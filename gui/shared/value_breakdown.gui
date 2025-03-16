@@ -1,0 +1,2558 @@
+types Breakdowns
+{
+	## List of values tooltip
+	# Note: use "widget_value_breakdown_tooltip" to get a list with a tooltip background and header.
+	# (this type widget should be used when you want only the list)
+	type widget_value_breakdown_list = widget {
+		name = "values_grid"
+		size = { 50 50 }
+		alwaystransparent = no
+
+		block "background" {
+			background = {
+				using = Background_Area_Border_Solid
+			}
+		}
+
+		vbox = {
+			datamodel = "[ValueBreakdown.GetSubValues]"
+			alwaystransparent = no
+			set_parent_size_to_minimum = yes
+			margin = { 17 10 }
+			spacing = 3
+
+			block "list" {}
+
+			block "header" {}
+
+			item = {
+				hbox = {
+					name = "value_breakdown"
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						name = "name"
+						layoutpolicy_horizontal = expanding
+						text = "[ValueBreakdown.GetName]"
+						min_width = 180
+						max_width = 275
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						margin_right = 10
+					}
+
+					text_single= {
+						visible = "[And(ValueBreakdown.HasTooltip, ValueBreakdown.ShouldShowValue)]"
+						name = "value_with_tooltip"
+						text = "[ValueBreakdown.GetValue|L]"
+						align = right
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+						using = tooltip_below
+
+						tooltipwidget = {
+							recursive = yes
+
+							widget_value_breakdown_tooltip = {}
+						}
+					}
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+
+						visible = "[And( Not(ValueBreakdown.HasTooltip), ValueBreakdown.ShouldShowValue )]"
+						name = "value_with_no_tooltip"
+						text = "[ValueBreakdown.GetValue]"
+						align = right
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+					}
+				}
+			}
+		}
+	}
+
+	# Used in a 'top level' aka directly inside a `tooltipwidget = {}`
+	type widget_value_breakdown_tooltip = widget_value_breakdown_list
+	{
+		blockoverride "header"
+		{
+			# We have the header be the name, if it exists
+			block "header" {
+				text_label_left = {
+					layoutpolicy_horizontal = expanding
+					block "header_text" {
+						text = "[ValueBreakdown.GetName]"
+					}
+					default_format = "#T"
+					visible = "[Not( StringIsEmpty( ValueBreakdown.GetName ) )]"
+				}
+			}
+		}
+
+		blockoverride "background"
+		{
+			using = DefaultTooltipBackground
+		}
+
+		blockoverride "list"
+        {
+            # We want more spacing in bottom for this background
+            margin_bottom = 17
+        }
+	}
+
+	## Gold Breakdown Tooltip
+	type widget_gold_breakdown_tooltip = widget {
+		alwaystransparent = no
+
+		block "background" { #### needed to solve the hack for tooltip in Realm View
+			using = DefaultTooltipBackground
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			set_parent_size_to_minimum = yes
+			margin = { 14 8 }
+			margin_bottom = 18
+			spacing = 14
+
+			block "my_gold" {}
+
+			vbox_gold_breakdown = {
+				name = "income"
+				layoutpolicy_horizontal = expanding
+				block "income" {}
+			}
+
+			vbox_gold_breakdown = {
+				name = "expenses"
+				layoutpolicy_horizontal = expanding
+				block "expenses" {}
+			}
+
+			block "gold_income" {}
+		}
+	}
+
+	type vbox_gold_breakdown = vbox {
+		spacing = 6
+		alwaystransparent = no
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				text = "[ValueBreakdown.GetName]"
+				default_format = "#T"
+
+				background = {
+					using = Background_Area
+					margin = { 10 0 }
+					margin_bottom = 8
+				}
+			}
+
+			vbox = {
+				name = "values_grid"
+				datamodel = "[ValueBreakdown.GetSubValues]"
+				layoutpolicy_horizontal = expanding
+				margin_top = 2
+
+				item = {
+					hbox = {
+						name = "value_breakdown"
+						layoutpolicy_horizontal = expanding
+						spacing = 10
+
+						text_single = {
+							name = "name"
+							layoutpolicy_horizontal = expanding
+							text = "[ValueBreakdown.GetName]"
+						}
+
+						text_single = {
+							name = "value_with_tooltip"
+							visible = "[And(ValueBreakdown.HasTooltip, ValueBreakdown.ShouldShowValue)]"
+							text = "[ValueBreakdown.GetValue|L]"
+							align = right
+							default_format = "#high"
+
+							using = tooltip_se
+
+							tooltipwidget = {
+								widget_value_breakdown_tooltip = {}
+							}
+						}
+
+						text_single = {
+							name = "value_with_no_tooltip"
+							visible = "[And( Not(ValueBreakdown.HasTooltip), ValueBreakdown.ShouldShowValue )]"
+							text = "[ValueBreakdown.GetValue]"
+							align = right
+						}
+					}
+				}
+			}
+
+			text_single = {
+				visible = "[Not(DataModelHasItems( ValueBreakdown.GetSubValues ))]"
+				layoutpolicy_horizontal = expanding
+				block "no_values" {
+					text = "VALUE_BREAKDOWN_NO_VALUES"
+				}
+				default_format = "#weak"
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_top = 10
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				hbox = {
+					visible = "[DataModelHasItems( ValueBreakdown.GetSubValues )]"
+					layoutpolicy_horizontal = expanding
+
+					text_single = {
+						visible = "[ValueBreakdown.ShouldShowValue]"
+						layoutpolicy_horizontal = expanding
+						text = "VALUE_BREAKDOWN_TOTAL"
+					}
+
+					text_single = {
+						text = "[ValueBreakdown.GetValue|+]"
+						default_format = "#high"
+					}
+				}
+			}
+		}
+	}
+
+	## Resource Breakdown Tooltip
+	type widget_resource_value_tooltip = widget {
+		alwaystransparent = no
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			filter_mouse = all
+			margin = { 14 8 }
+			margin_bottom = 12
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 14
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					text = "MY_VALUE_LABEL"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+
+
+				text_single = {
+					name = "total_label_no_tooltip"
+					layoutpolicy_horizontal = expanding
+					text = "TOTAL_BREAKDOWN_LABEL"
+					visible = "[EqualTo_CFixedPoint(PlayerValueItem.GetBalance, '(CFixedPoint)0')]"
+				}
+
+				text_single = {
+					name = "total_label"
+					layoutpolicy_horizontal = expanding
+					text = "TOTAL_BREAKDOWN_LABEL"
+					visible = "[NotEqualTo_CFixedPoint(PlayerValueItem.GetBalance, '(CFixedPoint)0')]"
+					using = tooltip_ws
+
+					datacontext = "[PlayerValueItem.GetBalanceGained]"
+					tooltip_visible = "[ValueBreakdown.HasTooltip]"
+
+					tooltipwidget = {
+						widget_value_breakdown_tooltip = {
+							blockoverride "header" {}
+						}
+					}
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+
+				hbox = {
+					spacing = 5
+					layoutpolicy_horizontal = expanding
+
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+
+					text_single = {
+						text = "PLAYER_VALUE_LEVEL_LABEL"
+						layoutpolicy_horizontal = expanding
+
+						default_format = "#T"
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+					}
+
+					text_single = {
+						name = "current_level"
+						layoutpolicy_horizontal = expanding
+
+						text = "[PlayerValueItem.GetCurrentLevelName]"
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+					}
+
+					expand = {}
+				}
+
+				vbox = {
+					visible = "[PlayerValueItem.HasNextLevel]"
+					layoutpolicy_horizontal = expanding
+					spacing = 5
+
+					text_single = {
+						name = "progress_label"
+						layoutpolicy_horizontal = expanding
+
+						text = "[PlayerValueItem.GetProgressTowardNextLevelLabel]"
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin_left = -3
+
+						progressbar_standard = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 15 }
+							tintcolor = "[TooltipInfo.GetTintColor]"
+							value = "[PlayerValueItem.GetProgressTowardNextLevel]"
+							tooltip = "[PlayerValueItem.GetProgressTooltip]"
+						}
+
+						expand = {}
+					}
+				}
+			}
+		}
+	}
+	
+	## Magic Breakdown Tooltip
+	type widget_magic_value_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 25 }
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_top = 5
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					text = "MAGIC_HEADER"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+				}
+				
+				text_single = {
+					name = "magic_counter_label"
+					raw_text = "#T;V [GetPlayer.MakeScope.Var('magic_counter').GetValue|0]/#!#!"
+					
+					tooltip = CHARACTER_MAGIC_BASELINE_TOOLTIP
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "magic_baseline_total_label"
+					raw_text = "#T;V;underline [GetPlayer.MakeScope.ScriptValue('character_magic_baseline_value')|0]#!#T;V /#!"
+					
+					tooltip = CHARACTER_MAGIC_BASELINE_TOOLTIP
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "extended_magic_baseline_total_label"
+					raw_text = "#T;V;underline [GetPlayer.MakeScope.ScriptValue('character_extended_magic_baseline_value')|0]#!"
+					
+					tooltip = CHARACTER_EXTENDED_MAGIC_BASELINE_TOOLTIP
+					using = tooltip_ws
+				}
+				
+				expand = {}
+				
+				button_checkbox = {
+					size = { 20 20 }
+					
+					onclick = "[GetScriptedGui('activate_uncapped_magic_gain_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" 
+					checked = "[GetPlayer.MakeScope.Var('uncapped_magic_gain_activated').IsSet]"
+					tooltip = CHARACTER_UNCAP_MAGIC_TOOLTIP
+				}
+				
+				background = {
+					using = Background_Area
+					margin = { 10 0 }
+					margin_bottom = 5
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				text_single = {
+					name = "regeneration_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Ежемесячное восстановление:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "regeneration_value"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#V [GuiScope.SetRoot(GetPlayer.MakeScope).ScriptValue('character_magic_baseline_income_value')|1]#!(#underline;V [GuiScope.SetRoot(GetPlayer.MakeScope).ScriptValue('character_magic_regeneration_ratio_percentage_value')|1]%#!)"
+					align = right
+					
+					tooltip = CHARACTER_MAGIC_REGENERATION_TOOLTIP
+					using = tooltip_ws
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				margin_bottom = 10
+				text_single = {
+					name = "exposure_level_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#T [exposure_level|E]:#! #T;V [GetPlayer.MakeScope.ScriptValue('exposure_level_value')|0]/3#!"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				text_single = {
+					name = "exposure_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Текущее воздействие:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "exposure_value"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline;V0 [GuiScope.SetRoot(GetPlayer.MakeScope).ScriptValue('exposure_total_value')]#!"
+					align = right
+					
+					tooltip = CHARACTER_EXPOSURE_TOOLTIP
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				text_single = {
+					name = "exposure_decay_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Падение воздействия:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "exposure_decay_value"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline;V0 [GuiScope.SetRoot(GetPlayer.MakeScope).ScriptValue('spell_exposure_monthly_loss')]#!"
+					align = right
+					
+					tooltip = "exposure_decay_value_desc"
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "Предыдущий порог воздействия:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "#V0 [GuiScope.SetRoot(GetPlayer.MakeScope).ScriptValue('exposure_current_milestone_value')]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "Следующий порог воздействия:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "#V0 [GuiScope.SetRoot(GetPlayer.MakeScope).ScriptValue('exposure_next_milestone_value')]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+		}
+	}
+	
+	## Exposure Breakdown Tooltip
+	type widget_exposure_value_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "[magic_exposure|E]:"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "exposure_total_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Next [magic_exposure|E] Limit: "
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "exposure_total"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[FixedPointToFloat(GuiScope.SetRoot( Character.MakeScope ).ScriptValue('exposure_next_milestone_value'))]"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "exposure_total_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Total [magic_exposure|E]: "
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "exposure_total"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[FixedPointToFloat(GuiScope.SetRoot( Character.MakeScope ).ScriptValue('exposure_total_value'))]"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('magic_counter').GetValue, '(CFixedPoint)0')]"
+				
+				text_single = {
+					name = "exposure_magic_power_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[magic_exposure|E] from [mana|E]: "
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "exposure_magic_power_number"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[FixedPointToFloat(GetPlayer.MakeScope.Var('magic_counter').GetValue)|1]"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('spell_exposure').GetValue, '(CFixedPoint)0')]"
+				
+				text_single = {
+					name = "exposure_spell_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[magic_exposure|E] from [rituals|E]: "
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "exposure_spell_number"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[FixedPointToFloat(GetPlayer.MakeScope.Var('spell_exposure').GetValue)|1]"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+		}
+	
+	}
+
+	# Requires a ActiveCouncilTask datacontext
+	type council_task_progress_breakdown_widget = widget
+	{
+		size = { 50 50 }
+		alwaystransparent = no
+		datacontext = "[ActiveCouncilTask.GetProgressBreakdown]"
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+
+			margin = { 10 10 }
+
+			layoutpolicy_horizontal = expanding
+
+			text_single = {
+				name = "header"
+				text = COUNCIL_TASK_PROGRESSBAR_TOOLTIP_HEADER
+			}
+
+			text_single = {
+				name = "frozen"
+				text = COUNCIL_TASK_PROGRESSBAR_FROZEN
+				visible = "[ActiveCouncilTask.IsFrozen]"
+			}
+
+			vbox = {
+				name = "progress_breakdown"
+				layoutpolicy_horizontal = expanding
+				visible = "[And( ActiveCouncilTask.GetTaskType.IsProgressDefined, Not( ActiveCouncilTask.IsFrozen ) )]"
+
+				margin = { 0 5 }
+
+				text_single = {
+					name = "progress_rate_header"
+					visible = "[ActiveCouncilTask.GetTaskType.IsPercentageTask]"
+					text = COUNCIL_TASK_PROGRESS_RATE
+				}
+				text_single = {
+					name = "progress_rate_header_value"
+					visible = "[Not( ActiveCouncilTask.GetTaskType.IsPercentageTask )]"
+					text = COUNCIL_TASK_PROGRESS_RATE_VALUE
+				}
+
+				widget_value_breakdown_list = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				text_single = {
+					name = "task_eta"
+					text = "[ActiveCouncilTask.GetETA]"
+				}
+			}
+		}
+	}
+	
+	## Merit Breakdown Tooltip
+	type widget_merit_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 10 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "[merit|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_merit_value')|0]"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "martial_merit_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "From [martial|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_merit_value_from_martial')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "martial_merit_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "From [intrigue|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_merit_value_from_intrigue')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "martial_merit_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "From [prowess|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_merit_value_from_prowess')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "martial_merit_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "From #E Boldness#! (Personality): [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_merit_value_from_boldness')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "martial_merit_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "From #E Ambition#! (Personality): [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_merit_value_from_energy')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+		}
+	}
+	
+	##Influence Breakdown Tooltip
+	type widget_influence_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			restrictparent_min = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 10 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "[clique_influence|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_influence_total')|0]"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "influence_from_powerbase_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Powerbase: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_powerbase_total')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "influence_from_internal_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Internal Clique Influence: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_clique_internal_influence_total')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "clique_power_factor_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Clique Power: #color_white [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_clique_power_percentage')|V0]%#!"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+		}
+		vbox = {
+			name = "tooltip_container"
+			restrictparent_min = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 10 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "[clique_powerbase|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_powerbase_total')|0]"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "holdings_powerbase_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[holdings|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_powerbase_holdings')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "gold_powerbase_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[gold|E]: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_powerbase_gold')|V0]"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "diplomacy_factor_powerbase_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[diplomacy|E]: #color_white +[GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_powerbase_diplomacy_factor_percentage')|V0]%#!"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 15
+				margin_bottom = 10
+				spacing = 15
+				text_single = {
+					name = "intrigue_factor_powerbase_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "[intrigue|E]: #color_white +[GuiScope.SetRoot( Character.MakeScope ).ScriptValue('character_powerbase_intrigue_factor_percentage')|V0]%#!"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+		}
+	}
+	
+	## Lifepath Relevance Tooltip
+	type widget_lifepath_relevance_tooltip = widget {
+		alwaystransparent = no
+		#layoutpolicy_horizontal = expanding
+		#layoutpolicy_vertical = expanding
+		#size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			restrictparent_min = yes
+			#maximumsize = { 360 -1 }
+			filter_mouse = all
+			margin = { 15 10 }
+
+			vbox = {
+				#layoutpolicy_horizontal = expanding
+				#layoutpolicy_vertical = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					#layoutpolicy_horizontal = expanding
+					raw_text = "[lifepath|E] Relevance: [FixedPointToProgressbarValue(Faith.MakeScope.Var('lifepath_relevance_measure').GetValue)]%"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+				}
+				#text_single = { # WIP until I figure this out - Hapchazzard
+				#	#layoutpolicy_horizontal = expanding
+				#	#layoutpolicy_vertical = expanding
+				#	#maximumsize = { 360 -1 }
+				#	text = LIFEPATH_RELEVANCE_TOOLTIP_TEXT
+				#	default_format = "#low"
+				#	using = Font_Size_Small
+				#	fonttintcolor = "[TooltipInfo.GetTintColor]"
+				#}
+			}
+		}
+	}
+	
+	##Judicial Power Tooltip
+	type widget_judicial_power_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			restrictparent_min = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 10 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					raw_text = "#E Judicial Power#!: [GuiScope.SetRoot( Character.MakeScope ).ScriptValue('judicial_power_value')|0]"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+				}
+			}
+		}
+	}
+	
+	## Legal Tradition Progress Breakdown Tooltip
+	type widget_legal_tradition_progress_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#E Tradition Progress#!"
+						default_format = "#high;bold"
+						using = Font_Size_Medium
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						align = left
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "[Scope.Var('legal_tradition_level_progress').GetValue|V0]/[Scope.ScriptValue('legal_tradition_next_level_progress_requirement_value')|V0]"
+						using = tooltip_ws
+						align = right
+					}
+					
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				margin_bottom = 10
+				text_single = {
+					name = "patron_header_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#T Patrons #!"
+					align = left
+					
+					using = tooltip_ws
+				}
+			}
+			
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				datamodel = "[Scope.GetList('legal_tradition_patrons')]"
+				item = {
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 15
+						text_single = {
+							name = "patron_label"
+							layoutpolicy_horizontal = expanding
+							text = "[Scope.Char.GetTitledFirstName]"
+							align = left
+							
+							using = tooltip_ws
+						}
+						
+						text_single = {
+							name = "trait_magic_add"
+							layoutpolicy_horizontal = expanding
+							raw_text = "#L #V +[Scope.ScriptValue('legal_tradition_patronage_investment_character_total_value')|V1]#!#!/month"
+							align = right
+							
+							using = tooltip_ws
+						}
+					}
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				text_single = {
+					name = "total_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Total: "
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "total_text"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline +[Scope.ScriptValue('legal_tradition_monthly_progress_value')|V1]/month#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+		}
+	}
+	
+	## Jurist Trait Progress Breakdown Tooltip
+	type widget_jurist_progress_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#E Jurist Trait Progress#!"
+						default_format = "#high;bold"
+						using = Font_Size_Medium
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						align = left
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "[GetPlayer.MakeScope.Var('jurist_level_progress').GetValue|V0]/[GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('jurist_progress_character',GetPlayer.MakeScope).ScriptValue('jurist_next_level_progress_requirement_gui_value')|0]"
+						using = tooltip_ws
+						align = right
+					}
+					
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+		}
+	}
+	
+	type widget_number_of_patron_saints_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#E Maximum number of Patron Saints:#!"
+						default_format = "#high;bold"
+						using = Font_Size_Small
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						align = left
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#underline [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_saint_number_value'))]#!"
+						using = tooltip_ws
+						align = right
+					}
+					
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Faith:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_saint_number_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+		}
+	}
+	
+	type widget_maximum_patron_saint_level_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#E Maximum Patron Saint Level:#!"
+						default_format = "#high;bold"
+						using = Font_Size_Small
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						align = left
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#underline [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_individual_saint_level_value'))]#!"
+						using = tooltip_ws
+						align = right
+					}
+					
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Faith:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_individual_saint_level_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+		}
+	}
+	
+	type widget_available_patron_saint_levels_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#E Remaining Patron Saint Levels:#!"
+						default_format = "#high;bold"
+						using = Font_Size_Small
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						align = left
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#underline [GetPlayer.MakeScope.ScriptValue('patron_saint_remaining_levels_left_value'))]#!"
+						using = tooltip_ws
+						align = right
+					}
+					
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Faith:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_individual_saint_level_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Current Patron Saint Levels:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline -[GetPlayer.MakeScope.ScriptValue('patron_saint_character_all_other_saints_total_saint_level_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+		}
+	}
+	
+	## Patron Saint Affinity Breakdown Tooltip
+	type widget_patron_saint_affinity_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			set_parent_size_to_minimum = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 15 }
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#E Patron Saint Affinity:#!"
+						default_format = "#high;bold"
+						using = Font_Size_Medium
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						align = left
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_total_value'))]/[FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_required_affinity_for_next_level_value'))]#!"
+						using = tooltip_ws
+						align = right
+					}
+					
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Saint Affinity Required for Next Level:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_required_affinity_for_next_level_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Traits:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_trait_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Skills:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_skill_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Not(Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_piety').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Levels of Devotion:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_piety_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_piety').IsSet]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Levels of Devotion:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_values_piety_shown_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[DataModelHasItems( Scope.GetProvince.MakeScope.GetList('patron_saint_holy_sites_list') )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Pilgrimage:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_pilgrimage_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[And( GetPlayer.MakeScope.Var('patron_saint_duel_affinity').IsSet, Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_duels').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Duel Victories:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_duel_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_scheming').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Succesful Schemes:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_scheme_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_languages').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Known Foreign Languages:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_languages_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_battle_victory').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Battle Victories:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_battle_victory_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_battle_slaughter').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Enemy Troops Killed In Battle Victories:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_battle_slaughter_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_dread').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Dread:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_dread_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_raiding').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Raiding:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_raid_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_raiding_antislavery').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Raiding Slavers:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_antislavery_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_executing_heathens').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Heathens Executed:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_executed_heathens_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				visible = "[And(GetPlayer.HasRoyalCourt, Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_frivolous_expenses').IsSet)]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Court Grandeur Level:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_court_grandeur_or_prestige_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				visible = "[And(Not(GetPlayer.HasRoyalCourt), Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_frivolous_expenses').IsSet)]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Prestige:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_court_grandeur_or_prestige_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_frivolous_expenses').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Shown Off Wealth:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_frivolous_spending_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_just_rule').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Just Punishments:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_just_punishments_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_just_rule').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Ruling Justly:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_no_tyranny_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_healing').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Healing:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_healing_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_medical_experiments').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Medical Experiments:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_medical_experiments_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_pain').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Pain:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_pain_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_generosity').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Generosity:"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_generosity_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 15
+				
+				visible = "[Scope.GetProvince.MakeScope.Var('patron_saint_aspect_values_humility').IsSet )]"
+				
+				text_single = {
+					name = "patron_label"
+					layoutpolicy_horizontal = expanding
+					raw_text = "Humility (Keeping Low Prestige):"
+					align = left
+					
+					using = tooltip_ws
+				}
+				
+				text_single = {
+					name = "trait_magic_add"
+					layoutpolicy_horizontal = expanding
+					raw_text = "#underline [FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_humility_value'))]#!"
+					align = right
+					
+					using = tooltip_ws
+				}
+			}
+			
+		}
+	}
+	
+	type court_position_aptitude_breakdown_tooltip = widget {
+		name = "AptitudeBreakdownTooltip"
+		using = GeneralTooltipSetup
+		alwaystransparent = no
+
+		using = DefaultTooltipBackground
+		vbox = {
+			set_parent_size_to_minimum = yes
+			margin = { 20 6 }
+			minimumsize = { 300 80 }
+
+			# Header
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				minimumsize = { 100% 50 }
+
+				background = {
+					name = "header"
+					texture = "gfx/interface/component_tiles/tile_title_big_top_01.dds"
+					spriteType = Corneredstretched
+					margin = { 15 0 }
+					texture_density = 2
+
+					modify_texture = {
+						name = "mask"
+						texture = "gfx/interface/component_masks/mask_title_big_top.dds"
+						spriteType = Corneredstretched
+						spriteborder = { 160 0 }
+						blend_mode = alphamultiply
+						alpha = 0.5
+					}
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					block "header_additions" {}
+
+					vbox = {
+						name = "FancyHeader"
+						layoutpolicy_horizontal = expanding
+						alwaystransparent = no
+
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							autoresize = yes
+							name = "title"
+							margin_bottom = 18
+
+							using = Font_Size_Medium
+							fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+							block "header_text" {
+
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			# Modifiers
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					default_format = "#S"
+					text = COURT_POSITION_TOOLTIP_EFFECT_ON_LIEGE
+				}
+
+				vbox = {
+					margin = { 16 4 }
+					textbox = {
+						name = "modifiers"
+						using = DefaultTooltipText
+						layoutpolicy_horizontal = expanding
+						multiline = yes
+						fonttintcolor = "[TooltipInfo.GetTintColor]"
+						alwaystransparent = no
+
+						block "modifier_list" { }
+					}
+				}
+			}
+
+			# Breakdown
+			vbox = {
+				name = "aptitude_breakdown"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin = { 0 8 }
+
+
+				# Header
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						default_format = "#S"
+						text = COURT_POSITION_aptitude_character_possessive
+					}
+					expand = {}
+				}
+				
+				# The Breakdown
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					datamodel = "[ValueBreakdown.GetSubValues]"
+					alwaystransparent = no
+					margin = { 16 4 }
+
+					item = {
+						hbox = {
+							name = "value_breakdown"
+							spacing = 5
+
+							layoutpolicy_horizontal = expanding
+
+							text_single = {
+								name = "name"
+								layoutpolicy_horizontal = expanding
+								text = "[ValueBreakdown.GetName]"
+								fonttintcolor = "[TooltipInfo.GetTintColor]"
+								margin_right = 10
+							}
+
+							text_single = {
+								visible = "[And(ValueBreakdown.HasTooltip, ValueBreakdown.ShouldShowValue)]"
+								name = "value_with_tooltip"
+								text = "[ValueBreakdown.GetValue|L]"
+								align = right
+								fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+								using = tooltip_below
+
+								tooltipwidget = {
+									recursive = yes
+
+									widget_value_breakdown_tooltip = {}
+								}
+							}
+
+							text_single = {
+								visible = "[And( Not(ValueBreakdown.HasTooltip), ValueBreakdown.ShouldShowValue )]"
+								name = "value_with_no_tooltip"
+								text = "[ValueBreakdown.GetValue]"
+								align = right
+								fonttintcolor = "[TooltipInfo.GetTintColor]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type diarch_score_breakdown_tooltip = widget {
+		name = "diarch_score_breakdown_tooltip"
+		using = GeneralTooltipSetup
+		alwaystransparent = no
+
+		using = DefaultTooltipBackground
+		vbox = {
+			set_parent_size_to_minimum = yes
+			margin = { 16 8 }
+			minimumsize = { 300 80 }
+
+			block "breakdown_datacontext" {}
+
+			# Header
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				minimumsize = { 100% 50 }
+
+				background = {
+					name = "header"
+					texture = "gfx/interface/component_tiles/tile_title_big_top_01.dds"
+					spriteType = Corneredstretched
+					margin = { 15 0 }
+					texture_density = 2
+
+					modify_texture = {
+						name = "mask"
+						texture = "gfx/interface/component_masks/mask_title_big_top.dds"
+						spriteType = Corneredstretched
+						spriteborder = { 160 0 }
+						blend_mode = alphamultiply
+						alpha = 0.5
+					}
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					block "header_additions" {}
+
+					vbox = {
+						name = "fancy_header"
+						layoutpolicy_horizontal = expanding
+						alwaystransparent = no
+
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							autoresize = yes
+							name = "title"
+
+							fontsize_min = 14
+							using = Font_Size_Medium
+							fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+							block "header_text" {}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			# Breakdown
+			vbox = {
+				name = "aptitude_breakdown"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin = { 0 8 }
+
+				# The Breakdown
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					datamodel = "[ValueBreakdown.GetSubValues]"
+					alwaystransparent = no
+					margin = { 16 4 }
+
+					item = {
+						hbox = {
+							name = "value_breakdown"
+							spacing = 5
+
+							layoutpolicy_horizontal = expanding
+
+							text_single = {
+								name = "name"
+								layoutpolicy_horizontal = expanding
+								text = "[ValueBreakdown.GetName]"
+								fonttintcolor = "[TooltipInfo.GetTintColor]"
+								margin_right = 10
+							}
+
+							text_single = {
+								visible = "[And(ValueBreakdown.HasTooltip, ValueBreakdown.ShouldShowValue)]"
+								name = "value_with_tooltip"
+								text = "[ValueBreakdown.GetValue|L]"
+								align = right
+								fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+								using = tooltip_below
+
+								tooltipwidget = {
+									recursive = yes
+
+									widget_value_breakdown_tooltip = {}
+								}
+							}
+
+							text_single = {
+								visible = "[And( Not(ValueBreakdown.HasTooltip), ValueBreakdown.ShouldShowValue )]"
+								name = "value_with_no_tooltip"
+								text = "[ValueBreakdown.GetValue]"
+								align = right
+								fonttintcolor = "[TooltipInfo.GetTintColor]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type cost_breakdown_vbox = vbox
+	{
+		margin = { 10 0 }
+
+		background = {
+			visible = "[Not( CostBreakdown.CanAffordCosts( GetPlayer ) )]"
+			using = Status_Bad
+			margin_top = 5
+		}
+
+		hbox = {
+			name = "costs"
+			visible = "[CostBreakdown.HasAnyCost]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			spacing = 5
+
+			block "heading"
+			{
+				text_single = {
+					name = "cost_heading"
+					align = nobaseline
+					
+					block "heading_text"
+					{
+						text = "COST_HEADING"
+					}
+				}
+			}
+
+			hbox = {
+				name = "piety_cost"
+				visible = "[CostBreakdown.HasCost( 'piety' )]"
+				datacontext = "[CostBreakdown.AccessBreakdownTooltip( 'piety' )]"
+				tooltipwidget = { widget_value_breakdown_tooltip = {} }
+
+				spacing = 2
+
+				icon = {
+					name = "icon_piety"
+					size = { 30 30 }
+					texture = "[GetPlayer.GetPietyLevelTexture]"
+				}
+
+				text_single = {
+					name = "piety"
+					text = "[CostBreakdown.GetCost( 'piety' )|0]"
+					align = nobaseline
+					default_format = "#high"
+				}
+			}
+
+			text_single = {
+				name = "prestige"
+
+				datacontext = "[CostBreakdown.AccessBreakdownTooltip( 'prestige' )]"
+				visible = "[CostBreakdown.HasCost( 'prestige' )]"
+
+				raw_text = "@prestige_icon![CostBreakdown.GetCost( 'prestige' )|0]"
+				align = nobaseline
+				default_format = "#high"
+
+				tooltipwidget = { widget_value_breakdown_tooltip = {} }
+			}
+
+			text_single = {
+				name = "renown"
+
+				datacontext = "[CostBreakdown.AccessBreakdownTooltip( 'renown' )]"
+				visible = "[CostBreakdown.HasCost( 'renown' )]"
+
+				raw_text = "@dynasty_prestige_icon![CostBreakdown.GetCost( 'renown' )|0]"
+				align = nobaseline
+				default_format = "#high"
+
+				tooltipwidget = { widget_value_breakdown_tooltip = {} }
+			}
+
+			text_single = {
+				name = "gold"
+				datacontext = "[CostBreakdown.AccessBreakdownTooltip( 'gold' )]"
+				visible = "[CostBreakdown.HasCost( 'gold' )]"
+
+				raw_text = "@gold_icon![CostBreakdown.GetCost( 'gold' )|0]"
+				align = nobaseline
+				default_format = "#high"
+
+				tooltipwidget = { widget_value_breakdown_tooltip = {} }
+			}
+		}
+
+		text_single  = {
+			visible = "[Not( CostBreakdown.HasAnyCost )]"
+			text = "NO_COST_HEADING"
+			using = Font_Size_Small
+			align = nobaseline
+		}
+	}
+}
