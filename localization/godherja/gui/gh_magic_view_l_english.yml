@@ -611,6 +611,8 @@
  
 # Ingredient Spell Components
  
+ sedative_spell_component_name: "Sedative"
+ sedative_spell_component_desc: "A substance that dulls pain and relaxes the agitated mind would be highly useful here."
  sensory_amplifier_spell_component_name: "Sensory Amplifier"
  sensory_amplifier_spell_component_desc: "A substance that heightens the intensity of sensation would benefit this ritual."
  poison_spell_component_name: "Poison"
@@ -1195,7 +1197,6 @@
  SPELL_COST_TAG_BULLETPOINT: "$EFFECT_LIST_BULLET$ #negative_value +[Scope.Var('cost_change_value').GetValue|0]#![Concept('magic_power','@magic_icon!')]per [Scope.Story.Custom('SpellEffectScalar1')]"
  SPELL_EFFECT_EFFECT_BULLETPOINT: "$EFFECT_LIST_BULLET$ [Scope.Story.Custom('SpellEffectDesc')][AddLocalizationIf(DataModelHasItems(Scope.Story.MakeScope.GetList('activation_condition_list')), 'SPELL_EFFECT_ACTIVATION_CONDITION')] [AddLocalizationIf(And(Scope.Story.MakeScope.Var('spell_effect_chance').IsSet, Or(Not(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').IsSet), Not(EqualTo_CFixedPoint(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').GetValue, '(CFixedPoint)0')))), 'SPELL_EFFECT_CHANCE_NONZERO_ITERATION')][AddLocalizationIf(And(Scope.Story.MakeScope.Var('spell_effect_chance').IsSet, And(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').IsSet, EqualTo_CFixedPoint(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').GetValue, '(CFixedPoint)0'))), 'SPELL_EFFECT_CHANCE_ZERO_ITERATION')]"
  NONSTANDARD_SPELL_EFFECT_EFFECT_BULLETPOINT: "$EFFECT_LIST_BULLET$ #V [Scope.ScriptValue('spell_tag_scalar_threshold_plus_one_value')|0]+#![Scope.Story.Custom('SpellEffectScalar1')]: [Scope.Story.Custom('SpellEffectDesc')][AddLocalizationIf(DataModelHasItems(Scope.Story.MakeScope.GetList('activation_condition_list')), 'SPELL_EFFECT_ACTIVATION_CONDITION')] [AddLocalizationIf(And(Scope.Story.MakeScope.Var('spell_effect_chance').IsSet, Or(Not(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').IsSet), Not(EqualTo_CFixedPoint(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').GetValue, '(CFixedPoint)0')))), 'SPELL_EFFECT_CHANCE_NONZERO_ITERATION')][AddLocalizationIf(And(Scope.Story.MakeScope.Var('spell_effect_chance').IsSet, And(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').IsSet, EqualTo_CFixedPoint(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').GetValue, '(CFixedPoint)0'))), 'SPELL_EFFECT_CHANCE_ZERO_ITERATION')]"
- SPELL_EFFECT_MODIFIER_BULLETPOINT: "$EFFECT_LIST_BULLET$ [Scope.Story.Custom('SpellEffectModifierDesc')]"
  SPELL_EFFECT_ITERATION: "#V +[Scope.Story.MakeScope.Var('spell_effect_chance_iteration').GetValue|0]%#!"
  SPELL_EFFECT_CHANCE_NONZERO_ITERATION: "(#V [Scope.Story.MakeScope.Var('spell_effect_chance').GetValue|0]%#! [AddLocalizationIf(Scope.Story.MakeScope.Var('spell_effect_chance_iteration').IsSet, 'SPELL_EFFECT_ITERATION')] chance per [Scope.Story.Custom('SpellEffectScalar1')] above #V [Scope.ScriptValue('spell_tag_scalar_threshold_value')|0]#!)"
  SPELL_EFFECT_CHANCE_ZERO_ITERATION: "(#V [Scope.Story.MakeScope.Var('spell_effect_chance').GetValue|0]%#! chance)"
