@@ -1,0 +1,1641 @@
+﻿##############
+# SPELL MENU #
+##############
+# THANK YOU TO CASTOX
+# FOR CREATING THE ORIGINAL
+# MENU AT GH TEAM'S REQUEST
+
+window = {
+	name = "window_magic"
+	widgetid = "window_magic"
+	size = { 1222 840 }
+	layer = middle
+
+	position = { 620 100 }
+
+	using = Window_Movable
+	using = Window_Background
+	using = Window_Decoration_Spike
+
+	visible = "[GetVariableSystem.Exists( 'show_spells' )]"
+	#This is where vanilla puts the datacontext stuff for inventory
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Standard
+		on_start = "[GetVariableSystem.Clear( 'current_spell' )]"
+		on_start = "[GetVariableSystem.Set( 'magic_tab', 'ritual' )]"
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Standard
+		#on_finish = "[AccessLocalPlayerCachedData.AccessNewArtifacts.ClearNewArtifactsOfCategory( 'inventory' )]"
+		on_finish = "[GetVariableSystem.Clear( 'magic_tab_aspect' )]"
+	}
+
+	
+	vbox = {
+		using = Window_Margins
+
+		header_pattern = {
+			layoutpolicy_horizontal = expanding
+
+			blockoverride "header_text"
+			{
+				text = "MAGIC_TITLE"
+			}
+
+			blockoverride "button_close"
+			{
+				onclick = "[GetVariableSystem.Toggle( 'show_spells')]"
+			}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			###LEFT SIDE
+			vbox = {
+				name = "left side"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				background = {
+					texture = "gfx/interface/illustrations/event_scenes/magic_ritual.dds"
+					fittype = end
+					alpha = 0.4
+
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_fade_vertical_up.dds"
+						blend_mode = alphamultiply
+					}
+
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_vignette.dds"
+						blend_mode = alphamultiply
+						alpha = 0.4
+					}
+				}
+				
+				## DEBUG STUFF
+				flowcontainer = {
+					name = "debug_ai_weighting"
+					visible = "[And(InDebugMode, GetPlayer.MakeScope.Var('selected_spell').IsSet)]"
+				  
+					# Debug weighting
+					text_single = {
+						#tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_target_value')]"
+						raw_text = "#D [GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_value')]#!"
+						align = nobaseline
+					}
+					text_single = {
+						tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_target_value')]"
+						raw_text = "#D ([GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_target_value')] + #!"
+						align = nobaseline
+					}
+					text_single = {
+						tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_spell_organizer_value')]"
+						raw_text = "#D [GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_spell_organizer_value')])#!"
+						align = nobaseline
+					}
+				}
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					
+					vbox = {
+						portrait_head_small = {
+							name = "court_magi_portrait"
+							visible = "[GetPlayer.GetCouncillor('councillor_court_magi').MakeScope.IsSet]"
+							datacontext = "[GetPlayer.GetCouncillor('councillor_court_magi')]"
+	
+							blockoverride "portrait_button"
+							{
+								enabled = "[GetPlayer.MakeScope.IsSet]"
+								onclick = "[ToggleGameViewData('council_window', GetPlayer.GetID)]"
+								onclick = "[GetVariableSystem.Clear( 'show_spells')]"
+							}
+							
+							blockoverride "portrait_button_no_character_text"
+							{
+								text = "[SelectLocalization( GetPlayer.MakeScope.IsSet,'PORTRAIT_NO_COURTMAGI','CHARACTER_TOOLTIP_NO_PORTRAIT')]"
+							}
+						}
+	
+						portrait_head_small = {
+							name = "no_court_magi_portrait"
+							visible = "[Not(GetPlayer.GetCouncillor('councillor_court_magi').MakeScope.IsSet)]"
+							datacontext = "[GetPlayer.GetCouncillor('councillor_court_magi')]"
+	
+							blockoverride "portrait_button"
+							{
+								onclick = "[GetVariableSystem.Toggle( 'show_spells')]"
+								#enabled = "[Character.IsLocalPlayer]"
+							}
+						}
+	
+						text_single = {
+							text = "COURT_MAGI"
+						}
+						margin_bottom = 20
+					}
+					
+					vbox = {
+						button_checkbox_label = {
+							visible = "[Not(GetPlayer.GetCouncillor('councillor_court_magi').IsCouncillor)]"
+							onclick = "[GetScriptedGui('cast_through_court_magi_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[Or(GetPlayer.GetCouncillor('councillor_court_magi').IsCouncillor, GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet)]"
+
+							blockoverride "checkbox"
+							{
+								checked = "[GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet]"
+								tooltip = "NO_COURT_MAGI"
+							}
+							blockoverride "text"
+							{
+								raw_text = "Сотворить заклинание с помощью [Concept('court_magi','придворного мага')|E]" #RUCOM
+							}
+						}
+						button_checkbox_label = {
+							visible = "[GetPlayer.GetCouncillor('councillor_court_magi').IsCouncillor]"
+							onclick = "[GetScriptedGui('cast_through_court_magi_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[Or(GetPlayer.GetCouncillor('councillor_court_magi').IsCouncillor, GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet)]"
+
+							blockoverride "checkbox"
+							{
+								checked = "[GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet]"
+							}
+							blockoverride "text"
+							{
+								raw_text = "Сотворить заклинание с помощью [Concept('court_magi','придворного мага')|E]" #RUCOM
+							}
+						}
+						hbox_court_magi_spellcasting_acceptance = {
+						
+						}
+					}
+					
+					vbox = {
+						visible = "[And(GetPlayer.GetCouncillor('councillor_court_magi').MakeScope.IsSet, GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet)]"
+						
+						button_checkbox_label = {
+							onclick = "[GetScriptedGui('cast_through_court_magi_give_gold_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							blockoverride "checkbox"
+							{
+								checked = "[GetPlayer.MakeScope.Var('casting_through_court_magi_give_gold_var').IsSet]"
+							}
+							blockoverride "text"
+							{
+								raw_text = "Offer [gold|E] [gold_i]"
+							}
+						}
+						
+						button_checkbox_label = {
+							onclick = "[GetScriptedGui('cast_through_court_magi_give_hook_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							blockoverride "checkbox"
+							{
+								checked = "[GetPlayer.MakeScope.Var('casting_through_court_magi_give_hook_var').IsSet]"
+							}
+							blockoverride "text"
+							{
+								raw_text = "Offer [hook|E] @weak_hook_icon!"
+							}
+						}
+					}
+					
+					expand = {}
+				}
+				
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					#maximumsize = { -1 400 }
+					#size = { 0 500 }
+					blockoverride "scrollbox_background"
+					{
+						background = {
+							using = Background_Area
+						}
+						background = {
+							using = Background_Frame
+							margin = { 0 5 }
+						}
+					}
+					scrollwidget = {
+						vbox = {
+							margin_right = 14
+							margin_left = 14
+							vbox = {
+								name = "spell_targets_characters"
+								margin = { 0 10 }
+					
+								background = {
+									using = Background_Area
+									margin_bottom = 5
+								}
+					
+								fixedgridbox = {
+									name = "character_member_grid"
+									addcolumn = 80
+									addrow = 90
+									datamodel = "[GetPlayer.MakeScope.GetList('spell_targets')]"
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('spell_targets'))]"
+									datamodel_wrap = 6
+									flipdirection = yes
+					
+									item = {
+										container = {
+											datacontext = "[Scope.GetCharacter]"
+					
+											portrait_head_small = {
+												position = { 0 0 }
+												parentanchor = top|left
+												
+												blockoverride "opinion_box" {}
+												
+												flowcontainer = {
+													visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+													parentanchor = top|right
+													ignoreinvisible = yes
+													direction = vertical
+													margin = { 4 0 }
+													margin_bottom = 5
+										
+													flowcontainer = {
+														#name = "tutorial_highlight_portrait_opinion"
+														visible = "[And(Character.IsValid, And(Character.IsAlive, Not(Character.IsLocalPlayer)))]"
+														ignoreinvisible = yes
+														margin_right = 2
+												
+														background = {
+															name = "portrait_opinion_bg"
+															texture = "gfx/interface/component_tiles/solid_black_label.dds"
+															spritetype = Corneredtiled
+															spriteborder = { 20 20 }
+															margin = { 2 2 }
+															texture_density = 2
+														}
+														
+														icon = {
+															texture = "gfx/interface/icons/symbols/icon_cross.dds"
+															size = { 20 20 }
+															tooltip = "HOSTILE_RITUAL"
+															visible = "[LessThanOrEqualTo_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope).ScriptValue('ai_spell_weight_target_value'),'(CFixedPoint)0')]"
+														}
+														
+														icon = {
+															texture = "gfx/interface/icons/symbols/icon_check.dds"
+															size = { 20 20 }
+															tooltip = "POSITIVE_RITUAL"
+															visible = "[GreaterThan_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope).ScriptValue('ai_spell_weight_target_value'),'(CFixedPoint)0')]"
+														}
+													}
+												}
+												
+												flowcontainer = {
+													visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+													parentanchor = bottom|right
+													ignoreinvisible = yes
+													direction = vertical
+													position = { 0 -20 }
+													margin = { 4 0 }
+													margin_bottom = 5
+										
+													flowcontainer = {
+														#name = "tutorial_highlight_portrait_opinion"
+														visible = "[And(Character.IsValid, And(Character.IsAlive, Not(Character.IsLocalPlayer)))]"
+														ignoreinvisible = yes
+														margin_right = 2
+												
+														background = {
+															name = "portrait_opinion_bg"
+															texture = "gfx/interface/component_tiles/solid_black_label.dds"
+															spritetype = Corneredtiled
+															spriteborder = { 20 20 }
+															margin = { 2 2 }
+															texture_density = 2
+														}
+														
+														icon = {
+															size = { 15 15 }
+															position = { 10 0 }
+															parentanchor = left|vcenter
+															texture = "gfx/interface/icons/rituals/icon_spell_secrecy.dds"
+														}
+												
+														text_single = {
+															visible = "[Character.IsValid]"
+															max_width = 45
+															align = nobaseline
+															fontsize = 13
+															margin = { 3 0 }
+												
+															tooltip = "HOSTILE_SPELL_DISCOVERY_TOOLTIP"
+															using = tooltip_es
+															default_format = "#true_white"
+												
+															raw_text = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_defender', Character.MakeScope).ScriptValue('spellcasting_discovery_chance_value')|0]%"
+														}
+													}
+												}
+												
+												flowcontainer = {
+													visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+													parentanchor = bottom|right
+													ignoreinvisible = yes
+													direction = vertical
+													margin = { 4 0 }
+													margin_bottom = 5
+										
+													flowcontainer = {
+														#name = "tutorial_highlight_portrait_opinion"
+														visible = "[And(Character.IsValid, And(Character.IsAlive, Not(Character.IsLocalPlayer)))]"
+														ignoreinvisible = yes
+														margin_right = 2
+												
+														background = {
+															name = "portrait_opinion_bg"
+															texture = "gfx/interface/component_tiles/solid_black_label.dds"
+															spritetype = Corneredtiled
+															spriteborder = { 20 20 }
+															margin = { 2 2 }
+															texture_density = 2
+														}
+												
+														text_single = {
+															visible = "[Character.IsValid]"
+															max_width = 45
+															align = nobaseline
+															fontsize = 13
+															margin = { 3 0 }
+												
+															tooltip = "HOSTILE_SPELL_RESISTANCE_TOOLTIP"
+															using = tooltip_es
+															default_format = "#true_white"
+												
+															raw_text = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle', Character.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_defender', Character.MakeScope).ScriptValue('magic_resistance_chance')|0]%"
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+					
+								fixedgridbox = {
+									name = "spell_target_titles"
+									datamodel = "[GetPlayer.MakeScope.GetList('spell_target_titles')]"
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('spell_target_titles'))]"
+									addcolumn = 75
+									addrow = 70
+									datamodel_wrap = 6
+									flipdirection = yes
+								
+									item = {
+										container = {
+											datacontext = "[Scope.Title]"
+								
+											coa_title_medium = {
+												position = { 0 0 }
+											}
+										}
+									}
+								}
+							}
+
+							vbox = {
+								visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+								margin = { 10 10 }
+								layoutpolicy_horizontal = expanding
+								background = {
+									using = Background_Area
+									alpha = 1
+								}
+								background = {
+									using = Background_Frame
+									alpha = 1
+								}
+								text_single = {
+									text = "[GetPlayer.MakeScope.Var('selected_spell').Story.Custom('SpellName')]"
+									using = Font_Type_Flavor
+									using = Font_Size_Big
+									
+									autoresize = yes
+									max_width = 550
+									margin_bottom = 10
+								}
+								text_multi = {
+									visible = "[And(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').IsSet, Not(EqualTo_string( Concatenate(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').GetFlagName, '_desc'), Localize(Concatenate(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').GetFlagName, '_desc')) )))]"
+									text = "[Localize(Concatenate(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').GetFlagName, '_desc'))]"
+									
+									autoresize = yes
+									max_width = 550
+								}
+								divider_light = {
+									visible = "[And(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').IsSet, Not(EqualTo_string( Concatenate(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').GetFlagName, '_desc'), Localize(Concatenate(GetPlayer.MakeScope.Var('selected_spell').Var('unique_spell_identifier').GetFlagName, '_desc')) )))]"
+									layoutpolicy_horizontal = expanding
+								}
+								vbox = {
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_trigger_list'))]"
+									datamodel = "[GetPlayer.MakeScope.Var('selected_spell').GetList('spell_trigger_list')]"
+									
+									layoutpolicy_horizontal = expanding
+									
+									text_single = {
+										raw_text = "Activation Conditions"
+										
+										using = Font_Size_Medium
+									}
+									
+									item = {
+										text_single = {
+											raw_text = "• [Localize(Concatenate(Scope.Var('spell_tag_name').GetFlagName, '_desc'))]"
+										}
+									}
+									
+									margin_bottom = 10
+								}
+								divider_light = {
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_trigger_list'))]"
+									layoutpolicy_horizontal = expanding
+								}
+								hbox = {
+									datacontext = "[GetPlayer.MakeScope.Var('selected_spell').Story]"
+									layoutpolicy_horizontal = expanding
+									text_multi = {
+										layoutpolicy_horizontal = expanding
+										autoresize = yes
+										margin = { 10 0 }
+										max_width = 440
+			
+										text = "[GetScriptedGui('execute_spell_scripted_gui').BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('effect_display_mode', MakeScopeFlag('yes')).End)]"
+									}
+									
+									vbox = {
+										layoutpolicy_vertical = expanding
+										widget = {
+											size = { 120 70 }
+
+											tooltip = SPELL_MANA_COST_TOOLTIP
+											
+											background = {
+												using = Background_Area
+											}
+											
+											icon = {
+												size = { 40 40 }
+												position = { 10 0 }
+												parentanchor = left|vcenter
+												texture = "gfx/interface/icons/currencies/icon_magic_00.dds"
+											}
+											
+											text_single = {
+												raw_text = "[SelectLocalization(GreaterThan_CFixedPoint(GuiScope.SetRoot(Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('total_spell_cost'),GetPlayer.MakeScope.Var('magic_counter').GetValue),'#negative_value','#positive_value')] [GuiScope.SetRoot(Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('total_spell_cost')|0]#!"
+
+												parentanchor = hcenter|vcenter
+												margin_left = 30
+												margin_bottom = 5
+												visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+												using = Font_Type_Standard
+												fontsize = 20
+												autoresize = yes
+											}
+										}
+										
+										widget = {
+											size = { 120 70 }
+											
+											tooltip = SPELL_GOLD_COST_TOOLTIP
+											
+											background = {
+												using = Background_Area
+											}
+											
+											icon = {
+												size = { 40 40 }
+												position = { 10 0 }
+												parentanchor = left|vcenter
+												texture = "gfx/interface/icons/icon_gold.dds"
+											}
+											
+											text_single = {
+												visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+												text = "[GuiScope.SetRoot(Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('total_spell_gold_cost')|0]"
+												
+												parentanchor = hcenter|vcenter
+												margin_left = 30
+												margin_bottom = 5
+												using = Font_Type_Standard
+												fontsize = 20
+												autoresize = yes
+											}
+										}
+										
+										widget = {
+											size = { 120 70 }
+											
+											tooltip = SPELL_SUCCESS_CHANCE_TOOLTIP
+											
+											background = {
+												using = Background_Area
+											}
+											
+											icon = {
+												size = { 40 40 }
+												position = { 10 0 }
+												parentanchor = left|vcenter
+												texture = "gfx/interface/icons/rituals/icon_spell_success.dds"
+											}
+											
+											text_single = {
+												raw_text = "[SelectLocalization(GreaterThan_CFixedPoint(GuiScope.SetRoot(Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('spell_success_chance'),'(CFixedPoint)50'),'#positive_value','#negative_value')] [GuiScope.SetRoot(Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('spell_success_chance')|0]%#!"
+												visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+												parentanchor = hcenter|vcenter
+												margin_left = 30
+												margin_bottom = 5
+												
+												using = Font_Type_Standard
+												fontsize = 20
+												autoresize = yes
+											}
+										}
+										
+										widget = {
+											visible = "[Story.MakeScope.Var('spell_faith').IsSet]"
+											size = { 120 70 }
+											
+											tooltip = SPELL_FAITH_TOOLTIP
+											
+											background = {
+												using = Background_Area
+											}
+											
+											icon = {
+												size = { 40 40 }
+												position = { 10 0 }
+												parentanchor = left|vcenter
+												texture = "[Story.MakeScope.Var('spell_faith').Faith.GetIcon]"
+											}
+											
+											text_multi = {
+												raw_text = "[Story.MakeScope.Var('spell_faith').Faith.GetName]"
+												parentanchor = hcenter|vcenter
+												max_width = 100
+												margin_left = 30
+												margin_bottom = 5
+												
+												autoresize = yes
+											}
+										}
+										
+										vbox = {
+											name = "selected_spell_aspects_grid"
+											datamodel = "[GetGlobalList('global_aspect_list')]"
+											datacontext = "[GetPlayer.MakeScope.Var('selected_spell').Story]"
+											visible = "[DataModelHasItems(GetGlobalList('global_aspect_list'))]"
+											
+											item = {
+												widget = {
+													visible = "[GreaterThan_CFixedPoint(GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')), '(CFixedPoint)0')]"
+													
+													size = { 120 70 }
+													
+													tooltip = ASPECT_CASTING_GRID_TOOLTIP
+													
+													background = {
+														using = Background_Area
+													}
+													
+													button = {
+														visible = "[GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Var(Concatenate(Scope.GetFlagName, '_overcharge')).IsSet]"
+														onclick = "[GetScriptedGui('reset_spell_preparation_story_cycle_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_to_start_preparation_for_scope', Story.MakeScope).End)]"
+														onclick = "[GetScriptedGui('magic_gui_decrease_aspect_overcharge_scripted_gui').Execute(GuiScope.SetRoot(Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('aspect_being_overcharged', MakeScopeFlag(Scope.GetFlagName)).End)]"
+														size = { 25 25 }
+														parentanchor = left|top
+														margin_left = 10
+														button_icon = {
+															size = { 25 25 }
+															parentanchor = center
+															alwaystransparent = yes
+															framesize = { 100 100 }
+															texture = "gfx/interface/icons/flat_icons/minus.dds"
+														}
+													}
+													
+													button = {
+														visible = "[GetScriptedGui('magic_gui_increase_aspect_overcharge_scripted_gui').IsShown(GuiScope.SetRoot(Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('aspect_being_overcharged', MakeScopeFlag(Scope.GetFlagName)).End)]"
+														onclick = "[GetScriptedGui('reset_spell_preparation_story_cycle_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_to_start_preparation_for_scope', Story.MakeScope).End)]"
+														onclick = "[GetScriptedGui('magic_gui_increase_aspect_overcharge_scripted_gui').Execute(GuiScope.SetRoot(Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('aspect_being_overcharged', MakeScopeFlag(Scope.GetFlagName)).End)]"
+														size = { 25 25 }
+														parentanchor = right|top
+														button_icon = {
+															size = { 25 25 }
+															parentanchor = center
+															alwaystransparent = yes
+															framesize = { 100 100 }
+															texture = "gfx/interface/icons/flat_icons/plus.dds"
+														}
+													}
+												
+													text_single = {
+														name = "selected_spell_aspect_level"
+														visible = "[Not(Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).IsSet)]"
+														raw_text = "[Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)1' ), 'I', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)2' ), 'II', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)3' ), 'III', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)4' ), 'IV', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)5' ), 'V', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)6' ), 'VI', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)7' ), 'VII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)8' ), 'VIII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)9' ), 'IX', 'X')))))))))]#! [Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [Localize(Concatenate(Scope.GetFlagName,'_name'))]#!"
+														
+														parentanchor = hcenter|vcenter
+														margin_bottom = 5
+														
+														default_format = "#bold"
+														using = Font_Type_Standard
+														fontsize = 18
+														autoresize = yes
+													}
+													
+													text_single = {
+														name = "selected_spell_aspect_level_with_max"
+														visible = "[Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).IsSet]"
+														raw_text = "[Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)1' ), 'I', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)2' ), 'II', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)3' ), 'III', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)4' ), 'IV', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)5' ), 'V', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)6' ), 'VI', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)7' ), 'VII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)8' ), 'VIII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)9' ), 'IX', 'X')))))))))]/[SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)1' ), 'I', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)2' ), 'II', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)3' ), 'III', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)4' ), 'IV', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)5' ), 'V', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)6' ), 'VI', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)7' ), 'VII', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)8' ), 'VIII', SelectLocalization(EqualTo_CFixedPoint( Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).GetValue , '(CFixedPoint)9' ), 'IX', 'X')))))))))]#! [Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [Localize(Concatenate(Scope.GetFlagName,'_name'))]#!"
+														
+														parentanchor = hcenter|vcenter
+														margin_bottom = 5
+														
+														default_format = "#bold"
+														using = Font_Type_Standard
+														fontsize = 18
+														autoresize = yes
+													}
+													
+													text_single = {
+														visible = "[GetPlayer.MakeScope.Var(Concatenate(Scope.GetFlagName, '_overcharge')).IsSet]"
+														parentanchor = left|bottom
+														margin_left = 10
+														margin_bottom = 6
+													
+														layoutpolicy_horizontal = expanding
+														autoresize = yes
+														fontsize_min = 11
+														fontsize = 12
+														raw_text = "[Localize(Concatenate(Scope.GetFlagName, '_coloring'))] Overcharged#!"
+													}
+												}
+											}
+										}
+										
+										expand = {}
+									}
+								}
+								
+								vbox = {
+									datamodel = "[GetPlayer.MakeScope.GetList('spell_component_being_prepared_list')]"
+									visible = "[And(GetPlayer.MakeScope.Var('spell_preparation_story_cycle').IsSet, ObjectsEqual(GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Var('spell_being_prepared').Story, GetPlayer.MakeScope.Var('selected_spell').Story))]"
+									spacing = 10
+									
+									item = {
+										widget_spell_component = { 
+											datacontext = "[Scope.Story]"
+										}
+									}
+								}
+								
+								spacer = {
+									size = { 20 20 }
+								}
+								
+								vbox = {
+									datamodel = "[GetPlayer.MakeScope.Var('selected_spell').GetList('spell_component_list')]"
+									spacing = 10
+									
+									item = {
+										widget_spell_component = { 
+											datacontext = "[Scope.Story]"
+											visible = "[Not(GetScriptedGui('spell_component_has_local_overload_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_component_being_checked', Scope.Story.MakeScope).End))]"
+										}
+									}
+								}
+							}
+							
+							expand = {}
+						}
+	
+						blockoverride "scrollbox_background_fade" {
+							icon = {
+								alpha = 0
+							}
+						}
+					}
+				}
+
+				expand = {}
+								
+				vbox = {
+					visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+
+					button_standard = {
+						name = "cast_spell_placeholder_button"
+						visible = "[GetScriptedGui('spell_can_be_manually_casted_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).End)]"
+						enabled = "[And(GetPlayer.MakeScope.Var('selected_spell').IsSet, GetScriptedGui('execute_spell_scripted_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).End))]"
+						onclick = "[GetScriptedGui('execute_spell_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('execute_spell_scripted_gui').BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('effect_display_mode', MakeScopeFlag('yes')).End)]"
+						
+						raw_text = "Колдовать" #RUCOM
+						using = Font_Size_Big
+						default_format = "#high;bold;glow_color:{0,0,0,1}"
+
+						gfxtype = framedbuttongfx
+						effectname = "NoHighlight"
+
+						size = { 200 70 }
+						texture = "gfx/interface/buttons/button_fancy.dds"
+						framesize = { 150 70 }
+						spriteborder = { 45 0 }
+						spritetype = corneredTiled
+
+						blockoverride "disabled"
+						{
+							texture = "gfx/interface/buttons/button_disabled_stripes.dds"
+						}
+						modify_texture = {
+							texture = "gfx/interface/buttons/button_fancy_overlay.dds"
+							blend_mode = overlay
+						}
+
+						modify_texture = {
+							texture = "gfx/interface/buttons/button_fancy_overlay.dds"
+							blend_mode = overlay
+						}
+
+						modify_texture = {
+							name = "glow"
+							texture = "gfx/interface/buttons/button_fancy_glow.dds"
+							blend_mode = colordodge
+							alpha = 0
+
+							spriteborder = { 20 0 }
+							spritetype = corneredStretched
+						}
+
+						modify_texture = {
+							texture = "gfx/interface/component_masks/mask_center_shimmer.dds"
+							blend_mode = mask
+						}
+
+						modify_texture = {
+							name = "shimmer"
+							texture = "gfx/interface/component_masks/mask_clouds_solid.dds"
+							blend_mode = colordodge
+							spriteType = corneredTiled
+							rotate_uv = 0
+						}
+
+						modify_texture = {
+							name = "shimmer_2"
+							texture = "gfx/interface/component_masks/mask_clouds_solid.dds"
+							blend_mode = colordodge
+							spriteType = corneredTiled
+							rotate_uv = 0
+						}
+
+						modify_texture = {
+							name = "shimmer_3"
+							texture = "gfx/interface/component_masks/mask_clouds_solid.dds"
+							blend_mode = colordodge
+							spriteType = corneredTiled
+						}
+
+						modify_texture = {
+							name = "shimmer_4"
+							texture = "gfx/interface/component_masks/mask_clouds_solid.dds"
+							blend_mode = colordodge
+							spriteType = corneredTiled
+						}
+
+						state = {
+							trigger_when = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+							name = a
+							next = b
+							duration = 0
+
+							modify_texture = {
+								name = "shimmer"
+								translate_uv = { -0.1 0 }
+								alpha = 0.1
+								rotate_uv = 0
+							}
+
+							modify_texture = {
+								name = "shimmer_2"
+								translate_uv = { 0.1 0 }
+								alpha = 0.3
+								rotate_uv = 0
+							}
+
+							modify_texture = {
+								name = "shimmer_3"
+								translate_uv = { 1 0 }
+								alpha = 0.1
+							}
+
+							modify_texture = {
+								name = "shimmer_4"
+								translate_uv = { -1 0 }
+								alpha = 0.5
+							}
+						}
+
+						state = {
+							name = b
+							next = c
+							duration = 10
+
+							modify_texture = {
+								name = "shimmer"
+								translate_uv = { 0.1 0 }
+								alpha = 0.3
+								rotate_uv = 180
+							}
+
+							modify_texture = {
+								name = "shimmer_2"
+								translate_uv = { -0.1 0 }
+								alpha = 0.1
+								rotate_uv = -180
+							}
+
+							modify_texture = {
+								name = "shimmer_3"
+								translate_uv = { 0 0 }
+								alpha = 0.5
+							}
+
+							modify_texture = {
+								name = "shimmer_4"
+								translate_uv = { 0 0 }
+								alpha = 0.1
+							}
+						}
+
+						state = {
+							name = c
+							next = a
+							duration = 10
+
+							modify_texture = {
+								name = "shimmer"
+								translate_uv = { -0.1 0 }
+								alpha = 0.1
+								rotate_uv = 360
+							}
+
+							modify_texture = {
+								name = "shimmer_2"
+								translate_uv = { 0.1 0 }
+								alpha = 0.3
+								rotate_uv = -360
+							}
+
+							modify_texture = {
+								name = "shimmer_3"
+								translate_uv = { -1 0 }
+								alpha = 0.1
+							}
+
+							modify_texture = {
+								name = "shimmer_4"
+								translate_uv = { 1 0 }
+								alpha = 0.5
+							}
+						}
+
+						state = {
+							name = _mouse_hierarchy_enter
+
+							modify_texture = {
+								name = "glow"
+								alpha = 1
+							}
+						}
+
+						state = {
+							name = _mouse_hierarchy_leave
+							duration = 0.2
+							using = Animation_Curve_Default
+
+							modify_texture = {
+								name = "glow"
+								alpha = 0
+							}
+						}
+
+						state = {
+							name = _mouse_press
+							duration = 0
+							using = Animation_Curve_Default
+
+							modify_texture = {
+								name = "glow"
+								alpha = 0
+							}
+						}
+
+						state = {
+							name = start_game_audio
+							duration = 0.1
+
+							start_sound = {
+								soundeffect = "event:/SFX/UI/Generic/sfx_ui_generic_start_game"
+							}
+						}
+					}
+				}
+			}
+
+			divider = {
+				layoutpolicy_vertical = expanding
+			}
+
+			# right side is other artifacts and claims
+			vbox = {
+				name = "right_side"
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+				margin_left = -2
+				max_width = 525
+
+				vbox = {
+					name = "magic_action_top_bar"
+					#visible = "[And( Not( VariableSystem.Exists( 'claims' ) ), Not( VariableSystem.Exists( 'court_artifacts' ) ) )]"
+					layoutpolicy_horizontal = expanding
+					margin_bottom = 5
+				
+					text_label_center = {
+						layoutpolicy_horizontal = expanding
+						align = center|nobaseline
+						text = "SELECT_MAGIC_ACTION"
+						margin = { 0 2 }
+						max_width = 440
+					}
+				
+					hbox = {
+						name = "action_choice_tabs"
+						margin_top = 10
+						margin_left = -6
+				
+						button_tab = { # Show methods to generate magic
+							size = { 110 42 }
+				
+							tooltip = RITUAL_SORTING_TAB_RITUALS_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_tab' )]"
+							onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_tab', 'ritual' )]"
+							using = tooltip_above
+				
+							hbox = {
+								margin = { 10 0 }
+				
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									align = center
+									text = "RITUAL_RITUALS_BUTTON"
+								}
+							}
+						}
+						
+						button_tab = { # Show methods to generate magic
+							size = { 110 42 }
+				
+							#tooltip = RITUAL_SORTING_TAB_GENERATION_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_tab' )]"
+							onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_tab', 'bound_entities' )]"
+							down = "[GetVariableSystem.Set( 'magic_tab', 'bound_entities' )]"
+							using = tooltip_above
+				
+							hbox = {
+								margin = { 10 0 }
+				
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									align = center
+									raw_text = "Связи" #RUCOM
+								}
+				
+								#text_single = {
+								#	min_width = 30
+								#	align = center
+								#	text = "[Inventory.GetNumOfArtifactInCategory( 'inventory' )]"
+								#}
+							}
+						}
+				
+						button_tab = { # Show methods to study rituals
+							size = { 110 42 }
+				
+							tooltip = RITUAL_SORTING_TAB_STUDY_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_tab' )]"
+							onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_tab', 'study' )]"
+							using = tooltip_above
+							enabled = "[Not(GetPlayer.MakeScope.IsSet)]"
+				
+							hbox = {
+								margin = { 10 0 }
+				
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									align = center
+									text = "RITUAL_STUDY_BUTTON"
+								}
+							}
+						}
+				
+						button_tab = { # Show methods to discover rituals
+							size = { 110 42 }
+				
+							tooltip = RITUAL_SORTING_TAB_DISCOVER_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_tab' )]"
+							onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_tab', 'discover' )]"
+							using = tooltip_above
+							enabled = "[Not(GetPlayer.MakeScope.IsSet)]"
+				
+							hbox = {
+								margin = { 10 0 }
+				
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									align = center
+									text = "RITUAL_DISCOVER_BUTTON"
+								}
+							}
+						}
+					}
+				}
+
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+				
+					hbox = {
+						name = "ritual_top_bar"
+						visible = "[GetVariableSystem.HasValue('magic_tab', 'ritual' )]"
+					
+						text_label_center = {
+							layoutpolicy_horizontal = expanding
+							align = center|nobaseline
+							text = SPELLS
+							margin = { 0 2 }
+							max_width = 440
+						}
+					}
+					
+					hbox = {
+						name = "bound_entities_top_bar"
+						visible = "[GetVariableSystem.HasValue('magic_tab', 'bound_entities' )]"
+					
+						text_label_center = {
+							layoutpolicy_horizontal = expanding
+							align = center|nobaseline
+							raw_text = "Bound Entities"
+							margin = { 0 2 }
+							max_width = 440
+						}
+					}
+				}
+				
+				vbox = {
+					layoutpolicy_horizontal = expanding
+				
+					hbox = {
+						name = "generation_sort_tabs"
+						visible = "[GetVariableSystem.HasValue('magic_tab', 'generation' )]"
+						margin = { -6 10 }
+						spacing = 10
+				
+						button_tab = {
+							size = { 55 55 }
+				
+							tooltip = RITUAL_SORTING_TAB_TYPE_GEN_ALL_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_gen_tab_sort' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_gen_tab_sort', 'all' )]"
+							#down = "[Not( GetVariableSystem.HasSelectedSlot )]"
+							using = tooltip_above
+				
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_all.dds"
+								parentanchor = center
+				
+								alwaystransparent = yes
+				
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+				
+						button_tab = {
+							size = { 55 55 }
+				
+							tooltip = RITUAL_SORTING_TAB_TYPE_GEN_CHARACTER_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_gen_tab_sort' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_gen_tab_sort', 'character' )]"
+							using = tooltip_above
+				
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_generation_character.dds"
+								parentanchor = center
+				
+								alwaystransparent = yes
+				
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+				
+						button_tab = {
+							size = { 55 55 }
+				
+							tooltip = RITUAL_SORTING_TAB_TYPE_GEN_PROVINCE_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_gen_tab_sort' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_gen_tab_sort', 'province' )]"
+							using = tooltip_above
+				
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_generation_province.dds"
+								parentanchor = center
+				
+								alwaystransparent = yes
+				
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+				
+						button_tab = {
+							size = { 55 55 }
+				
+							tooltip = RITUAL_SORTING_TAB_TYPE_GEN_OTHER_TOOLTIP
+							onclick = "[VariableSystem.Clear( 'magic_gen_tab_sort' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_gen_tab_sort', 'other' )]"
+							using = tooltip_above
+				
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_other.dds"
+								parentanchor = center
+				
+								alwaystransparent = yes
+				
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+					}
+
+
+					hbox = {
+						name = "ritual_sort_tabs_1"
+						visible = "[GetVariableSystem.HasValue('magic_tab', 'ritual' )]"
+						margin = { -6 10 }
+						spacing = 10
+
+						button_tab = {
+							size = { 55 55 }
+					
+							tooltip = RITUAL_SORTING_TAB_TYPE_ALL_TOOLTIP
+							onclick = "[GetVariableSystem.Clear( 'magic_tab_aspect' )]"
+							down = "[Not( GetVariableSystem.Exists('magic_tab_aspect') )]"
+							using = tooltip_above
+					
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_all.dds"
+								parentanchor = center
+					
+								alwaystransparent = yes
+					
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_BLOOD_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'blood' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'blood' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_blood.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+					
+						button_tab = {
+							size = { 55 55 }
+					
+							tooltip = RITUAL_SORTING_TAB_TYPE_FIRE_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'fire' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'fire' )]"
+							using = tooltip_above
+					
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_fire.dds"
+								parentanchor = center
+					
+								alwaystransparent = yes
+					
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_AIR_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'air' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'air' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_air.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_NATURE_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'nature' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'nature' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_nature.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_WATER_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'water' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'water' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_water.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_STONE_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'stone' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'stone' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_stone.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_LIGHT_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'light' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'light' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_light.dds" #GH_TODO: Needs its own icon art
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+					}
+					hbox = {
+						name = "ritual_sort_tabs_2"
+						visible = "[GetVariableSystem.HasValue('magic_tab', 'ritual' )]"
+						margin = { -6 10 }
+						spacing = 10
+						
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_CELESTIAL_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'celestial' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'celestial' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_celestial.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_DEATH_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'death' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'death' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_death.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_DREAM_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'dream' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'dream' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_dream.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_ETHEREAL_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'ethereal' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'ethereal' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_ethereal.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_DARK_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'dark' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'dark' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_dark.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_METAL_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'metal' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'metal' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_metal.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_ICE_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'ice' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'ice' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_ice.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+
+						button_tab = {
+							size = { 55 55 }
+						
+							tooltip = RITUAL_SORTING_TAB_TYPE_SAND_TOOLTIP
+							onclick = "[GetVariableSystem.Set( 'magic_tab_aspect', 'sand' )]"
+							down = "[GetVariableSystem.HasValue( 'magic_tab_aspect', 'sand' )]"
+							using = tooltip_above
+						
+							icon = {
+								size = { 50 50 }
+								texture = "gfx/interface/icons/rituals/icon_aspect_sand.dds"
+								parentanchor = center
+						
+								alwaystransparent = yes
+						
+								blockoverride "button_frames"
+								{
+									effectname = "NoHighlight"
+								}
+							}
+						}
+					}
+					background = {
+						using = Background_Area_Dark
+					}
+				}
+
+				scrollbox = {
+					name = "spells_player"
+					visible = "[And(GetVariableSystem.HasValue('magic_tab', 'ritual' ), Not(And(GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet, GetPlayer.GetCouncillor('councillor_court_magi').MakeScope.IsSet)))]"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "spell_list"
+							datamodel = "[GetPlayer.MakeScope.GetList('known_spell_list')]"
+							layoutpolicy_horizontal = expanding
+							spacing = 8
+
+							item = {
+								widget_spell_entry = {
+									datacontext = "[Scope.Story]"
+								}
+							}
+						}
+					}
+				}
+				
+				scrollbox = {
+					name = "spells_court_magi"
+					visible = "[And(GetVariableSystem.HasValue('magic_tab', 'ritual' ), And(GetPlayer.MakeScope.Var('casting_through_court_magi_var').IsSet, GetPlayer.GetCouncillor('councillor_court_magi').MakeScope.IsSet))]"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "spell_list"
+							datamodel = "[GetPlayer.GetCouncillor('councillor_court_magi').MakeScope.GetList('known_spell_list')]"
+							layoutpolicy_horizontal = expanding
+							spacing = 8
+
+							item = {
+								widget_spell_entry = {
+									datacontext = "[Scope.Story]"
+								}
+							}
+						}
+					}
+				}
+				
+				scrollbox = {
+					name = "bound_entities"
+					visible = "[GetVariableSystem.HasValue('magic_tab', 'bound_entities' )]"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "bound_entity_list"
+							datamodel = "[GetPlayer.MakeScope.GetList('bound_entity_list')]"
+							layoutpolicy_horizontal = expanding
+							spacing = 8
+
+							item = {
+								widget_bound_entity = {
+									datacontext = "[Scope.Story]"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
