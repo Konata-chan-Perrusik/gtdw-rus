@@ -1,0 +1,71 @@
+######################################################
+################## HISTORY WINDOW ####################
+######################################################
+
+window = {
+	name = "window_magic_school"
+	visible = "[GetPlayer.MakeScope.Var('selected_magic_school').IsSet]"
+	datacontext = "[GetPlayer.MakeScope.Var('selected_magic_school').Story]"
+	position = { 590 80 }
+	widgetanchor = top
+	size = { 580 90% }
+	layer = middle
+
+	using = Window_Movable
+	using = title_view_window_side_pop_out
+	using = Window_Decoration
+	using = Window_Background
+
+	vbox = {
+		using = Window_Margins
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin_bottom = 10
+
+			header_pattern = {
+				layoutpolicy_horizontal = expanding
+				allow_outside = yes
+
+				blockoverride "header_text"
+				{
+					margin_top = 10
+					raw_text = "Заклятья [Localize(Concatenate(Story.MakeScope.Var('unique_magic_school_identifier').GetFlagName, '_name'))]"
+					align = nobaseline
+				}
+
+				blockoverride "button_close"
+				{
+					onclick = "[GetScriptedGui('close_magic_school_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				}
+			}
+		}
+
+		
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			
+			scrollbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+	
+				blockoverride "scrollbox_content" {
+					vbox = {
+						name = "spell_list"
+						datamodel = "[Story.MakeScope.GetList('spell_list')]"
+						layoutpolicy_horizontal = expanding
+						spacing = 12
+	
+						item = {
+							widget_spell_entry = {
+								datacontext = "[Scope.Story]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,565 @@
+
+##############################################################
+################# APPOINT SPELL COMPONENT ####################
+##############################################################
+
+
+window = {
+	name = "window_spell_component_character_assign"
+	visible = "[And(GetVariableSystem.Exists( 'show_spells' ), GetPlayer.MakeScope.Var('selected_spell_component').IsSet)]"
+	datacontext = "[GetPlayer.MakeScope.Var('selected_spell_component').Story]"
+	parentanchor = "top|right"
+	position = { -610 80 }
+	size = { 680 920 }
+	movable = no
+	layer = top
+	allow_outside = yes
+
+	using = Window_Background
+	using = Window_Decoration
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Quick
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Quick
+	}
+	
+	vbox = {
+		using = Window_Margins
+		layoutpolicy_vertical = expanding
+	
+		#Header for appointing
+		header_pattern = {
+			layoutpolicy_horizontal = expanding
+			
+			blockoverride "header_text"
+			{
+				text = ASSIGN_SPELL_COMPONENT
+			}
+	
+			blockoverride "button_close"
+			{
+				onclick = "[GetScriptedGui('deselect_spell_component_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			}
+		}
+	
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = fixed
+			
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 5
+				margin = { 20 2 }
+				margin_bottom = 8
+	
+				background = {
+					using = Background_Area_With_Header_Dark
+				}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+				
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						default_format = "#high"
+						text = "[Localize(Concatenate(Story.MakeScope.Var('spell_component_name').GetFlagName,'_name'))]"
+					}
+				
+					flowcontainer = {
+						datamodel = "[Story.MakeScope.GetList('spell_component_cost_and_bonus_list')]"
+						
+						item = {
+							text_single = {
+								name = "spell_component_cost_or_bonus"
+								align = right
+								parentanchor = bottom
+								default_format = "#high"
+								text = "[SelectLocalization(GreaterThan_CFixedPoint(Story.MakeScope.Var(Scope.GetFlagName).GetValue,'(CFixedPoint)0'),Concatenate(Scope.GetFlagName, '_spell_component_prefix_positive'),Concatenate(Scope.GetFlagName, '_spell_component_prefix_negative'))][Abs_CFixedPoint(Story.MakeScope.Var(Scope.GetFlagName).GetValue)|0][Localize(Concatenate(Scope.GetFlagName, '_spell_component_suffix'))]"
+								margin_top = 5
+								margin_right = 10
+							}
+						}
+					}
+				}
+	
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					margin_top = 5
+	
+					text_multi = {
+						visible = "[Not(EqualTo_string(Concatenate(Story.MakeScope.Var('spell_component_name').GetFlagName,'_desc'),Localize(Concatenate(Story.MakeScope.Var('spell_component_name').GetFlagName,'_desc'))))]"
+						text = "[Localize(Concatenate(Story.MakeScope.Var('spell_component_name').GetFlagName,'_desc'))]"
+						default_format = "#F"
+						autoresize = yes
+						max_width = 550
+						min_width = 550
+					}
+	
+					expand = {}
+				}
+			}
+		}
+		
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+	
+			### fades in correctly but does something wierd on hide, investigate ###
+			#using = Animation_ShowHide_Quick
+			
+			scrollbox = {
+				name = "characters_scroll_area"
+				visible = "[Story.MakeScope.Var('spell_component_template').Var('character_spell_component_input').IsSet]"
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+	
+				blockoverride "scrollbox_content" {
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						
+						vbox = {
+							layoutpolicy_horizontal = expanding
+					
+							spell_component_candidate_list_item = {
+								datacontext = "[GetPlayer.MakeScope.GetCharacter]"
+								layoutpolicy_horizontal = expanding
+							}
+						}
+						
+						vbox = {
+							datamodel = "[GetPlayer.GetPrisoners]"
+							layoutpolicy_horizontal = expanding
+					
+							item = {
+								spell_component_candidate_list_item = {
+									layoutpolicy_horizontal = expanding
+								}
+							}
+						}
+						
+						expand = {}
+					}
+				}
+	
+				blockoverride "scrollbox_empty"
+				{
+					block "scrollbox_empty_visibility"
+					{
+						layoutpolicy_vertical = expanding
+						visible = "[IsDataModelEmpty( GetPlayer.GetPrisoners )]"
+						text = "NO_CHARACTERS_TO_SELECT"
+					}
+				}
+			}
+			
+			scrollbox = {
+				name = "artifacts_scroll_area"
+				visible = "[Story.MakeScope.Var('spell_component_template').Var('artifact_spell_component_input').IsSet]"
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+	
+				blockoverride "scrollbox_content" {
+					vbox = {
+						name = "artifacts_grid"
+						datamodel = "[GetPlayer.GetInventory.GetArtifacts]"
+						layoutpolicy_horizontal = expanding
+						spacing = 10
+				
+						item = {
+							widget = {
+								name = "artifact_list_item"
+								visible = "[And(Or(Not(Story.MakeScope.Var('spell_component_template').Var('artifact_type').IsSet),EqualTo_string(Artifact.GetType, Story.MakeScope.Var('spell_component_template').Var('artifact_type').GetFlagName)), GetScriptedGui('runic_scroll_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_scope', Story.MakeScope.Var('spell_component_template').Var('spell_component_parent_spell').Story.MakeScope).AddScope('spell_component_scope', Story.MakeScope.Var('spell_component_template').Story.MakeScope).AddScope('artifact_scope', Artifact.MakeScope).End))]"
+								layoutpolicy_horizontal = expanding
+								size = { 360 80 }
+				
+								button_standard = {
+									name = "artifact_button"
+									size = { 100% 100% }
+				
+									onclick = "[GetScriptedGui('reset_spell_preparation_story_cycle_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_to_start_preparation_for_scope', Story.MakeScope.Var('spell_component_template').Var('spell_component_parent_spell').Story.MakeScope).End)]"
+									onclick = "[GetScriptedGui('set_spell_component_artifact_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_component_to_be_prepared', Story.MakeScope.Var('spell_component_template').Story.MakeScope).AddScope('selected_artifact_scope', Artifact.MakeScope).End)]"
+				
+									tooltipwidget = {
+										artifact_tooltip = {}
+									}
+				
+									hbox = {
+										widget = {
+											size = { 80 80 }
+											alwaystransparent = yes
+				
+											button_artifact = {
+												size = { 100% 100% }
+											}
+				
+											tooltipwidget = {
+												artifact_tooltip = {}
+											}
+										}
+										vbox = {
+											text_multi = {
+												name = "text"
+												layoutpolicy_horizontal = expanding
+												text = "[Artifact.GetNameNoTooltip]"
+												max_width = 250
+												default_format = "#clickable"
+												autoresize = yes
+											}
+				
+											text_multi = {
+												visible = "[GetPlayer.GetInventory.IsEquipped( Artifact.Self )]"
+												name = "equipped_status"
+												layoutpolicy_horizontal = expanding
+												text = "[Select_CString( Artifact.IsCourtArtifact, 'Displayed', 'Equipped' )]"
+												max_width = 250
+												default_format = "#weak"
+												autoresize = yes
+											}
+										}
+										expand = {}
+									}
+				
+								}
+							}
+						}
+					}
+				}
+	
+				blockoverride "scrollbox_empty"
+				{
+					block "scrollbox_empty_visibility"
+					{
+						layoutpolicy_vertical = expanding
+						visible = "[IsDataModelEmpty( GetPlayer.GetPrisoners )]"
+						text = "NO_CHARACTERS_TO_SELECT"
+					}
+				}
+			}
+		}
+	}
+}
+
+######################################################
+################ TYPES AND TEMPLATES #################
+######################################################
+
+types AssignSpellComponentCharacterTypes
+{
+	type spell_component_candidate_list_item = widget {
+		visible = "[GetScriptedGui('character_is_valid_to_fill_spell_component_scripted_gui').IsShown(GuiScope.SetRoot(Character.MakeScope).AddScope('spell_component_being_checked', Story.MakeScope).AddScope('caster_scope', GetPlayer.MakeScope).End)]"
+		size = { 10 110 }
+
+		block "divider" {
+			divider = {
+				parentanchor = bottom|hcenter
+				size = { 100% 3 }
+			}
+		}
+
+		block "widget" {}
+
+		hbox = {
+			margin = { 0 5 }
+			spacing = 15
+
+			portrait_head_small = {
+				blockoverride "portrait_button" {
+					text_single = {
+						name = "tutorial_highlight_character_view_opinion"
+						max_width = 100
+						margin = { 3 0 }
+						using = tooltip_es
+						default_format = "#D"
+					}
+				}
+			}
+
+			button_standard = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				onclick = "[GetScriptedGui('reset_spell_preparation_story_cycle_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_to_start_preparation_for_scope', Story.MakeScope.Var('spell_component_template').Var('spell_component_parent_spell').Story.MakeScope).End)]"
+				onclick = "[GetScriptedGui('set_spell_component_character_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_component_to_be_prepared', Story.MakeScope.Var('spell_component_template').Story.MakeScope).AddScope('selected_character_scope', Character.MakeScope).End)]"
+
+				framesize = { 249 78 }
+				spriteType = Corneredtiled
+				spriteborder = { 20 20 }
+
+				#down = "[AppointCourtPositionView.IsItemSelected(CharacterListItem.Self)]"
+
+				background = {
+					texture = "gfx/interface/buttons/button_entry_characterlist.dds"
+					spriteType = Corneredtiled
+					margin = { 10 0 }
+					using = Color_Orange
+					alpha = 0
+					using = Mask_Rough_Edges
+				}
+
+				block "button" {}
+
+				character_list_arrow = {
+					name = "character_list_arrow"
+				}
+
+				# Selected icon
+				#icon = {
+				#	visible = "[AppointCourtPositionView.IsItemSelected(CharacterListItem.Self)]"
+				#	parentanchor = left|vcenter
+				#	position = { -20 0 }
+				#	size = { 20 20 }
+				#	texture = "gfx/interface/buttons/button_entry_characterlist_arrow.dds"
+				#}
+
+				block "overlay" {
+					using = default_character_list_overlay
+				}
+
+				block "button_content"
+				{
+					hbox = {
+						#tooltipwidget = {
+						#	court_position_aptitude_breakdown_tooltip = {
+						#		datacontext = "[AppointCourtPositionView.GetAptitudeTooltip(Character.Self)]"
+						#
+						#		blockoverride "header_text" {
+						#			text = APPOINT_COURT_POSITION_VIEW_APTITUDE
+						#		}
+						#
+						#		blockoverride "modifier_list" {
+						#			text = "[AppointCourtPositionView.GetLiegeModifierForPositionType(Character.Self)]"
+						#		}
+						#	}
+						#}
+
+						# Name, Relation, Age and Aptitude
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+
+							# Name, Relation, Age
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_left = 10
+
+								# Name
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									using = Font_Size_Medium
+									autoresize = no
+									alwaystransparent = yes
+
+									text = "[Character.GetUINameNoTooltip]"
+								}
+
+								# Relation and Age
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+
+									using = character_age_or_death_text
+									blockoverride "list_layout" {}
+
+									block "character_relation"
+									{
+										text_single = {
+											name = "character_relation"
+											layoutpolicy_horizontal = expanding
+											raw_text = "|  [Character.GetRelationToString( GetPlayer )]"
+											default_format = "#low"
+											autoresize = no
+											align = nobaseline
+											visible = "[Character.HasRelationTo( GetPlayer )]"
+											alwaystransparent = yes
+										}
+
+										expand = {
+											visible = "[Not(Character.HasRelationTo( GetPlayer ))]"
+										}
+									}
+								}
+							}
+
+							# Suitability
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_left = 10
+							
+								text_single = {
+									raw_text = "Пригодность: #positive_value [GuiScope.SetRoot(Story.MakeScope).AddScope('character_being_checked_for_suitability', Character.MakeScope).ScriptValue('character_spell_component_suitability_value')]#!"
+								}
+							
+								expand = {}
+							
+							}
+
+							expand = {}
+						}
+
+						expand = {}
+
+						# SKills and Traits
+						vbox = {
+							minimumsize = { 200 0 }
+							layoutpolicy_vertical = expanding
+							margin_top = 5
+							margin_bottom = 5
+							margin_right = 5
+						
+							# Skills
+							hbox = {
+								name = "skills_grid"
+								layoutpolicy_horizontal = expanding
+							
+								expand = {}
+								
+								margin_right = 5
+							
+								widget = {
+									size = { 32 25 }
+							
+									text_single = {
+										parentanchor = center
+										margin_bottom = 4
+										align = center
+										text = "[Character.GetSkill( 'diplomacy' )]"
+										#tooltip = "[SkillItem.GetName]"
+									}
+							
+									background = {
+										texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+										framesize = { 70 26 }
+										margin = { 5 0 }
+										frame = 1
+									}
+								}
+								
+								widget = {
+									size = { 32 25 }
+							
+									text_single = {
+										parentanchor = center
+										margin_bottom = 4
+										align = center
+										text = "[Character.GetSkill( 'martial' )]"
+										#tooltip = "[SkillItem.GetName]"
+									}
+							
+									background = {
+										texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+										framesize = { 70 26 }
+										margin = { 5 0 }
+										frame = 2
+									}
+								}
+								
+								widget = {
+									size = { 32 25 }
+							
+									text_single = {
+										parentanchor = center
+										margin_bottom = 4
+										align = center
+										text = "[Character.GetSkill( 'stewardship' )]"
+										#tooltip = "[SkillItem.GetName]"
+									}
+							
+									background = {
+										texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+										framesize = { 70 26 }
+										margin = { 5 0 }
+										frame = 3
+									}
+								}
+								
+								widget = {
+									size = { 32 25 }
+							
+									text_single = {
+										parentanchor = center
+										margin_bottom = 4
+										align = center
+										text = "[Character.GetSkill( 'intrigue' )]"
+										#tooltip = "[SkillItem.GetName]"
+									}
+							
+									background = {
+										texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+										framesize = { 70 26 }
+										margin = { 5 0 }
+										frame = 4
+									}
+								}
+								
+								widget = {
+									size = { 32 25 }
+							
+									text_single = {
+										parentanchor = center
+										margin_bottom = 4
+										align = center
+										text = "[Character.GetSkill( 'learning' )]"
+										#tooltip = "[SkillItem.GetName]"
+									}
+							
+									background = {
+										texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+										framesize = { 70 26 }
+										margin = { 5 0 }
+										frame = 5
+									}
+								}
+							}
+						
+							expand = {}
+						
+							# Traits
+							fixedgridbox = {
+								name = "traits_grid"
+								datamodel = "[Character.GetTraitIndices]"
+								flipdirection = yes
+								addcolumn = 30
+								addrow = 30
+								datamodel_wrap = 7
+								maxverticalslots = 2
+						
+								item = {
+									container = {
+										button = {
+											enabled = "[Or(Story.MakeScope.Var(GetTraitForIndex(int32.GetInt).GetKey).IsSet, GetTraitForIndex(int32.GetInt).HasTraitGroup)]"
+											icon_trait = {
+												datacontext = "[GetTraitForIndex(int32.GetInt)]"
+												blockoverride "icon_size"
+												{
+													size = { 30 30 }
+												}
+										
+												blockoverride "tooltip_placement"
+												{
+													using = tooltip_se
+												}
+										
+												blockoverride "glow_radius"
+												{
+													glow_radius = 3
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

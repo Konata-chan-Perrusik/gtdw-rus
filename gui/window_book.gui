@@ -1,0 +1,196 @@
+window = {
+	name = "book_view"
+	parentanchor = center|center
+	layer = windows_layer
+	movable = yes
+	size = { 550 600 }
+    visible = "[And(GetVariableSystem.Exists('book_window_open'),IsInGame)]"	
+	state = {
+		name = _hide
+		trigger_when = "[Not(GetVariableSystem.Exists('book_window_open'))]"
+		using = Animation_FadeOut_Quick
+		using = Sound_WindowHide_Standard
+		using = Window_Position_MainTab_Hide
+		trigger_on_create = yes
+		trigger_when = "[IsGameViewOpen('my_realm')]"
+		trigger_when = "[IsGameViewOpen('military')]"
+		trigger_when = "[IsGameViewOpen('council_window')]"
+		trigger_when = "[IsGameViewOpen('court_window')]"
+		trigger_when = "[IsGameViewOpen('intrigue_window')]"
+		trigger_when = "[IsGameViewOpen('factions_window')]"
+		trigger_when = "[IsGameViewOpen('decisions')]"
+
+		#on_start = "[GetVariableSystem.Clear('book_window_open')]"
+	}
+	state = {
+		name = _show
+		trigger_when = "[GetVariableSystem.Exists('book_window_open')]"
+		using = Animation_FadeIn_Quick
+		using = Sound_WindowShow_Standard
+		using = Window_Position_MainTab
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('my_realm'), 'if_my_realm_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('military'), 'if_military_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('council_window'), 'if_council_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('court_window'), 'if_court_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('intrigue_window'), 'if_intrigue_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('factions_window'), 'if_factions_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('decisions'), 'if_decisions_open', 'else_do_nothing' ) )]"
+	}
+	state = {
+		name = if_my_realm_open
+		on_start = "[ToggleGameView('my_realm')]"
+	}
+	state = {
+		name = if_military_open
+		on_start = "[ToggleGameViewData('military', GetPlayer.GetID)]"
+	}
+	state = {
+		name = if_council_open
+		on_start = "[ToggleGameViewData('council_window', GetPlayer.GetID)]"
+	}
+	state = {
+		name = if_court_open
+		on_start = "[ToggleGameViewData( 'court_window', GetPlayer.GetID )]"
+	}
+	state = {
+		name = if_intrigue_open
+		on_start = "[ToggleGameViewData('intrigue_window', GetPlayer.GetID)]"
+	}
+	state = {
+		name = if_factions_open
+		on_start = "[ToggleGameView('factions_window')]"
+	}
+	state = {
+		name = if_decisions_open
+		on_start = "[ToggleGameView('decisions')]"
+	}
+
+	state = {
+		name = else_do_nothing
+	}
+
+	background = {
+		texture = "gfx/interface/component_tiles/background_area_solid_black.dds"
+		#texture = "gfx/interface/tooltips/tooltip_bg_gameconcept.dds"
+		fittype = centercrop
+	}
+	
+	background = {
+        name = "tooltip_frame"
+        texture = "gfx/interface/tooltips/tooltip_frame.dds"
+        spriteType = Corneredtiled
+        spriteborder = { 20 20 }
+
+        color = { 1.77 1.77 1.80 1 }
+
+        modify_texture = {
+            name = "overlay"
+            texture = "gfx/interface/component_overlay/overlay_window.dds"
+            blend_mode = overlay
+        }
+    }
+	
+	vbox = {
+		size = { 100% 100% }
+		using = Window_Margins
+		header_pattern = {
+			layoutpolicy_horizontal = expanding
+			
+			#button = {
+			#	texture = "gfx/interface/hud/table_of_contents.dds"
+			#	onclick = "[GetVariableSystem.Toggle( 'show_table_of_contents')]"
+			#	onclick = "[GetScriptedGui(Concatenate(GetPlayer.MakeScope.Var('artifact_selection').GetFlagName,'_book_table_of_contents')).Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			#	size = { 40 40 }
+			#}
+			
+			blockoverride "header_text"
+			{
+				raw_text = "Книга"
+			}
+			
+			blockoverride "button_close"
+			{
+				onclick = "[GetVariableSystem.Clear('book_window_open')]"
+			}
+		}
+		
+		text_multi = {
+			visible = "[Not(GetVariableSystem.Exists('show_table_of_contents'))]"
+			
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			raw_text = "#size:1 [GetScriptedGui(Concatenate(GetPlayer.MakeScope.Var('artifact_selection').GetFlagName,'_book_content')).BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			maximumsize = { 430 -1 }
+			autoresize = yes
+			margin = { 0 10 }
+			margin_right = 20
+			alwaystransparent = yes
+			using = Font_Size_Medium
+			format_override = { high light_background }
+		}
+		
+		vbox = {
+			visible = "[GetVariableSystem.Exists('show_table_of_contents')]"
+			size = { 100% 100% }
+			maximumsize = { 430 -1 }
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			alwaystransparent = yes
+			scrollbox = {
+				visible = "[GetVariableSystem.Exists('show_table_of_contents')]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				
+				blockoverride "scrollbox_content" {
+					hbox = {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							maximumsize = { 150 -1 }
+							text_multi = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								raw_text = "#size:1 [GetScriptedGui(Concatenate(GetPlayer.MakeScope.Var('artifact_selection').GetFlagName,'_book_table_of_contents')).BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								maximumsize = { 150 -1 }
+								autoresize = yes
+								alwaystransparent = yes
+								using = Font_Size_Medium
+								format_override = { high light_background }
+							}
+						}
+						#vbox = {
+						#	datamodel = "[GetPlayer.MakeScope.GetList('table_of_contents')]"
+						#	parentanchor = right
+						#	item = {
+						#		button_standard = {
+						#			onclick = "[GetVariableSystem.Toggle( 'show_table_of_contents')]"
+						#			onclick = "[ExecuteConsoleCommand(Concatenate(Concatenate('effect goto_page_in_table_of_contents_entry = { ENTRY_NAME = ' , Scope.GetFlagName),' }'))]"
+						#			maximumsize = { 25 25 }
+						#		}
+						#	}
+						#}
+					}
+				}
+			}
+		}
+		
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			button = {
+				texture = "gfx/interface/hud/icon_left.dds"
+				onclick = "[GetScriptedGui('previous_page_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				size = { 40 40 }
+			}
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				text_label_center = {
+					raw_text = "Страница [GetPlayer.MakeScope.Var('current_page').GetValue|0]"
+				}
+			}
+			button = {
+				texture = "gfx/interface/hud/icon_right.dds"
+				onclick = "[GetScriptedGui('next_page_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				size = { 40 40 }
+			}
+		}
+	}
+}

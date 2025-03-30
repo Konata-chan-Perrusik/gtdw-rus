@@ -1,0 +1,1615 @@
+window = {
+	name = "window_lore_doc"
+	size = { 100% 100% }
+	movable = yes
+	layer = top
+
+	visible = "[GetVariableSystem.Exists('show_lore_doc')]"
+
+	using = Window_Size_MainTab
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Standard
+		using = Sound_WindowShow_Standard
+		using =	Sound_Window_AmbienceMute_Snapshot
+		on_start = "[GetScriptedGui('lore_doc_startup').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Standard
+		using = Sound_WindowHide_Standard
+	}
+
+	widget = {
+		parentanchor = center
+		size = { 1000 900 }
+		alwaystransparent = no
+
+		using = Window_Background
+		using = Window_Decoration_Frontend_Spike
+
+		vbox = {
+			using = Window_Margins
+
+			header_pattern = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "header_text"
+				{
+					text = "LORE_DOC_WINDOW_TITLE"
+				}
+
+				blockoverride "button_close"
+				{
+					tooltip = "TOOLTIP_CLOSE_LORE_DOC"
+					onclick = "[GetVariableSystem.Clear('show_lore_doc')]"
+				}
+			}
+
+			hbox = {
+				name = "main"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				vbox = { #Section Selection
+					layoutpolicy_vertical = expanding
+					margin_left = 0
+					margin_right = -3
+					margin_top = 10
+					visible = "[Not(GetVariableSystem.Exists('show_lore_doc_sidebar'))]"
+
+					divider_light = {
+  						layoutpolicy_horizontal = expanding
+		  			}
+
+					button_tab_vertical = {
+						name = "foreword"
+						layoutpolicy_horizontal = expanding
+						size = { 225 35 }
+						text = "FOREWORD_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_0').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)0' )]"
+						default_format = "#clickable"
+					}
+
+					divider_light = {
+  						layoutpolicy_horizontal = expanding
+		  			}
+
+					text_single = {
+						margin_top = 6
+						margin_bottom = 10
+						margin_left = 10
+						name = "section_sep_prehistory"
+						layoutpolicy_horizontal = expanding
+						text = "BEFORE_HISTORY_TITLE"
+						using = Font_Type_Flavor
+						using = Font_Size_Medium
+					}
+
+					divider_light = {
+  						layoutpolicy_horizontal = expanding
+		  			}
+
+					button_tab_vertical = {
+						name = "age_of_dust"
+						layoutpolicy_horizontal = expanding
+						size = { 175 35 }
+						text = "AGE_OF_DUST_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_1').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)1' )]"
+						default_format = "#clickable"
+					}
+
+					button_tab_vertical = {
+						name = "rise_of_the_aelfir"
+						layoutpolicy_horizontal = expanding
+						size = { 175 35 }
+						text = "RISE_OF_THE_AELFIR_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_2').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)2' )]"
+						default_format = "#clickable"
+					}
+
+					button_tab_vertical = {
+						name = "the_god_war"
+						layoutpolicy_horizontal = expanding
+						size = { 175 35 }
+						text = "THE_GOD_WAR_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_3').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)3' )]"
+						default_format = "#clickable"
+					}
+
+					divider_light = {
+  						layoutpolicy_horizontal = expanding
+		  			}
+
+		  			text_single = {
+						margin_top = 6
+						margin_bottom = 10
+						margin_left = 10
+						name = "section_sep_history_begins"
+						layoutpolicy_horizontal = expanding
+						text = "HISTORY_BEGINS_TITLE"
+						using = Font_Type_Flavor
+						using = Font_Size_Medium
+					}
+
+					divider_light = {
+  						layoutpolicy_horizontal = expanding
+		  			}
+
+					button_tab_vertical = {
+						name = "collapse_and_rebirth"
+						layoutpolicy_horizontal = expanding
+						size = { 175 35 }
+						text = "COLLAPSE_AND_REBIRTH_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_4').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)4' )]"
+						default_format = "#clickable"
+					}
+
+					button_tab_vertical = {
+						name = "the_civil_war_and_frodbrokna"
+						layoutpolicy_horizontal = expanding
+						size = { 175 35 }
+						text = "THE_CIVIL_WAR_AND_FRODBROKNA_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_5').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)5' )]"
+						default_format = "#clickable"
+					}
+
+					button_tab_vertical = {
+						name = "the_rise_of_the_north"
+						layoutpolicy_horizontal = expanding
+						size = { 175 35 }
+						text = "THE_RISE_OF_THE_NORTH_TITLE"
+						onclick = "[GetScriptedGui('lore_doc_page_6').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+						down = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)6' )]"
+						default_format = "#clickable"
+					}
+
+					divider_light = {
+  						layoutpolicy_horizontal = expanding
+		  			}
+
+					expand = {}
+				}
+
+				divider_light = {
+					visible = "[Not(GetVariableSystem.Exists('show_lore_doc_sidebar'))]"
+	  				layoutpolicy_vertical = expanding
+			  	}
+
+				button_back = {
+					visible = "[Not(GetVariableSystem.Exists('show_lore_doc_sidebar'))]"
+					onclick = "[GetVariableSystem.Toggle('show_lore_doc_sidebar')]"
+					margin_right -20
+				}
+				button_forward = {
+					visible = "[GetVariableSystem.Exists('show_lore_doc_sidebar')]"
+					onclick = "[GetVariableSystem.Toggle('show_lore_doc_sidebar')]"
+				}
+
+				vbox = { #Section Text
+					name = "current"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					margin_top = 10
+					spacing = 10
+
+					scrollbox = { # Foreword
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)0' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+
+								icon = {
+									texture = "gfx/interface/frontend/frontend_main_menu_bg_top.dds"
+									size = { 340 116 }
+
+									using = Master_Button_Modify_Texture
+
+									blockoverride "master_color_frame" {
+										frame = 5
+									}
+								}
+
+								text_single = {
+									text = "FOREWORD_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "FOREWORD_TEXT_BEFORE_IMAGE"
+									margin = { 20 0 }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+					  			widget = {
+									size = { 490 490 }
+									widget = {
+										size = { 470 440 }
+										position = { 0 -15 }
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 440 440 }
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 400 400 }
+											texture = "gfx/interface/icons/lore_doc_images/oldest_gh_map.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "FOREWORD_IMAGE_CAPTION"
+										margin = { 0 12 }
+										max_width = 400
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "FOREWORD_TEXT_AFTER_IMAGE"
+									margin = { 20 -30 }
+								}
+
+								widget = { # To offset margin change
+									size = { 0 40 }
+								}
+							}
+							expand = {}		
+						}
+					}
+
+					scrollbox = { # Age of Dust
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)1' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+								text_single = {
+									text = "AGE_OF_DUST_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+								text_single = {
+									text = "AGE_OF_DUST_SUBTITLE"
+									fontsize = 18
+									using = Font_Type_Flavor
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "AGE_OF_DUST_TEXT_1"
+									margin = { 20 0 }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+					  			widget = {
+									size = { 490 375 }
+									widget = {
+										size = { 470 300 }
+										position = { 0 -30 }
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 440 296 }
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 400 266 }
+											position = { 0 2 }
+											texture = "gfx/interface/icons/lore_doc_images/proto_aver_fresco.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "PROTO_AVER_FRESCO_CAPTION"
+										margin = { 0 20 }
+										max_width = 400
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "AGE_OF_DUST_TEXT_2"
+									margin = { 20 0 }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+					  			widget = {
+									size = { 460 430 }
+									widget = {
+										size = { 470 330 }
+										position = { 0 -30 }
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 390 365 }
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 350 330 }
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/warning_sign.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "WARNING_SIGN_CAPTION"
+										margin = { 0 20 }
+										max_width = 400
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "AGE_OF_DUST_TEXT_3"
+									margin = { 20 0 }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+					  			widget = {
+									size = { 460 370 }
+									widget = {
+										size = { 470 200 }
+										position = { 0 -20 }
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 390 320 }
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 350 285 }
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/karth_journal.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "KARTH_JOURNAL_CAPTION"
+										margin = { 0 20 }
+										max_width = 400
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "AGE_OF_DUST_TEXT_4"
+									margin = { 20 0 }
+								}
+
+								widget = { # To offset margin change
+									size = { 0 20 }
+								}
+							}
+							expand = {}		
+						}
+					}
+
+					scrollbox = { # Rise of the Aelfir
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)2' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+								text_single = {
+									text = "RISE_OF_THE_AELFIR_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+								text_single = {
+									text = "RISE_OF_THE_AELFIR_SUBTITLE"
+									fontsize = 18
+									using = Font_Type_Flavor
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "RISE_OF_THE_AELFIR_TEXT_1"
+									margin = { 20 0 }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+					  			widget = {
+									size = { 460 550 }
+									widget = {
+										size = { 470 300 }
+										position = { 0 -25 }
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 510 }
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 470 }
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/observations.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "OBSERVATIONS_CAPTION"
+										margin = { 0 20 }
+										max_width = 400
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "RISE_OF_THE_AELFIR_TEXT_2"
+									margin = { 20 0 }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+					  			widget = {
+									size = { 460 600 }
+									widget = {
+										size = { 470 330 }
+										position = { 0 -20 }
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 560 }
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 520 }
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/letter_to_mayik.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "LETTER_TO_MAYIK_CAPTION"
+										margin = { 0 10 }
+										max_width = 400
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = {
+									size = { 0 10 }
+								}
+
+								text_multi = {
+									autoresize = yes
+									max_width = 575
+									min_width = 575
+									text = "RISE_OF_THE_AELFIR_TEXT_3"
+									margin = { 20 0 }
+								}
+
+								widget = { # To offset margin change
+									size = { 0 20 }
+								}
+							}
+							expand = {}		
+						}
+					}
+
+					scrollbox = { # The God War
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)3' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+								text_single = {
+									text = "THE_GOD_WAR_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+								text_single = {
+									text = "THE_GOD_WAR_SUBTITLE"
+									fontsize = 18
+									using = Font_Type_Flavor
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_GOD_WAR_TEXT_1"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 480 500 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 430 470 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 390 430 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/forgotten_conversation.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "FORGOTTEN_CONVERSATION_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_GOD_WAR_TEXT_2"
+								}
+
+								widget = { size = { 0 20 } }  # To offset margin change
+							}
+							expand = {}		
+						}
+					}
+
+					scrollbox = { # Collapse and Rebirth
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)4' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+								text_single = {
+									text = "COLLAPSE_AND_REBIRTH_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+								text_single = {
+									text = "COLLAPSE_AND_REBIRTH_SUBTITLE"
+									fontsize = 18
+									using = Font_Type_Flavor
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_1"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 480 330 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 466 280 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 426 240 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/nyctinaius_map.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "NYCTITNAIUS_MAP_CAPTION"
+										margin = { 0 10 }
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_2"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 460 610 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 570 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 530 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/treatise.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "TREATISE_CAPTION"
+										margin = { 0 10 }
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_3"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 550 520 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -40 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 530 420 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 490 380 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/whole_map.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "WHOLE_MAP_CAPTION"
+										margin = { 0 15 }
+										max_width = 500
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_4"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 580 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -10 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 560 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 520 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/northern_spy.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "NORTHERN_SPY_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_5"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 380 400 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -25 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 320 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 300 280 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/liches_and_evil.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "LICHES_AND_EVIL_CAPTION"
+										max_width = 300
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_6"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 560 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -20 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 520 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 480 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/ketrynos_letter.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "KETRYNOS_LETTER_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_7"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 400 540 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 520 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 480 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/machyos_journal.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "MACHYOS_JOURNAL_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_8"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 400 520 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 500 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 460 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/observance_34.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "OBSERVANCE_34_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_9"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 520 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 500 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 460 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/martial_codex.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "MARTIAL_CODEX_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_10"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 560 440 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -25 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 540 380 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 500 340 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/aversaria_map.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "AVERSARIA_MAP_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "COLLAPSE_AND_REBIRTH_TEXT_11"
+								}
+
+								widget = { size = { 0 20 } }  # To offset margin change
+							}
+							expand = {}		
+						}
+					}
+
+					scrollbox = { # The Civil War and Frodbrokna
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)5' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+								text_single = {
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+								text_single = {
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_SUBTITLE"
+									fontsize = 18
+									using = Font_Type_Flavor
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_TEXT_1"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 270 390 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -15 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 250 350 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 210 310 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/megos_protovoles.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "MEGOS_PROTOVOLES_CAPTION"
+										max_width = 200
+										margin = { 0 10 }
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_TEXT_2"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 400 210 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -30 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 110 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 90 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/whispered_sentence.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "WHISPERED_SENTENCE_CAPTION"
+										margin = { 0 15 }
+										max_width = 340
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_TEXT_3"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 550 460 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -35 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 540 380 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 500 340 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/icw_map.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "ICW_MAP_CAPTION"
+										margin = { 0 15 }
+										max_width = 500
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_TEXT_4"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 430 340 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -20 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 390 280 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 350 240 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/slaying_the_elder.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "SLAYING_THE_ELDER_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_CIVIL_WAR_AND_FRODBROKNA_TEXT_5"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 560 450 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -40 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 540 350 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 500 310 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/srbm_targets.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "SRBM_TARGETS_CAPTION"
+										max_width = 480
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 20 } }  # To offset margin change
+							}
+							expand = {}		
+						}
+					}
+
+					scrollbox = { # The Rise of the North
+						visible = "[EqualTo_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)6' )]"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_content" {
+
+							vbox = {
+								text_single = {
+									text = "THE_RISE_OF_THE_NORTH_TITLE"
+									fontsize = 30
+									using = Font_Type_Flavor
+									default_format = "#underline"
+								}
+								text_single = {
+									text = "THE_RISE_OF_THE_NORTH_SUBTITLE"
+									fontsize = 18
+									using = Font_Type_Flavor
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_1"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 520 } # Size for entire container
+									widget = {
+										size = { 420 510 } # To get rid of disappearing effect
+										position = { 0 -20 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 470 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 430 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/personal_journal.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "PERSONAL_JOURNAL_CAPTION"
+										max_width = 300
+										margin = { 0 15 }
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_2"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 580 500 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -30 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 540 440 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 500 400 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/sjal_map.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "SJAL_MAP_CAPTION"
+										margin = { 0 15 }
+										max_width = 450
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_3"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 430 490 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -20 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 390 430 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 350 390 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/survivors_tale.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "SURVIVORS_TALE_CAPTION"
+										margin = { 0 15 }
+										max_width = 350
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_4"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 520 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -30 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 440 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 400 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/fenvir_declaration.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "FENVIR_DECLARATION_CAPTION"
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_5"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 560 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -25 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 500 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 460 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/report_tribals.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "REPORT_TRIBALS_CAPTION"
+										max_width = 320
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_6"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 520 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -20 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 480 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 440 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/kalatisome_report.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "KALATISOME_REPORT_CAPTION"
+										max_width = 320
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_7"
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+					  			widget = {
+									size = { 420 550 } # Size for entire container
+									widget = {
+										size = { 500 500 } # To get rid of disappearing effect
+										position = { 0 -20 } # To move border and image together
+										parentanchor = hcenter|vcenter
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 380 500 } # Image Border Size
+											texture = "gfx/interface/component_tiles/interaction_menu_more_bg.dds"
+										}
+										icon = {
+											parentanchor = hcenter|vcenter
+											size = { 340 460 } # Image Size
+											position = { 0 0 }
+											texture = "gfx/interface/icons/lore_doc_images/fear_the_magi.dds"
+										}
+									}
+
+									text_multi = {
+										using = LoreDoc_CaptionText
+										text = "FEAR_THE_MAGI_CAPTION"
+										max_width = 320
+									}
+
+									background = { using = Background_Area_Dark }
+								}
+
+								widget = { size = { 0 10 } } # Spacer
+
+								text_multi = {
+									using = LoreDoc_StandardText
+									text = "THE_RISE_OF_THE_NORTH_TEXT_8"
+								}
+
+								widget = { size = { 0 20 } }  # To offset margin change
+							}
+							expand = {}		
+						}
+					}
+				}
+			}
+
+			divider_light = {
+  				layoutpolicy_horizontal = expanding
+		  	}
+
+			hbox = {
+				widget = {
+					visible = "[Not(GetVariableSystem.Exists('show_lore_doc_sidebar'))]"
+					size = { 250 0 }
+				}
+				button_back = {
+					onclick = "[GetScriptedGui('lore_doc_backward').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+					enabled = "[GreaterThan_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)0' )]"
+				}
+				button_forward = {
+					onclick = "[GetScriptedGui('lore_doc_forward').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+					enabled = "[LessThan_CFixedPoint( GetPlayer.MakeScope.Var('gh_lore_doc_page').GetValue, '(CFixedPoint)6' )]"
+				}
+			}
+		}
+	}
+}
+
+template LoreDoc_StandardText
+{
+	autoresize = yes
+	max_width = 575
+	min_width = 575
+	margin = { 20 0 }
+}
+
+template LoreDoc_CaptionText
+{
+	autoresize = yes
+	margin = { 0 15 }
+	max_width = 400
+	fontsize = 12
+	fontsize_min = 11
+	parentanchor = hcenter|bottom
+	align = top|hcenter
+}
