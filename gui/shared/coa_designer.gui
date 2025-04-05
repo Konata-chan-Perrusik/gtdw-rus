@@ -1,0 +1,6994 @@
+@overlay_alpha = 0.4
+types CoatOfArmsDesignerTypes
+{
+	# Reusable component for a Coat of Arms Designer
+	# Requires a CoatOfArmsDesigner data context
+	type vbox_coa_designer = window {
+		focuspolicy = all
+		layer = top
+		alwaystransparent = yes
+		movable = no
+
+		vbox = {
+			alwaystransparent = no
+			datacontext = "[GetVariableSystem]"
+			spacing = 8
+			margin_left = 10
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					vbox_coa_designer_previews = { }
+
+					vbox = {
+						name = "coa_designer_center"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+
+						hbox = {
+							margin_top = 40
+							layoutpolicy_horizontal = expanding
+
+						}
+
+						expand = { }
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+
+							vbox = {
+								layoutpolicy_vertical = expanding
+								expand = { }
+								vbox_coa_designer_mode_and_back = { }
+							}
+
+							expand = { }
+
+							vbox_coa_designer_quartering_options = { }
+						}
+					}
+
+				}
+
+				vbox = {
+					layoutpolicy_vertical = expanding
+					margin_right = 10
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				vbox = {
+					name = "coa_designer_right"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+					margin_top = -6
+					margin_bottom = -10
+					max_width = 480
+
+					vbox_coa_designer_tabs = { }
+
+					widget_coa_designer_editor_panel = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+					}
+				}
+			}
+		}
+	}
+	
+	type vbox_coa_designer_previews = vbox
+	{
+		name = "coa_designer_previews"
+
+		# expand = { }
+
+		# background = { using = Background_Area_Dark }
+
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 3
+
+			widget = {
+				size = { 0 30 }
+				layoutpolicy_horizontal = expanding
+
+				hbox = {
+					minimumsize = { -1 40 }
+					alpha = 0.8
+					spacing = 10
+					margin_top = -3
+					vbox_coa_designer_top_left_buttons = {
+						layoutpolicy_vertical = expanding
+						# layoutpolicy_horizontal = expanding
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+
+						onclick = "[GetVariableSystem.Toggle('grid')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('grid')]"
+						}
+						blockoverride "text"
+						{
+							text = "grid_symbol"
+							align = nobaseline
+							default_format = "#medium"
+							margin_top = 2
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_v"
+
+						onclick = "[GetVariableSystem.Toggle('guide_v')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_v')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#high  |"
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_h"
+
+						onclick = "[GetVariableSystem.Toggle('guide_h')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_h')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#medium —"
+						}
+					}
+
+					hbox = {
+						spacing = 10
+						visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							using = tooltip_se
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 1 1 1 0.6 }
+							}
+						}
+
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+							using = tooltip_se
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[GetVariableSystem.Exists('blue_guideline')]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 0 0.3 1 0.6 }
+							}
+						}
+
+						button_revert = {
+							onclick = "[PdxGuiTriggerAllAnimations('reset_guides')]"
+							visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+							tooltip = "reset_guides"
+							using = tooltip_se
+						}
+					}
+
+					widget = {
+						size = { 0 0 }
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('coa_edit_markers')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+						}
+
+						blockoverride "text"
+						{
+							text = "markers"
+						}
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('big_coa_scrollbars')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('big_coa_scrollbars')]"
+						}
+
+						blockoverride "text"
+						{
+							text = "sliders"
+						}
+					}
+
+					expand = { }
+				}
+
+				# text_single = {
+				# 	text = "COA_DESIGNER_HEADER"
+				# 	using = Font_Size_Medium
+				# 	parentanchor = center
+				# }
+
+				button_standard = {
+					raw_text = "Errors: [NumberOrErrors]"
+					onclick = "[ClearErrorLog]"
+					visible = "[Not(ReleaseMode)]"
+					parentanchor = right
+				}
+
+				background = {
+					margin_left = 15
+					margin_right = 5
+					margin_top = 0
+					margin_bottom = 5
+					# alpha = 0.5
+
+					texture = "gfx/interface/component_tiles/tile_title_bg_01.dds"
+					spriteType = Corneredtiled
+					spriteborder = { 40 8 }
+					texture_density = 2
+
+					modify_texture = {
+						name = "mask"
+						texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+						mirror = horizontal
+						spriteType = Corneredstretched
+						spriteborder = { 0 0 }
+						blend_mode = alphamultiply
+					}
+				}
+
+				expand = { }
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			margin_right = 10
+			margin_top = -3
+		}
+		
+		margin_widget = { # Seal Preview
+			size = { 0 0 }
+			layoutpolicy_horizontal = expanding
+			alwaystransparent = yes
+			# background = { using = Background_Area_Dark }
+			margin_left = 320
+			margin_top = 48
+
+			flowcontainer = {
+				parentanchor = hcenter
+				spacing = 20
+				alwaystransparent = no
+				# allow_outside = yes
+				
+			ps_coa_character_sigil_preview = {
+				name = "seal_left"
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+				}				
+			}
+		}
+		margin_widget = { # Seal Preview
+			size = { 0 0 }
+			layoutpolicy_horizontal = expanding
+			alwaystransparent = yes
+			# background = { using = Background_Area_Dark }
+			margin_left = -320
+			margin_top = 48
+
+			flowcontainer = {
+				parentanchor = hcenter
+				spacing = 20
+				alwaystransparent = no
+				# allow_outside = yes
+				
+			ps_coa_character_sigil_preview = {
+				name = "seal_left"
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+				}				
+			}
+		}		
+		margin_widget = { # Shields & Banners
+			size = { 0 180 }
+			layoutpolicy_horizontal = expanding
+			alwaystransparent = yes
+			# background = { using = Background_Area_Dark }
+			margin_left = -84
+			margin_top = 25
+
+			onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+			onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+
+			flowcontainer = {
+				parentanchor = hcenter
+				spacing = 40
+				alwaystransparent = no
+				# allow_outside = yes
+							
+
+			ps_coa_preview_realm_huge_frame = {
+				parentanchor = vcenter
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+				name = "dynasty_left"
+			}			
+
+			coa_designer_preview_full = {
+				parentanchor = vcenter
+				name = "realm_center"
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			}			
+			
+			ps_coa_preview_realm_huge = {
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+				name = "dynasty_right"
+			}
+
+				widget = {
+					size = { 120 150 }
+				}
+			}
+
+			flowcontainer = {
+				# this is stupid, but the other option didn't work for some reason
+				parentanchor = hcenter
+				spacing = 20
+				position = { -85 100 }
+				alwaystransparent = yes
+				# background = { using = Background_Area_Dark }				
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'dynasty')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'dynasty'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'realm')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'realm'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'title')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'title'))]"
+				}
+			}
+		}
+
+		spacer = { size = { 0 25 } }
+
+		window = {
+			datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			visible = yes
+			size = { 153 150 }
+			alwaystransparent = yes
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			allow_outside = yes
+			# movable = yes
+
+			widget = {
+				size = { 100% 100% }
+				scale = 4
+				parentanchor = center
+				# this should be redone, to have one CoA texture and only swap the frames
+
+				coa_designer_preview = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'dynasty')]"
+					blockoverride "coa_frame" {
+						texture = "gfx/interface/coat_of_arms/title_344.dds" # PATRUM SCUTA - Changed to PS frame
+						# size = { 172 172 }
+						size = { 128 128 }
+						position = { -1 0 }								
+					}
+					blockoverride "coa_mask" {
+						size = { 115 115 }
+						coat_of_arms_mask = "gfx/interface/coat_of_arms/house_mask_full.dds"
+					}
+				}
+
+				coa_designer_preview = {
+					visible = "[Not(GetVariableSystem.Exists('select_coa_preview'))]"
+					blockoverride "coa_mask" {
+						size = { 115 115 }
+						coat_of_arms_mask = "gfx/interface/coat_of_arms/house_mask_full.dds"
+					}
+				}
+
+				coa_designer_preview = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'title')]"
+					blockoverride "coa_mask" {
+						size = { 115 115 }
+						coat_of_arms_mask = "gfx/interface/icons/realm_masks/_default.dds"
+					}
+					blockoverride "coa_frame" {
+						# texture = "gfx/interface/icons/realm_frames/_default_344.dds" # 115 128
+						texture = "gfx/ps_hanging_banner_top_frame.dds"
+						# size = { 130 130 }
+						size = { 128 128 }
+						position = { -1 0 }
+					}
+				}
+
+				coa_designer_preview_full = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'realm')]"
+				}
+			}
+
+#			#model
+#			 vbox = {
+#				state = {
+#					name = "coa_model"
+#					position = { 200 -150 }
+#					trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#				state = {
+#					name = "no_coa_model"
+#					position = { 0 0 }
+#					trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#				}
+#				# background = { using = Background_Area_Dark }
+#				hbox = {
+#					layoutpolicy_horizontal = expanding
+#					layoutpolicy_vertical = growing
+#
+#
+#					widget = {
+#						size = { 120 250 }
+#						layoutpolicy_horizontal = growing
+#						layoutpolicy_vertical = growing
+#						onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+#						onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+#						# background = { using = Background_Area_Dark }
+#
+#						cameracontrolwidget = {
+#							alwaystransparent = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#							# parentanchor = center
+#							name = "coa_designer_unit_preview"
+#							size = { 66% 66% }
+#
+#							gfxtype = game_entity_view
+#							effectname = "PdxGuiDefault"
+#							shaderfile = "gfx/FX/pdxgui_default.shader"
+#
+#							camera_position = { 0 5 -12 }
+#							camera_look_at = { 0 5 0 }
+#							gfx_environment_file = "gfx/map/environment/environment_unit_preview.txt"
+#							camera_rotation_pitch_limits = { 0 0 }
+#							camera_zoom_limits = { 0.5 1.0 }
+#							camera_translation_limits = { 0 0 0 }
+#
+#							icon = {
+#								name = "shadow_center"
+#								parentanchor = bottom|hcenter
+#								position = { 0 0 }
+#								state = {
+#									name = "coa_model"
+#									position = { 0 10 }
+#									size = { 120 50 }
+#									trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#								}
+#								state = {
+#									name = "no_coa_model"
+#									position = { 0 -25 }
+#									size = { 100 120 }
+#									trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#								}
+#								texture = "gfx/interface/frontend/portrait_main_menu_shadow.dds"
+#								size = { 50 70 }
+#								alpha = 0.35
+#							}
+#						}
+#						select_coa_preview = {
+#							parentanchor = center
+#							onclick = "[GetVariableSystem.Set('select_coa_preview', 'model')]"
+#							visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#						}
+#					}
+#				}
+#				widget = {
+#					size = { 50 50 }
+#					layoutpolicy_vertical = expanding
+#					# background = { using = Background_Area_Dark }
+#					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#			}
+
+			#guide v
+			window = {
+				size = { 20 100% }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_v')]"
+				position = { -1 0 }
+
+				state = {
+					name = reset_guides
+					position = { -1 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					tintcolor = { 0 0.3 1 1 }
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#guide h
+			window = {
+				size = { 100% 20 }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_h')]"
+
+				state = {
+					name = reset_guides
+					position = { 0 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					tintcolor = { 0 0.5 1 1 }
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#grid
+			# it doesn't align well but that's a task for another day
+			margin_widget = {
+				name = "grid"
+				visible = "[GetVariableSystem.Exists('grid')]"
+				size = { 100% 100% }
+				margin = { 150 0 }
+				position = { 2 -4 }
+
+				widget = {
+					size = { 100% 100% }
+					vbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+					}
+
+					hbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+					}
+				}
+			}
+
+			#big scrollbars
+			widget = {
+				size = { 612 600 }
+				position = { -1 2 }
+				allow_outside = yes
+				parentanchor = center
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[And(GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' ), GetVariableSystem.Exists('big_coa_scrollbars'))]"
+
+				button_icon = {
+					texture = "gfx/ps_position.dds"
+					alwaystransparent = yes
+					position = { -11 -20 }
+					upframe = 4
+				}
+
+				button_icon = {
+					texture = "gfx/ps_rotation.dds"
+					size = { 35 35 }
+					parentanchor = right|bottom
+					position = { 120 12 }
+					raw_tooltip = "COA_DESIGNER_ROTATION"
+
+					onclick = "[GetVariableSystem.Toggle('coa_rotation')]"
+					# visible = "[Not(GetVariableSystem.Exists('coa_rotation'))]"
+				}
+
+				button_icon = {
+					texture = "gfx/ps_resize.dds"
+					alwaystransparent = yes
+					parentanchor = bottom|right
+					position = { 10 8 }
+					upframe = 4
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					onclick = "[GetVariableSystem.Set('resize_both', 'yes')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					onclick = "[GetVariableSystem.Clear('resize_both')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				widget = {
+					scale = 0.8
+					size = { 120 120 }
+					parentanchor = right|bottom
+					position = { 130 -85 }
+					visible = "[GetVariableSystem.Exists('coa_rotation')]"
+
+					icon = {
+						size = { 120 120 }
+						texture = "gfx/ps_circle_frame.dds"
+						parentanchor = center
+						alpha = 0.7
+					}
+
+					text_label_center = {
+						parentanchor = hcenter
+						default_format = "#high"
+						position = { 0 23 }
+						raw_text = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]°"
+					}
+
+					scrollbar = {
+						direction = horizontal
+						parentanchor = center
+						size = { 80 20 }
+						wheelstep = 1
+
+						dec_button = {
+							button_select_arrow = {
+								mirror = horizontal
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+							}
+						}
+
+						inc_button = {
+							button_select_arrow = {
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_increment"
+							}
+						}
+
+						track = {
+							using = SettingsValueTrack
+						}
+
+						slider = {
+							using = SettingsValueSlider
+						}
+						min = 0
+						max = 360
+						step = 1
+
+						onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.Self )]"
+						onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailRotation( PdxGuiWidget.Self )]"
+						value = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]"
+					}
+
+					widget = {
+						alpha = 0.65
+						size = { 120 120 }
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 2 }
+							parentanchor = hcenter
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 0 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							parentanchor = right
+							size = { 16 16 }
+							position = { -13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 45 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							size = { 16 16 }
+							parentanchor = vcenter|right
+							position = { -3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 90 max = 360 visible = no }
+						}
+
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical
+							parentanchor = bottom|right
+							position = { -13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 135 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 -2 }
+							mirror = vertical
+							parentanchor = hcenter|bottom
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 180 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							mirror = horizontal
+							parentanchor = vcenter
+							size = { 16 16 }
+							position = { 3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 270 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical|horizontal
+							parentanchor = bottom
+							position = { 13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 225 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							mirror = horizontal
+							size = { 16 16 }
+							position = { 13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 315 max = 360 visible = no }
+						}
+					}
+				}
+
+				#position x
+				big_coa_slider_x = {
+					min = 0
+					max = 1
+					step = 0.005
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX, '(float)100')|1]"
+						position = { 30 -27 }
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX]"
+				}
+
+				#position y
+				big_coa_slider_y = {
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY, '(float)100')|1]"
+						position = { -10 23 }
+						fontsize = 16
+						widgetanchor = right
+						default_format = "#high"
+					}
+
+					min = 0
+					max = 1
+					step = 0.005
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY]"
+				}
+
+				#size x
+				big_coa_slider_x = {
+					visible = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size both
+				big_coa_slider_x = {
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size y
+				big_coa_slider_y = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = vcenter|right
+					position = { 20 0 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY, '(float)100')|1]"
+						position = { 35 -27 }
+						parentanchor = bottom
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY]"
+				}
+
+				#scale x
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')), Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale ))]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#scale both
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')),  CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleCombined( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+					blockoverride "marker_center" { }
+				}
+
+				#scale y
+				big_slider_markers_v = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					position = { 45 -5 }
+					# size = { 20 540 }
+					parentanchor = vcenter|right
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = horizontal
+					}
+
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#pos x
+				big_slider_markers = { }
+
+				#pos y
+				big_slider_markers_v = {
+					# position = { -40 0 }
+					# size = { 20 540 }
+					# parentanchor = vcenter
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+				}
+			}
+
+			#buttons
+			margin_widget = {
+				size = { 100% 100% }
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+
+				widget = {
+					visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+					parentanchor = center
+					size = { 505 505 }
+					# position = { -5 -5 }
+
+					coa_buttons_box = { }
+
+				}
+
+			}
+
+			expand = { }
+
+		}
+	}
+
+	type move_coa_button = button {
+		size = { 0 0 }
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		onmousehierarchyenter = "[PdxGuiWidget.FindChild('bg').Show]"
+		onmousehierarchyleave = "[PdxGuiWidget.FindChild('bg').Hide]"
+
+		icon = {
+			visible = no
+			size = { 100% 100% }
+			name = bg
+			texture = "gfx/interface/colors/white.dds"
+			block "tint" {
+				tintcolor = { 0.9 0.7 0 0.5 }
+			}
+		}
+
+		onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+		onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.FindChild('y').Self )]"
+
+		scrollbar = { name = "x" block "x" { value = 0.25 } visible = no }
+		scrollbar = { name = "y" block "y" { value = 0.25 } visible = no }
+	}
+
+	type coa_designer_preview = container {
+		# scale = 4
+		parentanchor = center
+
+		# icon = {
+		# 	name = "crown"
+		# 	parentanchor = hcenter
+		# 	texture = "gfx/crown.jpg"
+		# 	block "crown"
+		# 	{
+		# 		size = { 60 60 }
+		# 		position = { 0 -56 }
+		# 		visible = no
+		# 	}
+		# }
+
+		coat_of_arms_icon = {
+			parentanchor = center
+			coat_of_arms = "[CoatOfArms.GetTexture('(int32)345','(int32)345')]"
+			coat_of_arms_slot = "[CoatOfArms.GetSlot('(int32)345','(int32)345')]"
+			block "coa_mask" {
+				size = { 115 115 }
+				coat_of_arms_mask = "gfx/interface/coat_of_arms/house_mask.dds"
+			}
+			alwaystransparent = yes
+
+			modify_texture = {
+				texture = "gfx/interface/coat_of_arms/coa_overlay.dds"
+				blend_mode = overlay
+				alpha = @overlay_alpha
+			}
+		}
+
+		icon = {
+			parentanchor = center
+			block "coa_frame" {
+				texture = "gfx/interface/coat_of_arms/title_344.dds"  # PATRUM SCUTA - Changed to PS frame
+				#size = { 153 153 }
+				size = { 128 128 }
+				position = { -1 0 }
+			}
+			alwaystransparent = yes
+		}
+	}
+
+	type guide_v = icon {
+		texture = "gfx/interface/colors/white.dds"
+		size = { 1 500 }
+		layoutpolicy_vertical = expanding
+		alpha = 0.2
+	}
+
+	type guide_h = icon {
+		texture = "gfx/interface/colors/white.dds"
+		size = { 500 1 }
+		layoutpolicy_horizontal = expanding
+		alpha = 0.2
+	}
+
+	type select_coa_preview = button_icon {
+		alwaystransparent = no
+		# position = { 0 40 }
+		state = {
+			alpha = 1
+			name = "select_coa_preview"
+		}
+		state = {
+			alpha = 0
+			name = "hide_coa_preview"
+		}
+		alpha = 0
+		size = { 50 50 }
+		# parentanchor = center
+		# alwaystransparent = yes
+		texture = "gfx/interface/icons/flat_icons/search.dds"
+		background = {
+			texture = "gfx/interface/frontend/portrait_main_menu_shadow.dds"
+			margin = { 20 20 }
+		}
+	}
+
+	type vbox_coa_designer_top_left_buttons = vbox
+	{
+		name = "coa_designer_top_left_buttons"
+		visible = "[Not(VariableSystem.HasValue('coa_designer_page', 'start'))]"
+
+		using = Animation_Tab_Switch
+
+		hbox = {
+			# layoutpolicy_horizontal = expanding
+
+			button_undo = {
+				name = "undo_edit"
+				size = { 40 40 }
+
+				enabled = "[CoatOfArmsDesigner.CanUndoEdit]"
+				onclick = "[CoatOfArmsDesigner.UndoEdit]"
+
+				tooltip = "COA_DESIGNER_UNDO_EDIT"
+				using = tooltip_se
+
+				shortcut = "undo"
+			}
+
+			button_redo = {
+				name = "redo_edit"
+				size = { 40 40 }
+
+				enabled = "[CoatOfArmsDesigner.CanRedoEdit]"
+				onclick = "[CoatOfArmsDesigner.RedoEdit]"
+
+				tooltip = "COA_DESIGNER_REDO_EDIT"
+				using = tooltip_se
+
+				shortcut = "redo"
+			}
+
+			button = {
+				size = { 0 0 }
+				visible = "[CoatOfArmsDesigner.CanRedoEdit]"
+				onclick = "[CoatOfArmsDesigner.RedoEdit]"
+				shortcut = "increase_speed_2"
+			}
+
+			button = {
+				size = { 0 0 }
+				visible = "[CoatOfArmsDesigner.CanUndoEdit]"
+				onclick = "[CoatOfArmsDesigner.UndoEdit]"
+				shortcut = "decrease_speed_2"
+			}
+
+			spacer = { size = { 10 0 } }
+
+			button_round = {
+				size = { 35 35 }
+				button_copy = {
+					size = { 25 25 }
+					parentanchor = center
+					onclick = "[CoatOfArmsDesigner.OnCopyToClipboard]"
+					tooltip = "COA_DESIGNER_COPY_TO_CLIPBOARD_BUTTON_TT"
+					using = tooltip_se
+				}
+			}
+
+			expand = { }
+		}
+
+		expand = { }
+	}
+
+	type vbox_coa_designer_tabs = vbox
+	{
+		name = "coa_designer_tabs"
+		visible = "[Not(VariableSystem.HasValue('coa_designer_page', 'start'))]"
+		layoutpolicy_horizontal = expanding
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin_bottom = 10
+
+			button_tab = {
+				text = "COA_DESIGNER_BACKGROUND_TAB_HEADER"
+				datacontext = "[CoatOfArmsDesigner.GetBackgroundPanel]"
+
+				onclick = "[VariableSystem.Set('coa_designer_page', 'background')]"
+				onclick = "[CoatOfArmsDesignerBackgroundPanel.UpdatePatternPreviewColors]"
+
+				down = "[VariableSystem.HasValue('coa_designer_page', 'background')]"
+
+				using = CoatOfArmsDesignerClearEditState
+
+				layoutpolicy_horizontal = expanding
+			}
+
+			button_tab = {
+				text = "COA_DESIGNER_EMBLEM_LAYOUT_TAB_HEADER"
+				visible = "[CoatOfArmsDesigner.IsCustomMode]"
+				onclick = "[VariableSystem.Set('coa_designer_page', 'emblem_layout')]"
+				down = "[VariableSystem.HasValue('coa_designer_page', 'emblem_layout')]"
+
+				using = CoatOfArmsDesignerClearEditState
+
+				layoutpolicy_horizontal = expanding
+			}
+
+			button_tab = {
+				text = "COA_DESIGNER_EMBLEM_INSTANCES_TAB_HEADER"
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+
+				enabled = "[DataModelHasItems( CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances )]"
+
+				onclick = "[VariableSystem.Set('coa_designer_page', 'emblem_instances')]"
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ResetSelectedEmblems]"
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.UpdateTexturePreviewColors]"
+
+				down = "[VariableSystem.HasValue('coa_designer_page', 'emblem_instances')]"
+
+				using = CoatOfArmsDesignerClearEditState
+
+				layoutpolicy_horizontal = expanding
+			}
+		}
+	}
+
+	type vbox_coa_designer_mode_and_back = vbox
+	{
+		name = "coa_designer_mode_and_back"
+		visible = "[Not(VariableSystem.HasValue('coa_designer_page', 'start'))]"
+
+		spacing = 5
+
+		text_single = {
+			text = "[SelectLocalization(CoatOfArmsDesigner.IsCustomMode, 'COA_DESIGNER_MODE_CUSTOM', 'COA_DESIGNER_MODE_ADJUSTED')]"
+		}
+
+		button_standard_back = {
+			onclick = "[VariableSystem.Set('coa_designer_page', 'start')]"
+		}
+	}
+
+	type vbox_coa_designer_quartering_options = vbox
+	{
+		name = "coa_designer_quartering_options"
+		visible = "[CoatOfArmsDesigner.AreQuarteringOptionsAvailable]"
+
+		using = Animation_Tab_Switch
+
+		spacing = 5
+		margin = { 15 0 }
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+
+			expand = { }
+
+			button_checkbox_label = {
+				size = { 35 35 }
+				tooltip = "COA_DESIGNER_TOGGLE_QUARTERING_BUTTON_TT"
+
+				onclick = "[CoatOfArmsDesigner.SetQuarteringEnabled( Not( CoatOfArmsDesigner.IsQuarteringEnabled ) )]"
+
+				blockoverride "checkbox"
+				{
+					checked = "[CoatOfArmsDesigner.IsQuarteringEnabled]"
+				}
+				blockoverride "text"
+				{
+					text = "COA_DESIGNER_QUARTERING_OPTIONS"
+				}
+
+				using = tooltip_se
+			}
+		}
+	}
+
+	type widget_coa_designer_editor_panel = widget {
+		name = "editor_panel"
+
+		vbox_coat_designer_start_panel = {
+			visible = "[VariableSystem.HasValue('coa_designer_page', 'start')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			using = Animation_Tab_Switch
+		}
+
+		vbox_coa_designer_background_panel = {
+			datacontext = "[CoatOfArmsDesigner.GetBackgroundPanel]"
+			visible = "[VariableSystem.HasValue('coa_designer_page', 'background')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			using = Animation_Tab_Switch
+		}
+
+		vbox_coa_designer_emblem_layout_panel = {
+			datacontext = "[CoatOfArmsDesigner.GetEmblemLayoutPanel]"
+			visible = "[VariableSystem.HasValue('coa_designer_page', 'emblem_layout')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			using = Animation_Tab_Switch
+		}
+
+		vbox_coa_designer_emblem_instances_panel = {
+			datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+			visible = "[VariableSystem.HasValue('coa_designer_page', 'emblem_instances')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			using = Animation_Tab_Switch
+		}
+	}
+
+	type vbox_coat_designer_start_panel = vbox
+	{
+		name = "start_panel"
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+			datacontext = "[CoatOfArmsDesignerEmblemInstancesPanel.AccessPagedEmblemInstanceData]"
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_left = 3
+
+				text_label_left = {
+					layoutpolicy_horizontal = expanding
+					text = "COA_DESIGNER_MODE_SELECTION_HEADER"
+					using = Font_Size_Medium
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+				visible = "[CoatOfArmsDesigner.IsCustomMode]"
+
+				text_multi = {
+					layoutpolicy_horizontal = expanding
+					autoresize = yes
+					max_width = 480
+					text = "COA_DESIGNER_MODE_SELECTION_CONTINUE_CUSTOM_DESC"
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					button_standard = {
+						name = "button_custom_mode"
+						text = "COA_DESIGNER_MODE_SELECTION_CONTINUE_CUSTOM_BUTTON"
+
+						datacontext = "[CoatOfArmsDesigner.GetBackgroundPanel]"
+
+						onclick = "[CoatOfArmsDesigner.OnSetCustomMode]"
+						onclick = "[VariableSystem.Set('coa_designer_page', 'background')]"
+						onclick = "[CoatOfArmsDesignerBackgroundPanel.UpdatePatternPreviewColors]"
+
+						using = CoatOfArmsDesignerClearEditState
+					}
+
+					expand = { }
+				}
+			}
+
+			vbox = {
+				visible = "[Not(CoatOfArmsDesigner.IsCustomMode)]"
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+
+				text_multi = {
+					layoutpolicy_horizontal = expanding
+					autoresize = yes
+					max_width = 480
+					text = "COA_DESIGNER_MODE_SELECTION_CUSTOM_DESC"
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					button_standard = {
+						name = "button_custom_mode"
+						text = "COA_DESIGNER_MODE_SELECTION_CUSTOM_BUTTON"
+
+						datacontext = "[CoatOfArmsDesigner.GetBackgroundPanel]"
+
+						onclick = "[CoatOfArmsDesigner.OnSetCustomMode]"
+						onclick = "[VariableSystem.Set('coa_designer_page', 'background')]"
+						onclick = "[CoatOfArmsDesignerBackgroundPanel.UpdatePatternPreviewColors]"
+
+						using = CoatOfArmsDesignerClearEditState
+					}
+
+					expand = { }
+				}
+
+				text_multi = {
+					layoutpolicy_horizontal = expanding
+					autoresize = yes
+					max_width = 480
+					text = "COA_DESIGNER_MODE_SELECTION_ADJUSTED_DESC"
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+
+					button_standard = {
+						name = "button_adjusted_mode"
+						text = "COA_DESIGNER_MODE_SELECTION_ADJUSTED_BUTTON"
+						onclick = "[CoatOfArmsDesigner.OnSetAdjustedMode]"
+						onclick = "[VariableSystem.Set('coa_designer_page', 'background')]"
+						using = CoatOfArmsDesignerClearEditState
+					}
+
+					expand = { }
+				}
+			}
+		}
+
+		expand = { }
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			spacing = 10
+
+			expand = { }
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				button_standard = {
+					name = "randomize"
+					size = { 300 33 }
+					text = "COA_DESIGNER_RANDOMIZE_BUTTON"
+					tooltip = "COA_DESIGNER_RANDOMIZE_BUTTON_TT"
+					onclick = "[CoatOfArmsDesigner.OnRandomize]"
+
+					using = tooltip_ws
+
+					button_randomize = {
+						using = ButtonStandardIconProperties
+					}
+				}
+				expand = { }
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				button_standard = {
+					name = "copy"
+					size = { 300 33 }
+					text = "COA_DESIGNER_COPY_TO_CLIPBOARD_BUTTON"
+					tooltip = "COA_DESIGNER_COPY_TO_CLIPBOARD_BUTTON_TT"
+					onclick = "[CoatOfArmsDesigner.OnCopyToClipboard]"
+
+					using = tooltip_ws
+
+					# text_single = {
+					# 	text = "COA_DESIGNER_COPY_TO_CLIPBOARD_BUTTON"
+					# 	default_format = "#clickable"
+					# 	parentanchor = center
+					# 	align = nobaseline
+					# 	position = { 10 0 }
+					# }
+
+					button_copy = {
+						using = ButtonStandardIconProperties
+					}
+				}
+				expand = { }
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+
+				widget  = {
+					size = { 340 33 }
+
+					button_standard = {
+						name = "paste"
+						size = { 300 33 }
+
+						text = "COA_DESIGNER_PASTE_FROM_CLIPBOARD_BUTTON"
+						tooltip = "COA_DESIGNER_PASTE_FROM_CLIPBOARD_BUTTON_TT"
+						enabled = "[CoatOfArmsDesigner.CanPasteFromClipboard]"
+						onclick = "[CoatOfArmsDesigner.OnPasteFromClipboard]"
+
+						using = tooltip_ws
+
+						button_paste = {
+							using = ButtonStandardIconProperties
+						}
+					}
+
+					coa_preview_title_tiny = {
+						name = "paste_preview"
+						datacontext = "[CoatOfArmsDesigner.GetPastePreviewCoA.GetCoA]"
+						visible = "[CoatOfArmsDesigner.CanPasteFromClipboard]"
+						parentanchor = right
+						position = { 3 -9 }
+						size = { 34 34 }
+					}
+				}
+
+				expand = { }
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+
+				widget = {
+					size = { 340 33 }
+
+					button_standard = {
+						name = "reset_to_original"
+						size = { 300 33 }
+						text = "COA_DESIGNER_RESET_BUTTON"
+						tooltip = "COA_DESIGNER_RESET_BUTTON_TT"
+						enabled = "[CoatOfArmsDesigner.WasDesignChanged]"
+						onclick = "[CoatOfArmsDesigner.OnResetToLoaded]"
+
+						using = tooltip_ws
+					}
+
+					coa_preview_title_tiny = {
+						name = "reset_preview"
+						datacontext = "[CoatOfArmsDesigner.GetOriginalCoASprite]"
+						parentanchor = right
+						position = { 3 -9 }
+						size = { 34 34 }
+					}
+				}
+
+				expand = { }
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				visible = "[CoatOfArmsDesigner.CanLoadHistoricalCoatOfArms]"
+
+				button_standard = {
+					name = "reset_to_historical"
+					size = { 300 33 }
+					text = "COA_DESIGNER_RESET_HISTORICAL_BUTTON"
+					tooltip = "COA_DESIGNER_RESET_HISTORICAL_BUTTON_TT"
+					enabled = "[Not( CoatOfArmsDesigner.WasDesignResetToHistorical )]"
+					onclick = "[CoatOfArmsDesigner.OnResetToHistorical]"
+
+					using = tooltip_ws
+				}
+
+				coa_preview_title_tiny = {
+					name = "reset_preview"
+					datacontext = "[CoatOfArmsDesigner.GetHistoricalCoASprite]"
+					size = { 34 34 }
+				}
+
+				expand = { }
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				button_standard = {
+					name = "save_to_disk"
+					size = { 300 33 }
+					text = "COA_DESIGNER_SAVE_TO_DISK"
+					tooltip = "COA_DESIGNER_SAVE_TO_DISK_TT"
+
+					# Size needs to match the size in common/coat_of_arms/options/atlases.txt for the screenshot atlas
+					onclick = "[CoatOfArmsDesigner.SaveCoatOfArmsImageToDisk( '(int32)345', '(int32)345' )]"
+
+					using = tooltip_ws
+
+					button_copy = {
+						using = ButtonStandardIconProperties
+					}
+				}
+
+				expand = { }
+			}
+		}
+	}
+
+	# Requires CoatOfArmsDesignerBackgroundPanel data context
+	type vbox_coa_designer_background_panel = vbox
+	{
+		name = "background_panel"
+
+		flowcontainer = {
+			name = "color_button_tabs"
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			margin_left = 5
+			margin_bottom = 10
+
+			button_standard = {
+				name = "pattern_button"
+				size = { 130 40 }
+
+				text_single = {
+					text = "COA_DESIGNER_BACKGROUND_PATTERN_HEADER"
+					align = center|nobaseline
+					parentanchor = center
+				}
+
+				onclick = "[VariableSystem.Clear('coa_designer_background_color')]"
+				down = "[Not( VariableSystem.Exists('coa_designer_background_color') )]"
+			}
+
+			button_color_selection_tab = {
+				name = "color1_button"
+				visible = "[CoatOfArmsDesignerBackgroundPanel.IsColorForNumberUsed( '(int32)1' )]"
+
+				onclick = "[VariableSystem.SetOrToggle('coa_designer_background_color', '1')]"
+				down = "[VariableSystem.HasValue('coa_designer_background_color', '1')]"
+				tooltip = COA_DESIGNER_COLOR1
+
+				blockoverride "button_color"
+				{
+					tintcolor = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)1' )]"
+				}
+			}
+
+			button_color_selection_tab = {
+				name = "color2_button"
+				visible = "[CoatOfArmsDesignerBackgroundPanel.IsColorForNumberUsed( '(int32)2' )]"
+
+				onclick = "[VariableSystem.SetOrToggle('coa_designer_background_color', '2')]"
+				down = "[VariableSystem.HasValue('coa_designer_background_color', '2')]"
+				tooltip = COA_DESIGNER_COLOR2
+
+				blockoverride "button_color"
+				{
+					tintcolor = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)2' )]"
+				}
+			}
+
+			button_color_selection_tab = {
+				name = "color3_button"
+				visible = "[CoatOfArmsDesignerBackgroundPanel.IsColorForNumberUsed( '(int32)3' )]"
+
+				onclick = "[VariableSystem.SetOrToggle('coa_designer_background_color', '3')]"
+				down = "[VariableSystem.HasValue('coa_designer_background_color', '3')]"
+				tooltip = COA_DESIGNER_COLOR3
+
+				blockoverride "button_color"
+				{
+					tintcolor = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)3' )]"
+				}
+			}
+
+			button_color_selection_tab = {
+				name = "color4_button"
+				visible = "[CoatOfArmsDesignerBackgroundPanel.IsColorForNumberUsed( '(int32)4' )]"
+
+				onclick = "[VariableSystem.SetOrToggle('coa_designer_background_color', '4')]"
+				down = "[VariableSystem.HasValue('coa_designer_background_color', '4')]"
+				tooltip = COA_DESIGNER_COLOR4
+
+				blockoverride "button_color"
+				{
+					tintcolor = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)4' )]"
+				}
+			}
+
+			button_color_selection_tab = {
+				name = "color5_button"
+				visible = "[CoatOfArmsDesignerBackgroundPanel.IsColorForNumberUsed( '(int32)5' )]"
+
+				onclick = "[VariableSystem.SetOrToggle('coa_designer_background_color', '5')]"
+				down = "[VariableSystem.HasValue('coa_designer_background_color', '5')]"
+				tooltip = COA_DESIGNER_COLOR5
+
+				blockoverride "button_color"
+				{
+					tintcolor = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)5' )]"
+				}
+			}
+		}
+
+		vbox = {
+			name = "color_selections"
+			layoutpolicy_horizontal = expanding
+			spacing = 4
+			visible = "[GreaterThan_int32( CoatOfArmsDesignerBackgroundPanel.GetNumColors, '(int32)0' )]"
+
+			vbox_coa_designer_color_selection = {
+				name = "color1_selection"
+				visible = "[VariableSystem.HasValue('coa_designer_background_color', '1')]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin_top = 20
+
+				blockoverride "coa_color_picker"
+				{
+					color = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)1' )]"
+					oncoloredited = "[CoatOfArmsDesignerBackgroundPanel.OnSelectColor( '(int32)1' )]"
+					oneditingfinished = "[CoatOfArmsDesignerBackgroundPanel.OnFinishColor( '(int32)1' )]"
+				}
+				blockoverride "palette_item_button"
+				{
+					down = "[CoatOfArmsDesignerBackgroundPanel.IsColorSelected( '(int32)1', CoatOfArmsDesignerPaletteColor.GetValue )]"
+					onclick = "[CoatOfArmsDesignerBackgroundPanel.OnSelectPaletteColor( '(int32)1', CoatOfArmsDesignerPaletteColor.Self )]"
+				}
+			}
+
+			vbox_coa_designer_color_selection = {
+				name = "color2_selection"
+				visible = "[VariableSystem.HasValue('coa_designer_background_color', '2')]"
+				layoutpolicy_horizontal = expanding
+				margin_top = 20
+
+				blockoverride "coa_color_picker"
+				{
+					color = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)2' )]"
+					oncoloredited = "[CoatOfArmsDesignerBackgroundPanel.OnSelectColor( '(int32)2' )]"
+					oneditingfinished = "[CoatOfArmsDesignerBackgroundPanel.OnFinishColor( '(int32)2' )]"
+				}
+				blockoverride "palette_item_button"
+				{
+					down = "[CoatOfArmsDesignerBackgroundPanel.IsColorSelected( '(int32)2', CoatOfArmsDesignerPaletteColor.GetValue )]"
+					onclick = "[CoatOfArmsDesignerBackgroundPanel.OnSelectPaletteColor( '(int32)2', CoatOfArmsDesignerPaletteColor.Self )]"
+				}
+			}
+
+			vbox_coa_designer_color_selection = {
+				name = "color3_selection"
+				visible = "[VariableSystem.HasValue('coa_designer_background_color', '3')]"
+				layoutpolicy_horizontal = expanding
+				margin_top = 20
+
+				blockoverride "coa_color_picker"
+				{
+					color = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)3' )]"
+					oncoloredited = "[CoatOfArmsDesignerBackgroundPanel.OnSelectColor( '(int32)3' )]"
+					oneditingfinished = "[CoatOfArmsDesignerBackgroundPanel.OnFinishColor( '(int32)3' )]"
+				}
+				blockoverride "palette_item_button"
+				{
+					down = "[CoatOfArmsDesignerBackgroundPanel.IsColorSelected( '(int32)3', CoatOfArmsDesignerPaletteColor.GetValue )]"
+					onclick = "[CoatOfArmsDesignerBackgroundPanel.OnSelectPaletteColor( '(int32)3', CoatOfArmsDesignerPaletteColor.Self )]"
+				}
+			}
+
+			vbox_coa_designer_color_selection = {
+				name = "color4_selection"
+				visible = "[VariableSystem.HasValue('coa_designer_background_color', '4')]"
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "coa_color_picker"
+				{
+					color = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)4' )]"
+					oncoloredited = "[CoatOfArmsDesignerBackgroundPanel.OnSelectColor( '(int32)4' )]"
+					oneditingfinished = "[CoatOfArmsDesignerBackgroundPanel.OnFinishColor( '(int32)4' )]"
+				}
+				blockoverride "palette_item_button"
+				{
+					down = "[CoatOfArmsDesignerBackgroundPanel.IsColorSelected( '(int32)4', CoatOfArmsDesignerPaletteColor.GetValue )]"
+					onclick = "[CoatOfArmsDesignerBackgroundPanel.OnSelectPaletteColor( '(int32)4', CoatOfArmsDesignerPaletteColor.Self )]"
+				}
+			}
+
+			vbox_coa_designer_color_selection = {
+				name = "color5_selection"
+				visible = "[VariableSystem.HasValue('coa_designer_background_color', '5')]"
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "coa_color_picker"
+				{
+					color = "[CoatOfArmsDesignerBackgroundPanel.GetColor( '(int32)5' )]"
+					oncoloredited = "[CoatOfArmsDesignerBackgroundPanel.OnSelectColor( '(int32)5' )]"
+					oneditingfinished = "[CoatOfArmsDesignerBackgroundPanel.OnFinishColor( '(int32)5' )]"
+				}
+				blockoverride "palette_item_button"
+				{
+					down = "[CoatOfArmsDesignerBackgroundPanel.IsColorSelected( '(int32)5', CoatOfArmsDesignerPaletteColor.GetValue )]"
+					onclick = "[CoatOfArmsDesignerBackgroundPanel.OnSelectPaletteColor( '(int32)5', CoatOfArmsDesignerPaletteColor.Self )]"
+				}
+			}
+		}
+
+		vbox = {
+			name = "patterns"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			visible = "[Not( VariableSystem.Exists('coa_designer_background_color') )]"
+
+			background = {
+				using = Background_Area
+			}
+
+			state = {
+				name = _show
+				on_start = "[CoatOfArmsDesignerBackgroundPanel.UpdatePatternPreviewColors]"
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				scrollbox = {
+					name = "patterns_scrollbox"
+					visible = "[CoatOfArmsDesigner.IsCustomMode]"
+
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_background" { }
+					blockoverride "scrollbox_margins"
+					{
+						margin_left = 10
+						margin_top = 10
+					}
+
+					blockoverride "scrollbox_content"
+					{
+						fixedgridbox = {
+							layoutpolicy_vertical = expanding
+							layoutpolicy_horizontal = expanding
+
+							datamodel = "[CoatOfArmsDesignerBackgroundPanel.GetAllPatterns]"
+							addcolumn = 92
+							addrow = 92
+							flipdirection = yes
+							datamodel_wrap = 5
+
+							item = {
+								widget_coa_pattern_item = { }
+							}
+						}
+					}
+				}
+
+				text_multi = {
+					visible = "[Not(CoatOfArmsDesigner.IsCustomMode)]"
+
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					align = center
+
+					text = "COA_DESIGNER_BACKGROUND_PATTERN_DISABLED_IN_ADJUSTED_MODE"
+					default_format = "#weak"
+				}
+			}
+		}
+
+		expand = { }
+	}
+
+	# Requires CoatOfArmsDesignerPattern datacontext
+	type widget_coa_pattern_item = widget
+	{
+		size = { 92 92 }
+
+		button_standard_clean = {
+			size = { 88 88 }
+			position = { 2 2 }
+
+			tooltip = "[CoatOfArmsDesignerPattern.GetName]"
+			tooltip_visible = "[InDebugMode]"
+			onclick = "[CoatOfArmsDesignerPattern.OnSelect]"
+			down = "[CoatOfArmsDesignerPattern.IsSelected]"
+
+			coa_preview_icon = {
+				datacontext = "[CoatOfArmsDesignerPattern.GetPreviewCoA.GetCoA]"
+				parentanchor = center
+			}
+		}
+	}
+
+	# Requires CoatOfArmsDesignerEmblemLayoutPanel data context
+	type vbox_coa_designer_emblem_layout_panel = vbox
+	{
+		name = "emblem_layout_panel"
+
+		spacing = 5
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			vbox = {
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+
+				background = {
+					using = Background_Area
+				}
+
+				scrollbox = {
+					name = "emblem_layouts_scrollbox"
+
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_background" { }
+
+					blockoverride "scrollbox_margins"
+					{
+						margin_left = 10
+						margin_top = 10
+					}
+
+					blockoverride "scrollbox_content"
+					{
+						fixedgridbox = {
+							layoutpolicy_vertical = expanding
+							layoutpolicy_horizontal = expanding
+
+							datamodel = "[CoatOfArmsDesignerEmblemLayoutPanel.GetAllLayouts]"
+							addcolumn = 92
+							addrow = 92
+							flipdirection = yes
+							datamodel_wrap = 5
+
+							item = {
+								widget_coa_emblem_layout = { }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Requires CoatOfArmsDesignerEmblemLayout datacontext
+	type widget_coa_emblem_layout = widget
+	{
+		size = { 92 92 }
+
+		button_standard_clean = {
+			size = { 88 88 }
+			position = { 2 2 }
+
+			tooltip = "[CoatOfArmsDesignerEmblemLayout.GetName]"
+			tooltip_visible = "[InDebugMode]"
+			onclick = "[CoatOfArmsDesignerEmblemLayout.OnSelect]"
+			down = "[CoatOfArmsDesignerEmblemLayout.IsSelected]"
+
+			coa_preview_icon = {
+				datacontext = "[CoatOfArmsDesignerEmblemLayout.GetPreviewCoA.GetCoA]"
+				parentanchor = center
+			}
+		}
+	}
+
+	# Requires CoatOfArmsDesignerEmblemInstancesPanel data context
+	type vbox_coa_designer_emblem_instances_panel = vbox
+	{
+		name = "emblem_instances_panel"
+
+		vbox = {
+			name = "default_emblem_instances"
+			visible = "[Not( VariableSystem.Exists('coa_designer_emblem_detail_mode') )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			hbox = {
+				name = "emblem_selection"
+				layoutpolicy_horizontal = expanding
+				datacontext = "[CoatOfArmsDesignerEmblemInstancesPanel.AccessPagedEmblemInstanceData]"
+
+				minimumsize = { 0 152 }
+
+				vbox = {
+					margin_right = 10
+					spacing = 5
+					datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+
+					button_standard = {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.AddEmblemInstance]"
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.SetAllSelectedEmblems( '(bool)no' )]"
+						size = { 60 60 }
+
+						button_icon_highlight = {
+
+							block "highlight_icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/plus.dds"
+						}
+
+						tooltip = "COA_DESIGNER_DETAIL_ADD_INSTANCE_TT"
+					}
+
+					button_standard = {
+						text = "COA_DESIGNER_EMBLEM_INSTANCES_ALL_BUTTON"
+						size = { 60 60 }
+
+						button_ignore = none
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.SetAllSelectedEmblems( '(bool)yes' )]"
+						onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.SetAllSelectedEmblems( '(bool)no' )]"
+
+						tooltip = "COA_DESIGNER_EMBLEM_INSTANCE_SELECT_ALL"
+						using = tooltip_ne
+					}
+
+				}
+
+				hbox = {
+					layoutpolicy_vertical = expanding
+					margin_right = 7
+					margin_left = 5
+
+					background = {
+						using = Background_Area_Dark
+						alpha = 0.5
+					}
+
+					button = {
+						size = { 20 0 }
+						layoutpolicy_vertical = expanding
+						enabled = "[PagedContainerData.CanShowPreviousPage]"
+						onclick = "[PagedContainerData.ShowPreviousPage]"
+
+						button_select_arrow = {
+							parentanchor = center
+							size = { 20 30 }
+							mirror = horizontal
+							alwaystransparent = yes
+						}
+					}
+				}
+
+				flowcontainer = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					margin = { 10 10 }
+
+					background = {
+						using = Background_Area_Dark
+						alpha = 0.5
+					}
+
+					fixedgridbox = {
+						name = "emblem_instances"
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+
+						datamodel = "[PagedContainerData.DataModelPage( CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances )]"
+						addcolumn = 66
+						addrow = 66
+						flipdirection = yes
+						datamodel_wrap = 4 # Half of NCoatOfArmsDesigner::NUM_EMBLEM_PER_GROUP so we have two lines per page
+
+						item = {
+							widget_coa_emblem_instance = {
+								blockoverride "coa_emblem_instance_size"
+								{
+									size = { 60 60 }
+								}
+							}
+						}
+					}
+				}
+
+				hbox = {
+					layoutpolicy_vertical = expanding
+					margin_right = 5
+					margin_left = 7
+
+					background = {
+						using = Background_Area_Dark
+						alpha = 0.5
+					}
+
+					button = {
+						size = { 20 0 }
+						layoutpolicy_vertical = expanding
+						enabled = "[PagedContainerData.CanShowNextPage( GetDataModelSize( CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances ) )]"
+						onclick = "[PagedContainerData.ShowNextPage( GetDataModelSize( CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances ) )]"
+
+						button_select_arrow = {
+							parentanchor = center
+							size = { 20 30 }
+							alwaystransparent = yes
+						}
+					}
+				}
+
+				vbox = {
+					layoutpolicy_vertical = expanding
+					spacing = 5
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						expand = { }
+
+						vbox = {
+							layoutpolicy_vertical = expanding
+							button_outliner = {
+								name = "toggle_detail_edit"
+								tooltip = "COA_DESIGNER_EMBLEM_INSTANCE_DETAIL_TOGGLE_TT"
+								size = { 30 30 }
+
+								# enabled = "[LessThan_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+								onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ClearDetailEdit]"
+								onclick = "[VariableSystem.Toggle('coa_designer_emblem_detail_mode')]"
+								checked = "[VariableSystem.Exists('coa_designer_emblem_detail_mode')]"
+							}
+
+
+							# text_single = {
+								# visible = "[Or(CoatOfArmsDesignerPagedEmblemInstances.CanShowPreviousPage, CoatOfArmsDesignerPagedEmblemInstances.CanShowNextPage)]"
+							# 	raw_text = COA_DESIGNER_EMBLEM_INSTANCES_PAGE
+							# 	min_width = 60
+							# 	align = center
+							# 	margin = { 10 5 }
+							# }
+
+							overlappingitembox = {
+								size = { 30 30 }
+								datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+
+								datamodel = "[CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances]"
+								# visible = "[GreaterThan_int32(GetDataModelSize(CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances), '(int32)1')]"
+
+								item = {
+									button = {
+										size = { 30 30 }
+										visible = "[CoatOfArmsDesignerEmblemInstance.IsSelected]"
+										button_edit_text = {
+											# alwaystransparent = yes
+											size = { 30 30 }
+											onclick = "[CoatOfArmsDesignerEmblemInstance.OnSelectForDetailEdit]"
+											tooltip = "edit_emblem"
+											shortcut = "map_mode_1"
+											visible = "[LessThan_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+										}
+										button_close = {
+											tooltip = "CLOSE_TOOLTIP"
+											visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+											shortcut = "map_mode_1"
+											onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ClearDetailEdit]"
+										}
+									}
+								}
+							}
+
+							# overlappingitembox = {
+							# 	size = { 30 30 }
+							# 	datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+							#
+							# 	datamodel = "[CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances]"
+							# 	visible = "[GreaterThan_int32(GetDataModelSize(CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances), '(int32)1')]"
+							#
+							# 	item = {
+							# 		button_clear = {
+							# 			name = "remove"
+							# 			size = { 30 30 }
+							# 			visible = "[CoatOfArmsDesignerEmblemInstance.IsSelected]"
+							# 			# onclick = "[CoatOfArmsDesignerEmblemInstance.OnSelectForDetailEdit]"
+							# 			onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.RemoveEmblemInstance( CoatOfArmsDesignerEmblemInstance.AccessSelf )]"
+							#
+							# 			raw_tooltip = "#I Click to remove#!" #TODO
+							# 		}
+							# 	}
+							# }
+
+						}
+					}
+				}
+			}
+
+			emblem_position_edit = {
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+			}
+
+			vbox_emblem_basic_edit = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+			}
+		}
+
+		vbox = {
+			name = "detail_emblem_instances"
+			visible = "[VariableSystem.Exists('coa_designer_emblem_detail_mode')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			using = Animation_Tab_Switch
+
+			vbox = {
+				name = "detail_emblem_list"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				visible = "[LessThan_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+
+				hbox = {
+					margin = { 10 0 }
+					spacing = 10
+					layoutpolicy_horizontal = expanding
+
+					button = {
+						size  = { 30 30 }
+						tooltip = "compact_emblem_list"
+						onclick = "[GetVariableSystem.Toggle('emblem_list')]"
+
+						button_icon = {
+							alwaystransparent = yes
+							texture = "gfx/ps_item_list.dds"
+							mirror = horizontal
+							size = { 35 35 }
+							position = { -5 -3 }
+						}
+					}
+
+					button_standard = {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.AddEmblemInstance]"
+						size = { 0 30 }
+						layoutpolicy_horizontal = expanding
+
+						button_icon_highlight = {
+
+							block "highlight_icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/plus.dds"
+						}
+
+						tooltip = "COA_DESIGNER_DETAIL_ADD_INSTANCE_TT"
+					}
+					button_close = {
+						onclick = "[VariableSystem.Toggle('coa_designer_emblem_detail_mode')]"
+						tooltip = "BACK_LABEL"
+					}
+				}
+
+				vbox = {
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+
+					margin_top = 10
+
+					background = {
+						using = Background_Area
+						margin_top = -10
+					}
+
+					scrollbox = {
+						name = "emblem_instances_scrollbox"
+
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						blockoverride "scrollbox_background" { }
+						blockoverride "scrollbox_margins"
+						{
+							margin = { 5 5 }
+						}
+
+						blockoverride "scrollbox_content"
+						{
+							vbox = {
+								margin_top = 5
+								layoutpolicy_horizontal = expanding
+								dynamicgridbox = {
+									visible = "[GetVariableSystem.Exists('emblem_list')]"
+									layoutpolicy_horizontal = expanding
+									flipdirection = yes
+									datamodel_wrap = 3
+									# maxhorizontalslots = 4
+
+									datamodel = "[CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances]"
+
+									item = {
+										widget_coa_emblem_detail_instance = { }
+									}
+								}
+
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									visible = "[Not(GetVariableSystem.Exists('emblem_list'))]"
+
+									datamodel = "[CoatOfArmsDesignerEmblemInstancesPanel.GetAllEmblemInstances]"
+
+									item = {
+										widget_coa_emblem_detail_instance_vanilla = { }
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			vbox = {
+				name = "detail_edit_scrollbars"
+				visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				spacing = 1
+
+				using = Animation_Tab_Switch
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 5
+					margin = { 5 0 }
+
+					background = {
+						using = Background_Area_Dark
+						alpha = 0.8
+						margin = { 0 5 }
+
+						modify_texture = {
+							texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+							mirror = horizontal
+							blend_mode = alphamultiply
+						}
+					}
+
+					button_back = {
+						name = "back_to_detail_edit"
+						size = { 25 25 }
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ClearDetailEdit]"
+
+						tooltip = "COA_DESIGNER_DETAIL_EDIT_BACK_TT"
+						using = tooltip_ws
+					}
+
+					coa_preview_icon = {
+						datacontext = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditCoAPreview.GetCoA]"
+					}
+
+					expand = { }
+				}
+
+				emblem_position_edit = { }
+
+				vbox_emblem_basic_edit = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+				}
+			}
+		}
+
+		expand = { }
+	}
+
+	type emblem_position_edit = vbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 20
+		margin_top = 20
+		margin_left = 0
+
+		state = {
+			name = resize_both
+			trigger_when = "[And(Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale), GetVariableSystem.Exists('resize_both'))]"
+			on_finish = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+		}
+
+
+		hbox_scrollbar_coa_label = {
+			name = "scrollbar_position_axis_x"
+
+			blockoverride "label"
+			{
+				text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX, '(float)100')|1]"
+			}
+			blockoverride "label2"
+			{
+				text = "COA_DESIGNER_POSITION_X"
+			}
+			blockoverride "coa_scrollbar_steps"
+			{
+				min = 0
+				max = 1
+				step = 0.005
+			}
+
+			blockoverride "coa_scrollbar_values"
+			{
+				onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.Self)]"
+				onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisX( PdxGuiWidget.Self  )]"
+				value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX]"
+			}
+		}
+
+		hbox_scrollbar_coa_label = {
+			name = "scrollbar_position_axis_y"
+
+			blockoverride "label"
+			{
+				text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY, '(float)100')|1]"
+			}
+
+			blockoverride "label2"
+			{
+				text = "COA_DESIGNER_POSITION_Y"
+			}
+			blockoverride "coa_scrollbar_steps"
+			{
+				min = 0
+				max = 1
+				step = 0.005
+			}
+
+			blockoverride "coa_scrollbar_values"
+			{
+				onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.Self )]"
+				onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisY( PdxGuiWidget.Self )]"
+				value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY]"
+			}
+			blockoverride "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.FindChild('x').Self )]"
+			}
+		}
+
+		vbox = {
+			name = "detail_scale_scrollbars"
+			layoutpolicy_horizontal = expanding
+			spacing = 20
+			allow_outside = yes
+
+			hbox_scrollbar_coa_label = {
+				name = "scrollbar_scale_axis_x"
+				visible = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+				layoutpolicy_horizontal = expanding
+
+				# blockoverride "flip" {
+				#
+				# 	button_icon = {
+				# 		texture = "gfx/flip_v.png"
+				# 		tooltip = "COA_DESIGNER_FLIP_EMBLEM_X_AXIS_TT"
+				# 		using = tooltip_se
+				# 		onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleFlipEmblemXAxisDetail]"
+				# 		visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemXAxisDetail)]"
+				# 	}
+				#
+				# 	button_icon = {
+				# 		texture = "gfx/flip_v.png"
+				# 		tooltip = "COA_DESIGNER_FLIP_EMBLEM_X_AXIS_TT"
+				# 		using = tooltip_se
+				# 		onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleFlipEmblemXAxisDetail]"
+				# 		visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemXAxisDetail]"
+				# 		down = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemXAxisDetail]"
+				# 		mirror = vertical
+				# 	}
+				#
+				# 	widget = {
+				# 		size = { 5 0 }
+				# 	}
+				# }
+
+				blockoverride "label"
+				{
+					text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+				}
+
+				blockoverride "label2"
+				{
+					text = "COA_DESIGNER_SCALE_X"
+				}
+
+				blockoverride "coa_scrollbar_values"
+				{
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self )]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+				blockoverride "click" {
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.FindChild('x').Self )]"
+				}
+				blockoverride "marker_center" { }
+			}
+
+			hbox_scrollbar_coa_label = {
+				name = "scrollbar_scale_axis_y"
+				visible = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+
+				# blockoverride "flip" {
+				# 	button_icon = {
+				# 		texture = "gfx/flip.png"
+				# 		tooltip = "COA_DESIGNER_FLIP_EMBLEM_Y_AXIS_TT"
+				# 		using = tooltip_se
+				# 		onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleFlipEmblemYAxisDetail]"
+				# 		visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemYAxisDetail)]"
+				# 	}
+				#
+				# 	button_icon = {
+				# 		texture = "gfx/flip.png"
+				# 		tooltip = "COA_DESIGNER_FLIP_EMBLEM_Y_AXIS_TT"
+				# 		using = tooltip_se
+				# 		onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleFlipEmblemYAxisDetail]"
+				# 		visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemYAxisDetail]"
+				# 		down = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemYAxisDetail]"
+				# 		mirror = horizontal
+				# 	}
+				#
+				# 	widget = {
+				# 		size = { 5 0 }
+				# 	}
+				# }
+
+				blockoverride "label"
+				{
+					text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY, '(float)100')|1]"
+				}
+				blockoverride "label2"
+				{
+					text = "COA_DESIGNER_SCALE_Y"
+				}
+
+				blockoverride "coa_scrollbar_values"
+				{
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.Self )]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisY( PdxGuiWidget.Self )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY]"
+				}
+				blockoverride "click" {
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.FindChild('x').Self )]"
+				}
+				blockoverride "marker_center" { }
+			}
+
+			hbox_scrollbar_coa_label = {
+				name = "scrollbar_scale_combined"
+				visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+
+				blockoverride "label"
+				{
+					text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+				}
+
+				blockoverride "label2"
+				{
+					text = "COA_DESIGNER_SCALE_COMBINED"
+				}
+
+				blockoverride "coa_scrollbar_values"
+				{
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleCombined( PdxGuiWidget.Self )]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleCombined( PdxGuiWidget.Self )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				blockoverride "click" {
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleCombined( PdxGuiWidget.FindChild('x').Self )]"
+				}
+				blockoverride "marker_center" { }
+			}
+		}
+
+		hbox_scrollbar_coa_label = {
+			name = "scrollbar_rotation"
+
+			blockoverride "precise" { }
+
+			blockoverride "label"
+				{
+					raw_text = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation|0]°"
+				}
+
+			blockoverride "label2"
+			{
+				text = "COA_DESIGNER_ROTATION"
+			}
+			blockoverride "coa_scrollbar_steps"
+			{
+				wheelstep = 1
+				min = 0
+				max = 360
+				step = 1
+			}
+			blockoverride "coa_scrollbar_values"
+			{
+				onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.Self )]"
+				onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailRotation( PdxGuiWidget.Self )]"
+				value = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]"
+			}
+
+			blockoverride "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+			}
+
+			blockoverride "value_1" { value = 45 }
+			blockoverride "marker_1" { position = { 11.5% 0 } }
+			blockoverride "value_2" { value = 90 }
+			blockoverride "marker_2" { position = { 23.5% 0 } }
+			blockoverride "marker_center" { }
+			blockoverride "value_center" { value = 180 max = 360 }
+			blockoverride "value_3" { value = 225 max = 360 }
+			blockoverride "marker_3" { position = { 59% 0 } }
+			blockoverride "value_4" { value = 270 max = 360 }
+			blockoverride "marker_4" { position = { 71% 0 } }
+			blockoverride "markers" {
+				button_slider_marker = {
+					position = { 35% 0 }
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					scrollbar = { name = "x" value = 135 max = 360 visible = no }
+				}
+				button_slider_marker = {
+					position = { 83% 0 }
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					scrollbar = { name = "x" value = 315 max = 360 visible = no }
+				}
+			}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 5
+			margin_left = 5
+
+			button_checkbox_label = {
+				layoutpolicy_horizontal = expanding
+				name = "toggle_flip_emblem_x_axis"
+				tooltip = "COA_DESIGNER_FLIP_EMBLEM_X_AXIS_TT"
+				size = { 25 25 }
+
+				using = tooltip_se
+
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleFlipEmblemXAxisDetail]"
+
+				blockoverride "checkbox"
+				{
+					checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemXAxisDetail]"
+					visible = no
+				}
+
+				blockoverride "text"
+				{
+					text = "COA_DESIGNER_FLIP_EMBLEM_X_AXIS_CHECKBOX_LABEL"
+					max_width = 100
+				}
+				button_icon = {
+					texture = "gfx/ps_flip_horizontal.dds"
+					visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemXAxisDetail)]"
+					alwaystransparent = yes
+				}
+				button_icon = {
+					texture = "gfx/ps_flip_horizontal.dds"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemXAxisDetail]"
+					mirror = horizontal
+					alwaystransparent = yes
+				}
+			}
+
+			button_checkbox_label = {
+				layoutpolicy_horizontal = expanding
+				name = "toggle_flip_emblem_y_axis"
+				tooltip = "COA_DESIGNER_FLIP_EMBLEM_Y_AXIS_TT"
+				size = { 25 25 }
+
+				using = tooltip_se
+
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleFlipEmblemYAxisDetail]"
+
+				blockoverride "checkbox"
+				{
+					visible = no
+				}
+
+				blockoverride "text"
+				{
+					text = "COA_DESIGNER_FLIP_EMBLEM_Y_AXIS_CHECKBOX_LABEL"
+					max_width = 100
+				}
+				button_icon = {
+					texture = "gfx/ps_flip_vertical.dds"
+					visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemYAxisDetail)]"
+					alwaystransparent = yes
+				}
+				button_icon = {
+					texture = "gfx/ps_flip_vertical.dds"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldFlipEmblemYAxisDetail]"
+					mirror = vertical
+					alwaystransparent = yes
+				}
+			}
+
+			button_checkbox_label = {
+				layoutpolicy_horizontal = expanding
+				shortcut = map_mode_3
+				name = "toggle_match_scale"
+				tooltip = "COA_DESIGNER_SCALE_COMBINED_TOGGLE_TT"
+				size = { 25 25 }
+				visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+
+				using = tooltip_se
+
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+				onclick = "[GetVariableSystem.Set('resize_both', 'yes')]"
+				shortcut = map_mode_3
+
+				blockoverride "checkbox"
+				{
+					checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+				}
+
+				blockoverride "text"
+				{
+					text = "shorter_combined_checbox"
+					max_width = 145
+				}
+			}
+
+			button_checkbox_label = {
+				layoutpolicy_horizontal = expanding
+				visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+				shortcut = map_mode_3
+				tooltip = "COA_DESIGNER_SCALE_COMBINED_TOGGLE_TT"
+				size = { 25 25 }
+
+				using = tooltip_se
+
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+				onclick = "[GetVariableSystem.Clear('resize_both')]"
+				shortcut = map_mode_3
+
+				blockoverride "checkbox"
+				{
+					checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+				}
+
+				blockoverride "text"
+				{
+					text = "shorter_combined_checbox"
+					max_width = 145
+				}
+			}
+		}
+	}
+
+	type vbox_emblem_basic_edit = vbox
+	{
+		vbox = {
+			# visible = "[GreaterThan_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetMaxNumColorsForSelected, '(int32)0' )]"
+			layoutpolicy_horizontal = expanding
+			margin_top = 10
+
+			using = Animation_Tab_Switch
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+
+			hbox = {
+				name = "color_button_tabs"
+				layoutpolicy_horizontal = expanding
+
+				spacing = 5
+				margin = { 5 10 }
+
+				button_standard = {
+					name = "COA_DESIGNER_EMBLEM_INSTANCES_PANEL_HEADER"
+					size = { 100 40 }
+
+					text_single = {
+						text = "COA_DESIGNER_EMBLEM_INSTANCES_PANEL_HEADER"
+						align = center|nobaseline
+						parentanchor = center
+					}
+
+					onclick = "[VariableSystem.Clear('coa_designer_emblem_color')]"
+					down = "[Not( VariableSystem.Exists('coa_designer_emblem_color') )]"
+				}
+
+				button_color_selection_tab = {
+					name = "color1_button"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.IsColorForNumberUsed( '(int32)1' )]"
+
+					onclick = "[VariableSystem.SetOrToggle('coa_designer_emblem_color', '1')]"
+					down = "[VariableSystem.HasValue('coa_designer_emblem_color', '1')]"
+					tooltip = COA_DESIGNER_COLOR1
+
+					blockoverride "button_color"
+					{
+						tintcolor = "[CoatOfArmsDesignerEmblemInstancesPanel.GetColor( '(int32)1' )]"
+					}
+				}
+
+				button_color_selection_tab = {
+					name = "color2_button"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.IsColorForNumberUsed( '(int32)2' )]"
+
+					onclick = "[VariableSystem.SetOrToggle('coa_designer_emblem_color', '2')]"
+					down = "[VariableSystem.HasValue('coa_designer_emblem_color', '2')]"
+					tooltip = COA_DESIGNER_COLOR2
+
+					blockoverride "button_color"
+					{
+						tintcolor = "[CoatOfArmsDesignerEmblemInstancesPanel.GetColor( '(int32)2' )]"
+					}
+				}
+
+				button_color_selection_tab = {
+					name = "color3_button"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.IsColorForNumberUsed( '(int32)3' )]"
+
+					onclick = "[VariableSystem.SetOrToggle('coa_designer_emblem_color', '3')]"
+					down = "[VariableSystem.HasValue('coa_designer_emblem_color', '3')]"
+					tooltip = COA_DESIGNER_COLOR3
+
+					blockoverride "button_color"
+					{
+						tintcolor = "[CoatOfArmsDesignerEmblemInstancesPanel.GetColor( '(int32)3' )]"
+					}
+				}
+
+				expand = { }
+			}
+		}
+
+		vbox = {
+			visible = "[VariableSystem.Exists('coa_designer_emblem_color')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			scrollbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				blockoverride "scrollbox_background" { }
+
+				blockoverride "scrollbox_background_fade" { }
+
+				blockoverride "scrollbox_margins" {
+					margin = { 0 5 }
+				}
+
+				blockoverride "scrollbox_content"
+				{
+					vbox = {
+						name = "color_selections"
+						layoutpolicy_horizontal = expanding
+						spacing = 4
+						margin_top = 15
+
+						using = Animation_Tab_Switch
+
+						vbox_coa_designer_color_selection = {
+							name = "color1_selection"
+							visible = "[VariableSystem.HasValue('coa_designer_emblem_color', '1')]"
+							layoutpolicy_horizontal = expanding
+
+							blockoverride "coa_color_picker"
+							{
+								color = "[CoatOfArmsDesignerEmblemInstancesPanel.GetColor( '(int32)1' )]"
+								oncoloredited = "[CoatOfArmsDesignerEmblemInstancesPanel.OnSelectColor( '(int32)1' )]"
+								oneditingfinished = "[CoatOfArmsDesignerEmblemInstancesPanel.OnFinishColor( '(int32)1' )]"
+							}
+							blockoverride "palette_item_button"
+							{
+								down = "[CoatOfArmsDesignerEmblemInstancesPanel.IsColorSelected( '(int32)1', CoatOfArmsDesignerPaletteColor.GetValue )]"
+								onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.OnSelectPaletteColor( '(int32)1', CoatOfArmsDesignerPaletteColor.Self )]"
+							}
+						}
+
+						vbox_coa_designer_color_selection = {
+							name = "color2_selection"
+							visible = "[VariableSystem.HasValue('coa_designer_emblem_color', '2')]"
+							layoutpolicy_horizontal = expanding
+
+							blockoverride "coa_color_picker"
+							{
+								color = "[CoatOfArmsDesignerEmblemInstancesPanel.GetColor( '(int32)2' )]"
+								oncoloredited = "[CoatOfArmsDesignerEmblemInstancesPanel.OnSelectColor( '(int32)2' )]"
+								oneditingfinished = "[CoatOfArmsDesignerEmblemInstancesPanel.OnFinishColor( '(int32)2' )]"
+							}
+							blockoverride "palette_item_button"
+							{
+								down = "[CoatOfArmsDesignerEmblemInstancesPanel.IsColorSelected( '(int32)2', CoatOfArmsDesignerPaletteColor.GetValue )]"
+								onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.OnSelectPaletteColor( '(int32)2', CoatOfArmsDesignerPaletteColor.Self )]"
+							}
+						}
+
+						vbox_coa_designer_color_selection = {
+							name = "color3_selection"
+							visible = "[VariableSystem.HasValue('coa_designer_emblem_color', '3')]"
+							layoutpolicy_horizontal = expanding
+
+							blockoverride "coa_color_picker"
+							{
+								color = "[CoatOfArmsDesignerEmblemInstancesPanel.GetColor( '(int32)3' )]"
+								oncoloredited = "[CoatOfArmsDesignerEmblemInstancesPanel.OnSelectColor( '(int32)3' )]"
+								oneditingfinished = "[CoatOfArmsDesignerEmblemInstancesPanel.OnFinishColor( '(int32)3' )]"
+							}
+							blockoverride "palette_item_button"
+							{
+								down = "[CoatOfArmsDesignerEmblemInstancesPanel.IsColorSelected( '(int32)3', CoatOfArmsDesignerPaletteColor.GetValue )]"
+								onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.OnSelectPaletteColor( '(int32)3', CoatOfArmsDesignerPaletteColor.Self )]"
+							}
+						}
+					}
+				}
+			}
+		}
+
+		vbox = {
+			name = "emblem_textures"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			spacing = 2
+
+			visible = "[Not( VariableSystem.Exists('coa_designer_emblem_color') )]"
+
+			state = {
+				name = _show
+				on_start = "[CoatOfArmsDesignerEmblemInstancesPanel.UpdateTexturePreviewColors]"
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+
+				dropdown_menu_standard = {
+					name = "emblem_texture_categories"
+
+					blockoverride "dropdown_properties"
+					{
+						datamodel = "[GetCoatOfArmsDesignerEmblemTextureCategories]"
+
+						onselectionchanged = "[CoatOfArmsDesignerEmblemInstancesPanel.SelectEmblemTextureCategory]"
+						selectedindex = "[CoatOfArmsDesignerEmblemInstancesPanel.GetSelectedEmblemTextureCategoryIndex]"
+					}
+
+					blockoverride "dropdown_active_item_properties"
+					{
+						text = "[Localize( Concatenate( 'COA_DESIGNER_CATEGORY_', CString.GetString ) )]"
+					}
+
+					blockoverride "dropdown_item_properties"
+					{
+						text = "[Localize( Concatenate( 'COA_DESIGNER_CATEGORY_', CString.GetString ) )]"
+					}
+				}
+
+				expand = { }
+			}
+
+			vbox = {
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+
+				background = {
+					using = Background_Area
+				}
+
+				scrollbox = {
+					name = "emblem_textures_scrollbox"
+
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					blockoverride "scrollbox_background" { }
+
+					blockoverride "scrollbox_margins"
+					{
+						margin = { 5 5 }
+					}
+
+					blockoverride "scrollbox_content"
+					{
+						fixedgridbox = {
+							layoutpolicy_vertical = expanding
+							layoutpolicy_horizontal = expanding
+
+							datamodel = "[CoatOfArmsDesignerEmblemInstancesPanel.GetEmblemTextures]"
+							addcolumn = 92
+							addrow = 92
+							flipdirection = yes
+							datamodel_wrap = 5
+
+							item = {
+								widget_coa_emblem_texture = { }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Requires CoatOfArmsDesignerEmblemInstance datacontext
+	type widget_coa_emblem_instance = widget
+	{
+		block "coa_emblem_instance_size"
+		{
+			size = { 92 92 }
+		}
+
+		button_standard_clean = {
+			size = { 62 62 }
+			position = { 2 2 }
+
+			down = "[CoatOfArmsDesignerEmblemInstance.IsSelected]"
+
+			click_modifiers = {
+				ondefault = "[CoatOfArmsDesignerEmblemInstance.OnSelect]"
+				onshift = "[CoatOfArmsDesignerEmblemInstance.OnSelectMulti]"
+			}
+			button_ignore = none
+
+			datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+
+			onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.RemoveEmblemInstance( CoatOfArmsDesignerEmblemInstance.AccessSelf )]"
+			onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.SetAllSelectedEmblems( '(bool)no' )]"
+			tooltip = "COA_DESIGNER_EMBLEM_INSTANCE_SELECTION_TT_new"
+			using = tooltip_ne
+
+			coa_preview_icon = {
+				datacontext = "[CoatOfArmsDesignerEmblemInstance.GetPreviewCoA.GetCoA]"
+				parentanchor = center
+
+				blockoverride "coa_preview_size"
+				{
+					size = { 58 58 }
+				}
+			}
+
+			background = {
+				texture = "gfx/interface/colors/white.dds"
+				margin = { 2 2 }
+				tintcolor = { 1 0.6 0 0.6 }
+				visible = "[CoatOfArmsDesignerEmblemInstance.IsSelected]"
+			}
+		}
+
+		button = {
+			click_modifiers = {
+				ondefault = "[CoatOfArmsDesignerEmblemInstance.OnSelectForDetailEdit]"
+				onshift = "[CoatOfArmsDesignerEmblemInstance.OnSelectMulti]"
+			}
+			datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+			visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+			size = { 100% 100% }
+			datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+			button_ignore = none
+			onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.RemoveEmblemInstance( CoatOfArmsDesignerEmblemInstance.AccessSelf )]"
+			onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.SetAllSelectedEmblems( '(bool)no' )]"
+			onclick = "[CoatOfArmsDesignerEmblemInstance.OnSelectForDetailEdit]"
+			tooltip = "COA_DESIGNER_EMBLEM_INSTANCE_SELECTION_TT_new"
+		}
+	}
+
+	# Requires CoatOfArmsDesignerEmblemInstance datacontext
+	type widget_coa_emblem_detail_instance = widget
+	{
+		size = { 155 70 }
+
+		widget = {
+			size = { 148 60 }
+			position = { 2 2 }
+
+			background = {
+				using = Background_Area_Dark
+				alpha = 0.7
+			}
+
+			drag_drop_coat_of_arms_icon = {
+				datacontext = "[CoatOfArmsDesignerEmblemInstance.GetPreviewCoA.GetCoA]"
+				parentanchor = left|vcenter
+				position = { 32 0 }
+
+				tooltip = "COA_DESIGNER_DETAIL_INSTANCE_ICON_TT"
+				using = tooltip_ws
+
+				using = coa_preview_icon_data
+
+				drag_drop_id = "coa_designer_emblem_entry"
+				drag_drop_args = "[CoatOfArmsDesignerEmblemInstance.GetIndexString]"
+			}
+
+			coa_emblem_instance_layer_drop_target = {
+				drag_drop_id = "coa_designer_emblem_layer_destination_top"
+				parentanchor = left
+				blockoverride "mask" {
+					texture = "gfx/interface/component_masks/mask_rough_edges.dds"
+				}
+				button_icon = {
+					texture = "gfx/ps_arrow_vertical.dds"
+					parentanchor = center
+					mirror = vertical
+					position = { 0 -2 }
+					alwaystransparent = yes
+					size = { 15 15 }
+				}
+			}
+
+			coa_emblem_instance_layer_drop_target = {
+				drag_drop_id = "coa_designer_emblem_layer_destination_bottom"
+				parentanchor = right
+				blockoverride "mask" {
+					texture = "gfx/interface/component_masks/mask_rough_edges.dds"
+				}
+				button_icon = {
+					texture = "gfx/ps_arrow_vertical.dds"
+					parentanchor = center
+					alwaystransparent = yes
+					position = { 0 2 }
+					size = { 15 15 }
+				}
+			}
+
+			button_edit_text = {
+				parentanchor = vcenter|right
+				size = { 30 30 }
+				position = { -30 0 }
+
+				button_ignore = none
+				down = "[CoatOfArmsDesignerEmblemInstance.IsSelected]"
+
+				onclick = "[CoatOfArmsDesignerEmblemInstance.OnSelectForDetailEdit]"
+				onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.RemoveEmblemInstance( CoatOfArmsDesignerEmblemInstance.AccessSelf )]"
+
+				tooltip = "COA_DESIGNER_DETAIL_INSTANCE_TT"
+			}
+		}
+	}
+
+	type widget_coa_emblem_detail_instance_vanilla = widget
+	{
+		size = { 475 95 }
+
+		widget = {
+			size = { 465 90 }
+			position = { 2 2 }
+
+			background = {
+				using = Background_Area_Dark
+				alpha = 0.7
+			}
+
+			drag_drop_coat_of_arms_icon = {
+				datacontext = "[CoatOfArmsDesignerEmblemInstance.GetPreviewCoA.GetCoA]"
+				parentanchor = left|vcenter
+				position = { 15 0 }
+
+				tooltip = "COA_DESIGNER_DETAIL_INSTANCE_ICON_TT"
+				using = tooltip_ws
+
+				using = coa_preview_icon_data
+
+				drag_drop_id = "coa_designer_emblem_entry"
+				drag_drop_args = "[CoatOfArmsDesignerEmblemInstance.GetIndexString]"
+			}
+
+			coa_emblem_instance_layer_drop_target = {
+				drag_drop_id = "coa_designer_emblem_layer_destination_top"
+				parentanchor = top
+				size = { 100% 15 }
+			}
+
+			coa_emblem_instance_layer_drop_target = {
+				drag_drop_id = "coa_designer_emblem_layer_destination_bottom"
+				parentanchor = bottom
+				size = { 100% 15 }
+			}
+
+			button_edit_text = {
+				parentanchor = vcenter|right
+				size = { 30 30 }
+				position = { -15 0 }
+
+				button_ignore = none
+				down = "[CoatOfArmsDesignerEmblemInstance.IsSelected]"
+
+				onclick = "[CoatOfArmsDesignerEmblemInstance.OnSelectForDetailEdit]"
+				onrightclick = "[CoatOfArmsDesignerEmblemInstancesPanel.RemoveEmblemInstance( CoatOfArmsDesignerEmblemInstance.AccessSelf )]"
+
+				tooltip = "COA_DESIGNER_DETAIL_INSTANCE_TT"
+			}
+		}
+	}
+
+	type coa_emblem_instance_layer_drop_target = drag_drop_target
+	{
+		drag_drop_args = "[CoatOfArmsDesignerEmblemInstance.GetIndexString]"
+
+		tooltip = COA_DESIGNER_DETAIL_INSTANCE_ICON_TARGET_TT
+		using = tooltip_ws
+
+		size = { 25 100% }
+		alpha = 0.9
+
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/colors/gold_darker.dds"
+
+			modify_texture = {
+				block "mask" {
+					texture = "gfx/interface/component_masks/mask_fade_horizontal_middle_thick.dds"
+				}
+				blend_mode = alphamultiply
+			}
+		}
+	}
+
+	# Requires CoatOfArmsDesignerEmblemTexture datacontext
+	type widget_coa_emblem_texture = widget
+	{
+		size = { 92 92 }
+
+		button_standard_clean = {
+			size = { 88 88 }
+			position = { 2 2 }
+
+			tooltip = "[CoatOfArmsDesignerEmblemTexture.GetName]"
+			tooltip_visible = "[InDebugMode]"
+			down = "[CoatOfArmsDesignerEmblemTexture.IsSelected]"
+			onclick = "[CoatOfArmsDesignerEmblemTexture.OnSelect]"
+
+			coa_preview_icon = {
+				datacontext = "[CoatOfArmsDesignerEmblemTexture.GetPreviewCoA.GetCoA]"
+				parentanchor = center
+			}
+		}
+	}
+
+	type button_color_selection_tab = button_standard_clean
+	{
+		size = { 52 40 }
+		using = tooltip_ne
+
+		icon = {
+			parentanchor = center
+			# position = { 6 0 }
+			block "color_size" {
+				size = { 40 30 }
+			}
+
+			texture = "gfx/interface/colors/white.dds"
+			using = Mask_Rough_Edges
+			block "button_color" { }
+		}
+	}
+
+	type vbox_coa_designer_color_selection = vbox
+	{
+		spacing = 5
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+
+			background = {
+				using = Background_Area
+				margin_top = 20
+			}
+
+			fixedgridbox = {
+				addcolumn = 50
+				addrow = 50
+				datamodel_wrap = 7
+				flipdirection = yes
+
+				datamodel = "[CoatOfArmsDesigner.GetAllPaletteColors]"
+
+				item = {
+
+					button_standard_clean = {
+						size = { 50 50 }
+
+						block "palette_item_button" { }
+
+						icon = {
+							parentanchor = center
+							size = { 44 44 }
+
+							texture = "gfx/interface/colors/white.dds"
+							tintcolor = "[CoatOfArmsDesignerPaletteColor.GetValue]"
+							using = Mask_Rough_Edges
+
+							tooltip = "[CoatOfArmsDesignerPaletteColor.GetName]"
+							tooltip_visible = "[InDebugMode]"
+						}
+					}
+				}
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin_top = 15
+				margin_right = 30
+				margin_left = 30
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+				}
+			}
+
+			text_multi = {
+				autoresize = yes
+				max_width = 410
+				margin_top = 10
+				margin_bottom = 20
+				default_format = "#weak"
+				text = "COA_DESIGNER_COLORS_DESCRIPTION"
+			}
+		}
+
+		vbox_expanded_color_picker = {
+			layoutpolicy_horizontal = expanding
+
+			background = {
+				using = Background_Area
+			}
+		}
+	}
+
+	type vbox_expanded_color_picker = vbox {
+		vbox = {
+			name = "expand_colorpicker"
+			layoutpolicy_horizontal = expanding
+
+			hbox_colorpicker_header_button = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle( 'expand_coa_color_picker' )]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[Select_int32(GetVariableSystem.Exists( 'expand_coa_color_picker'), '(int32)2', '(int32)1')]"
+				}
+
+				blockoverride "text"
+				{
+					text = "COA_DESIGNER_COLOR_PICKER_EXPAND_HEADER"
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				visible = "[GetVariableSystem.Exists( 'expand_coa_color_picker' )]"
+
+				using = Animation_Tab_Switch
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+
+					using = Animation_Tab_Switch
+
+					colorpicker_simple = {
+						block "coa_color_picker" { }
+					}
+				}
+			}
+		}
+	}
+
+	type hbox_colorpicker_header_button = hbox {
+		margin = { 10 5 }
+
+		background = {
+			using = Background_Area_Dark
+			alpha = 0.5
+		}
+
+		button_normal = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 25 }
+
+			block "onclick" { }
+
+			hbox = {
+				ignoreinvisible = yes
+				spacing = 5
+
+				button_expand = {
+					block "button_expand" { }
+					block "onclick" { }
+				}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					align = nobaseline
+					alwaystransparent = yes
+
+					block "text" { }
+				}
+			}
+		}
+	}
+
+	type hbox_scrollbar_coa_label = hbox
+	{
+		layoutpolicy_horizontal = expanding
+
+		margin_left = 5
+
+		text_single = {
+			# name = "coa_scrollbar_label2"
+			block "label2"
+			{
+				raw_text = "#D REPLACE ME#!"
+			}
+			max_width = 90
+		}
+
+		expand = { }
+
+		block "flip" { }
+
+		text_single = {
+			# name = "coa_scrollbar_label"
+			block "label"
+			{
+				raw_text = "#D REPLACE ME#!"
+			}
+			# align = right
+			default_format = "#v"
+		}
+
+		spacer = {
+			size = { 7 0 }
+		}
+
+		scrollbar = {
+			direction = horizontal
+			size = { 40 20 }
+			wheelstep = 0
+
+			track = {
+				using = SettingsValueTrack
+			}
+
+			slider = {
+				button = {
+					texture = "gfx/interface/scrollbars/scrollbar_slider.dds"
+					spriteType = Corneredtiled
+					spriteborder = { 0 3 }
+					framesize = { 12 40 }
+					size = { 12 0 }
+				}
+			}
+
+			dec_button = {
+				using = SettingsValueDecButton
+			}
+
+			inc_button = {
+				using = SettingsValueIncButton
+			}
+
+			block "coa_scrollbar_steps"
+			{
+				min = 0
+				max = 1
+				step = 0.01
+			}
+
+			block "coa_scrollbar_values"
+			{
+			}
+		}
+
+		spacer = {
+			size = { 7 0 }
+		}
+		allow_outside = yes
+
+		#slider and markers
+		widget = {
+			using = tooltip_se
+			block "precise" {
+				tooltip = "precise_editing"
+			}
+			tooltip_offset = { 0 5 }
+			block "size" {
+				size = { 270 20 }
+			}
+			allow_outside = yes
+
+			widget = {
+				visible = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+				position = { 0 -13 }
+				size = { 100% 20 }
+				parentanchor = hcenter
+
+				button_slider_marker = {
+					block "marker_1" {
+						position = { 23% 0 }
+					}
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+
+					scrollbar = { name = "x" block "value_1" { value = 0.25 } visible = no }
+
+				}
+
+				button_slider_marker = {
+					block "marker_2" {
+						position = { 31% 0 }
+					}
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					scrollbar = { name = "x" block "value_2" { value = 0.333 } visible = no }
+				}
+
+				button_slider_marker = {
+					parentanchor = hcenter
+					block "marker_center" {
+						tintcolor = { 1 1 1 0.4 }
+					}
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					scrollbar = { name = "x" block "value_center" { value = 0.5 } visible = no }
+				}
+
+				button_slider_marker = {
+					block "marker_3" {
+						position = { 63% 0 }
+					}
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					scrollbar = { name = "x" block "value_3" { value = 0.666 } visible = no }
+				}
+
+				button_slider_marker = {
+					block "marker_4" {
+						position = { 71% 0 }
+					}
+					block "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					scrollbar = { name = "x" block "value_4" { value = 0.75 } visible = no }
+				}
+				block "markers" { }
+			}
+
+			scrollbar = {
+				direction = horizontal
+				position = { 0 0 }
+				size = { 100% 20 }
+				wheelstep = 0.001
+
+				track = {
+					using = SettingsValueTrack
+				}
+
+				slider = {
+					using = SettingsValueSlider
+				}
+
+				dec_button = {
+					button_select_arrow = {
+						mirror = horizontal
+						size = { 0 0 }
+						clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+					}
+				}
+
+				inc_button = {
+					button_select_arrow = {
+						size = { 0 0 }
+						clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_increment"
+					}
+				}
+
+				block "coa_scrollbar_steps"
+				{
+					min = 0
+					max = 1
+					step = 0.005
+				}
+
+				block "coa_scrollbar_values"
+				{
+				}
+			}
+
+		}
+	}
+
+	type big_coa_slider_y = scrollbar {
+		position = { -17 -5 }
+		direction = vertical
+		size = { 25 540 }
+		parentanchor = vcenter
+		wheelstep = 0.001
+
+		track = {
+			using = SettingsValueTrack
+		}
+
+		slider = {
+			button = {
+				texture = "gfx/interface/scrollbars/scrollbar_slider.dds"
+				spriteType = Corneredstretched
+				spriteborder = { 0 3 }
+				framesize = { 12 40 }
+				block "slider" {
+					size = { 25 16 }
+				}
+			}
+		}
+
+		dec_button = {
+			button = {
+				size = { 25 25 }
+				framesize = { 36 36 }
+				frame = 2
+				mirror = vertical
+				alpha = 0.6
+				texture = "gfx/interface/buttons/button_tree_expand.dds"
+				clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+			}
+		}
+
+		inc_button = {
+			button = {
+				size = { 25 25 }
+				framesize = { 36 36 }
+				frame = 2
+				alpha = 0.6
+				texture = "gfx/interface/buttons/button_tree_expand.dds"
+				clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+			}
+		}
+	}
+
+	type big_coa_slider_x = scrollbar {
+		parentanchor = hcenter
+		position = { 0 -25 }
+		direction = horizontal
+		size = { 540 25 }
+		wheelstep = 0.001
+
+		track = {
+			using = SettingsValueTrack
+		}
+
+		slider = {
+			button = {
+				texture = "gfx/interface/scrollbars/scrollbar_slider.dds"
+				spriteType = Corneredstretched
+				spriteborder = { 0 3 }
+				framesize = { 12 40 }
+				size = { 17 25 }
+			}
+		}
+
+		dec_button = {
+			button_select_arrow = {
+				mirror = horizontal
+				size = { 25 25 }
+				clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+			}
+		}
+
+		inc_button = {
+			button_select_arrow = {
+				size = { 25 25 }
+				clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_increment"
+			}
+		}
+	}
+
+	type button_slider_marker = button {
+		size = { 15 15 }
+		framesize = { 36 36 }
+		tintcolor = { 0.4 0.7 1 0.75 }
+		frame = 2
+		texture = "gfx/interface/buttons/button_tree_expand.dds"
+	}
+
+	type button_slider_marker_2 = button {
+		block "mirror" { }
+		using = tooltip_ne
+		size = { 18 20 }
+		tintcolor = { 0.4 0.7 1 0.75 }
+		framesize = { 36 36 }
+		# alpha = 0.4
+		frame = 2
+		texture = "gfx/interface/buttons/button_tree_expand.dds"
+	}
+
+	type button_slider_marker_v = button_select_arrow {
+		tintcolor = { 0.5 0.75 1 1 }
+		size = { 20 18 }
+		block "mirror" {
+			using = tooltip_ws
+		}
+	}
+
+	type big_slider_markers = widget {
+		block "visible" {
+			visible = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+		}
+		position = { 0 -45 }
+		size = { 540 20 }
+		parentanchor = hcenter
+
+		button_slider_marker_2 = {
+			raw_tooltip = "1/4"
+			block "marker_1" {
+				position = { 26% 0 }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+
+			scrollbar = { name = "x" block "value_1" { value = 0.25 } visible = no }
+
+		}
+
+		button_slider_marker_2 = {
+			raw_tooltip = "1/3"
+			block "marker_2" {
+				position = { 33.5% 0 }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_2" { value = 0.333 } visible = no }
+		}
+
+		button_slider_marker_2 = {
+			raw_tooltip = "1/2"
+			parentanchor = hcenter
+			block "marker_center" {
+				tintcolor = { 1 1 1 0.45 }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_center" { value = 0.5 } visible = no }
+		}
+
+		button_slider_marker_2 = {
+			block "tooltip 3" {
+				raw_tooltip = "1/3"
+			}
+			block "marker_3" {
+				position = { 63% 0 }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_3" { value = 0.666 } visible = no }
+		}
+
+		button_slider_marker_2 = {
+			block "tooltip 4" {
+				raw_tooltip = "1/4"
+			}
+			block "marker_4" {
+				position = { 70% 0 }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_4" { value = 0.75 } visible = no }
+		}
+		block "markers" { }
+	}
+
+	type big_slider_markers_v = widget {
+		visible = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+		position = { -45 -5 }
+		size = { 20 540 }
+		parentanchor = vcenter
+
+		button_slider_marker_v = {
+			block "marker_1" {
+				raw_tooltip = "1/4"
+				position = { 0 26% }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+
+			scrollbar = { name = "x" block "value_1" { value = 0.25 } visible = no }
+
+		}
+
+		button_slider_marker_v = {
+			block "marker_2" {
+				raw_tooltip = "1/3"
+				position = { 0 33.5% }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_2" { value = 0.333 } visible = no }
+		}
+
+		button_slider_marker_v = {
+			parentanchor = vcenter
+			block "marker_center" {
+				raw_tooltip = "1/2"
+				tintcolor = { 1 1 1 0.6 }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_center" { value = 0.5 } visible = no }
+		}
+
+		button_slider_marker_v = {
+			block "tooltip 3" {
+				raw_tooltip = "1/3"
+			}
+			block "marker_3" {
+				position = { 0 63% }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_3" { value = 0.666 } visible = no }
+		}
+
+		button_slider_marker_v = {
+			block "tooltip 4" {
+				raw_tooltip = "1/4"
+			}
+			block "marker_4" {
+				position = { 0 70% }
+			}
+			block "click" {
+				onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.FindChild('x').Self )]"
+			}
+			scrollbar = { name = "x" block "value_4" { value = 0.75 } visible = no }
+		}
+		block "markers" { }
+	}
+
+	type coa_preview_icon = coat_of_arms_icon
+	{
+		using = coa_preview_icon_data
+	}
+}
+
+types DynastyCustomizationWindowTypes
+{
+	# Reusable component for a Coat of Arms Designer
+	# Requires a CoatOfArmsDesigner data context
+	type vbox_coa_designer_dynasty = window {
+		focuspolicy = all
+		layer = top
+		alwaystransparent = yes
+		movable = no
+
+		vbox = {
+			alwaystransparent = no
+			datacontext = "[GetVariableSystem]"
+			spacing = 8
+			margin_left = 10
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					vbox_coa_designer_previews_dynasty = { }
+
+					vbox = {
+						name = "coa_designer_center"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+
+						hbox = {
+							margin_top = 40
+							layoutpolicy_horizontal = expanding
+
+						}
+
+						expand = { }
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+
+							vbox = {
+								layoutpolicy_vertical = expanding
+								expand = { }
+								vbox_coa_designer_mode_and_back = { }
+							}
+
+							expand = { }
+
+							vbox_coa_designer_quartering_options = { }
+						}
+					}
+
+				}
+
+				vbox = {
+					layoutpolicy_vertical = expanding
+					margin_right = 10
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				vbox = {
+					name = "coa_designer_right"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+					margin_top = -6
+					margin_bottom = -10
+					max_width = 480
+
+					vbox_coa_designer_tabs = { }
+
+					widget_coa_designer_editor_panel = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+					}
+				}
+			}
+		}
+	}
+	type vbox_coa_designer_previews_dynasty = vbox
+	{
+		name = "coa_designer_previews"
+
+		# expand = { }
+
+		# background = { using = Background_Area_Dark }
+
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 3
+
+			widget = {
+				size = { 0 30 }
+				layoutpolicy_horizontal = expanding
+
+				hbox = {
+					minimumsize = { -1 40 }
+					alpha = 0.8
+					spacing = 10
+					margin_top = -3
+					vbox_coa_designer_top_left_buttons = {
+						layoutpolicy_vertical = expanding
+						# layoutpolicy_horizontal = expanding
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+
+						onclick = "[GetVariableSystem.Toggle('grid')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('grid')]"
+						}
+						blockoverride "text"
+						{
+							text = "grid_symbol"
+							align = nobaseline
+							default_format = "#medium"
+							margin_top = 2
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_v"
+
+						onclick = "[GetVariableSystem.Toggle('guide_v')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_v')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#high  |"
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_h"
+
+						onclick = "[GetVariableSystem.Toggle('guide_h')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_h')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#medium —"
+						}
+					}
+
+					hbox = {
+						spacing = 10
+						visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							using = tooltip_se
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 1 1 1 0.6 }
+							}
+						}
+
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+							using = tooltip_se
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[GetVariableSystem.Exists('blue_guideline')]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 0 0.3 1 0.6 }
+							}
+						}
+
+						button_revert = {
+							onclick = "[PdxGuiTriggerAllAnimations('reset_guides')]"
+							visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+							tooltip = "reset_guides"
+							using = tooltip_se
+						}
+					}
+
+					widget = {
+						size = { 0 0 }
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('coa_edit_markers')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+						}
+
+						blockoverride "text"
+						{
+							text = "markers"
+						}
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('big_coa_scrollbars')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('big_coa_scrollbars')]"
+						}
+
+						blockoverride "text"
+						{
+							text = "sliders"
+						}
+					}
+
+					expand = { }
+				}
+
+				# text_single = {
+				# 	text = "COA_DESIGNER_HEADER"
+				# 	using = Font_Size_Medium
+				# 	parentanchor = center
+				# }
+
+				button_standard = {
+					raw_text = "Errors: [NumberOrErrors]"
+					onclick = "[ClearErrorLog]"
+					visible = "[Not(ReleaseMode)]"
+					parentanchor = right
+				}
+
+				background = {
+					margin_left = 15
+					margin_right = 5
+					margin_top = 0
+					margin_bottom = 5
+					# alpha = 0.5
+
+					texture = "gfx/interface/component_tiles/tile_title_bg_01.dds"
+					spriteType = Corneredtiled
+					spriteborder = { 40 8 }
+					texture_density = 2
+
+					modify_texture = {
+						name = "mask"
+						texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+						mirror = horizontal
+						spriteType = Corneredstretched
+						spriteborder = { 0 0 }
+						blend_mode = alphamultiply
+					}
+				}
+
+				expand = { }
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			margin_right = 10
+			margin_top = -3
+		}
+		
+		margin_widget = { # Shields & Banners
+			size = { 0 180 }
+			layoutpolicy_horizontal = expanding
+			alwaystransparent = yes
+			# background = { using = Background_Area_Dark }
+			margin_left = -84
+			margin_top = 25
+
+			onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+			onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+
+			flowcontainer = {
+				parentanchor = hcenter
+				spacing = 20
+				alwaystransparent = no
+				# allow_outside = yes	
+
+				ps_coa_preview_dynasty_huge = {
+					name = "dynasty_left"
+				}
+				coa_designer_preview_full = {
+					parentanchor = vcenter
+					name = "realm_center"
+					datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+				}
+
+				ps_coa_preview_dynasty_huge = {
+					name = "dynasty_right"
+				}
+
+				widget = {
+					size = { 150 150 }
+				}
+			}
+
+			flowcontainer = {
+				# this is stupid, but the other option didn't work for some reason
+				parentanchor = hcenter
+				spacing = 20
+				position = { -85 100 }
+				alwaystransparent = yes
+				# background = { using = Background_Area_Dark }				
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'dynasty')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'dynasty'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'realm')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'realm'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'title')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'title'))]"
+				}
+			}
+		}
+
+		spacer = { size = { 0 25 } }
+
+		window = {
+			datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			visible = yes
+			size = { 153 150 }
+			alwaystransparent = yes
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			allow_outside = yes
+			# movable = yes
+
+			widget = {
+				size = { 100% 100% }
+				scale = 4
+				parentanchor = center
+				# this should be redone, to have one CoA texture and only swap the frames
+
+				coa_designer_preview_dynasty = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'dynasty')]"
+				}
+
+				coa_designer_preview_dynasty = {
+					visible = "[Not(GetVariableSystem.Exists('select_coa_preview'))]"
+				}
+
+				coa_designer_preview_dynasty = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'title')]"
+				}
+
+				coa_designer_preview_full = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'realm')]"
+					blockoverride "coa_mask" {
+						size = { 115 115 }
+						coat_of_arms_mask = "gfx/interface/coat_of_arms/house_mask_full.dds"
+					}
+				}
+			}
+
+#			#model
+#			 vbox = {
+#				state = {
+#					name = "coa_model"
+#					position = { 200 -150 }
+#					trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#				state = {
+#					name = "no_coa_model"
+#					position = { 0 0 }
+#					trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#				}
+#				# background = { using = Background_Area_Dark }
+#				hbox = {
+#					layoutpolicy_horizontal = expanding
+#					layoutpolicy_vertical = growing
+#
+#
+#					widget = {
+#						size = { 120 250 }
+#						layoutpolicy_horizontal = growing
+#						layoutpolicy_vertical = growing
+#						onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+#						onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+#						# background = { using = Background_Area_Dark }
+#
+#						cameracontrolwidget = {
+#							alwaystransparent = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#							# parentanchor = center
+#							name = "coa_designer_unit_preview"
+#							size = { 66% 66% }
+#
+#							gfxtype = game_entity_view
+#							effectname = "PdxGuiDefault"
+#							shaderfile = "gfx/FX/pdxgui_default.shader"
+#
+#							camera_position = { 0 5 -12 }
+#							camera_look_at = { 0 5 0 }
+#							gfx_environment_file = "gfx/map/environment/environment_unit_preview.txt"
+#							camera_rotation_pitch_limits = { 0 0 }
+#							camera_zoom_limits = { 0.5 1.0 }
+#							camera_translation_limits = { 0 0 0 }
+#
+#							icon = {
+#								name = "shadow_center"
+#								parentanchor = bottom|hcenter
+#								position = { 0 0 }
+#								state = {
+#									name = "coa_model"
+#									position = { 0 10 }
+#									size = { 120 50 }
+#									trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#								}
+#								state = {
+#									name = "no_coa_model"
+#									position = { 0 -25 }
+#									size = { 100 120 }
+#									trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#								}
+#								texture = "gfx/interface/frontend/portrait_main_menu_shadow.dds"
+#								size = { 50 70 }
+#								alpha = 0.35
+#							}
+#						}
+#						select_coa_preview = {
+#							parentanchor = center
+#							onclick = "[GetVariableSystem.Set('select_coa_preview', 'model')]"
+#							visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#						}
+#					}
+#				}
+#				widget = {
+#					size = { 50 50 }
+#					layoutpolicy_vertical = expanding
+#					# background = { using = Background_Area_Dark }
+#					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#			}
+
+			#guide v
+			window = {
+				size = { 20 100% }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_v')]"
+				position = { -1 0 }
+
+				state = {
+					name = reset_guides
+					position = { -1 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					tintcolor = { 0 0.3 1 1 }
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#guide h
+			window = {
+				size = { 100% 20 }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_h')]"
+
+				state = {
+					name = reset_guides
+					position = { 0 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					tintcolor = { 0 0.5 1 1 }
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#grid
+			# it doesn't align well but that's a task for another day
+			margin_widget = {
+				name = "grid"
+				visible = "[GetVariableSystem.Exists('grid')]"
+				size = { 100% 100% }
+				margin = { 150 0 }
+				position = { 2 -4 }
+
+				widget = {
+					size = { 100% 100% }
+					vbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+					}
+
+					hbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+					}
+				}
+			}
+
+			#big scrollbars
+			widget = {
+				size = { 612 600 }
+				position = { -1 2 }
+				allow_outside = yes
+				parentanchor = center
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[And(GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' ), GetVariableSystem.Exists('big_coa_scrollbars'))]"
+
+				button_icon = {
+					texture = "gfx/ps_position.dds"
+					alwaystransparent = yes
+					position = { -11 -20 }
+					upframe = 4
+				}
+
+				button_icon = {
+					texture = "gfx/ps_rotation.dds"
+					size = { 35 35 }
+					parentanchor = right|bottom
+					position = { 120 12 }
+					raw_tooltip = "COA_DESIGNER_ROTATION"
+
+					onclick = "[GetVariableSystem.Toggle('coa_rotation')]"
+					# visible = "[Not(GetVariableSystem.Exists('coa_rotation'))]"
+				}
+
+				button_icon = {
+					texture = "gfx/ps_resize.dds"
+					alwaystransparent = yes
+					parentanchor = bottom|right
+					position = { 10 8 }
+					upframe = 4
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					onclick = "[GetVariableSystem.Set('resize_both', 'yes')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					onclick = "[GetVariableSystem.Clear('resize_both')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				widget = {
+					scale = 0.8
+					size = { 120 120 }
+					parentanchor = right|bottom
+					position = { 130 -85 }
+					visible = "[GetVariableSystem.Exists('coa_rotation')]"
+
+					icon = {
+						size = { 120 120 }
+						texture = "gfx/ps_circle_frame.dds"
+						parentanchor = center
+						alpha = 0.7
+					}
+
+					text_label_center = {
+						parentanchor = hcenter
+						default_format = "#high"
+						position = { 0 23 }
+						raw_text = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]°"
+					}
+
+					scrollbar = {
+						direction = horizontal
+						parentanchor = center
+						size = { 80 20 }
+						wheelstep = 1
+
+						dec_button = {
+							button_select_arrow = {
+								mirror = horizontal
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+							}
+						}
+
+						inc_button = {
+							button_select_arrow = {
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_increment"
+							}
+						}
+
+						track = {
+							using = SettingsValueTrack
+						}
+
+						slider = {
+							using = SettingsValueSlider
+						}
+						min = 0
+						max = 360
+						step = 1
+
+						onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.Self )]"
+						onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailRotation( PdxGuiWidget.Self )]"
+						value = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]"
+					}
+
+					widget = {
+						alpha = 0.65
+						size = { 120 120 }
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 2 }
+							parentanchor = hcenter
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 0 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							parentanchor = right
+							size = { 16 16 }
+							position = { -13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 45 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							size = { 16 16 }
+							parentanchor = vcenter|right
+							position = { -3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 90 max = 360 visible = no }
+						}
+
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical
+							parentanchor = bottom|right
+							position = { -13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 135 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 -2 }
+							mirror = vertical
+							parentanchor = hcenter|bottom
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 180 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							mirror = horizontal
+							parentanchor = vcenter
+							size = { 16 16 }
+							position = { 3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 270 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical|horizontal
+							parentanchor = bottom
+							position = { 13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 225 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							mirror = horizontal
+							size = { 16 16 }
+							position = { 13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 315 max = 360 visible = no }
+						}
+					}
+				}
+
+				#position x
+				big_coa_slider_x = {
+					min = 0
+					max = 1
+					step = 0.005
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX, '(float)100')|1]"
+						position = { 30 -27 }
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX]"
+				}
+
+				#position y
+				big_coa_slider_y = {
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY, '(float)100')|1]"
+						position = { -10 23 }
+						fontsize = 16
+						widgetanchor = right
+						default_format = "#high"
+					}
+
+					min = 0
+					max = 1
+					step = 0.005
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY]"
+				}
+
+				#size x
+				big_coa_slider_x = {
+					visible = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size both
+				big_coa_slider_x = {
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size y
+				big_coa_slider_y = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = vcenter|right
+					position = { 20 0 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY, '(float)100')|1]"
+						position = { 35 -27 }
+						parentanchor = bottom
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY]"
+				}
+
+				#scale x
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')), Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale ))]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#scale both
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')),  CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleCombined( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+					blockoverride "marker_center" { }
+				}
+
+				#scale y
+				big_slider_markers_v = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					position = { 45 -5 }
+					# size = { 20 540 }
+					parentanchor = vcenter|right
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = horizontal
+					}
+
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#pos x
+				big_slider_markers = { }
+
+				#pos y
+				big_slider_markers_v = {
+					# position = { -40 0 }
+					# size = { 20 540 }
+					# parentanchor = vcenter
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+				}
+			}
+
+			#buttons
+			margin_widget = {
+				size = { 100% 100% }
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+
+				widget = {
+					visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+					parentanchor = center
+					size = { 505 505 }
+					# position = { -5 -5 }
+
+					coa_buttons_box = { }
+
+				}
+
+			}
+
+			expand = { }
+
+		}
+	}
+}
+
+types HouseCustomizationWindowTypes
+{
+	# Reusable component for a Coat of Arms Designer
+	# Requires a CoatOfArmsDesigner data context
+	type vbox_coa_designer_house = window {
+		focuspolicy = all
+		layer = top
+		alwaystransparent = yes
+		movable = no
+
+		vbox = {
+			alwaystransparent = no
+			datacontext = "[GetVariableSystem]"
+			spacing = 8
+			margin_left = 10
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					vbox_coa_designer_previews_house = { }
+
+					vbox = {
+						name = "coa_designer_center"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+
+						hbox = {
+							margin_top = 40
+							layoutpolicy_horizontal = expanding
+
+						}
+
+						expand = { }
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+
+							vbox = {
+								layoutpolicy_vertical = expanding
+								expand = { }
+								vbox_coa_designer_mode_and_back = { }
+							}
+
+							expand = { }
+
+							vbox_coa_designer_quartering_options = { }
+						}
+					}
+
+				}
+
+				vbox = {
+					layoutpolicy_vertical = expanding
+					margin_right = 10
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				vbox = {
+					name = "coa_designer_right"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+					margin_top = -6
+					margin_bottom = -10
+					max_width = 480
+
+					vbox_coa_designer_tabs = { }
+
+					widget_coa_designer_editor_panel = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+					}
+				}
+			}
+		}
+	}
+	type vbox_coa_designer_previews_house = vbox
+	{
+		name = "coa_designer_previews"
+
+		# expand = { }
+
+		# background = { using = Background_Area_Dark }
+
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 3
+
+			widget = {
+				size = { 0 30 }
+				layoutpolicy_horizontal = expanding
+
+				hbox = {
+					minimumsize = { -1 40 }
+					alpha = 0.8
+					spacing = 10
+					margin_top = -3
+					vbox_coa_designer_top_left_buttons = {
+						layoutpolicy_vertical = expanding
+						# layoutpolicy_horizontal = expanding
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+
+						onclick = "[GetVariableSystem.Toggle('grid')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('grid')]"
+						}
+						blockoverride "text"
+						{
+							text = "grid_symbol"
+							align = nobaseline
+							default_format = "#medium"
+							margin_top = 2
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_v"
+
+						onclick = "[GetVariableSystem.Toggle('guide_v')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_v')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#high  |"
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_h"
+
+						onclick = "[GetVariableSystem.Toggle('guide_h')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_h')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#medium —"
+						}
+					}
+
+					hbox = {
+						spacing = 10
+						visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							using = tooltip_se
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 1 1 1 0.6 }
+							}
+						}
+
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+							using = tooltip_se
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[GetVariableSystem.Exists('blue_guideline')]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 0 0.3 1 0.6 }
+							}
+						}
+
+						button_revert = {
+							onclick = "[PdxGuiTriggerAllAnimations('reset_guides')]"
+							visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+							tooltip = "reset_guides"
+							using = tooltip_se
+						}
+					}
+
+					widget = {
+						size = { 0 0 }
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('coa_edit_markers')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+						}
+
+						blockoverride "text"
+						{
+							text = "markers"
+						}
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('big_coa_scrollbars')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('big_coa_scrollbars')]"
+						}
+
+						blockoverride "text"
+						{
+							text = "sliders"
+						}
+					}
+
+					expand = { }
+				}
+
+				# text_single = {
+				# 	text = "COA_DESIGNER_HEADER"
+				# 	using = Font_Size_Medium
+				# 	parentanchor = center
+				# }
+
+				button_standard = {
+					raw_text = "Errors: [NumberOrErrors]"
+					onclick = "[ClearErrorLog]"
+					visible = "[Not(ReleaseMode)]"
+					parentanchor = right
+				}
+
+				background = {
+					margin_left = 15
+					margin_right = 5
+					margin_top = 0
+					margin_bottom = 5
+					# alpha = 0.5
+
+					texture = "gfx/interface/component_tiles/tile_title_bg_01.dds"
+					spriteType = Corneredtiled
+					spriteborder = { 40 8 }
+					texture_density = 2
+
+					modify_texture = {
+						name = "mask"
+						texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+						mirror = horizontal
+						spriteType = Corneredstretched
+						spriteborder = { 0 0 }
+						blend_mode = alphamultiply
+					}
+				}
+
+				expand = { }
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			margin_right = 10
+			margin_top = -3
+		}
+		
+		margin_widget = { # Shields & Banners
+			size = { 0 180 }
+			layoutpolicy_horizontal = expanding
+			alwaystransparent = yes
+			# background = { using = Background_Area_Dark }
+			margin_left = -84
+			margin_top = 25
+
+			onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+			onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+
+			flowcontainer = {
+				parentanchor = hcenter
+				spacing = 20
+				alwaystransparent = no
+				# allow_outside = yes
+							
+
+			ps_coa_preview_house_huge = {
+				name = "house_left"
+			}			
+
+			coa_designer_preview_full = {
+				parentanchor = vcenter
+				name = "realm_center"
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			}			
+			
+			ps_coa_preview_house_huge = {
+				name = "house_right"
+			}
+
+				widget = {
+					size = { 150 150 }
+				}
+			}
+
+			flowcontainer = {
+				# this is stupid, but the other option didn't work for some reason
+				parentanchor = hcenter
+				spacing = 20
+				position = { -85 100 }
+				alwaystransparent = yes
+				# background = { using = Background_Area_Dark }				
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'dynasty')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'dynasty'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'realm')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'realm'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'title')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'title'))]"
+				}
+			}
+		}
+
+		spacer = { size = { 0 25 } }
+
+		window = {
+			datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			visible = yes
+			size = { 153 150 }
+			alwaystransparent = yes
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			allow_outside = yes
+			# movable = yes
+
+			widget = {
+				size = { 100% 100% }
+				scale = 4
+				parentanchor = center
+				# this should be redone, to have one CoA texture and only swap the frames
+
+				coa_designer_preview_house = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'dynasty')]"
+				}
+
+				coa_designer_preview_house = {
+					visible = "[Not(GetVariableSystem.Exists('select_coa_preview'))]"
+				}
+
+				coa_designer_preview_house = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'title')]"
+				}
+
+				coa_designer_preview_full = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'realm')]"
+					blockoverride "coa_mask" {
+						size = { 115 115 }
+						coat_of_arms_mask = "gfx/interface/coat_of_arms/house_mask_full.dds"
+					}
+				}
+			}
+
+#			#model
+#			 vbox = {
+#				state = {
+#					name = "coa_model"
+#					position = { 200 -150 }
+#					trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#				state = {
+#					name = "no_coa_model"
+#					position = { 0 0 }
+#					trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#				}
+#				# background = { using = Background_Area_Dark }
+#				hbox = {
+#					layoutpolicy_horizontal = expanding
+#					layoutpolicy_vertical = growing
+#
+#
+#					widget = {
+#						size = { 120 250 }
+#						layoutpolicy_horizontal = growing
+#						layoutpolicy_vertical = growing
+#						onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+#						onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+#						# background = { using = Background_Area_Dark }
+#
+#						cameracontrolwidget = {
+#							alwaystransparent = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#							# parentanchor = center
+#							name = "coa_designer_unit_preview"
+#							size = { 66% 66% }
+#
+#							gfxtype = game_entity_view
+#							effectname = "PdxGuiDefault"
+#							shaderfile = "gfx/FX/pdxgui_default.shader"
+#
+#							camera_position = { 0 5 -12 }
+#							camera_look_at = { 0 5 0 }
+#							gfx_environment_file = "gfx/map/environment/environment_unit_preview.txt"
+#							camera_rotation_pitch_limits = { 0 0 }
+#							camera_zoom_limits = { 0.5 1.0 }
+#							camera_translation_limits = { 0 0 0 }
+#
+#							icon = {
+#								name = "shadow_center"
+#								parentanchor = bottom|hcenter
+#								position = { 0 0 }
+#								state = {
+#									name = "coa_model"
+#									position = { 0 10 }
+#									size = { 120 50 }
+#									trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#								}
+#								state = {
+#									name = "no_coa_model"
+#									position = { 0 -25 }
+#									size = { 100 120 }
+#									trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#								}
+#								texture = "gfx/interface/frontend/portrait_main_menu_shadow.dds"
+#								size = { 50 70 }
+#								alpha = 0.35
+#							}
+#						}
+#						select_coa_preview = {
+#							parentanchor = center
+#							onclick = "[GetVariableSystem.Set('select_coa_preview', 'model')]"
+#							visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#						}
+#					}
+#				}
+#				widget = {
+#					size = { 50 50 }
+#					layoutpolicy_vertical = expanding
+#					# background = { using = Background_Area_Dark }
+#					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#			}
+
+			#guide v
+			window = {
+				size = { 20 100% }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_v')]"
+				position = { -1 0 }
+
+				state = {
+					name = reset_guides
+					position = { -1 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					tintcolor = { 0 0.3 1 1 }
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#guide h
+			window = {
+				size = { 100% 20 }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_h')]"
+
+				state = {
+					name = reset_guides
+					position = { 0 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					tintcolor = { 0 0.5 1 1 }
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#grid
+			# it doesn't align well but that's a task for another day
+			margin_widget = {
+				name = "grid"
+				visible = "[GetVariableSystem.Exists('grid')]"
+				size = { 100% 100% }
+				margin = { 150 0 }
+				position = { 2 -4 }
+
+				widget = {
+					size = { 100% 100% }
+					vbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+					}
+
+					hbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+					}
+				}
+			}
+
+			#big scrollbars
+			widget = {
+				size = { 612 600 }
+				position = { -1 2 }
+				allow_outside = yes
+				parentanchor = center
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[And(GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' ), GetVariableSystem.Exists('big_coa_scrollbars'))]"
+
+				button_icon = {
+					texture = "gfx/ps_position.dds"
+					alwaystransparent = yes
+					position = { -11 -20 }
+					upframe = 4
+				}
+
+				button_icon = {
+					texture = "gfx/ps_rotation.dds"
+					size = { 35 35 }
+					parentanchor = right|bottom
+					position = { 120 12 }
+					raw_tooltip = "COA_DESIGNER_ROTATION"
+
+					onclick = "[GetVariableSystem.Toggle('coa_rotation')]"
+					# visible = "[Not(GetVariableSystem.Exists('coa_rotation'))]"
+				}
+
+				button_icon = {
+					texture = "gfx/ps_resize.dds"
+					alwaystransparent = yes
+					parentanchor = bottom|right
+					position = { 10 8 }
+					upframe = 4
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					onclick = "[GetVariableSystem.Set('resize_both', 'yes')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					onclick = "[GetVariableSystem.Clear('resize_both')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				widget = {
+					scale = 0.8
+					size = { 120 120 }
+					parentanchor = right|bottom
+					position = { 130 -85 }
+					visible = "[GetVariableSystem.Exists('coa_rotation')]"
+
+					icon = {
+						size = { 120 120 }
+						texture = "gfx/ps_circle_frame.dds"
+						parentanchor = center
+						alpha = 0.7
+					}
+
+					text_label_center = {
+						parentanchor = hcenter
+						default_format = "#high"
+						position = { 0 23 }
+						raw_text = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]°"
+					}
+
+					scrollbar = {
+						direction = horizontal
+						parentanchor = center
+						size = { 80 20 }
+						wheelstep = 1
+
+						dec_button = {
+							button_select_arrow = {
+								mirror = horizontal
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+							}
+						}
+
+						inc_button = {
+							button_select_arrow = {
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_increment"
+							}
+						}
+
+						track = {
+							using = SettingsValueTrack
+						}
+
+						slider = {
+							using = SettingsValueSlider
+						}
+						min = 0
+						max = 360
+						step = 1
+
+						onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.Self )]"
+						onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailRotation( PdxGuiWidget.Self )]"
+						value = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]"
+					}
+
+					widget = {
+						alpha = 0.65
+						size = { 120 120 }
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 2 }
+							parentanchor = hcenter
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 0 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							parentanchor = right
+							size = { 16 16 }
+							position = { -13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 45 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							size = { 16 16 }
+							parentanchor = vcenter|right
+							position = { -3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 90 max = 360 visible = no }
+						}
+
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical
+							parentanchor = bottom|right
+							position = { -13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 135 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 -2 }
+							mirror = vertical
+							parentanchor = hcenter|bottom
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 180 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							mirror = horizontal
+							parentanchor = vcenter
+							size = { 16 16 }
+							position = { 3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 270 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical|horizontal
+							parentanchor = bottom
+							position = { 13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 225 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							mirror = horizontal
+							size = { 16 16 }
+							position = { 13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 315 max = 360 visible = no }
+						}
+					}
+				}
+
+				#position x
+				big_coa_slider_x = {
+					min = 0
+					max = 1
+					step = 0.005
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX, '(float)100')|1]"
+						position = { 30 -27 }
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX]"
+				}
+
+				#position y
+				big_coa_slider_y = {
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY, '(float)100')|1]"
+						position = { -10 23 }
+						fontsize = 16
+						widgetanchor = right
+						default_format = "#high"
+					}
+
+					min = 0
+					max = 1
+					step = 0.005
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY]"
+				}
+
+				#size x
+				big_coa_slider_x = {
+					visible = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size both
+				big_coa_slider_x = {
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size y
+				big_coa_slider_y = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = vcenter|right
+					position = { 20 0 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY, '(float)100')|1]"
+						position = { 35 -27 }
+						parentanchor = bottom
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY]"
+				}
+
+				#scale x
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')), Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale ))]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#scale both
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')),  CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleCombined( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+					blockoverride "marker_center" { }
+				}
+
+				#scale y
+				big_slider_markers_v = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					position = { 45 -5 }
+					# size = { 20 540 }
+					parentanchor = vcenter|right
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = horizontal
+					}
+
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#pos x
+				big_slider_markers = { }
+
+				#pos y
+				big_slider_markers_v = {
+					# position = { -40 0 }
+					# size = { 20 540 }
+					# parentanchor = vcenter
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+				}
+			}
+
+			#buttons
+			margin_widget = {
+				size = { 100% 100% }
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+
+				widget = {
+					visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+					parentanchor = center
+					size = { 505 505 }
+					# position = { -5 -5 }
+
+					coa_buttons_box = { }
+
+				}
+
+			}
+
+			expand = { }
+
+		}
+	}
+}
+
+types RulerDesignerWindowTypes
+{
+	# Reusable component for a Coat of Arms Designer
+	# Requires a CoatOfArmsDesigner data context
+	type vbox_coa_designer_ruler = window {
+		focuspolicy = all
+		layer = top
+		alwaystransparent = yes
+		movable = no
+
+		vbox = {
+			alwaystransparent = no
+			datacontext = "[GetVariableSystem]"
+			spacing = 8
+			margin_left = 10
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					vbox_coa_designer_previews_ruler = { }
+
+					vbox = {
+						name = "coa_designer_center"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+
+						hbox = {
+							margin_top = 40
+							layoutpolicy_horizontal = expanding
+
+						}
+
+						expand = { }
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+
+							vbox = {
+								layoutpolicy_vertical = expanding
+								expand = { }
+								vbox_coa_designer_mode_and_back = { }
+							}
+
+							expand = { }
+
+							vbox_coa_designer_quartering_options = { }
+						}
+					}
+
+				}
+
+				vbox = {
+					layoutpolicy_vertical = expanding
+					margin_right = 10
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				vbox = {
+					name = "coa_designer_right"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+					margin_top = -6
+					margin_bottom = -10
+					max_width = 480
+
+					vbox_coa_designer_tabs = { }
+
+					widget_coa_designer_editor_panel = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+					}
+				}
+			}
+		}
+	}
+	type vbox_coa_designer_previews_ruler = vbox
+	{
+		name = "coa_designer_previews"
+
+		# expand = { }
+
+		# background = { using = Background_Area_Dark }
+
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 3
+
+			widget = {
+				size = { 0 30 }
+				layoutpolicy_horizontal = expanding
+
+				hbox = {
+					minimumsize = { -1 40 }
+					alpha = 0.8
+					spacing = 10
+					margin_top = -3
+					vbox_coa_designer_top_left_buttons = {
+						layoutpolicy_vertical = expanding
+						# layoutpolicy_horizontal = expanding
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+
+						onclick = "[GetVariableSystem.Toggle('grid')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('grid')]"
+						}
+						blockoverride "text"
+						{
+							text = "grid_symbol"
+							align = nobaseline
+							default_format = "#medium"
+							margin_top = 2
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_v"
+
+						onclick = "[GetVariableSystem.Toggle('guide_v')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_v')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#high  |"
+						}
+					}
+
+					button_checkbox_label = {
+						size = { 35 35 }
+						tooltip = "guide_h"
+
+						onclick = "[GetVariableSystem.Toggle('guide_h')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('guide_h')]"
+						}
+						blockoverride "text"
+						{
+							raw_text = "#medium —"
+						}
+					}
+
+					hbox = {
+						spacing = 10
+						visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							using = tooltip_se
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 1 1 1 0.6 }
+							}
+						}
+
+						button_color_selection_tab = {
+							tooltip = "guide_color"
+							size = { 35 30 }
+							blockoverride "color_size" {
+								size = { 25 25 }
+							}
+							using = tooltip_se
+
+							onclick = "[GetVariableSystem.Toggle('blue_guideline')]"
+							visible = "[GetVariableSystem.Exists('blue_guideline')]"
+
+							blockoverride "button_color"
+							{
+								tintcolor = { 0 0.3 1 0.6 }
+							}
+						}
+
+						button_revert = {
+							onclick = "[PdxGuiTriggerAllAnimations('reset_guides')]"
+							visible = "[Or(GetVariableSystem.Exists('guide_v'), GetVariableSystem.Exists('guide_h'))]"
+							tooltip = "reset_guides"
+							using = tooltip_se
+						}
+					}
+
+					widget = {
+						size = { 0 0 }
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('coa_edit_markers')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[Not(GetVariableSystem.Exists('coa_edit_markers'))]"
+						}
+
+						blockoverride "text"
+						{
+							text = "markers"
+						}
+					}
+
+					button_checkbox_label = {
+						# tooltip = "big_scrollbars"
+						size = { 25 25 }
+
+						# using = tooltip_se
+
+						onclick = "[GetVariableSystem.Toggle('big_coa_scrollbars')]"
+
+						blockoverride "checkbox"
+						{
+							checked = "[GetVariableSystem.Exists('big_coa_scrollbars')]"
+						}
+
+						blockoverride "text"
+						{
+							text = "sliders"
+						}
+					}
+
+					expand = { }
+				}
+
+				# text_single = {
+				# 	text = "COA_DESIGNER_HEADER"
+				# 	using = Font_Size_Medium
+				# 	parentanchor = center
+				# }
+
+				button_standard = {
+					raw_text = "Errors: [NumberOrErrors]"
+					onclick = "[ClearErrorLog]"
+					visible = "[Not(ReleaseMode)]"
+					parentanchor = right
+				}
+
+				background = {
+					margin_left = 15
+					margin_right = 5
+					margin_top = 0
+					margin_bottom = 5
+					# alpha = 0.5
+
+					texture = "gfx/interface/component_tiles/tile_title_bg_01.dds"
+					spriteType = Corneredtiled
+					spriteborder = { 40 8 }
+					texture_density = 2
+
+					modify_texture = {
+						name = "mask"
+						texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+						mirror = horizontal
+						spriteType = Corneredstretched
+						spriteborder = { 0 0 }
+						blend_mode = alphamultiply
+					}
+				}
+
+				expand = { }
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+			}
+			margin_right = 10
+			margin_top = -3
+		}
+		
+		margin_widget = { # Shields & Banners
+			size = { 0 180 }
+			layoutpolicy_horizontal = expanding
+			alwaystransparent = yes
+			# background = { using = Background_Area_Dark }
+			margin_left = -84
+			margin_top = 25
+
+			onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+			onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+
+			flowcontainer = {
+				parentanchor = hcenter
+				spacing = 20
+				alwaystransparent = no
+				# allow_outside = yes
+							
+
+			ps_coa_preview_ruler_huge = {
+				name = "house_left"
+			}			
+
+			ps_coa_preview_realm_huge = {
+				name = "realm_center"
+				datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			}			
+			
+			ps_coa_preview_ruler_huge = {
+				name = "house_right"
+			}
+
+				widget = {
+					size = { 150 150 }
+				}
+			}
+
+			flowcontainer = {
+				# this is stupid, but the other option didn't work for some reason
+				parentanchor = hcenter
+				spacing = 20
+				position = { -85 100 }
+				alwaystransparent = yes
+				# background = { using = Background_Area_Dark }				
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'dynasty')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'dynasty'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'realm')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'realm'))]"
+				}
+				widget = {
+					size = { 70 0 }
+				}
+				select_coa_preview = {
+					onclick = "[GetVariableSystem.Set('select_coa_preview', 'title')]"
+					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'title'))]"
+				}
+			}
+		}
+
+		spacer = { size = { 0 25 } }
+
+		window = {
+			datacontext = "[CoatOfArmsDesigner.GetPreviewCoA.GetCoA]"
+			visible = yes
+			size = { 153 150 }
+			alwaystransparent = yes
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			allow_outside = yes
+			# movable = yes
+
+			widget = {
+				size = { 100% 100% }
+				scale = 4
+				parentanchor = center
+				# this should be redone, to have one CoA texture and only swap the frames
+
+				coa_designer_preview = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'dynasty')]"
+					blockoverride "coa_frame" {
+						texture = "gfx/interface/coat_of_arms/title_344.dds" # PATRUM SCUTA - Changed to PS frame
+						# size = { 172 172 }
+						size = { 128 128 }
+						position = { -1 0 }								
+					}
+				}
+
+				coa_designer_preview = {
+					visible = "[Not(GetVariableSystem.Exists('select_coa_preview'))]"
+				}
+
+				coa_designer_preview_ruler = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'title')]"
+				}
+
+				coa_designer_preview_full = {
+					visible = "[GetVariableSystem.HasValue('select_coa_preview', 'realm')]"
+					blockoverride "coa_mask" {
+						size = { 115 115 }
+						coat_of_arms_mask = "gfx/interface/coat_of_arms/house_mask_full.dds"
+					}
+				}
+			}
+
+#			#model
+#			 vbox = {
+#				state = {
+#					name = "coa_model"
+#					position = { 200 -150 }
+#					trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#				state = {
+#					name = "no_coa_model"
+#					position = { 0 0 }
+#					trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#				}
+#				# background = { using = Background_Area_Dark }
+#				hbox = {
+#					layoutpolicy_horizontal = expanding
+#					layoutpolicy_vertical = growing
+#
+#
+#					widget = {
+#						size = { 120 250 }
+#						layoutpolicy_horizontal = growing
+#						layoutpolicy_vertical = growing
+#						onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('select_coa_preview')]"
+#						onmousehierarchyleave = "[PdxGuiTriggerAllAnimations('hide_coa_preview')]"
+#						# background = { using = Background_Area_Dark }
+#
+#						cameracontrolwidget = {
+#							alwaystransparent = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#							# parentanchor = center
+#							name = "coa_designer_unit_preview"
+#							size = { 66% 66% }
+#
+#							gfxtype = game_entity_view
+#							effectname = "PdxGuiDefault"
+#							shaderfile = "gfx/FX/pdxgui_default.shader"
+#
+#							camera_position = { 0 5 -12 }
+#							camera_look_at = { 0 5 0 }
+#							gfx_environment_file = "gfx/map/environment/environment_unit_preview.txt"
+#							camera_rotation_pitch_limits = { 0 0 }
+#							camera_zoom_limits = { 0.5 1.0 }
+#							camera_translation_limits = { 0 0 0 }
+#
+#							icon = {
+#								name = "shadow_center"
+#								parentanchor = bottom|hcenter
+#								position = { 0 0 }
+#								state = {
+#									name = "coa_model"
+#									position = { 0 10 }
+#									size = { 120 50 }
+#									trigger_when = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#								}
+#								state = {
+#									name = "no_coa_model"
+#									position = { 0 -25 }
+#									size = { 100 120 }
+#									trigger_when = "[GetVariableSystem.HasValue('select_coa_preview', 'model')]"
+#								}
+#								texture = "gfx/interface/frontend/portrait_main_menu_shadow.dds"
+#								size = { 50 70 }
+#								alpha = 0.35
+#							}
+#						}
+#						select_coa_preview = {
+#							parentanchor = center
+#							onclick = "[GetVariableSystem.Set('select_coa_preview', 'model')]"
+#							visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#						}
+#					}
+#				}
+#				widget = {
+#					size = { 50 50 }
+#					layoutpolicy_vertical = expanding
+#					# background = { using = Background_Area_Dark }
+#					visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+#				}
+#			}
+
+			#guide v
+			window = {
+				size = { 20 100% }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_v')]"
+				position = { -1 0 }
+
+				state = {
+					name = reset_guides
+					position = { -1 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					tintcolor = { 0 0.3 1 1 }
+					size = { 1 100% }
+					parentanchor = center
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#guide h
+			window = {
+				size = { 100% 20 }
+				movable = yes
+				alwaystransparent = no
+				parentanchor = center
+				visible = "[GetVariableSystem.Exists('guide_h')]"
+
+				state = {
+					name = reset_guides
+					position = { 0 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					visible = "[Not(GetVariableSystem.Exists('blue_guideline'))]"
+				}
+				icon = {
+					texture = "gfx/interface/colors/white.dds"
+					size = { 100% 1 }
+					parentanchor = center
+					tintcolor = { 0 0.5 1 1 }
+					visible = "[GetVariableSystem.Exists('blue_guideline')]"
+				}
+			}
+
+			#grid
+			# it doesn't align well but that's a task for another day
+			margin_widget = {
+				name = "grid"
+				visible = "[GetVariableSystem.Exists('grid')]"
+				size = { 100% 100% }
+				margin = { 150 0 }
+				position = { 2 -4 }
+
+				widget = {
+					size = { 100% 100% }
+					vbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+						guide_h = { }
+					}
+
+					hbox = {
+						layoutpolicy_vertical = expanding
+						layoutpolicy_horizontal = expanding
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+						guide_v = { }
+					}
+				}
+			}
+
+			#big scrollbars
+			widget = {
+				size = { 612 600 }
+				position = { -1 2 }
+				allow_outside = yes
+				parentanchor = center
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[And(GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' ), GetVariableSystem.Exists('big_coa_scrollbars'))]"
+
+				button_icon = {
+					texture = "gfx/ps_position.dds"
+					alwaystransparent = yes
+					position = { -11 -20 }
+					upframe = 4
+				}
+
+				button_icon = {
+					texture = "gfx/ps_rotation.dds"
+					size = { 35 35 }
+					parentanchor = right|bottom
+					position = { 120 12 }
+					raw_tooltip = "COA_DESIGNER_ROTATION"
+
+					onclick = "[GetVariableSystem.Toggle('coa_rotation')]"
+					# visible = "[Not(GetVariableSystem.Exists('coa_rotation'))]"
+				}
+
+				button_icon = {
+					texture = "gfx/ps_resize.dds"
+					alwaystransparent = yes
+					parentanchor = bottom|right
+					position = { 10 8 }
+					upframe = 4
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[Not(CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					onclick = "[GetVariableSystem.Set('resize_both', 'yes')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				button = {
+					parentanchor = bottom|right
+					position = { 70 10 }
+					size = { 60 30 }
+					onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.ToggleMatchEmblemDetailScale]"
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					onclick = "[GetVariableSystem.Clear('resize_both')]"
+
+					button_checkbox = {
+						checked = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+						alwaystransparent = yes
+						position = { 30 0 }
+					}
+					button_icon = {
+						alwaystransparent = yes
+						texture = "gfx/ps_link.dds"
+					}
+					# blockoverride "checkbox"
+					# {
+					# }
+					tooltip = "COA_DESIGNER_SCALE_COMBINED_CHECKBOX_LABEL"
+				}
+
+				widget = {
+					scale = 0.8
+					size = { 120 120 }
+					parentanchor = right|bottom
+					position = { 130 -85 }
+					visible = "[GetVariableSystem.Exists('coa_rotation')]"
+
+					icon = {
+						size = { 120 120 }
+						texture = "gfx/ps_circle_frame.dds"
+						parentanchor = center
+						alpha = 0.7
+					}
+
+					text_label_center = {
+						parentanchor = hcenter
+						default_format = "#high"
+						position = { 0 23 }
+						raw_text = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]°"
+					}
+
+					scrollbar = {
+						direction = horizontal
+						parentanchor = center
+						size = { 80 20 }
+						wheelstep = 1
+
+						dec_button = {
+							button_select_arrow = {
+								mirror = horizontal
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_decrement"
+							}
+						}
+
+						inc_button = {
+							button_select_arrow = {
+								size = { 0 0 }
+								clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_increment"
+							}
+						}
+
+						track = {
+							using = SettingsValueTrack
+						}
+
+						slider = {
+							using = SettingsValueSlider
+						}
+						min = 0
+						max = 360
+						step = 1
+
+						onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.Self )]"
+						onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailRotation( PdxGuiWidget.Self )]"
+						value = "[IntToFloat( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailRotation )]"
+					}
+
+					widget = {
+						alpha = 0.65
+						size = { 120 120 }
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 2 }
+							parentanchor = hcenter
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 0 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							parentanchor = right
+							size = { 16 16 }
+							position = { -13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 45 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							size = { 16 16 }
+							parentanchor = vcenter|right
+							position = { -3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 90 max = 360 visible = no }
+						}
+
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical
+							parentanchor = bottom|right
+							position = { -13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 135 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_vertical.dds"
+							size = { 16 16 }
+							position = { 0 -2 }
+							mirror = vertical
+							parentanchor = hcenter|bottom
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 180 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_horizontal.dds"
+							mirror = horizontal
+							parentanchor = vcenter
+							size = { 16 16 }
+							position = { 3 0 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 270 max = 360 visible = no }
+						}
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							size = { 16 16 }
+							mirror = vertical|horizontal
+							parentanchor = bottom
+							position = { 13 -13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 225 max = 360 visible = no }
+						}
+
+						button_icon = {
+							texture = "gfx/ps_arrow_diagonal.dds"
+							mirror = horizontal
+							size = { 16 16 }
+							position = { 13 13 }
+							onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailRotation( PdxGuiWidget.FindChild('x').Self )]"
+							scrollbar = { name = "x" value = 315 max = 360 visible = no }
+						}
+					}
+				}
+
+				#position x
+				big_coa_slider_x = {
+					min = 0
+					max = 1
+					step = 0.005
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX, '(float)100')|1]"
+						position = { 30 -27 }
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisX]"
+				}
+
+				#position y
+				big_coa_slider_y = {
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY, '(float)100')|1]"
+						position = { -10 23 }
+						fontsize = 16
+						widgetanchor = right
+						default_format = "#high"
+					}
+
+					min = 0
+					max = 1
+					step = 0.005
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailPositionAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailPositionAxisY]"
+				}
+
+				#size x
+				big_coa_slider_x = {
+					visible = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size both
+				big_coa_slider_x = {
+					visible = "[CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale]"
+					parentanchor = bottom|hcenter
+					position = { 0 10 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_right = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX, '(float)100')|1]"
+						position = { -30 30 }
+						fontsize = 16
+						widgetanchor = right
+						parentanchor = right
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisX( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisX]"
+				}
+
+				#size y
+				big_coa_slider_y = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					parentanchor = vcenter|right
+					position = { 20 0 }
+					min = 0
+					max = 1
+					step = 0.005
+
+					text_label_left = {
+						text = "[Multiply_float(CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY, '(float)100')|1]"
+						position = { 35 -27 }
+						parentanchor = bottom
+						fontsize = 16
+						default_format = "#high"
+					}
+
+					onvaluechanged = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.Self)]"
+					onchangefinish = "[CoatOfArmsDesignerEmblemInstancesPanel.FinishEditDetailScaleAxisY( PdxGuiWidget.Self  )]"
+					value = "[CoatOfArmsDesignerEmblemInstancesPanel.GetDetailScaleAxisY]"
+				}
+
+				#scale x
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')), Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale ))]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisX( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#scale both
+				big_slider_markers = {
+					blockoverride "visible" {
+						visible = "[And(Not(GetVariableSystem.Exists('coa_edit_markers')),  CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale)]"
+					}
+					parentanchor = bottom|hcenter
+					position = { 0 30 }
+
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleCombined( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = vertical
+					}
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+					blockoverride "marker_center" { }
+				}
+
+				#scale y
+				big_slider_markers_v = {
+					enabled = "[Not( CoatOfArmsDesignerEmblemInstancesPanel.ShouldMatchEmblemDetailScale )]"
+					position = { 45 -5 }
+					# size = { 20 540 }
+					parentanchor = vcenter|right
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailScaleAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+					blockoverride "mirror" {
+						mirror = horizontal
+					}
+
+					blockoverride "marker_center" { }
+
+					blockoverride "tooltip 3" {
+						raw_tooltip = "2/3"
+					}
+					blockoverride "tooltip 4" {
+						raw_tooltip = "3/4"
+					}
+				}
+
+				#pos x
+				big_slider_markers = { }
+
+				#pos y
+				big_slider_markers_v = {
+					# position = { -40 0 }
+					# size = { 20 540 }
+					# parentanchor = vcenter
+					blockoverride "click" {
+						onclick = "[CoatOfArmsDesignerEmblemInstancesPanel.EditDetailPositionAxisY( PdxGuiWidget.FindChild('x').Self )]"
+					}
+				}
+			}
+
+			#buttons
+			margin_widget = {
+				size = { 100% 100% }
+				datacontext = "[CoatOfArmsDesigner.GetEmblemInstancesPanel]"
+				visible = "[Not(GetVariableSystem.HasValue('select_coa_preview', 'model'))]"
+
+				widget = {
+					visible = "[GreaterThanOrEqualTo_int32( CoatOfArmsDesignerEmblemInstancesPanel.GetDetailEditIndex, '(int32)0' )]"
+					parentanchor = center
+					size = { 505 505 }
+					# position = { -5 -5 }
+
+					coa_buttons_box = { }
+
+				}
+
+			}
+
+			expand = { }
+
+		}
+	}
+}
+
+template coa_preview_icon_data
+{
+	coat_of_arms = "[CoatOfArms.GetTexture('(int32)80','(int32)80')]"
+	coat_of_arms_slot = "[CoatOfArms.GetSlot('(int32)80','(int32)80')]"
+	coat_of_arms_mask = "gfx/interface/coat_of_arms/designer_mask.dds"
+
+	block "coa_preview_size"
+	{
+		size = { 50 50 }
+	}
+}
+
+template CoatOfArmsDesignerAnimationResetState
+{
+	on_start = "[GetVariableSystem.Set( 'coa_designer_page', 'start' )]"
+
+	on_start = "[GetVariableSystem.Clear('coa_designer_background_color')]"
+	on_start = "[GetVariableSystem.Clear('coa_designer_emblem_color')]"
+	on_start = "[GetVariableSystem.Clear('coa_designer_emblem_detail_mode')]"
+}
+
+template CoatOfArmsDesignerClearEditState
+{
+	onclick = "[VariableSystem.Clear('coa_designer_background_color')]"
+	onclick = "[VariableSystem.Clear('coa_designer_emblem_color')]"
+	onclick = "[VariableSystem.Clear('coa_designer_emblem_detail_mode')]"
+	onclick = "[CoatOfArmsDesigner.GetEmblemInstancesPanel.ClearDetailEdit]"
+}

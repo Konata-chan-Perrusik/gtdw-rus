@@ -1,0 +1,54 @@
+types gh_county_view_changes
+{
+	type add_magic_target_county_button = button_round
+	{
+		visible = "[Not(GetScriptedGui('magic_gui_title_is_selected_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetCountyTitle.MakeScope).End))]"
+		size = { 50 50 }
+		onclick = "[GetScriptedGui('magic_gui_select_title_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetCountyTitle.MakeScope).End)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+
+		button_icon = {
+			size = { 20 20 }
+			texture = "gfx/interface/icons/flat_icons/plus_small.dds"
+			parentanchor = right|bottom
+		}
+		
+		button_icon = {
+			parentanchor = center
+			texture = "gfx/interface/icons/flat_icons/magic_add_icon.dds"
+			size = { 30 30 }
+			onclick = "[GetScriptedGui('magic_gui_select_title_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetCountyTitle.MakeScope).End)]"
+			oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+			clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		}
+		
+		tooltip = "add_magic_targets"
+	}
+	
+	type remove_magic_target_county_button = button_round
+	{
+		visible = "[GetScriptedGui('magic_gui_title_is_selected_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetCountyTitle.MakeScope).End)]"
+		size = { 50 50 }
+		onclick = "[GetScriptedGui('magic_gui_select_title_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetCountyTitle.MakeScope).End)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+
+		button_icon = {
+			size = { 20 20 }
+			texture = "gfx/interface/icons/flat_icons/minus_small.dds"
+			parentanchor = right|bottom
+		}
+		
+		button_icon = {
+			parentanchor = center
+			texture = "gfx/interface/icons/flat_icons/magic_add_icon.dds"
+			size = { 30 30 }
+			onclick = "[GetScriptedGui('magic_gui_select_title_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetCountyTitle.MakeScope).End)]"
+			oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+			clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		}
+		
+		tooltip = "remove_magic_targets"
+	}
+}

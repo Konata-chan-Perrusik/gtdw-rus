@@ -1,0 +1,545 @@
+##############################
+# CLIQUE MENU BY HAPCHAZZARD #
+##############################
+	
+window = {
+	name = "window_cliques"
+	parentanchor = top|right
+	layer = windows_layer
+	movable = no
+	using = Window_Size_MainTab
+	visible = "[And(GetVariableSystem.Exists('cliques_window_open'),IsInGame)]"	
+	state = {
+		name = _hide
+		trigger_when = "[Not(GetVariableSystem.Exists('cliques_window_open'))]"
+		using = Animation_FadeOut_Quick
+		using = Sound_WindowHide_Standard
+		using = Window_Position_MainTab_Hide
+		trigger_on_create = yes
+		trigger_when = "[IsGameViewOpen('my_realm')]"
+		trigger_when = "[IsGameViewOpen('military')]"
+		trigger_when = "[IsGameViewOpen('council_window')]"
+		trigger_when = "[IsGameViewOpen('court_window')]"
+		trigger_when = "[IsGameViewOpen('intrigue_window')]"
+		trigger_when = "[IsGameViewOpen('factions_window')]"
+		trigger_when = "[IsGameViewOpen('decisions')]"
+		trigger_when = "[IsGameViewOpen('activity_list_window')]"
+		trigger_when = "[GetVariableSystem.Exists('artifact_window_open')]"
+
+		on_start = "[GetVariableSystem.Clear('cliques_window_open')]"
+		on_start = "[GetVariableSystem.Clear('show_allied_cliques')]"
+	}
+	state = {
+		name = _show
+		trigger_when = "[GetVariableSystem.Exists('artifact_window_open')]"
+		using = Animation_FadeIn_Quick
+		using = Sound_WindowShow_Standard
+		using = Window_Position_MainTab
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('my_realm'), 'if_my_realm_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('military'), 'if_military_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('council_window'), 'if_council_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('court_window'), 'if_court_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('intrigue_window'), 'if_intrigue_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('factions_window'), 'if_factions_open', 'else_do_nothing' ) )]"
+		on_start = "[PdxGuiTriggerAllAnimations( Select_CString( IsGameViewOpen('decisions'), 'if_decisions_open', 'else_do_nothing' ) )]"
+		on_start = "[GetScriptedGui('get_character_cliques_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+	}
+	state = {
+		name = if_my_realm_open
+		on_start = "[ToggleGameView('my_realm')]"
+	}
+	state = {
+		name = if_military_open
+		on_start = "[ToggleGameViewData('military', GetPlayer.GetID)]"
+	}
+	state = {
+		name = if_council_open
+		on_start = "[ToggleGameViewData('council_window', GetPlayer.GetID)]"
+	}
+	state = {
+		name = if_court_open
+		on_start = "[ToggleGameViewData( 'court_window', GetPlayer.GetID )]"
+	}
+	state = {
+		name = if_intrigue_open
+		on_start = "[ToggleGameViewData('intrigue_window', GetPlayer.GetID)]"
+	}
+	state = {
+		name = if_factions_open
+		on_start = "[ToggleGameView('factions_window')]"
+	}
+	state = {
+		name = if_decisions_open
+		on_start = "[ToggleGameView('decisions')]"
+	}
+
+	state = {
+		name = else_do_nothing
+	}
+
+	background = {
+		texture = "gfx/interface/component_tiles/solid_black_label.dds"
+		margin_left = -40
+		fittype = centercrop
+	}
+	
+	margin_widget = {
+		size = { 100% 100% }
+		margin = { 0 26 }
+		margin_right = 20
+		widget = {
+			size = { 100% 100% }
+			using = Window_Background
+			
+			vbox = {
+				using = Window_Margins
+				
+				header_pattern = {
+					layoutpolicy_horizontal = expanding
+					
+					blockoverride "header_text"
+					{
+						text = "CLIQUES_VIEW_TITLE"
+					}
+					
+					blockoverride "button_close"
+					{
+						onclick = "[GetVariableSystem.Clear('cliques_window_open')]"
+					}
+				}
+				
+				button_checkbox_label = {
+					visible = "[GetScriptedGui('allied_cliques_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+					onclick = "[GetVariableSystem.Toggle( 'show_allied_cliques')]"
+					onclick = "[GetScriptedGui('allied_cliques_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+
+					blockoverride "checkbox"
+					{
+						checked = "[GetVariableSystem.Exists( 'show_allied_cliques')]"
+					}
+
+					blockoverride "text"
+					{
+						raw_text = "Show Allied Cliques"
+						min_width = 100
+					}
+				}
+				
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					
+					blockoverride "scrollbox_content"
+					{	
+						vbox = {
+							name = "clique_list"
+							datamodel = "[GetPlayer.MakeScope.GetList('displayed_character_cliques')]"
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							
+							item = {
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									spacing = 5
+									
+									divider_light = {
+										layoutpolicy_horizontal = expanding
+									}
+									
+									background = {
+										using = Background_Area
+										alpha = 0.2
+									}
+									
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										
+										coa_title_tiny_crown = {
+											visible = "[GetScriptedGui('clique_is_external_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('relevant_clique',Scope.Province.MakeScope).End)]"
+											datacontext = "[Scope.Var('latched_to_title').GetLandedTitle]"
+										}
+										
+										text_single = {
+											name = "name_clique"
+											layoutpolicy_horizontal = expanding
+											text = "[Localize(Concatenate(Scope.Var('clique_name').GetFlagName,'_name'))]"
+											align = nobaseline
+											default_format = "#high"
+											using = Font_Type_Flavor
+											fontsize = 26
+											autoresize = yes
+											margin_left = 10
+										}
+										
+										background = {
+											using = Background_Area_Solid
+											margin_bottom = 10
+											margin_top = 10
+											margin_left = 5
+											margin_right = 5
+										}
+										
+										text_single = {
+											name = "clique_power"
+											visible = "[Not(GetScriptedGui('clique_is_external_or_secret_society_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('relevant_clique',Scope.GetProvince.MakeScope).End))]"
+											layoutpolicy_horizontal = expanding
+											raw_text = "[GuiScope.SetRoot( Scope.GetProvince.MakeScope ).ScriptValue('clique_power_percentage')|1] %"
+											align = right
+											default_format = "#medium"
+											using = Font_Type_Standard
+											fontsize = 20
+											autoresize = yes
+											margin_right = 30
+										}
+										
+										expand = {}
+										
+										hbox = {
+											visible = "[GetScriptedGui('clique_is_external_or_secret_society_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('relevant_clique',Scope.GetProvince.MakeScope).End)]"
+											icon = {
+												name = "powerbase_icon"
+												size = { 30 30 }
+												framesize = { 28 28 }
+												texture = "gfx/interface/icons/portraits/powerful_vassal_small.dds"
+												frame = 3
+											}
+											
+											text_single = {
+												name = "clique_power"
+												layoutpolicy_horizontal = expanding
+												text = "[GuiScope.SetRoot( Scope.GetProvince.MakeScope ).ScriptValue('clique_total_power')|1]"
+												align = right
+												default_format = "#medium"
+												using = Font_Type_Standard
+												fontsize = 20
+												autoresize = yes
+												margin_right = 30
+											}
+										}
+									}
+									
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										layoutpolicy_vertical = expanding
+										
+										margin_top = 10
+										margin_left = 10
+										margin_right = 10
+										
+										textbox = {
+											name = "clique_desc"
+											layoutpolicy_horizontal = expanding
+											layoutpolicy_vertical = expanding
+											text = "[SelectLocalization('(bool)no','',Concatenate(Scope.Var('clique_name').GetFlagName,'_desc'))]"
+											align = nobaseline
+											default_format = "#high"
+											using = Font_Type_Standard
+											autoresize = yes
+											multiline = yes
+											
+											max_width = 500
+										}
+									}
+									
+									divider_light = {
+										layoutpolicy_horizontal = expanding
+										alpha = 0.8
+									}
+									
+									hbox = {
+										layoutpolicy_vertical = expanding
+										layoutpolicy_horizontal = expanding
+										vbox = {
+											layoutpolicy_vertical = expanding
+											
+											text_single = {
+												text = "GUIDING_VALUES_TITLE"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												default_format = "#weak"
+												align = center
+												
+												tooltip = "GUIDING_VALUES_TOOLTIP"
+											}
+											
+											dynamicgridbox = {
+												name = "guiding_virtues_grid"
+												datamodel = "[Scope.GetList('clique_guiding_principle_traits')]"
+												flipdirection = yes
+												datamodel_wrap = 3
+	
+												item = {
+													icon = {
+														datacontext = "[GetTrait(Scope.GetFlagName)]"
+														size = { 40 40 }
+														alwaystransparent = yes
+														texture = "[Trait.GetIcon( GetPlayer )]"
+	
+														#tooltipwidget = {
+														#	using = clique_window_trait_tooltip
+														#}
+	
+														block "tooltip_placement"
+														{
+															using = tooltip_ne
+															tooltip_offset = { 0 20 }
+														}
+													}
+												}
+											}
+											
+											text_single = {
+												text = "OPPOSED_VALUES_TITLE"
+												visible = "[GetScriptedGui('clique_has_opposed_values_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).End)]"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												default_format = "#weak"
+												align = center
+												
+												tooltip = "OPPOSED_VALUES_TOOLTIP"
+											}
+											
+											dynamicgridbox = {
+												name = "opposed_traits_grid"
+												datamodel = "[Scope.GetList('clique_guiding_principle_opposed_traits')]"
+												flipdirection = yes
+												datamodel_wrap = 3
+	
+												item = {
+													icon = {
+														datacontext = "[GetTrait(Scope.GetFlagName)]"
+														size = { 40 40 }
+														alwaystransparent = yes
+														texture = "[Trait.GetIcon( GetPlayer )]"
+	
+														block "tooltip_placement"
+														{
+															using = tooltip_ne
+															tooltip_offset = { 0 20 }
+														}
+													}
+												}
+											}
+											
+											text_single = {
+												text = "FAVORED_SKILLS_TITLE"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												default_format = "#weak"
+												align = center
+											}
+											
+											dynamicgridbox = {
+												datamodel = "[Scope.GetList('clique_guiding_principle_skills')]"
+												flipdirection = yes
+												datamodel_wrap = 3
+												item = {
+													flowcontainer = {
+														margin_left = 10
+														margin_right = 15
+														spacing = 4
+													
+														background = {
+															name = "skill_icon_bg"
+															texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+															framesize = { 70 26 }
+													
+															block "bg"
+															{
+																frame = "[Select_int32( EqualTo_string(Scope.GetFlagName,'Diplomacy') , '(int32)1', Select_int32(EqualTo_string(Scope.GetFlagName,'Martial'),'(int32)2', Select_int32(EqualTo_string(Scope.GetFlagName,'Stewardship'),'(int32)3', Select_int32(EqualTo_string(Scope.GetFlagName, 'Intrigue'), '(int32)4' , Select_int32(EqualTo_string(Scope.GetFlagName, 'Learning'), '(int32)5', Select_int32(EqualTo_string(Scope.GetFlagName, 'Prowess'), '(int32)6', '(int32)7'))) ) ) )]"
+															}
+														}
+													
+														block "tooltip"
+														{
+															tooltip = "SKILL_ITEM_TOOLTIP"
+														}
+													
+														icon = {
+															name = "skill_icon"
+															texture = "gfx/interface/icons/icon_skills.dds"
+															framesize = { 60 60 }
+													
+															block "icon"
+															{
+																frame = "[Select_int32( EqualTo_string(Scope.GetFlagName,'Diplomacy') , '(int32)1', Select_int32(EqualTo_string(Scope.GetFlagName,'Martial'),'(int32)2', Select_int32(EqualTo_string(Scope.GetFlagName,'Stewardship'),'(int32)3', Select_int32(EqualTo_string(Scope.GetFlagName, 'Intrigue'), '(int32)4' , Select_int32(EqualTo_string(Scope.GetFlagName, 'Learning'), '(int32)5', Select_int32(EqualTo_string(Scope.GetFlagName, 'Prowess'), '(int32)6', '(int32)7'))) ) ) )]"
+															}
+													
+															block "icon_size"
+															{
+																size = { 30 30 }
+															}
+													
+														}
+													}
+												}
+											}
+											
+											text_single = {
+												text = "CLIQUE_ASPECTS_TITLE"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												default_format = "#weak"
+												align = center
+											}
+											
+											vbox = {
+												datamodel = "[Scope.GetList('clique_guiding_principle_aspects')]"
+												
+												item = {
+													text_single = {
+														text = "[SelectLocalization('(bool)no','',Concatenate(Scope.GetFlagName,'_name'))]"
+														layoutpolicy_horizontal = expanding
+														layoutpolicy_vertical = expanding
+														align = center
+														margin_bottom = 10
+														tooltip = "[SelectLocalization('(bool)no','',Concatenate(Scope.GetFlagName,'_tooltip'))]"
+													}
+												}
+											}
+											
+											text_single = {
+												visible = "[GetScriptedGui('clique_has_geographic_constraint_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).End)]"
+												raw_text = "Constrained to [Scope.Var('clique_geographic_constraint').Title.GetNameNoTier]"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												align = center
+												margin_bottom = 10
+											}
+										}
+										 
+										vbox = {
+											layoutpolicy_vertical = expanding
+											
+											vbox = {
+												text_single = {
+													text = "CLIQUE_LEADER"
+													layoutpolicy_horizontal = expanding
+													layoutpolicy_vertical = expanding
+													default_format = "#weak"
+													align = center
+													margin_bottom = 5
+												}
+												text_single = {
+													text = "[Scope.Var('clique_leader').GetCharacter.GetName]"
+													layoutpolicy_horizontal = expanding
+													layoutpolicy_vertical = expanding
+													align = center
+													margin_bottom = 10
+												}
+												container = {
+													datacontext = "[Scope.Var('clique_leader').GetCharacter]"
+													visible = "[Scope.Var('clique_leader').IsSet]"
+		
+													portrait_head = {
+													
+													}
+												}
+											}
+											vbox = {
+												datamodel = "[Scope.GetList('valid_clique_interactions')]"
+												text_single = {
+													text = "CLIQUE_INTERACTIONS_TITLE"
+													layoutpolicy_horizontal = expanding
+													layoutpolicy_vertical = expanding
+													default_format = "#weak"
+													align = center
+													margin_bottom = 10
+												}
+												
+												button_standard = {
+													name = "join_clique_button"
+									
+													onclick = "[GetScriptedGui('join_clique_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+													visible = "[GetScriptedGui('join_clique_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+													enabled = "[GetScriptedGui('join_clique_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+													tooltip = "[GetScriptedGui('join_clique_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]" 
+									
+													text = "JOIN_CLIQUE"
+													parentanchor = top
+												}
+												
+												button_standard = {
+													name = "leave_clique_button"
+									
+													onclick = "[GetScriptedGui('leave_clique_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+													visible = "[GetScriptedGui('leave_clique_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+													enabled = "[GetScriptedGui('leave_clique_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+													tooltip = "[GetScriptedGui('leave_clique_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]" 
+													
+													text = "LEAVE_CLIQUE"
+													parentanchor = top
+												}
+												
+												item = {
+													button_standard = {
+														name = "clique_interaction_button"
+										
+														onclick = "[GetScriptedGui('clique_interaction_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+														enabled = "[GetScriptedGui('clique_interaction_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]"
+														tooltip = "[GetScriptedGui('clique_interaction_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_cliques',GetPlayer.MakeScope).End)]" 
+										
+														text = "[SelectLocalization('(bool)no','',Concatenate(Scope.Var('clique_interaction_name').GetFlagName,'_name'))]"
+														parentanchor = top
+													}
+												}
+											}
+											expand = {}
+										}
+									}
+									
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										button_group  = {
+											onclick = "[GetVariableSystem.Toggle(Concatenate(Scope.Var('clique_name').GetFlagName,'_displayed'))]"
+											
+											parentanchor = left
+							
+											button_normal = {
+												name = "show_members"
+												size = { 20 20 }
+												alwaystransparent = no
+							
+												texture = "gfx/interface/buttons/button_tree_expand.dds"
+												framesize = { 36 36 }
+												frame = "[Select_int32( Not(GetVariableSystem.Exists(Concatenate(Scope.Var('clique_name').GetFlagName,'_displayed'))), '(int32)1', '(int32)2' )]"
+							
+												using = tooltip_ws
+											}
+							
+											text_single = {
+												raw_text = "Show Members"
+												align = nobaseline
+												position = { 25 0 }
+											}
+										}
+										expand = {}
+									}
+									
+									dynamicgridbox = {
+										name = "clique_members_grid"
+										datamodel = "[Scope.GetProvince.MakeScope.GetList('clique_members')]"
+										visible = "[GetVariableSystem.Exists(Concatenate(Scope.Var('clique_name').GetFlagName,'_displayed'))]"
+										datamodel_wrap = 4
+										ignoreinvisible = yes
+										flipdirection = yes
+										
+										item = {
+											container = {
+												datacontext = "[Scope.GetCharacter]"
+	
+												portrait_head = {
+													
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

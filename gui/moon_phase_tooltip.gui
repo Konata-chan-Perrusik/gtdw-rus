@@ -1,0 +1,73 @@
+types MoonPhaseTooltips
+{
+	## moon_phase Breakdown Tooltip
+	type widget_moon_phase_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			
+			datacontext = "[GetGlobalVariable('current_moon_phase')]"
+			
+			restrictparent_min = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 5 }
+			margin_bottom = 15
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_bottom = 5
+				spacing = 5
+
+				block "header" {}
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					text = "[Localize(Concatenate(GetGlobalVariable('current_moon_phase').Var('moon_phase_name').GetFlagName,'_name'))]"
+					default_format = "#high;bold"
+					using = Font_Size_Medium
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+
+					background = {
+						using = Background_Area
+						margin = { 10 0 }
+						margin_bottom = 5
+					}
+				}
+				
+				text_multi = {
+					layoutpolicy_horizontal = expanding
+					text = "[Localize(Concatenate(GetGlobalVariable('current_moon_phase').Var('moon_phase_name').GetFlagName,'_desc'))]"
+					autoresize = yes
+					max_width = 350
+				}
+			}
+			
+			vbox = {
+				datamodel = "[GetGlobalVariable('current_moon_phase').GetList('moon_phase_modifier_list')]"
+			
+				layoutpolicy_horizontal = expanding
+				
+				item = {
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						
+						text_single = {
+							raw_text = "[Localize(Concatenate(Scope.GetFlagName,'_modifier_name'))]:"
+						}
+						
+						expand = {}
+						
+						text_single = {
+							raw_text = "[Localize(Concatenate(Scope.GetFlagName,'_modifier_formatting'))][GetGlobalVariable('current_moon_phase').Var(Scope.GetFlagName).GetValue|0]%#!"
+						}
+					}
+				}
+			}
+		}
+	}
+}

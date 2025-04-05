@@ -1,0 +1,5947 @@
+######################################################
+################### FAITH WINDOW #####################
+######################################################
+
+window = {
+	name = "faith_window"
+	widgetid = "faith_window"
+	datacontext = "[FaithWindow.GetFaith]"
+	datacontext = "[GetVariableSystem]"
+	movable = no
+	layer = middle
+
+	using = Window_Size_Sidebar
+	using = Window_Background_Sidebar
+
+	state = {
+		name = _show
+		position = { 0 0 }
+		on_start = "[GetVariableSystem.Set( 'faith_view_tabs', 'beliefs' )]"
+		on_start = "[GetVariableSystem.Set( 'hide_bottom_left_HUD', 'true' )]"
+
+		using = Animation_FadeIn_Quick
+		using = Sound_WindowShow_Standard
+	}
+
+	state = {
+		name = _hide
+		position = { -60 0 }
+		on_start = "[GetVariableSystem.Clear( 'hide_bottom_left_HUD' )]"
+
+
+		using = Animation_FadeOut_Quick
+		using = Sound_WindowHide_Standard
+	}
+
+	### INSIDE WINDOW
+	vbox = {
+		using = Window_Margins_Sidebar
+
+		### Header
+		widget_header_with_picture = {
+			name = "header"
+			datacontext = "[GetIllustration( 'religion_interior' )]"
+			size = { 0 130 }
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = fixed
+
+			blockoverride "size" {
+				size = { 100% 143 }
+			}
+
+			blockoverride "header_text"
+			{
+				text = "FAITH_VIEW_HEADING"
+				using = tooltip_es
+
+				state = {
+					name = "faith_view_refresh"
+					using = Animation_Refresh_FadeOut
+				}
+
+				state = {
+					using = Animation_Refresh_FadeIn
+				}
+			}
+
+			blockoverride "button_close"
+			{
+				onclick = "[FaithWindow.Close]"
+			}
+
+			blockoverride "button_back"
+			{
+				visible = "[HasViewHistory]"
+				onclick = "[OpenFromViewHistory]"
+				tooltip = "[GetViewHistoryTooltip]"
+			}
+
+			blockoverride "button_me"
+			{
+				onclick = "[DefaultOnCharacterClick(GetPlayer.GetID)]"
+			}
+
+			blockoverride "illustration_texture"
+			{
+				texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+				spriteType = stretched
+				fittype = centercrop
+				alpha = 0.35
+			}
+
+			hbox = {
+				datacontext = "[FaithWindow.GetFaith]"
+
+				watch_window_button = {
+					size = { 60 40 }
+					onclick = "[AddWatchWindow( FaithWindow.GetFaith.MakeScope )]"
+				}
+
+				vbox = {
+					margin_top = 30
+					margin_left = 10
+
+					icon = {
+						name = "faith_icon"
+						size = { 100 100 }
+						texture = "[Faith.GetIcon]"
+						using = tooltip_se
+						tooltipwidget = {
+							faith_tooltip = {}
+						}
+
+						state = {
+							name = "faith_view_refresh"
+							using = Animation_Refresh_FadeOut
+						}
+
+						state = {
+							using = Animation_Refresh_FadeIn
+						}
+					}
+				}
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					expand = {}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+
+						expand = {}
+
+						vbox = {
+							layoutpolicy_vertical = expanding
+							margin_bottom = 4
+							margin_left = 25
+							spacing = 1
+
+							text_single = {
+								name = "your_faith"
+								visible = "[ObjectsEqual( GetPlayer.GetFaith, Faith.Self )]"
+								text = "FAITH_VIEW_YOUR_FAITH"
+								align = nobaseline|center
+							}
+
+							expand = {}
+
+							text_single = {
+								name = "our_view"
+								visible = "[Not(ObjectsEqual( GetPlayer.GetFaith, Faith.Self ))]"
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_VIEW_OUR_VIEW"
+								align = nobaseline|center
+							}
+
+							text_single = {
+								name = "their_view"
+								visible = "[Not(ObjectsEqual( GetPlayer.GetFaith, Faith.Self ))]"
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_VIEW_THEIR_VIEW"
+								align = nobaseline|center
+							}
+						}
+
+						expand = {}
+
+						vbox = {
+							margin = { 10 0 }
+							spacing = 2
+
+							fervor_container_vbox = {}
+
+							button_sidepanel_right = {
+								name = "religion_information"
+								datacontext = "[Faith.GetReligion]"
+								onclick = "[FaithWindow.ToggleReligionWindow]"
+								tooltip = "TOGGLE_RELIGION_VIEW_TOOLTIP"
+
+								using = tooltip_nw
+
+								blockoverride "button_text"
+								{
+									text = "TOGGLE_RELIGION_VIEW"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			text_single = {
+				visible = "[And( Not( Faith.GetReligion.HasPaganRoots ), Not( Faith.IsUnreformed ) )]"
+				text = "FAITH_VIEW_SUBHEADING"
+				align = center
+				parentanchor = top|hcenter
+				position = {0 40}
+				alpha = 0.9
+			}
+
+			text_label_center = {
+				visible = "[Faith.IsUnreformed]"
+				text = "FAITH_VIEW_UNREFORMED_SUBHEADING"
+				align = center
+				parentanchor = top|hcenter
+				position = {0 40}
+				alpha = 0.8
+			}
+
+			text_label_center = {
+				visible = "[And( Faith.GetReligion.HasPaganRoots, Not( Faith.IsUnreformed ) )]"
+				text = "FAITH_VIEW_REFORMED_SUBHEADING"
+				align = center
+				parentanchor = top|hcenter
+				position = {0 40}
+				alpha = 0.8
+			}
+		}
+
+		### Tabs
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			name = "tabs"
+
+			button_tab = {
+				layoutpolicy_horizontal = expanding
+				onclick = "[GetVariableSystem.Set( 'faith_view_tabs', 'beliefs' )]"
+				down = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'beliefs' )]"
+				text = "FAITH_BELIEFS"
+				default_format = "#low"
+
+				using = tooltip_below
+			}
+
+			button_tab = {
+				layoutpolicy_horizontal = expanding
+				onclick = "[GetVariableSystem.Set( 'faith_view_tabs', 'holy_sites' )]"
+				down = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'holy_sites' )]"
+				text = "FAITH_HOLY_SITES"
+				default_format = "#low"
+
+				using = tooltip_below
+			}
+			
+			button_tab = {
+				layoutpolicy_horizontal = expanding
+				visible = "[DataModelHasItems( FaithWindow.GetFaith.MakeScope.GetList('judges_list') )]"
+				onclick = "[GetVariableSystem.Set( 'faith_view_tabs', 'judges' )]"
+				down = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'judges' )]"
+				text = "FAITH_JUDGES"
+				default_format = "#low"
+			
+				using = tooltip_below
+			}
+			
+			button_tab = {
+				layoutpolicy_horizontal = expanding
+				visible = "[Or(DataModelHasItems( FaithWindow.GetFaith.GetReligion.MakeScope.GetList('legal_traditions') ),DataModelHasItems( FaithWindow.GetFaith.MakeScope.GetList('recognized_high_court_list') ))]"
+				onclick = "[GetVariableSystem.Set( 'faith_view_tabs', 'traditions' )]"
+				down = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'traditions' )]"
+				text = "FAITH_TRADITIONS"
+				default_format = "#low"
+			
+				using = tooltip_below
+			}
+			
+			button_tab = {
+				layoutpolicy_horizontal = expanding
+				visible = "[DataModelHasItems( FaithWindow.GetFaith.MakeScope.GetList('recognized_high_court_list') )]"
+				onclick = "[GetVariableSystem.Set( 'faith_view_tabs', 'high_court' )]"
+				down = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'high_court' )]"
+				raw_text = "High Court"
+				default_format = "#low"
+			
+				using = tooltip_below
+			}
+			
+			button_tab = {
+				layoutpolicy_horizontal = expanding
+				visible = "[DataModelHasItems( FaithWindow.GetFaith.MakeScope.GetList('patron_saint_list') )]"
+				onclick = "[GetVariableSystem.Set( 'faith_view_tabs', 'patron_saints' )]"
+				down = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'patron_saints' )]"
+				raw_text = "Patron Saints"
+				default_format = "#low"
+			
+				using = tooltip_below
+			}
+		}
+
+		vbox = {
+			name = "tab_beliefs"
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'beliefs' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			state = {
+				name = _show
+				using = Animation_FadeIn_Quick
+			}
+
+			state = {
+				name = _hide
+				alpha = 0
+			}
+
+			### Core Tenets
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 8
+				#margin_top = 15
+				margin = { 8 16 }
+				margin_bottom = 11
+
+				text_label_center = {
+					text = "FAITH_CORE_TENETS_HEADING"
+				}
+
+				hbox = {
+					name = "doctrines_grid_core_tenets"
+					datamodel = "[FaithWindow.GetGroupingHelper( 'core_tenets' ).GetGrouping]"
+					spacing = 52
+
+					state = {
+						name = "faith_view_refresh"
+						using = Animation_Refresh_FadeOut
+					}
+
+					state = {
+						using = Animation_Refresh_FadeIn
+					}
+
+					item = {
+						container_tenet_item = {
+							datacontext = "[GuiFaithDoctrineItem.GetDoctrine]"
+							datacontext = "[GuiFaithDoctrineItem.GetFaith]"
+							tooltip = "FAITH_WINDOW_DOCTRINE_TOOLTIP"
+						}
+					}
+				}
+			}
+
+			### Doctrines
+			vbox = {
+				name = "doctrines"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				#margin_top = 10
+
+				scrollbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+
+					blockoverride "scrollbox_content"
+					{ ## GH CHANGE: Beeg icons
+						spacing = 16
+						layoutpolicy_vertical = expanding
+                        allow_outside = no
+                        ignoreinvisible = yes
+
+						state = {
+							name = "faith_view_refresh"
+							using = Animation_Refresh_FadeOut
+						}
+
+						state = {
+							using = Animation_Refresh_FadeIn
+						}
+
+						vbox = {
+							name = "sins_and_virtues"
+							layoutpolicy_horizontal = expanding
+							spacing = 15
+
+							expand = {
+								layoutstretchfactor_horizontal = 1
+							}
+
+							divider_light = {
+								layoutpolicy_vertical = expanding
+							}
+
+							vbox = {
+								name = "virtues"
+								spacing = 1
+
+								hbox = {
+									spacing = 5
+									expand = {}
+
+									icon = {
+										texture = "gfx/interface/icons/traits/virtue_big.dds"
+									}
+
+									text_single = {
+										text = "FAITH_WINDOW_VIRTUES"
+										align = nobaseline
+									}
+								}
+
+								dynamicgridbox = {
+									name = "virtues_grid"
+									datamodel = "[FaithWindow.GetVirtues]"
+									flipdirection = yes
+									datamodel_wrap = 8
+									
+
+									item = {
+										icon = {
+											datacontext = "[GuiVirtueOrSinItem.GetTrait]"
+											size = { 60 60 }
+											alwaystransparent = yes
+											texture = "[Trait.GetIcon( GetPlayer )]"
+
+											tooltipwidget = {
+												using = faith_window_trait_tooltip
+											}
+
+											block "tooltip_placement"
+											{
+												using = tooltip_ne
+												tooltip_offset = { 0 20 }
+											}
+										}
+									}
+								}
+
+								expand = {}
+							}
+
+							vbox = {
+								name = "sins"
+								spacing = 1
+
+
+								hbox = {
+									spacing = 5
+
+									expand = {}
+
+									icon = {
+										texture = "gfx/interface/icons/traits/sin_big.dds"
+									}
+
+									text_single = {
+										text = "FAITH_WINDOW_SINS"
+										align = right|nobaseline
+									}
+								}
+
+								dynamicgridbox = {
+									name = "sins_grid"
+									datamodel = "[FaithWindow.GetSins]"
+									flipdirection = yes
+									datamodel_wrap = 8 #LotR
+
+									item = {
+										icon = {
+											datacontext = "[GuiVirtueOrSinItem.GetTrait]"
+											size = { 60 60 }
+											alwaystransparent = yes
+											texture = "[Trait.GetIcon( GetPlayer )]"
+
+											tooltipwidget = {
+												using = faith_window_trait_tooltip
+											}
+
+											block "tooltip_placement"
+											{
+												using = tooltip_ne
+												tooltip_offset = { 0 20 }
+											}
+										}
+									}
+								}
+
+								expand = {}
+							}
+
+							expand = {
+								layoutstretchfactor_horizontal = 20
+							}
+						}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 8
+
+							margin_bottom = -8
+
+							text_label_center = {
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_DOCTRINES_IMPORTANT"
+								default_format = "#low"
+							}
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+
+								hbox = {
+									name = "important_doctrines"
+									datamodel = "[FaithWindow.GetGroupingHelper( 'main_group' ).GetGrouping]"
+									#spacing = 15
+									layoutpolicy_vertical = expanding
+									minimumsize = { 0 108 }
+
+									item = {
+										vbox = {
+											layoutpolicy_vertical = expanding
+											minimumsize = { 100 0 }
+											name = "doctrine_list_item"
+											datacontext = "[GuiFaithDoctrineItem.GetDoctrine]"
+											visible = "[FaithDoctrine.IsVisible]"
+											tooltip = "FAITH_WINDOW_DOCTRINE_TOOLTIP"
+											using = tooltip_se
+
+											icon_doctrine = {
+												name = "doctrine_group_icon"
+												size = { 60 60 }
+												texture = "[FaithDoctrine.GetIcon]"
+											}
+
+											text_single = {
+												name = "doctrine_name"
+												align = center
+												#raw_text = "Bingo Bongo Tongo gyngo"
+												text = "[FaithDoctrine.GetNameNoTooltip( GuiFaithDoctrineItem.GetFaith )]"
+												default_format = "#high"
+												multiline = yes
+												max_width = 101   ##### minimum in order to look good in german
+											}
+
+											expand = {}
+										}
+									}
+								}
+							}
+						}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 12
+							margin_bottom = -10
+
+							text_label_center = {
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_DOCTRINES_MARRIAGE"
+								default_format = "#low"
+							}
+
+							fixedgridbox = {
+								datamodel = "[FaithWindow.GetGroupingHelper( 'marriage' ).GetGrouping]"
+								flipdirection = yes
+								addcolumn = 225
+								addrow = 67
+								datamodel_wrap = 2
+
+								item = {
+									widget_doctrine_item = {}
+								}
+							}
+						}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 12
+							margin_bottom = -10
+
+							text_label_center = {
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_DOCTRINES_CRIMES"
+								default_format = "#low"
+							}
+
+							fixedgridbox = {
+								datamodel = "[FaithWindow.GetGroupingHelper( 'crimes' ).GetGrouping]"
+								flipdirection = yes
+								addcolumn = 225
+								addrow = 67
+								datamodel_wrap = 2
+
+								item = {
+									widget_doctrine_item = {}
+								}
+							}
+						}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 12
+							margin_bottom = -10
+
+							text_label_center = {
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_DOCTRINES_CLERGY"
+								default_format = "#low"
+							}
+
+							fixedgridbox = {
+								datamodel = "[FaithWindow.GetGroupingHelper( 'clergy' ).GetGrouping]"
+								flipdirection = yes
+								addcolumn = 225
+								addrow = 67
+								datamodel_wrap = 2
+
+								item = {
+									widget_doctrine_item = {}
+								}
+							}
+						}
+
+						vbox = {
+							visible = "[DataModelHasItems(FaithWindow.GetGroupingHelper( 'special' ).GetGrouping)]"
+							layoutpolicy_horizontal = expanding
+							spacing = 7
+
+							text_label_center = {
+								layoutpolicy_horizontal = expanding
+								text = "FAITH_DOCTRINES_SPECIAL"
+								default_format = "#low"
+							}
+
+							vbox = {
+								datamodel = "[FaithWindow.GetGroupingHelper( 'special' ).GetGrouping]"
+								layoutpolicy_horizontal = expanding
+								margin_left = 50
+								margin_right = 66
+
+								spacing = 8
+
+								item = {
+									text_single = {
+										layoutpolicy_horizontal = expanding
+
+
+										margin = { 17 0 }
+										margin_top = 12
+										margin_bottom = 13
+
+										datacontext = "[GuiFaithDoctrineItem.GetDoctrine]"
+										datacontext = "[GuiFaithDoctrineItem.GetFaith]"
+
+										text = "[FaithDoctrine.GetNameNoTooltip( GuiFaithDoctrineItem.GetFaith )]"
+										tooltip = "FAITH_WINDOW_DOCTRINE_TOOLTIP_WITH_FAITH"
+
+										align = nobaseline
+
+										using = tooltip_es
+
+										background = {
+											using = Background_Area
+										}
+
+
+									}
+
+								}
+							}
+						}
+					}
+				}
+			}
+
+			widget = {
+				size = { 0 8 }
+			}
+
+			### Religious Head // Footer
+			vbox = {
+				name = "religious_head"
+				layoutpolicy_horizontal = expanding
+				#margin_top = { 0 10 }
+
+				state = {
+					name = "faith_view_refresh"
+					using = Animation_Refresh_FadeOut
+				}
+
+				state = {
+					using = Animation_Refresh_FadeIn
+				}
+
+				hbox = {
+					name = "current_hof"
+					layoutpolicy_horizontal = expanding
+					spacing = 5
+
+					background = {
+						using = Background_Area
+					}
+
+					portrait_head = {
+						name = "character_portrait"
+						datacontext = "[Faith.GetReligiousHead]"
+						visible = "[Faith.GetReligiousHead.IsValid]"
+
+						blockoverride "coa" {}
+						blockoverride "opinion_box"{}
+					}
+
+					portrait_head = {
+						name = "character_portrait_saint"
+						datacontext = "[Faith.MakeScope.Var('agionist_saint').GetCharacter]"
+						visible = "[Faith.MakeScope.Var('agionist_saint').IsSet]"
+
+						blockoverride "coa" {}
+						blockoverride "opinion_box"{}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						spacing = 3
+						margin = { 0 10 }
+
+						spacer = {
+							visible = "[Not( Faith.GetReligiousHead.IsValid)]"
+							size = { 10 3 }
+						}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							spacing = 5
+
+							text_label_left = {
+								layoutpolicy_horizontal = expanding
+								text = "RELIGIOUS_HEAD"
+								default_format = "#low"
+								fontsize_min = 14
+							}
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+
+								text_multi = {
+									visible = "[Faith.GetReligiousHead.IsValid]"
+									text = "RELIGIOUS_HEAD_WITH_NAME"
+									default_format = "#high"
+									layoutpolicy_horizontal = expanding
+									fontsize_min = 10
+								}
+
+								text_multi = {
+									visible = "[Not( Faith.GetReligiousHead.IsValid)]"
+									text = "RELIGIOUS_HEAD_EMPTY_DESC"
+									default_format = "#weak"
+									layoutpolicy_horizontal = expanding
+									align = left
+									fontsize_min = 10
+								}
+
+								expand = {}
+							}
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+
+								button_round = {
+									datacontext = "[Faith.GetReligiousHead]"
+									visible = "[Faith.GetReligiousHead.IsValid]"
+
+									tooltip = "HOF_INTERACTIONS_BUTTON_TOOLTIP"
+									tooltip_visible = "[Not(IsInteractionMenuOpenForCharacterWithFilter(Character.Self, 'interaction_category_religion'))]"
+
+									onclick = "[ToggleFilteredCharacterInteractionMenu(Character.Self, 'interaction_category_religion')]"
+
+									button_icon = {
+										alwaystransparent = yes
+										parentanchor = center
+										size = { 30 30 }
+										texture = "gfx/interface/icons/flat_icons/character_interactions.dds"
+									}
+
+									text_single = {
+										parentanchor = bottom|hcenter
+										position = { 0 3 }
+										text = "[GetNumberOfValidInteractionsWithFilter(Character.Self, 'interaction_category_religion')]"
+										default_format = "#glow_color:{0.1,0.1,0.1,1.0}"
+
+										background = {
+											margin = { 5 0 }
+											margin_top = -5
+											using = Background_Area_Dark
+										}
+									}
+								}
+
+								expand = {}
+							}
+
+							expand = {}
+						}
+					}
+
+					vbox = {
+						layoutpolicy_vertical = expanding
+						margin = { 0 5 }
+
+						divider_light = {
+							layoutpolicy_vertical = expanding
+						}
+					}
+
+					vbox = {
+						layoutpolicy_vertical = expanding
+						margin = { 5 5 }
+						spacing = 5
+
+						widget_doctrine_item = {
+							visible = "[Faith.HasDoctrineByKey( 'doctrine_no_head' )]"
+
+							blockoverride "background" {}
+
+							blockoverride "doctrine_icon"
+							{
+								texture = "[GetDoctrine( 'doctrine_no_head' ).GetIcon]"
+							}
+
+							blockoverride "wdi_context"
+							{
+								datacontext = "[GetDoctrine('doctrine_no_head')]"
+								datacontext = "[Faith]"
+							}
+						}
+
+						widget_doctrine_item = {
+							visible = "[Faith.HasDoctrineByKey( 'doctrine_spiritual_head' )]"
+
+							blockoverride "background" {}
+
+							blockoverride "doctrine_icon"
+							{
+								texture = "[GetDoctrine( 'doctrine_spiritual_head' ).GetIcon]"
+							}
+
+							blockoverride "wdi_context"
+							{
+								datacontext = "[GetDoctrine('doctrine_spiritual_head')]"
+								datacontext = "[Faith]"
+							}
+						}
+
+						widget_doctrine_item = {
+							visible = "[Faith.HasDoctrineByKey( 'doctrine_temporal_head' )]"
+
+							blockoverride "background" {}
+
+							blockoverride "doctrine_icon"
+							{
+								texture = "[GetDoctrine( 'doctrine_temporal_head' ).GetIcon]"
+							}
+
+							blockoverride "wdi_context"
+							{
+								datacontext = "[GetDoctrine('doctrine_temporal_head')]"
+								datacontext = "[Faith]"
+							}
+						}
+
+						expand = {}
+
+						hbox = {
+							name = "hof_title"
+							layoutpolicy_horizontal = expanding
+							datacontext = "[Faith.GetReligiousHeadTitle]"
+							visible = "[Title.IsValid]"
+							margin_left = -5
+							spacing = 5
+
+							coa_title_tiny_crown = {
+								name = "head_title"
+							}
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+
+								text_multi = {
+									text = "[Title.GetNameNoTooltip|U]"
+									layoutpolicy_horizontal = expanding
+									autoresize = yes
+									max_width = 160
+								}
+
+								expand = {}
+							}
+						}
+
+						expand = {}
+					}
+				}
+			}
+			
+			vbox = {
+				name = "general_legal_tradition_information_maintab"
+				visible = "[And(ObjectsEqual(GetPlayer.GetFaith, FaithWindow.GetFaith),And(GetPlayer.HasTrait(GetTrait('lifestyle_jurist').Self), Not(Or(DataModelHasItems( FaithWindow.GetFaith.GetReligion.MakeScope.GetList('legal_traditions') ),DataModelHasItems( FaithWindow.GetFaith.MakeScope.GetList('recognized_high_court_list') )))))]"
+				layoutpolicy_horizontal = expanding
+				margin = { 0 10 }
+
+				state = {
+					name = "faith_view_refresh"
+					using = Animation_Refresh_FadeOut
+				}
+
+				state = {
+					using = Animation_Refresh_FadeIn
+				}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+					margin = { 0 10 }
+
+					background = {
+						using = Background_Area
+					}
+
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						spacing = 5
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							button_group = {
+								onclick = "[GetVariableSystem.Toggle('legal_information_expanded')]"
+				
+								button_normal = {
+									name = "show_legal_info"
+									size = { 20 20 }
+									alwaystransparent = no
+								
+									texture = "gfx/interface/buttons/button_tree_expand.dds"
+									framesize = { 36 36 }
+									frame = "[Select_int32( Not(GetVariableSystem.Exists('legal_information_expanded')), '(int32)1', '(int32)2' )]"
+								
+									using = tooltip_ws
+								}
+							}
+							
+							text_label_left = {
+								layoutpolicy_horizontal = expanding
+								raw_text = "Legal Information"
+								default_format = "#low"
+								fontsize_min = 14
+								margin_left = 25
+							}
+							
+							expand = {}
+						}
+						
+						hbox = {
+							visible = "[GetVariableSystem.Exists('legal_information_expanded')]"
+							layoutpolicy_horizontal = expanding
+							
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 10 }
+								spacing = 5
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										raw_text = "Workload"
+										default_format = "#high"
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_workload_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_workload_scope',MakeScopeFlag('high_workload')).End)]"
+		
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_workload').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_workload').GetFlagName,'high_workload')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "High"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_workload_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_workload_scope',MakeScopeFlag('medium_workload')).End)]"
+		
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( Not(GetPlayer.MakeScope.Var('judicial_workload').IsSet) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Normal"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_workload_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_workload_scope',MakeScopeFlag('low_workload')).End)]"
+		
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_workload').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_workload').GetFlagName,'low_workload')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Low"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								expand = {}
+							}
+							
+							divider_light = {
+								layoutpolicy_vertical = expanding
+							}
+							
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 10 }
+								spacing = 5
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										raw_text = "Approach"
+										default_format = "#high"
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('innovation_approach')).End)]"
+										tooltip = INNOVATION_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_approach').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'innovation_approach')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Innovation"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('scholarship_approach')).End)]"
+										tooltip = SCHOLARSHIP_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_approach').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'scholarship_approach')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Scholarship"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('grifting_approach')).End)]"
+										tooltip = GRIFTING_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_approach').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'grifting_approach')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Grifting"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('orthodoxy_approach')).End)]"
+										tooltip = ORTHODOXY_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( Or( Not(GetPlayer.MakeScope.Var('judicial_approach').IsSet), EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'orthodoxy_approach') ) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Orthodoxy"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								
+								expand = {}
+							}
+							
+							divider_light = {
+								layoutpolicy_vertical = expanding
+							}
+							
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 10 }
+								spacing = 5
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										raw_text = "Corruption & Radicalism"
+										default_format = "#high"
+									}
+									expand = {}
+								}
+								
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									margin_top = 5
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										
+										icon = {
+											texture = "gfx/interface/icons/message_feed/county_corruption.dds"
+											size = { 50 50 }
+										}
+										
+										text_single = {
+											name = "corruption_value_low"
+											visible = "[Or(Not(GetPlayer.MakeScope.Var('corruption').IsSet) , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50'))]"
+											text = "[GetPlayer.MakeScope.Var('corruption').GetValue|1]"
+											default_format = "#high"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "corruption_value_medium"
+											visible = "[And( GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50') , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)100'))]"
+											text = "[GetPlayer.MakeScope.Var('corruption').GetValue|1]"
+											default_format = "#color_yellow"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "corruption_value_high"
+											visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)100')]"
+											text = "[GetPlayer.MakeScope.Var('corruption').GetValue|1]"
+											default_format = "#N"
+											fontsize = 26
+											align = top
+										}
+									}
+									
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										
+										icon = {
+											texture = "gfx/interface/icons/icon_fervor.dds"
+											size = { 50 50 }
+										}
+										
+										text_single = {
+											name = "radicalism_value_low"
+											visible = "[Or(Not(GetPlayer.MakeScope.Var('radicalism').IsSet) , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50'))]"
+											text = "[GetPlayer.MakeScope.Var('radicalism').GetValue|1]"
+											default_format = "#high"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "radicalism_value_medium"
+											visible = "[And( GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50') , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100'))]"
+											text = "[GetPlayer.MakeScope.Var('radicalism').GetValue|1]"
+											default_format = "#color_yellow"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "radicalism_value_high"
+											visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100')]"
+											text = "[GetPlayer.MakeScope.Var('radicalism').GetValue|1]"
+											default_format = "#N"
+											fontsize = 26
+											align = top
+										}
+									}
+								}
+								
+								text_single = {
+									name = "radicalism_effects_label"
+									raw_text = "#EMP [SelectLocalization(Or(GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50'),GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50')),'Effects:','No effects at this level')]#!"
+									default_format = "#low"
+									layoutpolicy_horizontal = expanding
+									align = left
+								}
+								
+								text_multi = {
+									name = "radicalism_modifier_low_label"
+									visible = "[And( GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50') , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100'))]"
+									text = "[GetModifier('radicalism_modifier_low').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_multi = {
+									name = "radicalism_modifier_high_label"
+									visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100')]"
+									text = "[GetModifier('radicalism_modifier_high').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_multi = {
+									name = "corruption_modifier_low_label"
+									visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50'),LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)100'))]"
+									text = "[GetModifier('corruption_modifier_low').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_multi = {
+									name = "corruption_modifier_high_label"
+									visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)100')]"
+									text = "[GetModifier('corruption_modifier_high').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_single = {
+									name = "vulnerable_to_censure_label"
+									visible = "[Or(GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50'),GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50'))]"
+									raw_text = "@warning_icon! #X Vulnerable to Censure#!"
+									layoutpolicy_horizontal = expanding
+									align = left
+								}
+								expand = {}
+							}
+						}
+						
+						expand = {}
+					}
+				}
+				
+				#hbox = {
+				#	layoutpolicy_horizontal = expanding
+				#	visible = "[Not(GetPlayer.HasTrait(GetTrait('jurist_5').Self))]"
+				#	margin_left = 10
+				#	margin_right = 10
+				#	
+				#	icon = {
+				#		datacontext = "[GetPlayer.GetTraitFromGroup(GetTraitGroup('lifestyle_jurist').Self)]"
+				#		visible = "[GetPlayer.HasTraitFromGroup(GetTraitGroup('lifestyle_jurist').Self)]"
+				#		size = { 30 30 }
+				#		alwaystransparent = yes
+				#		texture = "[Trait.GetIcon( GetNullCharacter )]"
+				#
+				#		tooltipwidget = {
+				#			using = faith_window_trait_tooltip
+				#		}
+				#
+				#		block "tooltip_placement"
+				#		{
+				#			using = tooltip_ne
+				#			tooltip_offset = { 0 20 }
+				#		}
+				#	}
+				#	
+				#	progressbar_standard = {
+				#		layoutpolicy_horizontal = expanding
+				#		size = { -1 30 }
+				#	
+				#		min = 0
+				#		max = "[FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('jurist_progress_character',GetPlayer.MakeScope).ScriptValue('jurist_next_level_progress_requirement_gui_value'))]"
+				#		value = "[FixedPointToFloat(GetPlayer.MakeScope.Var('jurist_level_progress').GetValue)]"
+				#		
+				#		tooltipwidget = {
+				#			widget_jurist_progress_tooltip = {}
+				#		}
+				#	}
+				#	
+				#	icon = {
+				#		datacontext = "[GetTrait(SelectLocalization(EqualTo_int32(GetPlayer.GetTraitGroupLevel(GetTraitGroup('lifestyle_jurist')),'(int32)1'),'jurist_2', SelectLocalization(EqualTo_int32(GetPlayer.GetTraitGroupLevel(GetTraitGroup('lifestyle_jurist')),'(int32)2'),'jurist_3', SelectLocalization(EqualTo_int32(GetPlayer.GetTraitGroupLevel(GetTraitGroup('lifestyle_jurist')),'(int32)3'),'jurist_4', SelectLocalization(EqualTo_int32(GetPlayer.GetTraitGroupLevel(GetTraitGroup('lifestyle_jurist')),'(int32)4'),'jurist_5','lifestyle_jurist') )) ))]"
+				#		size = { 30 30 }
+				#		alwaystransparent = yes
+				#		texture = "[Trait.GetIcon( GetNullCharacter )]"
+				#	
+				#		tooltipwidget = {
+				#			using = faith_window_trait_tooltip
+				#		}
+				#	
+				#		block "tooltip_placement"
+				#		{
+				#			using = tooltip_ne
+				#			tooltip_offset = { 0 20 }
+				#		}
+				#	}
+				#}
+			}
+
+			hbox = {
+				#spacing = 10
+				margin_bottom = 8
+				margin_top = 8
+				layoutpolicy_horizontal = expanding
+
+				expand = {}
+
+				button_standard = {
+					name = "convert_faith"
+					minimumsize = { 240 0 }
+					visible = "[NotEqualTo_uint32( Faith.GetID, GetPlayer.GetFaith.GetID )]"
+					text = "FAITH_CONVERSION_CONVERT"
+					onclick = "[ToggleGameViewData( 'faith_conversion', Faith.GetID )]"
+
+					using = tooltip_nw
+				}
+
+				button_standard = {
+					name = "create_faith"
+					minimumsize = { 240 0 }
+					visible = "[And( ObjectsEqual(Faith.Self, GetPlayer.GetFaith ), GetVariableSystem.HasValue( 'faith_view_tabs', 'beliefs' ))]"
+					text = "CREATE_REFORM_FAITH_TEXT"
+					onclick = "[OpenGameViewData( 'faith_creation', Faith.GetID )]"
+					tooltip = "CREATE_REFORM_FAITH_TOOLTIP"
+
+					using = tooltip_nw
+				}
+
+				button_standard = {
+					name = "create_head_of_faith"
+					minimumsize = { 240 0 }
+					visible = "[And( And( Not(Faith.HasDoctrineByKey( 'doctrine_no_head' )), Not( Faith.GetReligiousHeadTitle.IsValid ) ), ObjectsEqual( GetPlayer.GetFaith, Faith.Self ) )]"
+					datacontext = "[GetScriptedGui( 'create_head_of_faith' )]"
+					enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End ) ]"
+					onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End ) ]"
+					tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End ) ]"
+					text = "CREATE_TEMPORAL_HEAD_OF_FAITH_TITLE"
+				}
+
+				button_standard = {
+					name = "recreate_head_of_faith"
+					minimumsize = { 240 0 }
+					visible = "[And( And( Not(Faith.HasDoctrineByKey( 'doctrine_no_head' )), And(Faith.GetReligiousHeadTitle.IsValid, Not( Faith.GetReligiousHeadTitle.HasHolder ))), ObjectsEqual( GetPlayer.GetFaith, Faith.Self ) )]"
+					datacontext = "[GetScriptedGui( 'recreate_head_of_faith' )]"
+					enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End ) ]"
+					onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End ) ]"
+					tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End ) ]"
+					text = "RECREATE_TEMPORAL_HEAD_OF_FAITH_TITLE"
+				}
+
+				expand = {}
+			}
+		}
+
+		## HOLY SITES
+		scrollbox = {
+			name = "tab_holy_sites"
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'holy_sites' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			datacontext = "[GetIllustration( 'religion_holding' )]"
+
+			blockoverride "scrollbox_background" {}
+			blockoverride "scrollbox_background_fade" {}
+
+			state = {
+				name = _show
+				using = Animation_FadeIn_Quick
+			}
+
+			state = {
+				name = _hide
+				alpha = 0
+			}
+
+			background = {
+				alpha = 0.5
+				fittype = end
+				texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+
+				modify_texture = {
+					mirror = vertical
+					blend_mode = alphamultiply
+					texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+				}
+			}
+
+			blockoverride "scrollbox_content"
+			{
+				vbox = {
+					name = "holy_sites"
+					datamodel = "[FaithWindow.GetHolySites]"
+					layoutpolicy_horizontal = expanding
+
+					text_multi = {
+						datacontext = "[FaithWindow.GetFaith]"
+						layoutpolicy_horizontal = expanding
+						size = { 0 45 }
+						text = FAITH_HOLY_SITE_EXPLANATION
+						default_format = "#weak"
+						margin = { 0 5 }
+						margin_bottom = 15
+						align = center
+						max_width = 560
+						autoresize = yes
+
+						state = {
+							name = "faith_view_refresh"
+							using = Animation_Refresh_FadeOut
+						}
+
+						state = {
+							using = Animation_Refresh_FadeIn
+						}
+					}
+
+					item = {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 3
+
+							divider_light = {
+								layoutpolicy_horizontal = expanding
+							}
+
+							hbox = {
+								name = "faith_list_item"
+								datacontext = "[GuiHolySiteItem.GetHolySite]"
+								datacontext = "[HolySite.GetBarony]"
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_right = 15
+
+								background = {
+									using = Background_Area
+									alpha = 0.2
+								}
+
+								vbox = {
+									layoutpolicy_vertical = expanding
+									min_width = 175
+									spacing = 3
+
+									state = {
+										name = "faith_view_refresh"
+										using = Animation_Refresh_FadeOut
+									}
+
+									state = {
+										using = Animation_Refresh_FadeIn
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+
+										coa_title_tiny = {}
+
+										text_single = {
+											name = "name_notheld"
+											visible = "[Not( GuiHolySiteItem.IsHeldByFaith )]"
+											layoutpolicy_horizontal = expanding
+											text = "[HolySite.GetName]"
+											align = nobaseline
+											default_format = "#low"
+											using = Font_Size_Big
+											autoresize = no
+										}
+
+										text_single = {
+											name = "name_held"
+											visible = "[GuiHolySiteItem.IsHeldByFaith]"
+											layoutpolicy_horizontal = expanding
+											text = "[HolySite.GetName]"
+											align = nobaseline
+											default_format = "#high"
+											using = Font_Size_Big
+											autoresize = no
+
+										}
+
+										expand = {}
+									}
+
+									hbox = {
+										datacontext = "[Title.GetHolder]"
+										tooltip = "FAITH_HOLY_SITE_HOLDER_TOOLTIP"
+
+										background = {
+											visible = "[Not( GuiHolySiteItem.IsHeldByFaith )]"
+											using = Status_Bad
+											margin_top = 3
+											margin_bottom = -1
+											alpha = 0.8
+										}
+
+										background = {
+											visible = "[GuiHolySiteItem.IsHeldByFaith]"
+											using = Background_Area
+											margin_top = 3
+											margin_bottom = -1
+											alpha = 0.8
+										}
+
+										highlight_icon = {
+											name = "faith_button"
+											datacontext = "[Title.GetDeJureLiege.GetHolder.GetFaith]"
+											size = { 45 45 }
+											texture = "[Faith.GetIcon]"
+										}
+
+										coa_realm_small = {
+											visible = "[Title.HasHolder]"
+											datacontext = "[Title.GetHolder.GetTopLiege]"
+										}
+									}
+
+									expand = {}
+								}
+
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+									margin_top = 15
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										margin_left = 20
+
+										vbox = {
+											layoutpolicy_vertical = expanding
+
+											state = {
+												name = "faith_view_refresh"
+												using = Animation_Refresh_FadeOut
+											}
+
+											state = {
+												using = Animation_Refresh_FadeIn
+											}
+
+											text_multi = {
+												name = "effects_notheld"
+												visible = "[Not( GuiHolySiteItem.IsHeldByFaith )]"
+												layoutpolicy_horizontal = expanding
+												text = "[HolySite.GetEffectDesc( GuiHolySiteItem.GetFaith )]"
+												default_format = "#low"
+												format_override = { P low }
+												format_override = { L low }
+												format_override = { E low }
+												format_override = { S low }
+												autoresize = yes
+												max_width = 315
+											}
+
+											text_multi = {
+												name = "effects_held"
+												visible = "[GuiHolySiteItem.IsHeldByFaith]"
+
+												layoutpolicy_horizontal = expanding
+												text = "[HolySite.GetEffectDesc( GuiHolySiteItem.GetFaith )]"
+												autoresize = yes
+												max_width = 315
+											}
+										}
+
+										expand = {
+											layoutpolicy_horizontal = expanding
+										}
+									}
+
+									expand = {}
+								}
+
+								button_go_to_my_location = {
+									onclick = "[DefaultOnCoatOfArmsRightClick(Title.GetID)]"
+									tooltip = "GOTO_PROVINCE"
+								}
+
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		## LIFEPATHS
+		scrollbox = {
+			name = "tab_lifepaths"
+			datacontext = "[GetScriptedGui('has_lifepaths_scripted_gui')]"
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'lifepaths' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			blockoverride "scrollbox_background" {}
+			blockoverride "scrollbox_background_fade" {}
+
+			state = {
+				name = _show
+				using = Animation_FadeIn_Quick
+			}
+
+			state = {
+				name = _hide
+				alpha = 0
+			}
+
+			background = {
+				alpha = 0.5
+				fittype = end
+				texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+
+				modify_texture = {
+					mirror = vertical
+					blend_mode = alphamultiply
+					texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+				}
+			}
+
+			blockoverride "scrollbox_content"
+			{
+				vbox = {
+					name = "lifepaths"
+					datamodel = "[FaithWindow.GetFaith.MakeScope.GetList('valid_lifepaths')]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					text_multi = {
+						datacontext = "[FaithWindow.GetFaith]"
+						layoutpolicy_horizontal = expanding
+						size = { 0 45 }
+						text = FAITH_LIFEPATHS_EXPLANATION
+						default_format = "#weak"
+						margin = { 0 5 }
+						margin_bottom = 15
+						align = center
+						max_width = 560
+						autoresize = yes
+
+						state = {
+							name = "faith_view_refresh"
+							using = Animation_Refresh_FadeOut
+						}
+
+						state = {
+							using = Animation_Refresh_FadeIn
+						}
+					}
+
+					item = {
+						layoutpolicy_vertical = expanding
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 5
+
+							divider_light = {
+								layoutpolicy_horizontal = expanding
+							}
+
+							hbox = {
+								name = "lifepath_list_item"
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_right = 15
+								margin_left = 5
+								margin_bottom = 10
+								margin_top = 10
+
+								background = {
+									using = Background_Area
+									alpha = 0.2
+								}
+								vbox = {
+									size = { 50 50 }
+									text_single = {
+										name = "name_lifepath"
+										layoutpolicy_horizontal = expanding
+										text = "[Localize(Concatenate(Scope.Var('lifepath_name').GetFlagName,'_name'))]"
+										align = nobaseline
+										default_format = "#high"
+										using = Font_Type_Flavor
+										fontsize = 26
+										autoresize = no
+										
+										background = {
+											using = Background_Area_Solid
+											margin_bottom = 10
+											margin_top = 10
+											margin_left = 5
+											margin_right = 5
+										}
+									}
+									
+									text_single = {
+										text = "[Localize(Concatenate(Concatenate('@icon_',Scope.Var('lifepath_name').GetFlagName), '!'))]"
+										layoutpolicy_horizontal = expanding
+										align = nobaseline
+										size = { 180 180 }
+										
+										margin_top = 10
+									}
+								}
+								
+								text_multi = {
+									name = "lifepath_desc"
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+									text = "[GetTrait(Concatenate(Scope.Var('lifepath_name').GetFlagName,'_follower')).GetFullDescription( GetPlayer.Self , GetPlayer.GetFaith.Self)]"
+									align = nobaseline
+									default_format = "#high"
+									using = Font_Size_Small
+									fontsize = 11
+									margin_left = 10
+									margin_right = 10
+								}
+								
+								vbox = {
+									text_single = {
+										name = "lifepath_aligned_traits"
+										layoutpolicy_horizontal = expanding
+										layoutpolicy_vertical = expanding
+										raw_text = "Aligned Traits:"
+										align = nobaseline
+										default_format = "#weak"
+										using = Font_Size_Small
+										fontsize = 14
+										margin_right = 10
+										margin_bottom = 5
+									}
+									
+									hbox = {
+										layoutpolicy_vertical = expanding
+										datamodel = "[Scope.GetList('aligned_traits')]"
+										
+										item = {
+											icon = {
+												name = "aligned_trait_icon"
+												texture = "[GetTrait(Scope.GetFlagName).GetIcon( GetPlayer.Self )]"
+												size = { 32 32 }
+												position = { 7 0 }
+												tintcolor = "[TooltipInfo.GetTintColor]"
+											}
+										}
+										margin_bottom = 10
+									}
+									
+									divider_light = {
+										layoutpolicy_horizontal = expanding
+									}
+									
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										text_single = {
+											name = "lifepath_popularity"
+											layoutpolicy_horizontal = expanding
+											layoutpolicy_vertical = expanding
+											raw_text = "Popularity: @fervor_icon! [Scope.GetVariable('lifepath_base_weight').GetValue|0]"
+											align = nobaseline
+											default_format = "#weak"
+											using = Font_Size_Small
+											fontsize = 14
+											margin_right = 5
+											margin_bottom = 10
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		vbox = {
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'traditions' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			
+			datacontext = "[FaithWindow.GetFaith]"
+			
+			scrollbox = {
+				name = "tab_traditions"
+				datacontext = "[GetScriptedGui('has_traditions_scripted_gui')]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+	
+				blockoverride "scrollbox_background" {}
+				blockoverride "scrollbox_background_fade" {}
+	
+				state = {
+					name = _show
+					using = Animation_FadeIn_Quick
+				}
+	
+				state = {
+					name = _hide
+					alpha = 0
+				}
+	
+				background = {
+					alpha = 0.5
+					fittype = end
+					texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+	
+					modify_texture = {
+						mirror = vertical
+						blend_mode = alphamultiply
+						texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+					}
+				}
+	
+				blockoverride "scrollbox_content"
+				{
+					vbox = {
+						name = "high_courts_to_pull_legal_traditions_from"
+						datamodel = "[Faith.MakeScope.GetList('recognized_high_court_list')]"
+						
+						layoutpolicy_horizontal = expanding
+						
+						text_multi = {
+							layoutpolicy_horizontal = expanding
+							size = { 0 45 }
+							text = FAITH_TRADITIONS_EXPLANATION
+							default_format = "#weak"
+							margin = { 0 5 }
+							margin_bottom = 15
+							align = center
+							max_width = 560
+							autoresize = yes
+		
+							state = {
+								name = "faith_view_refresh"
+								using = Animation_Refresh_FadeOut
+							}
+		
+							state = {
+								using = Animation_Refresh_FadeIn
+							}
+						}
+						
+						item = {
+							vbox = {
+								name = "legal_traditions_from_high_court"
+								datamodel = "[Scope.GetList('legal_traditions')]"
+								visible = "[Not(And(Scope.Var('high_court_mamuramat').Title.HasHolder, GreaterThan_int32(Scope.Var('high_court_mamuramat').Title.GetHolder.GetFaith.GetHostilityLevelTowards(FaithWindow.GetFaith),'(int32)1')))]"
+								
+								layoutpolicy_horizontal = expanding
+								
+								item = {
+									vbox_legal_tradition_item = {
+										layoutpolicy_horizontal = expanding
+									}
+								}
+							}
+						}
+					}
+					
+					vbox = {
+						name = "radical_traditions"
+						layoutpolicy_horizontal = expanding
+						datamodel = "[Faith.GetReligion.MakeScope.GetList('legal_traditions')]"
+					
+						item = {
+							vbox_legal_tradition_item = {
+								layoutpolicy_horizontal = expanding
+								blockoverride "header_background_color" {
+									texture = "gfx/interface/component_masks/mask_rough_edges.dds"
+									spriteType = Corneredtiled
+									spriteborder = { 20 20 }
+									color = { 0.2 0 0 0.4 }
+									texture_density = 2
+								}
+								# We override this so that the level numeral becomes white, otherwise it looks ugly on a red background
+								blockoverride "legal_tradition_level_text" {
+									text = "[SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)1' ),'#color_white I#!', SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)2' ),'#color_white II#!', SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)3' ),'#color_white III#!', SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)4' ),'#color_white IV#!','#color_white V#!')) ) )]"
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			vbox = {
+				name = "general_legal_tradition_information"
+				visible = "[GetPlayer.HasTraitFromGroup(GetTraitGroup('lifestyle_jurist').Self)]"
+				layoutpolicy_horizontal = expanding
+				margin = { 0 10 }
+
+				state = {
+					name = "faith_view_refresh"
+					using = Animation_Refresh_FadeOut
+				}
+
+				state = {
+					using = Animation_Refresh_FadeIn
+				}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 3
+					margin = { 0 10 }
+
+					background = {
+						using = Background_Area
+					}
+
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						spacing = 5
+
+						text_label_left = {
+							layoutpolicy_horizontal = expanding
+							raw_text = "Personal Information"
+							default_format = "#low"
+							fontsize_min = 14
+							margin_left = 25
+						}
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 10 }
+								spacing = 5
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										raw_text = "Workload"
+										default_format = "#high"
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_workload_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_workload_scope',MakeScopeFlag('high_workload')).End)]"
+		
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_workload').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_workload').GetFlagName,'high_workload')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "High"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_workload_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_workload_scope',MakeScopeFlag('medium_workload')).End)]"
+		
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( Not(GetPlayer.MakeScope.Var('judicial_workload').IsSet) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Normal"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_workload_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_workload_scope',MakeScopeFlag('low_workload')).End)]"
+		
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_workload').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_workload').GetFlagName,'low_workload')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Low"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								expand = {}
+							}
+							
+							divider_light = {
+								layoutpolicy_vertical = expanding
+							}
+							
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 10 }
+								spacing = 5
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										raw_text = "Approach"
+										default_format = "#high"
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('innovation_approach')).End)]"
+										tooltip = INNOVATION_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_approach').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'innovation_approach')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Innovation"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('scholarship_approach')).End)]"
+										tooltip = SCHOLARSHIP_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_approach').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'scholarship_approach')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Scholarship"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('grifting_approach')).End)]"
+										tooltip = GRIFTING_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( And(GetPlayer.MakeScope.Var('judicial_approach').IsSet, EqualTo_string(GetPlayer.MakeScope.Var('judicial_approach').GetFlagName,'grifting_approach')) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Grifting"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									button_radio_label = {
+										onclick = "[GetScriptedGui('set_judicial_approach_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('judicial_approach_scope',MakeScopeFlag('orthodoxy_approach')).End)]"
+										tooltip = ORTHODOXY_APPROACH
+										
+										blockoverride "radio" 
+										{ 
+											frame = "[BoolTo1And2( Not(GetPlayer.MakeScope.Var('judicial_approach').IsSet) )]"
+										}
+										blockoverride "text"
+										{
+											raw_text = "Orthodoxy"
+											default_format = "#medium"
+										}
+									}
+									expand = {}
+								}
+								
+								expand = {}
+							}
+							
+							divider_light = {
+								layoutpolicy_vertical = expanding
+							}
+							
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 10 }
+								spacing = 5
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										raw_text = "Corruption & Radicalism"
+										default_format = "#high"
+									}
+									expand = {}
+								}
+								
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									margin_top = 5
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										
+										icon = {
+											texture = "gfx/interface/icons/message_feed/county_corruption.dds"
+											size = { 50 50 }
+										}
+										
+										text_single = {
+											name = "corruption_value_low"
+											visible = "[Or(Not(GetPlayer.MakeScope.Var('corruption').IsSet) , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)20'))]"
+											text = "[GetPlayer.MakeScope.Var('corruption').GetValue|1]"
+											default_format = "#high"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "corruption_value_medium"
+											visible = "[And( GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)20') , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50'))]"
+											text = "[GetPlayer.MakeScope.Var('corruption').GetValue|1]"
+											default_format = "#color_yellow"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "corruption_value_high"
+											visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50')]"
+											text = "[GetPlayer.MakeScope.Var('corruption').GetValue|1]"
+											default_format = "#N"
+											fontsize = 26
+											align = top
+										}
+									}
+									
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										
+										icon = {
+											texture = "gfx/interface/icons/icon_fervor.dds"
+											size = { 50 50 }
+										}
+										
+										text_single = {
+											name = "radicalism_value_low"
+											visible = "[Or(Not(GetPlayer.MakeScope.Var('radicalism').IsSet) , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50'))]"
+											text = "[GetPlayer.MakeScope.Var('radicalism').GetValue|1]"
+											default_format = "#high"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "radicalism_value_medium"
+											visible = "[And( GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50') , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100'))]"
+											text = "[GetPlayer.MakeScope.Var('radicalism').GetValue|1]"
+											default_format = "#color_yellow"
+											fontsize = 26
+											align = top
+										}
+										
+										text_single = {
+											name = "radicalism_value_high"
+											visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100')]"
+											text = "[GetPlayer.MakeScope.Var('radicalism').GetValue|1]"
+											default_format = "#N"
+											fontsize = 26
+											align = top
+										}
+									}
+								}
+								
+								text_single = {
+									name = "radicalism_effects_label"
+									raw_text = "#EMP [SelectLocalization(Or(GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50'),GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50')),'Effects:','No effects at this level')]#!"
+									default_format = "#low"
+									layoutpolicy_horizontal = expanding
+									align = left
+								}
+								
+								text_multi = {
+									name = "radicalism_modifier_low_label"
+									visible = "[And( GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50') , LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100'))]"
+									text = "[GetModifier('radicalism_modifier_low').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_multi = {
+									name = "radicalism_modifier_high_label"
+									visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)100')]"
+									text = "[GetModifier('radicalism_modifier_high').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_multi = {
+									name = "corruption_modifier_low_label"
+									visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50'),LessThanOrEqualTo_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)100'))]"
+									text = "[GetModifier('corruption_modifier_low').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_multi = {
+									name = "corruption_modifier_high_label"
+									visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)100')]"
+									text = "[GetModifier('corruption_modifier_high').GetDescWithEffects]"
+									layoutpolicy_horizontal = expanding
+									align = left
+									autoresize = yes
+								}
+								
+								text_single = {
+									name = "vulnerable_to_censure_label"
+									visible = "[Or(GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('radicalism').GetValue, '(CFixedPoint)50'),GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('corruption').GetValue, '(CFixedPoint)50'))]"
+									raw_text = "@warning_icon! #X Vulnerable to Censure#!"
+									layoutpolicy_horizontal = expanding
+									align = left
+								}
+								expand = {}
+							}
+						}
+						
+						expand = {}
+					}
+				}
+			}
+		}
+		scrollbox = {
+			name = "tab_judges"
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'judges' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			blockoverride "scrollbox_background" {}
+			blockoverride "scrollbox_background_fade" {}
+
+			state = {
+				name = _show
+				using = Animation_FadeIn_Quick
+			}
+
+			state = {
+				name = _hide
+				alpha = 0
+			}
+
+			background = {
+				alpha = 0.5
+				fittype = end
+				texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+
+				modify_texture = {
+					mirror = vertical
+					blend_mode = alphamultiply
+					texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+				}
+			}
+
+			blockoverride "scrollbox_content"
+			{
+				vbox = {
+					name = "traditions"
+					datamodel = "[FaithWindow.GetFaith.MakeScope.GetList('judges_list')]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					text_multi = {
+						datacontext = "[FaithWindow.GetFaith]"
+						layoutpolicy_horizontal = expanding
+						size = { 0 45 }
+						text = FAITH_JUDGES_EXPLANATION
+						default_format = "#weak"
+						margin = { 0 5 }
+						margin_bottom = 15
+						align = center
+						max_width = 560
+						autoresize = yes
+
+						state = {
+							name = "faith_view_refresh"
+							using = Animation_Refresh_FadeOut
+						}
+
+						state = {
+							using = Animation_Refresh_FadeIn
+						}
+					}
+
+					item = {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 5
+
+							divider_light = {
+								layoutpolicy_horizontal = expanding
+							}
+
+							hbox = {
+								name = "judge_list_item"
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_right = 15
+								margin_left = 5
+								margin_bottom = 10
+								margin_top = 10
+
+								background = {
+									using = Background_Area
+									alpha = 0.2
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										name = "judge_name"
+										layoutpolicy_horizontal = expanding
+										raw_text = "Codex of [Scope.Var('judge_character').GetCharacter.GetFirstNameNoTooltip]"
+										align = nobaseline
+										default_format = "#high"
+										using = Font_Type_Flavor
+										fontsize = 26
+										autoresize = yes
+										margin_left = 5
+									}
+									button_round = {
+										visible = "[And( ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self ) , Not(And( GetPlayer.MakeScope.Var('character_law_codex').IsSet , ObjectsEqual( GetPlayer.MakeScope.Var('character_law_codex').GetProvince , Scope.GetProvince ) )) )]"
+										enabled = "[GetScriptedGui('adopt_codex_scripted_gui').IsValid( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'law_codex_being_picked', Scope.GetProvince.MakeScope ).End )]"
+										tooltip = "[GetScriptedGui('adopt_codex_scripted_gui').BuildTooltip( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'law_codex_being_picked', Scope.GetProvince.MakeScope ).End )]"
+										oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+										clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+										onclick = "[GetScriptedGui('adopt_codex_scripted_gui').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'law_codex_being_picked', Scope.GetProvince.MakeScope ).End )]"
+										
+										button_icon = {
+											size = { 25 25 }
+											parentanchor = center
+											alwaystransparent = yes
+											framesize = { 70 60 }
+											texture = "gfx/interface/icons/flat_icons/feudal_contract.dds"
+										}
+									}
+									text_single = {
+										name = "codex_difficulty"
+										text = "[Localize(Concatenate(Scope.Var('law_code_difficulty_loc').GetFlagName,'_name'))]"
+										align = nobaseline
+										default_format = "#high"
+										using = Font_Type_Standard
+										fontsize = 18
+										autoresize = yes
+										margin_left = 5
+									}
+									
+									background = {
+										using = Background_Area_Solid
+										margin_bottom = 10
+										margin_top = 10
+										margin_left = 5
+										margin_right = 20
+									}
+								}
+							}
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								margin_bottom = 10
+								textbox = {
+									name = "judge_trait_modifier"
+									layoutpolicy_horizontal = expanding
+									text = "FAITH_JUDGES_DESC"
+									min_width = 300
+									max_width = 300
+									multiline = yes
+									autoresize = yes
+								}
+								vbox = {
+									datacontext = "[Scope.Var('judge_character').GetCharacter]"
+									max_width = 260
+								
+									layoutpolicy_horizontal = expanding
+									hbox = {
+										margin_right = -150
+										container = {
+											visible = "[Scope.Var('judge_character').IsSet]"
+											portrait_head = {
+												blockoverride "coa" {}
+												blockoverride "status_icons" {}
+												blockoverride "opinion_box" {}
+												blockoverride "imprisonment" {}
+												blockoverride "player_overlay" {}
+												blockoverride "dead_icon" {}
+											}
+										}
+									}
+									
+									hbox = {
+										margin_right = -150
+										dynamicgridbox = {
+											name = "judge_traits_grid"
+											datamodel = "[Scope.GetList('judge_traits')]"
+											flipdirection = yes
+											datamodel_wrap = 3
+					
+											item = {
+												highlight_icon = {
+													datacontext = "[GetTrait(Scope.GetFlagName)]"
+													size = { 40 40 }
+													alwaystransparent = yes
+													texture = "[Trait.GetIcon( GetPlayer )]"
+					
+													tooltipwidget = {
+														object_tooltip_pop_out = {
+															blockoverride "header_additions"
+															{
+																hbox = {
+																	margin_right = 5
+																	icon = {
+																		size = { 52 52 }
+																		texture = "[Trait.GetIcon( GetPlayer )]"
+																		tintcolor = "[TooltipInfo.GetTintColor]"
+																	}
+																}
+															}
+															blockoverride "title_text"
+															{
+																text = "[Trait.GetNameNoTooltip( GetPlayer )]"
+															}
+															blockoverride "concept_link" {
+																text = [trait|E]
+															}
+															blockoverride "description_text"
+															{
+																text = "[Trait.GetFullDescription( Character.Self, Character.GetFaith.Self )]"
+															}
+														}
+													}
+					
+													block "tooltip_placement"
+													{
+														using = tooltip_ne
+														tooltip_offset = { 0 20 }
+													}
+												}
+											}
+										}
+									}
+									
+									vbox = {
+										datamodel = "[Scope.GetList('judge_traits')]"
+										layoutpolicy_horizontal = expanding
+										item = {
+											text_multi = {
+												name = "judge_trait_modifier"
+												layoutpolicy_horizontal = expanding
+												text = "[GetModifier(Concatenate(Scope.GetFlagName,'_judge_modifier_0')).GetDescWithEffects]"
+												align = right
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		# Mamuramat/High Judge tab
+		scrollbox = {
+			name = "tab_high_court"
+			datacontext = "[FaithWindow.GetFaith]"
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'high_court' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			blockoverride "scrollbox_background" {}
+			blockoverride "scrollbox_background_fade" {}
+
+			state = {
+				name = _show
+				using = Animation_FadeIn_Quick
+			}
+
+			state = {
+				name = _hide
+				alpha = 0
+			}
+
+			background = {
+				alpha = 0.5
+				fittype = end
+				texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+
+				modify_texture = {
+					mirror = vertical
+					blend_mode = alphamultiply
+					texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+				}
+			}
+
+			blockoverride "scrollbox_content"
+			{
+				vbox = {
+					name = "high_court_scrollbox_content"
+					
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					
+					# Mamuramat interface for Traditionalists
+					vbox = {
+						visible = "[GreaterThan_int32( GetDataModelSize( FaithWindow.GetFaith.MakeScope.GetList('recognized_high_court_list') ), '(int32)1' )]"
+						layoutpolicy_horizontal = expanding
+						margin_right = -20
+						margin_bottom = 20
+						
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							
+							hbox = {
+								datamodel = "[Faith.MakeScope.GetList( 'recognized_high_court_list' )]"
+								layoutpolicy_horizontal = expanding
+								margin_bottom = 10
+								
+								item = {
+									vbox = {
+										visible = "[Scope.Var('high_court_mamuramat').IsSet]"
+										portrait_head_small = {
+											name = "recognized_mamuramat_portrait"
+											datacontext = "[Scope.Var('high_court_mamuramat').Title.GetHolder]"
+											
+											coa_title_tiny_crown = {
+												datacontext = "[Scope.Var('high_court_mamuramat').Title]"
+												parentanchor = left|bottom
+											}
+											
+											blockoverride "coa" {}
+											blockoverride "opinion_box"{}
+											blockoverride "grayscale" {
+												grayscale = "[And(Scope.Var('high_court_mamuramat').Title.HasHolder, GreaterThan_int32(Scope.Var('high_court_mamuramat').Title.GetHolder.GetFaith.GetHostilityLevelTowards(FaithWindow.GetFaith),'(int32)1'))]"
+											}
+										}
+										text_single = {
+											text = "[Localize(Scope.Var('high_court_mamuramat').Var('mamuramat_title_name').GetFlagName)]"
+											default_format = "#high"
+										}
+										text_single = {
+											text = "[SelectLocalization(Scope.Var('high_court_mamuramat').Title.HasHolder , Scope.Var('high_court_mamuramat').Title.GetHolder.GetTitledFirstName , '#weak Vacant#!')]"
+										}
+										text_single = {
+											raw_text = "Disputed"
+											visible = "[And(Scope.Var('high_court_mamuramat').Title.HasHolder, GreaterThan_int32(Scope.Var('high_court_mamuramat').Title.GetHolder.GetFaith.GetHostilityLevelTowards(FaithWindow.GetFaith),'(int32)1'))]"
+											default_format = "#weak"
+										}
+									}
+								}
+							}
+						}
+						
+						background = {
+							texture = "[GetIllustration( 'character_view_bg' ).GetTexture( GetPlayer )]"
+							alpha = 0.6
+							fittype = centercrop
+							margin_top = 120
+						
+							using = Mask_Rough_Edges
+						
+							modify_texture = {
+								texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+								mirror = vertical
+								blend_mode = alphamultiply
+							}
+						
+							modify_texture = {
+								texture = "gfx/interface/component_masks/mask_fade_horizontal_extended.dds"
+								blend_mode = alphamultiply
+								spritetype = corneredstretched
+								spriteborder_right = 190
+								alpha = 0.9
+							}
+						}
+					}
+					
+					# Mamuramat interface for Idealists
+					vbox = {
+						visible = "[Not(FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet)]"
+						layoutpolicy_horizontal = expanding
+						margin_right = -20
+						
+						text_multi = {
+							raw_text = "#EMP The [Faith.GetNameNoTooltip] [faith|E] is #E Idealist#! and does not recognize any [Concept('mamuramat','Mamur')|E]#!"
+							default_format = "#weak"
+							autoresize = yes
+						}
+						
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							visible = "[GreaterThan_int32( GetDataModelSize( Faith.GetReligion.MakeScope.GetList( 'mamuramat_list' ) ), '(int32)0' )]"
+							
+							hbox = {
+								datamodel = "[Faith.GetReligion.MakeScope.GetList( 'mamuramat_list' )]"
+								layoutpolicy_horizontal = expanding
+								margin_bottom = 10
+								
+								item = {
+									vbox = {
+										visible = "[Scope.Var('mamuramat_title_name').IsSet]"
+										portrait_head_small = {
+											name = "unrecognized_mamuramat_portrait"
+											datacontext = "[Scope.Title.GetHolder]"
+											
+											coa_title_tiny_crown = {
+												datacontext = "[Scope.Title]"
+												parentanchor = left|bottom
+											}
+											
+											blockoverride "coa" {}
+											blockoverride "opinion_box"{}
+											blockoverride "grayscale"
+											{
+												grayscale = "[Character.IsAlive]"
+											}
+										}
+										text_single = {
+											text = "[Localize(Scope.Var('mamuramat_title_name').GetFlagName)]"
+											default_format = "#high"
+										}
+										text_single = {
+											text = "[SelectLocalization(Scope.Title.HasHolder , Scope.Title.GetHolder.GetTitledFirstName , '#weak Vacant#!')]"
+										}
+										text_single = {
+											text = MAMUR_NOT_RECOGNISED
+											visible = "[Scope.Title.HasHolder]"
+											default_format = "#weak"
+										}
+									}
+								}
+							}
+						}
+						
+						background = {
+							texture = "[GetIllustration( 'character_view_bg' ).GetTexture( GetPlayer )]"
+							alpha = 0.6
+							fittype = centercrop
+							margin_top = 120
+						
+							using = Mask_Rough_Edges
+						
+							modify_texture = {
+								texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+								mirror = vertical
+								blend_mode = alphamultiply
+							}
+						
+							modify_texture = {
+								texture = "gfx/interface/component_masks/mask_fade_horizontal_extended.dds"
+								blend_mode = alphamultiply
+								spritetype = corneredstretched
+								spriteborder_right = 190
+								alpha = 0.9
+							}
+						}
+					}
+					
+					# Mamuramat interface for mainliners
+					vbox = {
+						visible = "[Faith.MakeScope.Var('sole_mamur_recognized').IsSet]"
+						datacontext = "[Faith.MakeScope.Var('sole_mamur_recognized').Title.GetHolder]"
+						layoutpolicy_horizontal = expanding
+						margin_right = -20
+						margin_left = -20
+						
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							margin_bottom = 5
+							margin_left = 20
+							spacing = 0
+			
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								margin_left = 5
+			
+								text_label_center = {
+									text = "[Character.GetUINameNotMeNoTooltip|U]"
+									default_format = "#high"
+									using = Font_Size_Medium
+									max_width = 355
+								}
+			
+								expand = {}
+							}
+			
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								margin_left = 5
+			
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									text = "[Character.GetRelationToString( GetPlayer )]"
+									max_width = 400
+								}
+			
+								expand = {}
+							}
+						}
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 0 5 }
+							margin_right = 20
+							margin_left = 20
+			
+							divider_light = {
+								layoutpolicy_horizontal = expanding
+							}
+						}
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							margin_left = 20
+							
+							vbox = {
+								# Faith recognition
+								vbox = {
+									layoutpolicy_horizontal = expanding
+			
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+			
+										icon = {
+											size = { 20 20 }
+											alwaystransparent = yes
+			
+											texture = "gfx/interface/icons/portraits/me_small.dds"
+											framesize = { 28 28 }
+											frame = "1"
+										}
+			
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "Sole [Concept('mamuramat','Mamur')|E] of the following [faiths|E]:"
+											autoresize = yes
+											max_width = 360
+											default_format = "#high"
+											align = nobaseline
+										}
+			
+										expand = {}
+									}
+									
+									hbox = {
+										datamodel = "[Faith.GetReligion.GetFaiths]"
+										layoutpolicy_horizontal = expanding
+										
+										item = {
+											hbox = {	
+												layoutpolicy_horizontal = expanding
+												visible = "[And(Faith.MakeScope.Var('sole_mamur_recognized').IsSet, ObjectsEqual(Character.Self,Faith.MakeScope.Var('sole_mamur_recognized').Title.GetHolder))]"
+												
+												icon = {
+													name = "mamur_faith_icon"
+													size = { 30 30 }
+													texture = "[Faith.GetIcon]"
+												}
+											
+												text_single = {
+													layoutpolicy_horizontal = expanding
+													text = "[Faith.GetNameNoTooltip]"
+													autoresize = yes
+												}
+											}
+										}
+										expand = {}
+									}
+								}
+								
+								spacer = {
+									visible = "[GreaterThan_int32( GetDataModelSize( Faith.GetReligion.MakeScope.GetList('mamuramat_list') ), '(int32)1' )]"
+									size = { 10 10 }
+								}
+								
+								### Unrecognized Mamurs
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									visible = "[GreaterThan_int32( GetDataModelSize( Faith.GetReligion.MakeScope.GetList('mamuramat_list') ), '(int32)1' )]"
+								
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+								
+										icon = {
+											size = { 20 20 }
+											alwaystransparent = yes
+								
+											texture = "gfx/interface/icons/message_feed/bishop.dds"
+										}
+								
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											raw_text = "Unrecognized #E Mamurs#!:"
+											autoresize = no
+											max_width = 360
+											default_format = "#high"
+											align = nobaseline
+										}
+								
+										expand = {}
+									}
+									
+									hbox = {
+										datamodel = "[Faith.GetReligion.MakeScope.GetList('mamuramat_list')]"
+										layoutpolicy_horizontal = expanding
+										margin_bottom = 10
+										
+										item = {
+											vbox = {
+												visible = "[And(Not(ObjectsEqual(Scope.Title , Faith.MakeScope.Var('sole_mamur_recognized').Title)),Scope.Var('mamuramat_title_name').IsSet)]"
+												portrait_head_small = {
+													name = "mamuramat_portrait"
+													datacontext = "[Scope.Title.GetHolder]"
+													
+													coa_title_tiny_crown = {
+														datacontext = "[Scope.Title]"
+														parentanchor = left|bottom
+													}
+													
+													blockoverride "coa" {}
+													blockoverride "opinion_box"{}
+													#blockoverride "grayscale"
+													#{
+													#	grayscale = "[Not(EqualTo_string(Scope.Var('recognition_status').GetFlagName,'recognized'))]"
+													#}
+												}
+												text_single = {
+													text = "[Localize(Scope.Var('mamuramat_title_name').GetFlagName)]"
+													default_format = "#high"
+												}
+												text_single = {
+													text = "[SelectLocalization(Scope.Title.HasHolder,Scope.Title.GetHolder.GetTitledFirstName,'#weak Vacant#!')]"
+												}
+												text_single = {
+													text = MAMUR_NOT_RECOGNISED
+													visible = "[Scope.Title.HasHolder]"
+													default_format = "#weak"
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							expand = {}
+							
+							vbox = {
+								layoutpolicy_vertical = expanding
+								
+								portrait_high_judge = {
+									name = "mamur_portrait"
+									datacontext = "[GetIllustration( 'character_view_bg' )]"
+								}
+							}
+							
+							background = {
+								texture = "[GetIllustration( 'character_view_bg' ).GetTexture( Character.Self )]"
+								alpha = 0.6
+								fittype = centercrop
+								margin_top = 120
+					
+								using = Mask_Rough_Edges
+					
+								modify_texture = {
+									texture = "gfx/interface/component_masks/mask_fade_horizontal_extended.dds"
+									blend_mode = alphamultiply
+									spritetype = corneredstretched
+									spriteborder_right = 190
+									alpha = 0.7
+								}
+							}
+						}
+					}
+					
+					vbox = {
+						name = "high_court_list"
+						datamodel = "[Faith.MakeScope.GetList('recognized_high_court_list')]"
+						layoutpolicy_horizontal = expanding
+						margin_left = -15
+						margin_right = -15
+						spacing = 30
+						
+						item = {
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								
+								background = {
+									using = Background_Area_Dark
+								}
+								
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									
+									widget = {
+										layoutpolicy_horizontal = expanding
+										layoutpolicy_vertical = expanding
+										
+										size = { 100% 64 }
+										
+										icon = {
+											size = { 100% 46 }
+											layoutpolicy_horizontal = expanding
+											texture = "gfx/interface/window_event/header_sharp_yellow_left.dds"
+											
+											tooltip = "HIGH_COURT_LEGITIMACY_TT"
+											using = tooltip_ws
+										}
+										
+										# Legitimacy Bar (Left)
+										hbox = {
+											visible = "[GreaterThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'), '(CFixedPoint)0')]"
+										
+											position = { 0 4 }
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxScaled( FixedPointToFloat(Abs_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_gui_capped_value'))), FixedPointToFloat('(CFixedPoint)50'), '(int32)100' )]"
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25')]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/red.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)50'))]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/bronze.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)50'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75'))]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/blue.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75')]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/gold.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+											}
+									
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxOtherScaled( FixedPointToFloat(Abs_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_gui_capped_value'))), FixedPointToFloat('(CFixedPoint)50'), '(int32)100' )]"
+											}
+										}
+										
+										# High Court Loyalty Bar
+										icon = {
+											visible = "[FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet]"
+											
+											size = { 100% 15 }
+											position = { 0 40 }
+											layoutpolicy_horizontal = expanding
+											texture = "gfx/interface/window_event/header_sharp_yellow_left.dds"
+											
+											tooltip = "HIGH_COURT_LOYALTY_TT"
+											using = tooltip_ws
+										}
+										
+										hbox = {
+											visible = "[FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet]"
+											
+											position = { 0 41 }
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxOtherScaled( FixedPointToFloat(Abs_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'))), FixedPointToFloat('(CFixedPoint)100'), '(int32)100' )]"
+											}
+											
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxScaled( FixedPointToFloat(Abs_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'))), FixedPointToFloat('(CFixedPoint)100'), '(int32)100' )]"
+												
+												progressbar_generic = {
+													size = { 100% 11 }
+													visible = "[GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'),'(CFixedPoint)75')]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/gold.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 11 }
+													visible = "[And(LessThan_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'),'(CFixedPoint)75'),GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'),'(CFixedPoint)50'))]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/blue.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 11 }
+													visible = "[And(LessThan_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'),'(CFixedPoint)50'),GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'),'(CFixedPoint)25'))]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/bronze.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 11 }
+													visible = "[LessThan_CFixedPoint(Scope.ScriptValue('high_court_loyalty_value'),'(CFixedPoint)25')]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/red.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+											}
+										}
+										
+										hbox = {
+											visible = "[FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet]"
+											
+											layoutpolicy_horizontal = expanding
+											
+											vbox = {
+												layoutpolicy_vertical = expanding
+												
+												expand = {}
+												
+												widget = {
+													size = { 36 36 }
+													icon = {
+														size = { 36 36 }
+														layoutpolicy_horizontal = expanding
+														texture = "gfx/interface/icons/circle_background_icon.dds"
+													}
+													
+													icon = {
+														size = { 22 22 }
+														parentanchor = hcenter|vcenter
+														layoutpolicy_horizontal = expanding
+														texture = "gfx/interface/icons/icon_opinion.dds"
+													}
+												}
+											}
+											
+											expand = {}
+										}
+									}
+									
+									widget = {
+										layoutpolicy_horizontal = expanding
+										layoutpolicy_vertical = expanding
+										
+										icon = {
+											size = { 100% 46 }
+											layoutpolicy_horizontal = expanding
+											texture = "gfx/interface/window_event/header_sharp_yellow_right.dds"
+											
+											tooltip = "HIGH_COURT_LEGITIMACY_TT"
+											using = tooltip_ws
+										}
+										
+										# Legitimacy Bar (Right)
+										hbox = {
+											visible = "[GreaterThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'), '(CFixedPoint)50')]"
+										
+											position = { 0 4 }
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxScaled( FixedPointToFloat(Abs_CFixedPoint(Subtract_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'), '(CFixedPoint)50'))), FixedPointToFloat('(CFixedPoint)50'), '(int32)100' )]"
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25')]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/red.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)50'))]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/bronze.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)50'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75'))]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/blue.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+												
+												progressbar_generic = {
+													size = { 100% 36 }
+													visible = "[GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75')]"
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/gold.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+											}
+									
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxOtherScaled( FixedPointToFloat(Abs_CFixedPoint(Subtract_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'), '(CFixedPoint)50'))), FixedPointToFloat('(CFixedPoint)50'), '(int32)100' )]"
+											}
+										}
+										
+										icon = {
+											visible = "[FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet]"
+											
+											size = { 100% 15 }
+											position = { 0 40 }
+											layoutpolicy_horizontal = expanding
+											texture = "gfx/interface/window_event/header_sharp_yellow_right.dds"
+											tooltip = "HIGH_COURT_MAMURIAL_AUTHORITY_TT"
+										}
+										
+										# Mamurial Authority Bar
+										hbox = {
+											visible = "[FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet]"
+											
+											position = { 0 41 }
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxScaled( FixedPointToFloat(Scope.ScriptValue('high_court_mamurial_authority_value')), FixedPointToFloat('(CFixedPoint)100'), '(int32)100' )]"
+												
+												progressbar_generic = {
+													size = { 100% 11 }
+									
+													using = Animation_ShowHide_Standard
+									
+													blockoverride "bar_color"
+													{
+														texture = "gfx/interface/colors/bronze.dds"
+													}
+									
+													blockoverride "bar_color_flow"
+													{
+														texture = "gfx/interface/colors/white.dds"
+														alpha = 0.3
+													}
+												}
+											}
+									
+											widget = {
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												layoutstretchfactor_horizontal = "[GetProgressBarValueMaxOtherScaled( FixedPointToFloat(Scope.ScriptValue('high_court_mamurial_authority_value')), FixedPointToFloat('(CFixedPoint)100'), '(int32)100' )]"
+											}
+										}
+										
+										# Centerpiece Icon
+										widget = {
+											icon = {
+												size = { 74 74 }
+												position = { -36 -18 }
+												texture = "gfx/interface/window_faith/crown_centerpiece.dds"
+												
+												modify_texture = {
+													texture = "gfx/interface/colors/red.dds"
+													visible = "[LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25')]"
+													blend_mode = overlay
+												}
+												
+												modify_texture = {
+													texture = "gfx/interface/colors/gold_darker.dds"
+													visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)50'))]"
+													blend_mode = overlay
+												}
+												
+												modify_texture = {
+													texture = "gfx/interface/colors/blue.dds"
+													visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)50'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75'))]"
+													blend_mode = overlay
+												}
+												
+												modify_texture = {
+													texture = "gfx/interface/colors/gold.dds"
+													visible = "[GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75')]"
+													blend_mode = overlay
+												}
+												
+												glow = {
+													visible = "[LessThan_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)25')]"
+												
+													using = Color_Red
+													using = Glow_Standard
+													block "glow_radius"
+													{
+														glow_radius = 5
+													}
+												}
+												
+												#glow = {
+												#	visible = "[GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_legitimacy_value'),'(CFixedPoint)75')]"
+												#
+												#	using = Color_Orange
+												#	using = Glow_Standard
+												#	block "glow_radius"
+												#	{
+												#		glow_radius = 5
+												#	}
+												#}
+											}
+										}
+										
+										hbox = {
+											visible = "[FaithWindow.GetFaith.MakeScope.Var( 'recognizes_at_least_one_mamur' ).IsSet]"
+											
+											layoutpolicy_horizontal = expanding
+											
+											expand = {}
+											
+											vbox = {
+												layoutpolicy_vertical = expanding
+												
+												expand = {}
+												
+												widget = {
+													size = { 36 36 }
+													icon = {
+														size = { 36 36 }
+														layoutpolicy_horizontal = expanding
+														texture = "gfx/interface/icons/circle_background_icon.dds"
+													}
+													
+													icon = {
+														texture = "gfx/interface/coat_of_arms/crown_strip_44.dds"
+														framesize = { 28 20 }
+														position = { 4 4 }
+														
+														visible = "[LessThan_CFixedPoint(Scope.ScriptValue('high_court_mamurial_authority_value'),'(CFixedPoint)25')]"
+
+														frame = 3
+													}
+													
+													icon = {
+														texture = "gfx/interface/coat_of_arms/crown_strip_44.dds"
+														framesize = { 28 20 }
+														position = { 4 4 }
+														
+														visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_mamurial_authority_value'),'(CFixedPoint)25'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_mamurial_authority_value'),'(CFixedPoint)50'))]"
+
+														frame = 4
+													}
+													
+													icon = {
+														texture = "gfx/interface/coat_of_arms/crown_strip_44.dds"
+														framesize = { 28 20 }
+														position = { 4 4 }
+														
+														visible = "[And(GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_mamurial_authority_value'),'(CFixedPoint)50'), LessThan_CFixedPoint(Scope.ScriptValue('high_court_mamurial_authority_value'),'(CFixedPoint)75'))]"
+
+														frame = 5
+													}
+													
+													icon = {
+														texture = "gfx/interface/coat_of_arms/crown_strip_44.dds"
+														framesize = { 28 20 }
+														position = { 4 4 }
+														
+														visible = "[GreaterThanOrEqualTo_CFixedPoint(Scope.ScriptValue('high_court_mamurial_authority_value'),'(CFixedPoint)75')]"
+
+														frame = 6
+													}
+												}
+											}
+										}
+									}
+								}
+								
+								vbox_high_court_layout = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+			
+									using = Animation_Tab_Switch
+								}
+							}
+						}
+					}
+					
+					#text_multi = {
+					#	text = "[GetScriptedGui('legal_tradition_display_high_court_breakdown_scripted_gui').BuildTooltip(GuiScope.SetRoot(FaithWindow.GetFaith.MakeScope).AddScope('high_court_scope',FaithWindow.GetFaith.MakeScope.Var('presumed_high_court').GetLandedTitle.MakeScope).End)]"
+					#	autoresize = yes
+					#}
+					
+					expand = {}
+				}
+			}
+		}
+		
+		vbox = {
+			visible = "[GetVariableSystem.HasValue( 'faith_view_tabs', 'patron_saints' )]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			
+			datacontext = "[FaithWindow.GetFaith]"
+			
+			scrollbox = {
+				name = "tab_patron_saints"
+				datacontext = "[GetScriptedGui('has_patron_saints_scripted_gui')]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+	
+				blockoverride "scrollbox_background" {}
+				blockoverride "scrollbox_background_fade" {}
+	
+				state = {
+					name = _show
+					using = Animation_FadeIn_Quick
+				}
+	
+				state = {
+					name = _hide
+					alpha = 0
+				}
+	
+				background = {
+					texture = "[Illustration.GetTexture( FaithWindow.GetFaith.MakeScope )]"
+					alpha = 0.5
+					fittype = end
+	
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+						mirror = vertical
+						blend_mode = alphamultiply
+					}
+				}
+				
+				blockoverride "scrollbox_content"
+				{
+					vbox = {
+						name = "patron_saints"
+						datamodel = "[Faith.MakeScope.GetList('patron_saint_list')]"
+						
+						layoutpolicy_horizontal = expanding
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 5 0 }
+							margin_bottom = 5
+							margin_right = 30
+							spacing = 3
+							text_single = {
+								name = "number_of_patron_saints"
+								raw_text = "#underline Max Patron Saints: [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_saint_number_value'))]#!"
+								layoutpolicy_horizontal = expanding
+								align = left
+								autoresize = yes
+								
+								tooltipwidget = {
+									widget_number_of_patron_saints_tooltip = {}
+								}
+							}
+							
+							
+							text_single = {
+								name = "maximum_patron_saint_level"
+								raw_text = "#underline Max Patron Saint Level: [FaithWindow.GetFaith.MakeScope.ScriptValue('patron_saint_faith_max_individual_saint_level_value'))]#!"
+								layoutpolicy_horizontal = expanding
+								align = left
+								autoresize = yes
+								
+								tooltipwidget = {
+									widget_maximum_patron_saint_level_tooltip = {}
+								}
+							}
+							
+							text_single = {
+								name = "available_patron_saint_levels"
+								raw_text = "#underline Remaining Patron Saint Levels: [GetPlayer.MakeScope.ScriptValue('patron_saint_remaining_levels_left_value'))]#!"
+								layoutpolicy_horizontal = expanding
+								align = left
+								autoresize = yes
+								
+								tooltipwidget = {
+									widget_available_patron_saint_levels_tooltip = {}
+								}
+							}
+						}
+						
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+						
+						text_multi = {
+							layoutpolicy_horizontal = expanding
+							size = { 0 45 }
+							text = PATRON_SAINTS_EXPLANATION
+							default_format = "#weak"
+							#margin = { 0 5 }
+							margin_right = 30
+							margin_bottom = 15
+							align = center
+							max_width = 560
+							autoresize = yes
+		
+							state = {
+								name = "faith_view_refresh"
+								using = Animation_Refresh_FadeOut
+							}
+		
+							state = {
+								using = Animation_Refresh_FadeIn
+							}
+						}
+						
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+						
+						expand = {}
+						
+						item = {
+							vbox_patron_saint_item = {
+								layoutpolicy_horizontal = expanding
+							}
+						}
+						
+					}
+					
+					vbox = {
+						datacontext = "[GetScriptedGui('has_patron_saints_view_only_scripted_gui')]"
+						name = "patron_saints_view_only"
+						datamodel = "[Faith.MakeScope.GetList('patron_saint_view_only_list')]"
+						
+						layoutpolicy_horizontal = expanding
+						
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 15 0 }
+							margin_bottom = 5
+							spacing = 5
+							text_single = {
+								name = "inactive patron saints"
+								raw_text = "Recognized Patron Saints"
+								fontsize = 30
+								layoutpolicy_horizontal = expanding
+								align = center
+								autoresize = yes
+							}
+						}
+						
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+					
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 15 0 }
+							margin_bottom = 5
+							spacing = 5
+							text_multi = {
+								name = "ionactive patron saints"
+								size = { 0 45 }
+								text = RECOGNIZED_PATRON_SAINTS_EXPLANATION
+								default_format = "#weak"
+								margin_right = 30
+								margin_bottom = 15
+								align = center
+								max_width = 560
+								autoresize = yes
+							}
+						}
+						
+						divider_light = {
+							layoutpolicy_horizontal = expanding
+						}
+						
+						
+						item = {
+							vbox_patron_saint_item = {
+								layoutpolicy_horizontal = expanding
+							}
+						}
+						
+					}
+				}
+			}
+			
+		}
+	}
+}
+
+### RELIGION VIEW
+window = {
+	name = "religion_window"
+	size = { 590 80% }
+	position = { 620 75 }
+	datacontext = "[ReligionWindow.GetReligion]"
+	layer = windows_layer
+
+	using = Window_Movable
+	using = Window_Background_Subwindow
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Quick
+		using = Sound_WindowShow_Standard
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Quick
+		using = Sound_WindowHide_Standard
+	}
+
+	attachto = {
+		widgetid = "faith_window"
+		inherit_visibility = no
+	}
+
+	vbox = {
+		margin = { 4 4 }
+
+		header_pattern = {
+			layoutpolicy_horizontal = expanding
+
+			blockoverride "header_text"
+			{
+				text = "RELIGION_WINDOW_TITLE"
+			}
+
+			blockoverride "button_close"
+			{
+				onclick = "[ReligionWindow.Close]"
+			}
+
+			blockoverride "button_back"
+			{
+				visible = no
+			}
+		}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin = { 15 0 }
+			margin_bottom = 5
+			spacing = 5
+
+			hbox = {
+				spacing = 5
+
+				text_single = {
+					text = "SORT_BY"
+					align = nobaseline
+				}
+
+				dropdown_sort_characterlist = {
+					datamodel = "[ReligionWindow.GetOrderByOptions]"
+					onselectionchanged = "[ReligionWindow.OnOrderBySelectionChanged]"
+					selectedindex = "[ReligionWindow.GetOrderBySelectedIndex]"
+
+					blockoverride "text_button_drop" {
+						text = "[OrderFaithOption.GetName]"
+					}
+				}
+			}
+
+			expand = {}
+
+			### Only Selected religion faiths
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				max_width = 550
+				spacing = 5
+
+				expand = {}
+
+				button_checkbox_label = {
+					onclick = "[ReligionWindow.OnShowOnlyReligionFaiths]"
+
+					blockoverride "text"
+					{
+						text = "RELIGION_SHOW_ONLY"
+						max_width = 180
+					}
+					blockoverride "checkbox"
+					{
+						checked = "[ReligionWindow.ShowOnlyReligionFaiths]"
+					}
+				}
+
+				tooltip = "[ReligionWindow.GetShowOnlyReligionFaithsTooltip]"
+				using = tooltip_ne
+			}
+		}
+
+		scrollbox = {
+			name = "faiths_scroll_area"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			blockoverride "scrollbox_content"
+			{
+				vbox = {
+					datamodel = "[ReligionWindow.GetFaiths]"
+					layoutpolicy_horizontal = expanding
+
+					item = {
+						button_standard_hover = {
+							name = "show_faith_info"
+							layoutpolicy_horizontal = expanding
+							size = { 0 80 }
+							tooltipwidget = { faith_tooltip_click = {} }
+							onclick = "[PdxGuiTriggerAllAnimations('faith_view_refresh')]"
+
+							using = tooltip_es
+
+							state = {
+								name = _mouse_click
+								on_finish = "[OpenGameViewData( 'faith', Faith.GetID )]"
+							}
+
+							background = {
+								visible = "[Faith.IsSelected]"
+								using = Background_Area
+							}
+
+							divider_light = {
+								alpha = "[Select_float(GreaterThan_int32(Faith.GetNumberOfCountiesOfFaith,'(int32)0'), '(float)1.0','(float)0.5')]"
+								size = { 100% 3 }
+								parentanchor = bottom
+								position = { 0 1 }
+							}
+
+							hbox = {
+								margin = { 10 5 }
+								alpha = "[Select_float(GreaterThan_int32(Faith.GetNumberOfCountiesOfFaith,'(int32)0'), '(float)1.0','(float)0.5')]"
+
+								icon = {
+									name = "faith_icon"
+									texture = "[Faith.GetIcon]"
+									size = { 60 60 }
+								}
+
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+									margin_left = 10
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										layoutpolicy_vertical = expanding
+
+										text_single = {
+											name = "faith_name"
+											align = left|nobaseline
+											text = "[Faith.GetNameNoTooltip]"
+											using = Font_Size_Medium
+											default_format = "#high"
+											max_width = 240
+										}
+
+										expand = {}
+
+										text_single = {
+											min_width = 160
+											name = "religion_faith_name"
+											align = right|nobaseline
+											text = "FAITH_RELIGION"
+											margin_right = 5
+										}
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										layoutpolicy_vertical = expanding
+
+										icon = {
+											texture = "gfx/interface/icons/icon_fervor.dds"
+											size = { 22 22 }
+										}
+
+										text_single = {
+											name = "fervor"
+											text = "FAITH_WINDOW_FERVOR"
+											using = Font_Size_Small
+											align = left|nobaseline
+										}
+
+										expand = {}
+									}
+
+									text_single = {
+										layoutpolicy_horizontal = expanding
+										name = "counties"
+										align = left|nobaseline
+										text = "FAITH_WINDOW_COUNTIES"
+										default_format = "#low"
+										autoresize = no
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+######################################################
+################ TYPES AND TEMPLATES #################
+######################################################
+
+types FaithCreationWindow
+{
+	type name_entry_big = editbox_standard_with_label {
+		layoutpolicy_horizontal = expanding
+
+		blockoverride "editbox_label"
+		{
+			block "label"
+			{
+				text = "DEFAULT_TEXT"
+			}
+		}
+		size = { 380 30 }
+	}
+
+}
+
+types FaithShared
+{
+	type container_tenet_item = container {
+
+		using = tooltip_se
+
+		highlight_icon = {
+			name = "doctrine_group_bg"
+			texture = "[Faith.GetDoctrineBackgroundIcon]"
+			size = { 130 200 }
+		}
+
+		highlight_icon = {
+			name = "doctrine_group_icon"
+			texture = "[FaithDoctrine.GetIcon]"
+			size = { 130 200 }
+			alpha = 0.85
+			position = {0 0}
+		}
+
+		text_label_center = {
+			name = "doctrine_name"
+			parentanchor = bottom|hcenter
+			widgetanchor = center
+			position = { 0 -24 }
+			maximumsize = { 130 44 }
+			fontsize_min = 12
+			multiline = yes
+			align = center
+			elide = right
+			text = "[FaithDoctrine.GetNameNoTooltip( Faith.Self )]"
+			default_format = "#high"
+
+			using = Font_Size_Medium
+		}
+	}
+
+	type fervor_container_vbox = vbox {
+		name = "fervor_container"
+		tooltip = "FERVOR_TT"
+		spacing = -6
+
+		# Fervor
+		hbox = {
+
+			icon = {
+				texture = "gfx/interface/icons/icon_fervor.dds"
+				size = { 22 22 }
+			}
+
+			text_single = {
+				text = "FAITH_WINDOW_FERVOR"
+				default_format = "#high"
+				align = nobaseline
+			}
+		}
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin_right = 1
+			expand = {}
+
+			text_single = {
+				name = "fervor_trend"
+				text = "[Faith.GetYearlyFervorChange|=+2]"
+				max_width = 110
+				default_format = "#low"
+				fontsize = 13
+				size = { 0 12 }
+			}
+		}
+	}
+}
+
+types FaithWindow
+{
+	type widget_doctrine_item = margin_widget {
+		size = { 210 53 }
+		#margin = {5 5}
+		block "wdi_context"
+		{
+			datacontext = "[GuiFaithDoctrineItem.GetDoctrine]"
+			datacontext = "[GuiFaithDoctrineItem.GetFaith]"
+		}
+
+		block "background" {
+			background = {
+				using = Background_Area
+				margin = { 5 5 }
+			}
+		}
+
+		hbox = {
+			parentanchor = center
+			name = "faith_list_item"
+			block "tooltip" { #### current solution as to not display 2 different tooltips for special doctrines
+				tooltip = "FAITH_WINDOW_DOCTRINE_TOOLTIP_WITH_FAITH"
+			}
+			spacing = 8
+
+			using = tooltip_ne
+
+			block "doctrine_icon"
+			{
+				icon_doctrine = {
+					name = "doctrine_group_icon"
+					size = { 50 50 }
+
+					texture = "[FaithDoctrine.GetGroup.GetIcon]"
+				}
+			}
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+
+				text_single = {
+					name = "doctrine_group_name"
+					layoutpolicy_horizontal = expanding
+					align = left
+					autoresize = no
+					fontsize_min = 12
+					# default_format = "#low"
+					block "text_title"
+					{
+						text = "[FaithDoctrine.GetGroup.GetName( Faith.Self )]"
+					}
+				}
+
+				text_single = {
+					name = "faith_name"
+					layoutpolicy_horizontal = expanding
+					elide = right
+					autoresize = no
+					fontsize_min = 12
+					align = left
+					default_format = "#high"
+					block "text_desc"
+					{
+						text = "[FaithDoctrine.GetNameNoTooltip( Faith.Self )]"
+					}
+				}
+			}
+		}
+	}
+	
+	type vbox_legal_tradition_item = vbox {
+		layoutpolicy_horizontal = expanding
+		
+		spacing = 10
+
+		hbox = {
+			name = "tradition_list_item"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			margin_right = 15
+			margin_left = 5
+			margin_bottom = 10
+			margin_top = 10
+
+			background = {
+				using = Background_Area
+				alpha = 0.2
+			}
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					
+					vbox = {
+						text_single = {
+							name = "legal_tradition_name"
+							text = "[Localize(Concatenate(Scope.Var('legal_tradition_name').GetFlagName,'_name'))]"
+							layoutpolicy_horizontal = expanding
+							align = left
+							default_format = "#high"
+							using = Font_Type_Flavor
+							fontsize = 26
+							autoresize = yes
+						}
+						text_multi = {
+							visible = "[Scope.Var('legal_tradition_founder').IsSet]"
+							layoutpolicy_horizontal = expanding
+							raw_text = "Founded in the [Scope.Var('legal_tradition_founding_century').GetValue|0]th century by [Scope.Var('legal_tradition_founder').Char.GetTitledFirstName]"
+							default_format = "#low"
+							autoresize = yes
+							fontsize = 14
+							margin_left = 5
+						}
+					}
+					
+					text_single = {
+						name = "legal_tradition_level"
+						visible = "[Not(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)0' ))]"
+						layoutpolicy_horizontal = expanding
+						block "legal_tradition_level_text" {
+							text = "[SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)1' ),'#color_white I#!', SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)2' ),'#color_green II#!', SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)3' ),'#color_red III#!', SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)4' ),'#color_blue_gray IV#!','#color_yellow V#!')) ) )]"
+						}
+						align = right
+						default_format = "#bold"
+						using = Font_Type_Standard
+						fontsize = 26
+						autoresize = yes
+						margin_right = 30
+					}
+					
+					text_single = {
+						name = "legal_tradition_minor_label"
+						visible = "[EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)0' )]"
+						layoutpolicy_horizontal = expanding
+						raw_text = "#EMP Minor#!"
+						align = right
+						default_format = "#low"
+						using = Font_Type_Standard
+						fontsize = 18
+						autoresize = yes
+						margin_right = 30
+					}
+					
+					background = {
+						visible = "[Not(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)0' ))]"
+						block "header_background_color"
+						{
+							using = Background_Area_Solid
+						}
+						margin_bottom = 10
+						margin_top = 10
+						margin_left = 5
+						margin_right = 5
+					}
+					
+					background = {
+						visible = "[EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)0' )]"
+						block "header_background_color"
+						{
+							using = Background_Area_Solid
+						}
+						alpha = 0.6
+						margin_bottom = 10
+						margin_top = 10
+						margin_left = 5
+						margin_right = 5
+					}
+				}
+				
+				text_multi = {
+					text = "[Localize(Concatenate(Scope.Var('legal_tradition_name').GetFlagName,'_desc'))]"
+					visible = "[Not(EqualTo_string(Localize(Concatenate(Scope.Var('legal_tradition_name').GetFlagName,'_desc')), Concatenate(Scope.Var('legal_tradition_name').GetFlagName,'_desc')))]"
+					max_width = 550
+					layoutpolicy_vertical = expanding
+					align = nobaseline
+					autoresize = yes
+					margin_right = 10
+					margin_top = 10
+				}
+			}
+		}
+		
+		divider_light = {
+			layoutpolicy_horizontal = expanding
+		}
+		
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			
+			# Traits
+			vbox = {
+				datamodel = "[Scope.GetList('active_legal_tradition_trait_categories')]"
+				datacontext = "[Scope.GetProvince]"
+				layoutpolicy_horizontal = expanding
+				max_width = 112
+				spacing = 10
+				margin_left = -10
+				item = {
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						
+						background = {
+							using = Background_Area
+							margin = { 5 5 }
+						}
+						
+						vbox = {
+							spacing = 10
+							margin = { 10 10 }
+							layoutpolicy_vertical = expanding
+							text_single = {
+								name = "trait_category_name"
+								size = { 150 10 }
+								align = left
+								autoresize = no
+								fontsize_min = 12
+								# default_format = "#low"
+								block "text_title"
+								{
+									raw_text = "[Localize(Concatenate(Scope.GetFlagName,'_name'))]"
+								}
+							}
+			
+							text_single = {
+								name = "trait_name"
+								size = { 150 10 }
+								elide = right
+								autoresize = no
+								fontsize_min = 12
+								align = left
+								default_format = "#high"
+								block "text_desc"
+								{
+									text = "[Localize(Concatenate(Province.MakeScope.Var(Scope.GetFlagName).GetFlagName,'_name'))]"
+								}
+							}
+							tooltip = "[GetScriptedGui('legal_tradition_trait_effects_scripted_gui').BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('legal_tradition_scope',Province.MakeScope).AddScope('trait',MakeScopeFlag(Province.MakeScope.Var(Scope.GetFlagName).GetFlagName)).End)]"
+						}
+						text_single = {
+							name = "legal_tradition_trait_level"
+							layoutpolicy_horizontal = expanding
+							text = "[SelectLocalization(EqualTo_CFixedPoint( Province.MakeScope.Var(Concatenate(Province.MakeScope.Var(Scope.GetFlagName).GetFlagName,'_rank')).GetValue , '(CFixedPoint)1' ),'#color_white I#!', SelectLocalization(EqualTo_CFixedPoint( Province.MakeScope.Var(Concatenate(Province.MakeScope.Var(Scope.GetFlagName).GetFlagName,'_rank')).GetValue , '(CFixedPoint)2' ),'#color_green II#!', SelectLocalization(EqualTo_CFixedPoint( Province.MakeScope.Var(Concatenate(Province.MakeScope.Var(Scope.GetFlagName).GetFlagName,'_rank')).GetValue , '(CFixedPoint)3' ),'#color_red III#!', SelectLocalization(EqualTo_CFixedPoint( Province.MakeScope.Var(Concatenate(Province.MakeScope.Var(Scope.GetFlagName).GetFlagName,'_rank')).GetValue , '(CFixedPoint)4' ),'#color_blue_gray IV#!','#color_yellow V#!')) ) )]"
+							align = right
+							default_format = "#bold"
+							using = Font_Type_Standard
+							fontsize = 20
+							autoresize = yes
+							margin_right = 10
+						}
+					}
+				}
+			}
+			
+			vbox = {
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+				max_width = 288
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					
+					background = {
+						using = Background_Area
+						margin = { 5 5 }
+					}
+					
+					vbox = {
+						spacing = 10
+						margin = { 10 10 }
+						parentanchor = top|left
+						layoutpolicy_vertical = expanding
+						text_single = {
+							name = "founding_era_label"
+							size = { 150 10 }
+							align = left
+							autoresize = no
+							fontsize_min = 12
+							# default_format = "#low"
+							block "text_title"
+							{
+								raw_text = "Founding Era"
+							}
+						}
+			
+						text_single = {
+							name = "founding_era_text"
+							size = { 150 10 }
+							elide = right
+							autoresize = no
+							fontsize_min = 12
+							align = left
+							default_format = "#high"
+							block "text_desc"
+							{
+								text = "[SelectLocalization(Scope.Var('founding_era').IsSet, Concatenate(Scope.Var('founding_era').GetFlagName,'_legal_tradition_founding_name'), 'Unknown')]"
+							}
+						}
+					}
+					
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+					
+					vbox = {
+						spacing = 10
+						margin = { 10 10 }
+						parentanchor = top|left
+						layoutpolicy_vertical = expanding
+						text_single = {
+							name = "founding_era_label"
+							size = { 150 10 }
+							align = left
+							autoresize = no
+							fontsize_min = 12
+							# default_format = "#low"
+							block "text_title"
+							{
+								raw_text = "Origin"
+							}
+						}
+			
+						text_single = {
+							name = "founding_era_text"
+							size = { 150 10 }
+							elide = right
+							autoresize = no
+							fontsize_min = 12
+							align = left
+							default_format = "#high"
+							block "text_desc"
+							{
+								text = "[SelectLocalization(Scope.Var('origin').IsSet, Concatenate(Scope.Var('origin').GetFlagName,'_legal_tradition_origin_name'), 'Unknown')]"
+							}
+						}
+						tooltip = "[SelectLocalization(Scope.Var('origin').IsSet, Concatenate(Scope.Var('origin').GetFlagName,'_legal_tradition_origin_desc'), 'The origins of this legal tradition are murky.')]"
+					}
+				}
+				
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					
+					background = {
+						using = Background_Area
+						margin = { 5 5 }
+					}
+					
+					# Patronage slider
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						
+						visible = "[And( GetPlayer.MakeScope.Var('character_legal_tradition').IsSet, ObjectsEqual(GetPlayer.MakeScope.Var('character_legal_tradition').GetProvince, Scope.GetProvince) )]"
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							
+							margin_bottom = 5
+							margin_left = 2
+							
+							text_single = {
+								name = "legal_tradition_patronage_label"
+								align = left
+								autoresize = yes
+								fontsize_min = 12
+								block "text_title"
+								{
+									raw_text = "Patronage"
+								}
+							}
+							
+							expand = {}
+						}
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							button = {
+								enabled = "[GetScriptedGui('decrease_legal_tradition_patronage_scripted_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								onclick = "[GetScriptedGui('decrease_legal_tradition_patronage_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								size = { 25 25 }
+								button_icon = {
+									size = { 25 25 }
+									parentanchor = center
+									alwaystransparent = yes
+									framesize = { 100 100 }
+									texture = "gfx/interface/icons/flat_icons/minus.dds"
+								}
+							}
+							widget = {
+								layoutpolicy_horizontal = expanding
+								
+								progressbar_standard = {
+									layoutpolicy_horizontal = expanding
+									size = { 100% 25 }
+								
+									min = 0
+									max = 50
+									value = "[FixedPointToFloat(GetPlayer.MakeScope.Var('character_legal_tradition_patronage_level').GetValue)]"
+								}
+								
+								flowcontainer = {
+									visible = "[And(GetPlayer.MakeScope.Var('character_legal_tradition_patronage_level').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('character_legal_tradition_patronage_level').GetValue,'(CFixedPoint)0'))]"
+									parentanchor = center
+									position = { 0 -2 }
+									spacing = 4
+		
+									text_single = {
+										raw_text = "@gold_icon! +[GetPlayer.MakeScope.ScriptValue('legal_tradition_patronage_investment_character_total_value')|1]"
+									}
+								}
+							}
+							button = {
+								enabled = "[GetScriptedGui('increase_legal_tradition_patronage_scripted_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								onclick = "[GetScriptedGui('increase_legal_tradition_patronage_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								size = { 25 25 }
+								button_icon = {
+									size = { 25 25 }
+									parentanchor = center
+									alwaystransparent = yes
+									framesize = { 100 100 }
+									texture = "gfx/interface/icons/flat_icons/plus.dds"
+								}
+							}
+						}
+					}
+					
+					expand = {
+						visible = "[And( GetPlayer.MakeScope.Var('character_legal_tradition').IsSet, ObjectsEqual(GetPlayer.MakeScope.Var('character_legal_tradition').GetProvince, Scope.GetProvince) )]"
+					}
+					
+					# Progress slider
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							
+							margin_bottom = 5
+							margin_left = 2
+							
+							text_single = {
+								name = "legal_tradition_progress_label"
+								align = left
+								autoresize = yes
+								fontsize_min = 12
+								block "text_title"
+								{
+									raw_text = "Progress to [SelectLocalization(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)0' ),'Recognition','Next Level')]"
+								}
+							}
+							
+							expand = {}
+						}
+						
+						progressbar_standard = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 25 }
+						
+							min = 0
+							max = "[FixedPointToFloat(Scope.ScriptValue('legal_tradition_next_level_progress_requirement_value'))]"
+							value = "[FixedPointToFloat(Scope.Var('legal_tradition_level_progress').GetValue)]"
+							
+							tooltipwidget = {
+								widget_legal_tradition_progress_tooltip = {}
+							}
+						}
+					}
+				}
+				
+				expand = {}
+			}
+		}
+		
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			button_group  = {
+				onclick = "[GetVariableSystem.Toggle(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))]"
+				
+				parentanchor = left
+		
+				button_normal = {
+					name = "show_interactions"
+					size = { 20 20 }
+					alwaystransparent = no
+		
+					texture = "gfx/interface/buttons/button_tree_expand.dds"
+					framesize = { 36 36 }
+					frame = "[Select_int32( Not(GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))), '(int32)1', '(int32)2' )]"
+		
+					using = tooltip_ws
+				}
+		
+				text_single = {
+					raw_text = "Interactions"
+					align = nobaseline
+					position = { 25 0 }
+				}
+			}
+			expand = {}
+		}
+		
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			visible = "[GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))]"
+			
+			# Adopt a legal tradition
+			button_standard = {
+				name = "adopt_legal_tradition_button"
+				
+				visible = "[And(ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self ),Not(And( GetPlayer.MakeScope.Var('character_legal_tradition').IsSet, ObjectsEqual(GetPlayer.MakeScope.Var('character_legal_tradition').GetProvince, Scope.GetProvince) )))]"
+				enabled = "[GetScriptedGui('adopt_legal_tradition_scripted_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('player_viewing_legal_schools',GetPlayer.MakeScope).End)]"
+				onclick = "[GetScriptedGui('adopt_legal_tradition_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_legal_schools',GetPlayer.MakeScope).End)]"
+				
+				raw_text = "Adopt"
+				tooltip = "[GetScriptedGui('adopt_legal_tradition_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_legal_schools',GetPlayer.MakeScope).End)]"
+			}
+			# Renounce a legal tradition
+			button_standard = {
+				name = "renounce_legal_tradition_button"
+				
+				visible = "[And( GetPlayer.MakeScope.Var('character_legal_tradition').IsSet, ObjectsEqual(GetPlayer.MakeScope.Var('character_legal_tradition').GetProvince, Scope.GetProvince) )]"
+				enabled = "[GetScriptedGui('legal_tradition_cooldown_check').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				onclick = "[GetScriptedGui('renounce_legal_tradition_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_legal_schools',GetPlayer.MakeScope).End)]"
+				
+				raw_text = "Renounce"
+				tooltip = "[GetScriptedGui('renounce_legal_tradition_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_legal_schools',GetPlayer.MakeScope).End)]"
+			}
+			# Appoint to High Court
+			button_standard = {
+				name = "appoint_to_high_court_legal_tradition_button"
+				
+				visible = "[GetScriptedGui('legal_tradition_appoint_high_judge_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				enabled = "[GetScriptedGui('legal_tradition_appoint_high_judge_scripted_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				onclick = "[GetScriptedGui('legal_tradition_appoint_high_judge_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('legal_tradition_scope',Scope.GetProvince.MakeScope).End)]"
+				
+				raw_text = "Appoint High Judge"
+				#tooltip = "[GetScriptedGui('renounce_legal_tradition_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_legal_schools',GetPlayer.MakeScope).End)]"
+			}
+		}
+		
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			visible = "[Not(EqualTo_CFixedPoint( Scope.Var('legal_tradition_level').GetValue, '(CFixedPoint)0' ))]"
+			button_group  = {
+				onclick = "[GetVariableSystem.Toggle(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_patrons_displayed'))]"
+				
+				parentanchor = left
+		
+				button_normal = {
+					name = "show_major_patrons"
+					size = { 20 20 }
+					alwaystransparent = no
+		
+					texture = "gfx/interface/buttons/button_tree_expand.dds"
+					framesize = { 36 36 }
+					frame = "[Select_int32( Not(GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_patrons_displayed'))), '(int32)1', '(int32)2' )]"
+		
+					using = tooltip_ws
+				}
+		
+				text_single = {
+					raw_text = "Greatest Patrons"
+					align = nobaseline
+					position = { 25 0 }
+				}
+			}
+			expand = {}
+		}
+		
+		dynamicgridbox = {
+			name = "legal_tradition_major_patrons_grid"
+			datamodel = "[Scope.GetProvince.MakeScope.GetList('legal_tradition_major_patrons')]"
+			visible = "[GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_patrons_displayed'))]"
+			datamodel_wrap = 4
+			ignoreinvisible = yes
+			flipdirection = yes
+			
+			item = {
+				container = {
+					datacontext = "[Scope.GetCharacter]"
+		
+					portrait_head = {
+						
+					}
+				}
+			}
+		}
+	}
+	
+	type progressbar_generic = icon {
+		shaderfile = "gfx/FX/pdxgui_repeat_texture.shader"
+		alpha = 0.8
+
+		block "bar_color"
+		{
+			# texture = "gfx/interface/colors/red.dds"
+		}
+
+		modify_texture = {
+			texture = "gfx/interface/component_masks/mask_rough_edges.dds"
+			spriteType = Corneredtiled
+			spriteborder = { 20 20 }
+			blend_mode = alphamultiply
+			texture_density = 5
+		}
+
+		modify_texture = {
+			texture = "gfx/interface/component_masks/mask_fade_horizontal.dds"
+			blend_mode = alphamultiply
+			alpha = 0.3
+		}
+
+		modify_texture = {
+			texture = "gfx/interface/component_masks/mask_scratches.dds"
+			blend_mode = alphamultiply
+			spriteType = corneredtiled
+			alpha = 0.3
+			texture_density = 3
+		}
+
+		modify_texture = {
+			name = "flash"
+			texture = "gfx/interface/colors/white.dds"
+			blend_mode = colordodge
+			alpha = 0
+		}
+
+		modify_texture = {
+			name = "clouds"
+			texture = "gfx/interface/component_masks/mask_clouds_solid.dds"
+			blend_mode = mask
+			spriteType = corneredtiled
+			texture_density = 1
+		}
+
+		modify_texture = {
+			block "bar_color_flow"
+			{
+				# texture = "gfx/interface/colors/yellow.dds"
+				alpha = 0.3
+			}
+			blend_mode = colordodge
+		}
+
+		state = {
+			name = a
+			next = b
+			trigger_on_create = yes
+
+			modify_texture = {
+				name = "clouds"
+				translate_uv = { 1 0 }
+			}
+		}
+
+		state = {
+			name = b
+			next = a
+			duration = 15
+
+			modify_texture = {
+				name = "clouds"
+				translate_uv = { -1 0 }
+			}
+		}
+	}
+	
+	type vbox_patron_saint_item = vbox {
+		datacontext = "[Scope.GetProvince]"
+		layoutpolicy_horizontal = expanding
+		
+		widget = {
+			allow_outside = yes
+			icon = {
+				texture = "gfx/interface/window_event/header_sharp_left.dds"
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/orange.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'orange'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Orange')))]"
+					blend_mode = overlay
+					alpha = 0.6
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/red.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'red'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Red')))]"
+					blend_mode = overlay
+					alpha = 0.6
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/gold.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'gold'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Gold')))]"
+					blend_mode = overlay
+					alpha = 0.6
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/blue.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'blue'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Blue')))]"
+					blend_mode = overlay
+					alpha = 0.6
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/white.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'white'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'White')))]"
+					blend_mode = overlay
+					alpha = 0.6
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/green.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'green'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Green')))]"
+					blend_mode = overlay
+					alpha = 0.3
+				}
+				
+				text_single = {
+					name = "patron_saint_name"
+					text = "[Localize(Concatenate(Scope.Var('patron_saint_name').GetFlagName,'_name'))]"
+					layoutpolicy_horizontal = expanding
+					default_format = "#high"
+					using = Font_Type_Flavor
+					fontsize = 26
+					autoresize = yes
+					margin_left = 120
+					margin_top = 15
+				}
+				hbox = {
+					button_patron_saint_level = {
+						visible = "[And(GetScriptedGui('character_has_this_patron_saint_saint_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End),GetScriptedGui('renounce_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End))]"
+						enabled = "[And(GetScriptedGui('character_has_this_patron_saint_saint_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End),GetScriptedGui('renounce_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End))]"
+						onclick = "[GetScriptedGui('renounce_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('renounce_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "glow_visibility" {
+							visible = "[And(GetScriptedGui('character_has_this_patron_saint_saint_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End),GetScriptedGui('renounce_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End))]"
+						}
+						blockoverride "level_text" {
+							raw_text = "X"
+						}
+					}
+					margin_left = 350
+					margin_top = -15
+				}
+				
+			}
+		
+			
+			icon = {
+				size = { 490 15 }
+				position = { 100 60 }
+				layoutpolicy_horizontal = expanding
+				allow_outside = yes
+				texture = "gfx/interface/window_event/header_sharp_right.dds"
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/orange.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'orange'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Orange')))]"
+					blend_mode = overlay
+					alpha = 0.2
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/red.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'red'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Red')))]"
+					blend_mode = overlay
+					alpha = 0.2
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/gold.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'gold'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Gold')))]"
+					blend_mode = overlay
+					alpha = 0.2
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/blue.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'blue'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Blue')))]"
+					blend_mode = overlay
+					alpha = 0.2
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/white.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'white'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'White')))]"
+					blend_mode = overlay
+					alpha = 0.2
+				}
+				
+				modify_texture = {
+					texture = "gfx/interface/colors/green.dds"
+					visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'green'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Green')))]"
+					blend_mode = overlay
+					alpha = 0.2
+				}
+				
+				hbox = {
+					widget = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						layoutstretchfactor_horizontal = "[GetProgressBarValueMaxScaled( FixedPointToFloat(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('relevant_patron_saint', Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_total_value')), FixedPointToFloat('(CFixedPoint)100'), '(int32)100' )]"
+						
+						progressbar_generic = {
+							visible = "[Or(Not(Scope.Var('patron_saint_ui_color').IsSet), Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'white'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'White')))]"
+							size = { 90% 11 }
+				
+							using = Animation_ShowHide_Standard
+				
+							blockoverride "bar_color"
+							{
+								texture = "gfx/interface/colors/white.dds"
+							}
+				
+							blockoverride "bar_color_flow"
+							{
+								texture = "gfx/interface/colors/white.dds"
+								alpha = 0.3
+							}
+							
+							tooltipwidget = {
+								widget_patron_saint_affinity_tooltip = {}
+							}
+						}
+						
+						progressbar_generic = {
+							visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'blue'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Blue')))]"
+							size = { 90% 11 }
+						
+							using = Animation_ShowHide_Standard
+						
+							blockoverride "bar_color"
+							{
+								texture = "gfx/interface/colors/blue.dds"
+							}
+						
+							blockoverride "bar_color_flow"
+							{
+								texture = "gfx/interface/colors/white.dds"
+								alpha = 0.3
+							}
+							
+							tooltipwidget = {
+								widget_patron_saint_affinity_tooltip = {}
+							}
+						}
+						
+						progressbar_generic = {
+							visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'gold'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Gold')))]"
+							size = { 90% 11 }
+						
+							using = Animation_ShowHide_Standard
+						
+							blockoverride "bar_color"
+							{
+								texture = "gfx/interface/colors/gold.dds"
+							}
+						
+							blockoverride "bar_color_flow"
+							{
+								texture = "gfx/interface/colors/white.dds"
+								alpha = 0.3
+							}
+							
+							tooltipwidget = {
+								widget_patron_saint_affinity_tooltip = {}
+							}
+						}
+						
+						progressbar_generic = {
+							visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'orange'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Orange')))]"
+							size = { 90% 11 }
+						
+							using = Animation_ShowHide_Standard
+						
+							blockoverride "bar_color"
+							{
+								texture = "gfx/interface/colors/orange.dds"
+							}
+						
+							blockoverride "bar_color_flow"
+							{
+								texture = "gfx/interface/colors/white.dds"
+								alpha = 0.3
+							}
+							
+							tooltipwidget = {
+								widget_patron_saint_affinity_tooltip = {}
+							}
+						}
+						
+						progressbar_generic = {
+							visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'red'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Red')))]"
+							size = { 90% 11 }
+						
+							using = Animation_ShowHide_Standard
+						
+							blockoverride "bar_color"
+							{
+								texture = "gfx/interface/colors/red.dds"
+							}
+						
+							blockoverride "bar_color_flow"
+							{
+								texture = "gfx/interface/colors/white.dds"
+								alpha = 0.3
+							}
+							
+							tooltipwidget = {
+								widget_patron_saint_affinity_tooltip = {}
+							}
+						}
+						
+						progressbar_generic = {
+							visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, Or(EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'green'), EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Green')))]"
+							size = { 90% 11 }
+						
+							using = Animation_ShowHide_Standard
+						
+							blockoverride "bar_color"
+							{
+								texture = "gfx/interface/colors/green.dds"
+							}
+						
+							blockoverride "bar_color_flow"
+							{
+								texture = "gfx/interface/colors/white.dds"
+								alpha = 0.3
+							}
+							
+							tooltipwidget = {
+								widget_patron_saint_affinity_tooltip = {}
+							}
+						}
+					}
+				
+					widget = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						layoutstretchfactor_horizontal = "[GetProgressBarValueMaxOtherScaled( FixedPointToFloat(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('relevant_patron_saint', Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_total_value')), FixedPointToFloat('(CFixedPoint)140'), '(int32)100' )]"
+						tooltipwidget = {
+							widget_patron_saint_affinity_tooltip = {}
+						}
+					}
+				}
+				
+				hbox = {
+					allow_outside = yes
+					margin_left = -35
+					margin_right = 5
+					button_patron_saint_level = {
+						visible = "[Not(GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)1')).End))]"
+						enabled = "[GetScriptedGui('adopt_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						onclick = "[GetScriptedGui('adopt_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('adopt_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "glow_visibility" {
+							visible = "[GetScriptedGui('adopt_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						}
+						blockoverride "level_text" {
+							raw_text = "I"
+						}
+					}
+					button_patron_saint_level = {
+						visible = "[GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)1')).End)]"
+						tooltip = "[GetScriptedGui('adopt_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "color_alpha" {
+							alpha = 0.5
+						}
+					}
+					
+					button_patron_saint_level = {
+						visible = "[Not(GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)2')).End))]"
+						enabled = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						onclick = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "glow_visibility" {
+							visible = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						}
+						blockoverride "level_text" {
+							raw_text = "II"
+						}
+					}
+					button_patron_saint_level = {
+						visible = "[GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)2')).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "level_text" {
+							raw_text = "II"
+						}
+						blockoverride "color_alpha" {
+							alpha = 0.5
+						}
+					}
+					
+					button_patron_saint_level = {
+						visible = "[Not(GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)3')).End))]"
+						enabled = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						onclick = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "glow_visibility" {
+							visible = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						}
+						blockoverride "level_text" {
+							raw_text = "III"
+						}
+					}
+					button_patron_saint_level = {
+						visible = "[GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)3')).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "level_text" {
+							raw_text = "III"
+						}
+						blockoverride "color_alpha" {
+							alpha = 0.5
+						}
+					}
+					
+					button_patron_saint_level = {
+						visible = "[Not(GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)4')).End))]"
+						enabled = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						onclick = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "glow_visibility" {
+							visible = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						}
+						blockoverride "level_text" {
+							raw_text = "IV"
+						}
+					}
+					button_patron_saint_level = {
+						visible = "[GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)4')).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "level_text" {
+							raw_text = "IV"
+						}
+						blockoverride "color_alpha" {
+							alpha = 0.5
+						}
+					}
+					
+					button_patron_saint_level = {
+						visible = "[Not(GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)5')).End))]"
+						enabled = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						onclick = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "glow_visibility" {
+							visible = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						}
+						blockoverride "level_text" {
+							raw_text = "V"
+						}
+					}
+					button_patron_saint_level = {
+						visible = "[GetScriptedGui('character_has_level_or_above_patron_saint_check').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).AddScope('patron_saint_level_being_checked',MakeScopeValue('(CFixedPoint)5')).End)]"
+						tooltip = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+						blockoverride "level_text" {
+							raw_text = "V"
+						}
+						blockoverride "color_alpha" {
+							alpha = 0.5
+						}
+					}
+				}
+			}
+			
+			hbox = {
+				hbox = {
+					datamodel = "[Scope.GetProvince.MakeScope.GetList('patron_saint_patron_character_list')]"
+					visible = "[DataModelHasItems( Scope.GetProvince.MakeScope.GetList('patron_saint_patron_character_list') )]"
+					
+					item = {
+						container = {
+							datacontext = "[Scope.GetCharacter]"
+				
+							portrait_head = {
+								name = "character_portrait_patron_saint"
+								datacontext = "[Scope.GetCharacter]"
+	
+								blockoverride "coa" {}
+								blockoverride "opinion_box"{}
+							}
+						}
+					}
+				}
+				
+				expand = {}
+			}
+		}
+		
+		spacer = {
+			size = { 0 150 }
+		}
+		
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+			text_multi = {
+				text = "[Localize(Concatenate(Scope.Var('patron_saint_name').GetFlagName,'_desc'))]"
+				visible = "[Not(EqualTo_string(Localize(Concatenate(Scope.Var('patron_saint_name').GetFlagName,'_desc')), Concatenate(Scope.Var('patron_saint_name').GetFlagName,'_desc')))]"
+				max_width = 330
+				layoutpolicy_horizontal = expanding
+				align = left
+				autoresize = yes
+			}
+			
+			divider_light = {
+				layoutpolicy_vertical = expanding
+			}
+			
+			vbox = {
+				hbox = {
+					datamodel = "[Scope.GetList('patron_saint_skills_ui')]"
+					item = {
+						hbox = {
+							margin_left = 10
+							margin_right = 15
+							spacing = 4
+						
+							background = {
+								texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+								framesize = { 70 26 }
+								frame = "[Select_int32( EqualTo_string(Scope.GetFlagName,'diplomacy_skill') , '(int32)1', Select_int32(EqualTo_string(Scope.GetFlagName,'martial_skill'),'(int32)2', Select_int32(Or(EqualTo_string(Scope.GetFlagName,'stewardship_skill'), EqualTo_string(Scope.GetFlagName,'health_skill')),'(int32)3', Select_int32(EqualTo_string(Scope.GetFlagName, 'intrigue_skill'), '(int32)4' , Select_int32(EqualTo_string(Scope.GetFlagName, 'learning_skill'), '(int32)5', '(int32)6')) ) ) )]"
+							}
+						
+							icon = {
+								texture = "gfx/interface/icons/icon_skills.dds"
+								framesize = { 60 60 }
+								frame = "[Select_int32( EqualTo_string(Scope.GetFlagName,'diplomacy_skill') , '(int32)1', Select_int32(EqualTo_string(Scope.GetFlagName,'martial_skill'),'(int32)2', Select_int32(EqualTo_string(Scope.GetFlagName,'stewardship_skill'),'(int32)3', Select_int32(EqualTo_string(Scope.GetFlagName, 'intrigue_skill'), '(int32)4' , Select_int32(EqualTo_string(Scope.GetFlagName, 'learning_skill'), '(int32)5', '(int32)6')) ) ) )]"
+								size = { 30 30 }
+							}
+							
+							text_single = {
+								using = Font_Size_Small
+								text = "[Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_affinity_modifier')).GetValue]"
+								default_format = "#high"
+							}
+						}
+					}
+				}
+				
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					fixedgridbox = {
+						datamodel = "[Scope.GetList('patron_saint_traits')]"
+						flipdirection = yes
+						datamodel_wrap = 5
+						addcolumn = 40
+						addrow = 80
+						
+						item = {
+							container_patron_saint_trait_modifier = { }
+						}
+					}
+					expand = {}
+				}
+				
+				vbox = {
+					datamodel = "[Scope.GetList('patron_saint_aspects')]"
+					
+					item = {
+						text_multi = {
+							text = "[Localize(Concatenate(Scope.GetFlagName, '_desc'))]"
+							max_width = 250
+							margin_right = 20
+							autoresize = yes
+						}
+					}
+				}
+				
+				vbox = {
+					datamodel = "[Scope.GetList('patron_saint_holy_sites_list')]"
+					layoutpolicy_horizontal = expanding
+					
+					text_single = {
+						raw_text = "Holy Sites"
+						
+						layoutpolicy_horizontal = expanding
+						align = left
+						
+						using = Font_Size_Small
+						default_format = "#bold"
+					}
+					
+					item = {
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							
+							text_single = {
+								text = "[Scope.Title.GetBaseNameNoTier]"
+							}
+							
+							coa_title_tiny = {
+								datacontext = "[Scope.Title]"
+							}
+						}
+					}
+				}
+			}
+			
+			expand = {}
+		}
+		
+		#hbox = {
+		#	layoutpolicy_horizontal = expanding
+		#	button_group  = {
+		#		onclick = "[GetVariableSystem.Toggle(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))]"
+		#		
+		#		parentanchor = left
+		#
+		#		button_normal = {
+		#			name = "show_interactions"
+		#			size = { 20 20 }
+		#			alwaystransparent = no
+		#
+		#			texture = "gfx/interface/buttons/button_tree_expand.dds"
+		#			framesize = { 36 36 }
+		#			frame = "[Select_int32( Not(GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))), '(int32)1', '(int32)2' )]"
+		#
+		#			using = tooltip_ws
+		#		}
+		#
+		#		text_single = {
+		#			raw_text = "Interactions"
+		#			align = nobaseline
+		#			position = { 25 0 }
+		#		}
+		#	}
+		#	expand = {}
+		#}
+		#
+		#hbox = {
+		#	layoutpolicy_horizontal = expanding
+		#	layoutpolicy_vertical = expanding
+		#	visible = "[GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))]"
+		#	
+		#	# Adopt a Patron Saint
+		#	button_standard = {
+		#		name = "adopt_patron_saint_button"
+		#		
+		#		visible = "[ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self )]"
+		#		enabled = "[GetScriptedGui('adopt_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		onclick = "[GetScriptedGui('adopt_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		
+		#		raw_text = "Follower"
+		#		tooltip = "[GetScriptedGui('adopt_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#	}
+		#	# Increase Devotion to level 2
+		#	button_standard = {
+		#		name = "increase_devotion_level_2_patron_saint_button"
+		#		
+		#		visible = "[ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self )]"
+		#		enabled = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		onclick = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		
+		#		raw_text = "Devotee"
+		#		tooltip = "[GetScriptedGui('increase_devotion_level_2_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#	}
+		#	# Increase Devoition to level 3
+		#	button_standard = {
+		#		name = "increase_devotion_level_3_patron_saint_button"
+		#		
+		#		visible = "[ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self )]"
+		#		enabled = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		onclick = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		
+		#		raw_text = "Exemplar"
+		#		tooltip = "[GetScriptedGui('increase_devotion_level_3_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#	}
+		#}
+		#
+		#hbox = {
+		#	layoutpolicy_horizontal = expanding
+		#	layoutpolicy_vertical = expanding
+		#	visible = "[GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed'))]"
+		#	
+		#	# Increase Devotion to level 4
+		#	button_standard = {
+		#		name = "increase_devotion_level_2_patron_saint_button"
+		#		
+		#		visible = "[ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self )]"
+		#		enabled = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		onclick = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		
+		#		raw_text = "Paragon"
+		#		tooltip = "[GetScriptedGui('increase_devotion_level_4_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#	}
+		#	# Increase Devoition to level 5
+		#	button_standard = {
+		#		name = "increase_devotion_level_3_patron_saint_button"
+		#		
+		#		visible = "[ObjectsEqual( GetPlayer.GetFaith, FaithWindow.GetFaith.Self )]"
+		#		enabled = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').IsValid(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		onclick = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		
+		#		raw_text = "Incarnation"
+		#		tooltip = "[GetScriptedGui('increase_devotion_level_5_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#	}
+		#}
+		#
+		#hbox = {
+		#	layoutpolicy_horizontal = expanding
+		#	layoutpolicy_vertical = expanding
+		#	visible = "[And( GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed')), GetScriptedGui('character_has_this_patron_saint_saint_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End) )]"
+		#	
+		#	# Renounce a Patron Saint
+		#	button_standard = {
+		#		name = "renounce_patron_saint_button"
+		#		
+		#		enabled = "[GetScriptedGui('patron_saint_cooldown_check').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		#		onclick = "[GetScriptedGui('renounce_patron_saint_scripted_gui').Execute(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#		
+		#		raw_text = "Renounce"
+		#		tooltip = "[GetScriptedGui('renounce_patron_saint_scripted_gui').BuildTooltip(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End)]"
+		#	}
+		#}
+		#
+		#hbox = {
+		#	layoutpolicy_horizontal = expanding
+		#	layoutpolicy_vertical = expanding
+		#	visible = "[And( GetVariableSystem.Exists(Concatenate(Scope.GetProvince.GetNameNoTooltip,'_interactions_displayed')), GetScriptedGui('character_has_this_patron_saint_saint_scripted_gui').IsShown(GuiScope.SetRoot(Scope.GetProvince.MakeScope).AddScope('player_viewing_patron_saints',GetPlayer.MakeScope).End) )]"
+		#	
+		#	progressbar_standard = {
+		#		layoutpolicy_horizontal = expanding
+		#		size = { -1 30 }
+		#	
+		#		min = 0
+		#		max = "[FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_required_affinity_for_next_level_value'))]"
+		#		value = "[FixedPointToFloat(GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('relevant_patron_saint',Scope.GetProvince.MakeScope).ScriptValue('patron_saint_affinity_total_value'))]"
+		#		
+		#		tooltipwidget = {
+		#			widget_patron_saint_affinity_tooltip = {}
+		#		}
+		#	}
+		#}
+	}
+	
+	type button_patron_saint_level = button_normal {
+		allow_outside = yes
+		tooltip_offset = { -50 40 }
+		
+		size = { 30 50 }
+		
+		state = {
+			name = "_mouse_enter"
+			on_start = "[PdxGuiWidget.FindChild('highlight_available_patron_saint_level').TriggerAnimation('show')]"
+		}
+
+		state = {
+			on_start = "[PdxGuiWidget.FindChild('highlight_available_patron_saint_level').TriggerAnimation('hide')]"
+			name = "_mouse_leave"
+		}
+		
+		icon_grandeur_level = {
+			texture = "gfx/interface/window_roco_grandeur/pin_grandeur_rank_03.dds"
+			text_single = {
+				block "level_text" {
+					raw_text = "I"
+				}
+				parentanchor = hcenter|vcenter
+			}
+			
+			modify_texture = {
+				texture = "gfx/interface/colors/orange.dds"
+				visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'orange'))]"
+				blend_mode = overlay
+				block "color_alpha" {
+					alpha = 0.3
+				}
+			}
+			
+			modify_texture = {
+				texture = "gfx/interface/colors/red.dds"
+				visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'red'))]"
+				blend_mode = overlay
+				block "color_alpha" {
+					alpha = 0.3
+				}
+			}
+			
+			modify_texture = {
+				texture = "gfx/interface/colors/gold.dds"
+				visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'gold'))]"
+				blend_mode = overlay
+				block "color_alpha" {
+					alpha = 0.4
+				}
+			}
+			
+			modify_texture = {
+				texture = "gfx/interface/colors/green.dds"
+				visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Green'))]"
+				blend_mode = overlay
+				block "color_alpha" {
+					alpha = 0.3
+				}
+			}
+			
+			modify_texture = {
+				texture = "gfx/interface/colors/blue.dds"
+				visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'Blue'))]"
+				blend_mode = overlay
+				block "color_alpha" {
+					alpha = 0.7
+				}
+			}
+			
+			modify_texture = {
+				texture = "gfx/interface/colors/white.dds"
+				visible = "[And(Scope.Var('patron_saint_ui_color').IsSet, EqualTo_string(Scope.Var('patron_saint_ui_color').GetFlagName, 'White'))]"
+				blend_mode = overlay
+				block "color_alpha" {
+					alpha = 0.4
+				}
+			}
+		}
+		
+		icon = {
+			name = "highlight_affinity_patron_saint_level"
+			size = { 80 80 }
+			position = { -10 -10 }
+			texture = "gfx/interface/window_roco_grandeur/pin_highlight.dds"
+			alpha = 0.2
+			block "glow_visibility" {
+				visible = no
+			}
+		}
+		icon = {
+			name = "highlight_available_patron_saint_level"
+			size = { 80 80 }
+			position = { -10 -10 }
+			texture = "gfx/interface/window_roco_grandeur/pin_highlight.dds"
+			alpha = 0
+			block "glow_visibility" {
+				visible = no
+			}
+		
+			state = {
+				name = show
+				using = Animation_Curve_Default
+				duration = 0.3
+				alpha = 0.7
+			}
+		
+			state = {
+				name = hide
+				using = Animation_Curve_Default
+				duration = 0.6
+				alpha = 0
+			}
+		}
+	}
+	
+	type container_patron_saint_trait_modifier = container {
+		datacontext = "[GetTrait(Scope.GetFlagName)]"
+		
+		icon = {
+			visible = "[GreaterThanOrEqualTo_CFixedPoint(Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_affinity_value')).GetValue, '(CFixedPoint)0')]"
+			texture = "gfx/interface/icons/rituals/banner_neutral.dds"
+			
+			size = { 29 38 }
+			position = { 0 30 }
+			parentanchor = hcenter|bottom
+			
+			using = Color_Green
+		
+			text_single = {
+				using = Font_Size_Small
+				visible = "[Not(Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_lifestyle_affinity_value')).IsSet)]"
+				text = "[Abs_CFixedPoint(Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_affinity_value')).GetValue)|0]"
+				default_format = "#high"
+				align = nobaseline
+				parentanchor = center
+			}
+			
+			text_single = {
+				using = Font_Size_Small
+				visible = "[Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_lifestyle_affinity_value')).IsSet]"
+				raw_text = "[Abs_CFixedPoint(Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_affinity_value')).GetValue)|0]/lvl"
+				default_format = "#high"
+				align = nobaseline
+				parentanchor = center
+			}
+		}
+		
+		icon = {
+			visible = "[LessThan_CFixedPoint(Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_affinity_value')).GetValue, '(CFixedPoint)0')]"
+			texture = "gfx/interface/icons/rituals/banner_neutral.dds"
+			
+			size = { 29 38 }
+			position = { 0 30 }
+			parentanchor = hcenter|bottom
+			
+			using = Color_Red
+		
+			text_single = {
+				using = Font_Size_Small
+				text = "[Abs_CFixedPoint(Province.MakeScope.Var(Concatenate(Concatenate('patron_saint_',Scope.GetFlagName),'_affinity_value')).GetValue)|0]"
+				default_format = "#high"
+				align = nobaseline
+				parentanchor = center
+			}
+		}
+		
+		icon = {
+			size = { 40 40 }
+			alwaystransparent = yes
+			texture = "[Trait.GetIcon( GetPlayer )]"
+		
+			using = tooltip_ne
+			tooltip_offset = { 0 20 }
+		}
+	}
+}
+
+types HighCourtTab
+{
+	
+	type portrait_high_judge = widget {
+        size = { 260 260 }
+
+        portrait_button = {
+            size = { 248 260 }
+            parentanchor = bottom|hcenter
+            using = portrait_base
+
+            portrait_texture = "[Character.GetAnimatedPortrait('environment_council', 'camera_council', 'idle', PdxGetWidgetScreenSize(PdxGuiWidget.Self))]"
+            mask = "gfx/portraits/portrait_mask_council.dds"
+            effectname = "NoHighlight"
+
+            block "mask" {
+                mask = "gfx/portraits/portrait_mask_council.dds"
+            }
+        }
+
+        #portrait unknown glow
+        button = {
+            name = "portrait_unknown_council_glow"
+            visible = "[Not(Character.IsValid)]"
+            parentanchor = center
+            position = { 2 -37 }
+            gfxtype = framedbuttongfx
+            effectname = "NoHighlight"
+            texture = "gfx/portraits/unknown_portraits/button_unknown_small.dds"
+            size = { 239 312 }
+            framesize = { 564 780 }
+            upframe = 1
+            overframe = 2
+
+            block "glow_visible" {
+
+                visible = "[Not(Character.IsValid)]"
+
+            }
+
+            block "onclick" {}
+        }
+    }
+	
+	type widget_high_judge_item = widget {
+		size = { 280 250 }
+		
+		widget = {
+			size = { 100% 100% }
+
+			state = {
+				name = _show
+				using = Animation_FadeIn_Quick
+			}
+
+			state = {
+				name = _hide
+				using = Animation_FadeOut_Quick
+			}
+
+			portrait_high_judge = {
+				name = "high_judge_portrait"
+				visible = "[Character.IsValid]"
+				parentanchor = bottom
+				position = { 0 4 }
+				blockoverride "portrait_button_no_high_judge_text"
+				{
+					text = "PORTRAIT_NO_JUDGE"
+				}
+
+				blockoverride "portrait_button"
+				{
+					using = tooltip_ws
+				}
+			}
+
+			block "missing_judge"
+			{
+				portrait_high_judge = {
+					name = "judge_portrait_blank"
+					visible = "[And(Not(Character.IsValid), And(Scope.Var('high_court').Var('high_court_mamuramat').IsSet, ObjectsEqual(Scope.Var('high_court').Var('high_court_mamuramat').Title.GetHolder, GetPlayer)))]"
+					parentanchor = center
+
+					blockoverride "portrait_button_no_high_judge_text"
+					{
+						text = "PORTRAIT_NO_JUDGE"
+					}
+
+					text_label_center = {
+						parentanchor = bottom|hcenter
+						position = { 0 -10 }
+						text = "HIGH_JUDGE_CLICK_TO_HIRE"
+						default_format = "#low;italic"
+						max_width = 235
+					}
+
+					blockoverride "onclick" {
+						onclick = "[GetScriptedGui('appoint_high_judge_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('high_court_scope', Scope.Var('high_court').Story.MakeScope).End)]"
+
+						button_icon = {
+							parentanchor = center
+							alwaystransparent = yes
+							size = { 40 40 }
+							position = { 0 70 }
+							texture = "gfx/interface/icons/flat_icons/plus.dds"
+						}
+					}
+					blockoverride "portrait_button"
+					{
+						using = tooltip_ws
+					}
+				}
+			}
+		}
+		
+		vbox = {
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 0 5 }
+				margin_right = 3
+
+				background = {
+					using = Background_Area_Dark
+				}
+
+				background = {
+					visible = "[ObjectsEqual( Character.Self, GetPlayer )]"
+					texture = "gfx/interface/component_masks/patterns/mask_pattern_02.dds"
+					spriteType = Corneredtiled
+					alpha = 0.4
+
+					using = Color_Blue
+
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_fade_horizontal_right.dds"
+						blend_mode = alphamultiply
+						alpha = 0.9
+					}
+
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_texture_01.dds"
+						spriteType = Corneredtiled
+						spriteborder = { 15 15 }
+						blend_mode = alphamultiply
+					}
+				}
+
+				background = {
+					visible = "[ObjectsEqual( Character.Self, GetPlayer )]"
+					texture = "gfx/interface/component_masks/mask_frame.dds"
+					spriteType = Corneredstretched
+					spriteborder = { 15 15 }
+					alpha = 0.25
+
+					using = Color_Blue
+
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_fade_horizontal_right.dds"
+						blend_mode = alphamultiply
+						alpha = 0.9
+					}
+				}
+
+				block "replace_judge"
+				{
+					#hbox = {
+					#
+					#	button_round = {
+					#		name = "replace"
+					#		visible = "[GuiCouncilPosition.CanPotentiallySelectCouncillor]"
+					#		onclick = "[GuiCouncilPosition.SelectCouncillor]"
+					#		enabled = "[GuiCouncilPosition.CanSelectCouncillor]"
+					#		tooltip = "[GuiCouncilPosition.GetSelectCouncillorTooltip]" #COUNCILWINDOW_TT_REPLACE
+					#		using = tooltip_se
+					#
+					#		button_change = {
+					#			alwaystransparent = yes
+					#			parentanchor = center
+					#		}
+					#	}
+					#
+					#	button_round = {
+					#		name = "leave"
+					#		visible = "[ObjectsEqual( GetPlayer.Self, Character.Self )]"
+					#		onclick = "[HighCourtTab.OnLeaveCouncil]"
+					#		tooltip = "DECISIONS_VIEW_LEAVE_COUNCIL_TT"
+					#		using = tooltip_se
+					#
+					#		button_leave_council = {
+					#			mirror = horizontal
+					#			parentanchor = center
+					#			alwaystransparent = yes
+					#		}
+					#	}
+					#}
+				}
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					margin_left = 6
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						text = "[Character.GetShortUINameNoTooltip]"
+						default_format = "#high"
+						align = nobaseline
+						autoresize = no
+						fontsize_min = 13
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						raw_text = "#weak [Scope.Var('seat_occupant').Var('character_legal_tradition').Var('legal_tradition_name').Char.GetFirstNameNoTooltip]#!"
+						align = nobaseline
+						autoresize = no
+						fontsize_min = 13
+					}
+				}
+				
+				vbox = {
+					visible = "[Character.IsValid]"
+					high_court_skill_icon_label = {
+						
+						blockoverride "icon"
+						{
+							texture = "gfx/interface/icons/message_feed/county_corruption.dds"
+						}
+						
+						blockoverride "icon_size"
+						{
+							size = { 22 22 }
+						}
+						
+						blockoverride "font_size"
+						{
+							using = Font_Size_Small
+						}
+						
+						blockoverride "bg"
+						{
+							frame = 2
+						}
+						
+						blockoverride "value"
+						{
+							text = "[Character.MakeScope.ScriptValue('corruption_value')|0]"
+						}
+					}
+					
+					high_court_skill_icon_label = {
+						
+						blockoverride "icon"
+						{
+							texture = "gfx/interface/icons/icon_fervor.dds"
+						}
+						
+						blockoverride "icon_size"
+						{
+							size = { 22 22 }
+						}
+						
+						blockoverride "font_size"
+						{
+							using = Font_Size_Small
+						}
+						
+						blockoverride "bg"
+						{
+							frame = 2
+						}
+						
+						blockoverride "value"
+						{
+							text = "[Character.MakeScope.ScriptValue('radicalism_value')|0]"
+						}
+					}
+				}
+
+				high_court_skill_icon_label = {
+					visible = "[Character.IsValid]"
+				
+					blockoverride "icon_size"
+					{
+						size = { 35 35 }
+					}
+					
+					blockoverride "bg"
+					{
+						frame = 5
+					}
+				}
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+			
+				state = {
+					name = _show
+					using = Animation_FadeIn_Quick
+				}
+			
+				portrait_opinion = {
+					visible = "[And(Character.IsValid, Not(Character.IsLocalPlayer) )]"
+					parentanchor = bottom|hcenter
+					position = { 0 -2 }
+			
+					blockoverride "opinion_text"
+					{
+						text = "[Character.GetOpinionOf( Character.GetLiege )|=]"
+						fonttintcolor = "[Character.GetOpinionOfTint( Character.GetLiege )]"
+					}
+			
+					blockoverride "ott_heading_text"
+					{
+						text = "[Character.GetOpinionHeadingText( Character.GetLiege )]"
+					}
+			
+					blockoverride "ott_opinion_value_text"
+					{
+						text = "[Character.GetOpinionOf( Character.GetLiege )|=]"
+						fonttintcolor = "[Character.GetOpinionOfTint( Character.GetLiege )]"
+					}
+				}
+			
+				background = {
+					texture = "gfx/interface/component_masks/mask_fade_corner.dds"
+					color = { 0.12 0.12 0.12 1 }
+					alpha = 0.5
+					margin_top = -130
+					margin_left = -150
+				}
+			
+				flowcontainer = {
+					parentanchor = bottom|right
+					ignoreinvisible = yes
+					margin_bottom = 3
+			
+					flowcontainer = {
+						parentanchor = bottom
+						margin_bottom = 4
+			
+						portrait_status_icons = {
+							background = {
+								using = Background_Area_Dark
+								margin = { 1 2 }
+							}
+						}
+					}
+			
+					coa_realm_small_crown = {
+						visible = "[Character.HasLandedTitles]"
+						parentanchor = bottom
+						name = "high_judge_realm"
+					}
+				}
+			}
+		}
+	}
+	
+	type high_court_skill_icon_label = flowcontainer {
+		margin_left = 10
+		margin_right = 15
+		spacing = 4
+
+		background = {
+			name = "skill_icon_bg"
+			texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+			framesize = { 70 26 }
+
+			block "bg"
+			{
+				frame = 1
+			}
+		}
+
+		icon = {
+			name = "skill_icon"
+			framesize = { 60 60 }
+
+			block "icon"
+			{
+				texture = "gfx/interface/icons/icon_skills_judicial_power.dds"
+			}
+
+			block "icon_size"
+			{
+				size = { 30 30 }
+			}
+
+		}
+
+		text_single = {
+			name = "skill_value"
+			parentanchor = vcenter
+			align = nobaseline
+			default_format = "#high"
+
+			block "font_size"
+			{
+				using = Font_Size_Medium
+			}
+
+			block "value"
+			{
+				text = "[GuiScope.SetRoot( Character.MakeScope ).AddScope('judicial_power_character' , Character.MakeScope).ScriptValue('judicial_power_gui_value')|0]"
+			}
+		}
+	}
+}
+
+types HighCourtTaskTypes
+{
+
+	type vbox_high_court_layout = vbox {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			maximumsize = { -1 932 }
+			spacing = 5
+			margin_left = 5
+			margin_right = 5
+			
+			fixedgridbox = {
+				datamodel = "[Scope.GetList('high_court_seat_list')]"
+			
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				addcolumn = 290
+				addrow = 255
+				datamodel_wrap = 2
+				flipdirection = yes
+				
+				item = {
+					widget_high_judge_item = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						datacontext = "[Scope.Var('seat_occupant').GetCharacter]"
+						background =  {
+							texture = "gfx/interface/illustrations/event_scenes/mosque.dds"
+							alpha = 0.6
+							using = Mask_Rough_Edges
+						}
+	
+						background = {
+							texture = "gfx/interface/component_masks/mask_vignette.dds"
+							color = { 0.15 0.15 0.15 1 }
+							alpha = 0.3
+						}
+					}
+				}
+			}
+		}
+
+		expand = {
+			layoutpolicy_vertical = growing
+		}
+	}
+}
+
+types GHCompTypes { # Make the gui warning disappear
+	type gh_overwrite_window_faith = vbox {}
+}
