@@ -1,4 +1,4 @@
-
+﻿
 widget = {
 	name = "mainmenu_panel_bottom"
 	parentanchor = center
@@ -1006,9 +1006,6 @@ widget = {
 						}
 					}
 
-					#GH Addition: Lore Doc button
-					#gh_lore_doc_button = {}
-
 					button_group = {
 						onclick = "[FrontEndMainView.OnCredits]"
 
@@ -1103,7 +1100,7 @@ widget = {
 			name = "right_panel"
 			parentanchor = right|vcenter
 			position = { -50 0 }
-			size = { 400 870 }
+			size = { 400 800 }
 			alpha = 0
 			#texture = "gfx/interface/frontend/frontend_main_menu_bg.dds"
 
@@ -1223,62 +1220,189 @@ widget = {
 				position_y = 0
 			}
 
-			gh_challenge_character = {
-				position = { 28 40 }
-				parentanchor = right
-				visible = "[Not(GetVariableSystem.HasValue('main_menu_tab', 'patch_highlights'))]"	# We want this to be a fallback
-			}
-
-			gh_patch_highlights = {
-				position = { 24 0 }
-				parentanchor = right
-				visible = "[GetVariableSystem.HasValue('main_menu_tab', 'patch_highlights')]"
-			}
-			hbox = {
+			vbox = {
 				layoutpolicy_horizontal = expanding
-				position = { 0 400 }
+				layoutpolicy_vertical = expanding
 
-				button_tab = {
-					name = "tab_challenge"
-					layoutpolicy_horizontal = expanding
-					
-					background = {
-						using = Background_Area_Light
-						using = Mask_Rough_Edges
-					}
 
-					raw_text = "Challenge Character"
-					default_format = "#clickable"
-					fontsize = 16
-					onclick = "[GetVariableSystem.Set('main_menu_tab', 'challenge_ruler')]"
-					down = "[GetVariableSystem.HasValue('main_menu_tab', 'challenge_ruler')]"
+				background = {
+					using = Background_Area_With_Header
+					margin_bottom = 5
 				}
-				button_tab = {
-					name = "tab_patch_highlights"
+
+				text_single = {
+					margin = { 80 5 }
+					parentanchor = top
+					#layoutpolicy_horizontal = expanding
+					text = GH_CHANGELOG_CURRENT_VERSION
+					using = Font_Size_Big
+					default_format = "#high;bold;glow_color:{0,0,0,1}"
+				}
+
+				vbox = {
 					layoutpolicy_horizontal = expanding
-					
-					background = {
-						using = Background_Area_Light
-						using = Mask_Rough_Edges
-						
-						glow = {
-							color = { 0.05 0.71 0.47 1 }
-							using = Glow_Standard
-							glow_radius = 10
+					layoutpolicy_vertical = expanding
+
+					scrollarea = {
+						name = "changelog_scrollbox"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						scrollbarpolicy_horizontal = always_off
+
+						scrollbar_vertical = {
+							using = editor_vertical_scrollbar
+						}
+
+						scrollwidget = {
+							flowcontainer = {
+								ignoreinvisible = yes
+								direction = vertical
+								spacing = 10
+								text_multi = {
+									max_width = 400
+									autoresize = yes
+									default_format = "#flavor"
+									margin = { 10 10 }
+
+									text = GH_CHANGELOG_NIGHTLY_DISCLAIMER
+								}
+								flowcontainer = {
+									direction = vertical
+									ignoreinvisible = yes
+									flowcontainer = {
+										button_expand = {
+											size = { 20 20 }
+											onclick = "[GetVariableSystem.Toggle('0.3.1.3')]"
+											frame = "[Select_int32( GetVariableSystem.Exists('0.3.1.3'), '(int32)2', '(int32)1' )]"
+										}
+										text_multi = {
+											layoutpolicy_horizontal = expanding
+											max_width = 400
+											autoresize = yes
+											default_format = "#flavor"
+
+											raw_text = "#T 0.3.1.3 Changelog#!"
+										}
+									}
+									text_multi = {
+										visible = "[GetVariableSystem.Exists('0.3.1.3')]"
+										layoutpolicy_horizontal = expanding
+										max_width = 400
+										autoresize = yes
+										default_format = "#flavor"
+										margin = { 10 10 }
+
+										text = GH_CHANGELOG_0.3.1.3
+									}
+								}
+								flowcontainer = {
+									direction = vertical
+									ignoreinvisible = yes
+									flowcontainer = {
+										button_expand = {
+											size = { 20 20 }
+											onclick = "[GetVariableSystem.Toggle('0.3.1')]"
+											frame = "[Select_int32( GetVariableSystem.Exists('0.3.1'), '(int32)2', '(int32)1' )]"
+										}
+										text_multi = {
+											layoutpolicy_horizontal = expanding
+											max_width = 400
+											autoresize = yes
+											default_format = "#flavor"
+
+											raw_text = "#T 0.3.1 Changelog#!"
+										}
+									}
+									text_multi = {
+										visible = "[GetVariableSystem.Exists('0.3.1')]"
+										layoutpolicy_horizontal = expanding
+										max_width = 400
+										autoresize = yes
+										default_format = "#flavor"
+										margin = { 10 10 }
+
+										text = GH_CHANGELOG_0.3.1
+									}
+								}
+								flowcontainer = {
+									direction = vertical
+									ignoreinvisible = yes
+									flowcontainer = {
+										button_expand = {
+											size = { 20 20 }
+											onclick = "[GetVariableSystem.Toggle('0.3.0.10')]"
+											frame = "[Select_int32( GetVariableSystem.Exists('0.3.0.10'), '(int32)2', '(int32)1' )]"
+										}
+										text_multi = {
+											layoutpolicy_horizontal = expanding
+											max_width = 400
+											autoresize = yes
+											default_format = "#flavor"
+
+											raw_text = "#T 0.3.0.10 Changelog#!"
+										}
+									}
+									text_multi = {
+										visible = "[GetVariableSystem.Exists('0.3.0.10')]"
+										layoutpolicy_horizontal = expanding
+										max_width = 400
+										autoresize = yes
+										default_format = "#flavor"
+										margin = { 10 10 }
+
+										text = GH_CHANGELOG_0.3.0.10
+									}
+								}
+								flowcontainer = {
+									direction = vertical
+									ignoreinvisible = yes
+									flowcontainer = {
+										button_expand = {
+											size = { 20 20 }
+											onclick = "[GetVariableSystem.Toggle('0.3')]"
+											frame = "[Select_int32( GetVariableSystem.Exists('0.3'), '(int32)2', '(int32)1' )]"
+										}
+										text_multi = {
+											layoutpolicy_horizontal = expanding
+											max_width = 400
+											autoresize = yes
+											default_format = "#flavor"
+
+											raw_text = "#T 0.3.0.0 Changelog#!"
+										}
+									}
+									text_multi = {
+										visible = "[GetVariableSystem.Exists('0.3')]"
+										layoutpolicy_horizontal = expanding
+										max_width = 400
+										autoresize = yes
+										default_format = "#flavor"
+										margin = { 10 10 }
+
+										text = GH_CHANGELOG_0.3.0.0
+									}
+								}
+							}
+						}
+
+						blockoverride "scrollbox_background_fade" {
+							icon = {
+								alpha = 0
+							}
 						}
 					}
+				}
 
-					raw_text = "Patch Highlights"
-					default_format = "#clickable"
-					fontsize = 16
-					onclick = "[GetVariableSystem.Set('main_menu_tab', 'patch_highlights')]"
-					down = "[GetVariableSystem.HasValue('main_menu_tab', 'patch_highlights')]"
+				spacer = {
+					size = { 10 10 }
 				}
 			}
 		}
 	}
 
 	clickable_version_number = {
+
 		parentanchor = bottom|right
 		position = { -15 -15 }
 
@@ -1288,18 +1412,20 @@ widget = {
 		{
 
 		}
+
+
 	}
 
 	error_horse = {
 		visible = "[Not(ReleaseMode)]"
-		parentanchor = bottom|hcenter
-		position = { 0 -32 }
+		parentanchor = bottom|right
+		position = { -80 -90 }
 	}
-
 	loaded_mods_icon = {
 		visible = "[And( HasLoadedMods, Not(ReleaseMode))]"
-		parentanchor = bottom|hcenter
-		position = { 12 -16 }
+		parentanchor = bottom|right
 		tooltip = "[GetLoadedMods]"
+		position = { -120 -85 }
 	}
 }
+
