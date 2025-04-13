@@ -1,0 +1,91 @@
+#window = { # GH QUESTION: What is this file for?
+#	name = "window_heritage"
+#	size = { 590 80% }
+#	position = { 620 75 }
+#    visible = "[GetVariableSystem.Exists( 'show_cult_group')]"
+#	datacontext = "[GetPlayer.GetCulture]"
+#	layer = windows_layer
+#
+#	using = Window_Movable
+#	using = Window_Background_Subwindow
+#
+#	state = {
+#		name = _show
+#		using = Animation_FadeIn_Quick
+#		using = Sound_WindowShow_Standard
+#	}
+#
+#	state = {
+#		name = _hide
+#		using = Animation_FadeOut_Quick
+#		using = Sound_WindowHide_Standard
+#	}
+#
+#	vbox = {
+#		margin = { 4 4 }
+#
+#		header_pattern = {
+#			layoutpolicy_horizontal = expanding
+#
+#			blockoverride "header_text"
+#			{
+#				raw_text = "Наследия"
+#			}
+#
+#			blockoverride "button_close"
+#			{
+#                onclick = "[GetVariableSystem.Clear( 'show_cult_group')]"
+#			}
+#
+#			blockoverride "button_back"
+#			{
+#				visible = no
+#			}
+#		}
+#
+#		scrollbox = {
+#			name = "culture_scroll_area"
+#			layoutpolicy_horizontal = expanding
+#			layoutpolicy_vertical = expanding
+#
+#			blockoverride "scrollbox_content" {
+#	        	vbox_list_interaction_title_selection = {
+#
+#	        		#datamodel = "[GetCulture.MakeScope.GetList('list_group_cultures')]"
+#					#make a toggle between "cultures related to this group" and the heritage one
+#					#and maybe also a "cultures related to this culture specifically"
+#					#but probably not
+#                    datamodel = "[Culture.GetHeritage.GetCulturesWithPillar]"
+#
+#	        		layoutpolicy_horizontal = expanding
+#	        		spacing = 3
+#	        		item = {
+#	        			button_tertiary = {
+#
+#	        				layoutpolicy_horizontal = expanding
+#	        				size = { 0 25 }
+#	        				onclick = "[DefaultOnCultureClick(Culture.GetID)]"
+#	        		 		text = "CULTURE_CHARACTER_WINDOW"
+#	        				default_format = "#clickable;italic"
+#	        				align = left|nobaseline
+#	        				margin_left = 5
+#
+#	        				tooltipwidget = {
+#	        					culture_tooltip_click = {}
+#	        				}
+#                            text_single = {
+#								name = "counties"
+#								layoutpolicy_horizontal = expanding
+#								parentanchor = right
+#								align = right
+#								text = "CULTURE_WINDOW_COUNTIES"
+#								default_format = "#low"
+#								autoresize = yes
+#							}
+#	        			}
+#	        		}
+#	        	}
+#	        }
+#		}
+#	}
+#}
