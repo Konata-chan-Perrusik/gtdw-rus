@@ -38,7 +38,7 @@ container = {
 
 		blockoverride "description_text" {
 			text = "[GameConceptTooltip.GetDescription]"
-			max_width = 400
+			max_width = 450
 		}
 
 		blockoverride "bg_texture"
@@ -979,6 +979,7 @@ types GameTooltipTypes
 				cooltip_paragraph = {
 					layoutpolicy_horizontal	= expanding
 					text = "[Character.GetHeirToDesc]"
+					max_width = 750
 				}
 
 				# mostly for pope
@@ -986,6 +987,7 @@ types GameTooltipTypes
 					layoutpolicy_horizontal	= expanding
 					text = "CHARACTER_BIRTH_NAME_TOOLTIP"
 					visible = "[Character.HasRegnalName]"
+					max_width = 750
 				}
 
 				spacer = {
@@ -995,24 +997,41 @@ types GameTooltipTypes
 				cooltip_paragraph = {
 					layoutpolicy_horizontal	= expanding
 					block "interaction_info" { }
+					max_width = 750
+				}
+
+				#GH ADDITIONS: Biography cooltip link, and seperate debug stuff from it
+				gh_bio_link_cooltip = { visible = "[Not(EqualTo_string(Concatenate(Character.GetHistoryId, '_desc'), Localize(Concatenate(Character.GetHistoryId, '_desc'))))]" }
+
+				spacer = {
+					size = { 10 10 }
+					visible = "[InDebugMode]"
+				}
+
+				divider_light = {
+					layoutpolicy_horizontal = expanding
+					visible = "[InDebugMode]"
 				}
 
 				cooltip_paragraph = {
 					layoutpolicy_horizontal	= expanding
 					text = "[Character.GetDebugTooltip]"
 					visible = "[InDebugMode]"
+					max_width = 750
 				}
 
 				cooltip_paragraph = {
 					layoutpolicy_horizontal	= expanding
 					text = "CHARACTER_KILLER_TOOLTIP"
 					visible = "[And( InDebugMode, Character.GetKiller.IsValid )]"
+					max_width = 750
 				}
 
 				cooltip_paragraph = {
 					layoutpolicy_horizontal	= expanding
 					raw_text = "[GetAnimationTooltip( PdxGuiWidget.Self, Character.Self )]"
 					visible = "[ShouldShowAnimationInfo]"
+					max_width = 750
 				}
 
 				hbox = {
@@ -1057,7 +1076,7 @@ types GameTooltipTypes
 
 									blockoverride "description_text"
 									{
-										max_width = 600
+										max_width = 750
 										text = "[Character.GetDnaAccessoryTooltip]"
 									}
 								}
