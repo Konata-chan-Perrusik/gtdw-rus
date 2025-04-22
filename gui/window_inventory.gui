@@ -203,14 +203,49 @@ window = {
 					position = { 0 -12 }
 					size = { 510 100 }
 					allow_outside = yes
+					
+					# GH CHANGE: Make Court Artifacts visible from inventory even if you have a Royal Court, and make the button to go to royal court a seperate button
+
+					button_normal = {
+						name = "open_royal_court"
+						size = { 70 70 }
+						visible = "[Character.HasRoyalCourt]"
+
+						position = { 0 10 }
+
+						onclick = "[VariableSystem.Set( 'artifacts_tab', 'artifacts' )]"
+						onclick = "[Character.OpenRoyalCourtView( 'artifacts' )]"
+
+						onclick = "[InventoryView.Close]"
+						onclick = "[LocalPlayerNewArtifacts.ClearNewArtifactsOfCategory( 'court' )]"
+						datacontext = "[AccessLocalPlayerCachedData.AccessNewArtifacts]"
+						tooltip = OPEN_ROYAL_COURT_TOOLTIP
+
+						icon_round_button_base = {}
+
+						button_royal_court = {
+							onclick = "[VariableSystem.Set( 'artifacts_tab', 'artifacts' )]"
+							onclick = "[Character.OpenRoyalCourtView( 'artifacts' )]"
+
+							onclick = "[InventoryView.Close]"
+							onclick = "[LocalPlayerNewArtifacts.ClearNewArtifactsOfCategory( 'court' )]"
+
+							size = { 50 50 }
+							parentanchor = center
+
+							modify_texture = {
+								texture = "gfx/interface/icons/focuses/hud_icon_mask.dds"
+								blend_mode = alphamultiply
+							}
+						}
+					}
 
 					vbox = {
 						hbox = {
 							spacing = 10
 
 							button_standard = {
-								datacontext = "[AccessLocalPlayerCachedData.AccessNewArtifacts]"
-								visible = "[Not( Character.HasRoyalCourt )]"
+								datacontext = "[AccessLocalPlayerCachedData.AccessNewArtifacts]"								
 								text = "INVENTORY_TAB_COURT_ARTIFACTS"
 
 								tooltip = "[SelectLocalization( Inventory.HasAnyCourtArtifact, 'INVENTORY_TAB_COURT_ARTIFACTS_TOOLTIP', 'NO_COURT_ARTIFACTS' )]"
@@ -227,29 +262,6 @@ window = {
 									size = { 20 20 }
 									parentanchor = top|right
 									visible = "[GreaterThan_int32( LocalPlayerNewArtifacts.GetNumNewArtifactsOfCategory( 'court' ), '(int32)0' )]"
-									text = "[LocalPlayerNewArtifacts.GetNumNewArtifactsOfCategory( 'court' )]"
-								}
-							}
-
-							button_standard = {
-								datacontext = "[AccessLocalPlayerCachedData.AccessNewArtifacts]"
-								visible = "[Character.HasRoyalCourt]"
-								text = "ROYAL_COURT"
-
-								tooltip = "INVENTORY_COURT_ARTIFACTS_BUTTON_TOOLTIP"
-								using = tooltip_se
-
-								onclick = "[VariableSystem.Set( 'artifacts_tab', 'artifacts' )]"
-								onclick = "[Character.OpenRoyalCourtView( 'artifacts' )]"
-
-								onclick = "[InventoryView.Close]"
-								onclick = "[LocalPlayerNewArtifacts.ClearNewArtifactsOfCategory( 'court' )]"
-
-								button_round = {
-									visible = "[GreaterThan_int32( LocalPlayerNewArtifacts.GetNumNewArtifactsOfCategory( 'court' ), '(int32)0' )]"
-									parentanchor = vcenter|right
-									size = { 20 20 }
-									position = { -5 0 }
 									text = "[LocalPlayerNewArtifacts.GetNumNewArtifactsOfCategory( 'court' )]"
 								}
 							}
@@ -413,8 +425,9 @@ window = {
 						margin_top = 10
 
 						button_tab = { # Show all artifacts tab
-							size = { 100 42 }
-
+							# GH CHANGE: Size adjustment to fit Mount tab
+							size = { 80 42 }
+							
 							onclick = "[InventoryView.ClearSelectedSlot]"
 							down = "[Not( InventoryView.HasSelectedSlot )]"
 
@@ -979,7 +992,7 @@ types InventoryViewTypes
 
 	type widget_inventory_slot_tab = button_tab
 	{
-		size = { 76 42 } # GH CHANGE: To fit the added mount tab
+		size = { 70 42 } # GH CHANGE: To fit the added mount tab
 		datacontext = "[AccessLocalPlayerCachedData.AccessNewArtifacts]"
 		down = "[InventoryView.SelectedSlotHasType( InventorySlotType.Self )]"
 		onclick = "[InventoryView.OnClickSlotTypeTab( InventorySlotType.Self )]"
