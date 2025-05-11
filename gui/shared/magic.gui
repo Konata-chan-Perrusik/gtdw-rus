@@ -18,8 +18,8 @@ types MagicViewTypes
 			
 			block "button_effects"
 			{
-				onclick = "[GetScriptedGui('reset_spell_preparation_story_cycle_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_to_start_preparation_for_scope', Scope.Story.MakeScope).End)]"
-				onclick = "[GetScriptedGui('select_spell_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('selected_spell_scope', Scope.Story.MakeScope).End)]"
+				onclick = "[GetScriptedGui('reset_spell_preparation_story_cycle_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_to_start_preparation_for_scope', Story.MakeScope).End)]"
+				onclick = "[GetScriptedGui('select_spell_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('selected_spell_scope', Story.MakeScope).End)]"
 			}
 
 			block "button"
@@ -276,7 +276,7 @@ types MagicViewTypes
 					text_multi = {
 						visible = "[Story.MakeScope.Var('spell_tag_list_overflow').IsSet]"
 						layoutpolicy_horizontal = expanding
-						raw_text = "#weak Наведите, чтобы увидеть#! [Story.MakeScope.Var('spell_tag_list_overflow').GetValue|0] #weak more effects#!"
+						raw_text = "#weak Наведите, чтобы увидеть#! [Story.MakeScope.Var('spell_tag_list_overflow').GetValue|0] #weak больше эффектов#!"
 						autoresize = yes
 						max_width = 350
 						using = Font_Size_Small
@@ -1335,7 +1335,7 @@ types MagicViewTypes
 				text_single = {
 					layoutpolicy_horizontal = expanding
 					name = "answer"
-					raw_text = "[SelectLocalization(LessThanOrEqualTo_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('caster', GetPlayer.GetCouncillor( 'councillor_court_magi' ).MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('court_magi_spellcasting_acceptance_value'),'(CFixedPoint)0'), '#negative_value Will not accept#!', '#positive_value Will accept#!')]"
+					raw_text = "[SelectLocalization(LessThanOrEqualTo_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('caster', GetPlayer.GetCouncillor( 'councillor_court_magi' ).MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).ScriptValue('court_magi_spellcasting_acceptance_value'),'(CFixedPoint)0'), '#negative_value Не примет#!', '#positive_value Примет#!')]"
 					default_format = "#high"
 					using = Font_Size_Medium
 					align = nobaseline
@@ -1400,6 +1400,42 @@ types MagicViewTypes
 						layoutpolicy_horizontal = expanding
 						default_format = "#S"
 						raw_text = "Требования к заклинанию"
+					}
+					
+					spacer = {
+						size = { 0 5 }
+					}
+					
+					item = {
+						text_multi = {
+							layoutpolicy_horizontal = expanding
+							text = SPELL_EFFECT_EFFECT_BULLETPOINT
+							autoresize = yes
+							max_width = 350
+							using = Font_Size_Small
+							alwaystransparent = yes
+						}
+					}
+				}
+				
+				vbox = {
+					datamodel = "[Story.MakeScope.GetList('spell_activation_trigger_list')]"
+					visible = "[DataModelHasItems(Story.MakeScope.GetList('spell_activation_trigger_list'))]"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+					margin_bottom = 10
+
+					background = {
+						layoutpolicy_horizontal = expanding
+						using = Background_Area
+						margin = { 15 0 }
+						margin_top = 5
+					}
+					
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						default_format = "#S"
+						raw_text = "Условия активации"
 					}
 					
 					spacer = {
