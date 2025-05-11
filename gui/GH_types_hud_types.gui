@@ -923,4 +923,63 @@ types gh_hud
 			}
 		}
 	}
+
+	type gh_magic_widget = widget
+	{
+		name = "magic_widget"
+		size = { 112 50 }
+
+		icon = {
+			texture = "gfx/interface/skinned/magic_widget_frame.dds"
+			size = { 112 96 }
+			position = { 40 -34 }
+		}
+
+		button_normal = {
+			parentanchor = center
+			position = { 40 0 }
+			name = "magic_button"
+
+			tooltip = "Click to open Spellcasting Menu"
+			using = tooltip_ne
+
+			onclick = "[GetVariableSystem.Toggle( 'show_spells')]"
+			size = { 55 55 }
+
+			icon_round_button_base = {}
+
+			button_icon = {
+				texture = "gfx/interface/hud/ambient_magic_mapmode.dds"
+				onclick = "[GetVariableSystem.Toggle( 'show_spells')]"
+				size = { 40 40 }
+				parentanchor = center
+				gfxtype = togglepushbuttongfx
+				effectname = "NoHighlight"
+			}
+		}
+
+		# Pogressbar & frame
+		highlight_icon = {
+			name = "progress_frame"
+			texture = "gfx/interface/window_scheme/scheme_hud_bg_progress_frame.dds"
+			size = { 100 124 }
+			parentanchor = center
+			alpha = 0.5
+		}
+
+		progresspie = {
+			name = "progress"
+			position = { 0.3 -2.5 }
+			size = { 76 76 }
+			texture = "gfx/interface/progressbars/action_progress_thin.dds"
+			framesize = { 128 128 }
+			frame = 2
+			widgetanchor = center
+			parentanchor = center
+			value = "[GetPlayer.MakeScope.Var('magic_counter').GetValue]"
+			max = "[GetPlayer.MakeScope.ScriptValue('character_magic_baseline_value')]"
+			tooltip = "[GetPlayer.MakeScope.Var('magic_counter').GetValue] | [GetPlayer.MakeScope.ScriptValue('character_magic_baseline_value')]"
+			using = tooltip_ne
+		}
+	}
 }

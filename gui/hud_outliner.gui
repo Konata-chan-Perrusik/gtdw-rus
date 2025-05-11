@@ -52,7 +52,7 @@ widget = {
 
 		background = {
 			name = "paper_texture_shadow"
-			texture = "gfx/interface/window_event/tile_letter_shadow.dds"
+			texture = "gfx/interface/skinned/window_letter/tile_letter_shadow.dds"
 			spriteType = Corneredtiled
 			spriteborder = { 200 200 }
 			margin = { -15 0 }
@@ -61,7 +61,7 @@ widget = {
 
 		background = {
 			name = "paper_texture_flat"
-			texture = "gfx/interface/window_event/tile_letter_flat.dds"
+			texture = "gfx/interface/skinned/window_letter/tile_letter_flat.dds"
 			spriteType = Corneredtiled
 			spriteborder = { 200 200 }
 			alpha = 0.9
@@ -802,6 +802,42 @@ types Outliner {
 								default_format = "#high"
 							}
 						}
+						
+						hbox = {
+							visible = "[And( Not( Holding.IsConstructionInProgress ), Not( IsNomad( GetPlayer ) ) )]"
+
+							text_single = {
+								text = "HOLDING_TAX_VALUE"
+								min_width = 70
+								align = left|nobaseline
+								default_format = "#high"
+							}
+
+							text_single = {
+								text = "HOLDING_LEVY_SIZE"
+								min_width = 60
+								align = left|nobaseline
+								default_format = "#high"
+							}
+						}
+
+						hbox = {
+							visible = "[And( Not( Holding.IsConstructionInProgress ), IsNomad( GetPlayer ) )]"
+
+							text_single = {
+								text = "HOLDING_COUNTY_FERTILITY"
+								min_width = 70
+								align = left|nobaseline
+								default_format = "#high;glow_color:{0.1,0.1,0.1,1.0}"
+							}
+
+							text_single = {
+								text = "HOLDING_COUNTY_HERD"
+								min_width = 60
+								align = left|nobaseline
+								default_format = "#high;glow_color:{0.1,0.1,0.1,1.0}"
+							}
+						}
 
 						hbox = {
 							visible = "[EqualTo_string(Holding.GetProvince.GetHolding.GetType.GetKey,'colony_holding')]"
@@ -1147,6 +1183,7 @@ types Outliner {
 						minimumsize = { 0 10 }
 
 						vbox = {
+							visible = "[Domicile.IsConstructing]"
 							tooltip = "[Domicile.GetBuildingUnderConstruction.GetConstructionTooltip( GetPlayer.Self )]"
 							using = tooltip_ws
 							
@@ -1194,10 +1231,10 @@ types Outliner {
 						}
 
 						text_single = {
-							margin_right = 52
 							visible = "[Domicile.CanUpgradeMain]"
 							text = "[Domicile.GetUpgradeMainText]"
 							default_format = "#P"
+							max_width = 255
 						}
 					}
 				}

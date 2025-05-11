@@ -1,0 +1,45 @@
+
+types MagicSpellAiWeightingTooltip
+{
+	## moon_phase Breakdown Tooltip
+	type magic_spell_ai_weighting_tooltip = widget {
+		alwaystransparent = no
+		size = { 50 50 }
+
+		using = DefaultTooltipBackground
+
+		vbox = {
+			name = "tooltip_container"
+			
+			restrictparent_min = yes
+			minimumsize = { 280 0 }
+			filter_mouse = all
+			margin = { 15 5 }
+			margin_bottom = 15
+			
+			vbox = {
+				datamodel = "[GetPlayer.MakeScope.Var('selected_spell').GetList('spell_effect_list')]"
+				layoutpolicy_horizontal = expanding
+				
+				item = {
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						#visible = "[GetScriptedGui('spell_effect_ai_weighting_scripted_gui_{{ spell_effect. }}').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope))]"
+						
+						text_single = {
+							text = SPELL_EFFECT_EFFECT_BULLETPOINT
+						}
+						
+						expand = {}
+						
+						text_single = {
+							margin_left = 5
+							raw_text = "#V;underline [GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).AddScope('spell_being_casted', GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('spell_effect', Scope.Story.MakeScope).ScriptValue(Concatenate(Scope.Var('spell_tag_name').GetFlagName,'_ai_weight_value'))]#!"
+							tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).AddScope('spell_being_casted', GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('spell_effect', Scope.Story.MakeScope).GetScriptValueDesc(Concatenate(Scope.Var('spell_tag_name').GetFlagName,'_ai_weight_value'))]"
+						}
+					}
+				}
+			}
+		}
+	}
+}
