@@ -1557,7 +1557,7 @@
 												button_plus = {
 													parentanchor = center
 								
-													raw_tooltip = "#T Add [magic|E]#!"
+													raw_tooltip = "#T Добавить [Concept('magic','магию')|E]#!"
 								
 													onclick = "[VariableSystem.Set( 'trait_select_window_open', 'magic_schools' )]"
 												}
@@ -1973,7 +1973,126 @@
 									expand = {}
 								}
 							}
+
+							vbox = {
+								name = "government"
+								layoutpolicy_horizontal = expanding
+								spacing = 10
+								visible = "[Not( RulerDesignerWindow.IsDesigningLandless )]"
 	
+								vbox = {
+									layoutpolicy_horizontal = expanding
+	
+									hbox = {
+										layoutpolicy_horizontal = expanding
+	
+										text_label_left = {
+											layoutpolicy_horizontal = expanding
+											text = "Government"
+											using = Font_Size_Medium
+										}
+									}
+								}
+	
+								hbox = {
+									layoutpolicy_horizontal = expanding
+				
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/feudal_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Aristocratic"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'feudal_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('feudal_government_flag')).End)]"
+									}
+									
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/republic_playable_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Republic"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'republic_playable_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('republic_playable_government_flag')).End)]"
+									}
+									
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/theocracy_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Theocracy"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'theocracy_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('theocracy_government_flag')).End)]"
+									}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+				
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/military_unit_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Military Unit"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'military_unit_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('military_unit_government_flag')).End)]"
+									}
+									
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/holy_order_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Holy Order"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'landed_order_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('landed_order_government_flag')).End)]"
+									}
+									
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/magocracy_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Magocracy"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'magocratic_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('magocratic_government_flag')).End)]"
+									}
+								}
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/magocracy_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Magi Republic"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'magocratic_republic_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('magocratic_republic_flag')).End)]"
+									}
+									
+									button_standard = {
+										icon = {
+											texture = "gfx/interface/icons/government_types/mercenary_government.dds"
+											size = { 30 30 }
+											position = { 10 0 }
+										}
+										text = "Pirate"
+										down = "[And(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').IsSet, EqualTo_string(GetTitleByKey('c_oraispol').MakeScope.Var('GH_ruler_designer_government_override').GetFlagName, 'pirate_government_flag'))]"
+										onclick = "[GetScriptedGui('GH_ruler_designer_set_government_scripted_gui').Execute(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).AddScope('GH_ruler_designer_government_override_scope', MakeScopeFlag('pirate_government_flag')).End)]"
+									}
+								}
+							}
+							
 							achievements_availability_box = {
 								blockoverride "achievements_enabled_visible" {
 									visible = "[LessThanOrEqualTo_int32( Add_int32(RulerDesignerWindow.GetPointsUsed, FixedPointToInt(GuiScope.SetRoot(GetTitleByKey('c_oraispol').MakeScope).ScriptValue('character_creation_magic_customization_points_value'))), GetDefine( 'NRulerDesigner', 'IRONMAN_POINT_MAX' ) )]"

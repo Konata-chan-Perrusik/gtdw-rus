@@ -104,7 +104,8 @@ window = {
 						spacing = 5
 
 						text_single = {
-							text = "[HoldingView.GetCountyTitle.GetNameNoTooltip|U]"
+							#GH CHANGE: Title lore/gloss
+							text = "[SelectLocalization(Not(EqualTo_string(Concatenate(HoldingView.GetCountyTitle.GetKey, '_desc'), Localize(Concatenate(HoldingView.GetCountyTitle.GetKey, '_desc')))), Glossary(HoldingView.GetCountyTitle.GetNameNoTooltip, Concatenate(HoldingView.GetCountyTitle.GetKey, '_desc')), HoldingView.GetCountyTitle.GetNameNoTooltip)]"
 							using = Font_Size_Big
 							font = TitleFont
 							max_width = 380
@@ -219,6 +220,7 @@ window = {
 
 				hbox = {
 					datamodel = "[HoldingView.GetDeJureLieges]"
+					spacing = 3
 
 					item = {
 						coa_title_tiny_crown = {
@@ -242,12 +244,12 @@ window = {
 				}
 
 				widget = {
-					size = { 37 0 }
+					size = { 34 0 }
 					visible = "[GetScriptedGui('gh_has_de_jure_kingdom').IsShown( GuiScope.SetRoot( County.GetTitle.MakeScope ).End)]"
 				}
 
 				widget = {
-					size = { 37 0 }
+					size = { 34 0 }
 					visible = "[GetScriptedGui('gh_has_de_jure_empire').IsShown( GuiScope.SetRoot( County.GetTitle.MakeScope ).End)]"
 				}
 
@@ -259,7 +261,6 @@ window = {
 
 					hbox = {
 						name = "county_modifiers_grid"
-						datamodel = "[HoldingView.GetCountyModifiers]"
 
 						button_round = {
 							name = "move_domcicle_button"
@@ -291,12 +292,28 @@ window = {
 							size = { 8 0 }
 						}
 
-						item = {
-							modifier_item_icon = {
-								size = { 30 30 }
+						scrollarea = {
+							name = "modifier_wrapper"
+							layoutpolicy_horizontal = expanding
 
-								blockoverride "icon_data" {
-									using = tooltip_ne
+							scrollbarpolicy_vertical = always_off
+							size = { 0 55 }
+
+							scrollbar_horizontal = { using = Scrollbar_Horizontal }
+
+							scrollwidget = {
+								flowcontainer = {
+									position = { 0 10 }
+									datamodel = "[HoldingView.GetCountyModifiers]"
+									item = {
+										modifier_item_icon = {
+											size = { 30 30 }
+
+											blockoverride "icon_data" {
+												using = tooltip_ne
+											}
+										}
+									}
 								}
 							}
 						}
@@ -1122,13 +1139,11 @@ window = {
 									spacing = 5
 
 									text_single = {
-										# GH CHANGE: Wasteland stuff
+										# GH CHANGE: Title Gloss
 										text = "[SelectLocalization(Not(EqualTo_string(Concatenate(HoldingView.GetProvince.GetTitle.GetKey, '_desc'), Localize(Concatenate(HoldingView.GetProvince.GetTitle.GetKey, '_desc')))), Glossary(HoldingView.GetProvince.GetTitle.GetNameNoTooltip, Concatenate(HoldingView.GetProvince.GetTitle.GetKey, '_desc')), HoldingView.GetProvince.GetTitle.GetNameNoTooltip)]"
 										default_format = "#high"
 										align = nobaseline
 										using = Font_Size_Big
-										max_width = 150
-										fontsize_min = 14
 										margin_left = 5
 
 										tooltip = "[HoldingView.GetProvince.GetTitle.GetNameNoTierNoTooltip]"
@@ -1144,68 +1159,11 @@ window = {
 										tooltip = "CUSTOMIZE_TITLE"
 									}
 
-									widget = {
-										size = { 30 30 }
-										visible = "[And(HoldingView.GetProvince.GetTitle.IsCountyCapital, Not(HoldingView.GetProvince.IsRealmCapital))]"
-
-										icon = {
-											name = "county_capital_icon"
-											parentanchor = center
-											size = { 30 30 }
-											texture = "gfx/interface/icons/icon_capital.dds"
-											framesize = { 60 60 }
-											frame = 1
-
-											tooltip = "COUNTY_CAPITAL_TOOLTIP"
-										}
-									}
-
-									widget = {
-										size = { 30 30 }
-										visible = "[HoldingView.GetProvince.IsRealmCapital]"
-
-										icon = {
-											name = "realm_capital_icon"
-											parentanchor = center
-											size = { 30 30 }
-											texture = "gfx/interface/icons/icon_capital.dds"
-											framesize = { 60 60 }
-											frame = 2
-
-											tooltip = "REALM_CAPITAL_TOOLTIP"
-										}
-									}
-
-									widget = {
-										size = { 30 30 }
-
-										button_move_capital = {
-											# GH CHANGE: Colony stuff
-											visible = "[And(HoldingView.PotentialSetRealmCapital, Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet))]"
-											name = "set_realm_capital_button"
-											texture = "gfx/interface/icons/flat_icons/move_capital.dds"
-
-											enabled = "[HoldingView.CanSetRealmCapital]"
-											onclick = "[HoldingView.SetRealmCapital]"
-
-											tooltip = "[HoldingView.GetSetRealmCapitalTooltip]"
-										}
-
-										button_move_capital = {
-											# GH CHANGE: Colony stuff
-											visible = "[And(HoldingView.PotentialSetRealmCapital, Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet))]"
-											name = "set_county_capital_button"
-											texture = "gfx/interface/icons/flat_icons/move_capital.dds"
-
-											onclick = "[HoldingView.SetCountyCapital]"
-
-											tooltip = "SET_COUNTY_CAPITAL_TOOLTIP"
-										}
-									}
+									#GH CHANGE: Moved to below the CoA
 								}
 
 								text_single = {
-									# GH CHANGE: Wasteland stuff
+									# GH CHANGE: Title Gloss
 									visible = "[Or(Not(HoldingView.GetTitle.HasHolder), HoldingView.GetHolder.HasTrait(GetTrait('gh_wasteland').Self))]"
 									text = "[SelectLocalization(Not(EqualTo_string(Concatenate(HoldingView.GetProvince.GetTitle.GetKey, '_desc'), Localize(Concatenate(HoldingView.GetProvince.GetTitle.GetKey, '_desc')))), Glossary(HoldingView.GetProvince.GetTitle.GetNameNoTierNoTooltip, Concatenate(HoldingView.GetProvince.GetTitle.GetKey, '_desc')), HoldingView.GetProvince.GetTitle.GetNameNoTierNoTooltip)]"
 									default_format = "#medium"
@@ -1236,6 +1194,69 @@ window = {
 							expand = {}
 						}
 
+						#GH CHANGE: Where capital buttons were moved to
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							widget = {
+								size = { 30 30 }
+								visible = "[And(HoldingView.GetProvince.GetTitle.IsCountyCapital, Not(HoldingView.GetProvince.IsRealmCapital))]"
+
+								icon = {
+									name = "county_capital_icon"
+									parentanchor = center
+									size = { 30 30 }
+									texture = "gfx/interface/icons/icon_capital.dds"
+									framesize = { 60 60 }
+									frame = 1
+
+									tooltip = "COUNTY_CAPITAL_TOOLTIP"
+								}
+							}
+
+							widget = {
+								size = { 30 30 }
+								visible = "[HoldingView.GetProvince.IsRealmCapital]"
+
+								icon = {
+									name = "realm_capital_icon"
+									parentanchor = center
+									size = { 30 30 }
+									texture = "gfx/interface/icons/icon_capital.dds"
+									framesize = { 60 60 }
+									frame = 2
+
+									tooltip = "REALM_CAPITAL_TOOLTIP"
+								}
+							}
+
+							widget = {
+								size = { 30 30 }
+
+								button_move_capital = {
+									# GH CHANGE: Colony stuff
+									visible = "[And(HoldingView.PotentialSetRealmCapital, Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet))]"
+									name = "set_realm_capital_button"
+									texture = "gfx/interface/icons/flat_icons/move_capital.dds"
+
+									enabled = "[HoldingView.CanSetRealmCapital]"
+									onclick = "[HoldingView.SetRealmCapital]"
+
+									tooltip = "[HoldingView.GetSetRealmCapitalTooltip]"
+								}
+
+								button_move_capital = {
+									# GH CHANGE: Colony stuff
+									visible = "[And(HoldingView.CanSetCountyCapital, Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet))]"
+									name = "set_county_capital_button"
+									texture = "gfx/interface/icons/flat_icons/move_capital.dds"
+
+									onclick = "[HoldingView.SetCountyCapital]"
+
+									tooltip = "SET_COUNTY_CAPITAL_TOOLTIP"
+								}
+							}
+							expand = {}
+						}
 						expand = {}
 					}
 
@@ -1815,6 +1836,10 @@ window = {
 									}
 
 									vbox = {
+										layoutpolicy_vertical = expanding
+
+										expand = {}
+
 										# GH ADDITIONS:
 										gh_damota_lodge_button = {}
 
@@ -2881,7 +2906,7 @@ window = {
 
 												# GH CHANGE: Put Desc in Scrollbox to accomodate those massive lore buildings
 												scrollbox = {
-													size = { 375 1 }
+													size = { 375 300 }
 													layoutpolicy_horizontal = expanding
 													layoutpolicy_vertical = expanding
 
@@ -2891,17 +2916,17 @@ window = {
 														text_multi = {
 															layoutpolicy_horizontal = expanding
 															layoutpolicy_vertical = expanding
-															margin = { -10 5 }
 															autoresize = yes
-															max_width = 300
-															min_width = 300
-															text = "[GUITrackItem.GetSelectedBuilding.GetDescription]"
+															max_width = 340
+															min_width = 340
+															#GH CHANGE: Use data-link text if present
+															text = "[SelectLocalization(EqualTo_string( GetTitleByKey('c_oraispol').GetProvince.Custom(Concatenate(GUITrackItem.GetSelectedBuilding.GetKey,'_building_loc_desc')),''), GUITrackItem.GetSelectedBuilding.GetDescription, GetTitleByKey('c_oraispol').GetProvince.Custom(Concatenate(GUITrackItem.GetSelectedBuilding.GetKey,'_building_loc_desc')))]"
 														}
 
+														spacer = { size = { 0 20 } }
 														text_single = {
 															datacontext = "[GUITrackItem.GetSelectedBuilding]"
 															visible = "[InDebugMode]"
-															margin = { 10 5 }
 
 															layoutpolicy_horizontal = expanding
 															text = "BUILDING_DEBUG_FULL"
@@ -3015,23 +3040,30 @@ window = {
 											vbox = {
 												layoutpolicy_horizontal = expanding
 												
-												margin = { 15 10 }
-												
-												text_multi = {
+												# GH CHANGE: Put effects in Scrollbox to accomodate those massive effect lists
+												scrollbox = {
+													size = { 375 400 }
 													layoutpolicy_horizontal = expanding
 													layoutpolicy_vertical = expanding
-													autoresize = yes
-													max_width = 350
-													min_width = 350
-													text = "[GUITrackItem.GetSelectedBuilding.GetEffectDescriptionAtProvince( Character.Self, HoldingView.GetProvince )]"
-												}
-												
-												vbox_building_arcana_values = {
-													datacontext = "[GUITrackItem.GetSelectedBuilding]"
-												}
-												
-												vbox_building_aspect_spellcasting_bonus_values = {
-													datacontext = "[GUITrackItem.GetSelectedBuilding]"
+
+													blockoverride "scrollbox_content"
+													{
+														text_multi = {
+															layoutpolicy_horizontal = expanding
+															autoresize = yes
+															max_width = 350
+															min_width = 350
+															text = "[GUITrackItem.GetSelectedBuilding.GetEffectDescriptionAtProvince( Character.Self, HoldingView.GetProvince )]"
+														}
+														
+														vbox_building_arcana_values = {
+															datacontext = "[GUITrackItem.GetSelectedBuilding]"
+														}
+														
+														vbox_building_aspect_spellcasting_bonus_values = {
+															datacontext = "[GUITrackItem.GetSelectedBuilding]"
+														}
+													}
 												}
 											}
 										}
