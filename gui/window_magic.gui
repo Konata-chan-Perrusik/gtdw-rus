@@ -86,19 +86,18 @@ window = {
 				  
 					# Debug weighting
 					text_single = {
-						#tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_target_value')]"
-						raw_text = "#D [GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_value')]#!"
+						#tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_spell_effect_value')]"
+						raw_text = "#D [GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_value')] (#!"
 						align = nobaseline
 					}
 					text_single = {
-						tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_target_value')]"
-						raw_text = "#D ([GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_target_value')] + #!"
+						#tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_spell_effect_value')]"
+						raw_text = "#D [GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_spell_effect_value')])#!"
 						align = nobaseline
 					}
-					text_single = {
-						tooltip = "[GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).GetScriptValueDesc('ai_spell_weight_spell_organizer_value')]"
-						raw_text = "#D [GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', GetPlayer.MakeScope).ScriptValue('ai_spell_weight_spell_organizer_value')])#!"
-						align = nobaseline
+
+					tooltipwidget = {
+						magic_spell_ai_weighting_tooltip = {}
 					}
 				}
 				hbox = {
@@ -281,14 +280,20 @@ window = {
 															texture = "gfx/interface/icons/symbols/icon_cross.dds"
 															size = { 20 20 }
 															tooltip = "HOSTILE_RITUAL"
-															visible = "[LessThanOrEqualTo_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope).ScriptValue('ai_spell_weight_target_value'),'(CFixedPoint)0')]"
+															[LessThanOrEqualTo_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope).ScriptValue('ai_spell_weight_value'),'(CFixedPoint)0')]"
+															tooltipwidget = {
+																magic_spell_ai_weighting_tooltip = {}
+															}																
 														}
 														
 														icon = {
 															texture = "gfx/interface/icons/symbols/icon_check.dds"
 															size = { 20 20 }
 															tooltip = "POSITIVE_RITUAL"
-															visible = "[GreaterThan_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope).ScriptValue('ai_spell_weight_target_value'),'(CFixedPoint)0')]"
+															[GreaterThan_CFixedPoint(GuiScope.SetRoot(GetPlayer.MakeScope.Var('selected_spell').Story.MakeScope).AddScope('caster', GetPlayer.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).AddScope('spell_being_checked_ai_target', Character.MakeScope).ScriptValue('ai_spell_weight_value'),'(CFixedPoint)0')]"
+															tooltipwidget = {
+																magic_spell_ai_weighting_tooltip = {}
+															}																
 														}
 													}
 												}
@@ -384,9 +389,9 @@ window = {
 								}
 					
 								fixedgridbox = {
-									name = "spell_target_titles"
-									datamodel = "[GetPlayer.MakeScope.GetList('spell_target_titles')]"
-									visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('spell_target_titles'))]"
+									name = "spell_target_province_list"
+									datamodel = "[GetPlayer.MakeScope.GetList('spell_target_province_list')]"
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('spell_target_province_list'))]"
 									addcolumn = 75
 									addrow = 70
 									datamodel_wrap = 6
@@ -394,7 +399,7 @@ window = {
 								
 									item = {
 										container = {
-											datacontext = "[Scope.Title]"
+											datacontext = "[Scope.Province.GetTitle]"
 								
 											coa_title_medium = {
 												position = { 0 0 }
@@ -402,6 +407,22 @@ window = {
 										}
 									}
 								}
+
+								fixedgridbox = {
+									name = "spell_targets_artifacts"
+									datamodel = "[GetPlayer.MakeScope.GetList('spell_targets_artifacts')]"
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('spell_targets_artifacts'))]"
+									addcolumn = 75
+									addrow = 70
+									datamodel_wrap = 6
+									flipdirection = yes
+								
+									item = {
+										icon_artifact = {
+											datacontext = "[Scope.Artifact]"
+										}
+									}
+								}								
 							}
 
 							vbox = {
@@ -437,8 +458,32 @@ window = {
 									layoutpolicy_horizontal = expanding
 								}
 								vbox = {
-									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_trigger_list'))]"
-									datamodel = "[GetPlayer.MakeScope.Var('selected_spell').GetList('spell_trigger_list')]"
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_casting_trigger_list'))]"
+									datamodel = "[GetPlayer.MakeScope.Var('selected_spell').GetList('spell_casting_trigger_list')]"
+									
+									layoutpolicy_horizontal = expanding
+									
+									text_single = {
+										raw_text = "Casting Conditions"
+										
+										using = Font_Size_Medium
+									}
+									
+									item = {
+										text_single = {
+											raw_text = "SPELL_EFFECT_EFFECT_BULLETPOINT"
+										}
+									}
+									
+									margin_bottom = 10
+								}
+								divider_light = {
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_activation_trigger_list'))]"
+									layoutpolicy_horizontal = expanding
+								}
+								vbox = {
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_activation_trigger_list'))]"
+									datamodel = "[GetPlayer.MakeScope.Var('selected_spell').GetList('spell_activation_trigger_list')]"
 									
 									layoutpolicy_horizontal = expanding
 									
@@ -450,14 +495,14 @@ window = {
 									
 									item = {
 										text_single = {
-											raw_text = "• [Localize(Concatenate(Scope.Var('spell_tag_name').GetFlagName, '_desc'))]"
+											raw_text = "SPELL_EFFECT_EFFECT_BULLETPOINT"
 										}
 									}
 									
 									margin_bottom = 10
 								}
 								divider_light = {
-									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_trigger_list'))]"
+									visible = "[DataModelHasItems(GetPlayer.MakeScope.Var('selected_spell').GetList('spell_activation_trigger_list'))]"
 									layoutpolicy_horizontal = expanding
 								}
 								hbox = {
@@ -588,6 +633,34 @@ window = {
 												autoresize = yes
 											}
 										}
+
+										widget = {
+											visible = "[Story.MakeScope.Var('lifespan').IsSet]"
+											size = { 120 70 }
+											
+											background = {
+												using = Background_Area
+											}
+											
+											icon = {
+												size = { 40 40 }
+												position = { 10 0 }
+												parentanchor = left|vcenter
+												texture = "gfx/interface/icons/rituals/icon_aspect_time.dds"
+											}
+											
+											text_single = {
+												raw_text = "[Story.MakeScope.Var('lifespan').GetValue|V0] лет"
+												parentanchor = hcenter|vcenter
+												max_width = 100
+												margin_left = 30
+												margin_bottom = 5
+												
+												using = Font_Type_Standard
+												fontsize = 20
+												autoresize = yes
+											}
+										}
 										
 										vbox = {
 											name = "selected_spell_aspects_grid"
@@ -597,7 +670,7 @@ window = {
 											
 											item = {
 												widget = {
-													visible = "[GreaterThan_CFixedPoint(GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')), '(CFixedPoint)0')]"
+													visible = "[Or(Story.MakeScope.Var(Scope.GetFlagName).IsSet, GreaterThan_CFixedPoint(GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')), '(CFixedPoint)0'))]"
 													
 													size = { 120 70 }
 													
@@ -641,7 +714,7 @@ window = {
 													text_single = {
 														name = "selected_spell_aspect_level"
 														visible = "[Not(Story.MakeScope.Var(Concatenate(Scope.GetFlagName, '_max')).IsSet)]"
-														raw_text = "[Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)1' ), 'I', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)2' ), 'II', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)3' ), 'III', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)4' ), 'IV', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)5' ), 'V', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)6' ), 'VI', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)7' ), 'VII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)8' ), 'VIII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)9' ), 'IX', 'X')))))))))]#! [Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [Localize(Concatenate(Scope.GetFlagName,'_name'))]#!"
+														raw_text = "[Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [SelectLocalization(LessThanOrEqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)0' ), '/', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)1' ), 'I', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)2' ), 'II', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)3' ), 'III', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)4' ), 'IV', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)5' ), 'V', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)6' ), 'VI', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)7' ), 'VII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)8' ), 'VIII', SelectLocalization(EqualTo_CFixedPoint( GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).ScriptValue(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value')) , '(CFixedPoint)9' ), 'IX', 'X'))))))))))]#! [Localize(Concatenate(Scope.GetFlagName, '_coloring'))] [Localize(Concatenate(Scope.GetFlagName,'_name'))]#!"
 														
 														parentanchor = hcenter|vcenter
 														margin_bottom = 5
@@ -687,7 +760,7 @@ window = {
 								}
 								
 								vbox = {
-									datamodel = "[GetPlayer.MakeScope.GetList('spell_component_being_prepared_list')]"
+									datamodel = "[GetPlayer.MakeScope.Var('spell_preparation_story_cycle').GetList('spell_component_being_prepared_list')]"
 									visible = "[And(GetPlayer.MakeScope.Var('spell_preparation_story_cycle').IsSet, ObjectsEqual(GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Var('spell_being_prepared').Story, GetPlayer.MakeScope.Var('selected_spell').Story))]"
 									spacing = 10
 									
@@ -729,7 +802,7 @@ window = {
 				expand = {}
 								
 				vbox = {
-					visible = "[GetPlayer.MakeScope.Var('selected_spell').IsSet]"
+					visible = "[And(GetVariableSystem.HasValue('magic_tab', 'ritual'), GetPlayer.MakeScope.Var('selected_spell').IsSet)]"
 
 					button_standard = {
 						name = "cast_spell_placeholder_button"
@@ -1017,7 +1090,7 @@ window = {
 								text_single = {
 									layoutpolicy_horizontal = expanding
 									align = center
-									raw_text = "Подчин. сущности"
+									raw_text = "Фамильяры"
 								}
 				
 								#text_single = {
@@ -1028,15 +1101,15 @@ window = {
 							}
 						}
 				
-						button_tab = { # Show methods to study rituals
+						button_tab = { 
 							size = { 110 42 }
 				
-							tooltip = RITUAL_SORTING_TAB_STUDY_TOOLTIP
+							visible = "[DataModelHasItems(GetPlayer.MakeScope.GetList('owned_hex_list'))]"
+							raw_tooltip = "Показать проклятия"
 							onclick = "[VariableSystem.Clear( 'magic_tab' )]"
 							onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
-							onclick = "[GetVariableSystem.Set( 'magic_tab', 'study' )]"
+							onclick = "[GetVariableSystem.Set( 'magic_tab', 'hexes' )]"
 							using = tooltip_above
-							enabled = "[Not(GetPlayer.MakeScope.IsSet)]"
 				
 							hbox = {
 								margin = { 10 0 }
@@ -1044,31 +1117,52 @@ window = {
 								text_single = {
 									layoutpolicy_horizontal = expanding
 									align = center
-									text = "RITUAL_STUDY_BUTTON"
+									raw_text = "Проклятия"
 								}
 							}
 						}
 				
-						button_tab = { # Show methods to discover rituals
-							size = { 110 42 }
-				
-							tooltip = RITUAL_SORTING_TAB_DISCOVER_TOOLTIP
-							onclick = "[VariableSystem.Clear( 'magic_tab' )]"
-							onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
-							onclick = "[GetVariableSystem.Set( 'magic_tab', 'discover' )]"
-							using = tooltip_above
-							enabled = "[Not(GetPlayer.MakeScope.IsSet)]"
-				
-							hbox = {
-								margin = { 10 0 }
-				
-								text_single = {
-									layoutpolicy_horizontal = expanding
-									align = center
-									text = "RITUAL_DISCOVER_BUTTON"
-								}
-							}
-						}
+						#button_tab = { # Show methods to study rituals
+						#	size = { 110 42 }
+						#
+						#	tooltip = RITUAL_SORTING_TAB_STUDY_TOOLTIP
+						#	onclick = "[VariableSystem.Clear( 'magic_tab' )]"
+						#	onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
+						#	onclick = "[GetVariableSystem.Set( 'magic_tab', 'study' )]"
+						#	using = tooltip_above
+						#	enabled = "[Not(GetPlayer.MakeScope.IsSet)]"
+						#
+						#	hbox = {
+						#		margin = { 10 0 }
+						#
+						#		text_single = {
+						#			layoutpolicy_horizontal = expanding
+						#			align = center
+						#			text = "RITUAL_STUDY_BUTTON"
+						#		}
+						#	}
+						#}
+						#
+						#button_tab = { # Show methods to discover rituals
+						#	size = { 110 42 }
+						#
+						#	tooltip = RITUAL_SORTING_TAB_DISCOVER_TOOLTIP
+						#	onclick = "[VariableSystem.Clear( 'magic_tab' )]"
+						#	onclick = "[VariableSystem.Clear( 'magic_tab_aspect' )]"
+						#	onclick = "[GetVariableSystem.Set( 'magic_tab', 'discover' )]"
+						#	using = tooltip_above
+						#	enabled = "[Not(GetPlayer.MakeScope.IsSet)]"
+						#
+						#	hbox = {
+						#		margin = { 10 0 }
+						#
+						#		text_single = {
+						#			layoutpolicy_horizontal = expanding
+						#			align = center
+						#			text = "RITUAL_DISCOVER_BUTTON"
+						#		}
+						#	}
+						#}
 					}
 				}
 
@@ -1608,6 +1702,28 @@ window = {
 							item = {
 								widget_spell_entry = {
 									datacontext = "[Scope.Story]"
+								}
+							}
+						}
+					}
+				}
+				
+				scrollbox = {
+					name = "hexes"
+					visible = "[GetVariableSystem.HasValue('magic_tab', 'hexes' )]"
+					layoutpolicy_vertical = expanding
+					layoutpolicy_horizontal = expanding
+
+					blockoverride "scrollbox_content" {
+						vbox = {
+							name = "spell_list"
+							datamodel = "[GetPlayer.MakeScope.GetList('owned_hex_list')]"
+							layoutpolicy_horizontal = expanding
+							spacing = 8
+
+							item = {
+								widget_spell_entry = {
+									datacontext = "[Scope.Var('spell_being_prepared').Story]"
 								}
 							}
 						}

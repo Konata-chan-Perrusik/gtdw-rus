@@ -1,0 +1,743 @@
+types gh_county_view_changes
+{
+	type add_magic_target_county_button = button_round
+	{
+		visible = "[Not(GetScriptedGui('magic_gui_province_is_selected_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetProvince.MakeScope).End))]"
+		size = { 50 50 }
+		onclick = "[GetScriptedGui('magic_gui_select_province_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetProvince.MakeScope).End)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+
+		button_icon = {
+			size = { 20 20 }
+			texture = "gfx/interface/icons/flat_icons/plus_small.dds"
+			parentanchor = right|bottom
+		}
+		
+		button_icon = {
+			parentanchor = center
+			texture = "gfx/interface/icons/flat_icons/magic_add_icon.dds"
+			size = { 30 30 }
+			onclick = "[GetScriptedGui('magic_gui_select_province_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetProvince.MakeScope).End)]"
+			oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+			clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		}
+		
+		tooltip = "add_magic_targets"
+	}
+	
+	type remove_magic_target_county_button = button_round
+	{
+		visible = "[GetScriptedGui('magic_gui_province_is_selected_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetProvince.MakeScope).End)]"
+		size = { 50 50 }
+		onclick = "[GetScriptedGui('magic_gui_select_province_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetProvince.MakeScope).End)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+
+		button_icon = {
+			size = { 20 20 }
+			texture = "gfx/interface/icons/flat_icons/minus_small.dds"
+			parentanchor = right|bottom
+		}
+		
+		button_icon = {
+			parentanchor = center
+			texture = "gfx/interface/icons/flat_icons/magic_add_icon.dds"
+			size = { 30 30 }
+			onclick = "[GetScriptedGui('magic_gui_select_province_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', HoldingView.GetProvince.MakeScope).End)]"
+			oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+			clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		}
+		
+		tooltip = "remove_magic_targets"
+	}
+
+	type gh_colonial_holding_stats = vbox
+	{
+		visible = "[Or(Not(HoldingView.HasHolding), Or(EqualTo_string(HoldingView.GetHolding.GetType.GetKey,'wasteland_empty_holding'), Or(EqualTo_string(HoldingView.GetHolding.GetType.GetKey,'colony_holding'), Or(EqualTo_string(HoldingView.GetHolding.GetType.GetKey,'ruin_holding'), EqualTo_string(HoldingView.GetHolding.GetType.GetKey,'ruined_district_holding')))))]"
+		layoutpolicy_vertical = expanding
+
+		margin = { 15 0 }
+		margin_bottom = 10
+		minimumsize = { 171 0 }
+		spacing = 5
+
+		### Supply Level
+		hbox = {
+			layoutpolicy_horizontal = expanding
+
+			tooltip = "[HoldingView.GetSupplyLimitTooltip]"
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				text = "SUPPLY_LIMIT"
+				default_format = "#high"
+				max_width = 140
+			}
+
+			text_single = {
+				raw_text = " [HoldingView.GetSupplyLimit|V]"
+				default_format = "#high"
+			}
+		}
+
+
+		### Plague Resistance
+		hbox = {
+			datacontext = "[Holding.GetProvince]"
+			datacontext = "[HoldingView.AccessPlagueResistanceBreakdown]"
+			layoutpolicy_horizontal = expanding
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				text = "HOLDING_VIEW_EPIDEMIC_RESISTANCE"
+				default_format = "#high"
+			}
+
+			expand = {}
+
+			text_single = {
+				text = "HOLDING_VIEW_EPIDEMIC_RESISTANCE_VALUE"
+				default_format = "#high"
+			}
+
+			tooltip_visible = "[ValueBreakdown.HasTooltip]"
+
+			tooltipwidget = {
+				widget_value_breakdown_tooltip = {}
+			}
+		}
+
+
+		# GH ADDITION: Ambient Magic
+		hbox = {
+			tooltip = "AMBIENT_MAGIC_TOOLTIP"
+			layoutpolicy_horizontal = expanding
+			margin = { 2 0 }
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				text = "AMBIENT_MAGIC"
+				default_format = "#high"
+			}
+
+			text_single = {
+				raw_text = " [HoldingView.GetCountyTitle.MakeScope.ScriptValue('total_ambient_magic_value')|0]"
+				default_format = "#high"
+			}
+		}
+
+		expand = {}
+	}
+
+	type gh_colonial_county_stats = vbox
+	{
+		name = "colony_stats"
+		layoutpolicy_vertical = shrinking
+		margin = { 10 10 }
+		margin_right = 15
+		min_width = 260
+		visible = "[Or(Holding.GetHolder.HasTrait(GetTrait('gh_wasteland').Self), HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet)]"
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			tooltip = "COUNTY_HABITABILITY_TOOLTIP"
+			datacontext = "[HoldingView.GetProvince.GetCountyCapitalProvince.GetHolding]"
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				raw_text = "[habitability|E]:"
+			}
+
+			text_single = {
+				raw_text = "[Concept('habitability','@habitability_icon!')] [HoldingView.GetCountyTitle.MakeScope.ScriptValue('county_habitability_value')|0]"
+				default_format = "#high"
+
+				background = {
+					visible = "[And(GetPlayer.IsValid, LessThan_CFixedPoint(HoldingView.GetCountyTitle.MakeScope.ScriptValue('county_habitability_value'), GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target',HoldingView.GetCountyTitle.MakeScope).ScriptValue('colonization_threshold_value')))]"
+					margin = { 5 0 }
+					using = Status_Bad
+				}
+			}
+		}
+
+		hbox = {
+			datacontext = "[County.GetCulture]"
+			datacontext = "[Province.GetCounty.GetCulture]"
+			datacontext = "[HoldingView.GetProvince.GetCountyCapitalProvince.GetHolding]"
+			visible = "[Not(Character.HasTrait(GetTrait('gh_wasteland').Self))]"
+			layoutpolicy_horizontal = expanding
+			spacing = 2
+
+			using = tooltip_ne
+
+			tooltipwidget = {
+
+				culture_tooltip = {
+
+					blockoverride "extra_info"
+					{
+						text_single = {
+							fonttintcolor = "[TooltipInfo.GetTintColor]"
+							using = DefaultTooltipText
+							visible = "[Not( ObjectsEqual( Culture.Self, GetPlayer.GetCulture ) )]"
+							text = "COUNTY_NOT_YOUR_CULTURE"
+						}
+					}
+				}
+			}
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				raw_text = "[culture|E]:"
+			}
+
+			text_single = {
+                visible = "[NotEqualTo_uint32(Culture.GetID, GetPlayer.GetCulture.GetID)]"
+                text = "COUNTY_CULTURE_ACCEPTANCE_DIFF_CULTURE"
+                margin_right = 5
+
+                tooltip = "CULTURE_ACCEPTANCE_TOOLTIP"
+            }
+
+			button_group = {
+				onclick = "[OpenGameViewData( 'culture_window', Culture.GetID )]"
+
+				text_single = {
+					text = "CULTURE_COUNTY_WINDOW"
+					default_format = "#high"
+					margin = { 5 0 }
+
+					background = {
+						visible = "[And( NotEqualTo_uint32(Culture.GetID, GetPlayer.GetCulture.GetID), EqualTo_CFixedPoint( Culture.GetAcceptance( GetPlayer.GetCulture ), '(CFixedPoint)100') )]"
+						margin = { 5 0 }
+						using = Status_Good
+					}
+
+					background = {
+						visible = "[And(And( NotEqualTo_uint32(Culture.GetID, GetPlayer.GetCulture.GetID), NotEqualTo_CFixedPoint( Culture.GetAcceptance( GetPlayer.GetCulture ), '(CFixedPoint)100') ), NotEqualTo_CFixedPoint( Culture.GetAcceptance( GetPlayer.GetCulture ), '(CFixedPoint)0') )]"
+						margin = { 5 0 }
+						using = Status_Mixed
+					}
+
+					background = {
+						visible = "[EqualTo_CFixedPoint( Culture.GetAcceptance( GetPlayer.GetCulture ), '(CFixedPoint)0') ) ]"
+						margin = { 5 0 }
+						using = Status_Bad
+					}
+				}
+
+                tooltipwidget = {
+                    culture_tooltip = {
+                        blockoverride "extra_info"
+                        {
+                            text_single = {
+                                fonttintcolor = "[TooltipInfo.GetTintColor]"
+                                using = DefaultTooltipText
+                                visible = "[Not( ObjectsEqual( Culture.Self, GetPlayer.GetCulture ) )]"
+                                text = "COUNTY_NOT_YOUR_CULTURE"
+                            }
+                        }
+                    }
+                }
+			}
+		}
+
+		hbox = {
+			datacontext = "[County.GetFaith]"
+			datacontext = "[Province.GetCounty.GetFaith]"
+			datacontext = "[HoldingView.GetProvince.GetCountyCapitalProvince.GetHolding]"
+			visible = "[Not(Character.HasTrait(GetTrait('gh_wasteland').Self))]"
+			layoutpolicy_horizontal = expanding
+			spacing = 2
+			using = tooltip_ne
+
+			tooltipwidget = {
+
+				faith_tooltip = {
+
+					blockoverride "extra_info" {
+						using = faith_tooltip_click_default_extra_info
+
+						text_single = {
+							margin = { 10 0 }
+							layoutpolicy_horizontal = expanding
+							fonttintcolor = "[TooltipInfo.GetTintColor]"
+							using = DefaultTooltipText
+							visible = "[Not( ObjectsEqual( Faith.Self, GetPlayer.GetFaith ) )]"
+							text = "COUNTY_NOT_YOUR_FAITH"
+						}
+					}
+				}
+			}
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				raw_text = "[faith|E]:"
+			}
+
+			vbox = {
+				expand = { minimumsize = { 0 2 } }
+				icon = {
+					size = { 22 22 }
+					datacontext = "[Province.GetCounty.GetFaith]"
+					texture = "[Faith.GetIcon]"
+				}
+			}
+
+			button_group = {
+				onclick = "[OpenGameViewData( 'faith', Faith.GetID )]"
+
+				button_group = {
+					# shortcut = "faith_window"
+					onclick = "[OpenGameViewData( 'faith', Faith.GetID )]"
+
+					text_single = {
+						margin_right = 5
+						text = "[Faith.GetNameNoTooltip]"
+						default_format = "#high"
+					}
+
+					background = {
+						margin = { 5 0 }
+						visible = "[NotEqualTo_uint32(Faith.GetID, GetPlayer.GetFaith.GetID)]"
+						using = Status_Bad
+					}
+				}
+			}
+		}
+	}
+
+	type gh_settle_ruin_widget = widget
+	{
+		name = "settle_ruin_view"
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		visible = "[And(GetVariableSystem.Exists('settle_ruin_tab_open'), And(Or(HoldingView.GetHolder.IsOtherLiegeOrAbove(GetPlayer), HoldingView.GetHolder.IsLocalPlayer), GetScriptedGui('settle_ruin_scripted_gui').IsShown(GuiScope.SetRoot(Title.GetProvince.MakeScope).End)))]"
+		layer = windows_layer
+		position = { 687 -50 }
+		parentanchor = bottom|hcenter
+		using = Animation_ShowHide_Quick
+		using = Window_Background_Subwindow
+		using = Window_Size_CharacterList
+		
+		vbox = {
+			set_parent_size_to_minimum = yes
+			margin = { 4 4 }
+			margin_bottom = 15
+			spacing = 15
+	
+			header_pattern = {
+				layoutpolicy_horizontal = expanding
+	
+				blockoverride "header_text"
+				{
+					text = "CREATE_NEW_HOLDING_RUIN_HEADING"
+				}
+	
+				blockoverride "button_close"
+				{
+					onclick = "[GetVariableSystem.Clear('settle_ruin_tab_open')]"
+				}
+			}
+	
+			building_in_vassal_warning_hbox = {}
+	
+			hbox = {
+				name = "holding_types"
+				datamodel = "[HoldingView.GetHoldingTypeItems]"
+				layoutpolicy_horizontal = expanding
+				spacing = 10
+				margin = { 10 10 }
+	
+				item = {
+					vbox = {
+						spacing = 5
+						visible = "[Not(EqualTo_string(HoldingTypeItem.GetHoldingType.GetKey,'metro_holding'))]"
+	
+						button_standard = {
+							size = { 250 148 }
+							datacontext = "[GetScriptedGui('settle_ruin_pick_holding_scripted_gui')]"
+							datacontext = "[HoldingTypeItem.GetProvince]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(Province.GetCounty.GetTitle.MakeScope).AddScope('holding_type_scope', MakeScopeFlag(HoldingTypeItem.GetHoldingType.GetKey)).AddScope('actor', GetPlayer.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('actor', GetPlayer.MakeScope).AddScope('holding_type_scope', MakeScopeFlag(HoldingTypeItem.GetHoldingType.GetKey)).End)]]"
+							tooltip = "SETTLE_RUIN_HOLDING_TOOLTIP"
+	
+							widget = {
+								scissor = yes
+								size = { 247 146 }
+	
+								icon = {
+									datacontext = "[GetScriptedGui('settle_ruin_pick_holding_scripted_gui')]"
+									visible = "[ScriptedGui.IsValid(GuiScope.SetRoot(Province.GetCounty.GetTitle.MakeScope).AddScope('holding_type_scope', MakeScopeFlag(HoldingTypeItem.GetHoldingType.GetKey)).AddScope('actor', GetPlayer.MakeScope).End)]"
+									size = { 320 146 }
+									texture = "[HoldingTypeItem.GetBuilding.GetIllustration(Province.Self)]"
+									using = Mask_Rough_Edges
+									alpha = 0.7
+								}
+	
+								highlight_icon = {
+									datacontext = "[GetScriptedGui('settle_ruin_pick_holding_scripted_gui')]"
+									visible = "[Not(ScriptedGui.IsValid(GuiScope.SetRoot(Province.GetCounty.GetTitle.MakeScope).AddScope('holding_type_scope', MakeScopeFlag(HoldingTypeItem.GetHoldingType.GetKey)).AddScope('actor', GetPlayer.MakeScope).End))]"
+									size = { 320 146 }
+									texture = "[HoldingTypeItem.GetBuilding.GetIllustration(Province.Self)]"
+									effectname = "GreyedOut"
+									tintcolor = { 0.6 0.6 0.6 1 }
+									using = Mask_Rough_Edges
+								}
+							}
+	
+							flowcontainer = {
+								parentanchor = bottom|right
+								ignoreinvisible = yes
+								margin = { 5 5 }
+	
+								warning_icon = {
+									name = "wrong_type"
+									visible = "[Not(HoldingTypeItem.IsValidForPlayer)]"
+									size = { 35 35 }
+									tooltip = HOLDING_SELECTION_VIEW_WRONG_HOLDING_TYPE
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	### DAMOTA STUFF ###
+	type gh_lodges_view_widget = widget
+	{
+		state = {
+			name = _show
+			using = Animation_FadeIn_Quick
+			using = Sound_WindowShow_Standard
+		}
+
+		state = {
+			name = _hide
+			using = Animation_FadeOut_Quick
+			using = Sound_WindowHide_Standard
+		}
+		name = "castes_view"
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		datacontext = "[GetScriptedGui('county_culture_uses_caste_system')]"
+		visible = "[And(GetVariableSystem.Exists( 'castes_open' ), And( Character.IsLocalPlayer, ScriptedGui.IsShown(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End) ))]"
+		layer = middle
+		position = { 550 120 }
+		alwaystransparent = no
+		size = {450 600}
+		using = Window_Background
+		using = Window_Decoration
+		using = Window_Size_CharacterList
+		
+		vbox = {
+			using = Window_Margins
+			parentanchor = top
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			header_pattern = {
+				layoutpolicy_horizontal = expanding
+				
+				blockoverride "header_text"
+				{
+					raw_text = "Ложи"
+				}
+				
+				blockoverride "button_close"
+				{
+					onclick = "[GetVariableSystem.Clear('castes_open')]"
+				}
+			}
+			text_multi = {
+				layoutpolicy_horizontal = expanding
+				size = { 0 30 }
+				text = LODGES_EXPLANATION
+				default_format = "#weak"
+				margin = { 0 5 }
+				margin_bottom = 20
+				align = center
+				max_width = 350
+				autoresize = yes
+			}
+			scrollbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				blockoverride "scrollbox_content"
+				{
+					datamodel = "[HoldingView.GetCountyTitle.MakeScope.GetList('caste_list')]"
+					item = {
+						hbox = {
+							minimumsize = { 100% 100 }
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							
+							tooltip = LODGE_EFFECT_TOOLTIP
+
+							flowcontainer = {
+								direction = vertical
+								allow_outside = no
+								
+								layoutpolicy_vertical = expanding
+								textbox = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+									font = TitleFont
+									fontsize = 20
+									text = "[Localize(Concatenate(Scope.GetFlagName,'_title'))]"
+									parentanchor = left
+								}
+							}
+							
+							textbox = {
+								font = StandardGameFont
+								fontcolor = { 0.8 0.8 0.8 1 }
+								fontsize = 12
+								text = "[GetModifier(Concatenate(Scope.GetFlagName,'_modifier_1')).GetDescWithEffects]"
+								autoresize = yes
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								multiline = yes
+								align = left
+								margin_top = 20
+								margin_left = 20
+								margin_bottom = 20
+							}
+							expand = {}
+							flowcontainer = {
+								direction = vertical
+								allow_outside = yes
+								layoutpolicy_vertical = expanding
+								margin_left = 20
+								spacing = 5
+								button_round  = {
+									datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+									datacontext = "[HoldingView.GetTitle]"
+									datacontext = "[HoldingView.GetHolder]"
+									datacontext = "[GetScriptedGui(Concatenate(Scope.GetFlagName,'_increase'))]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+									oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+									clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+									
+									button_increase_society_power = {
+										size = { 25 25 }
+										parentanchor = center
+										alwaystransparent = yes
+									}
+								}
+								button_round  = {
+									datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+									datacontext = "[HoldingView.GetTitle]"
+									datacontext = "[HoldingView.GetHolder]"
+									datacontext = "[GetScriptedGui(Concatenate(Scope.GetFlagName,'_decrease'))]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+									oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+									clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+								
+									button_decrease_society_power = {
+										size = { 25 25 }
+										parentanchor = center
+										alwaystransparent = yes
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type gh_damota_lodge_button = button_round 
+	{
+		name = "toggle_lodge_view"
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		datacontext = "[GetScriptedGui('county_culture_uses_caste_system')]"
+		visible = "[And(And(Character.IsLocalPlayer, ScriptedGui.IsShown(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)), Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet)))]"
+		enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+		#tooltip = "[Character.GetPlayerInteractionWithTargetTitleTooltip('feudalize_holding_interaction', Title.Self)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		onclick = "[GetVariableSystem.Toggle( 'castes_open' )]"
+		onclick = "[GetScriptedGui('get_castes_list').Execute(GuiScope.SetRoot(HoldingView.GetCountyTitle.MakeScope).End)]"
+
+		button_icon = {
+			texture = "gfx/interface/icons/flat_icons/city_holding.dds"
+			parentanchor = center
+			position = { 0 -3 }
+			alwaystransparent = yes
+		}
+	}
+
+	### PURGE A COUNTY ###
+	type gh_purge_county_button = button_round
+	{
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		visible = "[And(And(Character.IsLocalPlayer, Character.IsPlayerInteractionShownAndCanPickTitle('gh_purge_county_interaction', Title.Self)), Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet)))]"
+		enabled = "[Character.IsPlayerInteractionWithTargetTitleValid('gh_purge_county_interaction', Title.Self)]"
+		tooltip = "[Character.GetPlayerInteractionWithTargetTitleTooltip('gh_purge_county_interaction', Title.Self)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		onclick = "[Character.OpenPlayerInteractionWithTargetTitle('gh_purge_county_interaction', Title.Self)]"
+
+		button_purge_county = {
+			size = { 25 25 }
+			parentanchor = center
+			alwaystransparent = yes
+		}
+	}
+
+	### REDRUNNER PURGE CORRUPTION ###
+	type gh_redrunner_purge_button = button_round
+	{
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		visible = "[And(And(Character.IsLocalPlayer, Character.IsPlayerInteractionShownAndCanPickTitle('gh_redrunner_purge_corruption_interaction', Title.Self)), Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet)))]"
+		enabled = "[Character.IsPlayerInteractionWithTargetTitleValid('gh_redrunner_purge_corruption_interaction', Title.Self)]"
+		tooltip = "[Character.GetPlayerInteractionWithTargetTitleTooltip('gh_redrunner_purge_corruption_interaction', Title.Self)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		onclick = "[Character.OpenPlayerInteractionWithTargetTitle('gh_redrunner_purge_corruption_interaction', Title.Self)]"
+
+		button_purge_county = {
+			size = { 25 25 }
+			parentanchor = center
+			alwaystransparent = yes
+		}
+	}
+
+	### REDLANDER CULL LANDS ###
+	type gh_redlander_purge_button = button_round
+	{
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		visible = "[And(And(Character.IsLocalPlayer, Character.IsPlayerInteractionShownAndCanPickTitle('gh_redlands_decay_county_interaction', Title.Self)), Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet)))]"
+		enabled = "[Character.IsPlayerInteractionWithTargetTitleValid('gh_redlands_decay_county_interaction', Title.Self)]"
+		tooltip = "[Character.GetPlayerInteractionWithTargetTitleTooltip('gh_redlands_decay_county_interaction', Title.Self)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		onclick = "[Character.OpenPlayerInteractionWithTargetTitle('gh_redlands_decay_county_interaction', Title.Self)]"
+
+		button_purge_county = {
+			size = { 25 25 }
+			parentanchor = center
+			alwaystransparent = yes
+		}
+	}
+
+	### TRIBAL SETTLE A COUNTY ###
+	type gh_tribal_settle_button = button_round
+	{
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetTitle]"
+		datacontext = "[HoldingView.GetHolder]"
+		visible = "[And(And(Character.IsLocalPlayer, Character.IsPlayerInteractionShownAndCanPickTitle('gh_tribal_settlement_interaction', Title.Self)), Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet)))]"
+		enabled = "[Character.IsPlayerInteractionWithTargetTitleValid('gh_tribal_settlement_interaction', Title.Self)]"
+		tooltip = "[Character.GetPlayerInteractionWithTargetTitleTooltip('gh_tribal_settlement_interaction', Title.Self)]"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		onclick = "[Character.OpenPlayerInteractionWithTargetTitle('gh_tribal_settlement_interaction', Title.Self)]"
+
+		button_icon = {
+			size = { 25 25 }
+			parentanchor = center
+			alwaystransparent = yes
+			framesize = { 70 60 }
+			texture = "gfx/interface/icons/flat_icons/replace.dds"
+		}
+	}
+
+	type colonize_ruin_button = button_standard_big
+	{
+		name = "construct_holding_ruin"
+		visible = "[And(And(Or(EqualTo_string(HoldingView.GetHolding.GetType.GetKey,'ruin_holding'), EqualTo_string(HoldingView.GetHolding.GetType.GetKey,'ruined_district_holding')), Not(HoldingView.GetHolder.HasTrait(GetTrait('gh_wasteland').Self))), Not(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet))]"
+		parentanchor = bottom|hcenter
+		position = { 0 -10 }
+		size = { 300 50 }
+		datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+		datacontext = "[HoldingView.GetProvince]"
+		datacontext = "[HoldingView.GetCountyTitle.GetHolder]"
+		datacontext = "[GetScriptedGui('settle_ruin_scripted_gui')]"
+		text = "CREATE_NEW_HOLDING_RUIN_BUTTON"
+		tooltip = "CREATE_NEW_HOLDING_RUIN_BUTTON_TOOLTIP"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		enabled = "[And(ScriptedGui.IsValid(GuiScope.SetRoot(Province.MakeScope).AddScope('actor', GetPlayer.MakeScope).End), Not(GetVariableSystem.Exists('settle_ruin_tab_open')))]"
+		onclick = "[GetVariableSystem.Toggle('settle_ruin_tab_open')]"
+	}
+
+	type colonize_holding_button = button_standard_big
+	{
+		name = "colonize_holding"
+		parentanchor = bottom|hcenter
+		position = { 0 -10 }
+		size = { 300 50 }
+		text = "COLONIZE_BUTTON_TEXT"
+		datacontext = "[HoldingView.GetCountyTitle]"
+		
+		visible = "[Character.IsPlayerInteractionShownAndCanPickTitle('colonize_wasteland_interaction', Title.Self)]"
+		enabled = "[Character.IsPlayerInteractionWithTargetTitleValid('colonize_wasteland_interaction', Title.Self)]"
+		tooltip = "COLONIZE_COUNTY_TOOLTIP"
+		oversound = "event:/SFX/UI/Generic/sfx_ui_generic_pointer_over"
+		clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_select"
+		onclick = "[Character.OpenPlayerInteractionWithTargetTitle('colonize_wasteland_interaction', HoldingView.GetCountyTitle.Self)]"
+	}
+
+	type colony_progress_vbox = vbox
+	{
+		name = "colonizing_county"
+		visible = "[HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').IsSet]"
+		parentanchor = center
+		spacing = 5
+		expand = {}
+
+		progressbar_standard = {
+			name = "colonizing_county_progress"
+			alwaystransparent = yes
+			size = { 300 30 }
+			min = 0
+			max = 100
+			value = "[FixedPointToFloat(HoldingView.GetProvince.GetCounty.GetTitle.MakeScope.Var('colonization_story').Var('colonization_progress').GetValue)]"
+			tooltip = "COLONIZATION_PROGRESS_TOOLTIP"
+			direction = horizontal
+
+			text_single = {
+				parentanchor = center
+				raw_text = "Прогресс колонизации"
+				default_format = "#high"
+				align = nobaseline
+				using = Font_Size_Medium
+			}
+		}
+
+
+		button_standard_big = {
+			name = "cancel_colonization_progress"
+			size = { 300 30 }
+			text = "ABANDON_COLONY_BUTTON_TEXT"
+			datacontext = "[HoldingView.GetGUIHoldingBuilding]"
+			datacontext = "[HoldingView.GetCountyTitle]"
+			datacontext = "[HoldingView.GetHolder]"
+			
+			visible = "[Character.IsPlayerInteractionShownAndCanPickTitle('abandon_colony_interaction', Title.Self)]"
+			enabled = "[Character.IsPlayerInteractionWithTargetTitleValid('abandon_colony_interaction', Title.Self)]"
+			tooltip = "[Character.GetPlayerInteractionWithTargetTitleTooltip('abandon_colony_interaction', Title.Self)]"
+			onclick = "[Character.OpenPlayerInteractionWithTargetTitle('abandon_colony_interaction', Title.Self)]"
+		}
+
+		expand = {}
+	}
+}
