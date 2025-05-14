@@ -217,11 +217,11 @@
 						position = "[BookmarkCharacter.GetGuiPosition]"
 
 						button_group_map_character_selection = {
-							visible = "[Not( GameSetup.IsCharaterSelected( BookmarkCharacter.Self ) )]"
+							visible = "[Not( GameSetup.IsCharacterSelected( BookmarkCharacter.Self ) )]"
 							onclick = "[PdxGuiTriggerAllAnimations('bookmark_character_change')]"
 							onclick = "[GameSetup.SetSelectedCharacter( BookmarkCharacter.Self )]"
 							onclick = "[GetVariableSystem.Set( 'show_character_info', 'true' )]"
-							alwaystransparent = "[GameSetup.IsCharaterSelected( BookmarkCharacter.Self )]"
+							alwaystransparent = "[GameSetup.IsCharacterSelected( BookmarkCharacter.Self )]"
 
 							state = {
 								name = _mouse_hierarchy_enter
@@ -274,7 +274,7 @@
 						}
 
 						button_group_map_character_selection = {
-							visible = "[GameSetup.IsCharaterSelected( BookmarkCharacter.Self )]"
+							visible = "[GameSetup.IsCharacterSelected( BookmarkCharacter.Self )]"
 							visible_at_creation = no
 							position = { 0 -6 }
 							alwaystransparent = yes
@@ -1303,7 +1303,7 @@
 								name = "ruler_designer_promt_glow"
 								visible = "[ShouldPromptForRulerDesigner]"
 								size = { 100% 100% }
-								texture = "gfx/interface/icons/banners/banner_brown_left_glow.dds"
+								texture = "gfx/interface/bookmarks/any_ruler_shine.dds"
 								alpha = 0
 
 								state = {
@@ -1488,6 +1488,7 @@
 											text = "[GameSetup.GetBookmarkName]"
 											default_format = "#high;glow_color:{0,0,0,1}"
 											using = Font_Size_Big
+											using = Font_Type_Flavor
 											align = nobaseline
 											margin_bottom = -5
 										}
@@ -1816,7 +1817,7 @@
 
 													text_single = {
 														name = "character_title"
-														visible = "[Not( BookmarkCharacter.GetGovernmentType.IsType( 'landless_adventurer_government' ) )]"
+														visible = "[Not( Or(BookmarkCharacter.GetGovernmentType.IsType( 'landless_adventurer_government' ), BookmarkCharacter.GetGovernmentType.IsType( 'nomad_government' ) ) )]"
 														layoutpolicy_horizontal = expanding
 														autoresize = no
 														align = nobaseline|center
@@ -1831,6 +1832,26 @@
 														autoresize = no
 														align = nobaseline|center
 														text = "BOOKMARK_CHARACTER_TITLE_TYPE_ADVENTURER"
+														using = Font_Size_Medium
+													}
+
+													text_single = {
+														name = "character_title_nomad_high_chieftain"
+														visible = "[And( BookmarkCharacter.GetGovernmentType.IsType( 'nomad_government' ), EqualTo_int32( BookmarkCharacter.GetTier, '(int32)4' ) )]"
+														layoutpolicy_horizontal = expanding
+														autoresize = no
+														align = nobaseline|center
+														text = "BOOKMARK_CHARACTER_TITLE_TYPE_NOMAD_HIGH_CHIEFTAIN"
+														using = Font_Size_Medium
+													}
+
+													text_single = {
+														name = "character_title_nomad_chieftain_or_khan"
+														visible = "[And( BookmarkCharacter.GetGovernmentType.IsType( 'nomad_government' ), Not( EqualTo_int32( BookmarkCharacter.GetTier, '(int32)4' ) ) )]"
+														layoutpolicy_horizontal = expanding
+														autoresize = no
+														align = nobaseline|center
+														text = "BOOKMARK_CHARACTER_TITLE_TYPE_NOMAD_CHIEFTAIN_OR_KHAN"
 														using = Font_Size_Medium
 													}
 												}
@@ -3225,6 +3246,8 @@ types BookmarkPortraits
 				}
 			}
 		}
+
+		#GH REMOVAL: Don't need frame
 	}
 
 	type button_group_map_character_selection = button_group {
@@ -3287,7 +3310,7 @@ types BookmarkPortraits
 
 						modify_texture = {
 							name = overlay
-							visible = "[Not(GameSetup.IsCharaterSelected( BookmarkCharacter.Self ))]"
+							visible = "[Not( GameSetup.IsCharacterSelected( BookmarkCharacter.Self ) )]"
 							texture = "gfx/interface/component_effects/effect_blue_shine.dds"
 							blend_mode = colordodge
 							translate_uv = { 0.6 0 }
@@ -3373,7 +3396,7 @@ types BookmarkPortraits
 						}
 
 						icon = {
-							visible = "[GameSetup.IsCharaterSelected( BookmarkCharacter.Self )]"
+							visible = "[GameSetup.IsCharacterSelected( BookmarkCharacter.Self )]"
 							visible_at_creation = no
 							size = { 100% 100% }
 							texture = "gfx/interface/icons/banners/banner_blue_left_glow.dds"
@@ -3421,19 +3444,31 @@ types BookmarkPortraits
 									default_format = "#light_background"
 									visible = "[BookmarkCharacter.GetGovernmentType.IsType('landless_adventurer_government')]"
 								}
-								
+
 								text_single = {
 									text = "BOOKMARK_CHARACTER_TITLE"
 									default_format = "#light_background"
-									visible = "[Not( Or( BookmarkCharacter.GetGovernmentType.IsType( 'landless_adventurer_government' ), BookmarkCharacter.GetGovernmentType.IsType( 'administrative_government' ) ) )]"
+									visible = "[Not( Or( Or( BookmarkCharacter.GetGovernmentType.IsType( 'landless_adventurer_government' ), BookmarkCharacter.GetGovernmentType.IsType( 'administrative_government' ) ), BookmarkCharacter.GetGovernmentType.IsType( 'nomad_government' ) ) )]"
 								}
-	
+
 								text_single = {
 									text = "ADMIN_BOOKMARK_CHARACTER_TITLE"
 									default_format = "#light_background"
 									visible = "[BookmarkCharacter.GetGovernmentType.IsType( 'administrative_government' ) ]"
 								}
-	
+
+								text_single = {
+									text = "NOMAD_BOOKMARK_CHARACTER_TITLE_HIGH_CHIEFTAIN"
+									default_format = "#light_background"
+									visible = "[And( BookmarkCharacter.GetGovernmentType.IsType( 'nomad_government' ), EqualTo_int32( BookmarkCharacter.GetTier, '(int32)4' ) )]"
+								}
+
+								text_single = {
+									text = "NOMAD_BOOKMARK_CHARACTER_TITLE_CHIEFTAIN_OR_KHAN"
+									default_format = "#light_background"
+									visible = "[And( BookmarkCharacter.GetGovernmentType.IsType( 'nomad_government' ), Not( EqualTo_int32( BookmarkCharacter.GetTier, '(int32)4' ) ) )]"
+								}
+
 								text_single = {
 									text = "[BookmarkCharacter.GetDifficulty]"
 								}
@@ -3441,7 +3476,7 @@ types BookmarkPortraits
 						}
 
 						coa_realm_bookmark = {
-							visible = "[And(And(Not(BookmarkCharacter.GetGovernmentType.IsType('clan_government')),Not(BookmarkCharacter.GetGovernmentType.IsType('adventurer_government'))), Not(BookmarkCharacter.GetGovernmentType.IsType( 'administrative_government' )))]"
+							visible = "[And(And(Not(BookmarkCharacter.GetGovernmentType.IsType('clan_government')), Not(BookmarkCharacter.GetGovernmentType.IsType('landless_adventurer_government'))), And(Not(BookmarkCharacter.GetGovernmentType.IsType( 'administrative_government' )), Not(BookmarkCharacter.GetGovernmentType.IsType('nomad_government')))))]"
 							position = { 0 -25 }
 						}
 

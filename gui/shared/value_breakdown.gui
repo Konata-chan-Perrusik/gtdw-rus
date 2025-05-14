@@ -110,10 +110,15 @@ types Breakdowns
 
 		vbox = {
 			layoutpolicy_horizontal = expanding
+
 			set_parent_size_to_minimum = yes
-			margin = { 14 8 }
-			margin_bottom = 18
-			spacing = 14
+
+			block "margins"
+			{
+				margin = { 15 8 }
+				margin_bottom = 20
+				spacing = 15
+			}
 
 			block "my_gold" {}
 
@@ -130,11 +135,13 @@ types Breakdowns
 			}
 
 			block "gold_income" {}
+
+			block "extra_info" {}
 		}
 	}
 
 	type vbox_gold_breakdown = vbox {
-		spacing = 6
+		spacing = 5
 		alwaystransparent = no
 
 		vbox = {
@@ -145,10 +152,12 @@ types Breakdowns
 				text = "[ValueBreakdown.GetName]"
 				default_format = "#T"
 
-				background = {
-					using = Background_Area
-					margin = { 10 0 }
-					margin_bottom = 8
+				block "header_background" {
+					background = {
+						using = Background_Area
+						margin = { 10 5 }
+						margin_bottom = 10
+					}
 				}
 			}
 
@@ -156,7 +165,7 @@ types Breakdowns
 				name = "values_grid"
 				datamodel = "[ValueBreakdown.GetSubValues]"
 				layoutpolicy_horizontal = expanding
-				margin_top = 2
+				margin_top = 10
 
 				item = {
 					hbox = {
@@ -240,12 +249,12 @@ types Breakdowns
 			name = "tooltip_container"
 			set_parent_size_to_minimum = yes
 			filter_mouse = all
-			margin = { 14 8 }
-			margin_bottom = 12
+			margin = { 15 8 }
+			margin_bottom = 15
 
 			vbox = {
 				layoutpolicy_horizontal = expanding
-				margin_bottom = 14
+				margin_bottom = 15
 				spacing = 5
 
 				block "header" {}
@@ -259,11 +268,10 @@ types Breakdowns
 
 					background = {
 						using = Background_Area
-						margin = { 10 0 }
-						margin_bottom = 5
+						margin = { 10 5 }
+						margin_bottom = 10
 					}
 				}
-
 
 				text_single = {
 					name = "total_label_no_tooltip"
@@ -300,8 +308,8 @@ types Breakdowns
 
 					background = {
 						using = Background_Area
-						margin = { 10 0 }
-						margin_bottom = 5
+						margin = { 10 5 }
+						margin_bottom = 10
 					}
 
 					text_single = {
@@ -471,7 +479,7 @@ types Breakdowns
 				text_single = {
 					name = "exposure_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Нынешнее облучение:"
+					raw_text = "Нынешнее облучение::"
 					align = left
 					
 					using = tooltip_ws
@@ -494,7 +502,7 @@ types Breakdowns
 				text_single = {
 					name = "exposure_decay_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Разложение облучение:"
+					raw_text = "Разложение облучения:"
 					align = left
 					
 					using = tooltip_ws
@@ -617,7 +625,7 @@ types Breakdowns
 				text_single = {
 					name = "exposure_total_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Итоговая [magic_exposure|E]: "
+					raw_text = "Итоговое [magic_exposure|E]: "
 					align = left
 					
 					using = tooltip_ws
@@ -1034,7 +1042,7 @@ types Breakdowns
 
 				text_single = {
 					#layoutpolicy_horizontal = expanding
-					raw_text = "[lifepath|E] Relevance: [FixedPointToProgressbarValue(Faith.MakeScope.Var('lifepath_relevance_measure').GetValue)]%"
+					raw_text = "Значимость [Concept('lifepath','Жизненного Пути')|E]: [FixedPointToProgressbarValue(Faith.MakeScope.Var('lifepath_relevance_measure').GetValue)]%"
 					default_format = "#high;bold"
 					using = Font_Size_Medium
 					fonttintcolor = "[TooltipInfo.GetTintColor]"
@@ -1227,7 +1235,7 @@ types Breakdowns
 					layoutpolicy_horizontal = expanding
 					text_single = {
 						layoutpolicy_horizontal = expanding
-						raw_text = "#E Прогрее черты Юриста#!"
+						raw_text = "#E Прогресс черты юриста#!"
 						default_format = "#high;bold"
 						using = Font_Size_Medium
 						fonttintcolor = "[TooltipInfo.GetTintColor]"
@@ -1307,7 +1315,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Вера:"
+					raw_text = "Веры:"
 					align = left
 					
 					using = tooltip_ws
@@ -1350,7 +1358,7 @@ types Breakdowns
 					layoutpolicy_horizontal = expanding
 					text_single = {
 						layoutpolicy_horizontal = expanding
-						raw_text = "#E Максимальный кровень Святого-покровителя:#!"
+						raw_text = "#E Максимальный уровень Святого-покровителя:#!"
 						default_format = "#high;bold"
 						using = Font_Size_Small
 						fonttintcolor = "[TooltipInfo.GetTintColor]"
@@ -1382,7 +1390,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Вера:"
+					raw_text = "Веры:"
 					align = left
 					
 					using = tooltip_ws
@@ -1457,7 +1465,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Вера:"
+					raw_text = "Веры:"
 					align = left
 					
 					using = tooltip_ws
@@ -1699,7 +1707,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Победы в поединках:"
+					raw_text = "Побед в поединках:"
 					align = left
 					
 					using = tooltip_ws
@@ -1749,7 +1757,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Известных иностранных языков:"
+					raw_text = "Известно иностранных языков:"
 					align = left
 					
 					using = tooltip_ws
@@ -1799,7 +1807,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Вражеских войск убитых после победы:"
+					raw_text = "Вражеских войск убитых при победе:"
 					align = left
 					
 					using = tooltip_ws
@@ -1824,7 +1832,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Ужас:"
+					raw_text = "Ужаса:"
 					align = left
 					
 					using = tooltip_ws
@@ -1849,7 +1857,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Набегов:"
+					raw_text = "Набеги:"
 					align = left
 					
 					using = tooltip_ws
@@ -1874,7 +1882,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Набегов на рабовладельцев:"
+					raw_text = "Набеги на рабовладельцев:"
 					align = left
 					
 					using = tooltip_ws
@@ -1946,7 +1954,7 @@ types Breakdowns
 				text_single = {
 					name = "patron_label"
 					layoutpolicy_horizontal = expanding
-					raw_text = "Престижа:"
+					raw_text = "Престиж:"
 					align = left
 					
 					using = tooltip_ws
