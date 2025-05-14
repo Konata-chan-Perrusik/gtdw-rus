@@ -25,7 +25,7 @@ template character_age_or_death_text
 
 		block "character_age"
 		{
-			text_single = {
+			text_single = { #GH CHANGE AND ADDITION: Character Age Obfuscation
 				name = "character_age"
 				visible = "[Not(GetScriptedGui('gh_hide_character_age_scripted_gui').IsShown(GuiScope.SetRoot(Character.MakeScope).End))]"
 				raw_text = " [Character.GetAge]"
@@ -135,6 +135,11 @@ types Lists
 		datacontext = "[CharacterListItem.GetCharacter]"
 		size = { 10 110 }
 
+		state = {
+			name = _show
+			on_start = "[GetScriptedGui('HT_set_character_traits').Execute(GuiScope.SetRoot(CharacterListItem.GetCharacter.MakeScope).End)]"
+		}
+
 		block "divider" {
 			divider = {
 				parentanchor = bottom|hcenter
@@ -161,7 +166,7 @@ types Lists
 				framesize = { 252 80 }
 				spriteType = Corneredtiled
 				spriteborder = { 10 30 }
-				
+
 				block "button_texture"
 				{
 					texture = "gfx/interface/buttons/button_entry_characterlist.dds"
@@ -179,16 +184,24 @@ types Lists
 
 				block "button_content"
 				{
-					hbox = {
-						vbox = {
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						# Name
+						hbox = {
 							layoutpolicy_horizontal = expanding
 							layoutpolicy_vertical = expanding
 
-							# Name and age
+							# Age & Relation
 							vbox = {
 								layoutpolicy_horizontal = expanding
 								layoutpolicy_vertical = expanding
+
 								margin_left = 10
+
+								min_width = 320
+								max_width = 320
 
 								text_single = {
 									layoutpolicy_horizontal = expanding
@@ -225,41 +238,129 @@ types Lists
 										}
 									}
 								}
+
 								block "character_description_extra" {}
 							}
 
-							# Dynasty
+							expand = {}
+
+							# Skills
+							vbox = {
+								layoutpolicy_vertical = expanding
+
+								hbox = {
+									name = "skills_grid"
+
+									datamodel = "[CharacterListItem.GetSkillItems]"
+									margin_right = 3
+									margin_top = 3
+
+									item = {
+										widget_skill_item_no_icon = {}
+									}
+								}
+
+								expand = {}
+							}
+
+							block "extra_skills" {}
+						}
+
+						spacer = {
+							size = { 40 40 }
+						}
+						expand = {}
+					}
+
+					### Character Selection Bottom
+					widget = {
+						size = { 100% 40 }
+						parentanchor = bottom
+
+						### Details Box
+						widget = {
+							size = { 100% 44 }
+							parentanchor = left
+							scissor = yes
+							position = { 0 -4 }
+
 							hbox = {
 								layoutpolicy_horizontal = expanding
 								layoutpolicy_vertical = expanding
-								margin_left = 5
+								margin_left = 4
+								spacing = 4
 
+								# Dynasty
 								widget = {
-									size = { 45 60 }
+									size = { 35 40 }
 
-									coa_house_small = {
+									coa_house_tiny = {
 										datacontext = "[Character.GetHouse]"
-										scale = 0.7
+										parentanchor = center
+									}
+								}
+
+								block "bottom_middle_box" {
+									# Religion & Culture
+									hbox = {
+
+										# Faith
+										icon = {
+											name = "faith_button"
+											size = { 35 35 }
+											datacontext = "[Character.GetFaith]"
+											tooltipwidget = { faith_tooltip = {} }
+											texture = "[Faith.GetIcon]"
+										}
+
+										# Culture
+
+										hbox = {
+											datacontext = "[Character.GetCulture]"
+											tooltipwidget = {
+												culture_tooltip = {}
+											}
+
+											using = tooltip_se
+											icon = {
+												name = "culture"
+												texture = "gfx/interface/icons/icon_culture.dds"
+												size = { 30 30 }
+											}
+
+											text_multi = {
+												max_width = 90
+												max_height = 44
+												autoresize = yes
+												text = "CULTURE_LISTS_WINDOW"
+											}
+										}
 									}
 								}
 
 								# Traits
-
 								fixedgridbox = {
 									name = "traits_grid"
 									datamodel = "[CharacterListItem.GetTraits]"
+									visible = "[Character.IsDeadAndValid]"
 									flipdirection = yes
-									size = { 150 60 }
+									size = { 150 35 }
 									addcolumn = 30
-									addrow = 45
-									maxhorizontalslots = 8
+									addrow = 35
+									block "horizontal_slots"
+									{
+										maxhorizontalslots = 8
+									}
 									maxverticalslots = 1
 
 									item = {
-										container = {
+										widget = {
 											visible = "[Trait.IsValid]"
+											size = { 35 35 }
 
 											icon_trait = {
+												parentanchor = center
+
 												blockoverride "icon_size"
 												{
 													size = { 30 30 }
@@ -279,40 +380,56 @@ types Lists
 									}
 								}
 
-								block "bottom_middle_box" {
-									expand  = {}
+								fixedgridbox = {
+									name = "traits_grid"
+									datamodel = "[Character.MakeScope.GetList('HT_shown_traits_all')]"
+									visible = "[Character.IsAlive]"
+									flipdirection = yes
+									size = { 150 35 }
+									addcolumn = 30
+									addrow = 35
+									block "horizontal_slots"
+									{
+										maxhorizontalslots = 8
+									}
+									maxverticalslots = 1
+
+									item = {
+										widget = {
+										datacontext = "[Scope.Trait]"
+										visible = "[Trait.IsValid]"
+											
+											size = { 35 35 }
+
+											icon_trait = {
+												parentanchor = center
+
+												blockoverride "icon_size"
+												{
+													size = { 30 30 }
+												}
+
+												blockoverride "tooltip_placement"
+												{
+													using = tooltip_se
+												}
+
+												blockoverride "glow_radius"
+												{
+													glow_radius = 3
+												}
+											}
+										}
+									}
 								}
 
-							}
-						}
-
-						expand = {}
-
-						vbox = {
-							minimumsize = { 200 0 }
-							datacontext = "[CharacterListItem.GetCharacter]"
-							layoutpolicy_vertical = expanding
-							margin_top = 5
-							margin_right = 5
-
-							# Skills
-							hbox = {
-								name = "skills_grid"
-								layoutpolicy_horizontal = expanding
+								vbox = {
+									datacontext = "[CharacterListItem.GetCharacter]"
+									margin_right = 5
+								}
 
 								expand = {}
-
-								datamodel = "[CharacterListItem.GetSkillItems]"
-								margin_right = 5
-
-								item = {
-									widget_skill_item_no_icon = {}
-								}
 							}
-
-							block "extra_skills" {}
-
-							expand = {}
 
 							block "bottom_right_box"
 							{
@@ -322,7 +439,7 @@ types Lists
 
 									# Realm
 									widget = {
-										size = {55 58 }
+										size = { 55 58 }
 										visible = "[Not( IsDataModelEmpty( CharacterListItem.GetTitleItems ) )]"
 
 										block "claims_visibility" {}
@@ -371,54 +488,32 @@ types Lists
 											tooltip = "CHARACTER_LIST_CLAIM_TOOLTIP"
 										}
 									}
+								}
+							}
+						}
+
+						### Button Box
+
+						block "button_box" {
+							widget = {
+								size = { 100% 40 }
+
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									margin_right = 8
 
 									expand = {}
 
-									# Religion
-									vbox = {
-										layoutpolicy_vertical = expanding
-
-										margin_bottom = 20
-
-										expand = {}
-
-										hbox = {
-											icon = {
-												name = "faith_button"
-												size = { 35 35 }
-												datacontext = "[Character.GetFaith]"
-												tooltipwidget = { faith_tooltip = {} }
-												texture = "[Faith.GetIcon]"
-											}
-
-											widget = {
-												datacontext = "[Character.GetCulture]"
-												size = { 120 24 }
-
-												tooltipwidget = {
-													culture_tooltip = {}
-												}
-												using = tooltip_se
-
-												hbox = {
-													spacing = 3
-
-													icon = {
-														name = "culture"
-														texture = "gfx/interface/icons/icon_culture.dds"
-														size = { 24 24 }
-													}
-
-													text_multi = {
-														layoutpolicy_horizontal = expanding
-														min_width = 95
-														max_width = 95
-														autoresize = yes
-														text = "CULTURE_LISTS_WINDOW"
-													}
-												}
-											}
+									hbox = {
+										background = {
+											using = Background_Area_Light
+											using = Mask_Rough_Edges
+											margin_top = 8
+											margin_left = 12
+											margin_bottom = 2
 										}
+
+										block "button_box_content" {}
 									}
 								}
 							}
@@ -433,6 +528,12 @@ types Lists
 	type widget_character_list_item_finder = widget {
 		datacontext = "[CharacterListItem.GetCharacter]"
 		size = { 200 94 }
+
+		state = {
+			name = _show
+			trigger_on_create = yes
+			on_finish = "[GetScriptedGui('HT_set_character_traits').Execute(GuiScope.SetRoot(Character.MakeScope).End)]"
+		}
 
 		#background = {
 		#	visible = "[CharacterListItem.HasEvenOrderIndex]"
@@ -579,6 +680,7 @@ types Lists
 											fixedgridbox = {
 												name = "traits_grid"
 												datamodel = "[CharacterListItem.GetTraits]"
+												visible = "[Character.IsDeadAndValid]"
 												datamodel_reuse_widgets = yes
 												flipdirection = yes
 												layoutpolicy_horizontal = expanding
@@ -595,6 +697,48 @@ types Lists
 
 												item = {
 													icon_trait = {
+														visible = "[Trait.IsValid]"
+
+														blockoverride "icon_size"
+														{
+															size = { 30 30 }
+														}
+
+														blockoverride "tooltip_placement"
+														{
+															using = tooltip_se
+														}
+
+														blockoverride "glow_radius"
+														{
+															glow_radius = 3
+														}
+													}
+												}
+											}
+
+											#GH ADDITION: Hidden Traits version for Alive characters (dead can't hold)
+											fixedgridbox = {
+												name = "traits_grid"
+												datamodel = "[Character.MakeScope.GetList('HT_shown_traits_all')]"
+												visible = "[Character.IsAlive]"
+												datamodel_reuse_widgets = yes
+												flipdirection = yes
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												addcolumn = 30
+												addrow = 28
+												
+												block "gridbox_items"
+												{
+													min_width = 210
+													datamodel_wrap = 7
+													maxverticalslots = 2
+												}
+
+												item = {
+													icon_trait = {
+														datacontext = "[Scope.Trait]"
 														visible = "[Trait.IsValid]"
 
 														blockoverride "icon_size"
@@ -661,6 +805,7 @@ types Lists
 												texture = "[Faith.GetIcon]"
 											}
 											
+											#GH ADDITION: Show what magic school they are
 											magic_school_icon = {
 												visible = "[Character.MakeScope.Var('primary_magic_school').IsSet]"
 												datacontext = "[Character.MakeScope.Var('primary_magic_school').Story]"
@@ -1393,7 +1538,11 @@ types Lists
 
 	type widget_courtier_item = widget {
 		size = { 0 125 }
-
+		state = {
+			name = HT_trait
+			trigger_on_create = yes
+			on_finish = "[GetScriptedGui('HT_set_character_traits').Execute(GuiScope.SetRoot(Character.MakeScope).End)]"
+		}
 		hbox = {
 			spacing = 5
 
@@ -1467,7 +1616,7 @@ types Lists
 							}
 						}
 
-							text_single = {
+						text_single = {
 							name = "relation_to_court_hostage"
 							default_format = "#medium"
 							align = nobaseline
@@ -1550,6 +1699,7 @@ types Lists
 								fixedgridbox = {
 									name = "traits_grid_four"
 									datamodel = "[CharacterListItem.GetTraits]"
+									visible = "[Character.IsDeadAndValid]"
 									flipdirection = yes
 									addcolumn = 30
 									addrow = 28
@@ -1582,9 +1732,48 @@ types Lists
 										}
 									}
 								}
+								#GH ADDITION: Trait hiding
+								fixedgridbox = {
+									name = "traits_grid_four"
+									datamodel = "[Character.MakeScope.GetList('HT_shown_traits_all')]"
+									visible = "[Character.IsAlive]"
+									flipdirection = yes
+									addcolumn = 30
+									addrow = 28
+									visible = "[Not( IsDataModelEmpty( CharacterListItem.GetTitleItems ) )]"
+
+									block "gridbox_items"   ### for characterview
+									{
+										datamodel_wrap = 4
+										maxverticalslots = 2
+									}
+
+									item = {
+										icon_trait = {
+											datacontext = "[Scope.Trait]"
+											visible = "[Trait.IsValid]"
+
+											blockoverride "icon_size"
+											{
+												size = { 30 30 }
+											}
+
+											blockoverride "tooltip_placement"
+											{
+												using = tooltip_se
+											}
+
+											blockoverride "glow_radius"
+											{
+												glow_radius = 3
+											}
+										}
+									}
+								}
 								fixedgridbox = {
 									name = "traits_grid_five"
 									datamodel = "[CharacterListItem.GetTraits]"
+									visible = "[Character.IsDeadAndValid]"
 									flipdirection = yes
 									addcolumn = 30
 									addrow = 28
@@ -1598,6 +1787,44 @@ types Lists
 
 									item = {
 										icon_trait = {
+											visible = "[Trait.IsValid]"
+
+											blockoverride "icon_size"
+											{
+												size = { 30 30 }
+											}
+
+											blockoverride "tooltip_placement"
+											{
+												using = tooltip_se
+											}
+
+											blockoverride "glow_radius"
+											{
+												glow_radius = 3
+											}
+										}
+									}
+								}
+								#GH ADDITION: Trait Hiding
+								fixedgridbox = {
+									name = "traits_grid_five"
+									datamodel = "[Character.MakeScope.GetList('HT_shown_traits_all')]"
+									visible = "[Character.IsAlive]"
+									flipdirection = yes
+									addcolumn = 30
+									addrow = 28
+									visible = "[IsDataModelEmpty( CharacterListItem.GetTitleItems )]"
+
+									block "gridbox_items"   ### for characterview
+									{
+										datamodel_wrap = 5
+										maxverticalslots = 2
+									}
+
+									item = {
+										icon_trait = {
+											datacontext = "[Scope.Trait]"
 											visible = "[Trait.IsValid]"
 
 											blockoverride "icon_size"
@@ -1682,11 +1909,31 @@ types Lists
 
 	type widget_vassal_list_item = widget {
 		datacontext = "[CharacterListItem.GetCharacter]"
-		size = { 200 180 }
 
 		vbox = {
+			margin = { 5 0 }
+
 			background = {
 				using = Background_Area_With_Header
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				margin = { 5 5 }
+
+				text_single = {
+					layoutpolicy_horizontal = expanding
+					text = "[Character.GetUINameNoTooltip]"
+					using = Font_Size_Medium
+					autoresize = no
+					fontsize_min = 13
+					align = nobaseline
+					max_width = 340
+				}
+
+				expand = {}
+
+				hbox_skills_grid = {}
 			}
 
 			hbox = {
@@ -1698,27 +1945,7 @@ types Lists
 				vbox = {
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
-					margin_right = 10
-
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						margin_top = 4
-
-						text_single = {
-							layoutpolicy_horizontal = expanding
-							text = "[Character.GetUINameNoTooltip]"
-							using = Font_Size_Medium
-							autoresize = no
-							fontsize_min = 13
-							align = nobaseline
-							max_width = 280
-						}
-
-						expand = {}
-
-						hbox_skills_grid = {}
-
-					}
+					margin_right = 5
 
 					hbox = {
 						layoutpolicy_horizontal = expanding
@@ -1733,7 +1960,7 @@ types Lists
 
 								text_single = {
 									name = "character_relation"
-									visible = "[Character.GetLiege.IsLocalPlayer]"
+									visible = "[Or(Character.GetLiege.IsLocalPlayer, Character.GetSuzerain.IsLocalPlayer)]"
 									layoutpolicy_horizontal = expanding
 									text = "[Character.GetRelationToString(GetPlayer)]"
 									tooltip = "EXTENDED_RELATIONS_TOOLTIP"
@@ -2182,7 +2409,7 @@ types Lists
 			### VASSAL GOLD
 			hbox = {
 				icon = {
-					size = { 30 30 }
+					size = { 25 25 }
 					texture = "gfx/interface/icons/icon_gold.dds"
 				}
 
@@ -2225,10 +2452,11 @@ types Lists
 			### VASSAL LEVIES
 			hbox = {
 				visible = "[GreaterThan_CFixedPoint( MyRealmWindowVassalItem.GetContract.GetLevyRatioForLiege, '(CFixedPoint)0' )]"
+				spacing = 5
 
 				icon = {
 					size = { 25 25 }
-					texture = "gfx/interface/icons/icon_soldier.dds"
+					texture = "gfx/interface/icons/icon_levies.dds"
 				}
 
 				text_single = {
@@ -2356,14 +2584,14 @@ types Lists
 			}
 
 			hbox_vassal_contract_button = {}
-			
+
 			hbox_vassal_list_icons = {}
-			
+
 			expand = {}
-			
+
 			hbox_vassal_taxes = {}
 		}
-		
+
 		hbox = {
 			layoutpolicy_horizontal = expanding
 			visible = "[SubjectContractGroup.IsType('clan_government')]"
@@ -2443,9 +2671,15 @@ types Lists
 	{
 		layoutpolicy_horizontal = expanding
 
-		widget = {
+		button_standard_hover = { #GH CHANGE: Unhidden traits for Dead, and made expandable
 			layoutpolicy_horizontal = expanding
-			size = { 0 55 }
+			size = { 1 55 }
+			layoutpolicy_vertical = expanding
+			visible = "[Character.IsDeadAndValid]"
+
+			onclick = "[CharacterWindow.ToggleExpandedTraits]"
+			down = "[CharacterWindow.AreTraitsExpanded]"
+			tooltip = "[SelectLocalization( CharacterWindow.AreTraitsExpanded, 'CV_TRAITS_HIDE_TT', 'CV_TRAITS_SHOW_TT' )]"
 
 			hbox = {
 				name = "3_personality_traits"
@@ -2549,39 +2783,27 @@ types Lists
 					}
 				}
 
-				#GH Change: Click to show traits that get left out if there are too many
-				button_standard_hover = {
+				fixedgridbox = {
+					name = "traits_tiny"
+					datamodel = "[TraitArrays.GetTraits]"
 					visible = "[GreaterThan_int32(GetDataModelSize(TraitArrays.GetTraits), '(int32)10')]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
+					flipdirection = yes
+					addcolumn = 24
+					addrow = 25
+					maxhorizontalslots = 11
+					datamodel_wrap = 11
+					maxverticalslots = 2
 
-					onclick = "[CharacterWindow.ToggleExpandedTraits]"
-					down = "[CharacterWindow.AreTraitsExpanded]"
-					tooltip = "[SelectLocalization( CharacterWindow.AreTraitsExpanded, 'CV_TRAITS_HIDE_TT', 'CV_TRAITS_SHOW_TT' )]"
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 25 25 }
+							}
 
-					fixedgridbox = {
-						parentanchor = vcenter
-						name = "traits_tiny"
-						datamodel = "[TraitArrays.GetTraits]"
-						visible = "[GreaterThan_int32(GetDataModelSize(TraitArrays.GetTraits), '(int32)10')]"
-						flipdirection = yes
-						addcolumn = 24
-						addrow = 25
-						maxhorizontalslots = 11
-						datamodel_wrap = 11
-						maxverticalslots = 2
-
-						item = {
-							icon_trait = {
-								blockoverride "icon_size"
-								{
-									size = { 25 25 }
-								}
-
-								blockoverride "glow_radius"
-								{
-									glow_radius = 2
-								}
+							blockoverride "glow_radius"
+							{
+								glow_radius = 2
 							}
 						}
 					}
@@ -2692,38 +2914,310 @@ types Lists
 					}
 				}
 
-				#GH Change: Click to show traits that get left out if there are too many
-				button_standard_hover = {
+				fixedgridbox = {
+					name = "traits_tiny"
+					datamodel = "[TraitArrays.GetTraits]"
 					visible = "[GreaterThan_int32(GetDataModelSize(TraitArrays.GetTraits), '(int32)8')]"
-					layoutpolicy_horizontal = expanding
+					flipdirection = yes
+					addcolumn = 24
+					addrow = 25
+					maxhorizontalslots = 9
+					datamodel_wrap = 9
+					maxverticalslots = 2
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 2
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+		}
+
+		button_standard_hover = { #GH ADDITION: Hidden traits ver
+			layoutpolicy_horizontal = expanding
+			size = { 1 55 }
+			layoutpolicy_vertical = expanding
+			visible = "[Character.IsAlive]"
+
+			onclick = "[CharacterWindow.ToggleExpandedTraits]"
+			down = "[CharacterWindow.AreTraitsExpanded]"
+			tooltip = "[SelectLocalization( CharacterWindow.AreTraitsExpanded, 'CV_TRAITS_HIDE_TT', 'CV_TRAITS_SHOW_TT' )]"
+
+			hbox = {
+				name = "3_personality_traits"
+				visible = "[LessThanOrEqualTo_int32(GetDataModelSize(TraitArrays.GetPersonalityTraits), '(int32)3')]"
+
+				fixedgridbox = {
+					name = "personality_traits"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_personality')]"
+					flipdirection = yes
+					addcolumn = 54
+					addrow = 55
+					maxhorizontalslots = 3
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 55 55 }
+							}
+						}
+					}
+				}
+
+				hbox = {
+					visible = "[Not(IsDataModelEmpty( Character.MakeScope.GetList('HT_shown_traits_other') ))]"
 					layoutpolicy_vertical = expanding
+					margin = { 5 10 }
 
-					onclick = "[CharacterWindow.ToggleExpandedTraits]"
-					down = "[CharacterWindow.AreTraitsExpanded]"
-					tooltip = "[SelectLocalization( CharacterWindow.AreTraitsExpanded, 'CV_TRAITS_HIDE_TT', 'CV_TRAITS_SHOW_TT' )]"
-					
-					fixedgridbox = {
-						name = "traits_tiny"
-						datamodel = "[TraitArrays.GetTraits]"
-						visible = "[GreaterThan_int32(GetDataModelSize(TraitArrays.GetTraits), '(int32)8')]"
-						flipdirection = yes
-						addcolumn = 24
-						addrow = 25
-						maxhorizontalslots = 9
-						datamodel_wrap = 9
-						maxverticalslots = 2
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
 
-						item = {
-							icon_trait = {
-								blockoverride "icon_size"
-								{
-									size = { 25 25 }
-								}
+				fixedgridbox = {
+					name = "traits_big"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)5')]"
+					flipdirection = yes
+					addcolumn = 54
+					addrow = 55
+					maxhorizontalslots = 5
+					maxverticalslots = 1
 
-								blockoverride "glow_radius"
-								{
-									glow_radius = 2
-								}
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 55 55 }
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_medium"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[And(GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)5'), LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)7'))]"
+					flipdirection = yes
+					addcolumn = 39
+					addrow = 40
+					maxhorizontalslots = 7
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 40 40 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 4
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_small"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[And(GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)7'), LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)10'))]"
+					flipdirection = yes
+					addcolumn = 28
+					addrow = 29
+					maxhorizontalslots = 10
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 29 29 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 3
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_tiny"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)10')]"
+					flipdirection = yes
+					addcolumn = 24
+					addrow = 25
+					maxhorizontalslots = 11
+					datamodel_wrap = 11
+					maxverticalslots = 2
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 2
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			hbox = {
+				name = "4_personality_traits"
+				visible = "[GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_personality')), '(int32)3')]"
+
+				fixedgridbox = {
+					name = "personality_traits"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_personality')]"
+					flipdirection = yes
+					addcolumn = 54
+					addrow = 55
+					maxhorizontalslots = 4
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 55 55 }
+							}
+						}
+					}
+				}
+
+				hbox = {
+					visible = "[Not(IsDataModelEmpty( Character.MakeScope.GetList('HT_shown_traits_other') ))]"
+					layoutpolicy_vertical = expanding
+					margin = { 5 10 }
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_big"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)4')]"
+					flipdirection = yes
+					addcolumn = 54
+					addrow = 55
+					maxhorizontalslots = 5
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 55 55 }
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_medium"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[And(GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)4'), LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)6'))]"
+					flipdirection = yes
+					addcolumn = 39
+					addrow = 40
+					maxhorizontalslots = 7
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 40 40 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 4
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_small"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[And(GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)6'), LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)8'))]"
+					flipdirection = yes
+					addcolumn = 28
+					addrow = 29
+					maxhorizontalslots = 10
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 29 29 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 3
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_tiny"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)8')]"
+					flipdirection = yes
+					addcolumn = 24
+					addrow = 25
+					maxhorizontalslots = 9
+					datamodel_wrap = 9
+					maxverticalslots = 2
+
+					item = {
+						icon_trait = {
+							datacontext = "[Scope.Trait]"
+							blockoverride "icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 2
 							}
 						}
 					}
@@ -2742,6 +3236,7 @@ types Lists
 		widget = {
 			layoutpolicy_horizontal = expanding
 			size = { 0 55 }
+			visible = "[Character.IsDeadAndValid]"
 
 			hbox = {
 				name = "3_personality_traits"
@@ -2930,6 +3425,224 @@ types Lists
 					name = "traits_tiny"
 					datamodel = "[TraitArrays.GetTraits]"
 					visible = "[GreaterThan_int32(GetDataModelSize(TraitArrays.GetTraits), '(int32)6')]"
+					flipdirection = yes
+					addcolumn = 24
+					addrow = 25
+					maxhorizontalslots = 6
+					datamodel_wrap = 6
+					maxverticalslots = 2
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 2
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+		}
+		
+		widget = { #GH ADDITION: Hidden Traits ver
+			layoutpolicy_horizontal = expanding
+			size = { 0 55 }
+			visible = "[Character.IsAlive]"
+
+			hbox = {
+				name = "3_personality_traits"
+				visible = "[LessThanOrEqualTo_int32(GetDataModelSize(TraitArrays.GetPersonalityTraits), '(int32)3')]"
+
+				fixedgridbox = {
+					name = "personality_traits"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_personality')]"
+					flipdirection = yes
+					addcolumn = 54
+					addrow = 55
+					maxhorizontalslots = 3
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 55 55 }
+							}
+						}
+					}
+				}
+
+				hbox = {
+					visible = "[Not(IsDataModelEmpty( Character.MakeScope.GetList('HT_shown_traits_other') ))]"
+					layoutpolicy_vertical = expanding
+					margin = { 5 10 }
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_big"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)4')]"
+					flipdirection = yes
+					addcolumn = 39
+					addrow = 40
+					maxhorizontalslots = 4
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 40 40 }
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_small"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[And(GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)4'), LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)6'))]"
+					flipdirection = yes
+					addcolumn = 28
+					addrow = 29
+					maxhorizontalslots = 6
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 29 29 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 3
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_tiny"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)6')]"
+					flipdirection = yes
+					addcolumn = 24
+					addrow = 25
+					maxhorizontalslots = 7
+					datamodel_wrap = 7
+					maxverticalslots = 2
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 25 25 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 2
+							}
+						}
+					}
+				}
+
+				expand = {}
+			}
+
+			hbox = {
+				name = "4_personality_traits"
+				visible = "[GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_personality')), '(int32)3')]"
+
+				fixedgridbox = {
+					name = "personality_traits"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_personality')]"
+					flipdirection = yes
+					addcolumn = 54
+					addrow = 55
+					maxhorizontalslots = 4
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 55 55 }
+							}
+						}
+					}
+				}
+
+				hbox = {
+					visible = "[Not(IsDataModelEmpty( Character.MakeScope.GetList('HT_shown_traits_other') ))]"
+					layoutpolicy_vertical = expanding
+					margin = { 5 10 }
+
+					divider_light = {
+						layoutpolicy_vertical = expanding
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_big"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)4')]"
+					flipdirection = yes
+					addcolumn = 39
+					addrow = 40
+					maxhorizontalslots = 4
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 40 40 }
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_small"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[And(GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)4'), LessThanOrEqualTo_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)6'))]"
+					flipdirection = yes
+					addcolumn = 28
+					addrow = 29
+					maxhorizontalslots = 6
+					maxverticalslots = 1
+
+					item = {
+						icon_trait = {
+							blockoverride "icon_size"
+							{
+								size = { 29 29 }
+							}
+
+							blockoverride "glow_radius"
+							{
+								glow_radius = 3
+							}
+						}
+					}
+				}
+
+				fixedgridbox = {
+					name = "traits_tiny"
+					datamodel = "[Character.MakeScope.GetList('HT_shown_traits_other')]"
+					visible = "[GreaterThan_int32(GetDataModelSize(Character.MakeScope.GetList('HT_shown_traits_other')), '(int32)6')]"
 					flipdirection = yes
 					addcolumn = 24
 					addrow = 25

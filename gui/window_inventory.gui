@@ -267,6 +267,29 @@ window = {
 							}
 
 							button_standard = {
+								datacontext = "[AccessLocalPlayerCachedData.AccessNewArtifacts]"
+								visible = "[Character.HasRoyalCourt]"
+								text = "ROYAL_COURT"
+
+								tooltip = "INVENTORY_COURT_ARTIFACTS_BUTTON_TOOLTIP"
+								using = tooltip_se
+
+								onclick = "[VariableSystem.Set( 'artifacts_tab', 'artifacts' )]"
+								onclick = "[Character.OpenRoyalCourtView( 'artifacts' )]"
+
+								onclick = "[InventoryView.Close]"
+								onclick = "[LocalPlayerNewArtifacts.ClearNewArtifactsOfCategory( 'court' )]"
+
+								button_round = {
+									visible = "[GreaterThan_int32( LocalPlayerNewArtifacts.GetNumNewArtifactsOfCategory( 'court' ), '(int32)0' )]"
+									parentanchor = vcenter|right
+									size = { 20 20 }
+									position = { -5 0 }
+									text = "[LocalPlayerNewArtifacts.GetNumNewArtifactsOfCategory( 'court' )]"
+								}
+							}
+
+							button_standard = {
 								datacontext = "[InventoryView.GetArtifactClaimsList]"
 								text = "INVENTORY_TAB_CLAIMS_HIS_HER_MY"
 								enabled = "[And( DataModelHasItems( ArtifactClaimsList.GetClaims ), Not( InventoryView.HasSelectedSlot ) )]"
@@ -1262,6 +1285,23 @@ types InventoryViewTypes
 			expand = {}
 		}
 
+		icon = {
+			texture = "gfx/interface/icons/flat_icons/encyclopedia.dds"
+			size = { 44 44 }
+			modify_texture = {
+				texture = "gfx/interface/colors/blue.dds"
+				blend_mode = add
+				framesize = { 96 96 }
+				spritetype = corneredtiled
+
+				blockoverride "master_color_frame" { frame = 7 }
+			}
+			parentanchor = right|vcenter
+			visible = "[DataModelHasItems(Artifact.MakeScope.GetList('knowledge_entry_list'))]"
+			tooltip = "ARTIFACT_HAS_KNOWLEDGE_ENTRY"
+			position = { -52 0 }
+		}
+
 		widget = {
 			name = "horizontal_hostile_minor_buttons"
 			visible = "[And( Not( Artifact.GetOwner.IsLocalPlayer ), Artifact.HasClaim( GetPlayer ) )]"
@@ -1612,6 +1652,23 @@ types InventoryViewTypes
 					expand = {}
 				}
 			}
+		}
+
+		icon = {
+			texture = "gfx/interface/icons/flat_icons/encyclopedia.dds"
+			size = { 44 44 }
+			modify_texture = {
+				texture = "gfx/interface/colors/blue.dds"
+				blend_mode = add
+				framesize = { 96 96 }
+				spritetype = corneredtiled
+
+				blockoverride "master_color_frame" { frame = 7 }
+			}
+			parentanchor = right|vcenter
+			visible = "[DataModelHasItems(Artifact.MakeScope.GetList('knowledge_entry_list'))]"
+			tooltip = "ARTIFACT_HAS_KNOWLEDGE_ENTRY"
+			position = { -136 0 }
 		}
 
 		widget = {
