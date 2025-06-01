@@ -1760,7 +1760,7 @@ types ArmiesView
 
 			button_standard = {
 				datacontext = "[MilitaryView.GetMilitaryItem]"
-				visible = "[And( GetPlayer.GetGovernment.IsType( 'landless_adventurer_government' ), Character.IsPlayerInteractionShown('reinforce_soldiers_interaction') )]"
+				visible = "[And( Or(GetPlayer.GetGovernment.IsType( 'landless_adventurer_government' ), GetPlayer.GetGovernment.IsType( 'pirate_government' )), Character.IsPlayerInteractionShown('reinforce_soldiers_interaction') )]"
 				layoutpolicy_horizontal = expanding
 
 				name = "adventurer_reinforce_shortcut"
@@ -2968,7 +2968,8 @@ types MilitaryView
 						size = { 100 32 }
 						onclick = "[OnRaiseEventTroops(MilitaryViewEventTroop.Self)]"
 						visible = "[MilitaryViewEventTroop.CanBeRaised]"
-						tooltip = "MILITARY_VIEW_EVENT_TROOPS_RAISE_TT"
+						enabled = "[Not(MilitaryView.IsAutomatingArmies)]"
+						tooltip = "[MilitaryView.GetCanRaiseEventTroopTooltip]"
 
 						hbox = {
 							margin = { 5 0 }
