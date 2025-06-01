@@ -412,7 +412,7 @@
 					{
 						onclick = "[SetMapMode('ambient_magic_mapmode')]"
                 		onclick = "[GetScriptedGui('ambient_magic_map').Execute(GuiScope.End)]"
-              			down = "[And( GetScriptedGui('ambient_magic_map').IsShown(GuiScope.End), IsMapMode('custom_baronies') )]"
+              			down = "[IsMapMode( MapMode.GetKey )]"
               			enabled = "[And(Not(IsObserver), GetScriptedGui('ambient_magic_map').IsValid(GuiScope.End))]"
               			tooltip = "AMBIENT_MAGIC_MAP_TOOLTIP"
                 		using = tooltip_ws
@@ -647,6 +647,11 @@
 						size = { 26 26 }
 					}
 
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('gh_ruler_artifact_map').IsShown(GuiScope.End), IsMapMode('gh_ruler_artifact_mapmode') )]"
+					}
+
 					blockoverride "mm_button"
 					{
 						onclick = "[SetMapMode('gh_ruler_artifact_mapmode')]"
@@ -672,6 +677,11 @@
 					{
 						texture = "gfx/interface/icons/flat_icons/map_courtier.dds"
 						size = { 22 22 }
+					}
+
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('gh_courtier_artifact_map').IsShown(GuiScope.End), IsMapMode('gh_courtier_artifact_mapmode') )]"
 					}
 
 					blockoverride "mm_button"
@@ -701,6 +711,11 @@
 						size = { 26 26 }
 					}
 
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('habitability_map').IsShown(GuiScope.End), IsMapMode('habitability_mapmode') )]"
+					}
+
 					blockoverride "mm_button"
 					{
 						onclick = "[SetMapMode('habitability_mapmode')]"
@@ -726,6 +741,11 @@
 					{
 						texture = "gfx/interface/icons/flat_icons/map_antimagic.dds"
 						size = { 26 26 }
+					}
+
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('antimagic_map').IsShown(GuiScope.End), IsMapMode('antimagic_mapmode') )]"
 					}
 
 					blockoverride "mm_button"
@@ -759,6 +779,11 @@
 						size = { 26 26 }
 					}
 
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('jara_trade_route_map').IsShown(GuiScope.End), IsMapMode('jara_trade_route_mapmode'))]"
+					}
+
 					blockoverride "mm_button"
 					{
 						onclick = "[SetMapMode('jara_trade_route_mapmode')]"
@@ -784,6 +809,11 @@
 					{
 						texture = "gfx/interface/icons/flat_icons/map_fog.dds"
 						size = { 22 22 }
+					}
+
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('jara_fog_map').IsShown(GuiScope.End), IsMapMode('custom_baronies'))]"
 					}
 
 					blockoverride "mm_button"
@@ -813,6 +843,11 @@
 						size = { 22 22 }
 					}
 
+					blockoverride "mm_glow"
+					{
+						visible = "[And( GetScriptedGui('jara_aversaria_map').IsShown(GuiScope.End), IsMapMode('aversaria_map') )]"
+					}
+
 					blockoverride "mm_button"
 					{
 						onclick = "[SetMapMode('aversaria_map')]"
@@ -840,6 +875,11 @@
 						size = { 26 26 }
 					}
 
+					blockoverride "mm_glow"
+					{
+						visible = "[IsMapMode('biozones')]"
+					}
+
 					blockoverride "mm_button"
 					{
 						onclick = "[SetMapMode('biozones')]"
@@ -848,6 +888,18 @@
 						tooltip = "MAPMODE_BIOZONES"
 					}
 				}
+			}
+
+			widget ={
+				size = {0 4}
+			}
+
+			divider_light = {
+				min_width = 100
+				parentanchor = hcenter
+			}
+			widget ={
+				size = {0 4}
 			}
 
 			flowcontainer = {

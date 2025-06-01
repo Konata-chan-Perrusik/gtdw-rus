@@ -890,7 +890,7 @@ window = {
 				#### PORTRAITS ###
 				vbox = {
 					name = "succession_info"
-					visible = "[TitleViewWindow.GetTitle.HasHolder]"
+					visible = "[And(TitleViewWindow.GetTitle.HasHolder, Not(Title.GetHolder.HasTraitByKey( 'gh_wasteland' )))]"
 					layoutpolicy_vertical = preferred
 					layoutpolicy_horizontal = expanding
 					ignoreinvisible = yes
@@ -1216,7 +1216,7 @@ types Title
 
 		### RAZE HOLDING ###
 		button_round = {
-			visible = "[And( And( ObjectsEqual( Title.GetHolder, GetPlayer ), Not(Title.IsLeasedOut) ), IsNomad( GetPlayer ) )]"
+			visible = "[And( And( ObjectsEqual( Province.GetCounty.GetTitle.GetHolder, GetPlayer ), Not(Title.IsLeasedOut) ), IsNomad( GetPlayer ) )]" ## GH CHANGE: Easier barony razing
 			datacontext = "[Title.GetProvince]"
 
 			onclick = "[CreateCommandPopup( Province.RazeHolding( GetPlayer ) )]"

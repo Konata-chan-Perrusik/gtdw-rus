@@ -416,7 +416,83 @@
 					}
 				}
 
-				
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = { 20 0 }
+
+						text_multi = {
+							text = "[Artifact.GetModifierEffects]"
+							margin_bottom = 10
+							margin_top = 5
+							max_width = 410
+							autoresize = yes
+						}
+
+						expand = {}
+					}
+
+					spacer = {
+						size = { 0 5 }
+					}
+
+					hbox = {
+						name = "fallback"
+						visible = "[Not( Artifact.CanBenefitPlayer )]"
+						layoutpolicy_horizontal = expanding
+						margin = { 20 0 }
+
+						text_multi = {
+							text = "ARTIFACT_FALLBACK_EFFECT"
+							max_width = 390
+							autoresize = yes
+
+							margin_bottom = 5
+						}
+
+						expand = {}
+					}
+
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						scrollbox = {
+							name = "artifact_description_scrollarea"
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+
+							blockoverride "scrollbox_background"
+							{
+								background = {
+									using = Background_Area
+								}
+							}
+
+							scrollwidget = {
+								text_multi = {
+									name = "artifact_description"
+									text = "[Artifact.GetDesc]"
+									max_width = 410
+									autoresize = yes
+									default_format = "#flavor"
+
+									margin_top = 15
+									margin_left = 20
+								}
+							}
+
+							blockoverride "scrollbox_background_fade" {
+								icon = {
+									alpha = 0
+								}
+							}
+						}
+					}
+				}
 
 				expand = {}
 			}
