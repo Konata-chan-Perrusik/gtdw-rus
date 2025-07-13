@@ -1011,7 +1011,7 @@
  SPELLCASTING_ABILITY_TOOLTIP: "#T [spellcasting_ability|E] #!\n[Character.MakeScope.GetScriptValueDesc('spellcasting_value')|0]"
  ASPECT_CASTING_GRID_TOOLTIP: "#T [Concept('aspect','Aspects')|E]#!\n[GuiScope.SetRoot(Story.MakeScope).AddScope('spell_preparation_story_cycle_scope', GetPlayer.MakeScope.Var('spell_preparation_story_cycle').Story.MakeScope).AddScope('spell_organizer', GetPlayer.MakeScope).GetScriptValueDesc(Concatenate(Scope.GetFlagName, '_aspect_total_spell_level_value'))]\n\n#help Increase or decrease your potential power with the [Concept('aspect', 'aspects')|E] of a selected [ritual|E].#!"
 
- ARCANA_SKILL_TOOLTIP: "#T [arcana|E]: $ARCANA_SKILL_AND_LEVEL_VALUE$#!\n$ARCANA_VALUE_BREAKDOWN$\n\n#S Effects:#!\n[magic_resistance|E]: #positive_value +[Character.MakeScope.ScriptValue('magic_resistance_from_arcana_value')|0]#!\nIncreased [artifact|E] Quality and Wealth\nIncreased chance of [artifacts|E] being #E Magically-Infused#!"
+ ARCANA_SKILL_TOOLTIP: "#T [arcana|E]: $ARCANA_SKILL_AND_LEVEL_VALUE$#!\n$ARCANA_VALUE_BREAKDOWN$\n\n#S Effects:#!\n[ritual|E] [gold|E] Cost: [gold_i][SelectLocalization(GreaterThan_CFixedPoint(Character.MakeScope.ScriptValue('arcana_spell_gold_cost_discount_value'), '(CFixedPoint)0'), '#negative_value +', '#positive_value ')][Character.MakeScope.ScriptValue('arcana_spell_gold_cost_discount_value')|0]%#!\n[magic_resistance|E]: #positive_value +[Character.MakeScope.ScriptValue('magic_resistance_from_arcana_value')|0]#!\nIncreased [artifact|E] Quality and Wealth\nIncreased chance of [artifacts|E] being #E Magically-Infused#!"
 
  ARCANA_SKILL_AND_LEVEL_VALUE: "$ARCANA_SKILL$ $ARCANA_LEVEL$"
  ARCANA_SKILL: "#V [Character.MakeScope.ScriptValue('character_arcana_baseline_value')|0] #!"
@@ -1176,3 +1176,9 @@ spawn_quicksilver_elementals_desc:0 "Summon Quicksilver Elementals"
 spawn_desert_mirage_elementals_desc:0 "Summon Desert Mirage Elementals"
 spawn_dune_reaper_elementals_desc:0 "Summon Dune Reaper Elementals"
 spawn_mountain_spirit_elementals_desc:0 "Summon Mountain Spirit Elementals"
+
+ ########
+ # MISC #
+ ########
+ 
+ MUST_BUILD_ASPECT_ACTIVATING_BUILDING_WARNING: "\n\n#X An [aspect]-activating [building], such as the [GetBuilding('magi_tower_01').GetName] must be constructed in this province first#!"
