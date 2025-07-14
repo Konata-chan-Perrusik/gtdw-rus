@@ -617,9 +617,6 @@ types gh_bestiary
 		}
 		blockoverride "bestiary_biozone_availibility_list" {
 			text_single = {
-				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
-			}
-			text_single = {
 				text = "[GetGeographicalRegion('GH_geographic_kashirya').GetName]"
 			}
 			text_single = {
@@ -2467,6 +2464,47 @@ types gh_bestiary
 			}
 		}
 	}
+	type gh_bestiary_dwarf_elephant_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_dwarf_elephant_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_dwarf_elephant_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_3_adjective')] | [Localize('hunt_animal_prestige_4_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_dwarf_elephant_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_dwarf_elephant_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_dwarf_elephant_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_dwarf_elephant_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_dwarf_elephant_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_powerful"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+			text_single = {
+				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
+			}
+		}
+	}
 	type gh_bestiary_aurochs_entry = gh_bestiary_entry {
 		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_aurochs_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
 		blockoverride "bestiary_header" { text = "[Localize('animal_type_aurochs_plural')|U]" }
@@ -4163,6 +4201,50 @@ types gh_bestiary
 			}
 		}
 	}
+	type gh_bestiary_fossa_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_fossa_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_fossa_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_2_adjective')] | [Localize('hunt_animal_prestige_4_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_fossa_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_fossa_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_fossa_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_fossa_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_fossa_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_powerful"
+			}
+			text_single = {
+				text = "bestiary_majestic"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+			text_single = {
+				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
+			}
+		}
+	}
 	type gh_bestiary_goat_entry = gh_bestiary_entry {
 		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_goat_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
 		blockoverride "bestiary_header" { text = "[Localize('animal_type_goat_plural')|U]" }
@@ -4742,13 +4824,227 @@ types gh_bestiary
 		}
 		blockoverride "bestiary_biozone_availibility_list" {
 			text_single = {
-				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
-			}
-			text_single = {
 				text = "[GetGeographicalRegion('damota_biozone').GetName]"
 			}
 			text_single = {
 				text = "[GetGeographicalRegion('cyrat_biozone').GetName]"
+			}
+		}
+	}
+	type gh_bestiary_lemur_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_lemur_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_lemur_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_1_adjective')] | [Localize('hunt_animal_prestige_3_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_lemur_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_lemur_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_lemur_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_lemur_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_lemur_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_cunning"
+			}
+			text_single = {
+				text = "bestiary_quick"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+		}
+	}
+	type gh_bestiary_ring-tailed_lemur_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_ring-tailed_lemur_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_ring-tailed_lemur_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_1_adjective')] | [Localize('hunt_animal_prestige_3_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_ring-tailed_lemur_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_ring-tailed_lemur_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_ring-tailed_lemur_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_ring-tailed_lemur_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_ring-tailed_lemur_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_cunning"
+			}
+			text_single = {
+				text = "bestiary_quick"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+			text_single = {
+				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
+			}
+		}
+	}
+	type gh_bestiary_brown_lemur_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_brown_lemur_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_brown_lemur_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_1_adjective')] | [Localize('hunt_animal_prestige_2_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_brown_lemur_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_brown_lemur_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_brown_lemur_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_brown_lemur_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_brown_lemur_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_cunning"
+			}
+			text_single = {
+				text = "bestiary_quick"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+			text_single = {
+				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
+			}
+		}
+	}
+	type gh_bestiary_black_lemur_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_black_lemur_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_black_lemur_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_1_adjective')] | [Localize('hunt_animal_prestige_2_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_black_lemur_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_black_lemur_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_black_lemur_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_black_lemur_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_black_lemur_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_cunning"
+			}
+			text_single = {
+				text = "bestiary_quick"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+			text_single = {
+				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
+			}
+		}
+	}
+	type gh_bestiary_indri_entry = gh_bestiary_entry {
+		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_indri_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		blockoverride "bestiary_header" { text = "[Localize('animal_type_indri_plural')|U]" }
+		blockoverride "bestiary_subheader" { raw_text = "[Localize('mammal_title')] | [Localize('hunt_animal_safety_1_adjective')] | [Localize('hunt_animal_prestige_3_adjective')]" }
+		blockoverride "bestiary_desc" { text = "[Localize('animal_type_indri_encyclopedia_desc')]" }
+		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_indri_item')]" }
+		blockoverride "bestiary_details_button" { 
+			button_expandable_toggle_field = {
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "onclick"
+				{
+					onclick = "[GetVariableSystem.Toggle('bestiary_indri_item')]"
+				}
+
+				blockoverride "button_expand"
+				{
+					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_indri_item') )]"
+				}
+
+				blockoverride "text"
+				{
+					raw_text = "[Localize('animal_type_indri_no_gloss')|U] Details"
+				}
+				
+				upframe = 3
+	        	overframe = 2
+	        	downframe = 3
+			}
+		}
+		blockoverride "bestiary_adjectives_list" {
+			text_single = {
+				text = "bestiary_cunning"
+			}
+			text_single = {
+				text = "bestiary_quick"
+			}
+		}
+		blockoverride "bestiary_biozone_availibility_list" {
+			text_single = {
+				text = "[GetGeographicalRegion('krehejad_biozone').GetName]"
 			}
 		}
 	}
@@ -9380,43 +9676,6 @@ types gh_bestiary
 			}
 		}
 	}
-	type gh_bestiary_vulture_entry = gh_bestiary_entry {
-		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_vulture_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
-		blockoverride "bestiary_header" { text = "[Localize('animal_type_vulture_plural')|U]" }
-		blockoverride "bestiary_subheader" { raw_text = "[Localize('bird_title')] | [Localize('hunt_animal_safety_2_adjective')] | [Localize('hunt_animal_prestige_2_adjective')]" }
-		blockoverride "bestiary_desc" { text = "[Localize('animal_type_vulture_encyclopedia_desc')]" }
-		blockoverride "bestiary_details_visible" { visible = "[GetVariableSystem.Exists('bestiary_vulture_item')]" }
-		blockoverride "bestiary_details_button" { 
-			button_expandable_toggle_field = {
-				layoutpolicy_horizontal = expanding
-
-				blockoverride "onclick"
-				{
-					onclick = "[GetVariableSystem.Toggle('bestiary_vulture_item')]"
-				}
-
-				blockoverride "button_expand"
-				{
-					frame = "[BoolTo1And2( GetVariableSystem.Exists('bestiary_vulture_item') )]"
-				}
-
-				blockoverride "text"
-				{
-					raw_text = "[Localize('animal_type_vulture_no_gloss')|U] Details"
-				}
-				
-				upframe = 3
-	        	overframe = 2
-	        	downframe = 3
-			}
-		}
-		blockoverride "bestiary_adjectives_list" {
-		}
-		blockoverride "bestiary_biozone_availibility_list" {text_single = {
-				raw_text = "Any Biozone"
-			}
-		}
-	}
 	type gh_bestiary_falcon_entry = gh_bestiary_entry {
 		blockoverride "bestiary_visible" { visible = "[GetScriptedGui('GH_bestiary_falcon_item_is_shown_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
 		blockoverride "bestiary_header" { text = "[Localize('animal_type_falcon_plural')|U]" }
@@ -12966,9 +13225,8 @@ types gh_bestiary
 				text = "bestiary_loathsome"
 			}
 		}
-		blockoverride "bestiary_biozone_availibility_list" {
-			text_single = {
-				text = "[GetGeographicalRegion('world_greater_aversaria').GetName]"
+		blockoverride "bestiary_biozone_availibility_list" {text_single = {
+				raw_text = "Any Biozone"
 			}
 		}
 	}
@@ -13010,18 +13268,8 @@ types gh_bestiary
 				text = "bestiary_loathsome"
 			}
 		}
-		blockoverride "bestiary_biozone_availibility_list" {
-			text_single = {
-				text = "[GetGeographicalRegion('konijkmener_biozone').GetName]"
-			}
-			text_single = {
-				text = "[GetGeographicalRegion('chevalie_biozone').GetName]"
-			}
-			text_single = {
-				text = "[GetGeographicalRegion('knokidbes_biozone').GetName]"
-			}
-			text_single = {
-				text = "[GetGeographicalRegion('malcois_biozone').GetName]"
+		blockoverride "bestiary_biozone_availibility_list" {text_single = {
+				raw_text = "Any Biozone"
 			}
 		}
 	}
