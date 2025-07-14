@@ -293,28 +293,12 @@ window = {
 							size = { 8 0 }
 						}
 
-						scrollarea = {
-							name = "modifier_wrapper"
-							layoutpolicy_horizontal = expanding
+						item = {
+							modifier_item_icon = {
+								size = { 30 30 }
 
-							scrollbarpolicy_vertical = always_off
-							size = { 0 55 }
-
-							scrollbar_horizontal = { using = Scrollbar_Horizontal }
-
-							scrollwidget = {
-								flowcontainer = {
-									position = { 0 10 }
-									datamodel = "[HoldingView.GetCountyModifiers]"
-									item = {
-										modifier_item_icon = {
-											size = { 30 30 }
-
-											blockoverride "icon_data" {
-												using = tooltip_ne
-											}
-										}
-									}
+								blockoverride "icon_data" {
+									using = tooltip_ne
 								}
 							}
 						}
@@ -1431,6 +1415,9 @@ window = {
 
 						expand = {}
 					}
+					
+					# GH ADDITION: Aspect stats
+					vbox_province_aspect_values = {}
 
 					### HOLDING STATS
 					# GH CHANGE: Non-Colonial
@@ -2212,6 +2199,7 @@ window = {
 	movable = no
 	layer = top
 	datacontext = "[HoldingView.GetHolder]"
+	datacontext = "[HoldingView.GetProvince]"
 
 	state = {
 		name = _show
@@ -2252,8 +2240,10 @@ window = {
 						visible = "[Not(HoldingView.IsSelectingBuildingToConstruct)]"
 						layoutpolicy_horizontal = expanding
 						alwaystransparent = no
+
 						margin = { 3 3 }
 						margin_bottom = 5
+
 						using = Window_Background_Subwindow
 
 						header_pattern = {
@@ -2273,16 +2263,18 @@ window = {
 						building_in_vassal_warning_hbox = {}
 
 						text_single = {
-							layoutpolicy_horizontal = shrinking
 							name = "prompt"
+							layoutpolicy_horizontal = shrinking
+
 							text = "[HoldingView.GetTracksViewPrompt]"
 							margin_bottom = 10
 						}
 
 						text_single = {
+							name = "no_potential_buildings_text"
 							visible = "[IsDataModelEmpty(HoldingView.GetPotentialBuildings)]"
 							layoutpolicy_horizontal = shrinking
-							name = "no_potential_buildings_text"
+
 							text = "NO_POTENTIAL_BUILDINGS_WARNING"
 							margin_bottom = 10
 						}
@@ -2527,9 +2519,10 @@ window = {
 								name = "upgrade"
 								datacontext = "[HoldingView.GetTrack]"
 								layoutpolicy_horizontal = expanding
-								#minimumsize = { 0 700 }
-								using = Window_Background_Subwindow
+
 								margin_bottom = 10
+
+								using = Window_Background_Subwindow
 
 								hbox = {
 									layoutpolicy_horizontal = expanding
