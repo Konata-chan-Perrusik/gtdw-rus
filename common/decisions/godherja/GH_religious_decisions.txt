@@ -1,0 +1,202 @@
+﻿##################
+##DECISIONS LIST##
+# spirit_journey_decision
+##################
+
+#Lonely Note: I have zero recollection of making this. Perhaps I was on my own 'Spirit Journey'
+
+##################
+# Spirit Journey
+# by Lonely Knight
+#spirit_journey_decision = {
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+#	}
+#
+#	desc = spirit_journey_decision_desc
+#	selection_tooltip = spirit_journey_decision_tooltip
+#
+#	is_shown = {
+#		faith = {
+#			has_doctrine_parameter = spirit_journey_active
+#		}
+#	}
+#
+#
+#	effect = {
+#		add_character_flag = spirit_journey_ongoing
+#		trigger_event = {
+#			id = gh_religious_decision.0001
+#			days = { 14 28 }
+#		}
+#		custom_tooltip = spirit_journey_effect
+#	}
+#
+#	ai_check_interval = 60
+#	
+#	ai_potential = {
+#		always = yes
+#	}
+#
+#	ai_will_do = {
+#		base = 100
+#	}
+#}
+
+#kemsar_towers_decision = { #Add checks against owning all provinces that are holy sites once counties and baronies are done
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+#	}
+#
+#	desc = kemsar_towers_decision_desc
+#	selection_tooltip = kemsar_towers_decision_tooltip
+#
+#	is_shown = {
+#		is_ruler = yes
+#		faith = {
+#			has_doctrine_parameter = kemsar_towers_decisions_active
+#		}
+#	}
+#
+#	effect = {
+#		add_character_modifier = {
+#			modifier = kemsar_towers_modifier
+#		}
+#
+#		stress_impact = {
+#			cynical = major_stress_impact_gain
+#			greedy = minor_stress_impact_gain
+#		}
+#	}
+#	
+#	ai_check_interval = 120
+#
+#	ai_potential = {
+#		always = yes
+#	}
+#
+#	ai_will_do = {
+#		base = 0
+#
+#		modifier = {
+#			add = 20
+#			piety_level <= 2
+#		}
+#		modifier = {
+#			add = 30
+#			OR = { 
+#				has_trait = zealous
+#				3 <= dead_magic_education
+#			}
+#		}
+#		modifier = {
+#			add = 10
+#			OR = {
+#				has_trait = scholar
+#				1 <= dead_magic_education
+#			}
+#		}
+#		modifier = {
+#			add = -100
+#			has_trait = cynical
+#		}
+#	}
+#}
+
+# Raze
+raze_sophocos_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_irminsul_burning_cm.dds"
+	}
+	decision_group_type = major
+
+	desc = raze_sophocos_decision_desc
+	selection_tooltip = raze_sophocos_decision_tooltip
+
+	is_shown = {
+		is_landed = yes
+		any_realm_province = {
+			has_building_or_higher = 01_sophocos
+		}
+		NOT = {
+			has_character_flag = razed_sophocos_in_lifetime
+		}
+	}
+
+	is_valid = {
+		any_realm_province = {
+			has_building_or_higher = 02_sophocos
+		}
+		NOR = {
+			faith = { has_doctrine = tenet_armed_pilgrimages }
+			faith = { has_doctrine = tenet_pacifism }
+			faith = { has_doctrine = tenet_ritualist_religion_syncretism}
+			faith = { has_doctrine = tenet_adaptive }
+			faith = { has_doctrine = tenet_mendicant_preachers }
+			faith = { has_doctrine = tenet_tax_nonbelievers }
+			religion = religion:ritualist_religion
+		}
+		OR = {
+			faith = { has_doctrine = tenet_warmonger }
+			faith = { has_doctrine = tenet_superiority_in_bloodshed }
+			faith = { has_doctrine = tenet_pursuit_of_power }
+			faith = { has_doctrine = tenet_way_of_the_skulltaker }
+			faith = { has_doctrine = tenet_raider_cult }
+			faith = { has_doctrine = tenet_higher_purity }
+			faith = { has_doctrine = tenet_high_bloodright }
+		}
+	}
+
+	effect = {
+		custom_tooltip = raze_sophocos_effect_tooltip
+		hidden_effect = { add_character_flag = { flag = razed_sophocos_in_lifetime years = 20 } }
+		root = {
+			save_scope_as = sophocos_razer
+		}
+		trigger_event = sophocos_quest.7001
+
+		every_player = {
+			limit = { NOT = { this = root } }
+			trigger_event = sophocos_quest.7002
+		}
+
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 25
+
+		modifier = {
+			add = 5
+			has_trait = greedy
+		}
+		modifier = {
+			add = 15
+			has_trait = zealous
+		}
+		modifier = {
+			add = 10
+			has_trait = sadistic
+		}
+		modifier = {
+			add = -50
+			ai_compassion >= medium_positive_ai_value
+		}
+		modifier = {
+			add = 50
+			ai_greed >= medium_positive_ai_value
+		}
+		modifier = {
+			add = -25
+			ai_boldness <= medium_negative_ai_value
+		}
+		ai_value_modifier = {
+			ai_zeal = 1
+		}	
+	}
+}

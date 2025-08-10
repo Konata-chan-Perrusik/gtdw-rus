@@ -1,0 +1,705 @@
+﻿# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+@cultural_maa_extra_ai_score = 80 # Equivalent to having 8 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+
+# GH TODO: Merge this crap into the more general undead categories (under "Summonable Units")
+skeleton = {
+	type = skirmishers
+
+	damage = 10
+	toughness = 24
+	pursuit = 0
+	screen = 40
+
+	#low_maintenance_cost = { gold = name_low_maint_cost }
+	#high_maintenance_cost = { gold = name_low_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+	can_recruit = { culture = { has_cultural_tradition = tradition_lich_culture } } #GH_EP3_TODO: Lich mercs spawn without any troops otherwise, need a real solution to this
+	stack = 250
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = raised_undead
+}
+
+skeleton_archers = {
+	type = archers
+
+	damage = 30
+	toughness = 17
+	pursuit = 7
+	screen = 0
+
+	#low_maintenance_cost = { gold = name_low_maint_cost }
+	#high_maintenance_cost = { gold = name_low_maint_cost }
+	#provision_cost = @provisions_cost_infantry_expensive
+	can_recruit = { always = no }
+	stack = 250
+
+	terrain_bonus = {
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+	}
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = raised_undead
+}
+
+elite_undead = {
+	type = undead
+	can_recruit = { always = no }
+
+	damage = 28
+	toughness = 35
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		marcher_hills = { damage = -16 toughness = -20 }
+		marcher_farmlands = { damage = -16 toughness = -20 }
+		marcher_plains = { damage = -16 toughness = -20 }
+		marcher_mountains = { damage = -16 toughness = -20 }
+		marcher_forest = { damage = -16 toughness = -20 }
+		marcher_wetlands = { damage = -16 toughness = -20 }
+		marcher_floodplains = { damage = -16 toughness = -20 }
+		mayik_caverns = { pursuit = 10 screen = 12 }
+		mayik_corridors = { pursuit = 8 screen = 10 }
+		mayik_chamber = { pursuit = 6 screen = 8 }
+	}
+
+	counters = {
+	}
+
+	buy_cost = { gold = heavy_infantry_recruitment_cost }
+	low_maintenance_cost = { gold = heavy_infantry_low_maint_cost }
+	high_maintenance_cost = { gold = heavy_infantry_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 50
+	ai_quality = { value = culture_ai_weight_heavy_infantry }
+	icon = heavy_infantry
+}
+
+## Summonable Units ##
+
+spirits_of_the_horn = { # Unique MAA for using the BLACK HORN
+	type = undead
+	can_recruit = { always = no }
+
+	damage = 26
+	toughness = 70
+	pursuit = 50
+	screen = 25
+	siege_value = 0.08
+
+	terrain_bonus = {
+		marcher_hills = { damage = -25 toughness = -60 }
+		marcher_farmlands = { damage = -25 toughness = -60 }
+		marcher_plains = { damage = -25 toughness = -60 }
+		marcher_mountains = { damage = -25 toughness = -60 }
+		marcher_forest = { damage = -25 toughness = -60 }
+		marcher_wetlands = { damage = -25 toughness = -60 }
+		marcher_floodplains = { damage = -25 toughness = -60 }
+		antimagic_terrain = { damage = -25 toughness = -60 }
+	}
+
+	counters = {
+	}
+
+	stack = 100
+	icon = fog_spirits
+}
+
+undead_skirmishers = {
+	type = undead
+
+	damage = 10
+	toughness = 16
+	pursuit = 10
+	screen = 16
+
+	terrain_bonus = {
+		forest = { damage = 4 toughness = 6 }
+		taiga = { damage = 4 toughness = 6 }
+		jungle = { damage = 4 toughness = 6 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+
+		mayik_caverns = { damage = 8 toughness = 10 pursuit = 12 screen = 14 }
+		mayik_corridors = { damage = 6 toughness = 8 pursuit = 10 screen = 12 }
+		mayik_chamber = { damage = 4 toughness = 6 pursuit = 8 screen = 10 }
+	}
+
+	counters = {
+		heavy_infantry = 1
+	}
+
+	buy_cost = { gold = skirmisher_recruitment_cost }
+	low_maintenance_cost = { gold = skirmisher_low_maint_cost }
+	high_maintenance_cost = { gold = skirmisher_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	can_recruit = { always = no }
+
+	stack = 100
+	ai_quality = { value = culture_ai_weight_skirmishers }
+	
+	icon = raised_undead
+}
+
+undead_bowmen = {
+	type = undead
+
+	damage = 25
+	toughness = 10
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 10 toughness = 4 }
+		forest = { toughness = 4 screen = 4 }
+		taiga = { toughness = 4 screen = 4 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+
+		mayik_caverns = { damage = -16 }
+		mayik_corridors = { damage = -13 }
+		mayik_chamber = { damage = -10 }
+	}
+
+	counters = {
+		skirmishers = 1
+	}
+
+	buy_cost = { gold = bowmen_recruitment_cost }
+	low_maintenance_cost = { gold = bowmen_low_maint_cost }
+	high_maintenance_cost = { gold = bowmen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	can_recruit = { always = no }
+
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_archers
+		value = counter_synergy_ai_weight_archers
+	}
+	
+	icon = raised_undead
+}
+
+undead_light_horsemen = {
+	type = undead
+
+	damage = 22
+	toughness = 15
+	pursuit = 30
+	screen = 30
+
+	terrain_bonus = {
+		plains = { damage = 15 }
+		hills = { damage = -5 }
+		mountains = { damage = -10 pursuit = -20 }
+		wetlands = { damage = -15 toughness = -10 pursuit = -30 screen = -30 }
+		desert_mountains = { damage = -15 pursuit = -20 }
+		drylands = { damage = 15 }
+		## GH ADDITIONS ##
+		marcher_plains = { damage = 15 }
+		marcher_hills = { damage = -5 }
+		marcher_mountains = { damage = -10 pursuit = -20 }
+		marcher_wetlands = { damage = -15 toughness = -10 pursuit = -30 screen = -30 }
+
+		deadlands = { damage = 15 }
+
+		mayik_caverns = { damage = -20 toughness = -15 pursuit = -30 screen = -30 }
+		mayik_corridors = { damage = -18 toughness = -13 pursuit = -30 screen = -30 }
+		mayik_chamber = { damage = -16 toughness = -11 pursuit = -30 screen = -30 }
+	}
+
+	counters = {
+		archers = 1
+	}
+
+	winter_bonus = {
+		harsh_winter = { damage = -5 toughness = -2 }
+	}
+
+	buy_cost = { gold = light_cavalry_recruitment_cost }
+	low_maintenance_cost = { gold = light_cavalry_low_maint_cost }
+	high_maintenance_cost = { gold = light_cavalry_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	can_recruit = { always = no }
+
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_light_cavalry
+		value = counter_synergy_ai_weight_light_cavalry
+	}
+	icon = light_cavalry
+}
+
+undead_pikemen_unit = {
+	type = undead
+
+	damage = 22
+	toughness = 24
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		mountains = { toughness = 12 }
+		desert_mountains = { toughness = 12 }
+		hills = { toughness = 8 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+
+		mayik_caverns = { toughness = 12 }
+		mayik_chamber = { toughness = 8 }
+		mayik_corridors = { toughness = 12 }
+	}
+
+	counters = {
+		light_cavalry = 1
+		heavy_cavalry = 1
+		camel_cavalry = 1
+		elephant_cavalry = 1
+		## GH ADDITIONS ##
+		monsters = 0.4
+	}
+
+	buy_cost = { gold = pikemen_recruitment_cost }
+	low_maintenance_cost = { gold = pikemen_low_maint_cost }
+	high_maintenance_cost = { gold = pikemen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	can_recruit = { always = no }
+
+	stack = 100
+	ai_quality = { value = culture_ai_weight_pikemen }
+	icon = pikemen
+}
+
+#Tribal Era
+undead_armored_footmen = {
+	type = undead
+
+	damage = 32
+	toughness = 22
+	pursuit = 0
+	screen = 0
+
+	counters = {
+		pikemen = 1
+	}
+
+	terrain_bonus = {
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+	}
+
+	buy_cost = { gold = heavy_infantry_recruitment_cost }
+	low_maintenance_cost = { gold = heavy_infantry_low_maint_cost }
+	high_maintenance_cost = { gold = heavy_infantry_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	can_recruit = { always = no }
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_heavy_infantry
+		value = counter_synergy_ai_weight_heavy_infantry
+	}
+	icon = heavy_infantry
+}
+
+#Medieval Era
+undead_armored_horsemen = {
+	type = undead
+
+	damage = 100
+	toughness = 35
+	pursuit = 20
+	screen = 0
+
+	terrain_bonus = {
+		plains = { damage = 30 }
+		hills = { damage = -20 }
+		mountains = { damage = -75 }
+		wetlands = { damage = -75 toughness = -10 pursuit = -10 }
+		desert_mountains = { damage = -75 }
+		drylands = { damage = 30 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+
+		deadlands = { damage = 30 }
+
+		mayik_caverns = { damage = -90 toughness = -20 pursuit = -20 }
+		mayik_corridors = { damage = -85 toughness = -15 pursuit = -20 }
+		mayik_chamber = { damage = -80 toughness = -10 pursuit = -20 }
+	}
+
+	counters = {
+		archers = 1
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = -10 toughness = -5 }
+		harsh_winter = { damage = -20 toughness = -10 }
+	}
+	can_recruit = { always = no }
+
+	buy_cost = { gold = heavy_cavalry_recruitment_cost }
+	low_maintenance_cost = { gold = heavy_cavalry_low_maint_cost }
+	high_maintenance_cost = { gold = heavy_cavalry_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 50
+	ai_quality = { value = culture_ai_weight_heavy_cavalry }
+	icon = heavy_cavalry
+	fallback_in_hired_troops_if_unlocked = yes
+}
+
+#High Medieval Era
+undead_crossbowmen = {
+	type = undead
+
+	damage = 42
+	toughness = 18
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 10 }
+		plains = { toughness = -8 }
+		drylands = { toughness = -8 }
+		desert = { toughness = -8 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+
+		mayik_caverns = { damage = -8 }
+		mayik_chamber = { damage = -6 }
+		mayik_corridors = { damage = -8 }
+	}
+
+	counters = {
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		archer_cavalry = 0.5
+	}
+	can_recruit = { always = no }
+
+	buy_cost = { gold = crossbowmen_recruitment_cost }
+	low_maintenance_cost = { gold = crossbowmen_low_maint_cost }
+	high_maintenance_cost = { gold = crossbowmen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	ai_quality = {
+		value = counter_synergy_ai_weight_archers
+	}
+	icon = autocrossbow
+	stack = 100
+}
+
+undead_horse_archers = {
+	type = undead
+
+	damage = 45
+	toughness = 20
+	pursuit = 40
+	screen = 30
+
+	terrain_bonus = {
+		steppe = { damage = 45 }
+		plains = { damage = 20 }
+		drylands = { damage = 20 }
+		jungle = { damage = -20 pursuit = -20 }
+		wetlands = { damage = -30 pursuit = -30 }
+		mountains = { damage = -30 pursuit = -30 }
+		desert_mountains = { damage = -30 pursuit = -30 }
+		## GH ADDITIONS ##
+		marcher_plains = { damage = 20 }
+		marcher_wetlands = { damage = -30 pursuit = -30 }
+		marcher_wetlands = { damage = -30 pursuit = -30 }
+		marcher_mountains = { damage = -30 pursuit = -30 }
+
+		mayik_caverns = { damage = -44 pursuit = -40 screen = -30 }
+		mayik_corridors = { damage = -42 pursuit = -40 screen = -30 }
+		mayik_chamber = { damage = -40 pursuit = -40 screen = -30 }
+
+		deadlands = { damage = 20 }
+	}
+
+	counters = {
+		skirmishers = 1
+		heavy_infantry = 1
+	}
+
+	can_recruit = { always = no }
+
+	buy_cost = { gold = horse_archers_recruitment_cost }
+	low_maintenance_cost = { gold = horse_archers_low_maint_cost }
+	high_maintenance_cost = { gold = horse_archers_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = horse_archers
+}
+
+## REGIONAL MAA ##
+# The following were brought from the 00_regional_maa_types file in case we want to use them
+
+undead_camel_rider = {
+	type = undead # GH QUESTION: undead_camel_cavalry?
+
+	damage = 22
+	toughness = 15
+	pursuit = 20
+	screen = 20
+
+	terrain_bonus = {
+		desert = { damage = 20 toughness = 8 }
+		drylands = { damage = 15 toughness = 8 }
+		oasis = { damage = 15 }
+		floodplains = { damage = 5 }
+		hills = { damage = -10 }
+		mountains = { damage = -15 pursuit = -20 }
+		wetlands = { damage = -15 toughness = -10 pursuit = -20 screen = -20 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+	}
+
+	counters = {
+		light_cavalry = 1
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = -3 }
+		harsh_winter = { damage = -5 toughness = -2 }
+	}
+
+	can_recruit = { always = no }
+
+	buy_cost = { gold = camel_rider_recruitment_cost }
+	low_maintenance_cost = { gold = camel_rider_low_maint_cost }
+	high_maintenance_cost = { gold = camel_rider_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 100
+	icon = camel_riders
+}
+
+undead_war_elephant = {
+	type = undead # GH QUESTION: undead_elephant_cavalry?
+
+	damage = 250
+	toughness = 50
+	pursuit = 0
+	screen = 0
+
+	siege_value = 0.1
+
+	terrain_bonus = {
+		jungle = { damage = 50 }
+		mountains = { damage = -100 }
+		desert_mountains = { damage = -100 }
+		wetlands = { damage = -150 toughness = -20 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = -8 toughness = -8 }
+		marcher_farmlands = { damage = -8 toughness = -8 }
+		marcher_plains = { damage = -8 toughness = -8 }
+		marcher_mountains = { damage = -8 toughness = -8 }
+		marcher_forest = { damage = -8 toughness = -8 }
+		marcher_wetlands = { damage = -8 toughness = -8 }
+		marcher_floodplains = { damage = -8 toughness = -8 }
+	}
+
+	counters = {
+		skirmishers = 2
+		heavy_infantry = 2
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = -30 toughness = -5 }
+		harsh_winter = { damage = -60 toughness = -10 }
+	}
+
+	can_recruit = { always = no }
+
+	buy_cost = { gold = war_elephant_recruitment_cost }
+	low_maintenance_cost = { gold = war_elephant_low_maint_cost }
+	high_maintenance_cost = { gold = war_elephant_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 25
+	hired_stack_size = 10
+	icon = war_elephants
+}
+
+undead_dragon = {
+	type = flying
+
+	damage = 950
+	toughness = 700
+	pursuit = 58
+	screen = 120
+
+	can_recruit = {
+		exists = global_var:raised_drakavil
+		culture = { has_cultural_tradition = tradition_lich_culture }
+	}
+
+	terrain_bonus = {
+		wetlands = { damage = 250 pursuit = 250 }
+		plains = { damage = 250 pursuit = 250 }
+		farmlands = { damage = 250 pursuit = 250 }
+		floodplains = { damage = 250 pursuit = 250 }
+		desert = { damage = 250 pursuit = 250 }
+		steppe = { damage = 250 pursuit = 250 }
+		drylands = { damage = 250 pursuit = 250 }
+		oasis = { damage = -250 pursuit = -350 screen = -250 }
+		taiga = { damage = -250 pursuit = -350 screen = -250 }
+		forest = { damage = -250 pursuit = -400 screen = -250 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+		mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+		marcher_hills = { damage = -700 toughness = -700 }
+		marcher_farmlands = { damage = -700 toughness = -700 }
+		marcher_plains = { damage = -700 toughness = -700 }
+		marcher_mountains = { damage = -700 toughness = -700 }
+		marcher_forest = { damage = -700 toughness = -700 }
+		marcher_wetlands = { damage = -700 toughness = -700 }
+		marcher_floodplains = { damage = -700 toughness = -700 }
+	}
+
+	counters = {
+		flying = 0.75
+		magi = 0.25
+		elephant_cavalry = 0.75
+		light_cavalry = 0.75
+		archer_cavalry = 0.75
+		camel_cavalry = 0.75
+		monsters = 1
+	}
+
+	buy_cost = { gold = airship_recruitment_cost prestige = airship_recruitment_cost_prestige }
+	low_maintenance_cost = { gold = airship_low_maint_cost }
+	high_maintenance_cost = { gold = airship_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 1000
+	icon = griffon_riders
+}
+
+undead_worldeater = {
+	type = undead
+
+	damage = 9999
+	toughness = 9999
+	pursuit = 58
+	screen = 7000
+
+	can_recruit = { always = no }
+
+	terrain_bonus = {
+		wetlands = { damage = 250 pursuit = 250 }
+		plains = { damage = 250 pursuit = 250 }
+		farmlands = { damage = 250 pursuit = 250 }
+		floodplains = { damage = 250 pursuit = 250 }
+		desert = { damage = 250 pursuit = 250 }
+		steppe = { damage = 250 pursuit = 250 }
+		drylands = { damage = 250 pursuit = 250 }
+		oasis = { damage = -250 pursuit = -350 screen = -250 }
+		taiga = { damage = -250 pursuit = -350 screen = -250 }
+		forest = { damage = -250 pursuit = -400 screen = -250 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+		mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+		marcher_hills = { damage = -7000 toughness = -7000 }
+		marcher_farmlands = { damage = -7000 toughness = -7000 }
+		marcher_plains = { damage = -7000 toughness = -7000 }
+		marcher_mountains = { damage = -7000 toughness = -7000 }
+		marcher_forest = { damage = -7000 toughness = -7000 }
+		marcher_wetlands = { damage = -7000 toughness = -7000 }
+		marcher_floodplains = { damage = -7000 toughness = -7000 }
+	}
+
+	counters = {
+		flying = 0.75
+		magi = 0.25
+		elephant_cavalry = 0.75
+		light_cavalry = 0.75
+		archer_cavalry = 0.75
+		camel_cavalry = 0.75
+		monsters = 1
+	}
+
+	buy_cost = { gold = airship_recruitment_cost prestige = airship_recruitment_cost_prestige }
+	low_maintenance_cost = { gold = airship_low_maint_cost }
+	high_maintenance_cost = { gold = airship_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 10000
+	icon = griffon_riders
+}

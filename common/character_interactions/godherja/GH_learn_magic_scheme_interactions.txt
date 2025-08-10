@@ -1,0 +1,1225 @@
+﻿#Character interactions relating to magic learning schemes
+
+learn_magic_school_scheme_interaction = {
+	icon = icon_culture
+	common_interaction = yes
+	interface_priority = 90
+	category = interaction_category_magic
+
+	ignores_pending_interaction_block = yes
+
+	scheme = learn_magic_school_scheme
+
+	send_name = START_SCHEME_LEARN_MAGIC_SCHOOL
+	
+	ai_frequency = 36
+	
+	ai_targets = {
+		ai_recipients = spouses
+		ai_recipients = courtiers
+		ai_recipients = vassals
+		ai_recipients = war_allies # Lonely: Was Friends (which fires an error), changed to war_allies and family, yell at me if this is bad or something
+		ai_recipients = family
+	}
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		NOT = { scope:recipient = scope:actor }
+		scope:recipient = {
+			knows_any_magic_school_trigger = yes
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			can_start_scheme = {
+				type = learn_magic_school_scheme
+				target_character = scope:recipient
+			}
+		}
+	}
+
+	desc = {
+		triggered_desc = {
+			trigger = {
+				scope:actor = {
+					can_start_scheme = {
+						type = learn_magic_school_scheme
+						target_character = scope:recipient
+					}
+				}
+			}
+			desc = scheme_interaction_tt_learn_magic_school_willing
+		}
+	}
+
+	on_accept = {
+		hidden_effect = {
+			scope:actor = {
+				send_interface_toast = {
+					title = learn_magic_school_scheme_interaction_notification
+
+					left_icon = scope:actor					
+					right_icon = scope:recipient
+
+					start_scheme = {
+						type = learn_magic_school_scheme
+						target_character = scope:recipient
+					}
+				}
+			}
+		}
+	}
+	
+	ai_potential = {
+		has_trait = magic_good
+		primary_title.tier >= tier_county
+		NOR = {
+			any_scheme = {
+				OR = {
+					scheme_type = befriend
+					scheme_type = sway
+					scheme_type = seduce
+					scheme_type = courting
+					scheme_type = elope
+					scheme_type = learn_language
+					scheme_type = learn_magic_school_scheme
+					scheme_type = learn_magic_spell_scheme
+				}
+			}
+			AND = { # No one cares about City barons
+				is_lowborn = yes
+				primary_title.tier <= tier_barony
+			}
+		}
+	}
+	
+	auto_accept = yes
+
+	ai_will_do = {
+		base = 25
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				faith = {
+					has_doctrine_parameter = magic_supreme
+				}
+			}
+		}
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = ambitious
+			}
+		}
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = diligent
+			}
+		}
+		
+		modifier = {
+			add = -25
+			scope:actor = {
+				has_trait = lazy
+			}
+		}
+		
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+		}
+		
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+		}
+		
+		modifier = {
+			add = 25
+			scope:actor = {
+				exists = cp:councillor_court_magi
+				cp:councillor_court_magi = scope:recipient
+			}
+		}
+		
+		modifier = {
+			add = character_arcana_baseline_value
+			scope:actor = {
+				character_arcana_baseline_value >= 5
+			}
+		}
+		
+		modifier = {
+			add = learning
+			scope:actor = {
+				learning >= 10
+			}
+		}
+
+		modifier = {
+			add = 25
+			scope:actor = {
+				is_independent_ruler = no
+				is_playable_character = yes
+				has_vassal_stance = magic_focused
+			}
+		}
+	}
+}
+
+learn_magic_spell_scheme_interaction = {
+	interface_priority = 90
+	common_interaction = yes
+	icon = icon_magic
+	
+	category = interaction_category_magic
+	ai_maybe = yes
+	ai_min_reply_days = 4
+	ai_max_reply_days = 9
+	popup_on_receive = yes
+	pause_on_receive = yes
+	
+	desc = {
+		triggered_desc = {
+			trigger = {
+				scope:actor = {
+					can_start_scheme = {
+						type = learn_magic_spell_scheme
+						target_character = scope:recipient
+					}
+				}
+			}
+			desc = scheme_interaction_tt_learn_magic_spell_willing
+		}
+	}
+	
+	greeting = positive
+	notification_text = REQUEST_LEARN_MAGIC_SPELL_NOTIFICATION_TEXT
+	pre_answer_maybe_key = ANSWER_MIGHT_ACCEPT
+	pre_answer_no_key = ANSWER_CANT_ACCEPT
+	pre_answer_yes_key = ANSWER_WILL_ACCEPT
+	pre_answer_maybe_breakdown_key = ANSWER_SUM_CHANCE
+
+	on_decline_summary = learn_magic_spell_decline_summary
+
+	scheme = learn_magic_spell_scheme
+
+	send_name = START_SCHEME_LEARN_MAGIC_SPELL
+	
+	ai_potential = {
+		has_trait = magic_good
+		primary_title.tier >= tier_county
+		NOR = {
+			any_scheme = {
+				OR = {
+					scheme_type = befriend
+					scheme_type = sway
+					scheme_type = seduce
+					scheme_type = courting
+					scheme_type = elope
+					scheme_type = learn_language
+					scheme_type = learn_magic_school_scheme
+					scheme_type = learn_magic_spell_scheme
+				}
+			}
+			AND = { # No one cares about City barons
+				is_lowborn = yes
+				primary_title.tier <= tier_barony
+			}
+		}
+	}
+	
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			has_variable_list = known_magic_school_list
+		}
+		scope:recipient = {
+			knows_any_magic_spell_trigger = yes
+			OR = {
+				scope:actor = {
+					NOT = { has_variable_list = known_spell_list }
+				}
+				any_in_list = {
+					variable = known_spell_list
+					NOT = {
+						scope:actor = {
+							is_target_in_variable_list = {
+								name = known_spell_list
+								target = prev
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			is_physically_able_adult = yes
+			can_start_scheme = {
+				type = learn_magic_spell_scheme
+				target_character = scope:recipient
+			}
+		}
+		scope:recipient = {
+			is_physically_able_adult = yes
+		}
+	}
+	
+	#Steal spell
+	send_option = {
+		starts_enabled = {
+			always = no
+		}
+		flag = steal_spell
+		localization = "STEAL_SPELL"
+	}
+	
+	#Use hook
+	send_option = {
+		is_valid = {
+			exists = scope:recipient
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+			scope:steal_spell ?= no
+		}
+		flag = hook
+		localization = SCHEME_HOOK
+	}
+	should_use_extra_icon = {
+		scope:actor = { has_usable_hook = scope:recipient }
+	}
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+	
+	send_options_exclusive = no
+	
+	on_auto_accept = {
+		
+	}
+	
+	on_accept = {
+		if = {
+			limit = {
+				NOT = { exists = scope:actor.var:spell_to_learn_from_character }
+			}
+			scope:recipient = {
+				random_in_list = {
+					variable = known_spell_list
+					scope:actor = {
+						set_variable = {
+							name = spell_to_learn_from_character
+							value = prev
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = { 
+				scope:steal_spell ?= no
+			}
+			show_as_tooltip = {
+				scope:actor = {
+					start_scheme = {
+						type = learn_magic_spell_scheme
+						target_character = scope:recipient
+					}
+					random_scheme = {
+						limit = {
+							scheme_type = learn_magic_spell_scheme
+							scheme_target_character = scope:recipient
+						}
+						set_variable = {
+							name = spell_to_learn_from_character
+							value = scope:actor.var:spell_to_learn_from_character
+						}
+					}
+				}
+				scope:recipient = {
+					add_hook = {
+						target = scope:actor
+						type = favor_hook
+					}
+				}
+			}
+			scope:actor = {
+				var:spell_to_learn_from_character ?= { save_scope_as = spell_to_learn_scheme_scope }
+				trigger_event = magic.0201
+			}
+		}
+		else = {
+			scope:actor = {
+				remove_short_term_gold = minor_gold_value
+			
+				duel = {
+					skill = intrigue
+					target = scope:recipient
+					
+					50 = {
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 3.5
+							min = -49
+						}
+						modifier = {
+							scope:actor = { has_perk = arcana_erudition_perk5_tree3 }
+							factor = 1.18
+						}
+						scope:actor = {
+							start_scheme = {
+								type = learn_magic_spell_scheme
+								target_character = scope:recipient
+							}
+							random_scheme = {
+								limit = {
+									scheme_type = learn_magic_spell_scheme
+									scheme_target_character = scope:recipient
+								}
+								set_variable = {
+									name = spell_to_learn_from_character
+									value = scope:actor.var:spell_to_learn_from_character
+								}
+							}
+						}
+					}
+					50 = {
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = -3.5
+							min = -49
+						}
+						add_prestige = medium_prestige_loss
+					}
+				}
+			}
+		}
+	}
+	
+	on_decline = {
+		scope:actor = {
+			var:spell_to_learn_from_character ?= { save_scope_as = spell_to_learn_scheme_scope }
+			trigger_event = magic.0202
+		}
+	}
+	
+	auto_accept = {
+		scope:steal_spell ?= yes
+	}
+	
+	ai_accept = {
+		base = 0
+
+		opinion_modifier = { # Opinion Factor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1.0
+			desc = AI_OPINION_REASON
+		}
+		
+		modifier = { # Spell level
+			add = {
+				value = scope:actor.var:spell_to_learn_from_character.spell_level_value
+				multiply = -10
+			}
+			desc = SPELL_LEVEL_REASON
+			trigger = {
+				exists = scope:actor.var:spell_to_learn_from_character
+			}
+		}
+		
+		modifier = {
+			add = 50
+			scope:hook = yes
+			desc = SCHEME_HOOK_USED
+		}
+		
+		modifier = {
+			add = 20
+			scope:actor = { has_trait_with_flag = learn_spell_acceptance_20 }
+			desc = SAGE_PERK_ACCEPTANCE
+		}
+		
+		modifier = { # Same language
+			add = 5
+			desc = speaks_same_language_interaction_reason
+			trigger = {
+				scope:actor = {
+					knows_language_of_culture = scope:recipient.culture
+				}
+			}
+		}
+		
+		modifier = { # Shared Court Language (non-spoken)
+			add = 10
+			desc = foreign_realm_court_language_non_spoken_interaction_reason
+			trigger = {
+				scope:actor = {
+					has_royal_court = yes
+					NOT = { knows_court_language_of = this }
+				}
+				NOT = {
+					scope:actor.top_liege = scope:recipient.top_liege
+				}
+				OR = {
+					AND = {
+						scope:recipient = {
+							has_royal_court = yes
+						}
+						scope:actor = { # You share Court Language
+							has_same_court_language = scope:recipient
+						}
+					}
+					
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege does
+						is_independent_ruler = no
+						has_royal_court = no
+						liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						exists = liege.liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+				}
+			}
+		}
+		
+		modifier = { # Shared Court Language (spoken)
+			add = 20
+			desc = foreign_realm_court_language_spoken_interaction_reason
+			trigger = {
+				scope:actor = {
+					has_royal_court = yes
+					knows_court_language_of = this
+				}
+				NOT = {
+					scope:actor.top_liege = scope:recipient.top_liege
+				}
+				OR = {
+					AND = {
+						scope:recipient = {
+							has_royal_court = yes
+						}
+						scope:actor = { # You share Court Language
+							has_same_court_language = scope:recipient
+						}
+					}
+					
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege does
+						is_independent_ruler = no
+						has_royal_court = no
+						liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						exists = liege.liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+				}
+			}
+		}
+
+		modifier = {  # Serious diarchs wish to support their liege
+			add = 50
+			desc = ENTRENCHED_REGENT_WILL_SUPPORT_LIEGE
+			trigger_if = {
+				limit = { scope:recipient ?= scope:actor.diarch }
+				scope:actor = { has_diarchy_parameter = diarchy_type_is_entrenched_regency }
+			}
+			trigger_else = { always = no }
+		}
+
+		modifier = { # Bonus from Erudition
+			add = 15
+			desc = ERUDITION_PERK6_LEARN_SPELL_BONUS
+			scope:actor = { has_perk = arcana_erudition_perk5_tree3 }
+		}
+	}
+	
+	ai_frequency = 36
+	
+	ai_targets = {
+		ai_recipients = spouses
+		ai_recipients = courtiers
+		ai_recipients = vassals
+		ai_recipients = war_allies # Lonely: Was Friends (which fires an error), changed to war_allies and family, yell at me if this is bad or something
+		ai_recipients = family
+	}
+
+	ai_will_do = {
+		base = 25
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				faith = {
+					has_doctrine_parameter = magic_supreme
+				}
+			}
+		}
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = ambitious
+			}
+		}
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = diligent
+			}
+		}
+		
+		modifier = {
+			add = -25
+			scope:actor = {
+				has_trait = lazy
+			}
+		}
+		
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+		}
+		
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+		}
+		
+		modifier = {
+			add = 25
+			scope:actor = {
+				exists = cp:councillor_court_magi
+				cp:councillor_court_magi = scope:recipient
+			}
+		}
+		
+		modifier = {
+			add = character_arcana_baseline_value
+			scope:actor = {
+				character_arcana_baseline_value >= 5
+			}
+		}
+		
+		modifier = {
+			add = learning
+			scope:actor = {
+				learning >= 10
+			}
+		}
+
+		modifier = {
+			add = 25
+			scope:actor = {
+				is_independent_ruler = no
+				is_playable_character = yes
+				has_vassal_stance = magic_focused
+			}
+		}
+	}
+}
+
+teach_magic_spell_scheme_interaction = {
+	interface_priority = 91
+	common_interaction = yes
+	icon = icon_magic
+	
+	category = interaction_category_magic
+	ai_maybe = yes
+	ai_min_reply_days = 4
+	ai_max_reply_days = 9
+	popup_on_receive = yes
+	pause_on_receive = yes
+	
+	desc = {
+		triggered_desc = {
+			trigger = {
+				scope:actor = {
+					can_start_scheme = {
+						type = teach_magic_spell_scheme
+						target_character = scope:recipient
+					}
+				}
+			}
+			desc = scheme_interaction_tt_teach_magic_spell_willing
+		}
+	}
+
+
+	greeting = positive
+	notification_text = REQUEST_TEACH_MAGIC_SPELL_NOTIFICATION_TEXT
+	pre_answer_maybe_key = ANSWER_MIGHT_ACCEPT
+	pre_answer_no_key = ANSWER_CANT_ACCEPT
+	pre_answer_yes_key = ANSWER_WILL_ACCEPT
+	pre_answer_maybe_breakdown_key = ANSWER_SUM_CHANCE
+
+	on_decline_summary = teach_magic_spell_decline_summary
+
+	scheme = teach_magic_spell_scheme
+
+	send_name = START_SCHEME_TEACH_MAGIC_SPELL
+	
+	ai_potential = {
+		has_trait = magic_good
+		primary_title.tier >= tier_county
+		NOR = {
+			any_scheme = {
+				OR = {
+					scheme_type = befriend
+					scheme_type = sway
+					scheme_type = seduce
+					scheme_type = courting
+					scheme_type = elope
+					scheme_type = learn_language
+					scheme_type = learn_magic_school_scheme
+					scheme_type = learn_magic_spell_scheme
+					scheme_type = teach_magic_spell_scheme
+				}
+			}
+			AND = { # No one cares about City barons
+				is_lowborn = yes
+				primary_title.tier <= tier_barony
+			}
+		}
+	}
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		NOT = { scope:recipient = scope:actor }
+		scope:actor = {
+			has_perk = arcana_erudition_perk6_tree3
+			has_variable_list = known_magic_school_list
+			knows_any_magic_spell_trigger = yes
+			OR = {
+				scope:recipient = {
+					NOT = { has_variable_list = known_spell_list }
+					has_variable_list = known_magic_school_list
+				}
+				any_in_list = {
+					variable = known_spell_list
+					NOT = {
+						scope:recipient = {
+							is_target_in_variable_list = {
+								name = known_spell_list
+								target = prev
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			is_physically_able_adult = yes
+			can_start_scheme = {
+				type = teach_magic_spell_scheme
+				target_character = scope:recipient
+			}
+		}
+		scope:recipient = {
+			is_physically_able_adult = yes
+			has_variable_list = known_magic_school_list
+			OR = {
+				is_courtier_of = scope:actor
+				has_relation_friend = scope:actor
+				has_relation_best_friend = scope:actor
+				has_relation_lover = scope:actor
+				has_relation_soulmate = scope:actor
+			}
+		}
+	}
+
+	send_options_exclusive = no
+	
+	auto_accept = no
+
+	on_accept = {
+		if = {
+			limit = {
+				NOT = { exists = scope:actor.var:spell_to_learn_from_character }
+			}
+			scope:actor = {
+				random_in_list = {
+					variable = known_spell_list
+					scope:recipient = {
+						set_variable = {
+							name = spell_to_learn_from_character
+							value = prev
+						}
+					}
+				}
+			}
+		}
+		show_as_tooltip = {
+			scope:actor = {
+				start_scheme = {
+					type = teach_magic_spell_scheme
+					target_character = scope:recipient
+				}
+				random_scheme = {
+					limit = {
+						scheme_type = teach_magic_spell_scheme
+						scheme_target_character = scope:recipient
+					}
+					set_variable = {
+						name = spell_to_learn_from_character
+						value = scope:recipient.var:spell_to_learn_from_character
+					}
+				}
+			}
+		}
+		scope:recipient = {
+			var:spell_to_learn_from_character ?= { save_scope_as = spell_to_learn_scheme_scope }
+			trigger_event = magic.0210
+		}
+	}
+	
+	ai_accept = {
+		base = 0
+
+		opinion_modifier = { # Opinion Factor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1.0
+			desc = AI_OPINION_REASON
+		}
+		
+		modifier = { # Spell level
+			add = {
+				value = scope:actor.var:spell_to_learn_from_character.spell_level_value
+				multiply = -10
+			}
+			desc = SPELL_LEVEL_REASON
+			trigger = {
+				exists = scope:actor.var:spell_to_learn_from_character
+			}
+		}
+		
+		modifier = {
+			add = 50
+			scope:hook ?= yes
+			desc = SCHEME_HOOK_USED
+		}
+		
+		modifier = {
+			add = 20
+			scope:actor = { has_trait_with_flag = learn_spell_acceptance_20 }
+			desc = SAGE_PERK_ACCEPTANCE
+		}
+		
+		modifier = { # Same language
+			add = 5
+			desc = speaks_same_language_interaction_reason
+			trigger = {
+				scope:actor = {
+					knows_language_of_culture = scope:recipient.culture
+				}
+			}
+		}
+		
+		modifier = { # Shared Court Language (non-spoken)
+			add = 10
+			desc = foreign_realm_court_language_non_spoken_interaction_reason
+			trigger = {
+				scope:actor = {
+					has_royal_court = yes
+					NOT = { knows_court_language_of = this }
+				}
+				NOT = {
+					scope:actor.top_liege = scope:recipient.top_liege
+				}
+				OR = {
+					AND = {
+						scope:recipient = {
+							has_royal_court = yes
+						}
+						scope:actor = { # You share Court Language
+							has_same_court_language = scope:recipient
+						}
+					}
+					
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege does
+						is_independent_ruler = no
+						has_royal_court = no
+						liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						exists = liege.liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+				}
+			}
+		}
+		
+		modifier = { # Shared Court Language (spoken)
+			add = 20
+			desc = foreign_realm_court_language_spoken_interaction_reason
+			trigger = {
+				scope:actor = {
+					has_royal_court = yes
+					knows_court_language_of = this
+				}
+				NOT = {
+					scope:actor.top_liege = scope:recipient.top_liege
+				}
+				OR = {
+					AND = {
+						scope:recipient = {
+							has_royal_court = yes
+						}
+						scope:actor = { # You share Court Language
+							has_same_court_language = scope:recipient
+						}
+					}
+					
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege does
+						is_independent_ruler = no
+						has_royal_court = no
+						liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+					scope:recipient = { # The recipient doesn't have a royal court, but their liege's liege's liege's liege does, while their liege doesn't have a royal court
+						is_independent_ruler = no
+						has_royal_court = no
+						exists = liege.liege
+						exists = liege.liege.liege
+						exists = liege.liege.liege.liege
+						liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege = {
+							is_independent_ruler = no
+							has_royal_court = no
+						}
+						liege.liege.liege.liege = {
+							has_royal_court = yes
+							has_same_court_language = scope:actor
+						}
+					}
+				}
+			}
+		}
+
+		modifier = {  # Serious diarchs wish to support their liege
+			add = 50
+			desc = ENTRENCHED_REGENT_WILL_SUPPORT_LIEGE
+			trigger_if = {
+				limit = { scope:recipient ?= scope:actor.diarch }
+				scope:actor = { has_diarchy_parameter = diarchy_type_is_entrenched_regency }
+			}
+			trigger_else = { always = no }
+		}
+
+		modifier = { # Bonus from Erudition
+			add = 15
+			desc = ERUDITION_PERK6_LEARN_SPELL_BONUS
+			scope:actor = { has_perk = arcana_erudition_perk5_tree3 }
+		}
+	}
+	
+	ai_frequency = 36
+	
+	ai_targets = {
+		ai_recipients = spouses
+		ai_recipients = courtiers
+		ai_recipients = vassals
+		ai_recipients = war_allies # Lonely: Was Friends (which fires an error), changed to war_allies and family, yell at me if this is bad or something
+		ai_recipients = family
+	}
+
+	ai_will_do = {
+		base = 25
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				faith = {
+					has_doctrine_parameter = magic_supreme
+				}
+			}
+		}
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = ambitious
+			}
+		}
+		
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = diligent
+			}
+		}
+		
+		modifier = {
+			add = -25
+			scope:actor = {
+				has_trait = lazy
+			}
+		}
+		
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+		}
+		
+		modifier = {
+			add = 15
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+		}
+		
+		modifier = {
+			add = 25
+			scope:actor = {
+				exists = cp:councillor_court_magi
+				cp:councillor_court_magi = scope:recipient
+			}
+		}
+		
+		modifier = {
+			add = character_arcana_baseline_value
+			scope:actor = {
+				character_arcana_baseline_value >= 5
+			}
+		}
+		
+		modifier = {
+			add = learning
+			scope:actor = {
+				learning >= 10
+			}
+		}
+
+		modifier = {
+			add = 25
+			scope:actor = {
+				is_independent_ruler = no
+				is_playable_character = yes
+				has_vassal_stance = magic_focused
+			}
+		}
+	}
+}

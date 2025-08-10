@@ -1,0 +1,139 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_triggers/godherja/GH_magic_spell_trigger_list.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+####################################
+# LIST OF GENERATED SPELL TRIGGERS #
+####################################
+
+ spell_trigger_0 = { always = yes }	# GH TODO: Remove this from the binary list
+ spell_trigger_1 = {	# spell_trigger_adult
+	is_adult = yes
+ }
+ spell_trigger_2 = {	# spell_trigger_female
+	is_female = yes
+ }
+ spell_trigger_3 = {	# spell_trigger_has_trait_wounded
+	has_trait = wounded
+ }
+ spell_trigger_4 = {	# spell_trigger_has_trait_pregnant
+	has_trait = pregnant
+ }
+ spell_trigger_5 = {	# spell_trigger_not_has_trait_magic_good
+	NOT = { has_trait = magic_good }
+ }
+ spell_trigger_6 = {	# spell_trigger_traveling
+	exists = current_travel_plan
+ }
+ spell_trigger_7 = {	# spell_trigger_forest_terrain
+	trigger_if = {
+		limit = { exists = current_travel_plan }
+		current_travel_plan.current_location = { terrain = forest }
+	}
+	trigger_else_if = {
+		limit = { exists = location }
+		location = { terrain = forest }
+	}
+	trigger_else = {
+		always = no
+	}
+
+ }
+ spell_trigger_8 = {	# spell_trigger_geographical_region_sarradon
+	trigger_if = {
+		limit = { exists = current_travel_plan }
+		current_travel_plan.current_location = { geographical_region = world_sarradon }
+	}
+	trigger_else_if = {
+		limit = { exists = location }
+		location = { geographical_region = world_sarradon }
+	}
+	trigger_else = {
+		always = no
+	}
+
+ }
+ spell_trigger_9 = {	# spell_trigger_childbirth
+	trigger_if = {
+		limit = {
+			exists = scope:mother
+			exists = scope:child
+		}
+		this = scope:mother
+	}
+	trigger_else = { always = no }
+
+ }
+ spell_trigger_10 = {	# spell_trigger_not_caster
+	NOT = { is_in_list = caster_list }
+ }
+ spell_trigger_11 = {	# spell_trigger_is_inspired
+	exists = inspiration
+ }
+ spell_trigger_12 = {	# spell_trigger_intimate_relation_to_caster
+	OR = {
+		any_spouse = {
+			this = scope:caster
+		}
+		has_relation_lover = scope:caster
+		has_relation_soulmate = scope:caster
+	}
+
+ }
+ spell_trigger_13 = {	# spell_trigger_not_has_character_modifier_shard_exhaustion_modifier
+	NOT = { has_character_modifier = shard_exhaustion_modifier }
+ }
+ spell_trigger_14 = {	# spell_trigger_not_has_character_modifier_magic_mind_fog_modifier
+	NOT = { has_character_modifier = magic_mind_fog_modifier }
+ }
+ spell_trigger_15 = {	# spell_trigger_spell_organizer_is_title_holder
+	holder = { is_in_list = spell_organizer_list }
+ }
+ spell_trigger_16 = {	# spell_trigger_slay_dangerous_beast_or_character_in_duel
+	exists = scope:melee_success
+	scope:animal_slayer ?= this
+
+ }
+ spell_trigger_17 = {	# spell_trigger_not_has_maxed_out_gh_ritual_tattoos_track
+	has_trait_xp = {
+		trait = gh_ritual_tattoos
+		value < 100
+	}
+
+ }
+ spell_trigger_18 = {	# spell_trigger_not_has_tattoo_of_ritual
+	custom_description = {
+		text = "Already has a #BOL tattoo#! of this [ritual]"
+		OR = {
+			NOT = { has_variable_list = GH_ritual_tattoo_list }
+			NOT = {
+				is_target_in_variable_list = {
+					name = GH_ritual_tattoo_list
+					target = scope:spell_being_casted
+				}
+			}
+		}
+	}
+
+ }
+ spell_trigger_19 = {	# spell_trigger_less_than_age
+	age <= var:age
+ }
+ spell_trigger_20 = {	# spell_trigger_greater_than_age
+	age >= var:age
+ }
+ spell_trigger_21 = {}
+ spell_trigger_22 = {}
+ spell_trigger_23 = {}
+ spell_trigger_24 = {}
+ spell_trigger_25 = {}
+ spell_trigger_26 = {}
+ spell_trigger_27 = {}
+ spell_trigger_28 = {}
+ spell_trigger_29 = {}
+ spell_trigger_30 = {}
+ spell_trigger_31 = {}

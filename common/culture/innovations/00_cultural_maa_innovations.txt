@@ -1,0 +1,860 @@
+﻿#### Local Types ####
+@administration_1 = "gfx/interface/icons/culture_innovations/innovation_administration_01.dds"
+@administration_2 = "gfx/interface/icons/culture_innovations/innovation_administration_02.dds"
+@administration_3 = "gfx/interface/icons/culture_innovations/innovation_administration_03.dds"
+@civil_construction_1 = "gfx/interface/icons/culture_innovations/innovation_civil_construction_01.dds"
+@civil_construction_2 = "gfx/interface/icons/culture_innovations/innovation_civil_construction_02.dds"
+@leadership_1 = "gfx/interface/icons/culture_innovations/innovation_leadership_01.dds"
+@leadership_2 = "gfx/interface/icons/culture_innovations/innovation_leadership_02.dds"
+@raised_banner = "gfx/interface/icons/culture_innovations/innovation_raised_banner.dds"
+@fortifications = "gfx/interface/icons/culture_innovations/innovation_fortifications.dds"
+@siege_weapons = "gfx/interface/icons/culture_innovations/innovation_siege_weapons.dds"
+@levy_building = "gfx/interface/icons/culture_innovations/innovation_levy_building.dds"
+@maa_01 = "gfx/interface/icons/culture_innovations/innovation_maa_01.dds"
+@maa_02 = "gfx/interface/icons/culture_innovations/innovation_maa_02.dds"
+@weapons_and_armor_01 = "gfx/interface/icons/culture_innovations/innovation_weapons_and_armor_01.dds"
+@weapons_and_armor_02 = "gfx/interface/icons/culture_innovations/innovation_weapons_and_armor_02.dds"
+@knight = "gfx/interface/icons/culture_innovations/innovation_knight.dds"
+@majesty_01 = "gfx/interface/icons/culture_innovations/innovation_majesty_01.dds"
+@majesty_02 = "gfx/interface/icons/culture_innovations/innovation_majesty_02.dds"
+@majesty_03 = "gfx/interface/icons/culture_innovations/innovation_majesty_03.dds"
+@nobility_01 = "gfx/interface/icons/culture_innovations/innovation_nobility_01.dds"
+@nobility_02 = "gfx/interface/icons/culture_innovations/innovation_nobility_02.dds"
+@nobility_03 = "gfx/interface/icons/culture_innovations/innovation_nobility_03.dds"
+@nobility_04 = "gfx/interface/icons/culture_innovations/innovation_nobility_04.dds"
+@misc_inventions = "gfx/interface/icons/culture_innovations/innovation_misc_inventions.dds"
+
+@camel = "gfx/interface/icons/culture_innovations/innovation_camel.dds"
+@elephant = "gfx/interface/icons/culture_innovations/innovation_elephant.dds"
+@mammoth = "gfx/interface/icons/culture_innovations/innovation_mammoth.dds"
+@special_maa_01 = "gfx/interface/icons/culture_innovations/innovation_special_maa_01.dds"
+@special_maa_02 = "gfx/interface/icons/culture_innovations/innovation_special_maa_02.dds"
+
+innovation_imperial_magic = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# Imperial
+			has_cultural_pillar = heritage_aversarian
+			has_cultural_tradition = tradition_legacy_of_aversaria
+			has_cultural_tradition = tradition_legacy_of_aversaria_lesser
+		}
+	}
+
+	unlock_maa = arcane_auxiliaries
+	custom = more_magic_focused
+
+	flag = global_maa
+}
+
+innovation_anti_magic_combat = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# Marcher
+			has_cultural_pillar = heritage_marcher
+			has_cultural_pillar = heritage_ojyczaynz
+			has_cultural_tradition = tradition_chevalien_identity
+		}
+	}
+
+	unlock_building = 01_antimagi_chapterhouse
+	#custom = less_magic_focused
+
+	flag = global_maa
+}
+
+innovation_berserkers = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			has_cultural_pillar = heritage_sjalvolki
+			has_cultural_pillar = heritage_kardwen
+		}
+	}
+
+	unlock_maa = sjalvolki_berserkers
+	unlock_maa = slayers # GH URGENT: Move elsewhere
+
+	flag = global_maa
+}
+
+# new innovations
+
+innovation_wodes = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_fog_eaters
+	}
+
+	unlock_maa = wodes
+	unlock_maa = whisperers
+
+	flag = global_maa
+}
+
+innovation_grave_wardens = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# not-polish
+			has_cultural_pillar = heritage_ojyczaynz
+			this = culture:oejeynica
+			any_parent_culture_or_above = {
+				this = culture:oejeynica
+			}
+		}
+	}
+
+	unlock_maa = grave_wardens
+
+	flag = global_maa
+}
+
+innovation_flying_lances = {
+	group = culture_group_regional
+	culture_era = culture_era_late_medieval
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# not-polish
+			has_cultural_pillar = heritage_ojyczaynz
+			this = culture:oejeynica
+			any_parent_culture_or_above = {
+				this = culture:oejeynica
+			}
+		}
+	}
+
+	unlock_maa = flying_lances
+
+	flag = global_maa
+}
+
+innovation_golden_spears = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# adabyss
+			has_cultural_pillar = heritage_hadiyan
+		}
+	}
+
+	unlock_maa = golden_spears
+
+	flag = global_maa
+}
+
+innovation_the_bloodied = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		# Iyrossi
+		has_cultural_pillar = heritage_iyrossi
+	}
+
+	unlock_maa = the_bloodied
+
+	flag = global_maa
+}
+
+innovation_grove_guardians = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_nattanan
+	}
+
+	unlock_maa = grove_guardians
+
+	flag = global_maa
+}
+
+innovation_jerniems_rangers = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_nattanan
+	}
+
+	unlock_maa = jerniems_rangers
+
+	flag = global_maa
+}
+
+innovation_crimson_spears = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_korlacan
+	}
+
+	unlock_maa = crimson_spears
+
+	flag = global_maa
+
+}
+
+innovation_molten_vanguard = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_korlacan
+	}
+
+	unlock_maa = molten_vanguard
+
+	flag = global_maa
+
+}
+
+innovation_prophets_sons = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			has_cultural_pillar = heritage_zarasadari
+			has_cultural_pillar = heritage_thyssae
+		}
+	}
+
+	unlock_maa = prophets_sons
+
+	flag = global_maa
+}
+
+innovation_marcher_knights = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @maa_01
+
+	potential = {
+		# Marcher
+		has_cultural_pillar = heritage_marcher
+	}
+
+	unlock_maa = marcher_knights
+
+	flag = global_maa
+}
+
+innovation_brother_riders = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+
+	potential = {
+		# sjalvolki
+		has_cultural_pillar = heritage_sjalvolki
+	}
+
+	unlock_maa = brother_riders
+
+	flag = global_maa
+}
+
+innovation_moonkin = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_mondecny
+	}
+
+	unlock_maa = moonkin
+
+	flag = global_maa
+}
+
+innovation_konijkmener_pikes = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_konijkmener
+	}
+
+	unlock_maa = konijkmener_pikes
+
+	flag = global_maa
+}
+
+innovation_partic_seers = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_partic
+	}
+
+	unlock_maa = partic_seers
+
+	flag = global_maa
+}
+
+innovation_aversarian_legionaires = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_aversarian
+	}
+
+	unlock_maa = aversarian_legionaires
+
+	flag = global_maa
+}
+
+# innovation_veiled = {
+#	 group = culture_group_regional
+#	 culture_era = culture_era_late_medieval
+#	 icon = @maa_01
+#
+#	 potential = {
+#		 OR = {
+#			 this.religion = religion:gestanwoder
+#		 }
+#	 }
+#
+#	 unlock_maa = veiled
+#
+#	 flag = global_maa
+#}
+
+
+
+# GH unique non MAA giving cultural specific innovations 
+
+innovation_doriosian_reforms = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @weapons_and_armor_01
+	
+	potential = {
+		has_cultural_pillar = heritage_aversarian
+	}
+	
+	character_modifier = {
+		men_at_arms_maintenance = -0.05
+	}
+	
+	maa_upgrade = {
+		type = heavy_infantry
+		damage = 5
+		toughness = 5
+	}
+
+	flag = global_regular
+	flag = early_medieval_era_regular
+}
+
+innovation_imperial_religious_reformation = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @administration_1
+
+	potential = {
+		has_cultural_pillar = heritage_aversarian
+	}
+
+	character_modifier = {
+		faith_creation_piety_cost_mult = -0.2
+	}
+}
+
+innovation_eastern_cav = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @special_maa_02
+
+	potential = {
+		has_cultural_pillar = heritage_kikarsag	
+	}
+
+	unlock_maa = kikarsag_heavy_cav
+
+	flag = global_maa
+}
+
+innovation_adabyss = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+	
+	potential = {
+		has_cultural_pillar = heritage_hadiyan
+	}
+
+	unlock_maa = golem_infantry
+	unlock_maa = airships
+	unlock_maa = autocrossbowmen
+	unlock_law = single_heir_dynasty_house
+	flag = global_maa
+	flag = tribal_era_regional
+}
+
+innovation_griffon_riders = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# Marcher
+			has_cultural_pillar = heritage_marcher
+			has_cultural_pillar = heritage_ojyczaynz
+		}
+	}
+	
+	unlock_building = 01_griffon_roost
+
+	flag = global_maa
+}
+
+innovation_bloodbound = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# Iyrossi
+			has_cultural_pillar = heritage_iyrossi
+		}
+	}
+
+	unlock_maa = bloodbound
+
+	flag = global_maa
+}
+
+innovation_legion_raiders = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_aversarian
+	}
+
+	unlock_maa = legion_raiders
+
+	flag = global_maa
+}
+
+innovation_home_legions = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			this = culture:westernimperial
+			any_parent_culture_or_above = { this = culture:westernimperial }
+		}
+	}
+
+	unlock_maa = home_legions
+
+	flag = global_maa
+}
+
+innovation_pure_pikes = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			this = culture:southernimperial
+			this = culture:southislander
+			this = culture:enynanthari
+			this = culture:erridai
+			any_parent_culture_or_above = { this = culture:southernimperial }
+			any_parent_culture_or_above = { this = culture:southislander }
+			any_parent_culture_or_above = { this = culture:enynanthari }
+			any_parent_culture_or_above = { this = culture:erridai }
+		}
+	}
+
+	unlock_maa = pure_pikes
+
+	flag = global_maa
+}
+
+innovation_legion_outriders = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			this = culture:easternimperial
+			any_parent_culture_or_above = { this = culture:easternimperial }
+		}
+	}
+
+	unlock_maa = legion_outriders
+
+	flag = global_maa
+}
+
+innovation_north_shields = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			this = culture:apokiakas
+			any_parent_culture_or_above = { this = culture:apokiakas }
+		}
+	}
+
+	unlock_maa = north_shields
+
+	flag = global_maa
+}
+
+innovation_legion_marines = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			this = culture:aersodiaxian_islander
+			this = culture:centralislander
+			this = culture:dasulanoi
+			this = culture:easternislander
+			this = culture:imperialislander
+			this = culture:islander
+			this = culture:ixsian
+			this = culture:nimakiroi
+			this = culture:symvolix
+			this = culture:vonatolis
+			any_parent_culture_or_above = { this = culture:aersodiaxian_islander }
+			any_parent_culture_or_above = { this = culture:centralislander }
+			any_parent_culture_or_above = { this = culture:easternislander }
+			any_parent_culture_or_above = { this = culture:imperialislander }
+			any_parent_culture_or_above = { this = culture:imperialislander }
+			any_parent_culture_or_above = { this = culture:islander }
+			any_parent_culture_or_above = { this = culture:ixsian }
+			any_parent_culture_or_above = { this = culture:nimakiroi }
+			any_parent_culture_or_above = { this = culture:symvolix }
+			any_parent_culture_or_above = { this = culture:vonatolis }
+		}
+	}
+
+	unlock_maa = legion_marines
+
+	flag = global_maa
+}
+
+innovation_duneriders = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			this = culture:erimatos
+			this = culture:makryenis
+			any_parent_culture_or_above = { this = culture:erimatos }
+			any_parent_culture_or_above = { this = culture:makryenis }
+		}
+	}
+
+	unlock_maa = duneriders
+
+	flag = global_maa
+}
+
+#innovation_stepwalkers = {
+#	group = culture_group_regional
+#	culture_era = culture_era_tribal
+#	icon = @maa_01
+#
+#	potential = {
+#		OR = {
+#			# Imperial
+#			always = no # GH TODO: Ritualists
+#		}
+#	}
+#
+#	unlock_maa = stepwalkers
+#
+#	flag = global_maa
+#}
+
+innovation_mountainstrikers = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			# Goan
+			has_cultural_pillar = heritage_goan
+		}
+	}
+
+	unlock_maa = mountainstrikers
+
+	flag = global_maa
+}
+
+innovation_thrill_of_the_hunt = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_kardwen
+	}
+
+	unlock_maa = huntsmen
+	
+	flag = global_maa
+}
+
+innovation_stoneforged = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @weapons_and_armor_01
+
+	potential = {
+		has_cultural_pillar = heritage_goan
+	}
+	unlock_maa = stoneforged
+
+	flag = global_maa
+}
+
+innovation_sunstriders = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @knight
+
+	potential = {
+		has_cultural_pillar = heritage_sarminian
+	}
+
+	unlock_maa = sunstriders
+
+	character_modifier = {
+		heavy_cavalry_maintenance_mult = -0.1
+	}
+
+	flag = global_maa
+}
+
+innovation_observant = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @raised_banner
+	
+	potential = {
+		has_cultural_pillar = heritage_huegodoc
+	}
+	
+	unlock_maa = observant
+
+	flag = global_maa
+}
+
+innovation_huegodoc_legion = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @knight
+	
+	potential = {
+		has_cultural_pillar = heritage_huegodoc
+	}
+	unlock_maa = huegodoc_legion
+
+	flag = global_maa
+}
+
+innovation_warisnik_mammoths = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @mammoth
+	potential = {
+		OR = {
+			this = culture:warisnik
+			any_parent_culture_or_above = { this = culture:warisnik }
+		}
+	}
+	unlock_building = mammoth_pens_01
+
+	custom = eligible_accolade_mammothry_attribute
+	custom = domicile_building_parameter_camp_reinforce_mammoth_regiments_anywhere
+
+	flag = global_maa
+}
+
+innovation_jokhosani = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_lerrardin
+	}
+
+	unlock_maa = jokhosani
+
+	flag = global_maa
+}
+
+innovation_kafasali_steel = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	region = world_ga_kashirya
+	icon = @weapons_and_armor_01
+
+	character_modifier = {
+		prowess = 1
+	}
+	
+	maa_upgrade = {
+		type = heavy_infantry
+		damage = 3
+		toughness = 3
+	}
+
+	flag = global_maa
+}
+
+innovation_talabhau = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		OR = {
+			has_cultural_pillar = heritage_zonthawa
+			has_cultural_pillar = heritage_rekhala
+			has_cultural_pillar = heritage_emanhi
+		}
+	}
+
+	unlock_maa = talabhau
+
+	flag = global_maa
+}
+
+innovation_kaphral = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+	
+	potential = {
+		OR = {
+			has_cultural_pillar = heritage_adhata
+			has_cultural_pillar = heritage_athacaya
+		}
+	}
+
+	unlock_maa = kaphral
+
+	flag = global_maa
+}
+
+innovation_sword_oaths = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @leadership_1
+	potential = {
+		has_cultural_pillar = heritage_theugombrian
+	}
+	unlock_maa = theugombrian_warrior_kinband
+	unlock_maa = theugombrian_iron_brotherhood
+	
+	flag = global_maa
+}
+
+innovation_terrors_of_the_void = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @leadership_1
+	potential = {
+		has_cultural_pillar = heritage_redlander
+	}
+	unlock_maa = chasm_terrors
+	unlock_maa = redland_cultists
+	unlock_maa = voidhosts
+	
+	flag = global_maa
+}
+
+innovation_sjalvolki_adventurers = {
+	group = culture_group_regional
+	culture_era = culture_era_tribal
+	icon = @maa_01
+
+	potential = {
+		has_cultural_pillar = heritage_sjalvolki
+	}
+
+	unlock_maa = adventurers_maa
+}
+
+innovation_bronzecast = {
+	group = culture_group_regional
+	culture_era = culture_era_high_medieval
+	icon = @siege_weapons
+
+	character_modifier = {
+		army_toughness_mult = 0.05
+		army_maintenance_mult = 0.05
+	}
+	
+	potential = {
+		OR = {
+			this = culture:lakoeng
+			this = culture:banwagul
+			any_parent_culture_or_above = { this = culture:lakoeng }
+			any_parent_culture_or_above = { this = culture:banwagul }
+		}
+	}
+	unlock_maa = bronzecast
+	
+	flag = global_maa
+}

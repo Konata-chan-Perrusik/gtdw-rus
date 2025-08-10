@@ -1,0 +1,276 @@
+﻿
+setup_global_story_effect = {
+	create_story = {
+		type = $STORY_TYPE$
+		save_scope_as = $STORY_TYPE$
+	}
+	scope:$STORY_TYPE$ = {
+		set_variable = {
+			name = story_name
+			value = flag:$STORY_NAME$
+		}
+		set_variable = {
+			name = story_decision_illustration
+			value = flag:$STORY_ILLUSTRATION$
+		}
+		set_variable = { # GH_TODO Does this need an if statement? Changed for now to not, as it did not have a trigger
+			name = story_start_year
+			value = current_year
+		}
+	}
+	add_to_global_variable_list = {
+		name = global_story_cycle_list
+		target = scope:$STORY_TYPE$
+	}
+}
+
+end_global_story_effect = {
+	save_temporary_scope_as = story_to_end
+	remove_list_global_variable = {
+		name = global_story_cycle_list
+		target = scope:story_to_end
+	}
+	end_story = yes
+}
+
+add_progressbar_variable_effect = {
+	set_variable = {
+		name = $VARIABLE_NAME$
+		value = 0
+	}
+	set_variable = {
+		name = $VARIABLE_NAME$_maximum
+		value = $MAXIMUM_VALUE$
+	}
+	set_variable = {
+		name = $VARIABLE_NAME$_tracker_color
+		value = flag:$TRACKER_COLOR$
+	}
+	set_variable = {
+		name = $VARIABLE_NAME$_tracker_icon
+		value = flag:$TRACKER_ICON$
+	}
+	if = {
+		limit = { NOT = { has_variable = primary_tracked_variable } }
+		set_variable = {
+			name = primary_progressbar_variable
+			value = flag:$VARIABLE_NAME$
+		}
+	}
+	else = {
+		add_to_variable_list = {
+			name = progressbar_story_variables
+			target = flag:$VARIABLE_NAME$
+		}
+	}
+}
+
+add_progressbar_script_value_effect = {
+	set_variable = {
+		name = $SCRIPT_VALUE_NAME$_tracker_color
+		value = flag:$TRACKER_COLOR$
+	}
+	set_variable = {
+		name = $SCRIPT_VALUE_NAME$_tracker_icon
+		value = flag:$TRACKER_ICON$
+	}
+	if = {
+		limit = { NOT = { has_variable = primary_tracked_variable } }
+		set_variable = {
+			name = primary_progressbar_variable
+			value = flag:$SCRIPT_VALUE_NAME$
+		}
+	}
+	else = {
+		add_to_variable_list = {
+			name = progressbar_story_script_values
+			target = flag:$SCRIPT_VALUE_NAME$
+		}
+	}
+}
+
+add_tracked_variable_effect = {
+	set_variable = {
+		name = $VARIABLE_NAME$
+		value = 0
+	}
+	add_to_variable_list = {
+		name = tracked_story_variables
+		target = flag:$VARIABLE_NAME$
+	}
+}
+
+add_person_of_interest_effect = {
+	if = {
+		limit = { exists = $PERSON_OF_INTEREST$ }
+		add_to_variable_list = {
+			name = $PERSON_OF_INTEREST_TYPE$
+			target = $PERSON_OF_INTEREST$
+		}
+		add_to_variable_list = {
+			name = person_of_interest_type_list
+			target = flag:$PERSON_OF_INTEREST_TYPE$
+		}
+		# Done like this since hboxes are more convenient than grids, and there should not be more than 12 tracked faiths for performance reasons
+		if = {
+			limit = { 
+				OR = {
+					NOT = { has_variable_list = person_of_interest_type_list_row_1 }
+					variable_list_size = {
+						name = person_of_interest_type_list_row_1
+						value < 4
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = person_of_interest_type_list_row_1
+				target = flag:$PERSON_OF_INTEREST_TYPE$
+			}
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					NOT = { has_variable_list = person_of_interest_type_list_row_2 }
+					variable_list_size = {
+						name = person_of_interest_type_list_row_2
+						value < 4
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = person_of_interest_type_list_row_2
+				target = flag:$PERSON_OF_INTEREST_TYPE$
+			}
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					NOT = { has_variable_list = person_of_interest_type_list_row_3 }
+					variable_list_size = {
+						name = person_of_interest_type_list_row_3
+						value < 4
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = person_of_interest_type_list_row_3
+				target = flag:$PERSON_OF_INTEREST_TYPE$
+			}
+		}
+	}
+}
+
+add_faith_powerbalance_tracker_effect = {
+	if = {
+		limit = { exists = $FAITH$ }
+		add_to_variable_list = {
+			name = tracked_powerbalance_faiths_list
+			target = $FAITH$
+		}
+		# Done like this since hboxes are more convenient than grids, and there should not be more than 12 tracked faiths for performance reasons
+		if = {
+			limit = { 
+				OR = {
+					NOT = { has_variable_list = tracked_powerbalance_faiths_list_row_1 }
+					variable_list_size = {
+						name = tracked_powerbalance_faiths_list_row_1
+						value < 4
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = tracked_powerbalance_faiths_list_row_1
+				target = $FAITH$
+			}
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					NOT = { has_variable_list = tracked_powerbalance_faiths_list_row_2 }
+					variable_list_size = {
+						name = tracked_powerbalance_faiths_list_row_2
+						value < 4
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = tracked_powerbalance_faiths_list_row_2
+				target = $FAITH$
+			}
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					NOT = { has_variable_list = tracked_powerbalance_faiths_list_row_3 }
+					variable_list_size = {
+						name = tracked_powerbalance_faiths_list_row_3
+						value < 4
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = tracked_powerbalance_faiths_list_row_3
+				target = $FAITH$
+			}
+		}
+	}
+}
+
+assign_roc_color_effect = {
+	save_temporary_scope_value_as = {
+		name = fur_color
+		value = flag:$COLOR$
+	}
+	if = {
+		limit = { scope:fur_color = flag:random }
+		hidden_effect = {
+			random_list = {
+				50 = {
+					set_variable = {
+						name = roc_fur_color
+						value = flag:brown
+					}
+				}
+				50 = {
+					set_variable = {
+						name = roc_fur_color
+						value = flag:gray
+					}
+				}
+				50 = {
+					set_variable = {
+						name = roc_fur_color
+						value = flag:orange
+					}
+				}
+				50 = {
+					set_variable = {
+						name = roc_fur_color
+						value = flag:black
+					}
+				}
+				50 = {
+					set_variable = {
+						name = roc_fur_color
+						value = flag:white
+					}
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				scope:fur_color = flag:brown
+				scope:fur_color = flag:gray
+				scope:fur_color = flag:orange
+				scope:fur_color = flag:black
+				scope:fur_color = flag:white
+			}
+		}
+		set_variable = {
+			name = roc_fur_color
+			value = flag:$COLOR$
+		}
+	}
+}

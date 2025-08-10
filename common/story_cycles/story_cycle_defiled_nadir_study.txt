@@ -1,0 +1,61 @@
+﻿defiled_nadir_study_story = { # Mentorship of an elder while learning the Defiled Nadir spell
+
+	on_setup = {
+		set_variable = {
+			name = defiled_nadir_mentor
+			value = story_owner.var:elder_mentor
+		}
+		story_owner = { remove_variable = elder_mentor }
+	}
+
+	on_end = {
+
+	}
+
+	on_owner_death = {
+		end_story = yes
+	}
+
+	effect_group = {
+		days = { 30 60 }
+
+		first_valid = { # Only those outcomes that have narrative value
+			triggered_effect = { # Successfully learned the spell
+				trigger = {
+					story_owner = { magic_spell_is_known_by_trigger = { MAGI = this SPELL = global_var:defiled_nadir } }
+					var:defiled_nadir_mentor = { is_alive = yes }
+				}
+				effect = { story_owner = { trigger_event = gh_olteni_events.0108 } }
+			}
+			triggered_effect = { # The Mentor died before teaching the spell
+				trigger = {
+					story_owner = { NOT = { magic_spell_is_known_by_trigger = { MAGI = this SPELL = global_var:defiled_nadir } } }
+					var:defiled_nadir_mentor = { is_alive = no }
+				}
+				effect = { story_owner = { trigger_event = gh_olteni_events.0109 } }
+			}
+			triggered_effect = { # Failed to learn the spell
+				trigger = {
+					story_owner = {
+						NOR = {
+							magic_spell_is_known_by_trigger = { MAGI = this SPELL = global_var:defiled_nadir }
+							any_scheme = {
+								AND = {
+									scheme_type = learn_magic_spell_scheme
+									scheme_target_character = root.var:defiled_nadir_mentor
+									var:spell_to_learn_from_character = global_var:defiled_nadir
+								}
+							}
+						}
+					}
+					var:defiled_nadir_mentor = { is_alive = yes }
+				}
+				effect = { story_owner = { trigger_event = gh_olteni_events.0110 } }
+			}
+			triggered_effect = { # Fallback
+				trigger = { var:defiled_nadir_mentor = { is_alive = no } }
+				effect = { end_story = yes }
+			}
+		}
+	}
+}

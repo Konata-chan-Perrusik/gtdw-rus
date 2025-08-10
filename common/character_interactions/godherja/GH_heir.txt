@@ -1,0 +1,448 @@
+﻿@designate_heir_cost = 1000
+@designate_heir_cost_discounted = 100
+
+adopt_heir_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = adopt_interaction_desc
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		
+		scope:recipient = {
+			is_adult = yes
+		}
+		scope:actor.faith = scope:recipient.faith
+		NOR = {
+			scope:actor.dynasty = scope:recipient.dynasty
+			scope:actor = {
+				is_at_war_with = scope:recipient
+			}
+			scope:actor = {
+				any_close_family_member = {
+					this = scope:recipient
+				}
+			}
+			scope:actor = {
+				any_spouse = {
+					this = scope:recipient
+				}
+			}
+			scope:actor = {
+				any_child = {
+					is_alive = yes
+					NOT = { has_trait = bastard }
+				}
+			}
+		}
+		scope:actor = {
+			OR = {
+				government_has_flag = government_is_landed_order
+				government_has_flag = government_is_military_unit
+			}
+			age > 40
+		}
+		scope:recipient = {
+			is_busy_in_events_localised = yes
+			is_imprisoned = no
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = { is_busy_in_events_localised = yes }
+		custom_description = {
+			scope:recipient = {
+				age < scope:actor.age
+			}
+			text = recipient_must_be_younger_to_adopt
+		}
+		trigger_if = {
+			scope:actor = { prestige >= @designate_heir_cost }
+		}
+	}
+
+	on_auto_accept = {
+		scope:recipient = {
+			set_house = scope:actor.house
+		}
+	} 
+
+	on_accept = {
+		scope:actor = {
+			send_interface_toast = {
+				title = designate_heir_interaction_notification
+				left_icon = scope:actor					
+				right_icon = scope:recipient
+				scope:recipient = {
+					set_house = scope:actor.house
+					if = {
+						limit = { scope:actor = { is_female = yes } }
+						custom_description = {
+							set_mother = scope:actor
+							text = becomes_mother_of_effect
+							subject = scope:actor
+							object = this
+						}
+					}
+					else = {
+						custom_description = {
+							set_father = scope:actor
+							text = becomes_father_of_effect
+							subject = scope:actor
+							object = this
+						}
+					}
+				}
+				
+				#else = {
+					add_prestige = { subtract = @designate_heir_cost }
+				#}
+			}
+		}
+	}
+
+	auto_accept = yes
+}
+
+# Overrides the presumed heir in governments where such a thing is allowed, i.e. landed holy orders
+designate_presumed_heir_interaction = {
+	category = interaction_category_diplomacy
+
+	desc = designate_presumed_heir_interaction_desc
+	
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		trigger_if = {
+			limit = { 
+				scope:actor = {
+					is_playable_character = yes
+					highest_held_title_tier >= tier_county
+					government_has_flag = government_is_landed_order
+				}
+			}
+			scope:recipient = {
+				can_be_presumed_heir_for_title = { TITLE = scope:actor.primary_title }
+			}
+			NOT = {
+				is_presumed_heir_of_any_character_title = { TARGET_CHARACTER = scope:actor PRESUMED_HEIR = scope:recipient }	# No point in setting a presumed heir if they're already one
+			}
+		}
+		trigger_else = { always = no }
+	}
+	
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			trigger_if = {
+				limit = { government_has_flag = government_is_landed_order }
+				piety >= presumed_heir_change_cost
+			}
+			trigger_else = {
+				prestige >= presumed_heir_change_cost
+			}
+			NOT = {
+				has_variable = designate_presumed_heir_cooldown
+			}
+		}
+	}
+	
+	on_accept = {
+		scope:actor = {
+			primary_title = {
+				if = {
+					limit = { has_variable = presumed_heir }
+					if = {
+						limit = {
+							var:presumed_heir = {
+								NOR = {
+									has_trait = content
+									has_trait = ambitious
+									has_trait = vengeful
+								}
+							}
+						}
+						var:presumed_heir = {
+							add_opinion = {
+								modifier = changed_presumed_heir_previous_heir
+								target = scope:actor
+							}
+							add_opinion = {
+								modifier = changed_presumed_heir_previous_heir_towards_new_heir
+								target = scope:recipient
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							var:presumed_heir = {
+								OR = {
+									has_trait = ambitious
+									has_trait = vengeful
+								}
+							}
+						}
+						var:presumed_heir = {
+							add_opinion = {
+								modifier = changed_presumed_heir_previous_heir_ambitious
+								target = scope:actor
+							}
+							add_opinion = {
+								modifier = changed_presumed_heir_previous_heir_ambitious_towards_new_heir
+								target = scope:recipient
+							}
+						}
+					}
+					if = {
+						limit = {
+							scope:recipient = {
+								NOR = {
+									has_trait = content
+									has_trait = ambitious
+								}
+							}
+						}
+						scope:recipient = {
+							add_opinion = {
+								modifier = changed_presumed_heir_new_heir
+								target = scope:actor
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							scope:recipient = {
+								has_trait = ambitious
+							}
+						}
+						scope:recipient = {
+							add_opinion = {
+								modifier = changed_presumed_heir_new_heir_ambitious
+								target = scope:actor
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							scope:recipient = {
+								has_trait = content
+							}
+						}
+						scope:recipient = {
+							add_opinion = {
+								modifier = changed_presumed_heir_new_heir_content
+								target = scope:actor
+							}
+						}
+					}
+				}
+			}
+			scope:recipient = {
+				set_variable = manually_designated_presumed_heir
+				set_variable = {
+					name = presumed_heir_to_title
+					value = scope:actor.primary_title
+				}
+			}
+			random_held_title = {
+				limit = { has_variable = presumed_heir }
+				var:presumed_heir = {
+					if = {
+						limit = { has_variable = manually_designated_presumed_heir }
+						remove_variable = manually_designated_presumed_heir
+					}
+					remove_variable = presumed_heir_to_title
+				}
+				set_variable = {
+					name = presumed_heir
+					value = scope:recipient
+				}
+			}
+			if = {
+				limit = { government_has_flag = government_is_landed_order }
+				add_piety = { subtract = presumed_heir_change_cost }
+			}
+			else = {
+				add_prestige = { subtract = presumed_heir_change_cost }
+			}
+			custom_description = {
+				set_variable = {
+					name = designate_presumed_heir_cooldown
+					years = 5
+				}
+				text = designate_presumed_heir_cooldown_effect
+			}
+		}
+	}
+	
+	auto_accept = yes
+}
+
+# Redlanders throw their kids in a pit
+send_children_to_pit_interaction = {
+	icon = heir
+	category = interaction_category_diplomacy
+
+	desc = send_children_to_pit_interaction_desc
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor.culture = { has_cultural_pillar = heritage_redlander }
+		scope:actor.capital_province = { geographical_region = GH_geographic_redlands_mainland }
+	}
+
+	is_valid = {
+		scope:recipient = {
+			is_adult = no
+		}
+		OR = {
+			scope:recipient = { is_courtier_of = scope:actor }
+			scope:recipient = { is_imprisoned_by = scope:actor }
+		}
+		scope:actor.culture = { has_cultural_pillar = heritage_redlander }
+		scope:actor.capital_province = { geographical_region = GH_geographic_redlands_mainland }
+	}
+	
+	on_auto_accept = {
+		scope:recipient = {
+			death = { death_reason = death_redlands_pit }
+		}
+	}
+
+	on_accept = {
+		scope:actor = {
+			GH_thechildrenyearnfortheyearning_check = yes
+			send_interface_toast = {
+				title = sent_child_to_pits_interaction_notification
+
+				left_icon = scope:actor
+				right_icon = scope:recipient
+			}
+			add_piety = 25  ##Planning to replace tributary wars for redlanders with a tributary CB that only targets other redlanders for a large piety cost. This is to help generate piety for that, and encourages child deletion.
+			if = {	# Child pit divine mission
+				limit = {
+					has_variable_list = ongoing_missions
+					any_in_list = {
+						variable = ongoing_missions
+						var:mission_type ?= flag:mission_type_child_pit
+					}
+				}
+				every_in_list = {
+					variable = ongoing_missions
+					limit = {
+						var:mission_type ?= flag:mission_type_child_pit
+						trigger_if = {
+							limit = { exists = var:mission_target_magic_level }
+							OR = {
+								AND = {
+									var:mission_target_magic_level <= 1
+									scope:recipient = {
+										has_trait = magic_good
+									}
+								}
+								AND = {
+									var:mission_target_magic_level = 2
+									scope:recipient = {
+										has_trait = magic_good
+										NOT = {
+											has_trait = magic_good_1
+										}
+									}
+								}
+								AND = {
+									var:mission_target_magic_level = 3
+									scope:recipient = {
+										has_trait = magic_good
+										NOT = {
+											has_trait = magic_good_1
+											has_trait = magic_good_2
+										}
+									}
+								}
+								AND = {
+									var:mission_target_magic_level = 4
+									scope:recipient = {
+										has_trait = magic_good
+										NOT = {
+											has_trait = magic_good_1
+											has_trait = magic_good_2
+											has_trait = magic_good_3
+										}
+									}
+								}
+								AND = {
+									var:mission_target_magic_level = 5
+									scope:recipient = {
+										has_trait = magic_good
+										NOT = {
+											has_trait = magic_good_1
+											has_trait = magic_good_2
+											has_trait = magic_good_3
+											has_trait = magic_good_4
+										}
+									}
+								}
+								AND = {
+									var:mission_target_magic_level >= 6
+									scope:recipient = {
+										has_trait = magic_good
+										NOT = {
+											has_trait = magic_good_1
+											has_trait = magic_good_2
+											has_trait = magic_good_3
+											has_trait = magic_good_4
+											has_trait = magic_good_5
+										}
+									}
+								}
+							}
+						}
+					}
+					if = {
+						limit = { NOT = { exists = var:mission_multiplicity } }
+						save_scope_as = mission_scope
+						scope:actor = { trigger_event = blackspawn.0011 }
+					}
+					else_if = { # Would the code logic be improved if we set this variable at the beginning?
+						limit = { NOT = { exists = var:completed_subtasks } }
+						set_variable = {
+							name = completed_subtasks
+							value = 1
+						}
+						scope:actor = {
+							send_interface_toast = {
+								title = blackspawn_mission_update_title
+								left_icon = this
+								decrease_divine_mission_penalties_effect = yes
+							}
+						}
+					}
+					else = {
+						change_variable = {
+							name = completed_subtasks
+							add = 1
+						}
+						if = {
+							limit = { var:completed_subtasks >= var:mission_multiplicity }
+							save_scope_as = mission_scope
+							scope:actor = { trigger_event = blackspawn.0011 }
+						}
+						else = {
+							scope:actor = {
+								send_interface_toast = {
+									title = blackspawn_mission_update_title
+									left_icon = this
+									decrease_divine_mission_penalties_effect = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 100 # we always want the redlanders to do this
+	}
+
+	auto_accept = yes
+}

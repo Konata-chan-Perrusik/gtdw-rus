@@ -1,0 +1,55 @@
+﻿action_can_censure_vassal = {
+	priority = 1000
+	combine_into_one = yes
+	check_create_action = {
+		if = {
+			limit = {
+				faith = { has_doctrine_parameter = uses_legal_traditions }
+				any_vassal = {
+					can_be_censured_trigger = yes
+				}
+			}
+			every_vassal = {
+				limit = { can_be_censured_trigger = yes }
+				save_temporary_scope_as = censured_target
+			}
+			try_create_important_action = {
+				important_action_type = action_can_censure_vassal
+				actor = root
+				recipient = scope:censured_target
+			}
+		}
+	}
+
+	effect = {
+		open_interaction_window = {
+			interaction = censure_interaction
+			actor = root
+			recipient = scope:censured_target
+		}
+	}
+}
+
+action_can_adopt_legal_tradition = {
+	type = alert
+	icon = generic_godherja_advice
+	check_create_action = {
+		if = {
+			limit = {
+				has_trait = lifestyle_jurist
+				NOT = { has_variable = character_legal_tradition }
+			}
+			try_create_important_action = {
+				important_action_type = action_can_adopt_legal_tradition
+				actor = root
+			}
+		}
+	}
+	effect = {
+		scope:actor.faith = {
+			open_view_data = {
+				view = faith
+			}
+		}
+	}
+}

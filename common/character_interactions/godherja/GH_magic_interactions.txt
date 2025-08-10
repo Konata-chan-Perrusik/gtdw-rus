@@ -1,0 +1,408 @@
+﻿dehand_interaction = {
+	interface_priority = 30
+	icon = icon_magic
+	category = interaction_category_prison
+
+	desc = dehand_interaction_desc
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:recipient = {
+			is_imprisoned_by = scope:actor
+			can_access_magic = yes
+		}
+		scope:actor = {
+			is_adult = yes
+			OR = {
+				culture = { has_cultural_pillar = heritage_aversarian }
+				has_any_negative_magic_doctrine = yes
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			custom_description = {
+				text = "currently_being_tortured"
+				NOT = { has_character_flag = is_being_tortured }
+			}
+		}
+	}
+
+	is_highlighted = {
+		OR = {
+			scope:actor = { has_trait = sadistic }
+			scope:actor = { has_relation_rival = scope:recipient }
+		}
+	}
+
+	on_accept = {
+		scope:recipient = {
+			add_character_flag = {
+				flag = is_being_tortured
+				months = 6
+			}
+		}
+
+		blind_castrate_and_disfigure_effect = yes #Stress & dread
+
+		show_as_tooltip = {
+			scope:recipient = {
+				add_trait = gh_dehanded
+				release_from_prison = yes
+			}
+		}
+		
+		hidden_effect = {
+			scope:recipient = {
+				add_trait = gh_dehanded
+				release_from_prison = yes
+			}
+		}
+
+		torture_blind_castrate_disfigure_opinion_effect = { VERB = dehanded }
+	}
+
+	auto_accept = yes
+
+	ai_targets = {
+		ai_recipients = prisoners
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = -20
+
+		modifier = {
+			has_trait = sadistic
+			add = 20
+		}
+		ai_value_modifier = {
+			ai_compassion = tiny_chance_impact_negative_ai_value #Adds +50 for highly uncompassionate characters, -50 for highly compassionate characters
+		}
+		opinion_modifier = {
+			opinion_target = scope:recipient
+			multiplier = -0.25
+		}
+	}
+
+	ai_frequency = 36
+}
+
+#cabal_invitation_interaction = {
+#	icon = icon_magic
+#	category = interaction_category_diplomacy
+#	common_interaction = yes
+#	interface_priority = 100
+#	desc = cabal_invitation_interaction_desc
+#	pre_answer_yes_key = cabal_invitation_pre_answer_key
+#	popup_on_receive = yes
+#	notification_text = cabal_invitation_notification_text
+#	reply_item_key = cabal_invitation_reply_key
+#	ai_frequency = 36
+#
+#	ai_targets = { ai_recipients = scripted_relations }
+#	ai_potential = { 
+#		is_adult = yes
+#		is_imprisoned = no 
+#		highest_held_title_tier > tier_county
+#	}
+#	ai_target_quick_trigger = { adult = yes }
+#	ai_will_do = { base = -25 }
+#	cooldown_against_recipient = { years = 10 }
+#	cooldown = { days = 10 }
+#
+#	is_shown = {
+#		NOT = {scope:actor = scope:recipient}
+#		scope:actor = {
+#			is_capable_adult = yes
+#			highest_held_title_tier >= tier_county
+#			exists = cp:councillor_court_magi
+#		}
+#		scope:recipient = {
+#			num_of_relation_cabal_master = 0
+#			num_of_relation_cabal_member = 0
+#			can_access_magic = yes
+#			OR = {
+#				is_courtier_of = scope:actor
+#				AND = {
+#					exists = liege
+#					liege = scope:actor
+#				}
+#			}
+#			NOT = { has_council_position = councillor_court_magi }
+#		}
+#	}
+#
+#	is_valid = {
+#		scope:actor = {
+#			has_cabal_room_limit = yes
+#			reverse_opinion = {
+#				target = scope:recipient
+#				value > medium_positive_opinion
+#			}
+#		}
+#	}
+#
+#	is_valid_showing_failures_only = {
+#		scope:actor = {
+#			NOR = {
+#				has_relation_rival = scope:recipient
+#				has_relation_nemesis = scope:recipient
+#				is_at_war_with = scope:recipient
+#			}
+#		}
+#		scope:recipient = {
+#			NOT = { has_trait = incapable }
+#		}
+#	}
+#
+#	can_send = {
+#		scope:recipient = { age > 16 }
+#	}
+#	ai_maybe = yes
+#	ai_accept = {
+#		base = -25
+#		opinion_modifier = {
+#			who = scope:recipient
+#			opinion_target = scope:actor
+#			multiplier = 0.5
+#		}
+#		compatibility_modifier = {
+#			who = scope:recipient
+#			compatibility_target = scope:actor
+#			multiplier = 1
+#			max = 30
+#		}
+#		first_valid = {
+#			modifier = {
+#				scope:actor = {has_relation_best_friend = scope:recipient}
+#				add = 50
+#			}
+#			modifier = {
+#				scope:actor = {has_relation_friend = scope:recipient}
+#				add = 25
+#			}
+#		}
+#		first_valid = {
+#			modifier = {
+#				scope:actor = {has_relation_soulmate = scope:recipient}
+#				add = 25
+#			}
+#			modifier = {
+#				scope:actor = {has_relation_lover = scope:recipient}
+#				add = 10
+#			}
+#		}
+#	}
+#	on_accept = {
+#		scope:recipient = {
+#			set_relation_cabal_master = scope:actor
+#		}
+#	}
+#}
+#
+#remove_cabal_member_interaction = {
+#	category = interaction_category_diplomacy
+#	icon = icon_magic
+#	common_interaction = yes
+#	interface_priority = 100
+#	desc = cabal_removal_interaction_desc
+#	popup_on_receive = yes
+#	notification_text = cabal_removal_notification_text
+#	ai_frequency = 1000
+#
+#	ai_targets = { ai_recipients = scripted_relations }
+#	ai_will_do = { base = -100 }
+#	cooldown = { days = 10 }
+#
+#	is_shown = {
+#		NOT = { scope:actor = scope:recipient }
+#		scope:actor = {
+#			is_capable_adult = yes
+#			exists = cp:councillor_court_magi
+#		}
+#		scope:recipient = {
+#			has_relation_cabal_master = scope:actor
+#		}
+#	}
+#
+#	is_valid = {
+#		scope:actor = {
+#			is_capable_adult = yes
+#		}
+#		scope:recipient = { is_diplomatically_available = yes }
+#		scope:recipient = { NOT = { has_strong_hook = scope:actor } }
+#	}
+#
+#	is_valid_showing_failures_only = {
+#		scope:actor = {
+#			NOT = { has_trait = incapable }
+#		}
+#	}
+#
+#	on_accept = {
+#		scope:actor = {
+#			stress_impact = {
+#				paranoid = minor_stress_impact_loss
+#			}
+#			hidden_effect = {
+#				send_interface_toast = {
+#					title = removed_from_cabal_notification
+#					left_icon = scope:actor
+#					right_icon = scope:recipient
+#
+#					scope:recipient = {
+#						show_as_tooltip = {
+#							remove_relation_cabal_master = scope:actor
+#						}
+#					}
+#				}
+#			}
+#		}
+#
+#		scope:recipient = {
+#			remove_relation_cabal_master = scope:actor
+#		}
+#	}
+#}
+
+
+add_to_magic_list_interaction = {
+	icon = icon_magic
+	interface_priority = 30
+
+	category = interaction_category_magic
+
+	desc = add_to_magic_list_desc
+	common_interaction = yes
+	is_shown = {
+		bilateral_nonsentient_diplomatic_block = yes
+		scope:actor = {
+			OR = {
+				can_access_magic = yes
+				exists = cp:councillor_court_magi
+			}
+			is_ai = no
+			NOT = {
+				is_target_in_variable_list = {
+					name = spell_targets
+					target = scope:recipient
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		always = yes
+	}
+
+	on_accept = {
+		scope:actor = {
+			add_to_variable_list = {
+				name = spell_targets
+				target = scope:recipient
+			}
+		}
+		scope:recipient = {
+			add_to_variable_list = {
+				name = spell_target_by
+				target = scope:actor
+			}
+		}
+	}
+
+	auto_accept = yes
+}
+
+remove_from_magic_list_interaction = {
+	interface_priority = 30
+	icon = icon_magic
+	category = interaction_category_magic
+	common_interaction = yes
+	use_diplomatic_range = no
+	desc = remove_from_magic_list_desc
+
+	is_shown = {
+		scope:actor = {
+			OR = {
+				can_access_magic = yes
+				exists = cp:councillor_court_magi
+			}
+			is_ai = no
+			is_target_in_variable_list = {
+				name = spell_targets
+				target = scope:recipient
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		always = yes
+	}
+
+	on_accept = {
+		scope:actor = {
+			remove_list_variable = {
+				name = spell_targets
+				target = scope:recipient
+			}
+		}
+		scope:recipient = {
+			remove_list_variable = {
+				name = spell_target_by
+				target = scope:actor
+			}
+		}
+	}
+
+	auto_accept = yes
+}
+
+clear_magic_list_interaction = {
+	interface_priority = 30
+	icon = icon_magic
+	category = interaction_category_magic
+	common_interaction = yes
+	desc = remove_from_magic_list_desc
+
+	is_shown = {
+		scope:actor = {
+			this = scope:recipient
+			OR = {
+				can_access_magic = yes
+				exists = cp:councillor_court_magi
+			}
+			is_ai = no
+			has_variable_list = spell_targets
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		always = yes
+	}
+
+	on_accept = {
+		scope:actor = {
+			every_in_list = {
+				variable = spell_targets
+				save_temporary_scope_as = target
+				scope:actor = {
+					remove_list_variable = {
+						name = spell_targets
+						target = scope:target
+					}
+				}
+				scope:target = {
+					remove_list_variable = {
+						name = spell_target_by
+						target = scope:actor
+					}
+				}
+			}
+		}
+	}
+}

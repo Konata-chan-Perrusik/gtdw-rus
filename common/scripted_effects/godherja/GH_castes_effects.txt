@@ -1,0 +1,383 @@
+﻿get_castes_list = {
+	$MODE$_caste = { NAME = rayakuux 	TRIGGER = always }
+	$MODE$_caste = { NAME = qabuux 		TRIGGER = always }
+	$MODE$_caste = { NAME = karavuux 	TRIGGER = always }
+	$MODE$_caste = { NAME = waranuux 	TRIGGER = always }
+}
+
+define_caste = {
+	if = {
+		limit = {
+			$TRIGGER$ = yes
+		}
+		add_to_variable_list = {
+			name = caste_list
+			target = flag:$NAME$
+		}
+		if = {
+			limit = {
+				NOR = {
+					has_variable = $NAME$_power_1
+					has_variable = $NAME$_power_2
+					has_variable = $NAME$_power_3
+					has_variable = $NAME$_power_4
+				}
+			}
+			set_variable = $NAME$_power_0
+		}
+	}
+}
+
+increase_caste_power = {
+	if = {
+		limit = {
+			NOR = {
+				has_variable = $NAME$_power_1
+				has_variable = $NAME$_power_2
+				has_variable = $NAME$_power_3
+				has_variable = $NAME$_power_4
+			}
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { has_variable = combined_faction_powershare }
+					var:combined_faction_powershare < 4
+				}
+				trigger_else = { always = yes }
+			}
+			add_county_modifier = $NAME$_modifier_1
+			set_variable = $NAME$_power_1
+			raise_combined_powershare = yes
+			set_variable = already_owned_by_caste
+			set_variable = {
+				name = caste_change_cooldown
+				years = 10
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_1
+			trigger_if = {
+				limit = { has_variable = combined_faction_powershare }
+				var:combined_faction_powershare < 4
+			}
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_1
+		}
+		add_county_modifier = $NAME$_modifier_2
+		remove_variable = $NAME$_power_1
+		set_variable = $NAME$_power_2
+		raise_combined_powershare = yes
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_2
+			trigger_if = {
+				limit = { has_variable = combined_faction_powershare }
+				var:combined_faction_powershare < 4
+			}
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_2
+		}
+		add_county_modifier = $NAME$_modifier_3
+		remove_variable = $NAME$_power_2
+		set_variable = $NAME$_power_3
+		raise_combined_powershare = yes
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_3
+			trigger_if = {
+				limit = { has_variable = combined_faction_powershare }
+				var:combined_faction_powershare < 4
+			}
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_3
+		}
+		add_county_modifier = $NAME$_modifier_4
+		remove_variable = $NAME$_power_3
+		set_variable = $NAME$_power_4
+		raise_combined_powershare = yes
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+}
+
+decrease_caste_power = {
+	if = {
+		limit = {
+			has_variable = $NAME$_power_1
+		}
+		remove_county_modifier = $NAME$_modifier_1
+		remove_variable = $NAME$_power_1
+		lower_combined_powershare = yes
+		remove_variable = already_owned_by_caste
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_2
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_2
+		}
+		add_county_modifier = $NAME$_modifier_1
+		remove_variable = $NAME$_power_2
+		set_variable = $NAME$_power_1
+		lower_combined_powershare = yes
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_3
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_3
+		}
+		add_county_modifier = $NAME$_modifier_2
+		remove_variable = $NAME$_power_3
+		set_variable = $NAME$_power_2
+		lower_combined_powershare = yes
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_4
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_4
+		}
+		add_county_modifier = $NAME$_modifier_3
+		remove_variable = $NAME$_power_4
+		set_variable = $NAME$_power_3
+		lower_combined_powershare = yes
+		set_variable = {
+			name = caste_change_cooldown
+			years = 10
+		}
+	}
+}
+
+raise_combined_powershare = {
+	if = {
+		limit = { has_variable = combined_faction_powershare }
+		change_variable = {
+			name = combined_faction_powershare
+			add = 1
+		}
+	}
+	else = {
+		set_variable = {
+			name = combined_faction_powershare
+			value = 1
+		}
+	}
+}
+
+lower_combined_powershare = {
+	if = {
+		limit = { has_variable = combined_faction_powershare }
+		change_variable = {
+			name = combined_faction_powershare
+			subtract = 1
+		}
+	}
+	else = {
+		set_variable = {
+			name = combined_faction_powershare
+			value = 0
+		}
+	}
+}
+
+standard_raise_caste_power_effect = {
+	holder = {
+		remove_short_term_gold = 50
+	}
+}
+
+standard_lower_caste_power_effect = {
+	add_county_modifier = {
+		modifier = weakened_lodge
+		years = 20
+	}
+}
+
+start_caste_power = {
+	if = {
+		limit = {
+			NOR = {
+				has_variable = $NAME$_power_1
+				has_variable = $NAME$_power_2
+				has_variable = $NAME$_power_3
+				has_variable = $NAME$_power_4
+			}
+		}
+		if = {
+			limit = {  
+				trigger_if = {
+					limit = { has_variable = combined_faction_powershare }
+					var:combined_faction_powershare < 4
+				}
+				trigger_else = { always = yes }
+			}
+			add_county_modifier = $NAME$_modifier_1
+			set_variable = $NAME$_power_1
+			raise_combined_powershare = yes
+			set_variable = already_owned_by_caste
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_1
+			trigger_if = {
+				limit = { has_variable = combined_faction_powershare }
+				var:combined_faction_powershare < 4
+			}
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_1
+		}
+		add_county_modifier = $NAME$_modifier_2
+		remove_variable = $NAME$_power_1
+		set_variable = $NAME$_power_2
+		raise_combined_powershare = yes
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_2
+			trigger_if = {
+				limit = { has_variable = combined_faction_powershare }
+				var:combined_faction_powershare < 4
+			}
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_2
+		}
+		add_county_modifier = $NAME$_modifier_3
+		remove_variable = $NAME$_power_2
+		set_variable = $NAME$_power_3
+		raise_combined_powershare = yes
+	}
+	else_if = {
+		limit = {
+			has_variable = $NAME$_power_3
+			trigger_if = {
+				limit = { has_variable = combined_faction_powershare }
+				var:combined_faction_powershare < 4
+			}
+		}
+		hidden_effect = {
+			remove_county_modifier = $NAME$_modifier_3
+		}
+		add_county_modifier = $NAME$_modifier_4
+		remove_variable = $NAME$_power_3
+		set_variable = $NAME$_power_4
+		raise_combined_powershare = yes
+	}
+}
+
+initialize_county_lodge_power_effect = {
+	random_list = {
+		$RAYAKUUV_VALUE$ = { start_caste_power = { NAME = rayakuux } }
+		$QABUUX_VALUE$ = { start_caste_power = { NAME = qabuux } }
+		$KARAVUUX_VALUE$ = { start_caste_power = { NAME = karavuux } }
+		$WARANUUX_VALUE$ = { start_caste_power = { NAME = waranuux } }
+		$NO_POWER_VALUE$ = {}
+	}
+}
+
+initialize_lodge_power_effect = {
+	culture:kawoch = {
+		every_culture_county = {
+			start_caste_power = { NAME = rayakuux }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 60 QABUUX_VALUE = 10 KARAVUUX_VALUE = 10 WARANUUX_VALUE = 10 NO_POWER_VALUE = 10 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 50 QABUUX_VALUE = 12 KARAVUUX_VALUE = 12 WARANUUX_VALUE = 12 NO_POWER_VALUE = 14 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 20 QABUUX_VALUE = 10 KARAVUUX_VALUE = 10 WARANUUX_VALUE = 10 NO_POWER_VALUE = 50 }
+		}
+	}
+	culture:fedagesh = {
+		every_culture_county = {
+			start_caste_power = { NAME = qabuux }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 10 QABUUX_VALUE = 60 KARAVUUX_VALUE = 10 WARANUUX_VALUE = 10 NO_POWER_VALUE = 10 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 12 QABUUX_VALUE = 50 KARAVUUX_VALUE = 12 WARANUUX_VALUE = 12 NO_POWER_VALUE = 14 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 10 QABUUX_VALUE = 20 KARAVUUX_VALUE = 10 WARANUUX_VALUE = 10 NO_POWER_VALUE = 50 }
+		}
+	}
+	culture:doffore = {
+		every_culture_county = {
+			start_caste_power = { NAME = karavuux }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 10 QABUUX_VALUE = 10 KARAVUUX_VALUE = 60 WARANUUX_VALUE = 10 NO_POWER_VALUE = 10 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 12 QABUUX_VALUE = 12 KARAVUUX_VALUE = 50 WARANUUX_VALUE = 12 NO_POWER_VALUE = 14 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 10 QABUUX_VALUE = 10 KARAVUUX_VALUE = 20 WARANUUX_VALUE = 10 NO_POWER_VALUE = 50 }
+		}
+	}
+	culture:kutma = {
+		every_culture_county = {
+			start_caste_power = { NAME = waranuux }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 10 QABUUX_VALUE = 10 KARAVUUX_VALUE = 10 WARANUUX_VALUE = 60 NO_POWER_VALUE = 10 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 12 QABUUX_VALUE = 12 KARAVUUX_VALUE = 12 WARANUUX_VALUE = 50 NO_POWER_VALUE = 14 }
+			initialize_county_lodge_power_effect = { RAYAKUUV_VALUE = 10 QABUUX_VALUE = 10 KARAVUUX_VALUE = 10 WARANUUX_VALUE = 20 NO_POWER_VALUE = 50 }
+		}
+	}
+}
+
+remove_lodges_effect = {
+	remove_county_modifier = rayakuux_modifier_1
+	remove_county_modifier = rayakuux_modifier_2
+	remove_county_modifier = rayakuux_modifier_3
+	remove_county_modifier = rayakuux_modifier_4
+	remove_county_modifier = qabuux_modifier_1
+	remove_county_modifier = qabuux_modifier_2
+	remove_county_modifier = qabuux_modifier_3
+	remove_county_modifier = qabuux_modifier_4
+	remove_county_modifier = waranuux_modifier_1
+	remove_county_modifier = waranuux_modifier_2
+	remove_county_modifier = waranuux_modifier_3
+	remove_county_modifier = waranuux_modifier_4
+	remove_county_modifier = karavuux_modifier_1
+	remove_county_modifier = karavuux_modifier_2
+	remove_county_modifier = karavuux_modifier_3
+	remove_county_modifier = karavuux_modifier_4
+	remove_variable = combined_faction_powershare
+	remove_variable = rayakuux_power_1
+	remove_variable = rayakuux_power_2
+	remove_variable = rayakuux_power_3
+	remove_variable = rayakuux_power_4
+	remove_variable = qabuux_power_1
+	remove_variable = qabuux_power_2
+	remove_variable = qabuux_power_3
+	remove_variable = qabuux_power_4
+	remove_variable = waranuux_power_1
+	remove_variable = waranuux_power_2
+	remove_variable = waranuux_power_3
+	remove_variable = waranuux_power_4
+	remove_variable = karavuux_power_1
+	remove_variable = karavuux_power_2
+	remove_variable = karavuux_power_3
+	remove_variable = karavuux_power_4
+}

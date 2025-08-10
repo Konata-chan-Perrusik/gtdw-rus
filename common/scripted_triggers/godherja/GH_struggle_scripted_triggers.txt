@@ -1,0 +1,220 @@
+﻿fp2_struggle_ending_percent_rite_wars_south_trigger = {
+	any_county_in_region = {
+		region = struggle_rite_wars_south
+		percent < fp2_struggle_compromise_owned_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+# Checks no more than half of Iberia is owned by another
+fp2_struggle_ending_other_percent_rite_wars_south_trigger = {
+	struggle:rite_wars_south_struggle = {
+		NOT = {
+			any_involved_ruler = {
+				exists = primary_title # Max figured out that is_independent_ruler causes errors if you are unlanded
+				NOT = { this = root }
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+				any_county_in_region = {
+					region = struggle_rite_wars_south
+					percent > fp2_struggle_compromise_involved_percent_decimal_value
+					holder.top_liege = prev
+				}
+			}
+		}
+	}
+}
+
+# Checks if characters were both involved in struggle
+fp2_struggle_rite_wars_south_conciliation_recipient_actor_involved_trigger = {
+	has_global_variable = gh_rws_struggle_conciliation_ending
+	AND = {
+		scope:actor.capital_province = { geographical_region = struggle_rite_wars_south }
+		scope:recipient.capital_province = { geographical_region = struggle_rite_wars_south }
+		# Offer comes from an Involved culture/faith character
+		OR = {
+			any_in_global_list = {
+				variable = gh_rws_struggle_ending_faith_list
+				this = scope:actor.faith
+			}
+			any_in_global_list = {
+				variable = gh_rws_struggle_ending_culture_list
+				this = scope:actor.culture
+			}
+		}
+		# Recipient is from an Involved culture/faith
+		OR = {
+			any_in_global_list = {
+				variable = fp2_struggle_ending_faith_list
+				this = scope:recipient.faith
+			}
+			any_in_global_list = {
+				variable = fp2_struggle_ending_culture_list
+				this = scope:recipient.culture
+			}
+		}
+	}
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_opakasajian_kingdom_trigger = {
+	tier = tier_kingdom
+	#de_jure_liege = title:e_spain
+	root = { completely_controls = prev }
+	save_temporary_scope_as = opakasajian_kingdom_temp
+	always = no
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_faith_trigger = {
+	fp2_struggle_secure_rite_wars_south_foothold_faith_percent_value >= fp2_struggle_secure_rite_wars_south_foothold_faith_target_percent_value
+}
+
+fp2_struggle_secure_rite_wars_foothold_outsider_kingdom_trigger = {
+	any_county_in_region = {
+		region = struggle_rite_wars_north
+	}
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_outsider_kingdom_trigger = {
+	any_county_in_region = {
+		region = struggle_rite_wars_south
+	}
+}
+
+fp2_struggle_opakasjian_reclamation_should_vassalize_trigger = {
+	any_character_struggle = { is_struggle_type = rite_wars_south_struggle }
+	any_held_title = { tier < scope:attacker.primary_title.tier }
+	any_realm_county = {
+		count = all
+		duchy = { is_in_list = target_titles }
+		any_county_struggle = { is_struggle_type = rite_wars_south_struggle }
+	}
+}
+
+fp2_opakasjian_reclamation_vassalize_iberian_trigger = {
+	tier = tier_county
+	holder = {
+		any_character_struggle = {
+			involvement = involved
+			is_struggle_type = rite_wars_south_struggle
+		}
+		liege = scope:defender
+		NOT = { this = scope:defender }
+		capital_county = {
+			any_county_struggle = { is_struggle_type = rite_wars_south_struggle }
+		}
+	}
+}
+
+fp2_opakasjian_reclamation_involved_county_trigger = {
+	any_realm_county = {
+		any_county_struggle = { is_struggle_type = rite_wars_south_struggle }
+	}
+}
+
+fp2_opakasjian_reclamation_vassalize_vassal_trigger = {
+	primary_title.tier >= tier_county
+	primary_title.tier < scope:attacker.primary_title.tier
+	any_character_struggle = { is_struggle_type = rite_wars_south_struggle }
+	capital_county = {
+		duchy = { is_in_list = target_titles }
+	}
+	any_sub_realm_county = {
+		count = all
+		duchy = { is_in_list = target_titles }
+		any_county_struggle = { is_struggle_type = rite_wars_south_struggle }
+	}
+}
+
+gh_character_any_involvement_struggle_trigger = {
+	OR = {
+		fp2_character_involved_in_struggle_trigger = yes
+		fp2_character_interloper_in_struggle_trigger = yes
+	}
+}
+
+gh_character_involved_in_struggle_trigger = {
+	any_character_struggle = {
+		involvement = involved
+		is_struggle_type = ritewars_struggle
+	}
+}
+
+gh_character_interloper_in_struggle_trigger = {
+	any_character_struggle = {
+		involvement = interloper
+		is_struggle_type = ritewars_struggle
+	}
+}
+
+form_mountain_concordat_kingdom_trigger = {
+	tier = tier_kingdom
+	OR = {
+		de_jure_liege = title:e_opakhasia
+	}
+	root = { completely_controls = prev }
+	save_temporary_scope_as = mountain_kingdom_temp
+}
+
+rite_wars_south_hostility_ending_kingdom_trigger = {
+	tier = tier_kingdom
+	OR = {
+		de_jure_liege = title:e_opakhasia
+	}
+	root = { completely_controls = prev }
+	save_temporary_scope_as = opakasijan_kingdom
+}
+
+gh_rws_struggle_compromise_transfer_duchy_trigger = {
+	tier = tier_duchy
+	save_temporary_scope_as = transfer_duchy 
+	# Duchy is completely controlled by its capital's holder's top_liege
+	exists = title_capital_county.holder.top_liege
+	title_capital_county.holder.top_liege = { completely_controls = scope:transfer_duchy }
+	# De jure liege does not control duchy
+	trigger_if = {
+		limit = { exists = kingdom.holder }
+		NOT = { kingdom = scope:transfer_duchy.title_capital_county.holder.top_liege.capital_county.kingdom }
+	}
+	# Is controlled by a kingdom tier
+	trigger_else = { title_capital_county.holder.top_liege.primary_title.tier >= tier_kingdom }
+	# Duchy is connected de_jure to holders kingdom
+	any_de_jure_county = {
+		any_title_to_title_neighboring_and_across_water_county = {
+			exists = kingdom.holder
+			kingdom.holder = scope:transfer_duchy.title_capital_county.holder.top_liege
+		}
+	}
+}
+
+# Checks titular duchy should be made into de jure kingdom
+gh_rws_struggle_ending_compromise_titular_trigger = {
+	# Has not been tampered with already
+	NOT = { is_in_list = duchy_kingdom }
+	# Is created
+	exists = holder
+	# Is ruled by an independent duke
+	holder = {
+		is_independent_ruler = yes
+		primary_title = {
+			is_mercenary_company = no
+			tier = tier_duchy
+		}
+	}
+	# Titular duke holds at least half of any de jure duchy of Opakasija
+	title:e_opakhasia = {
+		any_in_de_jure_hierarchy = {
+			tier = tier_duchy
+			any_direct_de_jure_vassal_title = {
+				percent >= 0.5
+				holder.top_liege = scope:special_duchy.holder
+			}
+		}
+	}
+}
+
+GH_struggle_can_access_unlocks_bargain_fealty_interaction_trigger = {
+	OR = {
+		is_struggle_type = ritewars_struggle
+		is_struggle_type = rite_wars_south_struggle
+	}
+}

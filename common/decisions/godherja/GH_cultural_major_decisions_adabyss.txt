@@ -1,0 +1,100 @@
+﻿##################
+##DECISIONS LIST##
+# become_adabyss_invasion_leader_decision
+##################
+
+##################
+# Become Adabyss Invasion Leader
+# by ThePinkPanzer
+become_adabyss_invasion_leader_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = major
+	desc = become_adabyss_invasion_leader_decision_desc
+
+	ai_check_interval = 24
+
+	is_shown = {
+		has_game_rule = default_adabyss_invasion
+		highest_held_title_tier >= tier_kingdom
+		is_playable_character = yes
+		culture = { has_cultural_pillar = heritage_hadiyan }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:become_adabyss_invasion_leader_decision
+			}
+		}
+	}
+
+	is_valid = {
+		religion = religion:adabyssian_religion 
+
+		sub_realm_size >= 80
+		capital_province = {
+			geographical_region = world_es_damota 
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		custom_description  ={
+			text = adabyss_invasion_leader_title_tier_requirement
+			highest_held_title_tier >= tier_empire
+		}
+		is_adult = yes
+		is_independent_ruler = yes
+	}
+
+	effect = {
+		root.culture = {
+			add_innovation = innovation_adabyss
+		}
+		#Can only happen once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:become_adabyss_invasion_leader_decision
+		}
+
+		show_as_tooltip = {
+			add_trait = adabyss_invasion_leader
+			
+			if = {
+				limit = {
+					prestige_level < 5
+				}
+				add_prestige_level = 1
+			}
+
+			spawn_adabyss_troops_effect = yes
+		}
+		spawn_adabyss_troops_effect = yes
+		save_scope_as = adabyss_leader
+
+		trigger_event = adabyss_event.0001 ####I am adabyss leader
+		add_to_temporary_list = received_notification
+
+		every_vassal_or_below = {
+			trigger_event = adabyss_event.0002 ####liege is adabyss leader
+			add_to_temporary_list = received_notification
+		}
+
+		every_ruler = {
+			limit = {
+				NOT = {
+					is_in_list = received_notification
+				}
+			}
+
+			trigger_event = adabyss_event.0003 ####someone has become adabyss leader
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}	
+}

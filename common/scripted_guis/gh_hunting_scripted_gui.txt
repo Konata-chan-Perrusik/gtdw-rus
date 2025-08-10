@@ -1,0 +1,49 @@
+﻿select_biozone_scripted_gui = {
+	scope = character
+	
+	is_shown = { }
+	
+	effect = {
+		if = {
+			limit = { exists = scope:selected_biozone }
+			if = {
+				limit = { 
+					has_variable = selected_biozone_var
+					var:selected_biozone_var = { this = scope:selected_biozone }
+				}
+				remove_variable = selected_biozone_var
+			}
+			else = {
+				set_variable = {
+					name = selected_biozone_var
+					value = scope:selected_biozone
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+biozone_expanded_info_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		exists = scope:player_viewing_biozones
+		scope:player_viewing_biozones = {
+			has_variable = selected_biozone_var
+			var:selected_biozone_var = root
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_biozones }
+			if = {
+				limit = {
+					scope:player_viewing_biozones = { has_variable = selected_biozone_var }
+				}
+				scope:player_viewing_biozones = { remove_variable = selected_biozone_var }
+			}
+		}
+	}
+}

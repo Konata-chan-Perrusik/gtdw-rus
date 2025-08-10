@@ -1,0 +1,57 @@
+﻿ArtifactOltenicMaskDecoration = {
+	type = artifact
+
+	text = {
+		trigger = {
+			AND = {
+				has_artifact_feature_group = oltenic_mask_addon
+				has_artifact_feature_group = oltenic_mask_detail
+			}
+		}
+		localization_key = oltenic_mask_decoration_detail_and_addon
+	}
+	text = {
+		trigger = {
+			has_artifact_feature_group = oltenic_mask_addon
+			NOT = { has_artifact_feature_group = oltenic_mask_detail }
+		}
+		localization_key = oltenic_mask_decoration_addon
+	}
+	text = {
+		trigger = {
+			has_artifact_feature_group = oltenic_mask_detail
+			NOT = { has_artifact_feature_group = oltenic_mask_addon }
+		}
+		localization_key = oltenic_mask_decoration_detail
+	}
+	text = {
+		trigger = {
+			NAND = {
+				has_artifact_feature_group = oltenic_mask_addon
+				has_artifact_feature_group = oltenic_mask_detail
+			}
+		}
+		weight_multiplier = {
+			base = 0.5
+			modifier = {
+				add = -1
+				scope:owner ?= { has_trait = greedy }	
+			}
+			modifier = {
+				add = 0.5
+				scope:owner ?= { has_trait = humble }
+			}
+		}
+		localization_key = oltenic_mask_decoration_none_alt
+	}
+	text = {
+		trigger = {
+			NAND = {
+				has_artifact_feature_group = oltenic_mask_addon
+				has_artifact_feature_group = oltenic_mask_detail
+			}
+		}
+		localization_key = oltenic_mask_decoration_none
+		fallback = yes
+	}
+}

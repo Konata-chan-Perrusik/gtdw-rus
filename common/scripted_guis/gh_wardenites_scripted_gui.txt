@@ -1,0 +1,504 @@
+﻿has_traditions_scripted_gui = {
+	scope = faith
+	
+	is_shown = {
+		has_variable_list = legal_traditions
+	}
+	
+	effect = {
+		
+	}
+}
+
+legal_tradition_cooldown_check = {
+	scope = character
+	is_shown = { }
+	is_valid = {
+		NOT = {
+			has_variable = legal_tradition_change_cooldown
+		}
+	}
+	effect = { }
+}
+
+wardenite_player_check = {
+	scope = character
+	is_shown = { }
+	effect = {
+		save_temporary_scope_as = traditions_choice_player
+		set_global_variable = {
+			name = character_to_apply_modifier_to
+			value = root
+		}
+		set_variable = {
+			name = school_change_cooldown
+			days = 1
+		}
+	}
+}
+
+adopt_legal_tradition_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = "legal_tradition_change_cooldown"
+			subject = this
+			scope:player_viewing_legal_schools = {
+				NOT = {
+					has_variable = legal_tradition_change_cooldown
+				}
+			}
+		}
+		scope:player_viewing_legal_schools = {
+			has_trait = lifestyle_jurist
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_legal_schools }
+			save_scope_as = legal_tradition_to_join
+			scope:player_viewing_legal_schools = {
+				join_legal_tradition_effect = { LEGAL_TRADITION = scope:legal_tradition_to_join }
+			}
+		}
+	}
+}
+
+renounce_legal_tradition_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_legal_schools }
+			scope:player_viewing_legal_schools = {
+				leave_legal_tradition_effect = yes
+			}
+		}
+	}
+}
+
+increase_legal_tradition_patronage_scripted_gui = {
+	scope = character
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		has_variable = character_legal_tradition
+		highest_held_title_tier >= tier_county
+		OR = {
+			NOT = { has_variable = character_legal_tradition_patronage_level }
+			var:character_legal_tradition_patronage_level < 50
+		}
+	}
+	
+	ai_is_valid = {
+		monthly_character_balance >= legal_tradition_projected_patronage_increase_cost_value
+		is_at_war = no
+		NOT = { has_trait = greedy }
+	}
+	
+	ai_chance = {
+		base = 0
+		modifier = {
+			add = {
+				value = monthly_character_balance
+				multiply = 5
+			}
+		}
+		modifier = {
+			factor = {
+				value = ai_greed
+				multiply = -0.025
+			}
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { has_variable = character_legal_tradition_patronage_level }
+			change_variable = {
+				name = character_legal_tradition_patronage_level
+				add = 10
+			}
+		}
+		else = {
+			set_variable = {
+				name = character_legal_tradition_patronage_level
+				value = 10
+			}
+		}
+		update_legal_tradition_patronage_modifier_effect = yes
+	}
+}
+
+decrease_legal_tradition_patronage_scripted_gui = {
+	scope = character
+	is_shown = {
+	}
+	
+	is_valid = {
+		trigger_if = {
+			limit = { has_variable = character_legal_tradition_patronage_level }
+			var:character_legal_tradition_patronage_level > 0
+		}
+		trigger_else = {
+			always = no
+		}
+	}
+	
+	ai_is_valid = {
+		always = yes
+	}
+	
+	ai_chance = {
+		base = 0
+		modifier = {
+			add = {
+				value = monthly_character_balance
+				multiply = -1
+			}
+		}
+		modifier = {
+			factor = {
+				value = ai_greed
+				multiply = 0.025
+			}
+		}
+		modifier = {
+			add = 1000
+			gold < 0
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { has_variable = character_legal_tradition_patronage_level }
+			change_variable = {
+				name = character_legal_tradition_patronage_level
+				subtract = 10
+			}
+		}
+		else = {
+			set_variable = {
+				name = character_legal_tradition_patronage_level
+				value = 0
+			}
+		}
+		update_legal_tradition_patronage_modifier_effect = yes
+	}
+}
+
+legal_tradition_trait_effects_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		legal_tradition_trait_effect = { MODE = effect_tooltip }
+	}
+}
+
+set_judicial_workload_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:judicial_workload_scope }
+			if = {
+				limit = { scope:judicial_workload_scope = flag:medium_workload}
+				remove_variable = judicial_workload
+			}
+			else = {
+				set_variable = {
+					name = judicial_workload
+					value = scope:judicial_workload_scope
+				}
+			}
+		}
+	}
+}
+
+set_judicial_approach_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		has_variable = character_legal_tradition
+	}
+	
+	ai_is_valid = {
+		always = yes
+	}
+	
+	ai_chance = {
+		base = 0
+		modifier = {
+			add = {
+				value = var:radicalism
+				multiply = {
+					value = 3
+					subtract = {
+						value = ai_boldness
+						multiply = 0.01
+					}
+					min = 1
+				}
+			}
+			has_variable = radicalism
+		}
+		
+		modifier = {
+			add = {
+				value = var:corruption
+				multiply = {
+					value = 3
+					subtract = {
+						value = ai_boldness
+						multiply = 0.01
+					}
+					min = 1
+				}
+			}
+			has_variable = corruption
+		}
+		
+		modifier = {
+			add = 20
+			OR = {
+				NOT = { has_variable = radicalism }
+				var:radicalism < 10
+			}
+			OR = {
+				NOT = { has_variable = corruption }
+				var:corruption < 10
+			}
+			OR = {
+				has_trait = brave
+				has_trait = cynical
+				has_trait = deceitful
+				has_trait = arbitrary
+				has_trait = ambitious
+				has_trait = scholar
+			}
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { is_ai = no }
+			if = {
+				limit = { exists = scope:judicial_approach_scope }
+				if = {
+					limit = { scope:judicial_approach_scope = flag:medium_workload}
+					remove_variable = judicial_approach
+				}
+				else = {
+					set_variable = {
+						name = judicial_approach
+						value = scope:judicial_approach_scope
+					}
+				}
+			}
+		}
+		else = {
+			random_list = {
+				50 = {
+					modifier = {
+						add = {
+							value = ai_zeal
+							multiply = 0.5
+							min = -49
+						}
+					}
+					set_variable = {
+						name = judicial_approach
+						value = flag:orthodoxy_approach
+					}
+				}
+				10 = {
+					trigger = {
+						ai_honor <= medium_negative_ai_value
+					}
+					modifier = {
+						add = {
+							value = ai_honor
+							multiply = -0.5
+						}
+					}
+					modifier = {
+						add = {
+							value = ai_zeal
+							multiply = -0.25
+						}
+					}
+					set_variable = {
+						name = judicial_approach
+						value = flag:grifting_approach
+					}
+				}
+				10 = {
+					trigger = {
+						has_trait = lifestyle_jurist
+					}
+					modifier = {
+						add = {
+							value = ai_energy
+							multiply = 0.5
+						}
+					}
+					set_variable = {
+						name = judicial_approach
+						value = flag:scholarship_approach
+					}
+				}
+				10 = {
+					trigger = {
+						has_trait = lifestyle_jurist
+					}
+					modifier = {
+						add = {
+							value = ai_energy
+							multiply = 0.5
+						}
+					}
+					modifier = {
+						add = {
+							value = ai_boldness
+							multiply = 0.5
+						}
+					}
+					modifier = {
+						add = {
+							value = ai_zeal
+							multiply = -0.25
+						}
+					}
+					set_variable = {
+						name = judicial_approach
+						value = flag:innovation_approach
+					}
+				}
+			}
+		}
+	}
+}
+
+legal_tradition_appoint_high_judge_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		any_held_title = {
+			has_variable = attached_high_court
+		}
+	}
+	
+    is_valid = {
+        any_held_title = {
+            has_variable = attached_high_court
+            var:attached_high_court = {
+                any_in_list = {
+                    variable = high_court_seat_list
+                    OR = { 
+                        NOT = { has_variable = seat_occupant }
+                        var:seat_occupant = { is_alive = no }
+                    }
+                }
+                var:high_court_mamurial_authority >= 50
+            }
+        }
+    }
+	
+	effect = {
+		random_held_title = {
+			limit = {
+				has_variable = attached_high_court
+				var:attached_high_court = {
+					any_in_list = {
+						variable = high_court_seat_list
+						OR = { 
+							NOT = { has_variable = seat_occupant }
+							var:seat_occupant = { is_alive = no }
+						}
+					}
+				}
+			}
+			var:attached_high_court = { save_scope_as = high_court_scope }
+		}
+		trigger_event = legal_tradition.1011
+	}
+}
+
+appoint_high_judge_scripted_gui = {
+	is_shown = { }
+	
+	is_valid = { }
+	
+	effect = {
+		trigger_event = legal_tradition.1001
+	}
+}
+
+legal_tradition_display_high_court_breakdown_scripted_gui = {
+	scope = faith
+	
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+		
+	}
+	
+	effect = {
+		every_in_list = {
+			variable = legal_traditions
+			limit = {
+				save_temporary_scope_as = legal_tradition
+				exists = scope:high_court_scope
+				scope:high_court_scope = {
+					any_in_list = {
+						variable = high_court_seat_list
+						has_variable = seat_occupant
+						var:seat_occupant.var:character_legal_tradition = scope:legal_tradition
+					}
+				}
+			}
+			custom_tooltip = legal_tradition_high_court_breakdown_tooltip
+		}
+	}
+}
+
+high_court_mamurial_privileges_scripted_gui = {
+	scope = story
+	
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:high_court_mamurial_authority }
+			display_mamurial_authority_privileges_effect = { PRIVILEGE = can_appoint_high_judges VALUE = 50 }
+			display_mamurial_authority_privileges_effect = { PRIVILEGE = can_use_legal_manipulation_on_high_judges VALUE = 75 }
+			display_mamurial_authority_privileges_effect = { PRIVILEGE = can_dismiss_high_judges_unanimously VALUE = 90 }
+		}
+	}
+}

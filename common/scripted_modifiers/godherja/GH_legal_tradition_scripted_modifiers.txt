@@ -1,0 +1,165 @@
+﻿
+start_hostile_legal_action_ai_base_modifiers = {
+	first_valid = {
+		modifier = {
+			add = -30
+			exists = scope:recipient.primary_title
+			scope:recipient.primary_title.tier = tier_empire
+		}
+		modifier = {
+			add = -20
+			exists = scope:recipient.primary_title
+			scope:recipient.primary_title.tier = tier_kingdom
+		}
+	}
+	
+	modifier = { # Less likely against liege
+		add = -30
+		scope:recipient = { target_is_liege_or_above = scope:actor }
+	}
+	
+	#How much does the actor dislike the recipient?
+	opinion_modifier = {
+		trigger = {
+			NOT = { this = scope:recipient }
+		}
+		who = this
+		opinion_target = scope:recipient
+		multiplier = -0.5
+		step = 5
+	}
+	
+	# Intimidated
+	modifier = {
+		trigger = {
+			has_dread_level_towards = {
+				target = scope:recipient
+				level = 1
+			}
+		}
+		add = -50
+	}
+	# Cowed
+	modifier = {
+		trigger = {
+			has_dread_level_towards = {
+				target = scope:recipient
+				level = 2
+			}
+		}
+		add = -1000
+	}
+	
+	# Rivalry bonus
+	modifier = {
+		add = 10
+		has_relation_rival = scope:recipient
+	}
+	
+	# Friendship malus
+	modifier = {
+		add = -20
+		has_relation_friend = scope:recipient
+	}
+	
+	# Much less likely to do if content
+	modifier = {
+		add = -50
+		has_trait = content
+	}
+	# Much less likely to do if lazy
+	modifier = {
+		add = -30
+		has_trait = lazy
+	}
+	# More likely to do if diligent
+	modifier = {
+		add = 20
+		has_trait = diligent
+	}
+	# More likely to do if ambitious
+	modifier = {
+		add = 30
+		has_trait = ambitious
+	}
+}
+
+render_judgement_for_plaintiff_ai_base_modifiers = {
+	ai_value_modifier = {	# We add in energy and honor for both plaintiff and defendant to determine the chance of the judge directly weighing in on the matter at all
+		ai_energy = 0.5
+		ai_honor = 0.25
+	}
+	
+	# Increase proportionally to the plaintiff's judicial power	
+	modifier = {
+		add = scope:actor.judicial_power_value
+	}
+	
+	# What is the judge's opinion of the plaintiff?
+	opinion_modifier = {
+		who = this
+		opinion_target = scope:actor
+		multiplier = 0.25
+		step = 5
+	}
+	
+	modifier = {	# Significantly reduce chances if already over level 1 stress
+		factor = 0.1
+		stress_level >= 1
+	}
+	modifier = {	# Never do this if already above level 2 stress
+		factor = 0
+		stress_level >= 2
+	}
+}
+
+render_judgement_for_defendant_ai_base_modifiers = {
+	ai_value_modifier = {	# We add in energy and honor for both plaintiff and defendant to determine the chance of the judge directly weighing in on the matter at all
+		ai_energy = 0.5
+		ai_honor = 0.25
+	}
+	
+	# Increase proportionally to the defendant's judicial power	
+	modifier = {
+		add = scope:recipient.judicial_power_value
+	}
+	
+	# What is the judge's opinion of the plaintiff?
+	opinion_modifier = {
+		who = this
+		opinion_target = scope:recipient
+		multiplier = 0.25
+		step = 5
+	}
+	
+	modifier = {	# Significantly reduce chances if already over level 1 stress
+		factor = 0.1
+		stress_level >= 1
+	}
+	modifier = {	# Never do this if already above level 2 stress
+		factor = 0
+		stress_level >= 2
+	}
+}
+
+defer_judgement_ai_base_modifiers = {
+	ai_value_modifier = {
+		ai_energy = -0.5
+		ai_honor = -0.25
+	}
+	
+	modifier = {
+		add = 1000
+		stress_level >= 2
+	}
+}
+
+render_judgement_title_ai_base_modifiers = {
+	modifier = {	# The higher the tier of the title, the more seriously the character should take this
+		add = {
+			value = scope:target.tier
+			multiply = 20
+		}
+		exists = scope:target
+	}
+}

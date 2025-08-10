@@ -1,0 +1,103 @@
+﻿
+story_cycle_mitheux = {
+
+	on_setup = {
+		
+	}
+
+	on_end = {
+	
+	}
+
+	on_owner_death = {
+		end_story = yes
+	}
+	
+	effect_group = {
+		months = 12
+	
+		trigger = {
+			story_owner = {
+				is_playable_character = no
+				is_available_healthy_ai_adult = yes
+			}
+		}
+	
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					story_owner = {
+						NOT = { has_variable = inspiration_cooldown }
+						OR = {
+							NOT = { exists = global_var:witchbreakerhero_created }
+							NOT = { exists = global_var:chevalienknightinoraispol_created }
+							NOT = { exists = global_var:sjalvolkipoetry_created }
+						}
+						NOT = { 
+							has_any_bad_relationship_with_character_trigger = { CHARACTER = character:daukeni_sjalvolki_1 }
+						}
+					}
+				}
+				effect = {
+					story_owner = {
+						random = {
+							chance = 50
+							random_list = {
+								15 = {
+									trigger = {
+										NOT = { exists = global_var:witchbreakerhero_created }
+									}
+									set_variable = {
+										name = book_topic
+										value = flag:witchbreakerhero
+									}
+								}
+								10 = {
+									trigger = {
+										NOT = { exists = global_var:chevalienknightinoraispol_created }
+										exists = global_var:oraispol_fallen
+									}
+									set_variable = {
+										name = book_topic
+										value = flag:chevalienknightinoraispol
+									}
+								}
+								5 = {
+									trigger = {
+										NOT = { exists = global_var:sjalvolkipoetry_created }
+									}
+									set_variable = {
+										name = book_topic
+										value = flag:sjalvolkipoetry
+									}
+								}
+							}
+							create_inspiration = book_inspiration
+							set_variable = {
+								name = inspiration_cooldown
+								years = 10
+							}
+						}
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = {
+					OR = {
+						AND = {
+							exists = global_var:witchbreakerhero_created
+							exists = global_var:chevalienknightinoraispol_created
+							exists = global_var:sjalvolkipoetry_created
+						}
+						story_owner = {
+							has_any_bad_relationship_with_character_trigger = { CHARACTER = character:daukeni_sjalvolki_1 }
+						}
+					}
+				}
+				effect = {
+					end_story = yes
+				}
+			}
+		}
+	}
+}

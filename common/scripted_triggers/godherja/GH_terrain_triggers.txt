@@ -1,0 +1,195 @@
+﻿#######################
+### GH TERRAIN TRIGGERS
+
+#################
+## GH Governments
+
+# Pirate
+province_has_underground_terrain = {
+	GH_any_underground_terrain_trigger = yes
+	trigger_if = {
+		limit = { exists = empire }
+		OR = {
+			empire = title:e_abyssal_pits
+			empire = title:e_western_undercity
+			empire = title:e_eastern_undercity
+			empire = title:e_red_chasm
+			empire = title:e_sunken_depths
+		}
+	}
+	trigger_if = {
+		limit = { exists = kingdom }
+		kingdom = title:k_the_mistake
+	}
+}
+
+GH_any_marcher_terrain_trigger = {
+	OR = {
+		terrain = marcher_plains
+		terrain = marcher_farmlands
+		terrain = marcher_floodplains
+		terrain = marcher_wetlands
+		terrain = marcher_hills
+		terrain = marcher_forest
+		terrain = marcher_mountains
+	}
+}
+
+# Terrain Consolidation
+GH_any_plains_terrain_trigger = {
+	OR = {
+		terrain = plains
+		terrain = marcher_plains
+	}
+}
+
+GH_any_farmlands_terrain_trigger = {
+	OR = {
+		terrain = farmlands
+		terrain = marcher_farmlands
+	}
+}
+
+GH_any_floodplains_terrain_trigger = {
+	OR = {
+		terrain = floodplains
+		terrain = marcher_floodplains
+	}
+}
+
+GH_any_wetlands_terrain_trigger = {
+	OR = {
+		terrain = wetlands
+		terrain = marcher_wetlands
+	}
+}
+
+GH_any_hills_terrain_trigger = {
+	OR = {
+		terrain = hills
+		terrain = marcher_hills
+	}
+}
+
+GH_any_mountains_terrain_trigger = {
+	OR = {
+		GH_any_desert_mountains_terrain_trigger = yes
+		GH_any_mountains_no_desert_terrain_trigger = yes
+	}
+}
+
+GH_any_mountains_no_desert_terrain_trigger = {
+	OR = {
+		terrain = mountains
+		terrain = marcher_mountains
+	}
+}
+
+GH_any_forest_terrain_trigger = {
+	OR = {
+		terrain = forest
+		terrain = marcher_forest
+	}
+}
+
+GH_any_forest_or_taiga_terrain_trigger = {
+	OR = {
+		terrain = taiga
+		GH_any_forest_terrain_trigger = yes
+	}
+}
+
+GH_any_underground_terrain_trigger = {
+	OR = {
+		terrain = mayik_chamber
+		terrain = mayik_corridors
+		terrain = mayik_caverns
+	}
+}
+
+GH_any_mayik_trigger = {
+	OR = {
+		terrain = mayik_chamber
+		terrain = mayik_corridors
+		terrain = mayik_caverns
+	}
+}
+
+GH_any_redlands_trigger = {
+	OR = {
+		terrain = redlands_drylands
+		terrain = redlands_desert
+		terrain = redlands_mountains
+		terrain = redlands_chasms
+	}
+}
+
+GH_any_wasteland_terrain_trigger = { terrain = deadlands }
+GH_any_taiga_terrain_trigger = { terrain = taiga }
+GH_any_steppe_terrain_trigger = { terrain = steppe }
+GH_any_oasis_terrain_trigger = { terrain = oasis }
+GH_any_jungle_terrain_trigger = { terrain = jungle }
+GH_any_drylands_terrain_trigger = { terrain = drylands }
+GH_any_desert_terrain_trigger = { terrain = desert }
+GH_any_sea_terrain_trigger = { terrain = sea }
+GH_any_coastal_sea_terrain_trigger = { terrain = coastal_sea }
+GH_any_desert_mountains_terrain_trigger = { terrain = desert_mountains }
+GH_any_archipelagic_terrain_trigger = { terrain = archipelagic }
+
+# Misc
+GH_any_plains_or_wasteland_terrain_trigger = {
+	OR = {
+		GH_any_plains_terrain_trigger = yes
+		GH_any_wasteland_terrain_trigger = yes
+	}
+}
+
+GH_any_terrain = {
+	OR = {
+		GH_any_desert_terrain_trigger = yes
+		GH_any_drylands_terrain_trigger = yes
+		GH_any_farmlands_terrain_trigger = yes
+		GH_any_floodplains_terrain_trigger = yes
+		GH_any_forest_terrain_trigger = yes
+		GH_any_hills_terrain_trigger = yes
+		GH_any_jungle_terrain_trigger = yes
+		GH_any_mountains_terrain_trigger = yes
+		GH_any_oasis_terrain_trigger = yes
+		GH_any_plains_terrain_trigger = yes
+		GH_any_steppe_terrain_trigger = yes
+		GH_any_taiga_terrain_trigger = yes
+		GH_any_underground_terrain_trigger = yes
+		GH_any_wasteland_terrain_trigger = yes
+		GH_any_wetlands_terrain_trigger = yes
+		GH_any_archipelagic_terrain_trigger = yes
+	}
+}
+
+GH_temperate_seasons_trigger = {
+	OR = {
+		geographical_region = world_greater_aversaria
+	}
+}
+
+GH_tropical_seasons_trigger = {
+	OR = {
+		geographical_region = world_ga_kashirya
+		geographical_region = world_ga_pirate_coast
+		geographical_region = world_sarradon
+	}
+}
+
+GH_province_is_inhabited_trigger = {
+	# Just for hunt_4008 for now to avoid having events with peasants in the Foglands or magical wastelands or whatever.
+	# GH TODO: Make a new trigger when we get natives in for wastelands
+	NOR = {
+		GH_any_wasteland_terrain_trigger = yes
+		GH_any_redlands_trigger = yes
+		GH_any_underground_terrain_trigger = yes
+		is_sea_province = yes
+	}
+	NOR = {
+		barony = { GH_any_wasteland_holding_trigger = yes }
+		county.culture = { GH_cult_culture_trigger = yes }
+	}
+}

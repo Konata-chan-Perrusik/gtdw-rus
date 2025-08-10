@@ -1,0 +1,59 @@
+﻿# this was made to see if a theocratic type succession could help with holy order inheritance, but it appears that company/theocratic succession types
+# can only choose courtiers and not vassals?
+pool_landed_order_succession = {
+	valid_character = {
+		is_capable_adult = yes
+		scope:base.faith = { has_allowed_gender_for_clergy = root }
+		NOT = { has_trait = excommunicated }
+	}
+	
+	character_score = {
+		base = 1
+		
+		modifier = {
+			add = 1000
+			OR = {
+				liege_or_court_owner.primary_title.current_heir = this
+				is_primary_heir_of = scope:base
+			}
+		}
+		compare_modifier = {
+			value = martial
+		}
+		modifier = {
+		piety_level >= 2
+			add = {
+				value = piety_level
+				multiply = 5
+			}
+		}
+		modifier = {
+			add = 100
+			has_same_culture_as = scope:base
+		}
+		modifier = {
+			add = 200
+			is_same_clique_as_trigger = { OTHER_CHARACTER = scope:base }
+		}
+		modifier = {
+			add = 50
+			age > 35
+		}
+		modifier = {
+			add = 100
+			scope:base.faith = { has_preferred_gender_for_clergy = root }
+		}
+	}
+	
+	config = {
+		background = landed_order_member
+		age = { 25 45 }
+	}
+	
+	selection_count = 1
+	
+	pool = faith
+	gender = clergy
+	court = yes
+}
+

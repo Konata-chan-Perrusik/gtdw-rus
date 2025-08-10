@@ -1,0 +1,74 @@
+﻿########################
+## Worldstate Backend ##
+##	by Lonely Knight  ##
+########################
+
+## Historical Worldstates Table ##
+
+gh_worldstate_initialization_effect = {
+	#check_worldstate_historical_date_effect = { WORLDSTATE = elysian_pass }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = imperial_civil_war }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = sorrowing_of_oejeynica }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = sjalvolki_imperrech_forms }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = agionist_rebellions }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = war_of_the_thousand_dragons }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = srbm_discovered }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = srbm_performed }
+	#check_worldstate_historical_date_effect = { WORLDSTATE = frodbrokna }
+	#worldstate_yearly_effect = yes
+}
+
+# Check if we're at least a day after the lore date of the World State
+check_worldstate_historical_date_effect = {
+	if = {
+		limit = {
+			ws_$WORLDSTATE$_trigger = no
+			OR = {
+				current_year > ws_year_of_$WORLDSTATE$
+				AND = {
+					current_year = ws_year_of_$WORLDSTATE$
+					current_month > ws_month_of_$WORLDSTATE$
+				}
+				AND = {
+					current_year = ws_year_of_$WORLDSTATE$
+					current_month = ws_month_of_$WORLDSTATE$
+					current_day > ws_day_of_$WORLDSTATE$
+				}
+			}
+			# The ws_$WORLDSTATE$_year variable enables the es_$WORLDSTATE$_trigger scripted_trigger (GH_worldstate_triggers).  If the date is
+			# after the historical date of the World State (GH_worldstate_values) then the World State is activated with the historical values
+			#set_worldstate_manual_effect = { WORLDSTATE = $WORLDSTATE$ YEAR = ws_historical_year_of_$WORLDSTATE$ MONTH = ws_historical_month_of_$WORLDSTATE$ DAY = ws_historical_day_of_$WORLDSTATE$ }
+		}
+	}
+}
+
+# Set the World State date from the date triggered, if the World State has not been activated already
+set_worldstate_effect = {
+	if = {
+		limit = {
+			ws_$WORLDSTATE$_trigger = no
+		}
+		set_worldstate_manual_effect = { WORLDSTATE = $WORLDSTATE$ YEAR = current_year MONTH = current_month DAY = current_day }
+	}
+}
+
+# Set the World State date from an arbitrarily defined date, if the World State has not been activated already
+set_worldstate_manual_effect = {
+	if = {
+		limit = {
+			ws_$WORLDSTATE$_trigger = no
+		}
+		set_global_variable = {
+			name = ws_$WORLDSTATE$_year
+			value = $YEAR$
+		}
+		set_global_variable = {
+			name = ws_$WORLDSTATE$_month
+			value = $MONTH$
+		}
+		set_global_variable = {
+			name = ws_$WORLDSTATE$_day
+			value = $DAY$
+		}
+	}
+}

@@ -1,0 +1,678 @@
+﻿gh_purge_county_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+
+	desc = gh_purge_county_interaction_desc
+
+	target_type = title
+	target_filter = actor_domain_titles
+	
+	auto_accept = yes
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			this = scope:recipient
+			OR = {
+				culture = { has_cultural_parameter = can_purge_counties }
+				faith = { has_doctrine_parameter = faith_can_use_purges }
+			}
+		}
+	}
+	
+	can_be_picked_title = {
+		scope:target = {
+			holder = scope:actor
+			is_capital_barony = no # we'll use the county in that case
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province.county = {
+					NOT = { scope:target.culture = scope:actor.culture }
+					OR = {
+						scope:target.culture = {
+							cultural_acceptance = {
+								target = scope:actor.culture
+								value <= 25
+							}
+						}
+						AND = {
+							scope:actor.faith = { has_doctrine = tenet_superiority_in_bloodshed }
+							scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_description = {
+					text = "feudalize_tribal_holding_interaction_title_not_county_or_below"
+					always = no
+				}
+			}
+		}
+	}
+
+	has_valid_target_showing_failures_only = {
+		scope:target = {
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province = {
+					barony_controller = scope:actor
+				}
+				NOT = { title_province.county = { has_county_modifier = recent_purge_modifier } }
+			}
+		}
+	}
+
+	on_accept = {
+		if = {
+			limit = { scope:target.development_level > 0 }
+			scope:actor = {
+				duel = {
+					skill = martial
+					value = decent_skill_rating
+					15 = {
+						desc = gh_purge_county_interaction_result_1
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = -1.0
+							min = -14
+						}
+						send_interface_toast = {	
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -1
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = minor_piety_value
+							}
+							add_gold = minor_gold_value
+						}
+					}
+					7 = {
+						desc = gh_purge_county_interaction_result_2
+						trigger = {
+							scope:target = { development_level >= 2 }
+						}
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 0.75
+							min = -14
+						}
+						send_interface_toast = {
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -2
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									multiply = 2
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = {
+									value = minor_piety_value
+									multiply = 2
+								}
+							}
+							add_gold = {
+								value = minor_gold_value
+								multiply = 2
+							}
+						}
+					}
+					3 = {
+						desc = gh_purge_county_interaction_result_3
+						trigger = {
+							scope:target = { development_level >= 3 }
+						}
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 0.5
+							min = -14
+						}
+						send_interface_toast = {
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -3
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									multiply = 3
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = {
+									value = minor_piety_value
+									multiply = 3
+								}
+							}
+							add_gold = {
+								value = minor_gold_value
+								multiply = 3
+							}
+						}
+					}
+					1 = {
+						desc = gh_purge_county_interaction_result_4
+						trigger = {
+							scope:target = { development_level >= 4 }
+						}
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 0.25
+							min = -14
+						}
+						send_interface_toast = {
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -4
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									multiply = 4
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = {
+									value = minor_piety_value
+									multiply = 4
+								}
+							}
+							add_gold = {
+								value = minor_gold_value
+								multiply = 4
+							}
+						}
+					}
+				}
+				if = {
+					limit = { 
+						faith = { has_doctrine = tenet_superiority_in_bloodshed }
+						scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+						NOT = { has_trait = gh_chosen_man }
+					}
+					add_trait = gh_chosen_man
+				}
+				scope:target.culture = {
+					change_cultural_acceptance = {
+						target = scope:actor.culture
+						value = -5
+						desc = cultural_acceptance_loss_purge
+					}
+				}
+				stress_impact = {
+					compassionate = massive_stress_impact_gain
+					forgiving = major_stress_impact_gain
+					just = major_stress_impact_gain
+					vengeful = medium_stress_impact_loss
+					callous = medium_stress_impact_loss
+					sadistic = major_stress_impact_loss
+				}
+			}
+		}
+		random_list = {
+			5 = {
+				desc = gh_purge_county_interaction_result_5
+				trigger = {
+					scope:target.development_level < 5
+				}
+				if = {
+					limit = { NOT = { scope:target.culture = scope:actor.culture } }
+					scope:target = {
+						set_county_culture = scope:actor.culture
+					}
+				}
+				if = {
+					limit = { NOT = { scope:target.faith = scope:actor.faith } }
+					scope:target = {
+						set_county_faith = scope:actor.faith
+					}
+				}
+				scope:target = {
+					if = {
+						limit = { has_county_modifier = recent_purge_modifier }
+						remove_county_modifier = recent_purge_modifier
+					}
+					add_county_modifier = {
+						modifier = natives_wiped_out_modifier
+						years = 20
+					}
+				}
+			}
+			0 = {
+				desc = gh_purge_county_interaction_result_6
+				modifier = {
+					add = scope:target.development_level
+					scope:target.development_level > 0
+				}
+				scope:target = {
+					if = {
+						limit = { has_county_modifier = natives_wiped_out_modifier }
+						remove_county_modifier = natives_wiped_out_modifier
+					}
+					add_county_modifier = {
+						modifier = recent_purge_modifier
+						years = 5
+					}
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = -1000
+			has_trait = compassionate
+		}
+		modifier = {
+			add = -10
+			has_trait = forgiving
+		}
+		modifier = {
+			add = -10
+			has_trait = generous
+		}
+		modifier = {
+			add = -10
+			has_trait = just
+		}
+		modifier = {
+			add = 20
+			has_trait = sadistic
+		}
+		modifier = {
+			add = 20
+			has_trait = callous
+		}
+	}
+}
+
+# Redrunner Purges
+gh_redrunner_purge_corruption_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+
+	desc = gh_redrunner_purge_corruption_interaction_desc
+
+	target_type = title
+	target_filter = actor_domain_titles
+	
+	auto_accept = yes
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			this = scope:recipient
+			culture = { has_cultural_tradition = tradition_hives_of_scum_and_villainy }
+		}
+	}
+
+	can_be_picked_title = {
+		scope:target = {
+			holder = scope:actor
+			is_capital_barony = no
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province.county = {
+					county_control <= 50
+				}
+			}
+			trigger_else = {
+				custom_description = {
+					text = "feudalize_tribal_holding_interaction_title_not_county_or_below"
+					always = no
+				}
+			}
+		}
+	}
+
+	has_valid_target_showing_failures_only = {
+		scope:target = {
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province = {
+					barony_controller = scope:actor
+				}
+				NOT = { title_province.county = { has_county_modifier = recent_purge_modifier } }
+			}
+		}
+	}
+
+	on_accept = {
+		if = {
+			limit = { scope:target.development_level > 0 }
+			scope:actor = {
+				remove_short_term_gold = medium_gold_value
+				duel = {
+					skill = martial
+					value = decent_skill_rating
+					15 = {
+						desc = gh_purge_county_interaction_result_1
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = -1.0
+							min = -14
+						}
+						send_interface_toast = {	
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -1
+								if = {
+									limit = { has_county_modifier = redlander_mystery_cults_modifier }
+									remove_county_modifier = redlander_mystery_cults_modifier
+								}
+								add_county_modifier = {
+									modifier = purged_by_fire_county_modifier
+									years = 5
+								}
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = minor_piety_value
+							}
+							add_gold = minor_gold_value
+						}
+					}
+					7 = {
+						desc = gh_purge_county_interaction_result_2
+						trigger = {
+							scope:target = { development_level >= 2 }
+						}
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 0.75
+							min = -14
+						}
+						send_interface_toast = {
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -2
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									multiply = 2
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = {
+									value = minor_piety_value
+									multiply = 2
+								}
+							}
+							add_gold = {
+								value = minor_gold_value
+								multiply = 2
+							}
+						}
+					}
+					3 = {
+						desc = gh_purge_county_interaction_result_3
+						trigger = {
+							scope:target = { development_level >= 3 }
+						}
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 0.5
+							min = -14
+						}
+						send_interface_toast = {
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -3
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									multiply = 3
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = {
+									value = minor_piety_value
+									multiply = 3
+								}
+							}
+							add_gold = {
+								value = minor_gold_value
+								multiply = 3
+							}
+						}
+					}
+					1 = {
+						desc = gh_purge_county_interaction_result_4
+						trigger = {
+							scope:target = { development_level >= 4 }
+						}
+						compare_modifier = {
+							value = scope:duel_value
+							multiplier = 0.25
+							min = -14
+						}
+						send_interface_toast = {
+							title = gh_purge_county_interaction_result
+							left_icon = scope:actor
+							
+							scope:target = {
+								change_development_level = -4
+							}
+							if = {
+								limit = { culture = { has_cultural_parameter = purging_counties_gives_prestige } }
+								add_prestige = {
+									value = miniscule_prestige_value
+									multiply = 4
+									if = {
+										limit = { has_trait = sadistic }
+										multiply = 1.5
+									}
+								}
+							}
+							if = {
+								limit = { 
+									faith = { has_doctrine = tenet_superiority_in_bloodshed }
+									scope:target.culture = { has_cultural_pillar = heritage_aversarian }
+								}
+								add_piety = {
+									value = minor_piety_value
+									multiply = 4
+								}
+							}
+							add_gold = {
+								value = minor_gold_value
+								multiply = 4
+							}
+						}
+					}
+				}
+				stress_impact = {
+					compassionate = massive_stress_impact_gain
+					forgiving = major_stress_impact_gain
+					just = major_stress_impact_gain
+					vengeful = medium_stress_impact_loss
+					callous = medium_stress_impact_loss
+					sadistic = major_stress_impact_loss
+				}
+			}
+		}
+		scope:target = {
+			add_county_modifier = {
+				modifier = recent_purge_modifier
+				years = 5
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = -1000
+			has_trait = compassionate
+		}
+		modifier = {
+			add = -10
+			has_trait = forgiving
+		}
+		modifier = {
+			add = -10
+			has_trait = generous
+		}
+		modifier = {
+			add = -10
+			has_trait = just
+		}
+		modifier = {
+			add = 20
+			has_trait = sadistic
+		}
+		modifier = {
+			add = 20
+			has_trait = callous
+		}
+	}
+}
+
+gh_redlands_decay_county_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+
+	desc = gh_redlands_decay_county_interaction_desc
+
+	target_type = title
+	target_filter = actor_domain_titles
+
+	auto_accept = yes
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			this = scope:recipient
+			has_religion = religion:redland_cults_religion
+		}
+	}
+
+	can_be_picked_title = {
+		scope:target = {
+			tier = tier_county
+			holder = scope:actor
+			#is_capital_barony = no
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province.county = { has_county_modifier = redlands_decay_modifier }
+			}
+		}
+	}
+
+	has_valid_target_showing_failures_only = {
+		scope:target = {
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province.county = { development_level = 0 }
+			}
+		}
+	}
+
+	on_accept = {
+		scope:target = {
+			save_scope_as = redlands_decay_target
+		}
+		scope:actor = {
+			trigger_event = redlands_decision.1000 # Triggers choice between wastelanding and culture-flipping
+		}
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

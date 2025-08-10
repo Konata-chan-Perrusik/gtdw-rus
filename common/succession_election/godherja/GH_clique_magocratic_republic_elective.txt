@@ -1,0 +1,162 @@
+﻿clique_magocratic_republic_elective = {
+	elector_vote_strength = {
+		base = 0
+		modifier = { # Emperor
+			desc = tooltip_feudal_vote_strength_emperor_tier
+			add = 1
+			highest_held_title_tier = 5
+		}
+		modifier = { # King
+			desc = tooltip_feudal_vote_strength_king_tier
+			add = 1
+			highest_held_title_tier = 4
+		}
+		modifier = { # Duke
+			desc = tooltip_feudal_vote_strength_duke_tier
+			add = 1
+			highest_held_title_tier = 3
+		}
+		modifier = { # Count
+			desc = tooltip_feudal_vote_strength_count_tier
+			add = 1
+			highest_held_title_tier = 2
+		}
+
+		#arcana characters have bonuses
+		modifier = {
+			desc = tooltip_vote_strength_education_arcana
+			add = 1
+			has_trait = education_arcana
+		}
+		#arcana characters have bonuses
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_arcana
+			add = 1
+			arcana_lifestyle_perks > 0	
+		}
+		#arcana characters have bonuses
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_arcana_trait
+			add = 3
+			has_arcana_lifestyle_trait_trigger = yes	
+		}
+		#arcana characters have bonuses
+		modifier = {
+			desc = tooltip_vote_strength_education_arcana_3
+			add = 2
+			has_trait = education_arcana_3	
+		}
+		#arcana characters have bonuses
+		modifier = {
+			desc = tooltip_vote_strength_education_arcana_4
+			add = 4
+			OR = {
+				has_trait = education_arcana_4
+				has_trait = education_arcana_5
+			}	
+		}
+		#arcana characters have bonuses
+		modifier = {
+			
+			desc = tooltip_vote_strength_arcana_points
+			add = {
+				add = character_arcana_baseline_value
+				multiply = 0.15
+			}
+		}
+		
+		#court magi has bonus
+		modifier = {
+			desc = tooltip_vote_strength_court_magi
+			add = 4
+			has_council_position = councillor_court_magi
+		}
+		modifier = { # Political power
+			desc = tooltip_clique_political_power_elector_strength
+			add = character_influence_total
+		}
+		
+	}
+	
+	electors = {
+		add = holder
+		add = {
+			type = title_dejure_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+				any_held_title = {
+					tier = root.highest_held_title_tier
+					exists = de_jure_liege
+					target_is_de_jure_liege_or_above = scope:title
+				}
+			}
+		}
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+			}
+		}
+	}
+
+	candidate_score = {
+		base = 0
+		######################	Elector self-voting pattern	##########################
+		elector_self_voting_pattern_clique_elective_modifier = yes
+		# some stuff about children of the ruler voting for themselves needed to be changed from the feudal one
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		elector_voting_pattern_circumstances_magocratic_republic_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one for republics
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either
+		
+		##########################	Elector voting patterns (cliques)	##########################
+		elector_voting_pattern_circumstances_clique_mechanics_modifier = yes
+	}
+	
+	#scope:candidate = Candidate, scope:title = Title, scope:holder_candidate = Candidate currently selected by ruler.
+	candidates = {
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				feudal_elective_potential_landed_candidate_trigger = yes
+				can_access_magic = yes
+				age > 15
+			}
+		}
+		add = {
+			type = title_claimants
+			limit = {
+				can_access_magic = yes
+				feudal_elective_potential_landless_claimant_candidate_trigger = yes 
+				age > 15
+			}
+		}
+		add = {
+			type = holder_close_family
+			limit = {
+				is_close_family_of = scope:holder
+				feudal_elective_potential_landless_dynastic_candidate_trigger = yes
+				can_access_magic = yes
+				age > 15
+			}
+		}
+	}
+}

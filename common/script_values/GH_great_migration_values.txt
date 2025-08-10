@@ -1,0 +1,34 @@
+﻿
+migration_momentum_value = {
+	value = 0
+	if = {
+		limit = {
+			exists = var:current_migration_size
+			exists = var:max_migration_size
+			var:max_migration_size > 0
+		}
+		add = var:current_migration_size	# Done via a manually adjusted variable for performance reasons
+		divide = var:max_migration_size
+		multiply = 100
+	}
+}
+
+migration_momentum_value_maximum = {
+	value = 100
+}
+
+total_migrating_development_for_pop_value = {
+	value = 0
+	if = {
+		limit = { has_variable_list = transit_counties_list }
+		every_in_list = {
+			variable = transit_counties_list
+			add = var:migrating_development_in_county
+		}
+	}
+}
+
+pop_movement_county_cap_value = {
+	value = total_migrating_development_for_pop_value
+	divide = 10
+}

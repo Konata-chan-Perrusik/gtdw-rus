@@ -1,0 +1,82 @@
+﻿
+#########################
+# Triggers for Province Terrain
+#########################
+is_wooded_trigger = {
+	OR = {
+		GH_any_forest_terrain_trigger = yes
+		GH_any_jungle_terrain_trigger = yes
+		GH_any_taiga_terrain_trigger = yes
+	}
+}
+
+is_mountainous_trigger = { GH_any_mountains_terrain_trigger = yes }
+
+is_mountainous_or_hilly_trigger = {
+	OR = {
+		GH_any_mountains_terrain_trigger = yes
+		GH_any_hills_terrain_trigger = yes
+	}
+}
+
+is_drylands_trigger = {
+	OR = {
+		GH_any_drylands_terrain_trigger = yes
+		GH_any_steppe_terrain_trigger = yes
+	}
+}
+
+is_desert_trigger = {
+	OR = {
+		GH_any_desert_terrain_trigger = yes
+		GH_any_desert_mountains_terrain_trigger = yes
+		GH_any_oasis_terrain_trigger = yes
+	}
+}
+
+is_drylands_or_desert_trigger = {
+	OR = {
+		GH_any_drylands_terrain_trigger = yes
+		GH_any_steppe_terrain_trigger = yes
+		GH_any_desert_terrain_trigger = yes
+		GH_any_desert_mountains_terrain_trigger = yes
+		GH_any_oasis_terrain_trigger = yes
+	}
+}
+
+is_wetland_trigger = {
+	OR = {
+		GH_any_wetlands_terrain_trigger = yes
+		GH_any_floodplains_terrain_trigger = yes
+		GH_any_oasis_terrain_trigger = yes
+	}
+}
+
+is_flatlands_trigger = {
+	OR = {
+		GH_any_steppe_terrain_trigger = yes
+		GH_any_plains_terrain_trigger = yes
+		GH_any_farmlands_terrain_trigger = yes
+		GH_any_wasteland_terrain_trigger = yes
+	}
+}
+
+is_likely_to_contain_trees_trigger = {
+	OR = {
+		is_wooded_trigger = yes
+		is_wetland_trigger = yes
+		is_flatlands_trigger = yes
+		GH_any_hills_terrain_trigger = yes
+	}
+}
+
+holds_county_with_water_trigger = {
+	any_held_county = {
+		any_county_province = {
+			NOR = {
+				terrain = desert
+				terrain = desert_mountains
+			}
+		}
+	}
+}

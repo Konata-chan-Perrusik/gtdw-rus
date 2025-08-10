@@ -1,0 +1,251 @@
+﻿##################################################
+
+#	Legalism Decisions List
+
+#	Begin Practicing Law
+
+##################################################
+
+
+
+#############################################
+# Begin Practicing Law						#
+# by Hapchazzard							#
+#############################################
+
+begin_practicing_law_decision = {
+	title = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { 
+					has_variable = has_previously_studied_law
+				}
+				desc = continue_practicing_law_decision_name
+			}
+			desc = begin_practicing_law_decision_name
+		}
+	}
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_variable = has_previously_studied_law
+				}
+				desc = continue_practicing_law_decision_desc
+			}
+			desc = begin_practicing_law_decision_desc
+		}
+	}
+	selection_tooltip = begin_practicing_law_decision_tooltip
+	cooldown = { years = 5 }
+	decision_group_type = major
+
+	is_shown = {
+		# Following a valid faith, and not already a jurist
+		faith = { has_doctrine_parameter = enables_practising_law }
+		NOR = { 
+			has_trait = lifestyle_jurist
+			has_variable = studying_law
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		custom_tooltip = begin_practicing_law_decision_effect_tt
+		set_variable = studying_law
+		create_story = {
+			type = story_cycle_studying_law
+		}
+	}
+
+	cost = { 
+		gold = {
+			value = 0
+			if = {
+				limit = { is_ruler = yes }
+				add = medium_gold_value
+			}
+		}
+	}
+
+	ai_check_interval = 60
+	
+	ai_potential = {
+		# Has enough gold.
+		short_term_gold >= medium_gold_value
+		# Either has a learning education, or has some personality-based interest in the law.
+		OR = {
+			has_trait = education_learning
+			has_trait = just
+			has_trait = diligent
+			has_trait = zealous
+			has_trait = ambitious
+		}
+		# Must have at least decent learning to consider this, or to be arrogant enough not to care
+		OR = {
+			learning >= decent_skill_rating
+			has_trait = arrogant
+		}
+		# Mustn't be lazy
+		NOT = {
+			has_trait = lazy
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+		
+		# Every learning point above 10 increases the chance of picking this
+		modifier = {
+			add = {
+				value = learning
+				multiply = 5
+			}
+		}
+		## Trait-based factors.
+		## Diligent.
+		modifier = {
+			add = 10
+			has_trait = diligent
+		}
+		## Ambitious.
+		modifier = {
+			add = 10
+			has_trait = ambitious
+		}
+		## Zealous.
+		modifier = {
+			add = 10
+			has_trait = zealous
+		}
+		## Just.
+		modifier = {
+			add = 10
+			has_trait = just
+		}
+		## Cynical.
+		modifier = {
+			add = -10
+			has_trait = cynical
+		}
+		## Arbitrary.
+		modifier = {
+			add = -10
+			has_trait = arbitrary
+		}
+		# Being older than 35 gives a huge decrease to the chance of an AI taking this decision.
+		modifier = {
+			factor = 0.2
+			age > 35
+		}
+	}
+}
+
+#####################################
+# Promote Law Clerk					#
+# By Mayor							#
+#####################################
+
+promote_law_clerk_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+	decision_group_type = courtier
+
+	desc = promote_law_clerk_decision_desc
+	selection_tooltip = promote_law_clerk_decision_tooltip
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_ruler = yes
+		can_have_court_magi_trigger = yes
+		domicile ?= { has_domicile_parameter = promote_legal_clerk }
+	}
+
+	cooldown = { years = 5 }
+	
+	effect = {
+		custom_tooltip = promote_law_clerk_decision_tooltip
+		hidden_effect = {
+			create_character = {
+					employer = root
+					template = pool_repopulate_stewardship
+					faith = root.faith
+					culture = root.culture
+					save_scope_as = promoted_clerk
+			}
+			if = {
+				limit = {
+					exists = scope:promoted_clerk
+				}
+				scope:promoted_clerk = {
+					force_character_skill_recalculation = yes
+					add_character_flag = {
+						flag = blocked_from_leaving
+						years = 25
+					}
+					if = {
+						limit = {
+							NOT = {
+								has_trait = lifestyle_jurist
+							}
+						}
+						add_trait = lifestyle_jurist
+					}
+				}
+				if = {
+					limit = {
+						scope:promoted_clerk = {
+							NOT = {
+								is_courtier_of = root
+							}
+						}
+					}
+					add_courtier = scope:promoted_clerk
+				}
+				send_interface_toast = {
+					title = clerk_promoted.t
+					left_icon = scope:promoted_clerk
+					custom_tooltip = promoted_clerk.desc
+				}
+			}
+			if = {
+				limit = { domicile ?= { has_domicile_parameter = legal_power_boost_1 } }
+				scope:promoted_clerk = {
+					add_trait_xp = {
+						trait = lifestyle_jurist
+						value = 25
+					}
+				}
+			}
+			else_if = {
+				limit = { domicile ?= { has_domicile_parameter = legal_power_boost_2 } }
+				scope:promoted_clerk = {
+					add_trait_xp = {
+						trait = lifestyle_jurist
+						value = 50
+					}
+				}
+			}
+			else_if = {
+				limit = { domicile ?= { has_domicile_parameter = legal_power_boost_3 } }
+				scope:promoted_clerk = {
+					add_trait_xp = {
+						trait = lifestyle_jurist
+						value = 75
+					}
+				}
+			}
+		}
+	}
+}

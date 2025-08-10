@@ -1,0 +1,179 @@
+﻿task_court_magi_boost_magic_power = {
+	position = councillor_court_magi
+	task_type = task_type_general
+	task_progress = task_progress_infinite
+	
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_court_magi_boost_magic_power.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+
+	effect_desc = {
+		desc = task_court_magi_boost_magic_power_effect_desc
+	}
+
+	council_owner_modifier = {
+	
+	}
+	
+	on_cancel_task = {
+	
+	}
+
+	on_start_task = {
+	
+	}
+	
+	on_monthly = {
+	
+	}
+	
+	ai_will_do = {
+		value = 1
+	}
+}
+
+task_court_magi_research_magic = { # Needs on action for chaotic mistakes
+	position = councillor_court_magi
+	task_type = task_type_general
+	task_progress = task_progress_percentage
+
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_court_magi_research_magic.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+
+	is_valid_showing_failures_only = {
+		# GH TODO: Readd the below logic once the tenet has a proper effect tooltip explaining this, and when the actual trigger logic is displayed to the player
+		#OR = {
+		#	scope:councillor_liege = { has_perk = arcana_erudition_perk8_tree3 }
+		#	scope:councillor_liege.faith = { has_doctrine = tenet_knowledge_veneration } # Vidvaoos
+		#}
+		scope:councillor_liege = { has_perk = arcana_erudition_perk8_tree3 }
+	}
+	effect_desc = {
+		desc = task_court_magi_research_magic_effect_desc
+	}
+
+	progress = {
+		value = 0
+		add = {
+			value = scope:councillor.character_arcana_baseline_value
+			desc = COURT_MAGI_ARCANA_BASE
+			multiply = 0.5
+		}
+		# GH_TODO: Other bonuses?
+	}
+
+	on_finish_task = {
+		if = {
+			limit = {
+				NOT = { exists = scope:councillor.var:spell_to_learn }
+			}
+			scope:councillor = {
+				learn_random_culture_magic_school_effect = {
+					MIN_SPELLS = 1
+					MAX_SPELLS = 3
+					MAX_SPELL_LEVEL = court_magi_max_spell_level_default_value
+				}
+			}
+		}	
+	}
+
+	ai_will_do = {
+		value = 1
+	}
+}
+
+
+task_court_magi_defend_against_hostile_magic = {
+	default_task = yes
+	position = councillor_court_magi
+	task_type = task_type_general
+	task_progress = task_progress_infinite
+	
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_court_magi_defend_against_hostile_magic.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+
+	effect_desc = {
+		desc = task_court_magi_defend_against_hostile_magic_desc
+	}
+
+	council_owner_modifier = {
+	
+	}
+	
+	on_cancel_task = {
+	
+	}
+
+	on_start_task = {
+	
+	}
+	
+	on_monthly = {
+	
+	}
+	
+	ai_will_do = {
+		value = 10 # Defense should be preferred
+	}
+}
+
+
+task_court_magi_tutor_magic = {
+	position = councillor_court_magi
+	
+	task_type = task_type_general
+	task_progress = task_progress_infinite
+
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_court_magi_tutor_magic.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+	
+	effect_desc = task_court_magi_tutor_magic_effect_desc
+
+	council_owner_modifier = {
+		# name = task_court_magi_cast_spells_modifier
+		# Fire a decision or event for spell here
+	}
+
+	on_cancel_task = {
+		
+	}
+	
+	on_start_task = {
+		
+	}
+
+	on_monthly = {
+		#trigger_event = court_magi_task.0001 # commenting out
+	}
+	
+	ai_will_do = {	# If you have kids that have potential, do it. Check will be made more complex in the future
+		value = 0
+		if = {
+			limit = {
+				scope:councillor_liege = {
+					any_child = {
+						is_adult = no
+						has_magi_potency_trigger = yes
+						age >= 6	# Must be old enough to actually get educated
+					}
+				}
+			}
+			add = 1000
+		}
+	}  
+}

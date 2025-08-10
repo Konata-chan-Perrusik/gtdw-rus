@@ -1,0 +1,67 @@
+﻿gh_tribal_settlement_interaction = {
+	category = interaction_category_uncategorized
+	
+	desc = gh_tribal_settlement_interaction_desc
+	
+	target_type = title
+	target_filter = actor_domain_titles
+	
+	auto_accept = yes
+	
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			this = scope:recipient
+			faith = { has_doctrine = unreformed_faith_doctrine }
+		}
+	}
+	
+	can_be_picked_title = {
+		scope:target = {
+			holder = scope:actor
+			is_capital_barony = no
+			title_province = { NOT = { has_holding_type = colony_holding } }
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province.county = {
+					NOT = { scope:target.culture = scope:actor.culture }
+					NOT = { scope:target.faith = scope:actor.faith }
+				}
+			}
+		}
+	}
+	
+	has_valid_target_showing_failures_only = {
+		scope:target = {
+			trigger_if = {
+				limit = { tier <= tier_county }
+				title_province = { barony_controller = scope:actor }
+				NOT = { title_province.county = { has_county_modifier = tribal_settlement_target } }
+			}
+		}
+	}
+	
+	on_accept = {
+		scope:target = {
+			add_county_modifier = {
+				modifier = tribal_settlement_target
+				years = 15
+			}
+		}
+		scope:actor.culture = {
+			change_cultural_acceptance = {
+				target = scope:target.culture
+				value = -3
+				desc = cultural_acceptance_loss_tribal_settlement
+			}
+		}
+	}
+	
+	ai_will_do = {
+		base = 5
+		modifier = {
+			add = 20
+			has_trait = zealous
+		}
+	}
+}

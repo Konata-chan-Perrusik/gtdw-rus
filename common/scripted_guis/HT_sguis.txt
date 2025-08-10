@@ -1,0 +1,60 @@
+﻿HT_set_character_traits = {
+	scope = character
+	effect = {
+		clear_variable_list = HT_shown_traits_all
+		clear_variable_list = HT_shown_traits_personality
+		clear_variable_list = HT_shown_traits_other
+		ordered_character_trait = {
+			limit = {
+				NOR = {
+					has_trait_flag = HT_hidden_trait
+					prev = {
+						is_target_in_variable_list = {
+							name = HT_hidden_traits
+							target = prev
+						}
+					}
+				}
+			}
+			max = 1000
+			check_range_bounds = no
+			order_by = {
+				switch = {
+					trigger = has_trait_category
+					personality = { value = 10 }
+					education = { value = 8 }
+					childhood = { value = 7 }
+					commander = { value = 6 }
+					winter_commander = { value = 5 }
+					lifestyle = { value = 4 }
+					court_type = { value = 3 }
+					fame = { value = 2 }
+					health = { value = 1 }
+				}
+			}
+			if = {
+				limit = { OR = { has_trait_category = personality has_trait_category = childhood } }
+				prev = {
+					add_to_variable_list = {
+						name = HT_shown_traits_personality
+						target = prev
+					}
+				}
+			}
+			else = {
+				prev = {
+					add_to_variable_list = {
+						name = HT_shown_traits_other
+						target = prev
+					}
+				}
+			}
+			prev = {
+				add_to_variable_list = {
+					name = HT_shown_traits_all
+					target = prev
+				}
+			}
+		}
+	}
+}

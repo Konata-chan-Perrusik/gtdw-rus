@@ -1,0 +1,39 @@
+﻿olteni_mask_template = {
+	can_equip = {
+		custom_tooltip = {
+			text = oltenic_mask_user_trigger_no_reasons
+			oltenic_mask_user_lax_trigger = yes
+		}
+	}
+
+	# can this character benefit from the full modifiers of the artifact?
+	can_benefit = {
+		oltenic_mask_user_lax_trigger = yes
+	}
+	can_reforge = {
+		oltenic_mask_user_lax_trigger = yes
+	}
+
+	can_repair = {
+		always = yes
+	}
+
+	# if a given character does not pass the "can_benefit" trigger then this modifier will be applied instead.
+	fallback = { 
+		monthly_prestige = 0.05
+	}
+
+	ai_score = {
+		value = 0
+		add = {
+			if = {
+				limit = { oltenic_mask_user_strict_trigger = yes }
+				add = 100
+			}
+			if = {
+				limit = { has_character_modifier = magic_defiled_nadir_modifier }
+				add = 1000
+			}
+		}
+	}
+}

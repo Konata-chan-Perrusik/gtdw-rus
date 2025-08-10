@@ -1,0 +1,111 @@
+﻿reactive_advice_pirates = {
+	chain = reactive_advice
+	delay = 0
+	start_automatically = no
+
+	reactive_advice_pirates_intro = {
+		text = "reactive_advice_pirates_intro_desc"
+		
+		animation = center
+		header_info = "lesson_step_1_of_5"
+		shown_in_encyclopedia = no
+		highlight_widget = "tab_council"
+		gui_transition = {
+			button_id = "skip"
+			button_text = "tutorial_lesson_button_skip"
+			target = lesson_finish # ends current lesson chain
+		}
+
+		trigger_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_pirates_basics
+			trigger = {
+				custom_description = {
+					text = lesson_basics_council_view_tt
+					is_widgetid_open = council_window
+				}
+			}
+		}
+	}
+
+	reactive_advice_pirates_basics = {
+		text = "reactive_advice_pirates_basics_desc"
+		
+		header_info = "lesson_step_2_of_5"
+		highlight_widget = "tab_council"
+		shown_in_encyclopedia = no
+
+
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_pirates_intro
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_pirates_authority
+		}
+	}
+
+	reactive_advice_pirates_authority = {
+		text = "reactive_advice_pirates_authority_desc"
+		header_info = "lesson_step_3_of_5"
+			
+		highlight_widget = "tab_my_realm_tutorial_uses_this"
+		shown_in_encyclopedia = no
+		
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_pirates_basics
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_pirates_succession
+		}
+	}
+
+	reactive_advice_pirates_succession = {
+		text = "reactive_advice_pirates_succession_desc"
+		header_info = "lesson_step_4_of_5"
+			
+		highlight_widget = "tab_my_realm_tutorial_uses_this"
+		#highlight_widget = "tutorial_highlight_succession_tab"
+
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_pirates_authority
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_pirates_tax_collectors
+		}
+	}
+
+	reactive_advice_pirates_tax_collectors = {
+		text = "reactive_advice_pirates_tax_collectors_desc"
+		header_info = "lesson_step_5_of_5"
+			
+		highlight_widget = "tab_tax_jurisdiction"
+
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_pirates_succession
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_complete"
+			target = lesson_finish
+		}
+	}
+}

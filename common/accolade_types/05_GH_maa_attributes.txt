@@ -1,0 +1,410 @@
+﻿##################################################
+# INDEX
+#
+# Mammoth Rider	-	mammothry_attribute
+#
+
+##################################################
+# CONTROL VALUES
+
+@skill_accolade_qualifying_value = high_skill_rating
+
+@has_relevant_maa_weight_up_value = 500
+@respected_culture_for_maa_type_value = 100
+@disinterested_culture_for_maa_type_value = -100
+
+@number_maa_regiments_increment_1 = 2
+@number_maa_regiments_increment_2 = 4
+@number_maa_regiments_increment_3 = 6
+@number_maa_regiments_increment_4 = 8
+
+@accolade_maa_maint_1 = -0.1
+@accolade_maa_maint_2 = -0.15
+@accolade_maa_maint_3 = -0.2
+@accolade_maa_maint_4 = -0.25
+@accolade_maa_maint_5 = -0.3
+
+@accolade_maa_damage_1 = 0.1
+@accolade_maa_damage_2 = 0.2
+@accolade_maa_damage_3 = 0.3
+@accolade_maa_damage_4 = 0.4
+@accolade_maa_damage_5 = 0.5
+@accolade_maa_damage_6 = 0.6
+
+@accolade_maa_toughness_1 = 0.1
+@accolade_maa_toughness_2 = 0.2
+@accolade_maa_toughness_3 = 0.3
+@accolade_maa_toughness_4 = 0.4
+@accolade_maa_toughness_5 = 0.5
+@accolade_maa_toughness_6 = 0.6
+
+@accolade_maa_screen_1 = 0.1
+@accolade_maa_screen_2 = 0.2
+@accolade_maa_screen_3 = 0.3
+@accolade_maa_screen_4 = 0.4
+@accolade_maa_screen_5 = 0.5
+@accolade_maa_screen_6 = 0.6
+
+@accolade_maa_pursuit_1 = 0.1
+@accolade_maa_pursuit_2 = 0.2
+@accolade_maa_pursuit_3 = 0.3
+@accolade_maa_pursuit_4 = 0.4
+@accolade_maa_pursuit_5 = 0.5
+@accolade_maa_pursuit_6 = 0.6
+
+@mammothry_attr_eleph_maint_1 = -0.2
+@mammothry_attr_eleph_maint_2 = -0.35
+@mammothry_attr_eleph_maint_3 = -0.5
+
+@mammothry_attr_eleph_max_size_1 = 1
+@mammothry_attr_eleph_max_size_2 = 2
+@mammothry_attr_eleph_max_size_3 = 3
+
+@mammothry_attr_eleph_damage_2 = 0.2
+@mammothry_attr_eleph_damage_3 = 0.2
+
+@mammothry_attr_eleph_tough_3 = 0.2
+
+@magi_attr_magi_maint_1 = -0.2
+@magi_attr_magi_maint_2 = -0.35
+@magi_attr_magi_maint_3 = -0.5
+
+@magi_attr_magi_max_size_1 = 1
+@magi_attr_magi_max_size_2 = 2
+@magi_attr_magi_max_size_3 = 3
+
+@magi_attr_magi_damage_2 = 0.2
+@magi_attr_magi_damage_3 = 0.2
+
+@magi_attr_magi_tough_2 = 0.2
+@magi_attr_magi_tough_3 = 0.2
+
+##################################################
+# SKILL TYPE ACCOLADES
+
+# Mammoth Rider
+mammothry_attribute = {
+	adjective = accolade_mammoth_riding
+	noun = accolade_mammotheer
+	accolade_categories = { men_at_arms army_bonus militant forceful leader aggressive defensive cavalry heavy_fighter }
+
+	potential = {
+		prowess >= accolade_prowess_requirement_value
+		OR = {
+			has_trait_xp = {
+				trait = tourney_participant
+				track = horse
+				value >= 20
+			}
+			has_trait = winter_soldier
+		}
+		culture ?= { has_innovation = innovation_warisnik_mammoths }
+	}
+
+	weight = {
+		value = accolade_uninteresting_base_value
+		scope:owner ?= {
+			# Should only be interested at all if they have a unit of the type OR if the maa type is exciting and foreign
+			if = {
+				limit = {
+					OR = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= 1
+						}
+						culture ?= { has_innovation = innovation_warisnik_mammoths }
+					}
+				}
+				add = @has_relevant_maa_weight_up_value
+				# Weight up a bit further for more MaA of the same type.
+				## A few.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_1
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				## Lots.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_2
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				## Many.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_3
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				## Many-lots.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_4
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				# AI values.
+				add = {
+					value = ai_boldness
+					multiply = 1
+				}
+				add = {
+					value = ai_honor
+					multiply = 1
+				}
+				#Culture
+				if = {
+					limit = {
+						root.culture ?= {
+							AND = {
+								has_cultural_pillar = heritage_sjalvolki
+								has_cultural_pillar = language_kholmvolki
+							}
+						}
+					}
+					add = @respected_culture_for_maa_type_value
+				}
+				# Mammoths are cool
+				add = 100
+				# Finally, weight for opinion.
+				multiply = accolade_opinion_multiplier_value
+			}
+		}
+	}
+
+	ranks = {
+		# Mammoths are incredibly deadly but also really expensive. So what if. *What if*. We reduced the cost to run them as we started to buff them? Scream, cry, seethe, cope, etc.
+		100 = {
+			liege_modifier = {
+				elephant_cavalry_maintenance_mult = @mammothry_attr_eleph_maint_1
+				elephant_cavalry_max_size_add = @mammothry_attr_eleph_max_size_1
+			}
+		}
+		300 = {
+			liege_modifier = {
+				elephant_cavalry_maintenance_mult = @mammothry_attr_eleph_maint_1
+				elephant_cavalry_max_size_add = @mammothry_attr_eleph_max_size_1
+			}
+		}
+		600 = {
+			liege_modifier = {
+				elephant_cavalry_maintenance_mult = @mammothry_attr_eleph_maint_2
+				elephant_cavalry_max_size_add = @mammothry_attr_eleph_max_size_2
+			}
+			knight_army_modifier = { elephant_cavalry_damage_mult = @mammothry_attr_eleph_damage_2 }
+			men_at_arms = { accolade_maa_mammothiers }
+		}
+		1000 = {
+			liege_modifier = {
+				elephant_cavalry_maintenance_mult = @mammothry_attr_eleph_maint_2
+				elephant_cavalry_max_size_add = @mammothry_attr_eleph_max_size_2
+			}
+			knight_army_modifier = { elephant_cavalry_damage_mult = @mammothry_attr_eleph_damage_2 }
+		}
+		1500 = {
+			liege_modifier = {
+				elephant_cavalry_maintenance_mult = @mammothry_attr_eleph_maint_3
+				elephant_cavalry_max_size_add = @mammothry_attr_eleph_max_size_3
+			}
+			knight_army_modifier = {
+				elephant_cavalry_damage_mult = @mammothry_attr_eleph_damage_3
+				elephant_cavalry_toughness_mult = @mammothry_attr_eleph_tough_3
+			}
+			men_at_arms = { accolade_maa_mammothiers }
+		}
+		2100 = {
+			liege_modifier = {
+				elephant_cavalry_maintenance_mult = @mammothry_attr_eleph_maint_3
+				elephant_cavalry_max_size_add = @mammothry_attr_eleph_max_size_3
+			}
+			knight_army_modifier = {
+				elephant_cavalry_damage_mult = @mammothry_attr_eleph_damage_3
+				elephant_cavalry_toughness_mult = @mammothry_attr_eleph_tough_3
+			}
+		}
+	}
+}
+
+# Magi
+magi_attribute = {
+	adjective = accolade_magi_leading
+	noun = accolade_magi
+	accolade_categories = { men_at_arms army_bonus militant leader aggressive forceful ranged_fighter siege causes_stress }
+
+	potential = {
+		has_variable = magic_prowess
+		has_trait = magic_good
+		NOR = {
+			trait_is_criminal_in_faith_trigger = {
+				TRAIT = magic_good
+				FAITH = root.faith
+				GENDER_CHARACTER = root
+			}
+			scope:owner ?= {
+				trait_is_criminal_in_faith_trigger = {
+					TRAIT = magic_good
+					FAITH = root.faith
+					GENDER_CHARACTER = root
+				}
+			}
+		}
+	}
+
+	weight = {
+		value = accolade_uninteresting_base_value
+		scope:owner ?= {
+			# Should only be interested at all if they have a unit of the type
+			if = {
+				limit = {
+					number_maa_regiments_of_base_type = {
+						type = magi
+						value >= 1
+					}
+				}
+				add = @has_relevant_maa_weight_up_value
+				# Weight up a bit further for more MaA of the same type.
+				## A few.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_1
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				## Lots.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_2
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				## Many.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_3
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				## Many-lots.
+				if = {
+					limit = {
+						number_maa_regiments_of_base_type = {
+							type = magi
+							value >= @number_maa_regiments_increment_4
+						}
+					}
+					add = @has_relevant_maa_weight_up_value
+				}
+				if = {
+					limit = {
+						root.culture ?= {
+							OR = { # GH URGENT: GH Cultures - do we have a generic 'likes magic' trigger?
+								has_cultural_pillar = heritage_aversarian
+								has_cultural_pillar = heritage_partic
+							}
+						}
+					}
+					add = @respected_culture_for_maa_type_value
+				}
+				if = {
+					limit = {
+						root.culture ?= {
+							OR = { # GH TODO: GH Cultures - do we have a generic 'dislikes magic' trigger?
+								has_cultural_pillar = heritage_marcher
+								has_cultural_pillar = heritage_sjalvolki
+							}
+						}
+					}
+					add = @disinterested_culture_for_maa_type_value
+				}
+				## Era.
+				### No specific era preference.
+				# AI values.
+				add = {
+					value = ai_boldness
+					multiply = 1
+				}
+				add = {
+					value = ai_rationality
+					multiply = 1
+				}
+				# Finally, weight for opinion.
+				multiply = accolade_opinion_multiplier_value
+			}
+		}
+	}
+
+	ranks = {
+		# Magi, like Elephants, are incredibly deadly but also really expensive, and Lonely doesn't feel like balancing right now, so like the PDX Elephant comment (and the mammothry one ig) says cope and seethe and etc
+		100 = {
+			liege_modifier = {
+				magi_maintenance_mult = @magi_attr_magi_maint_1
+				magi_max_size_add = @magi_attr_magi_max_size_1
+			}
+		}
+		300 = {
+			liege_modifier = {
+				magi_maintenance_mult = @magi_attr_magi_maint_1
+				magi_max_size_add = @magi_attr_magi_max_size_1
+			}
+		}
+		600 = {
+			liege_modifier = {
+				magi_maintenance_mult = @magi_attr_magi_maint_2
+				magi_max_size_add = @magi_attr_magi_max_size_2
+			}
+			knight_army_modifier = { magi_damage_mult = @magi_attr_magi_damage_2 }
+			men_at_arms = { accolade_maa_magi }
+		}
+		1000 = {
+			liege_modifier = {
+				magi_maintenance_mult = @magi_attr_magi_maint_2
+				magi_max_size_add = @magi_attr_magi_max_size_2
+			}
+			knight_army_modifier = { magi_damage_mult = @magi_attr_magi_damage_2 }
+		}
+		1500 = {
+			liege_modifier = {
+				magi_maintenance_mult = @magi_attr_magi_maint_3
+				magi_max_size_add = @magi_attr_magi_max_size_3
+			}
+			knight_army_modifier = {
+				magi_damage_mult = @magi_attr_magi_damage_3
+				magi_toughness_mult = @magi_attr_magi_tough_3
+			}
+			men_at_arms = { accolade_maa_magi }
+		}
+		2100 = {
+			liege_modifier = {
+				magi_maintenance_mult = @magi_attr_magi_maint_3
+				magi_max_size_add = @magi_attr_magi_max_size_3
+			}
+			knight_army_modifier = {
+				magi_damage_mult = @magi_attr_magi_damage_3
+				magi_toughness_mult = @magi_attr_magi_tough_3
+			}
+		}
+	}
+}

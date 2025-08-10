@@ -1,0 +1,153 @@
+﻿hubarite_codex_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	ai_check_interval = 120
+	desc = hubarite_codex_decision_desc
+	decision_group_type = hubarite
+	
+	is_shown = {
+		faith = faith:hubarism
+		NOT = {
+			has_character_flag = wrote_hubarite_codex
+		}
+	}
+	
+	is_valid = {
+		piety_level >= 4
+		prestige_level >= 4
+		has_at_least_magi_potency_rank_trigger = { RANK = 4 }
+	}
+	
+	effect = {
+		trigger_event = hubarite.0001
+	}
+	
+	ai_will_do = {
+		base = 50
+	}
+}
+
+hubarite_empire_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	decision_group_type = hubarite
+	sort_order = 100
+	ai_check_interval = 120
+	desc = hubarite_empire_decision_desc
+	
+	is_shown = {
+		faith = faith:hubarism
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:hubarite_empire_decision
+			}
+		}
+	}
+	is_valid = {
+		calc_true_if = {
+			amount >= 3
+			completely_controls = title:k_tifrennesh
+			completely_controls = title:k_emporia
+			completely_controls = title:k_sorros_mar
+			completely_controls = title:k_mukhtab
+			completely_controls = title:k_southeastern_isles
+			completely_controls = title:k_southwestern_isles
+			completely_controls = title:k_thaliteia
+			completely_controls = title:k_palitake
+			}
+	}
+	
+	effect = {
+		show_as_tooltip = { hubarite_empire_decision_effects = yes }
+		
+		save_scope_as = hubarite_empire_founder
+		if = {
+			limit = { completely_controls = title:k_tifrennesh }
+			title:k_tifrennesh = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+		
+		if = {
+			limit = { completely_controls = title:k_emporia }
+			title:k_emporia = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+		
+		if = {
+			limit = { completely_controls = title:k_mukhtab }
+			title:k_mukhtab = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+		
+		if = {
+			limit = { completely_controls = title:k_thaliteia }
+			title:k_thaliteia = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+
+		if = {
+			limit = { completely_controls = title:k_sorros_mar }
+			title:k_sorros_mar = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+		
+		if = {
+			limit = { completely_controls = title:k_palitake }
+			title:k_palitake = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+
+		if = {
+			limit = { completely_controls = title:k_southeastern_isles }
+			title:k_southeastern_isles = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+
+		if = {
+			limit = { completely_controls = title:k_southwestern_isles }
+			title:k_southwestern_isles = {
+				add_to_list = hubarite_empire_kingdoms
+			}
+		}
+		
+		dynasty = {
+			add_dynasty_prestige = 2000
+		}
+		trigger_event = hubarite.0002
+		every_player = {
+			limit = {
+				NOT = { this = scope:hubarite_empire_founder }
+				is_within_diplo_range = { CHARACTER = scope:hubarite_empire_founder }
+			}
+			trigger_event = hubarite.0003
+		}
+		
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:hubarite_empire_decision
+		}
+
+		GH_achiev_shamsahofthesun_check = yes
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+	
+	ai_will_do = {
+		base = 100
+	}
+}
+				
+				
+	

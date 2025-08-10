@@ -1,0 +1,145 @@
+﻿story_fogeater_invasion = {
+	
+	on_setup ={
+		story_owner = {
+			save_scope_as = fogeater_emperor
+			set_variable = {
+				name = fogeater_consumed_variable
+				value = 0
+			}
+			every_ruler = { # Subjugate Fogeaters
+				if = {
+					limit = {
+						any_realm_province = { geographical_region = world_ga_foglands }
+						is_fogeater = yes
+					}
+					random_list = {
+						4 = { }
+						1 = {
+							trigger_event = {
+								id = fogeater_invasion.2001
+								days = { 3 12 }
+							}
+						}
+					}
+				}
+			}
+			fogeater_war_target_evaluation_and_declaration_effect = yes
+		}
+	}
+
+	on_end = {
+		title:e_foglands.holder = {
+			every_vassal = {
+				limit = { highest_held_title_tier > tier_barony }
+				random_list = {
+					1 = { }
+					1 = { add_to_list = surviving_fogeaters }
+				}
+			}
+			create_title_and_vassal_change = {
+				type = granted
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			every_in_list = {
+				list = surviving_fogeaters
+				becomes_independent = { change = scope:change }
+				if = {
+					limit = { NOT = { has_government = migratory_government } }
+					change_government = migratory_government
+				}
+				every_vassal = {
+					limit = { NOT = { has_government = migratory_government } }
+					change_government = migratory_government
+				}
+			}
+			resolve_title_and_vassal_change = scope:change
+			every_realm_county = {
+				save_temporary_scope_as = fogeater_wastelands
+				spawn_ruin = { COUNTY = scope:fogeater_wastelands }
+			}
+			destroy_title = title:e_foglands
+		}
+		if = { ## GH TODO: Generalize
+			limit = { NOT = { has_global_variable = sundeath_phase_1_start } }
+			remove_global_variable = moon_phases_disabled
+			remove_global_variable = aelhyoer_moon_active
+			advance_moon_phase = yes
+		}
+	}
+
+	on_owner_death = {
+		story_owner = {
+			save_scope_as = defeated_fogeater_leader
+			every_player = { trigger_event = fogeater_invasion.1005 }
+		}
+		end_story = yes
+	}
+
+	effect_group = {
+		days = 30
+
+		trigger = {
+			story_owner = {
+				is_at_war = no
+				NOT = { has_variable = fogeater_lost_once_cooldown }
+			}
+		}
+		triggered_effect = {
+			trigger = { story_owner = { is_ai = yes } }
+			effect = { story_owner = { fogeater_war_target_evaluation_and_declaration_effect = yes } }
+		}
+	}
+
+	effect_group = {
+		days = 60
+
+		trigger = { story_owner = { NOT = { any_held_title = { this = title:e_foglands } } } }
+		triggered_effect = {
+			trigger = { exists = title:e_foglands }
+			effect = { end_story = yes }
+		}
+	}
+
+	effect_group = { # Aervalr impact
+		days = { 60 120 }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = { story_owner = { trigger_event = aervalr.0100 } }
+		}
+	}
+
+	effect_group = { # Fog spread tick
+		years = 2
+
+		trigger = { always = yes }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				story_owner = {
+					every_realm_county = {
+						limit = { has_county_modifier = bordering_fog_modifier }
+						add_to_list = fogswept_counties
+					}
+				}
+				every_in_list = {
+					list = fogswept_counties
+					remove_county_modifier = bordering_fog_modifier
+					add_county_modifier = fogswept_modifier
+					every_neighboring_county = {
+						limit = {
+							NOR = {
+								has_county_modifier = fogswept_modifier
+								has_county_modifier = bordering_fog_modifier
+							}
+						}
+						add_county_modifier = bordering_fog_modifier
+					}
+				}
+			}
+		}
+	}
+}

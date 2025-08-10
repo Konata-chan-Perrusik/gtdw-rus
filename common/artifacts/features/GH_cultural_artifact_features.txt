@@ -1,0 +1,2001 @@
+﻿##################
+## Oltenic Mask	##
+##################
+
+# oltenic_mask_base
+	oltenic_mask_base_human = {
+		group = oltenic_mask_base
+		weight = 100
+	}
+	oltenic_mask_base_bestial = {
+		group = oltenic_mask_base
+		weight = {
+			value = 30
+			if = {
+				limit = { scope:owner = { has_trait = lifestyle_hunter } }
+				add = 20
+			}
+			if = {
+				limit = { scope:owner.faith = { has_doctrine = tenet_sanctity_of_nature } }
+				add = 20
+			}
+		}
+	}
+	oltenic_mask_base_other = {
+		group = oltenic_mask_base
+		weight = {
+			value = 15
+			if = {
+				limit = {
+					scope:owner = {
+						OR = {
+							has_trait = possessed_1
+							has_trait = possessed_genetic
+							has_trait = lunatic_1
+							has_trait = lunatic_genetic
+							has_trait = gh_riftsight_1
+							has_trait = gh_riftsight_2
+							has_trait = gh_riftsight_3
+							has_trait = gh_riftsight_4
+						}
+					}
+				}
+				add = 50
+			}
+		}
+	}
+
+# oltenic_mask_material
+	# Cheap/common materials, everywhere
+		oltenic_mask_material_linen = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 10 }
+			weight = 5
+		}
+		oltenic_mask_material_leather = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 10 }
+			weight = 5
+		}
+		oltenic_mask_material_burlap = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 10 }
+			weight = 5
+		}
+		oltenic_mask_material_wicker = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 10 }
+			weight = 5
+		}
+		oltenic_mask_material_clay = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 10 }
+			weight = 10
+		}
+		oltenic_mask_material_wood = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 10 }
+			weight = 10
+		}
+		oltenic_mask_material_stone = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 20 }
+			weight = 20
+		}
+		oltenic_mask_material_terracota = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 30 }
+			weight = 20
+		}
+		oltenic_mask_material_ceramic = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 40 }
+			weight = 20
+		}
+		oltenic_mask_material_iron = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 40 }
+			weight = 20
+		}
+	# Somewhat valuable materials, everywhere
+		oltenic_mask_material_obsidian = {
+			group = oltenic_mask_material
+			trigger = { scope:wealth < 50 }
+			weight = 10
+		}
+		oltenic_mask_material_copper = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 30 } }
+			weight = 30
+		}
+		oltenic_mask_material_tin = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 30 } }
+			weight = 30
+		}
+		oltenic_mask_material_pewter = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 40 } }
+			weight = 30
+		}
+		oltenic_mask_material_bronze = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 40 } }
+			weight = 30
+		}
+		oltenic_mask_material_brass = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 40 } }
+			weight = 30
+		}
+	# Valuable materials, everywhere
+		oltenic_mask_material_steel = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 40 MAX = 50 } }
+			weight = 40
+		}
+		oltenic_mask_material_magisteel = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 45 MAX = 60 } }
+			weight = 40
+		}
+		oltenic_mask_material_silver = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 70 } }
+			weight = 40
+		}
+		oltenic_mask_material_electrum = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 70 } }
+			weight = 40
+		}
+	# Extremely valuable and rare materials, everywhere
+		oltenic_mask_material_gold = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 60 MAX = 999 } }
+			weight = 50
+		}
+		oltenic_mask_material_white_gold = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 60 MAX = 999 } }
+			weight = 50
+		}
+		oltenic_mask_material_rose_gold = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 60 MAX = 999 } }
+			weight = 50
+		}
+		oltenic_mask_material_platinum = {
+			group = oltenic_mask_material
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } }
+			weight = 50
+		}
+	# Regional materials
+		oltenic_mask_material_jade = {
+			group = oltenic_mask_material
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 45 MAX = 999 }
+				artifact_region_trigger = { CHARACTER = scope:owner REGION = world_ga_kashirya } ## GH TODO: KATHUN-KAI TEN THOUSAND YEARS
+			}
+			weight = 30
+		}
+		oltenic_mask_material_porcelain = {
+			group = oltenic_mask_material
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 45 MAX = 999 }
+				artifact_region_trigger = { CHARACTER = scope:owner REGION = world_ga_kashirya } ## GH TODO: KATHUN-KAI TEN THOUSAND YEARS
+			}
+			weight = 30
+		}
+		oltenic_mask_material_ivory = {
+			group = oltenic_mask_material
+			trigger = {
+				OR = {
+					AND = {
+						artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+						artifact_region_trigger = { CHARACTER = scope:owner REGION = material_hsb_ivory_native }
+					}
+					AND = {
+						artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 999 }
+						artifact_region_trigger = { CHARACTER = scope:owner REGION = material_hsb_ivory_imported }
+					}
+				}
+			}
+			weight = 40
+		}
+		oltenic_mask_material_ebony = {
+			group = oltenic_mask_material
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 25 MAX = 40 }
+				artifact_region_trigger = { CHARACTER = scope:owner REGION = material_woods_ebony }
+			}
+			weight = 30
+		}
+	# Event-Only
+		oltenic_mask_material_bloodcrystal = {
+			group = oltenic_mask_material
+			weight = 0
+		}
+
+# oltenic_mask_gender
+	oltenic_mask_gender_male = {
+		group = oltenic_mask_gender
+		weight = {
+			value = 5
+			if = {
+				limit = { scope:owner = { is_male = yes } }
+				add = 100
+			}
+			if = {
+				limit = {
+					scope:owner = {
+						is_female = yes
+						OR = {
+							has_sexuality = none
+							has_sexuality = homosexual
+							has_sexuality = asexual
+						}
+					}
+				}
+				add = 30
+			}
+			if = {
+				limit = {
+					scope:owner = {
+						culture = { has_cultural_pillar = martial_custom_male_only }
+						OR = {
+							is_ruler = yes
+							is_knight = yes
+						}
+					}
+				}
+				add = 20
+			}
+			if = {
+				limit = {
+					scope:owner = {
+						faith = { has_doctrine = doctrine_gender_male_dominated }
+						OR = {
+							is_ruler = yes
+							is_knight = yes
+						}
+					}
+				}
+				add = 20
+			}
+		}
+	}
+	oltenic_mask_gender_female = {
+		group = oltenic_mask_gender
+		weight = {
+			value = 5
+			if = {
+				limit = { scope:owner = { is_female = yes } }
+				add = 100
+			}
+			if = {
+				limit = {
+					scope:owner = {
+						is_male = yes
+						OR = {
+							has_sexuality = none
+							has_sexuality = homosexual
+							has_sexuality = asexual
+						}
+					}
+				}
+				add = 30
+			}
+			if = {
+				limit = {
+					scope:owner = {
+						culture = { has_cultural_pillar = martial_custom_female_only }
+						OR = {
+							is_ruler = yes
+							is_knight = yes
+						}
+					}
+				}
+				add = 20
+			}
+			if = {
+				limit = {
+					scope:owner = {
+						faith = { has_doctrine = doctrine_gender_female_dominated }
+						OR = {
+							is_ruler = yes
+							is_knight = yes
+						}
+					}
+				}
+				add = 20
+			}
+		}
+	}
+	oltenic_mask_gender_androgynous = {
+		group = oltenic_mask_gender
+		weight = {
+			value = 20
+			if = {
+				limit = {
+					scope:owner = {
+						OR = {
+							has_sexuality = none
+							has_sexuality = homosexual
+							has_sexuality = asexual
+						}
+					}
+				}
+				add = 50
+			}
+		}
+	}
+
+# oltenic_mask_visage_human
+	# Basic
+		oltenic_mask_visage_human_plain = {
+			group = oltenic_mask_visage_human
+			weight = 10
+		}
+		oltenic_mask_visage_human_kathuni = {
+			group = oltenic_mask_visage_human
+			weight = 3
+		}
+		oltenic_mask_visage_human_aversarin = {
+			group = oltenic_mask_visage_human
+			trigger = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_greater_aversaria } }
+			weight = 3
+		}
+		oltenic_mask_visage_human_parent = {
+			group = oltenic_mask_visage_human
+			trigger = {
+				exists = scope:smith
+				scope:owner = {
+					any_parent = {
+						even_if_dead = yes
+						is_alive = no
+						OR = {
+							AND = {
+								is_male = yes
+								scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_male }
+							}
+							AND = {
+								is_female = yes
+								scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_female }
+							}
+						}
+					}
+				}
+			}
+			weight = 3
+		}
+		oltenic_mask_visage_human_child = {
+			group = oltenic_mask_visage_human
+			trigger = {
+				exists = scope:smith
+				scope:owner = {
+					any_child = {
+						even_if_dead = yes
+						is_alive = no
+						OR = {
+							AND = {
+								is_male = yes
+								scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_male }
+							}
+							AND = {
+								is_female = yes
+								scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_female }
+							}
+						}
+					}
+				}
+			}
+			weight = 3
+		}
+		oltenic_mask_visage_human_sibling = {
+			group = oltenic_mask_visage_human
+			trigger = {
+				exists = scope:smith
+				scope:owner = {
+					any_sibling = {
+						even_if_dead = yes
+						is_alive = no
+						OR = {
+							AND = {
+								is_male = yes
+								scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_male }
+							}
+							AND = {
+								is_female = yes
+								scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_female }
+							}
+						}
+					}
+				}
+			}
+			weight = 3
+		}
+		oltenic_mask_visage_human_spouse = {
+			group = oltenic_mask_visage_human
+			trigger = {
+				exists = scope:smith
+				scope:owner = {
+					any_spouse = {
+						even_if_dead = yes
+						is_alive = no
+					}
+				}
+			}
+			weight = 3
+		}
+		oltenic_mask_visage_human_twin_faces = {
+			group = oltenic_mask_visage_human
+			trigger = {
+				exists = scope:smith
+				scope:owner = { has_trait = twin }
+			}
+			weight = 9
+		}
+		oltenic_mask_visage_human_old = {
+			group = oltenic_mask_visage_human
+			weight = 3
+		}
+		oltenic_mask_visage_human_young = {
+			group = oltenic_mask_visage_human
+			weight = 3
+		}
+		oltenic_mask_visage_human_baby = {
+			group = oltenic_mask_visage_human
+			weight = 1
+		}
+		oltenic_mask_visage_human_beautiful = {
+			group = oltenic_mask_visage_human
+			weight = {
+				value = 3
+				if = {
+					limit = {
+						scope:owner = {
+							OR = {
+								has_trait = beauty_good_1
+								has_trait = beauty_good_2
+								has_trait = beauty_good_3
+							}
+						}
+					}
+					add = 6
+				}
+			}
+		}
+		oltenic_mask_visage_human_hideous = {
+			group = oltenic_mask_visage_human
+			weight = 3
+		}
+	# Event-Only
+		oltenic_mask_visage_human_otached = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_ayran = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_kusan = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_ayar = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_ioa = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_baytor = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_mogha = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_ogotei = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_korsakai = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+		oltenic_mask_visage_human_toragei = {
+			group = oltenic_mask_visage_human
+			weight = 0
+		}
+
+# oltenic_mask_visage_bestial
+	# Generic
+		oltenic_mask_visage_bestial_horse = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_dog = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_cat = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_fox = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_mouse = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_boar = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_hawk = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_sparrow = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_frillneck_lizard = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_viper = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_fish = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_bear = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_frog = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+		oltenic_mask_visage_bestial_wolf = {
+			group = oltenic_mask_visage_bestial
+			weight = 10
+		}
+	# Aironoian
+		oltenic_mask_visage_bestial_zilant = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_ga_aironoi } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_visage_bestial_kursha = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_ga_aironoi } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_visage_bestial_elephant = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_innovation_elephants } }
+					add = 10
+				}
+			}
+		}
+	# Aironoian & Kashiryan
+		oltenic_mask_visage_bestial_gaur = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = {
+						OR = {
+							artifact_region_trigger = { CHARACTER = scope:owner REGION = world_innovation_elephants }
+							artifact_region_trigger = { CHARACTER = scope:owner REGION = world_kashirya }
+						}
+					}
+					add = 10
+				}
+			}
+		}
+	# Kashiryan
+		oltenic_mask_visage_bestial_snow_leopard = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_kashirya } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_visage_bestial_tiger = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_kashirya } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_visage_bestial_jackal = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_kashirya } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_visage_bestial_gajara = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_kashirya } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_visage_bestial_peacock = {
+			group = oltenic_mask_visage_bestial
+			weight = {
+				value = 5
+				if = {
+					limit = { artifact_region_trigger = { CHARACTER = scope:owner REGION = world_kashirya } }
+					add = 10
+				}
+			}
+		}
+
+# oltenic_mask_visage_other
+	oltenic_mask_visage_other_demonic = {
+		group = oltenic_mask_visage_other
+		weight = 3
+	}
+	oltenic_mask_visage_other_featureless = {
+		group = oltenic_mask_visage_other
+		weight = 3
+	}
+	oltenic_mask_visage_other_twisted = {
+		group = oltenic_mask_visage_other
+		weight = 3
+	}
+	oltenic_mask_visage_other_aelfir = {
+		group = oltenic_mask_visage_other
+		weight = 3
+	}
+	oltenic_mask_visage_other_draconic = {
+		group = oltenic_mask_visage_other
+		weight = 3
+	}
+	oltenic_mask_visage_other_skull = {
+		group = oltenic_mask_visage_other
+		weight = 3
+	}
+	oltenic_mask_visage_other_upside_down = {
+		group = oltenic_mask_visage_other
+		weight = 10
+	}
+	oltenic_mask_visage_other_glitterhoof = {
+		group = oltenic_mask_visage_other
+		trigger = {
+			scope:owner = {
+				OR = {
+					has_trait = possessed_1
+					has_trait = possessed_genetic
+					has_trait = lunatic_1
+					has_trait = lunatic_genetic
+					has_trait = gh_riftsight_1
+					has_trait = gh_riftsight_2
+					has_trait = gh_riftsight_3
+					has_trait = gh_riftsight_4
+				}
+			}
+		}
+		weight = 5
+	}
+	oltenic_mask_visage_other_corncob = {
+		group = oltenic_mask_visage_other
+		trigger = {
+			scope:owner = {
+				OR = {
+					has_trait = possessed_1
+					has_trait = possessed_genetic
+					has_trait = lunatic_1
+					has_trait = lunatic_genetic
+					has_trait = gh_riftsight_1
+					has_trait = gh_riftsight_2
+					has_trait = gh_riftsight_3
+					has_trait = gh_riftsight_4
+				}
+			}
+		}
+		weight = 5
+	}
+	oltenic_mask_visage_other_pickle = {
+		group = oltenic_mask_visage_other
+		trigger = {
+			scope:owner = {
+				OR = {
+					has_trait = possessed_1
+					has_trait = possessed_genetic
+					has_trait = lunatic_1
+					has_trait = lunatic_genetic
+					has_trait = gh_riftsight_1
+					has_trait = gh_riftsight_2
+					has_trait = gh_riftsight_3
+					has_trait = gh_riftsight_4
+				}
+			}
+		}
+		weight = 5
+	}
+
+# oltenic_mask_expression
+	# Generic - the most common and used by all
+		oltenic_mask_expression_blank = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+		oltenic_mask_expression_neutral = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+		oltenic_mask_expression_placid = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+
+	# Common emotions - not always 1:1 with personality but stuff that's general enough that anyone can reasonably have them
+		oltenic_mask_expression_grinning = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = {
+				value = 10
+				if = {
+					limit = { scope:owner = { has_trait = lifestyle_reveler } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_expression_laughing = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = {
+				value = 10
+				if = {
+					limit = { scope:owner = { has_trait = lifestyle_reveler } }
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_expression_crying = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = {
+				value = 10
+				if = {
+					limit = {
+						scope:owner = {
+							OR = {
+								has_trait = depressed_1
+								has_trait = depressed_genetic
+							}
+						}
+					}
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_expression_sobbing = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = {
+				value = 10
+				if = {
+					limit = {
+						scope:owner = {
+							OR = {
+								has_trait = depressed_1
+								has_trait = depressed_genetic
+							}
+						}
+					}
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_expression_sad = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = {
+				value = 10
+				if = {
+					limit = {
+						scope:owner = {
+							OR = {
+								has_trait = depressed_1
+								has_trait = depressed_genetic
+							}
+						}
+					}
+					add = 10
+				}
+			}
+		}
+		oltenic_mask_expression_brooding = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = {
+				value = 10
+				if = {
+					limit = { scope:owner = { has_trait = irritable } }
+					add = 10
+				}
+			}
+		}
+
+	# Uncommon emotions - weirder or braver, not necessarily rare but not common
+		oltenic_mask_expression_screaming = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+		oltenic_mask_expression_snarling = {
+			group = oltenic_mask_expression
+			weight = 10
+		}
+		oltenic_mask_expression_surprised = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+		oltenic_mask_expression_grimacing = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+		oltenic_mask_expression_taunting = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+		oltenic_mask_expression_wary = {
+			group = oltenic_mask_expression
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 10
+		}
+
+	# Personality - masks linked to various personality traits
+		# Lustful
+			oltenic_mask_expression_lecherous = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						has_trait = lustful
+						age >= 18
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_smirking = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						has_trait = lustful
+						age >= 18
+					}
+				}
+				weight = 10
+			}
+		# Chaste
+			oltenic_mask_expression_demure = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = chaste }
+				}
+				weight = 10
+			}
+		# Gluttonous
+			oltenic_mask_expression_plump = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = gluttonous }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_stout = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = gluttonous }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_ravenous = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = { has_trait = gluttonous }
+					}
+				}
+				weight = 10
+			}
+		# Lazy
+			oltenic_mask_expression_lethargic = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = lazy }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_listless = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = lazy }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_languid = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = lazy }
+				}
+				weight = 10
+			}
+		# Diligent
+			oltenic_mask_expression_focused = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = diligent }
+				}
+				weight = 10
+			}
+		# Wrathful
+			oltenic_mask_expression_frowning = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = wrathful }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_scowling = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = wrathful
+							has_trait = sadistic
+							has_trait = callous
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_furious = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = wrathful }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_growling = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = { has_trait = wrathful }
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_glowering = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = wrathful
+							has_trait = sadistic
+							has_trait = callous
+						}
+					}
+				}
+				weight = 10
+			}
+		# Calm
+			oltenic_mask_expression_serene = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = {
+							OR = {
+								has_trait = calm
+								has_trait = content
+							}
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_meditative = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = calm }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_calm = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = {
+							OR = {
+								has_trait = calm
+								has_trait = content
+								has_trait = patient
+							}
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_steady = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = calm
+							has_trait = patient
+						}
+					}
+				}
+				weight = 10
+			}
+		# Patient
+			oltenic_mask_expression_watchful = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = {
+							OR = {
+								has_trait = patient
+								has_trait = paranoid
+							}
+						}
+					}
+				}
+				weight = 10
+			}
+		# Impatient
+			oltenic_mask_expression_champing = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = { has_trait = impatient }
+					}
+				}
+				weight = 10
+			}
+		# Arrogant
+			oltenic_mask_expression_haughty = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = arrogant }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_disdainful = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = arrogant }
+				}
+				weight = 10
+			}
+		# Ambitious
+			oltenic_mask_expression_confident = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = ambitious
+							has_trait = arrogant
+						}
+					}
+				}
+				weight = 10
+			}
+		# Honest
+			oltenic_mask_expression_trustworthy = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = honest
+							has_trait = deceitful
+						}
+					}
+				}
+				weight = 10
+			}
+		# Craven
+			oltenic_mask_expression_cowering = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = craven
+							has_trait = shy
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_timid = {
+				group = oltenic_mask_expression
+				trigger = {
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = {
+							OR = {
+								has_trait = craven
+								has_trait = shy
+							}
+						}
+					}
+				}
+				weight = 10
+			}
+		# Brave
+			oltenic_mask_expression_courageous = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = brave }
+				}
+				weight = 10
+			}
+		# Shy
+			oltenic_mask_expression_diffident = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = craven
+							has_trait = shy
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_reticent = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = deceitful
+							has_trait = shy
+						}
+					}
+				}
+				weight = 10
+			}
+		# Compassionate
+			oltenic_mask_expression_gentle = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = compassionate }
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_kindly = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = compassionate }
+				}
+				weight = 10
+			}
+		# Gregarious
+			oltenic_mask_expression_jovial = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = compassionate
+							has_trait = gregarious
+						}
+					}
+				}
+			}
+			oltenic_mask_expression_boisterous = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = brave
+							has_trait = gregarious
+						}
+					}
+				}
+				weight = 10
+			}
+		# Zealous
+			oltenic_mask_expression_reverent = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = zealous }
+				}
+			}
+		# Paranoid
+			oltenic_mask_expression_frightened = {
+				group = oltenic_mask_expression
+				trigger = { 
+					OR = {
+						scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_bestial }
+						scope:owner = {
+							OR = {
+								has_trait = paranoid
+								has_trait = craven
+							}
+						}
+					}
+				}
+				weight = 10
+			}
+		# Callous
+			oltenic_mask_expression_cruel = {
+				group = oltenic_mask_expression
+				trigger = { 
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = callous
+							has_trait = sadistic
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_sinister = {
+				group = oltenic_mask_expression
+				trigger = { 
+					scope:owner = {
+						OR = {
+							has_trait = callous
+							has_trait = sadistic
+						}
+					}
+				}
+				weight = 10
+			}
+			oltenic_mask_expression_dark = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = {
+						OR = {
+							has_trait = callous
+							has_trait = sadistic
+						}
+					}
+				}
+				weight = 10
+			}
+		# Sadistic
+			oltenic_mask_expression_menacing = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = sadistic }
+				}
+				weight = 10
+			}
+		# Eccentric
+			oltenic_mask_expression_capricious = {
+				group = oltenic_mask_expression
+				trigger = {
+					scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+					scope:owner = { has_trait = eccentric }
+				}
+				weight = 10
+			}
+
+	# Education - masks linked to character educations
+		oltenic_mask_expression_sly = {
+			group = oltenic_mask_expression
+			trigger = { scope:owner = { has_education_intrigue_trigger = yes } }
+			weight = 10
+		}
+		oltenic_mask_expression_sneaky = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_education_intrigue_trigger = yes }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_shifty = {
+			group = oltenic_mask_expression
+			trigger = { scope:owner = { has_education_intrigue_trigger = yes } }
+			weight = 10
+		}
+		oltenic_mask_expression_thoughtful = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_education_diplomacy_trigger = yes
+						has_education_stewardship_trigger = yes
+						has_education_learning_trigger = yes
+						has_education_arcana_trigger = yes
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_winking = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_education_diplomacy_trigger = yes
+						has_education_intrigue_trigger = yes
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_shrewd = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_education_diplomacy_trigger = yes
+						has_education_stewardship_trigger = yes
+						has_education_intrigue_trigger = yes
+						has_education_learning_trigger = yes
+						has_education_arcana_trigger = yes
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_calculating = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_education_stewardship_trigger = yes
+						has_education_intrigue_trigger = yes
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_grizzled = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_education_martial_trigger = yes }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_bellicose = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_education_martial_trigger = yes }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_wizened = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_education_learning_trigger = yes
+						has_education_arcana_trigger = yes
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_studious = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_education_learning_trigger = yes
+						has_education_arcana_trigger = yes
+					}
+				}
+			}
+			weight = 10
+		}
+	# Lifestyles - masks linked to lifestyle traits
+		oltenic_mask_expression_paternal = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_male }
+				scope:owner = { has_trait = family_first }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_maternal = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_female }
+				scope:owner = { has_trait = family_first }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_gallant = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_trait = gallant }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_scheming = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_trait = schemer }
+			}
+			weight = 10
+		}
+
+	# Special - trait connected variants
+		oltenic_mask_expression_tipsy = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_trait = drunkard }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_wasted = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_trait = drunkard }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_smarked = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = { has_trait = hashishiyah }
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_miserable = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_trait = depressed_1
+						has_trait = depressed_genetic
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_dejected = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_trait = depressed_1
+						has_trait = depressed_genetic
+					}
+				}
+			}
+			weight = 10
+		}
+		oltenic_mask_expression_resigned = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+				scope:owner = {
+					OR = {
+						has_trait = depressed_1
+						has_trait = depressed_genetic
+					}
+				}
+			}
+			weight = 10
+		}
+
+	# Insane - crazy wacky faces for crazy wacky horselords
+		oltenic_mask_expression_googly_eyes = {
+			group = oltenic_mask_expression
+			trigger = {
+				scope:owner = {
+					OR = {
+						has_trait = lunatic_1
+						has_trait = lunatic_genetic
+						has_trait = possessed_1
+						has_trait = possessed_genetic
+					}
+				}
+			}
+			weight = 10
+		}
+
+# oltenic_mask_detail
+	oltenic_mask_detail_runes = {
+		group = oltenic_mask_detail
+		weight = 10
+	}
+	oltenic_mask_detail_prayers = {
+		group = oltenic_mask_detail
+		weight = {
+			value = 10
+			if = {
+				limit = { scope:owner = { has_trait = zealous } }
+				add = 20
+			}
+			else_if = {
+				limit = { scope:owner = { has_trait = cynical } }
+				multiply = 0
+			}
+		}
+	}
+	oltenic_mask_detail_religious_symbol = {
+		group = oltenic_mask_detail
+		weight = {
+			value = 10
+			if = {
+				limit = { scope:owner = { has_trait = zealous } }
+				add = 20
+			}
+			else_if = {
+				limit = { scope:owner = { has_trait = cynical } }
+				multiply = 0
+			}
+		}
+	}
+	oltenic_mask_detail_esoteric_scribbles = {
+		group = oltenic_mask_detail
+		weight = {
+			value = 0
+			if = {
+				limit = {
+					scope:owner = {
+						OR = {
+							has_trait = possessed_1
+							has_trait = possessed_genetic
+							has_trait = lunatic_1
+							has_trait = lunatic_genetic
+							has_trait = gh_riftsight_1
+							has_trait = gh_riftsight_2
+							has_trait = gh_riftsight_3
+							has_trait = gh_riftsight_4
+						}
+					}
+				}
+				add = 40
+			}
+		}
+	}
+	oltenic_mask_detail_handprint = {
+		group = oltenic_mask_detail
+		trigger = {
+			scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted }
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 50 }
+		}
+		weight = 10
+	}
+	oltenic_mask_detail_war_graffiti = {
+		group = oltenic_mask_detail
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 50 } }
+		weight = 10
+	}
+	oltenic_mask_detail_eye_rays_right = {
+		group = oltenic_mask_detail
+		weight = 3
+	}
+	oltenic_mask_detail_eye_rays_left = {
+		group = oltenic_mask_detail
+		weight = 3
+	}
+	oltenic_mask_detail_eye_rays_both = {
+		group = oltenic_mask_detail
+		weight = 3
+	}
+	oltenic_mask_detail_teardrop_right = {
+		group = oltenic_mask_detail
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 5
+	}
+	oltenic_mask_detail_teardrop_left = {
+		group = oltenic_mask_detail
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 5
+	}
+	oltenic_mask_detail_teardrop_both = {
+		group = oltenic_mask_detail
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 5
+	}
+	oltenic_mask_detail_too_many_eyes = {
+		group = oltenic_mask_detail
+		weight = 10
+	}
+	oltenic_mask_detail_tribal_symbols = {
+		group = oltenic_mask_detail
+		trigger = { scope:owner = { GH_is_any_tribal_government_trigger = yes } }
+		weight = 15
+	}
+	oltenic_mask_detail_inscriptions = {
+		group = oltenic_mask_detail
+		weight = 10
+	}
+	oltenic_mask_detail_personal_legend = { ## GH TODO: LotD functionality
+		group = oltenic_mask_detail
+		weight = {
+			value = 0
+			if = {
+				limit = { scope:owner = { prestige_level >= 3 } }
+				add = 10
+			}
+			if = {
+				limit = { scope:owner = { has_trait = arrogant } }
+				add = 10
+			}
+		}
+	}
+	oltenic_mask_detail_dynastic_legend = { ## GH TODO: LotD functionality
+		group = oltenic_mask_detail
+		weight = {
+			value = 0
+			if = {
+				limit = {
+					scope:owner = {
+						is_lowborn = no
+						dynasty = { dynasty_prestige_level >= 2 }
+					}
+				}
+				add = 10
+			}
+			if = {
+				limit = { scope:owner = { has_trait = arrogant } }
+				add = 10
+			}
+		}
+	}
+	oltenic_mask_detail_travel_list = {
+		group = oltenic_mask_detail
+		weight = {
+			value = 0
+			if = {
+				limit = { scope:owner = { has_trait = lifestyle_traveler } }
+				add = 15
+			}
+		}
+	}
+	oltenic_mask_detail_forgive_me_mama = { # Vietnam War graffiti
+		group = oltenic_mask_detail
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 45 } }
+		weight = 10
+	}
+	oltenic_mask_detail_spirals = {
+		group = oltenic_mask_detail
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 } }
+		weight = 10
+	}
+	oltenic_mask_detail_fractals = {
+		group = oltenic_mask_detail
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 } }
+		weight = 10
+	}
+	oltenic_mask_detail_historical_record = {
+		group = oltenic_mask_detail
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 } }
+		weight = 15
+	}
+	oltenic_mask_detail_mini_masks = {
+		group = oltenic_mask_detail
+		trigger = {
+			scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human }
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+		}
+		weight = 10
+	}
+	oltenic_mask_detail_kill_notches = {
+		group = oltenic_mask_detail
+		trigger = {
+			scope:owner = {
+				any_killed_character = { count > 1 } # Plural
+				any_killed_character = { count < 13 }
+			}
+		}
+		weight = 15
+	}
+	oltenic_mask_detail_kill_notches_over_dozen = {
+		group = oltenic_mask_detail
+		trigger = {
+			scope:owner = {
+				any_killed_character = { count >= 13 }
+				any_killed_character = { count < 25 }
+			}
+		}
+		weight = 30
+	}
+	oltenic_mask_detail_kill_notches_innumerable = {
+		group = oltenic_mask_detail
+		trigger = {
+			scope:owner = { any_killed_character = { count >= 24 } }
+		}
+		weight = 60
+	}
+
+# oltenic_mask_detail_type
+	oltenic_mask_detail_type_painted = {
+		group = oltenic_mask_detail_type
+		weight = {
+			value = 50
+			if = {
+				limit = { artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 40 } }
+				add = 100
+			}
+			else_if = {
+				limit = { artifact_value_trigger = { VALUE = scope:wealth MIN = 60 MAX = 999 } }
+				multiply = 0
+			}
+		}
+	}
+	oltenic_mask_detail_type_carved = {
+		group = oltenic_mask_detail_type
+		trigger = { scope:wealth > 10 }
+		weight = {
+			value = 50
+			if = {
+				limit = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 999 } }
+				add = 100
+			}
+		}
+	}
+
+# oltenic_mask_detail_paint_color
+	oltenic_mask_detail_paint_color_red = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_green = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_blue = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_yellow = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_purple = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_pink = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_orange = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_black = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_white = {
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_detail_type_painted } }
+		weight = 10
+	}
+	oltenic_mask_detail_paint_color_empty = { # Prevents errors
+		group = oltenic_mask_detail_paint_color
+		trigger = { scope:newly_created_artifact = { NOT = { has_artifact_feature = oltenic_mask_detail_type_painted } } }
+		weight = 10
+	}
+
+# oltenic_mask_addon
+	# Mundane
+		oltenic_mask_addon_bands_of_wood = {
+			group = oltenic_mask_addon
+			trigger = {
+				scope:newly_created_artifact = { NOT = { has_artifact_feature = oltenic_mask_material_wood } }
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_bands_of_iron = {
+			group = oltenic_mask_addon
+			trigger = {
+				scope:newly_created_artifact = {
+					NOR = {
+						has_artifact_feature = oltenic_mask_material_iron
+						has_artifact_feature = oltenic_mask_material_steel
+						has_artifact_feature = oltenic_mask_material_magisteel
+					}
+				}
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 40 }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_bands_of_steel = {
+			group = oltenic_mask_addon
+			trigger = {
+				scope:newly_created_artifact = {
+					NOR = {
+						has_artifact_feature = oltenic_mask_material_iron
+						has_artifact_feature = oltenic_mask_material_steel
+						has_artifact_feature = oltenic_mask_material_magisteel
+					}
+				}
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_colorful_ribbons = {
+			group = oltenic_mask_addon
+			weight = 5
+		}
+		oltenic_mask_addon_horse_hair_ponytail = {
+			group = oltenic_mask_addon
+			trigger = { scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_base_human } }
+			weight = 5
+		}
+		oltenic_mask_addon_sculpted_beard = {
+			group = oltenic_mask_addon
+			trigger = {
+				scope:newly_created_artifact = { has_artifact_feature = oltenic_mask_gender_male }
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_gem_inlay = {
+			group = oltenic_mask_addon
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 } }
+			weight = 30
+		}
+		oltenic_mask_addon_gem_cabochon = {
+			group = oltenic_mask_addon
+			trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 40 MAX = 999 } }
+			weight = 30
+		}
+	# Magical
+		oltenic_mask_addon_shrouded_eyes = {
+			group = oltenic_mask_addon
+			trigger = { scope:owner = { can_access_magic = yes } }
+			weight = 5
+		}
+		oltenic_mask_addon_glowing_eyes = {
+			group = oltenic_mask_addon
+			trigger = { scope:owner = { can_access_magic = yes } }
+			weight = 5
+		}
+		oltenic_mask_addon_glowing_runes = {
+			group = oltenic_mask_addon
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+				scope:owner = { can_access_magic = yes }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_shifting_features = {
+			group = oltenic_mask_addon
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+				scope:owner = { can_access_magic = yes }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_iridescent = {
+			group = oltenic_mask_addon
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+				scope:owner = { can_access_magic = yes }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_reflective = {
+			group = oltenic_mask_addon
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+				scope:owner = { can_access_magic = yes }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_shimmering = {
+			group = oltenic_mask_addon
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+				scope:owner = { can_access_magic = yes }
+			}
+			weight = 5
+		}
+		oltenic_mask_addon_glowing_gems = {
+			group = oltenic_mask_addon
+			trigger = {
+				artifact_value_trigger = { VALUE = scope:wealth MIN = 40 MAX = 999 }
+				scope:owner = { can_access_magic = yes }
+			}
+			weight = 5
+		}

@@ -1,0 +1,769 @@
+﻿form_high_kingdom_of_opakasija_effect = {
+	scope:new_opak_capital = {
+		add_county_modifier = {
+			modifier = opakasijan_highkingdom_modifier
+			years = 50
+		}
+		if = {
+			limit = {
+				NOT = { this = title:e_opakasija.title_capital_county }
+			}
+			title:e_opakasija = { set_capital_county = scope:new_opak_capital }
+		}
+	}
+	title:k_eve = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_suncourt = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_day = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_morn = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_kasmiene = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_kollos = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_hyrea = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+	title:k_kalliados = {
+		if = {
+			limit = { is_in_list = opakasija_empire_kingdoms }
+			set_de_jure_liege_title = title:e_opakasija
+		}
+	}
+
+
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_opakasija = {
+		change_title_holder = {
+			holder = root
+			change = scope:change
+		}
+	}
+	resolve_title_and_vassal_change = scope:change
+	hidden_effect = { set_primary_title_to = title:e_opakasija }
+	every_held_title = {
+		limit = {
+			tier = tier_empire
+			NOT = { this = title:e_opakasija }
+		}
+		root = { destroy_title = prev }
+	}
+	give_nickname = nick_mountain_king
+
+	#Innovations
+	culture = {
+		add_random_innovation = culture_group_military
+		add_random_innovation = culture_group_civic
+	}
+
+	#Laws
+	if = {
+		limit = { has_realm_law = crown_authority_0 }
+		add_realm_law_skip_effects = crown_authority_2
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_realm_law = crown_authority_1
+				has_realm_law = crown_authority_2
+			}
+		}
+		add_realm_law_skip_effects = crown_authority_3
+	}
+}
+
+form_mountain_sun_concordat_effect = {
+	
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_mountain_sun_concordat = {
+		change_title_holder = {
+			holder = root
+			change = scope:change
+		}
+	}
+	resolve_title_and_vassal_change = scope:change
+	hidden_effect = { set_primary_title_to = title:e_mountain_sun_concordat }
+	every_held_title = {
+		limit = {
+			tier = tier_empire
+			NOT = { this = title:e_mountain_sun_concordat }
+		}
+		root = { destroy_title = prev }
+	}
+}
+
+gh_rws_struggle_ending_involved_list_effect = {
+	save_scope_as = struggle_ender
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+			}
+			add_to_list = struggle_involvees
+		}
+	}
+}
+
+gh_rws_struggle_hostility_ender_effect = {
+	if = {
+		limit = {
+			NOT = {
+				religion = religion:sjalvolki_religion
+			}
+		}
+		give_nickname = nick_rite_breaker
+	}
+	else = {
+		give_nickname = nick_rite_slayer
+	}
+}
+
+gh_rws_struggle_compromise_ender_effect = {
+	give_nickname = nick_peace_maker
+	dynasty = { add_dynasty_prestige = 10000 }
+}
+
+gh_rws_struggle_compromise_tooltip_effect = {
+	# De Jure Kingdoms will become De Jure Empires
+	custom_tooltip = struggle_compromise_duchy_transfer_tt
+	custom_tooltip = gh_rws_struggle_compromise_create_new_empires_tt
+	# RIP Hispania
+	#custom_tooltip = gh_rws_struggle_compromise_destroy_hispania_tt
+	if = {
+		limit = {
+			struggle:rite_wars_south_struggle = {
+				any_involved_ruler = {
+					count > 1
+					is_independent_ruler = yes
+					primary_title = { is_mercenary_company = no }
+				}
+			}
+			# Every Involved ruler gets a 10 year truce with every other
+			custom_tooltip = gh_rws_struggle_compromise_truce_tt
+		}
+	}
+	custom_tooltip = fp2_struggle_compromise_war_cost_tt
+}
+
+gh_rws_struggle_conciliation_ender_effect = {
+	give_nickname = nick_rite_lover
+	dynasty = { add_dynasty_prestige = 10000 }
+}
+
+gh_rws_struggle_conciliation_tooltip_effect = {
+	# Hispania is available!
+	#custom_tooltip = fp2_struggle_can_create_empire_of_hispania_tt
+	# All Involved cultures gain acceptance of each other
+	custom_tooltip = fp2_struggle_conciliation_culture_tt
+	# Interfaith marriage unlocked for Involved cultures
+	custom_tooltip = fp2_struggle_conciliation_marriage_unlocked_tt
+	# Declaring holy wars is perma-disabled for locals in the region
+	custom_tooltip = fp2_struggle_conciliation_holy_war_disabled_tt 
+	# Involved cultures/faiths can offer to join defensive wars with outsiders targetting Iberia
+	custom_tooltip = fp2_struggle_conciliation_join_war_tt
+}
+
+
+# Add all Involved cultures with counties to a list
+gh_rws_struggle_ending_culture_list_effect = {
+	every_culture_global = {		
+		limit = {
+			#TODO_CD_FP2 (JP) check if this can be more performant, every_struggle_culture would be better
+			save_temporary_scope_as = this_culture
+			struggle:rite_wars_south_struggle = { is_culture_involved_in_struggle = scope:this_culture }
+			culture_number_of_counties > 0
+		}
+		save_scope_as = culture_scope
+		add_to_global_variable_list = {
+			name = gh_rws_struggle_ending_culture_list
+			target = scope:culture_scope
+		}
+	}
+}
+
+# Add all Involved independent rulers to a list
+gh_rws_stuggle_ending_involved_list_effect = {
+	save_scope_as = struggle_ender
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+			}
+			add_to_list = struggle_involvees
+		}
+	}
+	# Add all involved cultures with counties to a list, for war checks
+	gh_rws_struggle_ending_culture_list_effect = yes
+	# Add all involved faiths with counties to a list, for marriage and holy war checks
+	gh_rws_struggle_ending_faith_list_effect = yes
+}
+
+### Hostility
+
+# Add all Involved faiths with counties to a list
+gh_rws_struggle_ending_faith_list_effect = {
+	every_religion_global = {
+		limit = {
+			any_faith = {
+				save_temporary_scope_as = this_faith
+				struggle:rite_wars_south_struggle = { is_faith_involved_in_struggle = scope:this_faith }
+				num_county_followers > 0
+			}
+		}
+		every_faith = {
+			limit = {
+				struggle:rite_wars_south_struggle = { is_faith_involved_in_struggle = prev }
+				num_county_followers > 0
+			}
+			save_scope_as = faith_scope
+			add_to_global_variable_list = {
+				name = gh_rws_struggle_ending_faith_list
+				target = scope:faith_scope
+			}
+		}
+	}
+}
+
+# Set cultural acceptance between all Involved cultures
+gh_rws_struggle_hostility_cultural_acceptance_effect = {
+	hidden_effect = {
+		while = {
+			limit = {
+				any_in_global_list = {
+					variable = gh_rws_struggle_ending_culture_list
+					NOT = { has_variable = gh_rws_struggle_hostility_flag }
+				}
+			}
+			ordered_in_global_list = {
+				variable = gh_rws_struggle_ending_culture_list
+				limit = {
+					NOT = { has_variable = gh_rws_struggle_hostility_flag }
+				}
+				order_by = culture_number_of_counties
+				save_scope_as = culture_scope
+				set_variable = gh_rws_struggle_hostility_flag # variable ensures acceptance is only lost once per couple
+			}
+			every_in_global_list = {
+				variable = gh_rws_struggle_ending_culture_list
+				limit = {
+					NOR = {
+						has_variable = gh_rws_struggle_hostility_flag
+						this = scope:culture_scope
+					}
+				}
+				change_cultural_acceptance = {
+					target = scope:culture_scope
+					value = fp2_struggle_hostility_culture_acceptance_value
+					desc = fp2_struggle_hostility_acceptance_tt
+				}
+			}
+		}
+		every_in_global_list = {
+			variable = gh_rws_struggle_ending_culture_list
+			remove_variable = gh_rws_struggle_hostility_flag
+		}
+	}
+}
+
+# Set cultural acceptance between all Involved cultures
+gh_rws_struggle_hostility_cultural_acceptance_large_effect = {
+	hidden_effect = {
+		while = {
+			limit = {
+				any_in_global_list = {
+					variable = gh_rws_struggle_ending_culture_list
+					NOT = { has_variable = gh_rws_struggle_hostility_flag }
+				}
+			}
+			ordered_in_global_list = {
+				variable = gh_rws_struggle_ending_culture_list
+				limit = {
+					NOT = { has_variable = gh_rws_struggle_hostility_flag }
+				}
+				order_by = culture_number_of_counties
+				save_scope_as = culture_scope
+				set_variable = gh_rws_struggle_hostility_flag # variable ensures acceptance is only lost once per couple
+			}
+			every_in_global_list = {
+				variable = gh_rws_struggle_ending_culture_list
+				limit = {
+					NOR = {
+						has_variable = gh_rws_struggle_hostility_flag
+						this = scope:culture_scope
+					}
+				}
+				change_cultural_acceptance = {
+					target = scope:culture_scope
+					value = fp2_struggle_hostility_culture_acceptance_value
+					desc = fp2_struggle_hostility_acceptance_tt
+				}
+			}
+		}
+		every_in_global_list = {
+			variable = gh_rws_struggle_ending_culture_list
+			remove_variable = gh_rws_struggle_hostility_flag
+		}
+	}
+}
+
+
+### Compromise
+
+# Creates a new de jure kingdom from a duchy
+gh_rws_struggle_compromise_create_new_opakhasia_kingdom_effect = {
+	add_to_list = duchy_kingdom
+	create_dynamic_title = {
+		tier = kingdom
+		name = $TYPE$_CREATED_TITLE_NAME
+	}
+	scope:old_title = { set_de_jure_liege_title = scope:new_title }
+	scope:new_title = {
+		set_coa = $FETCH$
+		set_color_from_title = $FETCH$
+		set_capital_county = $FETCH$.title_capital_county
+		set_de_jure_liege_title = title:e_opakhasia
+	}
+}
+
+
+# Create new de jure kingdoms from relevant duchies
+gh_rws_struggle_compromise_duchies_to_kingdoms_effect = {
+	hidden_effect = {
+		title:e_opakhasia = {
+			# Cycle through de jure duchies held by independent dukes
+			every_in_de_jure_hierarchy = {
+				limit = { fp2_struggle_ending_compromise_independent_duchy_trigger = yes }
+				save_scope_as = old_title
+				gh_rws_struggle_compromise_create_new_opakhasia_kingdom_effect = { TYPE = NEW FETCH = scope:old_title }
+			}
+			# Cycle through uncreated de jure duchies to split if needed
+			# TODO_CD_FP2 (JP) added to avoid exclaves, may not be intended by design
+			every_in_de_jure_hierarchy = {
+				limit = { fp2_struggle_ending_compromise_split_duchy_trigger = yes }
+			    save_scope_as = old_title
+				gh_rws_struggle_compromise_create_new_opakhasia_kingdom_effect = { TYPE = NEW FETCH = scope:old_title }
+			}
+		}
+	}
+}
+
+# Creates a new de jure empire from a kingdom
+gh_rws_struggle_compromise_transfer_duchies_effect = {
+	title:e_opakhasia = {
+		while = {
+			limit = {
+				any_in_de_jure_hierarchy = { gh_rws_struggle_compromise_transfer_duchy_trigger = yes }
+			}
+			every_in_de_jure_hierarchy = {
+				limit = { gh_rws_struggle_compromise_transfer_duchy_trigger = yes }
+				if = {
+					limit = { title_capital_county.holder.top_liege.primary_title.tier = tier_kingdom }
+					set_de_jure_liege_title = title_capital_county.holder.top_liege.primary_title
+				}
+				else = { set_de_jure_liege_title = title_capital_county.holder.top_liege.capital_county.kingdom }
+			}
+		}
+	}
+}
+
+
+# Creates a new de jure empire from a kingdom
+gh_rws_struggle_compromise_create_new_empire_effect = {
+	add_to_list = kingdom_empire
+	save_scope_as = old_title
+	create_dynamic_title = {
+		tier = empire
+		name = NEW_CREATED_TITLE_NAME
+	}
+	scope:old_title = { set_de_jure_liege_title = scope:new_title }
+	scope:new_title = {
+		set_coa = scope:old_title
+		set_color_from_title = scope:old_title
+		set_capital_county = scope:old_title.title_capital_county
+	}
+}
+
+# Create new de jure empires from relevant kingdoms
+gh_rws_struggle_compromise_kingdoms_to_empires_effect = {
+	hidden_effect = {
+		title:e_opakhasia = {
+			every_in_de_jure_hierarchy = {
+				limit = {
+					tier = tier_kingdom
+					any_in_de_jure_hierarchy = {
+						count >= gh_rws_struggle_compromise_ending_minimal_empire_size
+						tier = tier_county
+					}
+				}
+				gh_rws_struggle_compromise_create_new_empire_effect = yes
+			}
+		}
+	}
+}
+
+# Distribute remaining Kingdoms to neighboring empires
+gh_rws_struggle_compromise_distribute_kingdoms_to_neighbouring_empires_effect = {
+	hidden_effect = {
+		while = {
+			count = 100 # should be more than enough. Weirdly it doesn't seem to stop even when the limit becomes false
+			limit = {
+				title:e_opakhasia = {
+					any_in_de_jure_hierarchy = {
+						count > 0
+						tier = tier_kingdom
+					}
+				}
+			}
+			title:e_opakhasia = {
+				every_in_de_jure_hierarchy = {
+					limit = { tier = tier_kingdom }
+					save_scope_as = kingdom_to_distribute
+					random_title_to_title_neighboring_and_across_water_kingdom = {
+						limit = {
+							any_this_title_or_de_jure_above = {
+								tier = tier_empire
+								NOT = { this = title:e_opakhasia }
+							}
+							# we don't want to use water connexion if there are de jure within iberia to avoid weird set up
+							trigger_if = {
+								limit = {
+									any_in_de_jure_hierarchy = {
+  				 						tier = tier_county
+										title_province = { geographical_region = struggle_rite_wars_south }
+									}
+								}
+								any_title_to_title_neighboring_kingdom = {
+									this = scope:kingdom_to_distribute
+								}
+							}
+						}
+						weight = {
+							modifier = { # Value one from Opakasija for small empire
+								add = {
+									value = 2
+									subtract = {
+										value = 0
+										every_in_de_jure_hierarchy = {
+											add = 0.25
+										}
+									}
+									min = 0
+								}
+								any_in_de_jure_hierarchy = {
+  				 					tier = tier_county
+									title_province = { geographical_region = struggle_rite_wars_south }
+								}
+							}
+							modifier = { # Value smaller empire
+								add = {
+									value = 2
+									subtract = {
+										value = 0
+										every_in_de_jure_hierarchy = {
+											limit = { tier = tier_kingdom }
+											add = 0.5
+										}
+									}
+									min = 0
+								}
+							}
+						}
+						random_this_title_or_de_jure_above = {
+							limit = {
+								tier = tier_empire
+								NOT = { this = title:e_opakhasia }
+							}
+							scope:kingdom_to_distribute = { set_de_jure_liege_title = prev }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+gh_rws_struggle_compromise_distribute_the_actual_titles = {
+	struggle:rite_wars_south_struggle = {
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = change
+		}
+
+		every_involved_ruler = {
+			save_scope_as = new_owner
+
+			# give empire to kingdom owners
+			if = {
+				limit = {
+					primary_title = {
+						tier = tier_kingdom
+						any_this_title_or_de_jure_above = {
+							tier = tier_empire
+							NOT = { this = title:e_opakasija }
+							NOT = { exists = holder }
+							NOT = { is_in_list = assigned_title }
+						}
+					}
+				}
+				primary_title = {
+					every_this_title_or_de_jure_above = {
+						limit = {
+							tier = tier_empire
+							NOT = { this = title:e_opakasija }
+							NOT = { exists = holder }
+							NOT = { is_in_list = assigned_title }
+						}
+						change_title_holder = {
+							holder = scope:new_owner
+							change = scope:change
+						}
+						add_to_temporary_list  = assigned_title
+					}
+				}
+			}
+			else_if = {	# give the kingdom for duchy owners
+				limit = {
+					primary_title = {
+						tier = tier_duchy
+						any_this_title_or_de_jure_above = {
+							tier = tier_kingdom
+							NOT = { exists = holder }
+							NOT = { is_in_list = assigned_title }
+						}
+					}
+				}
+				primary_title = {
+					every_this_title_or_de_jure_above = {
+						limit = {
+							tier = tier_kingdom
+							NOT = { exists = holder }
+							NOT = { is_in_list = assigned_title }
+						}
+						change_title_holder = {
+							holder = scope:new_owner
+							change = scope:change
+						}
+						add_to_temporary_list = assigned_title
+						# give empire title
+						if = {
+							limit = {
+								any_this_title_or_de_jure_above = {
+									tier = tier_empire
+									NOT = { this = title:e_opakasija }
+									NOT = { exists = holder }
+									NOT = { is_in_list = assigned_title }
+								}
+							}
+							every_this_title_or_de_jure_above = {
+								limit = {
+									tier = tier_empire
+									NOT = { this = title:e_opakasija }
+									NOT = { exists = holder }
+									NOT = { is_in_list = assigned_title }
+								}
+								change_title_holder = {
+									holder = scope:new_owner
+									change = scope:change
+								}
+								add_to_temporary_list  = assigned_title
+							}
+						}
+					}
+				}
+			}
+		}
+
+		resolve_title_and_vassal_change = scope:change
+	}
+}
+
+# Add house modifiers to Involved rulers; Didn't rename the key for localization cost reasons
+gh_rws_struggle_compromise_modifier_rewards_effect = {
+	struggle:rite_wars_south_struggle = {
+		show_as_tooltip = {
+			every_involved_ruler = {
+				limit = { this = root }
+				custom = gh_rws_struggle_compromise_house_rewards_tt
+				gh_rws_struggle_compromise_modifier_rewards_personal_house_effect = yes
+			}
+			every_involved_ruler = {
+				limit = { this = root }
+				custom = gh_rws_struggle_compromise_defensive_rewards_tt
+				gh_rws_struggle_compromise_modifier_rewards_personal_county_effect = yes
+			}
+		}
+		hidden_effect = {
+			every_involved_ruler = {
+				limit = {
+					is_independent_ruler = yes
+					primary_title = { is_mercenary_company = no }
+					exists = house
+					NOT = {
+						house = { has_house_modifier = gh_rws_struggle_compromise_house_reward_modifier }
+					}
+				}
+				gh_rws_struggle_compromise_modifier_rewards_personal_house_effect = yes
+			}
+			every_involved_ruler = {
+				limit = {
+					is_independent_ruler = yes
+					primary_title = { is_mercenary_company = no }
+				}
+				gh_rws_struggle_compromise_modifier_rewards_personal_county_effect = yes
+			}
+		}
+	}
+}
+
+# Add house modifiers to a single character (used in tooltips);
+gh_rws_struggle_compromise_modifier_rewards_personal_house_effect = {
+	house = {
+		custom_tooltip = gh_rws_struggle_compromise_house_enforce_truce_rewards_tt
+		add_house_modifier = {
+			modifier = gh_rws_struggle_compromise_house_reward_modifier
+		}
+	}
+}
+
+# Add county modifiers to a single character (used in tooltips)
+gh_rws_struggle_compromise_modifier_rewards_personal_county_effect = {
+	capital_county = {
+		add_county_modifier = { #TODO_CD_FP2 (JP) check this is the right scope
+			modifier = gh_rws_struggle_compromise_defensive_reward_modifier
+		}
+	}
+}
+
+# Add truces between all Involved rulers
+gh_rws_struggle_compromise_truce_effect = {
+	hidden_effect = {
+		if = {
+			limit = {
+				struggle:rite_wars_south_struggle = {
+					any_involved_ruler = {
+						count > 1
+						is_independent_ruler = yes
+						primary_title = { is_mercenary_company = no }
+					}
+				}
+			}
+			struggle:rite_wars_south_struggle = {
+				every_involved_ruler = {
+					limit = {
+						is_independent_ruler = yes
+						primary_title = { is_mercenary_company = no }
+					}
+					add_to_list = gh_rws_struggle_compromise_truce_list
+				}
+			}
+			while = {
+				limit = {
+					any_in_list = {
+						list = gh_rws_struggle_compromise_truce_list
+						NOT = { has_variable = gh_rws_struggle_compromise_flag }
+					}
+				}
+				ordered_in_list = {
+					list = gh_rws_struggle_compromise_truce_list
+					limit = {
+						NOT = { has_variable = gh_rws_struggle_compromise_flag }
+					}
+					order_by = realm_size
+					save_scope_as = realm_scope
+					set_variable = gh_rws_struggle_compromise_flag # variable ensures truces are set only once per couple
+				}
+				every_in_list = {
+					list = gh_rws_struggle_compromise_truce_list
+					limit = {
+						NOR = {
+							has_variable = gh_rws_struggle_compromise_flag
+							this = scope:realm_scope
+							has_truce = scope:realm_scope
+						}
+					}
+					add_truce_both_ways = {
+						character = scope:realm_scope
+						days = 3650
+						name = TRUCE_RWS_COMPROMISE
+					}
+				}
+			}
+			every_in_list = {
+				list = gh_rws_struggle_compromise_truce_list
+				remove_variable = gh_rws_struggle_compromise_flag
+			}
+		}
+	}
+}
+
+### Conciliation
+
+# Add House modifiers to all Involved rulers
+gh_rws_struggle_conciliation_modifier_rewards_effect = {
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = { this = root }
+			custom = gh_rws_struggle_compromise_house_rewards_tt
+			show_as_tooltip = { gh_rws_struggle_conciliation_modifier_rewards_personal_effect = yes }
+		}
+		every_involved_ruler = {
+			limit = {
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+				exists = house
+				NOT = {
+					house = { has_house_modifier = gh_rws_struggle_conciliation_house_reward_modifier }
+				}
+			}
+			hidden_effect = { gh_rws_struggle_conciliation_modifier_rewards_personal_effect = yes }
+		}
+	}
+}
+
+# Add House modifier to a single character (used in tooltips)
+gh_rws_struggle_conciliation_modifier_rewards_personal_effect = {
+	house = {
+		add_house_modifier = { #TODO_CD_FP2 (JP) check this is the right scope
+			modifier = gh_rws_struggle_conciliation_house_reward_modifier
+		}
+	}
+}

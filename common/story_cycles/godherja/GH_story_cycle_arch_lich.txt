@@ -1,0 +1,347 @@
+﻿story_arch_lich = {
+	
+	on_setup = {
+		story_owner = {
+			save_scope_as = arch_lich
+			set_variable = {
+				name = lich_consumed_variable
+				value = 0
+			}
+		}
+		every_ruler = { # Subjugate Liches
+			if = {
+				limit = {
+					any_realm_province = { geographical_region = GH_geographic_oejeynica }
+					is_undead = yes
+				}
+				random_list = {
+					1 = { }
+					3 = {
+						trigger_event = {
+							id = arch_lich_invasion.2001
+							days = { 3 12 }
+						}
+					}
+				}
+			}
+			else = {
+				end_story = yes # All the undead are dead!
+			}
+		}
+	}
+
+	on_end = {
+		title:e_lichdoms.holder = {
+			every_vassal = {
+				limit = { highest_held_title_tier > tier_barony }
+				random_list = {
+					1 = { }
+					1 = { add_to_list = surviving_liches }
+				}
+			}
+			create_title_and_vassal_change = {
+				type = granted
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			every_in_list = {
+				list = surviving_liches
+				becomes_independent = { change = scope:change }
+				if = {
+					limit = { NOT = { has_government = lichdom_government } }
+					change_government = lichdom_government
+				}
+				every_vassal = {
+					limit = { NOT = { has_government = lichdom_government } }
+					change_government = lichdom_government
+				}
+			}
+			resolve_title_and_vassal_change = scope:change
+			every_realm_county = {
+				save_temporary_scope_as = lichdom_wastelands
+				spawn_ruin = { COUNTY = scope:lichdom_wastelands }
+			}
+			destroy_title = title:e_lichdoms
+		}
+	}
+
+	on_owner_death = {
+		story_owner = {
+			save_scope_as = defeated_arch_lich
+			every_player = { trigger_event = arch_lich_invasion.1005 }
+		}
+		end_story = yes
+	}
+
+
+	## EFFECTS FOR LICH ACTIVITY ##
+	effect_group = {
+		days = 30
+
+		trigger = {
+			story_owner = {
+				is_at_war = no
+				NOT = { has_variable = archlich_lost_once_cooldown }
+			}
+		}
+		triggered_effect = {
+			trigger = { story_owner = { is_ai = yes } }
+			effect = { story_owner = { archlich_war_target_evaluation_and_declaration_effect = yes } }
+		} 
+	}
+
+	effect_group = { # Kill story if lich doesnt have title for some reason
+		days = 60
+
+		trigger = { story_owner = { NOT = { any_held_title = { this = title:e_lichdoms } } } }
+		triggered_effect = {
+			trigger = { exists = title:e_lichdoms }
+			effect = { end_story = yes }
+		}
+	}
+
+	effect_group = { # Arch Lich should cast magic *far* more frequently than normal AI
+		days = { 45 90 }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = { story_owner = { trigger_event = magic_ai.0001 } }
+		}
+	}
+
+	effect_group = { # Sorrowing spread 
+		years = 3
+
+		trigger = { always = yes }
+
+		triggered_effect = {
+			trigger = { always =  yes }
+			effect = {
+				story_owner = {
+					every_realm_county = {
+						limit = {
+							NOR = {
+								title_province = { geographical_region = GH_geographic_oejeynica }
+								has_county_modifier = lichdom_sorrow
+							} 
+						}
+						gain_arcane_fallout_effect = { VALUE = 140 }
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = { # Wake up undead hordes
+		years = 1
+
+		trigger = { always = yes } 
+
+		triggered_effect = {
+			trigger = {
+				NOT = { exists = global_var:raised_raocourt }
+				story_owner = { any_realm_province = { has_building = 01_conclave_of_raocourt } }
+			}
+			effect = {
+				set_global_variable = raised_raocourt
+				story_owner = {
+					spawn_army = {
+						uses_supply = no
+						inheritable = no
+						name = lich_raocourt_event_troops
+						men_at_arms = {
+							type = elite_undead
+							stacks = 75	
+						}
+						men_at_arms = {
+							type = undead_skirmishers
+							stacks = 75
+						}
+						location = capital_province 
+					}
+				}
+				every_player = {
+					trigger_event = arch_lich_invasion.4010
+				}
+			}
+		}
+		triggered_effect = {
+			trigger = {
+				NOT = { exists = global_var:raised_drakavil }
+				story_owner = { any_realm_province = { has_building = 01_drakavil } }
+			}
+			effect = {
+				set_global_variable = raised_drakavil
+				story_owner = {
+					spawn_army = {
+						uses_supply = no
+						inheritable = no
+						name = lich_drakavil_event_troops
+						men_at_arms = {
+							type = undead_dragon
+							stacks = 10
+						}
+						location = capital_province 
+					}
+				}
+				every_player = {
+					trigger_event = arch_lich_invasion.4011
+				}
+			}
+		}
+		triggered_effect = {
+			trigger = {
+				NOT = { exists = global_var:raised_worldeater }
+				story_owner = { any_realm_province = { has_building = 01_bonesoftheworldeater } }
+			}
+			effect = {
+				set_global_variable = raised_worldeater
+				every_player = {
+					trigger_event = arch_lich_invasion.4012
+				}
+			}
+		}			
+	}
+
+	effect_group = { # This is for if the Worldeater is summoned & needs to end the world
+		months = 6
+		
+		trigger = {
+			exists = global_var:raised_worldeater
+		}
+
+		triggered_effect = {
+			trigger = {
+				story_owner = {
+					NOT = { has_character_flag = worldeater_dummy }
+				}
+			}
+			effect = {
+				story_owner = {
+					save_scope_as = arch_lich
+					random_neighboring_top_liege_realm_owner = {
+						limit = { is_ruin = no }
+						weight = {
+							base = 0
+							modifier = {
+								add = undead_worldeater_destruction_path_value
+								always = yes
+							}
+						}
+						random_sub_realm_county = {
+							limit = { is_neighbor_to_realm = scope:arch_lich }
+							save_scope_as = worldeater_target_county
+						}
+					}
+					ordered_in_list = { # Find the primary war target
+						list = top_liege_targets
+						order_by = {
+							value = 0
+							if = { # Invasion kingdom title holders or their lieges
+								limit = {
+									OR = {
+										has_title = scope:worldeater_target_county.kingdom
+										any_vassal = { has_title = scope:worldeater_target_county.kingdom }
+									}
+								}
+								add = 100
+							}
+							if = { # Other emperors
+								limit = { highest_held_title_tier = tier_empire }
+								add = 90
+							}
+							if = { # Multi-kings
+								limit = {
+									AND = {
+										highest_held_title_tier = tier_kingdom
+										any_held_title = {
+											count >= 2
+											tier = tier_kingdom
+										}
+									}
+								}
+								add = 80
+							}
+							if = { # Other Kings
+								limit = {
+									AND = {
+										highest_held_title_tier = tier_kingdom
+										any_held_title = {
+											count < 2
+											tier = tier_kingdom
+										}
+									}
+								}
+								add = 70
+							}
+							if = { # Multi-dukes
+								limit = {
+									AND = {
+										highest_held_title_tier = tier_duchy
+										any_held_title = {
+											count >= 2
+											tier = tier_duchy
+										}
+									}
+								}
+								add = 60
+							}
+							if = { # Other Dukes
+								limit = {
+									AND = {
+										highest_held_title_tier = tier_duchy
+										any_held_title = {
+											count < 2
+											tier = tier_duchy
+										}
+									}
+								}
+								add = 50
+							}
+							if = { # Multi-counts
+								limit = {
+									AND = {
+										highest_held_title_tier = tier_county
+										any_held_title = {
+											count >= 4
+											tier = tier_county
+										}
+									}
+								}
+								add = 40
+							}
+							if = { # Other Counts
+								limit = {
+									AND = {
+										highest_held_title_tier = tier_county
+										any_held_title = {
+											count < 2
+											tier = tier_county
+										}
+									}
+								}
+								add = 30
+							}
+							if = { # Prioritize Players
+								limit = { is_ai = no }
+								add = 5
+							}
+							if = { # Prioritize Neighbors
+								limit = { any_realm_county = { is_neighbor_to_realm = scope:arch_lich } }
+								add = 1
+							}
+						}
+						spawn_dummy_worldeater_effect = yes # This spawns the dummy for the ambush army
+						scope:worldeater_dummy_character = { # Declare war on them
+							start_war = {
+								cb = worldeater_destruction_cb
+								target = prev
+								target_title = scope:worldeater_target_county.kingdom
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

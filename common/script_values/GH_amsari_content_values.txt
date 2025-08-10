@@ -1,0 +1,289 @@
+﻿gh_count_total_year_acw_value = {
+	value = current_year
+	subtract = global_var:gh_acw_started_date
+	min = 1
+}
+total_amsari_supporters_civil_war_half_value = {
+	value = 0
+	every_in_global_list = {
+		variable = involved_character_amsari_civil_war
+		limit = { exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting }
+		add = 1
+	}
+	multiply = 0.5
+	round = yes	
+	min = 1
+}
+
+gh_amsari_number_of_allies_value = {
+	value = 0
+	if = {
+		limit = { has_variable = gh_amsari_civil_war_info_story }
+		var:gh_amsari_civil_war_info_story ?= {
+			every_in_list = {
+				variable = amsari_civil_war_supporter_list
+				add = 1
+			}
+		}
+	}
+}
+
+nht_domain_income_value = {
+   every_directly_owned_province = {
+     limit = {
+       exists = barony
+       barony = {
+         is_leased_out = no
+       }
+     }
+     add = monthly_income
+  }
+}
+
+gh_hiklahn_ruling_dynasty_house_unity_value = {
+	value = 0
+	add = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+}
+
+gh_hiklahn_ruling_dynasty_house_unity_value_progress_bar = {
+	value = 0
+	add = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+	if = {
+		limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } }
+		subtract = {
+			value = 48
+			subtract = {
+				value = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+				subtract = 0
+				multiply = 1.4
+			}
+		}
+	}
+	if = {
+		limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive } }
+		subtract = {
+			value = 88
+			subtract = {
+				value = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+				subtract = 40
+				multiply = 1.4
+			}
+		}
+	}
+	if = {
+		limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = impassive } }
+		subtract = {
+			value = 128
+			subtract = {
+				value = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+				subtract = 80
+				multiply = 1.4
+			}
+		}
+	}
+	if = {
+		limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = friendly } }
+		subtract = {
+			value = 168
+			subtract = {
+				value = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+				subtract = 120
+				multiply = 1.4
+			}
+		}
+	}
+	else_if = {
+		limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = harmonious } }
+		subtract = {
+			value = 208
+			subtract = {
+				value = global_var:gh_hiklahn_ruling_dynasty_var.house_unity_value
+				subtract = 160
+				multiply = 1.4
+			}
+		}
+	}
+}
+
+gh_number_of_current_wars = {
+	every_character_war = {
+		add = 1
+	}
+}
+
+gh_acw_enforce_pretender_cb_ai_score_value = {
+	value = 1
+	scope:attacker = {
+		# Are they a different faith than me?
+		if = {
+			limit = {
+				NOT = { faith = scope:defender.faith }
+			}
+			add = 1
+		}
+		# Are they a different culture than me?
+		if = {
+			limit = {
+				NOT = { culture = scope:defender.culture }
+			}
+			add = 1
+		}
+		# Do I have a negative relationship with them?
+		if = {
+			limit = { has_relation_nemesis = scope:defender }
+			add = 2
+		}
+		else_if = {
+			limit = {
+				has_any_bad_relationship_with_character_trigger = { CHARACTER = scope:defender }
+			}
+			add = 1
+		}
+		# Do I have a positive relationship with them?
+		if = {
+			limit = {
+				OR = {
+					has_relation_soulmate = scope:defender
+					has_relation_best_friend = scope:defender
+				}
+			}
+			add = -5
+		}
+		else_if = {
+			limit = {
+				has_any_good_relationship_with_character_trigger = { CHARACTER = scope:defender }
+			}
+			add = -1
+		}
+		# Multiply this up or down per the phase.
+		## Some phases make people hunger for violence...
+		if = {
+			limit = {
+				OR = {
+					global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic }
+					global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive }
+				}
+				# Unless you're just not that sort of person.
+				NOR = {
+					has_trait = content
+					has_trait = compassionate
+				}
+			}
+			multiply = 2
+		}
+	}
+}
+
+
+gh_acw_target_percent_value = 75
+
+gh_acw_target_percent_decimal_value = {
+	value = gh_acw_target_percent_value
+	divide = 100
+}
+
+gh_acw_current_percent_value = {
+	value = gh_acw_current_percent_decimal_value
+	divide = gh_acw_current_percent_decimal_total_value
+	multiply = 100
+}
+
+gh_acw_current_percent_decimal_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = world_ws_amsari
+		add = 1
+	}
+}
+
+gh_acw_current_percent_decimal_value = {
+	value = 0
+	every_county_in_region = {
+		region = world_ws_amsari
+		limit = { holder.top_liege = root }
+		add = 1
+	}
+}
+
+gh_current_number_of_pretender_supporter_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			gh_acw_valid_independent_ruler_in_amsar = yes
+			prev.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= prev.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+		}
+		add = 1
+	}
+	min = 1
+}
+
+gh_acw_total_amount_of_valid_rulers_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			is_landed = yes
+			OR = {
+				culture = { has_cultural_pillar = heritage_zarasadari }
+				culture = { has_cultural_pillar = heritage_thyssae }
+				religion = religion:amsari_religion
+			}
+			capital_county.title_province ?= { geographical_region = world_ws_amsari }
+		}
+		add = 1
+	}
+}
+
+gh_acw_current_non_amsari_counties_count_value = {
+	value = 0
+	every_county_in_region = {
+		region = world_ws_amsari
+		limit = { 
+			holder.top_liege = {
+				NOR = {
+					AND = { 
+						culture = { has_cultural_pillar = heritage_zarasadari }
+						religion = religion:amsari_religion
+					}
+					AND = { 
+						culture = { has_cultural_pillar = heritage_thyssae }
+						religion = religion:amsari_religion
+					}
+				}
+			}
+		}
+		add = 1
+	}
+}
+
+gh_acw_target_non_amsari_counties_percent_value = 20
+
+gh_acw_target_non_amsari_counties_percent_decimal_value = {
+	value = gh_acw_target_percent_value
+	divide = 100
+}
+
+gh_acw_current_non_amsari_counties_percent_value = {
+	value = gh_acw_current_non_amsari_counties_count_value
+	divide = gh_acw_current_percent_decimal_total_value
+	multiply = 100
+}
+
+
+
+
+gh_acw_current_active_supporters_rulers_percent_value = {
+	value = gh_acw_current_amount_of_active_supporters_value
+	divide = gh_acw_total_amount_of_valid_rulers_value
+	multiply = 100
+}
+
+gh_acw_current_amount_of_active_supporters_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			gh_acw_valid_independent_ruler_in_amsar = yes
+		}
+		add = 1
+	}
+}

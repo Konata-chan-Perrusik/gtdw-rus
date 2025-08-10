@@ -1,0 +1,1804 @@
+﻿#Effects used in the Sjalvolki Conquest/Great Migration system
+
+#####################################################################
+# EFFECT LIST
+#####################################################################
+#
+#  Title Rearrangement Effects:
+#	generate_procedural_de_jure_kingdom_effect	- Generates a new de jure kingdom with a capital at the scope
+#	regenerate_title_hierarchy_effect 			- Procedurally regenerates a title's (kingdom or empire) de jure hierarchy according to the specified parameters
+#	balance_kingdom_sizes_effect				- Tries to reorganize duchies among the kingdoms of an empire to break up mega-kingdoms and give small ones more land
+
+
+## Procedurally regenerates a title's (kingdom or empire) de jure hierarchy according to the specified parameters
+## Parameters:
+#### KINGDOM_NAME - the loc ID for the new kingdom's name
+#### MIN_DUCHIES  - the minimum number of duchies required to form the kingdom
+#### MAX_DUCHIES  - the maximum number of duchies allowed in the formation of the kingdom
+#### TITLE_CONSTRAINT - sets the previous de jure title out of which the new title is allowed to steal duchies from. Optional.
+#### REORGANIZATION_FLAG - the ID of the overall reorganization "group" of the generator. Used to prevent new titles from siphoning land from each other
+#### REORGANIZATION_TITLES_PROTECTED - sets whether the generator will siphon off land from newly created titles in the same reorganization group. Leave this as 'yes' in most cases
+#### FAILURE_MODE - sets what to do in the event of the generator failing to reach the minimum number of duchies. Valid values:
+##### fold_into_same_reorganization_group - checks whether any neighboring duchy is part of the same reorganization group. If there is, transfers the duchy to that kingdom
+#### CREATE_BELOW_MINIMUM - sets whether the kingdom should be created if all else fails anyways
+#generate_procedural_de_jure_kingdom_effect = {
+#	if = {
+#		limit = { exists = county }	# Though this effect should always be fired from a county scope anyway, default to the capital county otherwise
+#		county = {
+#			save_scope_as = capital_county_scope
+#		}
+#		set_local_variable = {
+#			name = failure_mode
+#			value = flag:$FAILURE_MODE$
+#		}
+#		# Immediately check if the county's duchy is part of a kingdom that is already protected within the same reorganization scope
+#		if = {
+#			limit = {
+#				exists = duchy
+#				NAND = {
+#					kingdom = { has_variable = $REORGANIZATION_FLAG$ }
+#					always = $REORGANIZATION_TITLES_PROTECTED$	# If the duchy is already part of another title in the same reorganization group, check if protection is enabled
+#				}
+#				trigger_if = {
+#					limit = { exists = $TITLE_CONSTRAINT$ }
+#					$TITLE_CONSTRAINT$ = { is_de_jure_liege_or_above_target = scope:capital_county_scope }
+#				}
+#			}
+#			# If the duchy passes the test, add it to the list of valid titles to give the new de jure kingdom
+#			duchy = { add_to_list = duchies_to_add_list }
+#			# Iterate until you adequately fill up the list of preallocated duchies
+#			while = {
+#				limit = {
+#					list_size = {
+#						name = duchies_to_add_list
+#						value < $MAX_DUCHIES$
+#					}
+#					NOT = {
+#						exists = local_var:failed_to_find_more_duchies
+#					}
+#				}
+#				# Kingdoms should propagate outwards in a sphere-like manner. Therefore, we preallocate duchies in "waves" to prevent snakey kingdoms
+#				every_in_list = {
+#					list = duchies_to_add_list
+#					# First, add any land-neighboring duchies, as these are fairly straightforward in their logic
+#					every_title_to_title_neighboring_duchy = {
+#						limit = {
+#							NAND = {
+#								kingdom = { has_variable = $REORGANIZATION_FLAG$ }
+#								always = $REORGANIZATION_TITLES_PROTECTED$
+#							}
+#							trigger_if = {
+#								limit = { exists = $TITLE_CONSTRAINT$ }
+#								save_temporary_scope_as = temporary_duchy_scope
+#								$TITLE_CONSTRAINT$ = { is_de_jure_liege_or_above_target = scope:temporary_duchy_scope }
+#							}
+#							NOT = { is_in_list = duchies_to_add_list }
+#						}
+#						add_to_list = next_duchy_preallocation_sphere_list
+#					}
+#					# Next, check if there are any island/archipelago duchies available to add
+#					# DISABLED THIS FOR NOW - It does not currently work as intended
+#					#every_title_to_title_neighboring_and_across_water_duchy = {
+#					#	limit = {
+#					#		NOT = { is_in_list = next_duchy_preallocation_sphere_list }	# Ignore land based neighboring duchies
+#					#		NAND = {	# Standard checks
+#					#			has_variable = $REORGANIZATION_FLAG$
+#					#			always = $REORGANIZATION_TITLES_PROTECTED$
+#					#		}
+#					#		NOT = {	# Must not have any land-based neighbor duchies itself. This indicates that it is an island or archipelago
+#					#			any_title_to_title_neighboring_duchy = {
+#					#				exists = this
+#					#			}
+#					#		}
+#					#	}
+#					#	add_to_list = next_duchy_preallocation_sphere_list
+#					#}
+#				}
+#				# Check if there are any duchies in the next expansion wave
+#				if = {
+#					limit = {
+#						list_size = {
+#							name = next_duchy_preallocation_sphere_list
+#							value > 0
+#						}
+#					}
+#					# If there are, randomly add them until you either run out or hit the MAX_DUCHIES cap
+#					while = {
+#						limit = {
+#							list_size = {
+#								name = next_duchy_preallocation_sphere_list
+#								value > 0
+#							}
+#							list_size = {
+#								name = duchies_to_add_list
+#								value < $MAX_DUCHIES$
+#							}
+#						}
+#						random_in_list = {
+#							list = next_duchy_preallocation_sphere_list
+#							add_to_list = duchies_to_add_list
+#							remove_from_list = next_duchy_preallocation_sphere_list
+#						}
+#					}
+#				}
+#				else = { # If not, we've hit the limit of what we can do with the provided parameters
+#					set_local_variable = {
+#						name = failed_to_find_more_duchies
+#						value = yes
+#					}
+#				}
+#			}
+#			# Check what our searched turned up with
+#			if = {
+#				limit = { 
+#					NOT = { exists = local_var:failed_to_find_more_duchies }
+#					# If we hit a physical limit, check if we at least reached the minimum amount of duchies required to form the kingdom
+#					list_size = {
+#						name = duchies_to_add_list
+#						value >= $MIN_DUCHIES$
+#					}
+#				}
+#				# If we didn't hit a physical limit during the search, assume that everything went fine and we have the minimum amount of duchies required to form the kingdom
+#				create_dynamic_title = {	# Create the kingdom itself
+#					tier = kingdom
+#					name = $KINGDOM_NAME$
+#				}
+#				scope:new_title = {
+#					set_variable = $REORGANIZATION_FLAG$	 # To possibly protect against other reorganizations in the same group
+#					add_to_list = $REORGANIZATION_FLAG$_list
+#					set_de_jure_liege_title = scope:capital_county_scope.empire
+#					set_capital_county = scope:capital_county_scope
+#					set_color_from_title = scope:capital_county_scope
+#					set_coa = scope:capital_county_scope
+#				}
+#				every_in_list = {
+#					list = duchies_to_add_list
+#					set_de_jure_liege_title = scope:new_title
+#					set_variable = {
+#						name = $REORGANIZATION_FLAG$_liege_title
+#						value = scope:new_title
+#					}
+#					remove_from_list = duchies_to_add_list
+#				}
+#			}
+#			else = {
+#				# Otherwise, check what to do in the case of a complete failure to gather the minimum number of duchies
+#				if = {
+#					limit = {
+#						exists = local_var:failure_mode
+#						local_var:failure_mode = flag:fold_into_same_reorganization_group
+#					}
+#					# If the policy is set to this, check if there's any neighboring duchies whose kingdom is part of the same
+#					# reorganization group. If there are, assign the duchy to that instead
+#					duchy = {
+#						if = {
+#							limit = {	# First, check if there are any land neighbors
+#								any_title_to_title_neighboring_duchy = { kingdom = { has_variable = $REORGANIZATION_FLAG$ } }
+#							}
+#							random_title_to_title_neighboring_duchy = {
+#								limit = {
+#									exists = kingdom
+#									kingdom = { has_variable = $REORGANIZATION_FLAG$  }
+#								}
+#								kingdom = { save_temporary_scope_as = kingdom_to_assign_to_scope }
+#							}
+#							set_de_jure_liege_title = scope:kingdom_to_assign_to_scope
+#							set_variable = {
+#								name = $REORGANIZATION_FLAG$_liege_title
+#								value = scope:kingdom_to_assign_to_scope
+#							}
+#						}
+#						else_if = {
+#							limit = {	# If this is an island, check for overseas connections as well
+#								NOT = {
+#									any_title_to_title_neighboring_duchy = {
+#										exists = this
+#									}
+#								}
+#							}
+#							random_title_to_title_neighboring_and_across_water_duchy = {
+#								limit = {
+#									exists = kingdom
+#									kingdom = { has_variable = $REORGANIZATION_FLAG$ }
+#								}
+#								kingdom = { save_temporary_scope_as = kingdom_to_assign_to_scope }
+#							}
+#							set_de_jure_liege_title = scope:kingdom_to_assign_to_scope
+#							set_variable = {
+#								name = $REORGANIZATION_FLAG$_liege_title
+#								value = scope:kingdom_to_assign_to_scope
+#							}
+#						}
+#					}
+#				}
+#				# If the generator failed to assign the title even in failure mode, check if it should ignore the MIN_DUCHIES value
+#				if = {
+#					limit = {
+#						exists = local_var:failure_mode
+#						NOT = { exists = scope:kingdom_to_assign_to_scope }
+#						always = $CREATE_BELOW_MINIMUM$
+#					}
+#					# If the policy is set to this, simply create a kingdom with whatever you manage to scrounge up, even if it would be below the MIN_DUCHIES number
+#					create_dynamic_title = {	# Create the kingdom itself
+#						tier = kingdom
+#						name = $KINGDOM_NAME$
+#					}
+#					scope:new_title = {
+#						set_variable = $REORGANIZATION_FLAG$	 # To possibly protect against other reorganizations in the same group
+#						add_to_list = $REORGANIZATION_FLAG$_list
+#						set_de_jure_liege_title = scope:capital_county_scope.empire
+#						set_capital_county = scope:capital_county_scope
+#						set_color_from_title = scope:capital_county_scope
+#						set_coa = scope:capital_county_scope
+#					}
+#					every_in_list = {
+#						list = duchies_to_add_list
+#						set_de_jure_liege_title = scope:new_title
+#						set_variable = {
+#							name = $REORGANIZATION_FLAG$_liege_title
+#							value = scope:new_title
+#						}
+#					}
+#				}
+#				# Otherwise, just abort
+#			}
+#		}
+#	}
+#	if = {
+#		limit = { exists = scope:new_title }
+#		clear_saved_scope = new_title
+#	}
+#	if = {
+#		limit = { exists = scope:kingdom_to_assign_to_scope }
+#		clear_saved_scope = kingdom_to_assign_to_scope
+#	}
+#	clear_saved_scope = capital_county_scope
+#	every_in_list = {
+#		list = duchies_to_add_list
+#		remove_from_list = duchies_to_add_list
+#	}
+#	every_in_list = {
+#		list = next_duchy_preallocation_sphere_list
+#		remove_from_list = next_duchy_preallocation_sphere_list
+#	}
+#	remove_local_variable = failed_to_find_more_duchies
+#}
+#
+### Divides a kingdom or empire into procedurally generated sub-kingdoms
+### Parameters:
+##### KINGDOM_NAME_FORMAT - the loc ID for the name format used for new kingdoms
+##### MIN_DUCHIES  - the minimum number of duchies required to form a kingdom
+##### MAX_DUCHIES  - the maximum number of duchies allowed in the formation of a kingdom
+##### REORGANIZATION_FLAG - the ID of the overall reorganization "group" of the generator. Used to prevent new titles from siphoning land from each other
+#regenerate_title_hierarchy_effect = {
+#	save_temporary_scope_as = title_being_regenerated_scope
+#	set_local_variable = {	# Used only in case something goes wrong to prevent the SE from freezing the game
+#		name = iterator
+#		value = 1
+#	}
+#	# First, look for metro counties, as they make for excellent capitals
+#	while = {
+#		limit = {
+#			exists = local_var:iterator
+#			local_var:iterator <= 50
+#			any_in_de_jure_hierarchy = {
+#				tier = tier_county 
+#				title_province = { is_any_metropolis_or_ruined_district_trigger = yes }
+#				NOT = { kingdom = { has_variable = $REORGANIZATION_FLAG$ } }
+#			}
+#		}
+#		random_in_de_jure_hierarchy = {
+#			limit = { 
+#				tier = tier_county 
+#				title_province = { is_any_metropolis_or_ruined_district_trigger = yes }
+#				NOT = { kingdom = { has_variable = $REORGANIZATION_FLAG$ } }
+#			}
+#			generate_procedural_de_jure_kingdom_effect = {
+#				KINGDOM_NAME = $KINGDOM_NAME_FORMAT$
+#				MIN_DUCHIES = $MIN_DUCHIES$
+#				MAX_DUCHIES = $MAX_DUCHIES$
+#				TITLE_CONSTRAINT = scope:title_being_regenerated_scope
+#				REORGANIZATION_FLAG = $REORGANIZATION_FLAG$
+#				REORGANIZATION_TITLES_PROTECTED = yes
+#				FAILURE_MODE = none
+#				CREATE_BELOW_MINIMUM = yes
+#			}
+#		}
+#		change_local_variable = {
+#			name = iterator
+#			add = 1
+#		}
+#	}
+#	set_local_variable = {	# Reset the iterator
+#		name = iterator
+#		value = 1
+#	}
+#	# Then, do the same for every duchy still not assigned a new kingdom
+#	while = {
+#		limit = {
+#			exists = local_var:iterator
+#			local_var:iterator <= 50
+#			any_in_de_jure_hierarchy = {
+#				tier = tier_county 
+#				NOT = { kingdom = { has_variable = $REORGANIZATION_FLAG$ } }
+#			}
+#		}
+#		random_in_de_jure_hierarchy = {
+#			limit = { 
+#				tier = tier_county
+#				NOT = { kingdom = { has_variable = $REORGANIZATION_FLAG$ } }
+#			}
+#			generate_procedural_de_jure_kingdom_effect = {
+#				KINGDOM_NAME = $KINGDOM_NAME_FORMAT$
+#				MIN_DUCHIES = $MIN_DUCHIES$
+#				MAX_DUCHIES = $MAX_DUCHIES$
+#				TITLE_CONSTRAINT = scope:title_being_regenerated_scope
+#				REORGANIZATION_FLAG = $REORGANIZATION_FLAG$
+#				REORGANIZATION_TITLES_PROTECTED = yes
+#				FAILURE_MODE = none
+#				CREATE_BELOW_MINIMUM = yes
+#			}
+#		}
+#		change_local_variable = {
+#			name = iterator
+#			add = 1
+#		}
+#	}
+#	# Finally, do a bit of polishing
+#	balance_kingdom_sizes_effect = {  
+#		TITLE_CONSTRAINT = scope:title_being_regenerated_scope
+#		TOO_LITTLE_DUCHIES_THRESHOLD = 1
+#		EXCESSIVE_DUCHIES_THRESHOLD = 3
+#		REORGANIZATION_FLAG = $REORGANIZATION_FLAG$
+#	}
+#}
+#
+#balance_kingdom_sizes_effect = {
+#	if = {
+#		limit = { exists = $TITLE_CONSTRAINT$ }
+#		$TITLE_CONSTRAINT$ = {
+#			every_in_de_jure_hierarchy = {
+#				limit = {
+#					tier = tier_kingdom
+#					direct_de_jure_vassals_value > 0
+#					direct_de_jure_vassals_value <= $TOO_LITTLE_DUCHIES_THRESHOLD$
+#				}
+#				save_temporary_scope_as = kingdom_to_transfer_duchies_to
+#				if = {
+#					limit = {
+#						any_title_to_title_neighboring_duchy = {
+#							kingdom.direct_de_jure_vassals_value >= $EXCESSIVE_DUCHIES_THRESHOLD$
+#							save_temporary_scope_as = neighboring_duchy_scope
+#							$TITLE_CONSTRAINT$ = { is_de_jure_liege_or_above_target = scope:neighboring_duchy_scope }
+#						}
+#					}
+#					random_title_to_title_neighboring_duchy = {
+#						limit = { 
+#							kingdom.direct_de_jure_vassals_value >= $EXCESSIVE_DUCHIES_THRESHOLD$
+#							save_temporary_scope_as = neighboring_duchy_scope
+#							$TITLE_CONSTRAINT$ = { is_de_jure_liege_or_above_target = scope:neighboring_duchy_scope }
+#							any_title_to_title_neighboring_duchy = {
+#								kingdom = { this = scope:kingdom_to_transfer_duchies_to }
+#							}
+#						}
+#						kingdom = {
+#							ordered_in_de_jure_hierarchy = {
+#								order_by = duchy_same_to_target_kingdom_neighboring_difference_inverted_value
+#								position = 0
+#								limit = { 
+#									tier = tier_duchy
+#									any_title_to_title_neighboring_duchy = {
+#										kingdom = { this = scope:kingdom_to_transfer_duchies_to }
+#									}
+#								}
+#								set_de_jure_liege_title = scope:kingdom_to_transfer_duchies_to
+#								set_variable = {
+#									name = $REORGANIZATION_FLAG$_liege_title
+#									value = scope:kingdom_to_transfer_duchies_to
+#								}
+#							}
+#						}
+#					}
+#				}
+#			}
+#		}
+#	}
+#}
+#
+### Merges 1-duchy kingdoms under a title
+#merge_micro_kingdoms_effect = {
+#	set_local_variable = {
+#		name = iterator
+#		value = 1
+#	}
+#	while = {
+#		limit = { local_var:iterator < 50 }
+#		random_in_de_jure_hierarchy = {
+#			limit = {
+#				tier = tier_county
+#				kingdom.direct_de_jure_vassals_value <= $TOO_LITTLE_DUCHIES_THRESHOLD$
+#			}
+#			kingdom = { save_temporary_scope_as = microkingdom_to_merge_into_others }
+#			random_neighboring_county = {
+#				limit = {
+#					NOT = { kingdom = scope:microkingdom_to_merge_into_others }
+#					kingdom.direct_de_jure_vassals_value <= $TOO_LITTLE_DUCHIES_THRESHOLD$
+#				}
+#				alternative_limit = {
+#					NOT = { kingdom = scope:microkingdom_to_merge_into_others }
+#				}
+#				kingdom = {
+#					save_temporary_scope_as = neighboring_larger_kingdom
+#				}
+#				scope:microkingdom_to_merge_into_others = {
+#					every_in_de_jure_hierarchy = {
+#						limit = { tier = tier_duchy }
+#						set_de_jure_liege_title = scope:neighboring_larger_kingdom
+#						set_variable = {
+#							name = $REORGANIZATION_FLAG$_liege_title
+#							value = scope:neighboring_larger_kingdom
+#						}
+#					}
+#				}
+#			}
+#		}
+#		change_local_variable = {
+#			name = iterator
+#			add = 1
+#		}
+#	}
+#	set_local_variable = {
+#		name = iterator
+#		value = 1
+#	}
+#	while = {
+#		limit = { local_var:iterator < 50 }
+#		random_in_de_jure_hierarchy = {
+#			limit = {
+#				tier = tier_county
+#				kingdom.direct_de_jure_vassals_value <= $TOO_LITTLE_DUCHIES_THRESHOLD$
+#			}
+#			kingdom = { save_temporary_scope_as = microkingdom_to_merge_into_others }
+#			random_county = {
+#				limit = {
+#					NOT = { kingdom = scope:microkingdom_to_merge_into_others }
+#					is_coastal_county = yes
+#					squared_distance = { target = scope:microkingdom_to_merge_into_others.title_capital_county value <= squared_distance_small }
+#				}
+#				alternative_limit = {
+#					NOT = { kingdom = scope:microkingdom_to_merge_into_others }
+#					is_coastal_county = yes
+#					squared_distance = { target = scope:microkingdom_to_merge_into_others.title_capital_county value <= squared_distance_medium }
+#				}
+#				kingdom = {
+#					save_temporary_scope_as = neighboring_larger_kingdom
+#				}
+#				scope:microkingdom_to_merge_into_others = {
+#					every_in_de_jure_hierarchy = {
+#						limit = { tier = tier_duchy }
+#						set_de_jure_liege_title = scope:neighboring_larger_kingdom
+#						set_variable = {
+#							name = $REORGANIZATION_FLAG$_liege_title
+#							value = scope:neighboring_larger_kingdom
+#						}
+#					}
+#				}
+#			}
+#		}
+#		change_local_variable = {
+#			name = iterator
+#			add = 1
+#		}
+#	}
+#}
+#
+### Merges 1-kingdom empires under a title
+#merge_micro_empires_effect = {
+#	set_local_variable = {
+#		name = iterator
+#		value = 1
+#	}
+#	while = {
+#		limit = { local_var:iterator < 50 }
+#		random_in_list = {
+#			list = $EMPIRE_LIST$
+#			limit = {
+#				kingdoms_in_empire_value <= $TOO_LITTLE_KINGDOMS_THRESHOLD$
+#			}
+#			save_temporary_scope_as = microempire_to_merge_into_others
+#			random_in_de_jure_hierarchy = {
+#				limit = { 
+#					tier = tier_county
+#					any_neighboring_county = {
+#						exists = empire
+#						NOT = { empire = scope:microempire_to_merge_into_others }
+#					}
+#				}
+#				random_neighboring_county = {
+#					limit = {
+#						exists = empire
+#						NOT = { empire = scope:microempire_to_merge_into_others }
+#					}
+#					empire = {
+#						save_temporary_scope_as = neighboring_larger_empire
+#					}
+#					scope:microempire_to_merge_into_others = {
+#						every_in_de_jure_hierarchy = {
+#							limit = { tier = tier_kingdom }
+#							set_de_jure_liege_title = scope:neighboring_larger_empire
+#						}
+#					}
+#				}
+#			}
+#		}
+#		change_local_variable = {
+#			name = iterator
+#			add = 1
+#		}
+#	}
+#	set_local_variable = {
+#		name = iterator
+#		value = 1
+#	}
+#	while = {
+#		limit = { local_var:iterator < 50 }
+#		random_in_list = {
+#			list = $EMPIRE_LIST$
+#			limit = {
+#				kingdoms_in_empire_value <= $TOO_LITTLE_KINGDOMS_THRESHOLD$
+#			}
+#			save_scope_as = microempire_to_merge_into_others
+#			random_county = {
+#				limit = {
+#					squared_distance = { target = scope:microempire_to_merge_into_others.title_capital_county value <= squared_distance_small }
+#					exists = empire
+#					NOT = { empire = scope:microempire_to_merge_into_others }
+#				}
+#				alternative_limit = {
+#					squared_distance = { target = scope:microempire_to_merge_into_others.title_capital_county value <= squared_distance_medium }
+#					exists = empire
+#					NOT = { empire = scope:microempire_to_merge_into_others }
+#				}
+#				empire = {
+#					save_temporary_scope_as = neighboring_larger_empire
+#				}
+#				scope:microempire_to_merge_into_others = {
+#					every_in_de_jure_hierarchy = {
+#						limit = { tier = tier_kingdom }
+#						set_de_jure_liege_title = scope:neighboring_larger_empire
+#					}
+#				}
+#			}
+#		}
+#		change_local_variable = {
+#			name = iterator
+#			add = 1
+#		}
+#	}
+#}
+#
+#regenerate_kingdom_empires_effect = {
+#	while = {
+#		limit = {
+#			any_in_list = {
+#				list = $KINGDOM_LIST$
+#				exists = empire
+#				exists = title_capital_county
+#				empire = {
+#					NOT = { has_variable = $REORGANIZATION_FLAG$ }
+#				}
+#			}
+#		}
+#		random_in_list = {
+#			list = $KINGDOM_LIST$
+#			limit = {
+#				exists = empire
+#				empire = {
+#					NOT = { has_variable = $REORGANIZATION_FLAG$ }
+#				}
+#				direct_de_jure_vassals_value > 0
+#				exists = title_capital_county
+#				title_capital_county.title_province = { is_any_metropolis_or_ruined_district_trigger = yes }
+#				NOT = {
+#					any_in_de_jure_hierarchy = {
+#						tier = tier_county
+#						any_neighboring_county = {
+#							exists = empire
+#							empire = { has_variable = $REORGANIZATION_FLAG$ }
+#						}
+#					}
+#				}
+#			}
+#			alternative_limit = {
+#				exists = empire
+#				empire = {
+#					NOT = { has_variable = $REORGANIZATION_FLAG$ }
+#				}
+#				exists = title_capital_county
+#				NOT = {
+#					any_in_de_jure_hierarchy = {
+#						tier = tier_county
+#						any_neighboring_county = {
+#							exists = empire
+#							empire = { has_variable = $REORGANIZATION_FLAG$ }
+#						}
+#					}
+#				}
+#			}
+#			alternative_limit = {
+#				exists = empire
+#				empire = {
+#					NOT = { has_variable = $REORGANIZATION_FLAG$ }
+#				}
+#				exists = title_capital_county
+#				title_capital_county.title_province = { is_any_metropolis_or_ruined_district_trigger = yes }
+#			}
+#			alternative_limit = {
+#				exists = empire
+#				empire = {
+#					NOT = { has_variable = $REORGANIZATION_FLAG$ }
+#				}
+#				exists = title_capital_county
+#			}
+#			title_capital_county = { save_scope_as = capital_county_scope }
+#			create_dynamic_title = {	# Create the kingdom itself
+#				tier = empire
+#				name = $EMPIRE_NAME$
+#			}
+#			scope:new_title = {
+#				set_variable = $REORGANIZATION_FLAG$	 # To possibly protect against other reorganizations in the same group
+#				add_to_list = $REORGANIZATION_FLAG$_list
+#				set_capital_county = scope:capital_county_scope
+#				set_color_from_title = scope:capital_county_scope
+#				set_coa = scope:capital_county_scope
+#			}
+#			set_de_jure_liege_title = scope:new_title
+#			every_in_de_jure_hierarchy = {
+#				limit = {
+#					tier = tier_county
+#				}
+#				if = {
+#					limit = {
+#						any_neighboring_county = {
+#							exists = empire
+#							NOT = { empire = { has_variable = $REORGANIZATION_FLAG$ } }
+#						}
+#					}
+#					random_neighboring_county = {
+#						limit = {
+#							exists = empire
+#							NOT = { empire = { has_variable = $REORGANIZATION_FLAG$ } }
+#						}
+#						kingdom = {
+#							set_de_jure_liege_title = scope:new_title
+#						}
+#					}
+#				}
+#			}
+#		}
+#	}
+#}
+
+## Procedurally regenerates a post-Conquest de jure hierarchy for the Shattered Coast and stores this information on a per-duchy level
+
+#preplan_shattered_coast_conquest_realms_effect = {
+#	title:e_the_reach = {
+#		add_to_list = shattered_coast_empire
+#	}
+#	title:e_cornucopia = {
+#		add_to_list = shattered_coast_empire
+#	}
+#	title:e_gurdurbok = {
+#		add_to_list = shattered_coast_empire
+#	}
+#	title:e_etepezea = {
+#		add_to_list = shattered_coast_empire
+#	}
+#	title:e_opakhasia = {
+#		add_to_list = shattered_coast_empire
+#	}
+#	title:e_malcois = {
+#		add_to_list = shattered_coast_empire
+#	}
+#	title:e_aironoi = {
+#		add_to_list = shattered_coast_empire
+#	}
+	
+#	every_in_list = {
+#		list = shattered_coast_empire
+#		every_in_de_jure_hierarchy = {
+#			limit = { tier = tier_duchy }
+#			exists = kingdom
+#			set_variable = {
+#				name = default_kingdom
+#				value = kingdom
+#			}
+#			add_to_list = shattered_coast_duchy
+#		}
+#	}
+	
+#	every_in_list = {
+#		list = shattered_coast_empire
+#		regenerate_title_hierarchy_effect = {
+#			KINGDOM_NAME_FORMAT = DEFAULT_GENERATED_KINGDOM_NAME
+#			MIN_DUCHIES = 2
+#			MAX_DUCHIES = 4
+#			REORGANIZATION_FLAG = shattered_coast_conquest_realm
+#		}
+#	}
+	
+#	every_in_list = {
+#		list = shattered_coast_conquest_realm_list
+#		limit = { direct_de_jure_vassals_value > 0 }
+#		merge_micro_kingdoms_effect = {
+#			TOO_LITTLE_DUCHIES_THRESHOLD = 1
+#			REORGANIZATION_FLAG = shattered_coast_conquest_realm
+#		}
+#	}
+	
+#	regenerate_kingdom_empires_effect = {
+#		KINGDOM_LIST = shattered_coast_conquest_realm_list
+#		EMPIRE_NAME = DEFAULT_GENERATED_KINGDOM_NAME
+#		REORGANIZATION_FLAG = shattered_coast_conquest_realm_empire
+#	}
+	
+#	every_in_list = {
+#		list = shattered_coast_conquest_realm_empire_list
+#		limit = { kingdoms_in_empire_value > 0 }
+#		merge_micro_empires_effect = {
+#			EMPIRE_LIST = shattered_coast_conquest_realm_empire_list
+#			TOO_LITTLE_KINGDOMS_THRESHOLD = 1
+#		}
+#	}
+	
+#	every_in_list = {
+#		list = shattered_coast_duchy
+#		limit = { has_variable = default_kingdom }
+#		set_de_jure_liege_title = var:default_kingdom
+#	}
+#}
+
+setup_sjalvolki_conquest_effect = {
+	character:daukeni_sjalvolki_1 = {
+		setup_global_story_effect = { STORY_TYPE = story_great_migration STORY_NAME = the_sjalvolki_conquest STORY_ILLUSTRATION = tribal_challenge_ruler }
+		scope:story_great_migration = {
+			story_owner = {
+				every_realm_county = {
+					limit = {
+						NOR = {
+							culture = { has_cultural_pillar = heritage_aversarian }
+							religion = religion:aversarinas_aagiokrata_religion
+						}
+					}
+					save_temporary_scope_as = county_scope
+					add_great_migration_migrating_pop_in_county_effect = {
+						STORY_CYCLE_SCOPE = scope:story_great_migration
+						CULTURE = scope:county_scope.culture
+						FAITH = scope:county_scope.faith
+						SIZE = scope:county_scope.sjalvolki_great_migration_pop_county_size_value
+						COUNTY = scope:county_scope
+					}
+				}
+			}
+			add_to_variable_list = {
+				name = allowed_titles_to_migrate_to
+				target = title:e_etepezea
+			}
+			add_to_variable_list = {
+				name = allowed_titles_to_migrate_to
+				target = title:e_opakhasia
+			}
+			add_to_variable_list = {
+				name = allowed_titles_to_migrate_to
+				target = title:k_cyrocaea
+			}
+			add_to_variable_list = {
+				name = allowed_titles_to_migrate_to
+				target = title:k_kalliados
+			}
+			add_to_variable_list = {
+				name = allowed_titles_to_migrate_to
+				target = title:k_hyrea
+			}
+		}
+	}
+}
+set_time_in_migration = {
+	every_de_jure_county = {
+		limit = {
+			holder.liege.primary_title ?= title:e_migrant_coalition
+		}
+		set_variable = {
+			name = time_spent_in_migration_coalition
+			value = $VALUE$
+		}
+	}
+}
+# OLD STUFF THAT NEEDS TO BE REWRITTEN AND CLEANED UP
+assign_titles_to_characters_new_sjalvolki_conquest = {
+	# Save a character to use as a template in case we need to generate new ones
+	if = {
+		limit = { NOT = { exists = scope:model } }
+		ordered_in_list = {
+			list = $CHARACTER_LIST$
+			
+			order_by = sjalvolki_conquest_contribution_value
+			save_scope_as = model
+		}
+	}
+	else_if = {
+		limit = { 
+			exists = scope:model
+			scope:model = {
+				has_variable = refused_title
+			}
+		}
+		ordered_in_list = {
+			list = $CHARACTER_LIST$
+			
+			order_by = sjalvolki_conquest_contribution_value
+			save_scope_as = model
+		}
+	}
+	if = {
+		limit = { scope:model.culture ?= { has_variable = already_received_kingdom_in_great_migration } }
+		every_in_list = {
+			list = $TITLE_LIST$
+			limit = { 
+				tier = tier_kingdom
+				exists = holder
+			}
+			prev = { destroy_title = prev }
+		}
+	}
+	every_in_list = {
+		list = $TITLE_LIST$
+		limit = {
+			has_variable = unformed_kingdom
+			exists = holder
+			NOT = { tier = tier_duchy }
+		}
+		prev = { destroy_title = prev }
+	}
+	every_in_list = {
+		list = $TITLE_LIST$
+		limit = {
+			tier = tier_duchy
+			this.title_capital_county.holder = {
+				OR = {
+					has_character_flag = aversarian_bent_the_knee
+					has_character_flag = aversarian_migration
+					is_ruin = yes
+				}
+			}
+		}
+		prev = { remove_from_list = $TITLE_LIST$ }
+	}
+	if = {
+		limit = {
+			list_size = {
+				name = $TITLE_LIST$
+				value > 0
+			}
+		}
+		ordered_in_list = {
+			list = $TITLE_LIST$
+			order_by = tier
+			limit = { 
+				holder ?= prev
+				NOR = {
+					this.title_capital_county.holder = { is_ruin = yes }
+					this.title_capital_county.holder = { has_character_flag = aversarian_bent_the_knee }
+					this.title_capital_county.holder = { has_character_flag = aversarian_migration }
+					holder ?= { is_ruin = yes }
+					holder ?= { has_character_flag = aversarian_bent_the_knee }
+					holder ?= { has_character_flag = aversarian_migration }
+					has_variable = unformed_kingdom
+					has_variable = refugee_state
+				}
+			}
+			
+			save_scope_as = title_to_be_given
+			
+			if = {
+				limit = {
+					list_size = {
+						name = $CHARACTER_LIST$
+						value > 0
+					}
+					any_in_list = {
+						list = $CHARACTER_LIST$
+						NOT = {
+							trigger_if = {
+								limit = { has_variable =  refused_title }
+								var:refused_title = scope:title_to_be_given
+							}
+						}
+						sjalvolki_conquest_contribution_value > 0
+					}
+				}
+		
+				ordered_in_list = {
+					list = $CHARACTER_LIST$
+					order_by = sjalvolki_conquest_contribution_value
+					
+					limit = {
+						trigger_if = {
+							limit = { has_variable = refused_title }
+							NOT = { var:refused_title = scope:title_to_be_given }
+						}
+						is_ruin = no 
+						sjalvolki_conquest_contribution_value > 0
+					}
+					save_scope_as = new_character
+				}
+			}
+			else = {
+				create_character = {
+					location = scope:attacker.capital_province
+					gender_female_chance = 50
+					template_character = scope:model
+					random_traits = yes
+					age = { 20 50 }
+					
+					save_scope_as = new_character
+				}
+				scope:new_character = {
+					add_character_flag = created_for_migration
+				}
+			}
+			scope:new_character ?= {
+				trigger_event = sjalvolki_conquest.0010
+			}
+		}
+	}
+}
+
+generate_vassal_list_by_contribution = {
+	# Get a list of all vassals of a set culture
+	ordered_vassal_or_below = {
+		limit = {
+			primary_title.tier >= tier_county
+			#sjalvolki_conquest_contribution_value > 0
+			NOR = {
+				has_character_flag = aversarian_migration
+				has_character_flag = created_for_migration
+				has_character_flag = cant_receive_migration_titles
+				has_character_flag = aversarian_bent_the_knee
+			}
+		}
+		order_by = sjalvolki_conquest_contribution_value
+		max = 500 # Check if there is a way to add all of them without setting a max
+		check_range_bounds = no
+		add_to_list = $LIST$
+	}
+	
+	# Get laamps fitting the criteria
+	ordered_domicile = {
+		limit = {
+			owner = { is_imperrech_landless_adventurer = yes }
+		}
+		order_by = owner.sjalvolki_conquest_contribution_value
+		max = 500
+		check_range_bounds = no
+		owner = {
+			add_to_list = $LIST$
+		}
+	}
+
+	# Get unlanded courtiers fitting the criteria
+
+	# If none were found, generate one
+	if = {
+		limit = {
+			list_size = {
+				name = $LIST$
+				value = 0
+			}
+		}
+
+		create_character = {
+			employer = root
+			gender_female_chance = 50
+			template_character = root
+			culture = $CULTURE$
+			faith = $FAITH$
+			random_traits = yes
+			age = { 20 50 }
+
+			save_scope_as = generated_character
+		}
+
+		scope:generated_character = {
+			add_to_list = $LIST$
+		}
+	}
+}
+
+rebuild_kingdom_around_capital_effect = {
+	set_capital_county = title:$NEW_CAPITAL$
+	if = {
+		limit = {
+			NOT = {
+				any_in_de_jure_hierarchy = {
+					tier = tier_duchy
+					has_variable = refugee_state
+				}
+			}
+		}
+		title:$NEW_CAPITAL$ = {
+			holder = {
+				save_temporary_scope_as = prev_holder
+				if = {
+					limit = { 
+						any_liege_or_above = {
+							has_variable = sjalvolki_vanguard	# People in the vanguard have the privilege of keeping any kingdoms they conquered for themselves
+						}
+					}
+					random_liege_or_above = {
+						limit = {
+							has_variable = sjalvolki_vanguard
+						}
+						save_scope_as = new_kingdom_holder
+					}
+				}
+				else_if = {
+					limit = { 
+						trigger_if = {
+							limit = { 
+								title:$NEW_CAPITAL$ = { has_variable = influx_culture }
+								NOT = { has_variable = surrendered_aversarian }
+							}
+							title:$NEW_CAPITAL$ = { var:influx_culture = { save_temporary_scope_as = influx_culture_temp } }
+							AND = {
+								NOT = { culture = scope:influx_culture_temp }
+								is_ai = yes
+							}
+						}
+						trigger_else = { always = no }
+					}
+					title:$NEW_CAPITAL$ = {
+						var:influx_culture = { save_temporary_scope_as = influx_culture }
+						var:influx_faith = { save_temporary_scope_as = influx_faith }
+					}
+					create_character = {
+						location = scope:prev_holder.location
+						culture = scope:influx_culture
+						faith = scope:influx_faith
+						gender_female_chance = {
+							if = {
+								limit = { scope:influx_faith = { has_doctrine = doctrine_gender_male_dominated } }
+								add = 0
+							}
+							else_if = {
+								limit = { scope:influx_faith = { has_doctrine = doctrine_gender_female_dominated } }
+								add = 100
+							}
+							else = {
+								add = 50
+							}
+						}
+						template_character = root
+						random_traits = yes
+						age = { 20 38 }
+						
+						save_scope_as = new_kingdom_holder
+					}
+					scope:new_kingdom_holder = {
+						get_title = title:$NEW_CAPITAL$
+					}
+					if = {
+						limit = { title:$NEW_CAPITAL$ = { duchy = { is_title_created = yes } } }
+						title:$NEW_CAPITAL$ = { duchy = { scope:new_kingdom_holder = { get_title = prev } } }
+					}
+				}
+				else_if = {
+					limit = { 
+						trigger_if = {
+							limit = { 
+								OR = {
+									culture = { has_cultural_pillar = heritage_aversarian }
+									has_religion = religion:aversarinas_aagiokrata_religion
+									has_religion = religion:agionism_religion
+									has_religion = religion:islands_religion
+									has_religion = religion:raider_religion
+								}
+							}
+						}
+						trigger_else = { always = no }
+					}
+					create_character = {
+						location = scope:prev_holder.location
+						culture = culture:daukeni
+						faith = faith:sjalvolki
+						gender_female_chance = 50
+						template_character = root
+						random_traits = yes
+						age = { 20 38 }
+						
+						save_scope_as = new_kingdom_holder
+					}
+					scope:new_kingdom_holder = {
+						get_title = title:$NEW_CAPITAL$
+					}
+					if = {
+						limit = { title:$NEW_CAPITAL$ = { duchy = { is_title_created = yes } } }
+						title:$NEW_CAPITAL$ = { duchy = { scope:new_kingdom_holder = { get_title = prev } } }
+					}
+				}			
+				else = {
+					save_scope_as = new_kingdom_holder
+				}
+			}
+		}
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = kingdom_change
+			add_claim_on_loss = no
+		}
+		change_title_holder = {
+			holder = scope:new_kingdom_holder
+			change = scope:kingdom_change
+		}
+		resolve_title_and_vassal_change = scope:kingdom_change
+		if = {
+			limit = { holder.dynasty = { NOT = { has_variable = already_assigned_coa_to_kingdom } } }
+			set_coa = holder.dynasty
+			holder.dynasty = { set_variable = already_assigned_coa_to_kingdom }
+		}
+		else = {
+			generate_coa = yes
+		}
+		every_in_de_jure_hierarchy = {
+			limit = {
+				tier = tier_county
+				NOT = { has_variable = protected_from_automatic_culture_conversion }
+			}
+			random_list = {
+				65 = {
+					set_county_faith = scope:new_kingdom_holder.faith
+					set_county_culture = scope:new_kingdom_holder.culture
+				}
+				30 = {
+					set_county_faith = holder.faith
+					set_county_culture = holder.culture
+				}
+				5 = {  }	# County doesn't flip culture. Useful for leaving Aversarian enclaves here and there
+			}
+		}
+		rebuild_title_hierarchy = yes
+	}
+	else = {
+		every_in_de_jure_hierarchy = {
+			limit = {
+				tier = tier_county
+				NOT = { has_variable = protected_from_automatic_culture_conversion }
+			}
+			random_list = {
+				95 = {
+					set_county_faith = holder.faith
+					set_county_culture = holder.culture
+				}
+				5 = {  }	# County doesn't flip culture. Useful for leaving Aversarian enclaves here and there
+			}
+		}
+		every_in_de_jure_hierarchy = {
+			limit = {
+				tier = tier_duchy
+			}
+			rebuild_title_hierarchy_dukes = yes
+		}
+	}
+	every_in_de_jure_hierarchy = {
+		generate_coa = yes
+	}
+}
+
+# Gets most suitable courtier to lead new laamp after duchy/kingdom settles
+generate_migration_laamp_leader = {
+	# Get the most suitable leader
+	ordered_courtier = {
+		limit = {
+			is_valid_for_laampdom = yes
+			culture = employer.culture
+			OR = {
+				has_trait = ambitious
+				has_trait = brave
+				is_close_or_extended_family_of = employer
+				has_trait = diligent
+			}
+			NOT = {
+				is_heir_of = employer
+			}
+		}
+		order_by = ai_boldness
+		max = 1
+		check_range_bounds = no
+		save_scope_as = new_migration_laamp_leader
+		add_character_flag = imperrech_landless_adventurer
+	}
+}
+
+# Get list of possible followers for the new laamp
+generate_migration_laamp_followers = {
+	ordered_courtier = {
+		limit = {
+			is_valid_for_laampdom = yes
+			NOR = { 
+				is_heir_of = employer
+				opinion = {
+					target = employer
+					value > 25
+				}
+				has_trait = content
+				has_trait = craven
+			}
+		}
+		order_by = ai_boldness
+		max = 4
+		check_range_bounds = no
+		add_to_list = $LIST$
+	}
+}
+
+# Tick up time that counties have spent in the coalition
+tick_up_migration_time = {
+	primary_title = {
+		every_in_de_facto_hierarchy = {
+			limit = {
+				tier = tier_county
+			}
+			if = {
+				limit = {
+					NOT = { has_variable = time_spent_in_migration_coalition }
+				}
+				set_variable = {
+					name = time_spent_in_migration_coalition
+					value = 1
+				}
+			}
+			else = {
+				change_variable = {
+					name = time_spent_in_migration_coalition
+					add = 1
+				}
+			}
+		}
+	}
+}
+
+# Release migration vassals
+release_migration_vassals = {
+	every_vassal = {
+		limit = {
+			NOR = {
+				capital_county.kingdom = title:k_palitake 
+				capital_county.kingdom = title:k_southeastern_isles
+			}
+			OR = {
+				#AND = {
+				#	is_imperrech_vanguard_trigger = no
+				#	NOT = { has_trait = ambitious }
+				#	is_ai = no
+				#}
+				AND = {
+					has_character_flag = aversarian_migration
+					highest_held_title_tier < tier_kingdom
+					primary_title = {
+						any_de_jure_county = {
+							has_variable = time_spent_in_migration_coalition
+							var:time_spent_in_migration_coalition > 6
+						}
+					}
+				}
+				AND = {
+					has_character_flag = aversarian_migration
+					highest_held_title_tier = tier_kingdom
+					primary_title = {
+						any_de_jure_county = {
+							has_variable = time_spent_in_migration_coalition
+							var:time_spent_in_migration_coalition > 8 # Want the kingdoms to stay in longer to build up stability
+						}
+					}
+				}
+				has_character_flag = holdover_in_old_lands
+			}
+		}
+		create_title_and_vassal_change = {
+			type = independency
+			save_scope_as = change
+		}
+		becomes_independent = { change = scope:change }
+		resolve_title_and_vassal_change = scope:change
+		primary_title = {
+			every_de_jure_county = {
+				set_variable = {
+					name = released_from_migration
+					years = 20
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = holdover_in_old_lands
+				NOT = {
+					has_character_modifier = gh_sjalvolki_resettlement_focus_modifier
+				}
+			}
+			add_character_modifier = {
+				modifier = gh_sjalvolki_rebuilding_focus_modifier
+				years = 30
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = holdover_in_old_lands
+				trigger_if = {
+					limit = { exists = capital_county }
+					NOT = { capital_county = { has_county_modifier = gh_sjalvolki_resettlement_modifier } }
+				}
+			}
+			capital_county = {
+				add_county_modifier = {
+					modifier = gh_sjalvolki_resettlement_modifier
+					years = 40
+				}
+			}
+		}
+	}
+}
+
+# Modified version of the generic multi realm invasion which instead vassalizes Sjalvolki characters
+multi_realm_invasion_join_war_cenware = {
+	every_in_list = {
+		list = target_titles
+		save_scope_as = target_title
+		every_de_jure_top_liege = {
+			limit = {
+				NOR = {
+					this = scope:attacker
+					culture = { has_cultural_pillar = heritage_sjalvolki }
+				}
+				is_human = yes
+			}
+			if = {
+				limit = {
+					NOT = { has_character_flag = already_offered_vassalage }
+					exists = scope:war
+				}
+				if = {
+					limit = { character_cois_trigger = yes }
+					trigger_event = {
+						id = cois.0001
+						days = 1
+					}
+				}
+				else = {
+					trigger_event = {
+						id = sjalvolki_conquest.0004
+						days = 1
+					}
+				}
+				add_character_flag = {
+					flag = already_offered_vassalage
+					days = 1
+				}
+				if = {
+					limit = {
+						NOT = {
+							is_defender_in_war = scope:war
+						}
+					}
+					scope:war = {
+						add_defender = prev
+					}
+				}
+				every_vassal_or_below = {
+					limit = {
+						AND = {
+							primary_title = {
+								tier >= tier_county
+							}
+							NOT = {
+								is_defender_in_war = scope:war
+							}
+						}
+					}
+					add_to_list = valid_vassals
+				}
+			}
+		}
+		every_de_jure_top_liege = {
+			limit = {
+				is_imperrech_vanguard_trigger = yes
+				NOR = { 
+					this = scope:attacker 
+					has_character_flag = already_offered_vassalage
+				}
+			}
+			trigger_event = {
+				id = sjalvolki_conquest.0003
+				days = 1
+			}
+			add_character_flag = already_offered_vassalage
+		}
+	}
+	every_in_list = {
+		list = valid_vassals
+		trigger_event = {
+			id = gh_war_event.4000
+		}
+	}
+}
+
+cenware_conquer_kingdom_with_end_conquest_chance = {
+	random_list = {
+		100 = {
+			cenware_conquer_kingdom = { KINGDOM_NAME = $KINGDOM_NAME$ }
+		}
+		$END_CONQUEST_CHANCE$ = {
+			end_the_conquest = yes
+		}
+	}
+}
+
+cenware_conquer_kingdom = {
+	if = {
+		limit = { 
+			NOR = {
+				has_variable = ai_cenware_recently_launched_invasion
+				has_character_flag = preparing_to_end_conquest
+			} 
+		}
+		title:$KINGDOM_NAME$ = {
+			if = {
+				limit = {
+					any_in_de_jure_hierarchy = {
+						tier = tier_county 
+						NOR = { 
+							holder.top_liege = character:daukeni_sjalvolki_1
+							has_variable = lucky_aversarian_enclave
+							has_variable = released_from_migration
+							has_county_modifier = gh_sjalvolki_resettlement_modifier
+							holder = { has_character_modifier = gh_sjalvolki_resettlement_focus_modifier }
+							holder = { has_character_flag = aversarian_migration }
+							holder.top_liege = { has_character_modifier = gh_sjalvolki_resettlement_focus_modifier }
+							holder.top_liege = { has_character_flag = aversarian_migration }
+							holder.top_liege = { government_has_flag = government_is_wasteland }
+						}
+						OR = {
+							NOT = { any_county_province = { terrain  = archipelagic } }
+							holder = { has_title = title:k_high_kingdom_of_the_isles }
+						}
+					}
+				}
+				random_in_de_jure_hierarchy = {
+					limit = { 
+						tier = tier_county 
+						holder = { is_ruin = no }
+						NOR = { 
+							# This ensures that no rulers released from the migration, be it imperrech cultures or aversarians (nor their descendants) get targeted
+							# Potentially overdoing it, but Cenware has a tendency to break his scripting when possible, so we want to avoid headache
+							holder.top_liege = character:daukeni_sjalvolki_1
+							has_variable = lucky_aversarian_enclave
+							holder.top_liege = { government_has_flag = government_is_wasteland }
+							has_county_modifier = gh_sjalvolki_resettlement_modifier
+							holder = { has_character_modifier = gh_sjalvolki_resettlement_focus_modifier }
+							holder = { has_character_flag = aversarian_migration }
+							has_variable = released_from_migration
+						}
+						# GH: Avoids Cenware losing because his army gets wiped due to having to land in an island province
+						OR = {
+							holder = { has_variable = cois_defeated_cenware }
+							holder = { has_variable = generic_beat_cenware }
+							holder = { highest_held_title_tier >= tier_duchy } # Dukes or above should be a primary target when possible
+							holder = {
+								realm_size >= 3 # if there's no king, at least get a sizeable target instead of a 1 county count
+							}
+						}
+						trigger_if = { # If the defender holds archipelagic terrain, they should be a king for cenware to directly target them
+							limit = {
+								holder = {
+									any_sub_realm_county = {
+										any_county_province = {
+											terrain = archipelagic
+										}
+									}
+								}
+							}
+							holder = { highest_held_title_tier >= tier_kingdom }
+						}
+					}
+					kingdom = { save_scope_as = defender_title }
+					holder.top_liege = { save_scope_as = defender }
+					character:daukeni_sjalvolki_1 = {
+						if = {
+							limit = { has_character_flag = preparing_to_end_conquest }
+							remove_character_flag = preparing_to_end_conquest
+						}
+						set_variable = {
+							name = ai_cenware_recently_launched_invasion
+							days = 10
+						}
+						start_war = {
+							cb = sjalvolki_conquest_cb
+							target = scope:defender
+							target_title = scope:defender_title
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+end_the_conquest_with_preparation = {	# A version of ending the Conquest with a warm-up, so that AI Cenware has time to take all the kingdom division decisions
+	if = {
+		limit = { 
+			NOR = {
+				has_character_flag = preparing_to_end_conquest_timer
+				has_character_flag = preparing_to_end_conquest
+				is_at_war = yes
+			} 
+		}
+		add_character_flag = preparing_to_end_conquest
+		add_character_flag = { # He doesn't need this to be as long anymore
+			flag = preparing_to_end_conquest_timer
+			days = 120
+		}
+	}
+	else_if = {
+		limit = { 
+			has_character_flag = preparing_to_end_conquest
+			NOT = { has_character_flag = preparing_to_end_conquest_timer }
+		}
+		end_the_conquest = yes
+	}
+}
+
+end_the_conquest = {
+	if = {
+		limit = { 
+			title:e_migrant_coalition = {
+				is_title_created = yes
+			}
+			title:e_migrant_coalition.holder = {
+				NOR = {
+					has_variable = still_licking_wounds
+					has_variable = ai_cenware_recently_launched_invasion
+				}
+			}
+		}
+		title:e_migrant_coalition = {
+			holder = {
+				every_vassal = {
+					limit = { highest_held_title_tier >= tier_kingdom }
+					every_held_title = {
+						limit = { tier = tier_kingdom }
+						rebuild_title_hierarchy = yes
+					}
+				}
+				save_temporary_scope_as = imperrech_ruler
+			}
+		}
+		scope:imperrech_ruler = {
+			every_vassal = {
+				limit = {
+					save_temporary_scope_as = potential_vassal_to_be_released
+					NOT = {
+						scope:imperrech_ruler = {
+							any_held_title = {
+								is_de_jure_liege_or_above_target = scope:potential_vassal_to_be_released.primary_title
+							}
+						}
+					}
+				}
+				create_title_and_vassal_change = {
+					type = independency
+					save_scope_as = change
+					add_claim_on_loss = no
+				}
+				change_liege_or_become_independent = {
+					CHANGE = scope:change
+					VASSAL = this
+				}
+				resolve_title_and_vassal_change = scope:change
+				release_disconnected_counties = yes
+			}
+			destroy_title = title:e_migrant_coalition
+			remove_character_modifier = gh_imperrech_debuff_modifier
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				add_character_modifier = {
+					modifier = gh_sjalvolki_resettlement_focus_cenware_modifier # He gets a unique modifier to make sure his AI behaves correctly post-war
+					years = 30
+				}
+			}
+			release_disconnected_counties = yes
+		}
+		if = {
+			limit = {
+				has_game_rule = rapid_common_cause
+			}
+			custom_tooltip = gh_disband_the_imperrech_decision_effect4_tt
+		}
+		else_if = {
+			limit = {
+				has_game_rule = leisurely_common_cause
+			}
+			custom_tooltip = gh_disband_the_imperrech_decision_effect5_tt
+		}
+		else = {
+			custom_tooltip = gh_disband_the_imperrech_decision_effect6_tt
+		}
+	}
+	every_county = {
+		limit = {
+			has_variable = time_spent_in_migration_coalition
+		}
+		remove_variable = time_spent_in_migration_coalition
+	}
+}
+
+force_end_the_conquest = {	# For when the Conquest MUST end instantly regardless of anything else (e.g. Cenware gets beaten twice or dies)
+	if = {
+		limit = { 
+			title:e_migrant_coalition = {
+				is_title_created = yes
+			}
+		}
+		title:e_migrant_coalition = {
+			holder = {
+				every_vassal = {
+					limit = { highest_held_title_tier >= tier_kingdom }
+					every_held_title = {
+						limit = { tier = tier_kingdom }
+						rebuild_title_hierarchy = yes
+					}
+				}
+				save_temporary_scope_as = imperrech_ruler
+			}
+		}
+		scope:imperrech_ruler = {
+			every_vassal = {
+				limit = {
+					save_temporary_scope_as = potential_vassal_to_be_released
+					NOT = {
+						scope:imperrech_ruler = {
+							any_held_title = {
+								is_de_jure_liege_or_above_target = scope:potential_vassal_to_be_released.primary_title
+							}
+						}
+					}
+				}
+				create_title_and_vassal_change = {
+					type = independency
+					save_scope_as = change
+					add_claim_on_loss = no
+				}
+				change_liege_or_become_independent = {
+					CHANGE = scope:change
+					VASSAL = this
+				}
+				resolve_title_and_vassal_change = scope:change
+				release_disconnected_counties = yes
+			}
+			every_held_title = {
+				limit = { tier = tier_empire }
+				add_to_list = imperrech_empires
+			}
+			every_in_list = {
+				list = imperrech_empires
+				scope:imperrech_ruler = {
+					destroy_title = prev
+				}
+			}
+			destroy_title = title:e_migrant_coalition
+			remove_character_modifier = gh_imperrech_debuff_modifier
+			release_disconnected_counties = yes
+			random_owned_story = {
+				limit = { story_type = story_cycle_migration_coalition }
+				end_story = yes
+			}
+		}
+		if = {
+			limit = {
+				has_game_rule = rapid_common_cause
+			}
+			custom_tooltip = gh_disband_the_imperrech_decision_effect4_tt
+			trigger_event = {
+				id = sjalvolki_reformation.0002
+				years = 5
+			}
+		}
+		else_if = {
+			limit = {
+				has_game_rule = leisurely_common_cause
+			}
+			custom_tooltip = gh_disband_the_imperrech_decision_effect5_tt
+			trigger_event = {
+				id = sjalvolki_reformation.0002
+				years = 15
+			}
+		}
+		else = {
+			custom_tooltip = gh_disband_the_imperrech_decision_effect6_tt
+			trigger_event = {
+				id = sjalvolki_reformation.0002
+				years = 10
+			}
+		}
+	}
+	every_county = {
+		limit = {
+			has_variable = time_spent_in_migration_coalition
+		}
+		remove_variable = time_spent_in_migration_coalition
+	}
+}
+
+change_pops_in_transit = {
+	culture:$CULTURE$ = {
+		if = {
+			limit = {
+				NOT = { has_variable = pops_in_transit }
+			}
+			set_variable = {
+				name = pops_in_transit
+				value = 0
+			}
+		}
+		change_variable = {
+			name = pops_in_transit
+			$OPERATION$ = 1
+		}
+		if = {
+			limit = { var:pops_in_transit = 0 }
+			remove_variable = pops_in_transit
+		}
+	}
+}
+
+###event troops for slave plantation event
+spawn_slave_troops_effect = {
+	spawn_army = {
+		uses_supply = no
+		inheritable = no
+		name = freed_slaves
+		levies = {
+			value = 500
+		}
+		location = capital_province
+	}
+}
+
+add_conquest_contribution_effect = {
+	custom_description = {
+		text = gain_sjalvolki_conquest_contribution
+		value = $VALUE$
+		if = {
+			limit = {
+				NOT = { exists = var:sjalvolki_conquest_contribution }
+			}
+			set_variable = {
+				name = sjalvolki_conquest_contribution
+				value = $VALUE$
+			}
+		}
+		else = {
+			change_variable = {
+				name = sjalvolki_conquest_contribution
+				add = $VALUE$
+			}
+		}
+		if = {
+			limit = {  
+				exists = var:sjalvolki_conquest_contribution
+				var:sjalvolki_conquest_contribution <= 0
+			}
+			remove_variable = sjalvolki_conquest_contribution
+		}
+	}
+}

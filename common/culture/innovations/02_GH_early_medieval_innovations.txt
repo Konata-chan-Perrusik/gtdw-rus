@@ -1,0 +1,87 @@
+﻿#### Local Types ####
+@civil_construction_1 = "gfx/interface/icons/culture_innovations/innovation_civil_construction_01.dds"
+@hird = "gfx/interface/icons/culture_innovations/innovation_hird.dds"
+@early_medieval_magic = "gfx/interface/icons/culture_innovations/magic_03.dds"
+@maa_01 = "gfx/interface/icons/culture_innovations/innovation_maa_01.dds"
+@nobility_02 = "gfx/interface/icons/culture_innovations/innovation_nobility_02.dds"
+
+
+innovation_early_medieval_magic = {
+    culture_era = culture_era_early_medieval
+    group =  culture_group_civic
+    icon = @early_medieval_magic
+	potential = { culture_does_not_have_standard_innovations = no }
+
+	custom = unlock_early_medieval_magical_buildings
+
+    maa_upgrade = {
+		type = magi
+		damage = 10
+	}
+
+	flag = global_regular
+	flag = early_medieval_era_regular
+}
+
+# Region-Specific Innovations
+innovation_reefmining = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	region = world_innovation_reefmine
+	icon = @civil_construction_1
+	# potential = { # GH_TODO: add these
+	# 	culture_does_not_have_regional_innovations = no
+	# 	culture_does_not_have_regional_buildings = no
+	# }
+
+	unlock_building = reefmine_01
+
+	flag = early_medieval_era_regional
+}
+
+# Culture-Specific Innovations
+innovation_marcher_adventurers = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @maa_01
+	potential = {
+		culture_does_not_have_standard_innovations = no 
+		OR = {
+			has_cultural_pillar = heritage_marcher
+			has_cultural_pillar = heritage_ojyczaynz
+			has_cultural_tradition = tradition_chevalien_identity
+		}
+	}
+
+	character_modifier = {
+		levy_size = -0.2
+		monthly_income = 0.2
+	}
+
+	flag = global_regional
+	flag = early_medieval_era_regional
+}
+
+innovation_kashiryan_court_system = {
+	group = culture_group_regional
+	culture_era = culture_era_early_medieval
+	icon = @nobility_02
+	region = GH_geographic_kashirya
+	potential = {
+		culture_does_not_have_standard_innovations = no 
+	}
+
+	character_modifier = {
+		cultural_head_fascination_mult = -0.10
+		men_at_arms_recruitment_cost = 0.3
+		men_at_arms_limit = -2
+		men_at_arms_cap = -1
+		title_creation_cost_mult = 0.3
+		monthly_income_mult = -0.3
+		monthly_prestige_gain_per_dread_mult = -0.01
+		tyranny_gain_mult = 0.25
+	}
+
+	flag = global_regional
+	flag = early_medieval_era_regional
+}

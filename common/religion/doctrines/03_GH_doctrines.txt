@@ -1,0 +1,312 @@
+﻿doctrine_slavery = {
+	group = "crimes"
+	doctrine_slavery_demanded = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_slavery_demanded }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_neutral }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_discouraged }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_banned }
+				multiply = faith_changed_doctrine_cost_mult_four_step
+			}
+		}
+		character_modifier = {
+			domain_tax_mult = 0.03
+			monthly_county_control_growth_factor = 0.1
+			build_speed = -0.05
+			build_gold_cost = -0.05
+			county_opinion_add = -5
+		}
+	}
+	doctrine_slavery_encouraged = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_slavery_encouraged }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_discouraged }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_banned }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+		}
+		character_modifier = {
+			domain_tax_mult = 0.01
+			monthly_county_control_growth_factor = 0.05
+			build_speed = -0.05
+			county_opinion_add = -2
+		}
+	}
+	doctrine_slavery_neutral = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_slavery_neutral }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_demanded }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_banned }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+		}
+	}
+	doctrine_slavery_discouraged = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_slavery_discouraged }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_encouraged }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_demanded }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+		}
+		character_modifier = {
+			county_opinion_add = 2
+			monthly_county_control_growth_factor = -0.05
+			development_growth_factor = 0.02
+		}
+	}
+	doctrine_slavery_banned = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_slavery_banned }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_neutral }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_encouraged }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_slavery_demanded }
+				multiply = faith_changed_doctrine_cost_mult_four_step
+			}
+		}
+		character_modifier = {
+			county_opinion_add = 5
+			monthly_county_control_growth_factor = -0.1
+			development_growth_factor = 0.05
+		}
+	}
+}
+doctrine_magic = {
+	group = "crimes"
+	doctrine_magic_crime = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_magic_crime }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_accepted }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_supremacy }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+		}
+		parameters = {
+			magic_illegal = yes
+		}
+	}
+	doctrine_magic_shunned = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_magic_shunned }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_supremacy }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+		}
+		parameters = {
+			magic_shunned = yes
+		}
+	}
+	doctrine_magic_accepted = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_magic_accepted }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_crime }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+		}
+		parameters = {
+			magic_accepted = yes
+		}
+	}
+	doctrine_magic_honored = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_magic_accepted }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_crime }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+		}
+
+		can_pick = {
+			custom_description = {
+				text = GH_feature_coming_soon
+				always = no
+			}
+		}
+
+		parameters = {
+			magic_honored = yes
+		}
+	}
+	doctrine_magic_supremacy = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_magic_supremacy }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_crime }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_shunned }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			
+		}
+		parameters = {
+			magic_supreme = yes
+		}
+	}
+}
+
+doctrine_lifepath_numbers = {
+	group = "main_group"
+	
+	is_available_on_create = {
+		religion_tag = lifepath_religion
+	}
+	doctrine_lifepaths_standard = {
+		
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_lifepaths_standard }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_crime }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_magic_shunned }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			
+		}
+		parameters = {
+			standard_lifepaths = yes
+		}
+	}
+	doctrine_lifepaths_sjalvolki = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_lifepaths_sjalvolki }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_lifepaths_evil }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_lifepaths_standard }
+				multiply = faith_changed_doctrine_cost_mult_two_step
+			}
+			
+		}
+		parameters = {
+			sjalvolki_lifepaths = yes
+		}
+	}
+	doctrine_lifepaths_evil = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_lifepaths_evil }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_lifepaths_standard }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_lifepaths_sjalvolki }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			
+		}
+		parameters = {
+			evil_lifepaths = yes
+		}
+	}
+	doctrine_lifepaths_tripath = {
+		piety_cost = {
+			value = faith_doctrine_cost_low
+			if = {
+				limit = { has_doctrine = doctrine_lifepaths_tripath }
+				multiply = faith_unchanged_doctrine_cost_mult
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_lifepaths_standard }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			else_if = {
+				limit = { has_doctrine = doctrine_lifepaths_sjalvolki }
+				multiply = faith_changed_doctrine_cost_mult_three_step
+			}
+			
+		}
+		parameters = {
+			tripath_lifepaths = yes
+		}
+	}
+}

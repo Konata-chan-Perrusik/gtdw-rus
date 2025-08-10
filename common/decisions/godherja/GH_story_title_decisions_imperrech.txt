@@ -1,0 +1,91 @@
+﻿
+
+gh_disband_the_imperrech_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 24
+	
+	desc = gh_disband_the_imperrech_decision_desc
+	selection_tooltip = gh_disband_the_imperrech_decision_tooltip
+	
+	is_shown = {
+		# For now this is player-only - the AI has a separate system for dealing with this, and will continue to have it until we refactor the conquest
+		is_ai = no
+		# Standard filter checks.
+		is_playable_character = yes
+		# Must actually hold the Imperrech title
+		has_title_migrant_coalition_trigger = yes
+	}
+	
+	is_valid = {
+		# Must not be at war
+		is_at_war = no
+		# Must control Oraispol, Tinitida and Asiupol
+		OR = {
+			has_title = title:c_oraispol
+			custom_description = {
+				text = gh_disband_the_imperrech_must_be_liege_of_oraispol_desc
+				is_liege_or_above_of = title:c_oraispol.holder
+			}
+		}
+		OR = {
+			has_title = title:c_last_light
+			custom_description = {
+				text = gh_disband_the_imperrech_must_be_liege_of_tinitida_desc
+				OR = {
+					is_liege_or_above_of = title:c_last_light.holder
+					title:c_last_light = { has_variable = released_from_migration }
+				}
+			}
+		}
+		OR = {
+			has_title = title:c_asiupoli
+			custom_description = {
+				text = gh_disband_the_imperrech_must_be_liege_of_asiupoli_desc
+				OR = {
+					is_liege_or_above_of = title:c_asiupoli.holder
+					title:c_asiupoli = { has_variable = released_from_migration }
+				}
+			}
+		}
+	}
+	
+	effect = {
+		# custom_tooltip = gh_disband_the_imperrech_decision_effect_tt # commenting it out since I don't actually think this tooltip is correct
+		custom_tooltip = gh_disband_the_imperrech_decision_effect2_tt
+		custom_tooltip = gh_disband_the_imperrech_decision_effect3_tt
+		hidden_effect = {
+			end_the_conquest = yes
+		}
+		if = {
+			limit = {
+				has_game_rule = rapid_common_cause
+			}
+			custom_tooltip = gh_disband_the_imperrech_decision_effect4_tt
+		}
+		else_if = {
+			limit = {
+				has_game_rule = leisurely_common_cause
+			}
+			custom_tooltip = gh_disband_the_imperrech_decision_effect5_tt
+		}
+		else = {
+			custom_tooltip = gh_disband_the_imperrech_decision_effect6_tt
+		}
+		show_as_tooltip = {
+			remove_character_modifier = gh_imperrech_debuff_modifier
+			destroy_title = title:e_migrant_coalition
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 10
+	}
+}

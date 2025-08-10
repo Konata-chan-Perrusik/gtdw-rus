@@ -1,0 +1,264 @@
+﻿republic_playable_tax_slot = { # Bailate
+	default_obligation = burgher_tax_collector
+
+	obligations = {
+		plantation_tax_collector
+		mining_tax_collector
+		autonomy_special_rights_tax_collector
+		march_special_rights_tax_collector
+		privateer_special_rights_tax_collector
+	}
+
+	tax_slot_vassal_limit = {
+		add = {
+			value = 12
+			desc = tax_slot_vassal_level_base_desc
+		}
+	}
+
+	is_valid_tax_collector = {
+		is_courtier_of = scope:liege
+		is_playable_character = no
+		is_imprisoned = no
+		is_adult = yes
+		NOT = { has_trait = incapable }
+		NOT = { has_character_modifier = fp3_incapable_tax_collector_modifier }
+
+		# Gender has to be allowed to be granted titles to be eligible
+		trigger_if = {
+			limit = {
+				scope:liege.faith = {
+					has_doctrine = doctrine_gender_male_dominated
+				}
+			}
+			is_male = yes
+		}
+		trigger_if = {
+			limit = {
+				scope:liege.faith = {
+					has_doctrine = doctrine_gender_female_dominated
+				}
+			}
+			is_female = yes
+		}
+		trigger_if = {
+			limit = {
+				is_tax_collector = no
+			}
+			court_position_does_not_already_have_a_job_trigger = yes
+		}
+	}
+	aptitude_level_breakpoints = { 20 45 75 110	}
+	tax_collector_aptitude = tax_collector_bailate_aptitude_score
+
+	on_tax_collector_hired = {
+		scope:tax_collector = {
+			#TODO do we want to replace this with is_sheriff?
+			add_character_flag = is_tax_collector
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						target = scope:liege
+						modifier = fired_from_tax_collector_position_opinion
+					}
+				}
+				remove_opinion = {
+					target = scope:liege
+					modifier = fired_from_tax_collector_position_opinion
+				}
+			}
+		}
+	}
+
+	on_tax_collector_fired = {
+		scope:tax_collector = {
+			remove_character_flag = is_tax_collector
+			if = {
+				limit = {
+					NOT = { this = scope:liege }
+				}
+				add_opinion = {
+					target = scope:liege
+					modifier = fired_from_tax_collector_position_opinion
+				}
+			}
+		}
+	}
+}
+
+landed_order_tax_slot = { # Order Magistrate
+	default_obligation = commandry_tax_collector
+
+	obligations = {
+		autonomy_special_rights_tax_collector
+		inquisitive_special_rights_tax_collector
+		trade_rights_special_tax_collector
+		exploitative_tax_collector
+	}
+
+	tax_slot_vassal_limit = {
+		add = {
+			value = 12
+			desc = tax_slot_vassal_level_base_desc
+		}
+	}
+
+	is_valid_tax_collector = {
+		is_courtier_of = scope:liege
+		is_playable_character = no
+		is_imprisoned = no
+		is_adult = yes
+		NOT = { has_trait = incapable }
+		NOT = { has_character_modifier = fp3_incapable_tax_collector_modifier }
+
+		# Gender has to be allowed to be granted titles to be eligible
+		trigger_if = {
+			limit = {
+				scope:liege.faith = {
+					has_doctrine = doctrine_gender_male_dominated
+				}
+			}
+			is_male = yes
+		}
+		trigger_if = {
+			limit = {
+				scope:liege.faith = {
+					has_doctrine = doctrine_gender_female_dominated
+				}
+			}
+			is_female = yes
+		}
+		trigger_if = {
+			limit = {
+				is_tax_collector = no
+			}
+			court_position_does_not_already_have_a_job_trigger = yes
+		}
+	}
+
+	aptitude_level_breakpoints = { 20 45 75 110	}
+
+	tax_collector_aptitude = tax_collector_order_magistrate_aptitude_score
+
+	on_tax_collector_hired = {
+		scope:tax_collector = {
+			add_character_flag = is_tax_collector
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						target = scope:liege
+						modifier = fired_from_tax_collector_position_opinion
+					}
+				}
+				remove_opinion = {
+					target = scope:liege
+					modifier = fired_from_tax_collector_position_opinion
+				}
+			}
+		}
+	}
+
+	on_tax_collector_fired = {
+		scope:tax_collector = {
+			remove_character_flag = is_tax_collector
+			if = {
+				limit = {
+					NOT = { this = scope:liege }
+				}
+				add_opinion = {
+					target = scope:liege
+					modifier = fired_from_tax_collector_position_opinion
+				}
+			}
+		}
+	}
+}
+
+pirate_tax_slot = { # Boatswain
+	default_obligation = first_loot_tax_collector
+
+	obligations = {
+		raw_deal_tax_collector
+		commune_tax_collector
+		smuggling_tax_collector
+		plantation_tax_collector
+		mining_tax_collector
+	}
+
+	tax_slot_vassal_limit = {
+		add = {
+			value = 12
+			desc = tax_slot_vassal_level_base_desc
+		}
+	}
+
+	is_valid_tax_collector = {
+		is_courtier_of = scope:liege
+		is_playable_character = no
+		is_imprisoned = no
+		is_adult = yes
+		NOT = { has_trait = incapable }
+		NOT = { has_character_modifier = fp3_incapable_tax_collector_modifier }
+
+		# Gender has to be allowed to be granted titles to be eligible
+		trigger_if = {
+			limit = {
+				scope:liege.faith = {
+					has_doctrine = doctrine_gender_male_dominated
+				}
+			}
+			is_male = yes
+		}
+		trigger_if = {
+			limit = {
+				scope:liege.faith = {
+					has_doctrine = doctrine_gender_female_dominated
+				}
+			}
+			is_female = yes
+		}
+		trigger_if = {
+			limit = {
+				is_tax_collector = no
+			}
+			court_position_does_not_already_have_a_job_trigger = yes
+		}
+	}
+
+	aptitude_level_breakpoints = { 20 45 75 110	}
+
+	tax_collector_aptitude = tax_collector_boatswain_aptitude_score
+
+	on_tax_collector_hired = {
+		scope:tax_collector = {
+			add_character_flag = is_tax_collector
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						target = scope:liege
+						modifier = fired_from_tax_collector_position_opinion
+					}
+				}
+				remove_opinion = {
+					target = scope:liege
+					modifier = fired_from_tax_collector_position_opinion
+				}
+			}
+		}
+	}
+
+	on_tax_collector_fired = {
+		scope:tax_collector = {
+			remove_character_flag = is_tax_collector
+			if = {
+				limit = {
+					NOT = { this = scope:liege }
+				}
+				add_opinion = {
+					target = scope:liege
+					modifier = fired_from_tax_collector_position_opinion
+				}
+			}
+		}
+	}
+}

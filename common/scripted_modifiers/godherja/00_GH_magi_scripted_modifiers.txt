@@ -1,0 +1,276 @@
+﻿magi_value_modifier = { # GH: For judging the relative power of a Magi - # GH TODO: Add Aspects
+	modifier = { # Magical Prowess - Direct magical power is the most easily judged
+		has_variable = magic_prowess
+		var:magic_prowess >= 8
+		add = {
+			value = 15
+			if = {
+				limit = { var:magic_prowess >= 10 }
+				add = 5
+			}
+			if = {
+				limit = { var:magic_prowess > 12 }
+				add = 5
+			}
+			if = {
+				limit = { var:magic_prowess > 16 }
+				add = 5
+			}
+			if = {
+				limit = { var:magic_prowess > 18 }
+				add = 5
+			}
+			if = {
+				limit = { var:magic_prowess > 20 }
+				add = 5
+			}
+			if = {
+				limit = { var:magic_prowess > 25 }
+				add = 5
+			}
+			if = {
+				limit = { var:magic_prowess > 30 }
+				add = 5
+			}
+		}
+	}
+	modifier = { # Arcana - Knowledge of magic is obviously one of the greatest factors in using it
+		add = 20
+		character_arcana_baseline_value >= 6
+		add = {
+			value = 10
+			if = {
+				limit = { character_arcana_baseline_value >= 8 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 10 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 12 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 14 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 16 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 18 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 20 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 25 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 30 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 35 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 40 }
+				add = 5
+			}
+			if = {
+				limit = { character_arcana_baseline_value > 50 }
+				add = 5
+			}
+		}
+	}
+	modifier = { # Genetic Magic - Blood lays the path for potential, though not exclusively
+		has_trait = magic_good
+		add = {
+			value = 0
+			if = {
+				limit = { has_trait = magic_good_1 }
+				add = 1
+			}
+			else_if = {
+				limit = { has_trait = magic_good_2 }
+				add = 2
+			}
+			else_if = {
+				limit = { has_trait = magic_good_3 }
+				add = 4
+			}
+			else_if = {
+				limit = { has_trait = magic_good_4 }
+				add = 8
+			}
+			else_if = {
+				limit = { has_trait = magic_good_5 }
+				add = 12
+			}
+			else_if = {
+				limit = { has_trait = magic_good_6 }
+				add = 16
+			}
+			else_if = {
+				limit = { has_trait = magic_good_7 }
+				add = 20
+			}
+			else_if = {
+				limit = { has_trait = magic_good_8 }
+				add = 25
+			}
+			else_if = {
+				limit = { has_trait = magic_good_9 }
+				add = 30
+			}
+			else_if = {
+				limit = { has_trait = magic_good_10 }
+				add = 35
+			}
+			else_if = {
+				limit = { has_trait = magic_good_11 }
+				add = 40
+			}
+			else_if = {
+				limit = { has_trait = magic_good_12 }
+				add = 50
+			}
+			else_if = {
+				limit = { has_trait = magic_good_13 }
+				add = 60
+			}
+			else_if = {
+				limit = { has_trait = magic_good_14 }
+				add = 75
+			}
+			else_if = {
+				limit = { has_trait = magic_good_15 }
+				add = 90
+			}
+			else_if = {
+				limit = { has_trait = magic_good_16 }
+				add = 120
+			}
+			else_if = {
+				limit = { has_trait = magic_good_17 }
+				add = 150
+			}
+			else_if = {
+				limit = { has_trait = magic_good_18 }
+				add = 200
+			}
+			else_if = {
+				limit = { has_trait = magic_good_19 }
+				add = 250
+			}
+			else_if = {
+				limit = { has_trait = magic_good_20 }
+				add = 300
+			}
+		}
+	}
+	modifier = { # Magic Education - Education is not the only thing that makes a Magi, but it certainly helps
+		add = {
+			value = 0
+			if = {
+				limit = { has_magic_education_trait_rank = { RANK = 1 } }
+				add = 4
+			}
+			else_if = {
+				limit = { has_magic_education_trait_rank = { RANK = 2 } }
+				add = 8
+			}
+			else_if = {
+				limit = { has_magic_education_trait_rank = { RANK = 3 } }
+				add = 12
+			}
+			else_if = {
+				limit = { has_magic_education_trait_rank = { RANK = 4 } }
+				add = 16
+			}
+		}
+	}
+	modifier = { # Learning - A Magi is best served wise
+		learning >= 8
+		add = {
+			value = 8
+			if = {
+				limit = { learning >= 10 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 12 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 14 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 16 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 18 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 20 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 25 }
+				add = 4
+			}
+			if = {
+				limit = { learning > 30 }
+				add = 4
+			}
+		}
+	}
+	modifier = { # Prowess - It helps for a Magi to be a badass with or without magic
+		prowess >= 8
+		add = {
+			value = 2
+			if = {
+				limit = { prowess >= 10 }
+				add = 2
+			}
+			if = {
+				limit = { prowess > 12 }
+				add = 2
+			}
+			if = {
+				limit = { prowess > 16 }
+				add = 2
+			}
+			if = {
+				limit = { prowess > 18 }
+				add = 2
+			}
+			if = {
+				limit = { prowess > 20 }
+				add = 2
+			}
+			if = {
+				limit = { prowess > 25 }
+				add = 2
+			}
+			if = {
+				limit = { prowess > 30 }
+				add = 2
+			}
+		}
+	}
+	modifier = {
+		add = 10000
+		exists = character:daukeni_sjalvolki_19
+		this = character:daukeni_sjalvolki_19
+	}
+}

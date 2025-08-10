@@ -1,0 +1,635 @@
+﻿# No lists or indexes, only chaos. Keep scrolling down and thou shalt find them.
+
+#############################################
+# Hostility Ending							#
+# by Joe Parkin								#
+#############################################
+
+struggle_iberia_ending_hostility_decision = {
+	decision_group_type = major
+	title = struggle_iberia_ending_hostility_decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_hostility.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp2_decision_hostility.dds"
+	desc = struggle_iberia_ending_hostility_decision_desc
+	selection_tooltip = struggle_iberia_ending_hostility_decision_tooltip
+	confirm_click_sound = "event:/DLC/FP2/SFX/UI/fp2_struggle_ending_decision_confirm"
+	is_invisible = yes
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		#has_fp2_dlc_trigger = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		highest_held_title_tier >= tier_kingdom
+
+		prestige_level >= very_high_prestige_level # Exalted among Men or higher
+		piety_level >= very_high_piety_level
+
+		OR = {
+			custom_tooltip = {
+				text = struggle_iberia_ending_hostility_decision_correct_phase_tt
+				any_character_struggle = {
+					involvement = involved
+					is_struggle_type = ritewars_struggle
+					is_struggle_phase = struggle_iberia_phase_hostility
+				}
+			}
+			## Completely control Northern Rite War Region for 5 years
+			AND = {
+				completely_controls_region = struggle_rite_wars_north
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+
+		# Hold and completely control all sjalvolki holy sites
+		calc_true_if = {
+			amount >= 4
+			#completely_controls = title:c_leibarnae
+			OR = {
+				completely_controls = title:c_oraispol
+				title:c_oraispol.holder = { is_ruin = no }
+			}
+			OR = {
+				completely_controls = title:c_sugarholt
+				title:c_sugarholt.holder = { is_ruin = no }
+			}
+			OR = {
+				completely_controls = title:c_ilmindir
+				title:c_ilmindir.holder = { is_ruin = no }
+			}
+			OR = {
+				completely_controls = title:c_stymphanais
+				title:c_stymphanais.holder = { is_ruin = no }
+			}
+		}
+
+		# All your capital kingdom's de jure counties are of your culture and faith
+		custom_tooltip = {
+			text = struggle_iberia_ending_hostility_decision_county_tt
+			capital_county.de_jure_liege.de_jure_liege = {
+				any_de_jure_county = {
+					count = all
+					culture = root.culture
+					faith = root.faith
+				}
+			}
+		}
+
+		# No other realm controls more than 10% of the Rite region
+		custom_tooltip = {
+			text = struggle_iberia_ending_hostility_decision_region_tt
+			NOT = {
+				struggle:ritewars_struggle = {
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes
+						exists = primary_title
+						primary_title = { is_mercenary_company = no }
+						save_temporary_scope_as = iberian_realm
+						any_county_in_region = {
+							region = struggle_rite_wars_north
+							percent > fp2_struggle_hostility_region_percent_decimal_value
+							holder.top_liege = scope:iberian_realm
+						}
+					}
+				}
+			}
+		}
+
+		# If Im Krona/Piety, the rival HoF cannot exist
+
+		trigger_if = {
+			limit = {
+				has_faith = faith:authority_rite
+			}
+			OR = {
+				title:e_rite_piety_rel = { is_title_created = no }
+				title:e_rite_piety_rel.holder = { is_playable_character = no }
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				has_faith = faith:piety_rite
+			}
+			custom_description = {
+				text = gh_rws_authority_rel_cannot_exist
+				OR = {
+					title:e_rite_authority_rel = { is_title_created = no }
+					title:e_rite_authority_rel.holder = { is_playable_character = no }
+				}
+			}
+		}
+		
+		# If Im neither, neither HoF can exist
+		trigger_else = {
+			custom_description = {
+				text = gh_rws_piety_rel_cannot_exist
+				OR = {
+					title:e_rite_piety_rel = { is_title_created = no }
+					title:e_rite_piety_rel.holder = { is_playable_character = no }
+				}
+			}
+			custom_description = {
+				text = gh_rws_authority_rel_cannot_exist
+				OR = {
+					title:e_rite_authority_rel = { is_title_created = no }
+					title:e_rite_authority_rel.holder = { is_playable_character = no }
+				}
+			}
+		}
+	}
+
+	effect = {
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 10000 }
+			fp2_struggle_hostility_ender_effect = yes
+		}
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Keep the Struggle Clash for your House
+		custom_tooltip = fp2_struggle_can_keep_using_struggle_clash_tt
+		# Boost to culture and faith conversion
+		custom_tooltip = fp2_struggle_hostility_conversion_tt
+		# Damage opinion with other culture/faiths
+		custom_tooltip = fp2_struggle_hostility_opinion_tt
+		custom_tooltip = fp2_struggle_hostility_opinion_negative_tt
+		# Choose Holy War boost, Culture War boost, or both
+		custom_description_no_bullet = { text = fp2_struggle_hostility_list_tt }
+		#custom_tooltip = fp2_struggle_hostility_holy_cb_joint_tt
+		#custom_tooltip = fp2_struggle_hostility_culture_cb_tt
+
+
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+			}
+		}
+
+		# Trigger a player facing event as a coda
+		trigger_event = fp2_struggle.0900
+		gh_achiev_mightmakesrite_check = yes
+	}
+
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#############################################
+# Compromise Ending							#
+# by Joe Parkin								#
+#############################################
+
+struggle_iberia_ending_compromise_decision = {
+	decision_group_type = major
+	title = struggle_iberia_ending_compromise_decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_compromise.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp2_decision_compromise.dds"
+	desc = struggle_iberia_ending_compromise_decision_desc
+	selection_tooltip = struggle_iberia_ending_compromise_decision_tooltip
+	confirm_click_sound = "event:/DLC/FP2/SFX/UI/fp2_struggle_ending_decision_confirm"
+	is_invisible = yes
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		#has_fp2_dlc_trigger = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+
+		custom_tooltip = {
+			text = struggle_iberia_ending_compromise_decision_correct_phase_tt
+			any_character_struggle = {
+				is_struggle_type = ritewars_struggle
+				is_struggle_phase = struggle_iberia_phase_compromise
+			}
+		}
+		OR = {
+			# Exalted among Men or higher
+			prestige_level >= very_high_prestige_level
+			piety_level >= very_high_piety_level
+			# Hold and completely control a holy site
+			custom_description = {
+				text = controls_rite_wars_holy_sites_one
+				faith = {
+					any_holy_site = {
+						count >= 1
+						holder.top_liege = root
+					}
+				}
+			}
+		}
+
+		# Control less than 25% of Iberia
+		custom_tooltip = {
+			text = struggle_iberia_ending_compromise_decision_region_tt
+			fp2_struggle_ending_percent_iberia_trigger = yes
+		}
+
+		# No one else controls more than 50% of Iberia
+		custom_tooltip = {
+			text = struggle_iberia_ending_compromise_decision_other_region_tt
+			fp2_struggle_ending_other_percent_iberia_trigger = yes
+		}
+
+		# No Independent Involved rulers are at war with each other
+		custom_tooltip = {
+			text = struggle_iberia_ending_compromise_truce_tt
+			NOT = {
+				struggle:ritewars_struggle = {
+					any_involved_ruler = {
+						is_independent_ruler = yes
+						primary_title = { is_mercenary_company = no }
+						any_primary_war_enemy = {
+							is_independent_ruler = yes
+							any_character_struggle = {
+								involvement = involved
+								is_struggle_type = ritewars_struggle
+							}
+							primary_title = { is_mercenary_company = no }
+						}
+					}
+				}
+			}
+		}
+
+		OR = {
+			# Every other involved independent ruler in Iberia has at least 60 opinion of you or is strong hooked
+			custom_tooltip = {
+				text = struggle_iberia_ending_compromise_decision_opinion_tt
+				struggle:ritewars_struggle = {
+					NOT = {
+						any_involved_ruler = {
+							NOT = { this = root }
+							is_independent_ruler = yes
+							primary_title = { is_holy_order = no }
+							primary_title = { is_mercenary_company = no }
+							save_temporary_scope_as = this_character
+							NOR = {
+								root = { has_strong_hook = scope:this_character }
+								opinion = {
+									target = root
+									value >= struggle_iberia_ending_compromise_decision_opinion_value
+								}
+							}
+						}
+					}
+				}
+			}
+			# No other independent ruler in Iberia is a king or above
+			custom_tooltip = {
+				text = struggle_iberia_ending_compromise_decision_independent_tt
+				struggle:ritewars_struggle = {
+					NOT = {
+						any_involved_ruler = {
+							NOT = { this = root }
+							is_independent_ruler = yes
+							primary_title = { is_mercenary_company = no }
+							primary_title.tier >= tier_kingdom
+						}
+					}
+				}
+			}
+			# More than 50% of Iberia is controlled by Interloper or Uninvolved rulers
+			custom_tooltip = {
+				text = struggle_iberia_ending_compromise_decision_interloper_tt
+				any_county_in_region = {
+					region = struggle_rite_wars_north
+					percent > fp2_struggle_compromise_uninvolved_percent_decimal_value
+					holder.top_liege = { fp2_character_interloper_in_struggle_trigger = yes }
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = ritewars_struggle
+				STRUGGLE_ENDING = concordat
+			}
+		}
+		##### Major Effects #####
+		# Personal effects for ruler
+		show_as_tooltip = { fp2_struggle_compromise_ender_effect = yes }
+		# Independent/Split De Jure Duchies will become De Jure Kingdoms
+		if = { 
+			limit = {
+				title:e_etepezea = {
+					any_in_de_jure_hierarchy = {
+						fp2_struggle_ending_compromise_independent_duchy_trigger = yes
+					}
+				}
+			}
+		}
+
+		if = { 
+			limit = {
+				title:e_cornucopia = {
+					any_in_de_jure_hierarchy = {
+						fp2_struggle_ending_compromise_independent_duchy_trigger = yes
+					}
+				}
+			}
+		}
+		custom_tooltip = fp2_struggle_compromise_create_new_kingdoms_tt
+
+
+		## Other Tooltips!
+		fp2_struggle_compromise_tooltip_effect = yes
+
+		##### Minor Effects #####
+		# Self-sufficiency/defensive modifiers for each independent realm
+		show_as_tooltip = { fp2_struggle_compromise_modifier_rewards_effect = yes }
+
+		show_as_tooltip = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+			}
+		}
+
+		# Trigger a player facing event as a coda
+		trigger_event = fp2_struggle.0901
+	}
+
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#############################################
+# Conciliation Ending						#
+# by Joe Parkin								#
+#############################################
+
+struggle_iberia_ending_conciliation_decision = {
+	decision_group_type = major
+	title = struggle_iberia_ending_conciliation_decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_conciliation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp2_decision_conciliation.dds"
+	desc = struggle_iberia_ending_conciliation_decision_desc
+	selection_tooltip = struggle_iberia_ending_conciliation_decision_tooltip
+	confirm_click_sound = "event:/DLC/FP2/SFX/UI/fp2_struggle_ending_decision_confirm"
+	is_invisible = yes
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		#has_fp2_dlc_trigger = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+
+		custom_tooltip = {
+			text = struggle_iberia_ending_conciliation_decision_correct_phase_tt
+			any_character_struggle = {
+				is_struggle_type = ritewars_struggle
+				is_struggle_phase = struggle_iberia_phase_conciliation
+			}
+		}
+
+		prestige_level >= very_high_prestige_level # Exalted among Men or higher
+		piety_level >= very_high_piety_level
+
+		# Hold and completely control a holy site
+		custom_description = {
+			text = controls_rite_wars_holy_sites_some
+			faith = {
+				any_holy_site = {
+					count >= 2
+					holder.top_liege = root
+				}
+			}
+		}
+		calc_true_if = {
+			amount >= 1
+			#completely_controls = title:c_leibarnae
+			completely_controls = title:c_oraispol
+			completely_controls = title:c_sugarholt
+			completely_controls = title:c_ilmindir
+			completely_controls = title:c_stymphanais
+		}
+
+		# Every other independent involved ruler in Iberia is allied to you
+		custom_tooltip = {
+			text = struggle_iberia_ending_conciliation_decision_alliance_tt
+			struggle:ritewars_struggle = {
+				NOT = {
+					any_involved_ruler = {
+						is_independent_ruler = yes
+						primary_title = { is_mercenary_company = no }
+						primary_title = { is_holy_order = no }
+						NOR = {
+							this = root
+							is_allied_to = root
+						}
+					}
+				}
+			}
+		}
+
+		# Control less than 50% of Iberia
+		custom_tooltip = {
+			text = struggle_iberia_ending_compromise_decision_region_tt
+			fp2_struggle_ending_percent_iberia_trigger = yes
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = ritewars_struggle
+				STRUGGLE_ENDING = concordat
+			}
+		}
+		##### Major Effects #####
+		show_as_tooltip = {
+			fp2_struggle_conciliation_ender_effect = yes
+			fp2_struggle_conciliation_tooltip_effect = yes
+			fp2_struggle_conciliation_modifier_rewards_effect = yes
+		}
+
+		show_as_tooltip = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+				zealous = medium_stress_impact_gain
+			}
+		}
+
+		# Trigger a player facing event as a coda
+		trigger_event = fp2_struggle.0902
+	}
+
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#############################################
+# Eat a Cheese
+# by Daniel "yes I know what exciting content is stop bullying me" Moore
+###########################################################################
+# GH CHANGE: Removed
+
+#############################################
+# Secure Iberian Foothold
+# by Joe Parkin and Ola Jentzsch
+#############################################
+# GH CHANGE: Replaced with secure_ritewars_foothold_decision
+
+###################################
+# Build Pilgrim Roads
+# By Hugo Cortell
+###################################
+# GH CHANGE: Decision removed, reimplement if it fits somewhere / you want to make a generic version
+
+#############################################
+# Develop a city
+# by Maxence Voleau
+#############################################
+improve_city_province_decision = {
+	title = improve_city_province_decision_name
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	desc = improve_city_province_decision_desc
+	selection_tooltip = improve_city_province_decision_tooltip
+	cooldown = { years = 50 }
+	sort_order = 90
+
+	is_shown = {
+		is_landless_adventurer = no
+		exists = dynasty
+		dynasty = {
+			has_dynasty_perk = fp2_urbanism_legacy_5
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		custom_tooltip = {
+			text = improve_city_province_decision_at_least_one_city_tt
+			any_sub_realm_county = {
+				count > 0
+				holder = root
+				any_county_province = {
+					building_slots <= 5
+					is_urban_trigger = yes
+				}
+			}
+		}
+	}
+
+	effect = {
+
+		#Generate intelligible effect
+		if = {
+			limit = {
+				any_sub_realm_county = {
+					count > 0
+					holder = root
+					any_county_province = {
+						building_slots <= 5
+						is_urban_trigger = yes
+					}
+				}
+			}
+			every_sub_realm_county = {
+				# only county directly own by the character
+				limit = { holder = root }
+				every_county_province = {
+					limit = {
+						is_urban_trigger = yes
+						building_slots <= 5
+					}
+					save_scope_as = current_province
+					prev.holder = {
+						send_interface_toast = {
+							type = event_toast_effect_good
+							title = city_gained_building_slots
+							left_icon = scope:current_province.barony
+
+							scope:current_province = {
+								add_province_modifier = extra_building_slot
+							}
+						}
+					}
+
+				}
+			}
+		}
+		else = {
+			custom_tooltip = improve_city_province_decision_decision_no_effect
+		}
+	}
+
+	cost = {
+		gold = {
+			value = improve_city_province_decision_cost
+			multiply = {
+				value = 1
+				every_sub_realm_county = {
+					# only county directly own by the character
+					limit = { holder = root }
+					every_county_province = {
+						limit = {
+							building_slots <= 5
+							is_urban_trigger = yes
+						}
+						add = 1
+					}
+				}
+			}
+		}
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		is_at_war = no
+		# Has enough gold.
+		short_term_gold >= ai_war_chest_desired_gold_value
+		NOR = {
+			has_trait = lazy
+			has_trait = callous
+		}
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

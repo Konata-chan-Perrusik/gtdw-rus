@@ -1,0 +1,538 @@
+﻿colonize_wasteland_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+	use_diplomatic_range = no
+
+	desc = colonize_wasteland_interaction_desc
+
+	target_type = title
+	target_filter = recipient_domain_titles
+	
+	auto_accept = yes
+	
+	is_shown = {
+		#can_do_diplomacy_trigger = yes
+		scope:actor = {
+			is_ai = no
+			NOT = { government_has_flag = government_is_wasteland }
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		trigger_if = {
+			limit = { NOT = { scope:actor.culture = { has_cultural_tradition = tradition_wasteland_reclaimers } } }
+			scope:actor = { GH_is_any_tribal_government_trigger = no }
+		}
+	}
+	
+	can_be_picked_title = {
+		scope:target.holder = { has_trait = gh_wasteland }
+	}
+
+	has_valid_target_showing_failures_only = {
+		scope:target = { tier = tier_county }
+		trigger_if = { # Laamps can only colonize the county they are in
+			limit = { scope:actor = { is_landed = no } }
+			custom_description = {
+				text = "colonize_wasteland_interaction_distant_landless"
+				scope:actor.location.county = scope:target
+			}
+		}
+		trigger_else_if = { # Target is landlocked and does not border actor's non-colonial realm
+			limit = { scope:target = { is_coastal_county = no } }
+			custom_description = {
+				text = "colonize_wasteland_interaction_no_land_connection"
+				scope:target = {
+					any_neighboring_county = {
+						holder = {
+							OR = {
+								this = scope:actor
+								any_liege_or_above = { this = scope:actor }
+							}
+						}
+						title_province = { NOT = { has_holding_type = colony_holding } }
+					}
+				}
+			}
+		}
+		trigger_else_if = { # Target is overseas and actor is landlocked
+			limit = {
+				scope:actor = {
+					NOT = {
+						any_sub_realm_county = {
+							is_coastal_county = yes
+							title_province = { NOT = { has_holding_type = colony_holding } }
+						}
+					}
+				}
+			}
+			custom_description = {
+				text = "colonize_wasteland_interaction_landlocked_actor"
+				always = no
+			}
+		}
+		trigger_else_if = { # Target is overseas and is beyond actor's colonization range
+			limit = {
+				NOT = {
+					scope:target = {
+						any_neighboring_county = {
+							holder = {
+								OR = {
+									this = scope:actor
+									any_liege_or_above = { this = scope:actor }
+								}
+							}
+							title_province = { NOT = { has_holding_type = colony_holding } }
+						}
+					}
+				}
+			}
+			custom_description = {
+				text = "colonize_wasteland_interaction_beyond_colonization_range"
+				scope:actor = {
+					any_sub_realm_county = {
+						is_coastal_county = yes
+						title_province = { NOT = { has_holding_type = colony_holding } }
+						squared_distance = {
+							target = scope:target
+							value <= colonization_range_value_squared
+						}
+					}
+				}
+			}
+		}
+		trigger_else = { } # Error log negation
+		custom_description = { # Must be above habitability threshold
+			text = "colonize_wasteland_interaction_below_habitability_threshold"
+			scope:actor.colonization_threshold_value <= scope:target.county_habitability_value
+		}
+		trigger_if = {
+			limit = {
+				scope:actor = {
+					culture = { has_cultural_tradition = tradition_wasteland_reclaimers }
+					GH_is_any_tribal_government_trigger = yes
+				}
+			}
+			scope:actor.prestige >= scope:target.colonization_cost_value
+
+		}
+		trigger_else = { scope:actor.gold >= scope:target.colonization_cost_value }
+	}
+	
+	cost = {
+		prestige = {
+			value = scope:target.colonization_cost_value
+			if = {
+				limit = { scope:actor = { GH_is_any_tribal_government_trigger = no } }
+				multiply = 0
+			}
+		}
+		gold = {
+			value = scope:target.colonization_cost_value
+			if = {
+				limit = { scope:actor = { GH_is_any_tribal_government_trigger = yes } }
+				multiply = 0
+			}
+		}
+	}
+
+	on_accept = {
+		scope:target = {
+			if = {
+				limit = { title_province = { has_holding_type = ruin_holding } }
+				if = {
+					limit = { scope:actor = { has_perk = legacy_of_eons_perk } }
+					add_county_modifier = {
+						modifier = legacy_of_eons_modifier
+						years = 50
+					}
+				}
+				add_county_modifier = settling_ruins_modifier
+				set_variable = {
+					name = overridden_holding_type
+					value = flag:ruin
+				}
+			}
+			else_if = {
+				limit = { title_province = { has_holding_type = ruined_district_holding } }
+				if = {
+					limit = { scope:actor = { has_perk = legacy_of_eons_perk } }
+					add_county_modifier = {
+						modifier = legacy_of_eons_modifier
+						years = 50
+					}
+				}
+				add_county_modifier = settling_ruins_modifier
+				set_variable = {
+					name = overridden_holding_type
+					value = flag:ruined_district_holding
+				}
+			}
+			hidden_effect = {
+				set_county_faith = scope:actor.faith
+				set_county_culture = scope:actor.culture
+				title_province = { set_holding_type = colony_holding }
+				every_county_province = {
+					limit = {
+						NOT = { this = scope:target.title_province }
+						has_holding_type = wasteland_empty_holding
+					}
+					scope:actor = {
+						send_interface_message = {
+							type = event_colonization_good_with_text
+							title = colonization_discovered_ruin_title
+							desc = colonization_discovered_ruin_desc
+							left_icon = scope:target
+						}
+					}
+					set_holding_type = ruin_holding
+				}
+			}
+			custom_tooltip = colonization_settlers_info
+		}
+		scope:actor = {
+			hidden_effect = {
+				get_title = scope:target
+				send_interface_toast = {
+					title = gh_colonize_wasteland_title
+					left_icon = scope:target
+					custom_tooltip = gh_colonize_wasteland_tt
+					hidden_effect = { get_title = scope:target }
+					set_variable = {
+						name = colonization_target
+						value = scope:target
+					}
+					create_story = story_cycle_colonization
+				}
+			}
+			custom_tooltip = start_colonization
+		}
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+ai_colonize_wasteland_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+	use_diplomatic_range = no
+
+	desc = colonize_wasteland_interaction_desc
+
+	target_type = title
+	target_filter = recipient_domain_titles
+	
+	auto_accept = yes
+
+	ai_potential = {
+		is_independent_ruler = yes
+		any_neighboring_top_liege_realm_owner = { has_trait = gh_wasteland }
+		OR = {
+			culture = { has_cultural_tradition = tradition_wasteland_reclaimers }
+			GH_is_any_tribal_government_trigger = no
+		}
+		is_physically_able_adult = yes
+		is_at_war = no
+		NOT = { any_owned_story = { story_type = story_cycle_colonization } }
+	}
+	
+	is_shown = {
+		#can_do_diplomacy_trigger = yes
+		scope:actor = {
+			is_ai = yes
+			NOT = { government_has_flag = government_is_wasteland }
+		}
+	}
+
+	can_be_picked_title = {
+		scope:target = {
+			holder = { has_trait = gh_wasteland }
+			tier = tier_county
+			is_neighbor_to_realm = scope:actor
+			any_neighboring_county = {
+					holder = {
+						OR = {
+							this = scope:actor
+							any_liege_or_above = { this = scope:actor }
+						}
+					}
+					title_province = { NOT = { has_holding_type = colony_holding } }
+				}
+			county_habitability_value >= scope:actor.colonization_threshold_value
+		}
+	}
+
+	ai_set_target = {
+		scope:recipient = {
+			every_realm_county = { add_to_list = colonization_targets }
+			ordered_in_list = {
+				list = colonization_targets
+				order_by = county_habitability_value
+				save_scope_as = target
+			}
+		}
+	}
+	
+	cost = {
+		prestige = {
+			value = scope:target.colonization_cost_value
+			if = {
+				limit = { scope:actor = { GH_is_any_tribal_government_trigger = no } }
+				multiply = 0
+			}
+		}
+		gold = {
+			value = scope:target.colonization_cost_value
+			if = {
+				limit = { scope:actor = { GH_is_any_tribal_government_trigger = yes } }
+				multiply = 0
+			}
+		}
+	}
+
+	on_accept = {
+		scope:target = {
+			if = {
+				limit = { title_province = { has_holding_type = ruin_holding } }
+				if = {
+					limit = { scope:actor = { has_perk = legacy_of_eons_perk } }
+					add_county_modifier = {
+						modifier = legacy_of_eons_modifier
+						years = 50
+					}
+				}
+				add_county_modifier = settling_ruins_modifier
+				set_variable = {
+					name = overridden_holding_type
+					value = flag:ruin
+				}
+			}
+			else_if = {
+				limit = { title_province = { has_holding_type = ruined_district_holding } }
+				if = {
+					limit = { scope:actor = { has_perk = legacy_of_eons_perk } }
+					add_county_modifier = {
+						modifier = legacy_of_eons_modifier
+						years = 50
+					}
+				}
+				add_county_modifier = settling_ruins_modifier
+				set_variable = {
+					name = overridden_holding_type
+					value = flag:ruined_district_holding
+				}
+			}
+			set_county_faith = scope:actor.faith
+			set_county_culture = scope:actor.culture
+			title_province = { set_holding_type = colony_holding }
+			every_county_province = {
+				limit = {
+					NOT = { this = scope:target.title_province }
+					has_holding_type = wasteland_empty_holding
+				}
+				set_holding_type = ruin_holding
+			}
+		}
+		scope:actor = {
+			get_title = scope:target
+			set_variable = {
+				name = colonization_target
+				value = scope:target
+			}
+			create_story = story_cycle_colonization
+			custom_tooltip = start_colonization
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		max = 10
+	}
+	ai_frequency = 168
+
+	ai_will_do = {
+		base = 20
+		modifier = {
+			add = 20
+			scope:actor = { highest_held_title_tier >= tier_duchy }
+		}
+		modifier = {
+			add = 20
+			scope:actor = { highest_held_title_tier >= tier_kingdom }
+		}
+		modifier = {
+			add = 20
+			scope:actor = { highest_held_title_tier = tier_empire }
+		}
+		modifier = {
+			add = 40
+			scope:actor = { NOT = { any_neighboring_top_liege_realm_owner = { NOT = { has_trait = gh_wasteland } } } }
+		}
+	}
+}
+
+abandon_colony_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+
+	desc = abandon_colony_interaction_desc
+
+	target_type = title
+	target_filter = actor_domain_titles
+	
+	auto_accept = yes
+	
+	is_shown = {
+		scope:recipient = {
+			OR = {
+				this = scope:actor
+				AND = {
+					highest_held_title_tier = tier_barony
+					is_vassal_of = scope:actor
+				}
+			}
+		}
+	}
+	
+	can_be_picked_title = {
+		scope:target = {
+			trigger_if = {
+				limit = { tier = tier_county }
+				title_province = { has_holding_type = colony_holding }
+			}
+			trigger_else = {
+				custom_description = {
+					text = "colonize_holding_interaction_title_not_county_or_below"
+					always = no
+				}
+			}
+		}
+	}
+	
+	has_valid_target_showing_failures_only = {
+		always = yes
+	}
+
+	on_accept = {
+		custom_tooltip = abandon_colonization
+		hidden_effect = {
+			spawn_ruin = { COUNTY = scope:target }
+			scope:actor = {
+				random_owned_story = {
+					limit = {
+						story_type = story_cycle_colonization
+						var:county_being_colonized = scope:target
+					}
+					end_story = yes
+				}
+				if = {
+					limit = { scope:recipient = { NOT = { this = scope:actor } } }
+					add_courtier = scope:recipient
+				}
+				send_interface_toast = {
+					title = gh_abandon_colony_title
+					left_icon = scope:target
+					custom_tooltip = gh_abandon_colony_tt
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+ai_settle_ruin_interaction = {
+	category = interaction_category_uncategorized
+	hidden = yes
+
+	target_type = title
+	target_filter = actor_domain_titles
+	
+	auto_accept = yes
+
+	ai_potential = {
+		any_held_title = {
+			tier = tier_barony
+			title_province = { has_holding_type = ruin_holding }
+		}
+		GH_is_any_tribal_government_trigger = no
+		is_at_war = no
+	}
+	
+	is_shown = {
+		#can_do_diplomacy_trigger = yes
+		scope:actor = { is_ai = yes }
+	}
+
+	can_be_picked_title = {
+		scope:target = {
+			holder = { this = scope:actor }
+			tier = tier_barony
+			title_province = { has_holding_type = ruin_holding }
+		}
+	}
+	
+	cost = {
+		gold = 250
+	}
+
+	on_accept = {
+		scope:target = {
+			random_list = {
+				10 = {
+					trigger = {
+						county = {
+							OR = {
+								NOT = { any_county_province = { has_holding_type = castle_holding } }
+								AND = {
+									any_county_province = { has_holding_type = city_holding }
+									any_county_province = { has_holding_type = church_holding }
+								}
+							}
+						}
+					}
+					title_province = { set_holding_type = castle_holding }
+				}
+				10 = {
+					trigger = {
+						county = {
+							OR = {
+								NOT = { any_county_province = { has_holding_type = city_holding } }
+								AND = {
+									any_county_province = { has_holding_type = castle_holding }
+									any_county_province = { has_holding_type = church_holding }
+								}
+							}
+						}
+					}
+					title_province = { set_holding_type = city_holding }
+				}
+				10 = {
+					trigger = {
+						county = {
+							OR = {
+								NOT = { any_county_province = { has_holding_type = church_holding } }
+								AND = {
+									any_county_province = { has_holding_type = castle_holding }
+									any_county_province = { has_holding_type = city_holding }
+								}
+							}
+						}
+					}
+					title_province = { set_holding_type = church_holding }
+				}
+			}
+		}
+	}
+
+	ai_targets = { ai_recipients = self }
+	ai_frequency = 168
+
+	ai_will_do = {
+		base = 20
+	}
+}

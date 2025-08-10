@@ -1,0 +1,337 @@
+﻿has_patron_saints_scripted_gui = {
+	scope = faith
+	
+	is_shown = {
+		has_variable_list = patron_saint_list
+	}
+	
+	effect = {
+		
+	}
+}
+
+has_patron_saints_view_only_scripted_gui = {
+	scope = faith
+	
+	is_shown = {
+		has_variable_list = patron_saint_view_only_list
+		any_in_list = {
+			variable = patron_saint_view_only_list
+			exists = this
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+patron_saint_cooldown_check = {
+	scope = character
+	is_shown = { }
+	is_valid = {
+		NOT = {
+			has_variable = patron_saint_change_cooldown
+		}
+	}
+	effect = { }
+}
+
+character_has_level_or_above_patron_saint_check = {
+	scope = province
+	
+	is_shown = {
+		save_temporary_scope_as = relevant_patron_saint
+		scope:player_viewing_patron_saints = {
+			OR = {
+				AND = {
+					scope:patron_saint_level_being_checked <= 1
+					is_target_in_variable_list = {
+						name = character_patron_saint_level_1_list
+						target = scope:relevant_patron_saint
+					}
+				}
+				AND = {
+					scope:patron_saint_level_being_checked <= 2
+					is_target_in_variable_list = {
+						name = character_patron_saint_level_2_list
+						target = scope:relevant_patron_saint
+					}
+				}
+				AND = {
+					scope:patron_saint_level_being_checked <= 3
+					is_target_in_variable_list = {
+						name = character_patron_saint_level_3_list
+						target = scope:relevant_patron_saint
+					}
+				}
+				AND = {
+					scope:patron_saint_level_being_checked <= 4
+					is_target_in_variable_list = {
+						name = character_patron_saint_level_4_list
+						target = scope:relevant_patron_saint
+					}
+				}
+				is_target_in_variable_list = {
+					name = character_patron_saint_level_5_list
+					target = scope:relevant_patron_saint
+				}
+			}
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+adopt_patron_saint_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = relevant_patron_saint
+		custom_description = {
+			text = "patron_saint_change_cooldown"
+			subject = this
+			scope:player_viewing_patron_saints = {
+				NOR = {
+					has_variable = patron_saint_change_cooldown
+					is_target_in_variable_list = {
+						name = character_patron_saint_list
+						target = scope:relevant_patron_saint
+					}
+				}
+			}
+		}
+		faith_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint FAITH = scope:player_viewing_patron_saints.faith }
+		scope:player_viewing_patron_saints = {
+			character_can_have_more_patron_saints = yes
+			character_can_take_relevant_patron_saint_level = { LEVEL = 1 }
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_patron_saints }
+			save_scope_as = relevant_patron_saint
+			scope:player_viewing_patron_saints = {
+				adopt_patron_saint_effect = { PATRON_SAINT = scope:relevant_patron_saint }
+			}
+		}
+	}
+}
+
+increase_devotion_level_2_patron_saint_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = relevant_patron_saint
+		faith_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint FAITH = scope:player_viewing_patron_saints.faith }
+
+		scope:player_viewing_patron_saints = {
+			custom_description = {
+				text = "character_cannot_take_more_patron_saints_desc"
+				OR = {
+					character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint }
+					character_can_have_more_patron_saints_raw = yes
+				}
+			}
+			general_patron_saint_requirement_trigger = { LEVEL = 2 }
+			character_can_have_patron_saint_level = { LEVEL = 2 }
+			character_can_take_relevant_patron_saint_level = { LEVEL = 2 }
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_patron_saints }
+			save_scope_as = relevant_patron_saint
+			scope:player_viewing_patron_saints = {
+				if = {
+					limit = { 
+						NOT = { character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint } } 
+					}
+				adopt_patron_saint_raw_effect = { PATRON_SAINT = scope:relevant_patron_saint }
+				}
+				patron_saint_modifier_effect = { MODE = set_valid_level_2 PATRON_SAINT = scope:relevant_patron_saint }
+			}
+		}
+	}
+}
+
+increase_devotion_level_3_patron_saint_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = relevant_patron_saint
+		faith_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint FAITH = scope:player_viewing_patron_saints.faith }
+		scope:player_viewing_patron_saints = {
+			custom_description = {
+				text = "character_cannot_take_more_patron_saints_desc"
+				OR = {
+					character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint }
+					character_can_have_more_patron_saints_raw = yes
+				}
+			}
+			general_patron_saint_requirement_trigger = { LEVEL = 3 }
+			character_can_have_patron_saint_level = { LEVEL = 3 }
+			character_can_take_relevant_patron_saint_level = { LEVEL = 3 }
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_patron_saints }
+			save_scope_as = relevant_patron_saint
+			scope:player_viewing_patron_saints = {
+				if = {
+					limit = { 
+						NOT = { character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint } } 
+					}
+				adopt_patron_saint_raw_effect = { PATRON_SAINT = scope:relevant_patron_saint }
+				}
+				patron_saint_modifier_effect = { MODE = set_valid_level_3 PATRON_SAINT = scope:relevant_patron_saint }
+			}
+		}
+	}
+}
+
+increase_devotion_level_4_patron_saint_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = relevant_patron_saint
+		faith_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint FAITH = scope:player_viewing_patron_saints.faith }
+		scope:player_viewing_patron_saints = {
+			custom_description = {
+				text = "character_cannot_take_more_patron_saints_desc"
+				OR = {
+					character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint }
+					character_can_have_more_patron_saints_raw = yes
+				}
+			}
+			general_patron_saint_requirement_trigger = { LEVEL = 4 }
+			character_can_have_patron_saint_level = { LEVEL = 4 }
+			character_can_take_relevant_patron_saint_level = { LEVEL = 4 }
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_patron_saints }
+			save_scope_as = relevant_patron_saint
+			scope:player_viewing_patron_saints = {
+				if = {
+					limit = { 
+						NOT = { character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint } } 
+					}
+				adopt_patron_saint_raw_effect = { PATRON_SAINT = scope:relevant_patron_saint }
+				}
+				patron_saint_modifier_effect = { MODE = set_valid_level_4 PATRON_SAINT = scope:relevant_patron_saint }
+			}
+		}
+	}
+}
+
+increase_devotion_level_5_patron_saint_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = relevant_patron_saint
+		faith_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint FAITH = scope:player_viewing_patron_saints.faith }
+		scope:player_viewing_patron_saints = {
+			custom_description = {
+				text = "character_cannot_take_more_patron_saints_desc"
+				OR = {
+					character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint }
+					character_can_have_more_patron_saints_raw = yes
+				}
+			}
+			general_patron_saint_requirement_trigger = { LEVEL = 5 }
+			character_can_have_patron_saint_level = { LEVEL = 5 }
+			character_can_take_relevant_patron_saint_level = { LEVEL = 5 }
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:player_viewing_patron_saints }
+			save_scope_as = relevant_patron_saint
+			scope:player_viewing_patron_saints = {
+				if = {
+					limit = { 
+						NOT = { character_has_patron_saint = { PATRON_SAINT = scope:relevant_patron_saint } } 
+					}
+				adopt_patron_saint_raw_effect = { PATRON_SAINT = scope:relevant_patron_saint }
+				}
+				patron_saint_modifier_effect = { MODE = set_valid_level_5 PATRON_SAINT = scope:relevant_patron_saint }
+			}
+		}
+	}
+}
+
+
+renounce_patron_saint_scripted_gui = {
+	scope = province
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = "patron_saint_change_cooldown"
+			subject = this
+			scope:player_viewing_patron_saints = {
+				NOT = {
+					has_variable = patron_saint_change_cooldown
+				}
+			}
+		}
+	}
+	
+	effect = {
+		if = {
+			save_temporary_scope_as = relevant_patron_saint
+			limit = { exists = scope:player_viewing_patron_saints }
+			scope:player_viewing_patron_saints = {
+				renounce_patron_saint_effect = { PATRON_SAINT = scope:relevant_patron_saint }
+			}
+		}
+	}
+}
+
+character_has_this_patron_saint_saint_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		exists = scope:player_viewing_patron_saints
+		scope:player_viewing_patron_saints = {
+			has_variable_list = character_patron_saint_list
+			any_in_list = {
+					variable = character_patron_saint_list
+					this = root
+			}
+		}
+	}
+	
+	is_valid = {
+	}
+	
+	effect = {
+	}
+}

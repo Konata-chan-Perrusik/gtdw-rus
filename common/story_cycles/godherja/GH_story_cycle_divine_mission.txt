@@ -1,0 +1,94 @@
+﻿story_divine_mission = {
+
+	on_setup = {
+		set_variable = {
+			name = mission_timer_stage
+			value = 10
+		}
+		set_variable = {
+			name = mission_timer_total
+			value = {
+				value = var:mission_timer_stage
+				multiply = 4
+			}
+		}
+		set_variable = {
+			name = mission_punishment_level
+			value = 0
+		}
+	}
+
+	on_end = {
+		if = {
+			limit = { story_owner = { is_alive = yes } }
+			story_owner = {
+				remove_list_variable = {
+					name = ongoing_missions
+					target = root
+				}
+				if = {
+					limit = { has_character_modifier = redlander_punishment_1 }
+					remove_character_modifier = redlander_punishment_1
+				}
+				else_if = {
+					limit = { has_character_modifier = redlander_punishment_2 }
+					remove_character_modifier = redlander_punishment_2
+				}
+				else_if = {
+					limit = { has_character_modifier = redlander_punishment_3 }
+					remove_character_modifier = redlander_punishment_3
+				}
+			}
+		}
+	}
+
+	on_owner_death = {
+		end_story = yes
+	}
+	
+	effect_group = {
+		years = 1
+
+		first_valid = {
+			triggered_effect = { # Mission done
+				trigger = {
+					exists = var:completed_subtasks
+					trigger_if = {
+						limit = { exists = var:mission_multiplicity }
+						var:completed_subtasks >= var:mission_multiplicity
+					}
+				}
+				effect = {
+					save_scope_as = mission_scope
+					story_owner = { trigger_event = blackspawn.0011 }
+				}
+			}
+			triggered_effect = { # The gods are waiting
+				trigger = { always = yes }
+				effect = {
+					change_variable = {
+						name = mission_timer_stage
+						add = -1
+					}
+					change_variable = {
+						name = mission_timer_total
+						add = -1
+					}
+					if = {
+						limit = { var:mission_timer_stage <= 0 }
+						change_variable = {
+							name = mission_timer_stage
+							add = 10
+						}
+						change_variable = {
+							name = mission_punishment_level
+							add = 1
+						}
+						scope:story = { save_scope_as = mission_scope }
+						story_owner = { trigger_event = blackspawn.0012 }
+					}
+				}
+			}
+		}
+	}
+}

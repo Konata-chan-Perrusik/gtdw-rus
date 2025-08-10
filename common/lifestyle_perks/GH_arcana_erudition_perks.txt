@@ -1,0 +1,223 @@
+﻿arcana_erudition_perk3_tree3 = { # Better Court Magi
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 0 0 }
+	icon = node_martial
+
+	auto_selection_weight = {
+		value = 11
+		if = {
+			limit = {
+				has_trait = education_arcana
+			}
+			add = 1989
+		}
+		if = {
+			limit = {
+				has_focus = arcana_erudition_focus
+			}
+			multiply = 5
+		}
+		if = {
+			limit = {
+				can_start_new_lifestyle_tree_trigger = no
+			}
+			multiply = 0
+		}
+		if = {
+			limit = {
+				faith = { has_doctrine_parameter = magic_illegal }
+			}
+			multiply = 0
+		}
+	}
+
+	can_be_picked = {
+		NOT = { faith = { has_doctrine_parameter = magic_illegal } }
+	}
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_better_court_magi_perk_effect
+		}
+		custom_description_no_bullet = {
+			text = arcana_realm_power_court_magi_bonus_perk_effect
+		}
+	}
+}
+
+arcana_erudition_perk2_tree3 = { # Cheaper Magi MAA, Dev Bonus
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 2 0 }
+	icon = node_martial
+
+	auto_selection_weight = {
+		value = 11
+		if = {
+			limit = {
+				has_trait = education_arcana
+			}
+			add = 1989
+		}
+		if = {
+			limit = {
+				has_focus = arcana_erudition_focus
+			}
+			multiply = 5
+		}
+		if = {
+			limit = {
+				can_start_new_lifestyle_tree_trigger = no
+			}
+			multiply = 0
+		}
+		if = {
+			limit = {
+				faith = { has_doctrine_parameter = magic_illegal }
+			}
+			multiply = 0
+		}
+	}
+
+	can_be_picked = {
+		NOT = { faith = { has_doctrine_parameter = magic_illegal } }
+	}
+
+	character_modifier = {
+		magi_recruitment_cost_mult = -0.25
+		character_capital_county_monthly_development_growth_add = 0.2
+	}
+}
+
+arcana_erudition_perk6_tree3 = { # Better Arcana Wards
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 1 1 }
+	icon = node_martial
+	parent = arcana_erudition_perk3_tree3
+	parent = arcana_erudition_perk2_tree3
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_better_wards_perk_effect
+		}
+		custom_description_no_bullet = {
+			text = arcana_erudition_access_to_teach_scheme_tt
+		}
+	}	
+}
+
+
+arcana_erudition_perk7_tree3 = {
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 0 2 }
+	icon = node_martial
+	parent = arcana_erudition_perk6_tree3
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_erudition_runologic_geometry_perk_effect
+		}
+	}
+}
+
+arcana_erudition_perk1_tree3 = {
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 2 2 }
+	icon = node_martial
+	parent = arcana_erudition_perk6_tree3
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_erudition_experimentation_perk_effect
+		}
+	}
+}
+
+
+arcana_erudition_perk5_tree3 = { # Bonus to Learn Spell Scheme, Bonus to Stealing Spells Stealthly, Can search for magic-related items specifically in adventure inspirations
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 1 3 }
+	icon = node_martial
+
+	parent = arcana_erudition_perk7_tree3
+	parent = arcana_erudition_perk1_tree3
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_erudition_scholarship_perk_effect
+		}
+		custom_description_no_bullet = {
+			text = arcana_erudition_magic_knowledge_adventure_inspiration_perk_effect
+		}
+	}
+}
+
+arcana_erudition_perk8_tree3 = { # Grimoire Interpretation, Access Court Magi Research Task
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 0 4 }
+	icon = node_martial
+	parent = arcana_erudition_perk5_tree3
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = { #GH_URGENT: Once Grimoire Research is implemented this needs to be updated!!
+		custom_description_no_bullet = {
+			text = arcana_erudition_research_magic_access_perk_effect
+		}
+	}
+}
+
+arcana_erudition_perk4_tree3 = { # Better Arcane vassal opinion, maint cost 
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 2 4 }
+	icon = node_martial
+	parent = arcana_erudition_perk5_tree3
+
+	can_be_picked = {
+		always = yes
+	}
+
+	character_modifier = {
+		magi_maintenance_mult = -0.2
+		magic_focused_opinion = 20
+	}
+}
+
+arcana_erudition_perk9_tree3 = { # Second School
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree3
+	position = { 1 5 }
+	icon = trait_administrator
+	parent = arcana_erudition_perk8_tree3
+	parent = arcana_erudition_perk4_tree3
+
+	can_be_picked = {
+		always = yes
+	}
+
+	trait = gh_sage
+	effect = {
+		add_trait_force_tooltip = gh_sage
+	}
+}

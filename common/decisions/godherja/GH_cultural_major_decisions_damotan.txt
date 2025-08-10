@@ -1,0 +1,107 @@
+﻿#DAMOTAN DECISIONS
+
+reunite_boqqarut_decision = { #makes Damota have regular de jure borders and gets rid of the split titles, definetely not the Aversaria one copy-pasted
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ruins.dds"
+	}
+	decision_group_type = damotan
+	ai_check_interval = 120
+	desc = reunite_boqqarut_decision_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_damotan }
+		has_religion = religion:mogowai_religion
+		NOR = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reunite_boqqarut_decision
+			}
+		}
+	}
+	
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_damotan }
+		
+		custom_description = {
+			text = reunite_boqqarut_valid_desc
+			completely_controls_region = world_es_core_damota
+		}
+		
+		has_primary_title = title:e_damota
+	}
+	
+	effect = {
+		save_scope_as = damota_uniter
+		
+		custom_description = {
+			text = reunite_boqqarut_descision_effects
+		}
+		
+		trigger_event = damota.0001
+		every_player = {
+			limit = {
+				NOT = { this = scope:damota_uniter }
+				is_within_diplo_range = { CHARACTER = scope:damota_uniter }
+			}
+			trigger_event = damota.0002
+		}
+		
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reunite_boqqarut_decision
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+avenge_ayule_expedition_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ruins.dds"
+	}
+	decision_group_type = damotan
+	ai_check_interval = 120
+	desc = avenge_ayule_expedition_decision_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_damotan }
+		has_primary_title = title:e_damota
+		NOR = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:avenge_ayule_expedition_decision
+			}
+		}
+	}
+	
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_damotan }
+		
+		completely_controls_region =  world_es_ayule_decision
+	}
+	
+	effect = {		
+		show_as_tooltip = { avenge_ayule_expedition_decision_effects = yes }
+
+		avenge_ayule_expedition_decision_effects = yes
+		
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:avenge_ayule_expedition_decision
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

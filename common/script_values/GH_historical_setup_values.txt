@@ -1,0 +1,153 @@
+﻿
+# Slow historical development growth; use this should generally be the 'default' value
+historical_development_growth_slow_value = {
+	if = {
+		limit = { 
+			title_province = {
+				OR = {
+					GH_any_farmlands_terrain_trigger = yes
+					GH_any_floodplains_terrain_trigger = yes
+					GH_any_oasis_terrain_trigger = yes
+				}				
+			} 
+		}
+		value = 4
+	}
+	else_if = {
+		limit = { 
+			title_province = {
+				OR = {
+					GH_any_desert_terrain_trigger = yes
+					GH_any_mountains_terrain_trigger = yes
+					GH_any_jungle_terrain_trigger = yes
+				}				
+			} 
+		}
+		value = 1
+	}
+	else_if = {
+		limit = {
+			title_province = {
+				OR = {
+					GH_any_hills_terrain_trigger = yes
+					GH_any_wetlands_terrain_trigger = yes
+					GH_any_steppe_terrain_trigger = yes
+				}
+			}
+		}
+		value = 1.5
+	}
+	else = {
+		value = 2
+	}
+	if = {
+		limit = { title_province = { has_holding_type = metro_holding } }
+		if = {
+			limit = { holder = { highest_held_title_tier = tier_empire } } # Imperial capitals should get a slightly larger boost
+			multiply = 1.75
+		}
+		else = { multiply = 1.5 }
+	}
+}
+
+# Medium historical development growth; use this for regions that are undergoing a period of significant prosperity
+historical_development_growth_medium_value = {
+	if = {
+		limit = { 
+			title_province = {
+				OR = {
+					GH_any_farmlands_terrain_trigger = yes
+					GH_any_floodplains_terrain_trigger = yes
+					GH_any_oasis_terrain_trigger = yes
+				}				
+			} 
+		}
+		value = 10
+	}
+	else_if = {
+		limit = { 
+			title_province = {
+				OR = {
+					GH_any_desert_terrain_trigger = yes
+					GH_any_mountains_terrain_trigger = yes
+					GH_any_jungle_terrain_trigger = yes
+				}				
+			} 
+		}
+		value = 3
+	}
+	else_if = {
+		limit = {
+			title_province = {
+				OR = {
+					GH_any_hills_terrain_trigger = yes
+					GH_any_wetlands_terrain_trigger = yes
+					GH_any_steppe_terrain_trigger = yes
+				}
+			}
+		}
+		value = 4
+	}
+	else = {
+		value = 5
+	}
+	if = {
+		limit = { title_province = { has_holding_type = metro_holding } }
+		if = {
+			limit = { holder = { highest_held_title_tier = tier_empire } } # Imperial capitals should get a slightly larger boost
+			multiply = 1.75
+		}
+		else = { multiply = 1.5 }
+	}
+}
+
+# High historical development growth; use this for regions that are undergoing an incredibly prosperous golden age
+historical_development_growth_high_value = {
+	if = {
+		limit = { 
+			title_province = {
+				OR = {
+					GH_any_farmlands_terrain_trigger = yes
+					GH_any_floodplains_terrain_trigger = yes
+					GH_any_oasis_terrain_trigger = yes
+				}				
+			}
+		}
+		value = 20
+	}
+	else_if = {
+		limit = { 
+			title_province = {
+				OR = {
+					GH_any_desert_terrain_trigger = yes
+					GH_any_mountains_terrain_trigger = yes
+					GH_any_jungle_terrain_trigger = yes
+				}				
+			} 
+		}
+		value = 5
+	}
+	else_if = {
+		limit = {
+			title_province = {
+				OR = {
+					GH_any_hills_terrain_trigger = yes
+					GH_any_wetlands_terrain_trigger = yes
+					GH_any_steppe_terrain_trigger = yes
+				}
+			}
+		}
+		value = 7
+	}
+	else = {
+		value = 10
+	}
+	if = {
+		limit = { title_province = { has_holding_type = metro_holding } }
+		if = {
+			limit = { holder = { highest_held_title_tier = tier_empire } } # Imperial capitals should get a slightly larger boost
+			multiply = 1.75
+		}
+		else = { multiply = 1.5 }
+	}
+}

@@ -1,0 +1,54 @@
+﻿odds_skill_contribution_arcana_value = {
+	add = {
+		value = scope:owner.character_arcana_baseline_value
+		desc = scheme_odds.character_arcana_baseline_value.owner
+	}
+	
+	scope:target ?= {
+		add = {
+			value = scope:target.character_arcana_baseline_value
+			desc = scheme_odds.character_arcana_baseline_value.target
+			multiply = -0.5
+		}
+	}
+}
+
+odds_learn_magic_scheme_misc_value = {
+	add = {
+		value = 0
+		desc = scheme_odds.misc_modifiers
+		if = {
+			limit = {
+				exists = scope:owner.cp:councillor_court_magi
+				scope:owner.cp:councillor_court_magi.character_arcana_baseline_value > 10
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:owner.age < 30
+			}
+			add = 8
+		}
+		if = {
+			limit = {
+				scope:owner = {
+					has_perk = pedagogy_perk
+				}
+			}
+			add = 4
+		}
+		if = {
+			limit = {
+				scope:owner = {
+					has_trait = intellect_good_1
+					has_trait = intellect_good_2
+					has_trait = intellect_good_3
+					has_trait = stubborn
+					has_trait = ambitious
+				}
+			}
+			add = 4
+		}
+	}
+}

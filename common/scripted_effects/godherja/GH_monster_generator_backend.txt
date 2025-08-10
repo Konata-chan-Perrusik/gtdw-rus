@@ -1,0 +1,238 @@
+﻿pick_feature_effect = {
+	$NAME$_table_effect = { MODE = set }
+	$NAME$_requirements_table_effect = yes
+	$NAME$_exclusivity_table_effect = yes
+	choose_random_feature_effect = { NAME = $NAME$ }
+}
+
+pick_two_features_effect = {
+	pick_feature_effect = { NAME = $NAME$ }
+	pick_feature_effect = { NAME = $NAME$ }
+}
+
+set_feature_effect = {
+	if = {
+		limit = {
+			NOT = {
+				any_in_list = {
+					list = already_picked_$FEATURE_TYPE$
+					this = $NAME$
+				}
+			}
+		}
+		random = {
+			chance = $CHANCE$
+			add_to_variable_list = { name = possible_$FEATURE_TYPE$ target = $NAME$ }
+		}
+	}
+}
+
+required_feature_effect = {
+	if = {
+		limit = { NOT = { exists = scope:$NAME$_verified } }
+		if = {
+			limit = {  
+				trigger_if = {
+					limit = { has_variable = $REQUIRES_FEATURE_TYPE$ }
+					NOT = {
+						var:$REQUIRES_FEATURE_TYPE$ = $REQUIRES_FEATURE_NAME$
+					}
+					is_target_in_variable_list = {
+						name = possible_$FEATURE_TYPE$
+						target = flag:$NAME$
+					}
+				}
+				trigger_else = { always = no }
+			}
+			remove_list_variable = { name = possible_$FEATURE_TYPE$ target = flag:$NAME$ }
+		}
+		else_if = {
+			limit = {
+				trigger_if = {
+					limit = { has_variable = $REQUIRES_FEATURE_TYPE$ }
+					var:$REQUIRES_FEATURE_TYPE$ = $REQUIRES_FEATURE_NAME$
+				}
+				trigger_else = { always = no }
+			}
+			add_to_variable_list = { name = possible_$FEATURE_TYPE$ target = flag:$NAME$ }
+			save_scope_value_as = {
+				name = $NAME$_verified
+				value = yes
+			}
+		}
+	}
+}
+
+exclusive_feature_effect = {
+	if = {
+		limit = {
+			is_target_in_variable_list = {
+				name = already_picked_$EXCLUDES_FEATURE_TYPE$
+				target = flag:$EXCLUDES_FEATURE_NAME$
+			}
+		}
+		remove_list_variable = { name = possible_$FEATURE_TYPE$ target = flag:$NAME$ }
+	}
+	if = {
+		limit = {
+			is_target_in_variable_list = {
+				name = already_picked_$FEATURE_TYPE$
+				target = flag:$NAME$
+			}
+		}
+		remove_list_variable = { name = possible_$EXCLUDES_FEATURE_TYPE$ target = flag:$EXCLUDES_FEATURE_NAME$ }
+	}
+}
+
+choose_random_feature_effect = {
+	# GH TODO: This is probably broken by the switch to variable lists of flags and might need fixing.
+	random_in_list = {
+		list = possible_$NAME$
+		add_to_list = already_picked_$NAME$
+		root = {
+			if = {
+				limit = { NOT = { exists = var:$NAME$ } }
+				set_variable = {
+					name = $NAME$
+					value = prev
+					days = 5
+				}
+				set_variable = {
+					name = $NAME$_1
+					value = prev
+					days = 5
+				}
+			}
+			else = {
+				set_variable = {
+					name = $NAME$_2
+					value = prev
+					days = 5
+				}
+			}
+		}
+	}
+	# GH TODO: This is probably broken by the switch to variable lists of flags and might need fixing.
+	every_in_list = {
+		list = possible_$NAME$
+		remove_from_list = possible_$NAME$
+	}
+}
+
+mutate_fogbeast_powers_effect = {
+	random_list = {
+		5 = {
+			trigger = { 
+				NOR = { 
+					exists = scope:large
+					exists = scope:huge
+				} 
+			}
+			save_scope_value_as = {
+				name = large
+				value = yes
+			}
+			set_variable = {
+				name = upgraded_power
+				value = flag:large
+				days = 5
+			}
+		}
+		2 = {
+			trigger = { 
+				NOT = { 
+					exists = scope:huge
+				} 
+			}
+			if = {
+				limit = { exists = scope:large }
+				clear_saved_scope = large
+			}
+			save_scope_value_as = {
+				name = huge
+				value = yes
+			}
+			set_variable = {
+				name = upgraded_power
+				value = flag:huge
+				days = 5
+			}
+		}
+		2 = {
+			trigger = { 
+				NOT = { 
+					exists = scope:poisonous
+				} 
+			}
+			save_scope_value_as = {
+				name = poisonous
+				value = yes
+			}
+			set_variable = {
+				name = upgraded_power
+				value = flag:poisonous
+				days = 5
+			}
+			pick_feature_effect = { NAME = poison_delivery_method }
+		}
+	}
+}
+
+#mutate_sea_monsters_effect = {
+#	random_list = {
+#		5 = {
+#			trigger = { 
+#				NOR = { 
+#					exists = scope:large
+#					exists = scope:huge
+#				} 
+#			}
+#			save_scope_value_as = {
+#				name = large
+#				value = yes
+#			}
+#			set_variable = {
+#				name = upgraded_power
+#				value = flag:large
+#				days = 5
+#			}
+#		}
+#		2 = {
+#			trigger = { 
+#				NOT = { 
+#					exists = scope:huge
+#				} 
+#			}
+#			if = {
+#				limit = { exists = scope:large }
+#				clear_saved_scope = large
+#			}
+#			save_scope_value_as = {
+#				name = huge
+#				value = yes
+#			}
+#			set_variable = {
+#				name = upgraded_power
+#				value = flag:huge
+#				days = 5
+#			}
+#		}
+#		2 = {
+#			trigger = { 
+#				NOT = { 
+#					exists = scope:poisonous
+#				} 
+#			}
+#			save_scope_value_as = {
+#				name = poisonous
+#				value = yes
+#			}
+#			set_variable = {
+#				name = upgraded_power
+#				value = flag:poisonous
+#				days = 5
+#			}
+#		}
+#	}
+#}
+#

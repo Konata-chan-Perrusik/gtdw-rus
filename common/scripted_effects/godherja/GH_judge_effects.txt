@@ -1,0 +1,257 @@
+﻿initialize_starting_judges_effect = {
+	faith:hubarism = {
+		set_judge_effect = { JUDGE = character:qushyed_hubarism_1 DIFFICULTY = 0 }	
+		set_judge_effect = { JUDGE = character:qushyed_hubarism_2 DIFFICULTY = 2 }
+		set_judge_effect = { JUDGE = character:mazunic_hubarism_2 DIFFICULTY = 1 }
+		set_judge_effect = { JUDGE = character:qushyed_hubarism_3 DIFFICULTY = 3 }
+		set_judge_effect = { JUDGE = character:qushyed_hubarism_4 DIFFICULTY = 3 }
+		set_judge_effect = { JUDGE = character:qushyed_hubarism_5 DIFFICULTY = 2 }
+		set_judge_effect = { JUDGE = character:mazunic_hubarism_3 DIFFICULTY = 1 }
+	}
+}
+
+valid_judge_traits_effect = {
+	$MODE$_judge_trait_effect = { TRAIT = brave }
+	$MODE$_judge_trait_effect = { TRAIT = craven }
+	$MODE$_judge_trait_effect = { TRAIT = calm }
+	$MODE$_judge_trait_effect = { TRAIT = wrathful }
+	$MODE$_judge_trait_effect = { TRAIT = chaste }
+	$MODE$_judge_trait_effect = { TRAIT = lustful }
+	$MODE$_judge_trait_effect = { TRAIT = content }
+	$MODE$_judge_trait_effect = { TRAIT = ambitious }
+	$MODE$_judge_trait_effect = { TRAIT = diligent }
+	$MODE$_judge_trait_effect = { TRAIT = lazy }
+	$MODE$_judge_trait_effect = { TRAIT = fickle }
+	$MODE$_judge_trait_effect = { TRAIT = stubborn }
+	$MODE$_judge_trait_effect = { TRAIT = forgiving }
+	$MODE$_judge_trait_effect = { TRAIT = vengeful }
+	$MODE$_judge_trait_effect = { TRAIT = generous }
+	$MODE$_judge_trait_effect = { TRAIT = greedy }
+	$MODE$_judge_trait_effect = { TRAIT = gregarious }
+	$MODE$_judge_trait_effect = { TRAIT = shy }
+	$MODE$_judge_trait_effect = { TRAIT = honest }
+	$MODE$_judge_trait_effect = { TRAIT = deceitful }
+	$MODE$_judge_trait_effect = { TRAIT = humble }
+	$MODE$_judge_trait_effect = { TRAIT = arrogant }
+	$MODE$_judge_trait_effect = { TRAIT = just }
+	$MODE$_judge_trait_effect = { TRAIT = arbitrary }
+	$MODE$_judge_trait_effect = { TRAIT = patient }
+	$MODE$_judge_trait_effect = { TRAIT = impatient }
+	$MODE$_judge_trait_effect = { TRAIT = temperate }
+	$MODE$_judge_trait_effect = { TRAIT = gluttonous }
+	$MODE$_judge_trait_effect = { TRAIT = trusting }
+	$MODE$_judge_trait_effect = { TRAIT = paranoid }
+	$MODE$_judge_trait_effect = { TRAIT = zealous }
+	$MODE$_judge_trait_effect = { TRAIT = cynical }
+	$MODE$_judge_trait_effect = { TRAIT = compassionate }
+	$MODE$_judge_trait_effect = { TRAIT = callous }
+	$MODE$_judge_trait_effect = { TRAIT = sadistic }
+}
+
+set_judge_effect = {
+	random_province = {
+		limit = { NOT = { has_variable = judge_character } }
+		save_temporary_scope_as = judge_storage_province
+	}
+	scope:judge_storage_province = {
+		set_variable = {
+			name = judge_character
+			value = $JUDGE$
+		}
+		set_variable = {
+			name = law_code_difficulty
+			value = $DIFFICULTY$
+		}
+		set_variable = {
+			name = law_code_difficulty_threshold
+			value = var:law_code_difficulty
+		}
+		change_variable = {
+			name = law_code_difficulty_threshold
+			multiply = 10
+		}
+		if = {
+			limit = { has_variable = law_code_difficulty }
+			if = {
+				limit = { var:law_code_difficulty >= 3 }
+				set_variable = {
+					name = law_code_difficulty_loc
+					value = flag:high_law_code_difficulty
+				}
+			}
+			else_if = {
+				limit = { var:law_code_difficulty = 2 }
+				set_variable = {
+					name = law_code_difficulty_loc
+					value = flag:medium_law_code_difficulty
+				}
+			}
+			else_if = {
+				limit = { var:law_code_difficulty = 1 }
+				set_variable = {
+					name = law_code_difficulty_loc
+					value = flag:low_law_code_difficulty
+				}
+			}
+			else = {
+				set_variable = {
+					name = law_code_difficulty_loc
+					value = flag:no_law_code_difficulty
+				}
+			}
+		}
+		valid_judge_traits_effect = { MODE = set }
+		setup_judge_loc_effect = yes
+	}
+	add_to_variable_list = {
+		name = judges_list
+		target = scope:judge_storage_province
+	}
+}
+
+set_judge_trait_effect = {
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { has_variable = judge_character }
+				var:judge_character = { has_trait = $TRAIT$ }
+			}
+			trigger_else = { always = no }
+		}
+		add_to_variable_list = {
+			name = judge_traits
+			target = flag:$TRAIT$
+		}
+	}
+}
+
+remove_judge_trait_effect = {
+	if = {
+		limit = {  
+			exists = scope:character_being_assigned_codex
+		}
+		scope:character_being_assigned_codex = {
+			if = {
+				limit = { has_character_modifier = $TRAIT$_judge_modifier_0 }
+				remove_character_modifier = $TRAIT$_judge_modifier_0
+			}
+			if = {
+				limit = { has_character_modifier = $TRAIT$_judge_modifier_1 }
+				remove_character_modifier = $TRAIT$_judge_modifier_1
+			}
+			if = {
+				limit = { has_character_modifier = $TRAIT$_judge_modifier_2 }
+				remove_character_modifier = $TRAIT$_judge_modifier_2
+			}
+			if = {
+				limit = { has_character_modifier = $TRAIT$_judge_modifier_3 }
+				remove_character_modifier = $TRAIT$_judge_modifier_3
+			}
+			if = {
+				limit = { has_character_modifier = $TRAIT$_judge_modifier_4 }
+				remove_character_modifier = $TRAIT$_judge_modifier_4
+			}
+		}
+	}
+}
+
+set_modifier_judge_trait_effect = {
+	if = {
+		limit = {  
+			exists = scope:character_being_assigned_codex
+		}
+		scope:character_being_assigned_codex = {
+			if = {
+				limit = {
+					has_trait = $TRAIT$
+					prev = {
+						any_in_list = {
+							variable = judge_traits
+							this = flag:$TRAIT$
+						}
+					}
+				}
+				if = {
+					limit = { prev.var:law_code_difficulty = 0 }
+					custom_tooltip = codex_synergy_bonus_1
+					add_character_modifier = $TRAIT$_judge_modifier_1
+				}
+				else_if = {
+					limit = { prev.var:law_code_difficulty = 1 }
+					custom_tooltip = codex_synergy_bonus_2
+					add_character_modifier = $TRAIT$_judge_modifier_2
+				}
+				else_if = {
+					limit = { prev.var:law_code_difficulty = 2 }
+					custom_tooltip = codex_synergy_bonus_3
+					add_character_modifier = $TRAIT$_judge_modifier_3
+				}
+				else_if = {
+					limit = { prev.var:law_code_difficulty = 3 }
+					custom_tooltip = codex_synergy_bonus_4
+					add_character_modifier = $TRAIT$_judge_modifier_4
+				}
+			}
+			else_if = {
+				limit = {
+					prev = {
+						any_in_list = {
+							variable = judge_traits
+							this = flag:$TRAIT$
+						}
+					}
+				}
+				add_character_modifier = $TRAIT$_judge_modifier_0
+			}
+		}
+	}
+}
+
+setup_judge_loc_effect = {
+	if = {
+		limit = { has_variable = judge_character }
+		var:judge_character = {
+			prev = {
+				random_in_list = {
+					variable = judge_traits
+					save_temporary_scope_as = first_loc_trait
+					scope:judge_storage_province = {  
+						set_variable = {
+							name = first_loc_trait
+							value = scope:first_loc_trait
+						}
+					}
+				}
+				random_in_list = {
+					variable = judge_traits
+					limit = {
+						NOT = { this = scope:first_loc_trait }
+					}
+					save_temporary_scope_as = second_loc_trait
+					scope:judge_storage_province = {  
+						set_variable = {
+							name = second_loc_trait
+							value = scope:second_loc_trait
+						}
+					}
+				}
+				random_in_list = {
+					variable = judge_traits
+					limit = {
+						NOR = { 
+							this = scope:first_loc_trait
+							this = scope:second_loc_trait
+						}
+					}
+					save_temporary_scope_as = third_loc_trait
+					scope:judge_storage_province = {  
+						set_variable = {
+							name = third_loc_trait
+							value = scope:third_loc_trait
+						}
+					}
+				}
+			}
+		}
+	}
+}

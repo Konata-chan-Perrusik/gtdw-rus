@@ -1,0 +1,77 @@
+﻿amsari_child_kill_interaction = {
+	category = interaction_category_hostile
+	desc = amsari_child_kill_interaction_desc
+	auto_accept = yes
+
+	is_shown = { #Scope actor = parent  scope recipient = child
+		can_do_diplomacy_trigger = yes
+		NOT = { scope:actor = scope:recipient }
+		scope:actor = {
+			has_title = title:e_amsari
+			any_child = {
+				count >= 3
+			}
+			title:e_amsari = {
+				holder = {
+					culture = { has_cultural_pillar = heritage_zarasadari }
+				}
+			}
+		}
+		scope:recipient = {
+			is_child_of = scope:actor
+			age < 16
+		}
+	}
+
+	on_accept = {
+		scope:recipient = {
+			death = {
+				death_reason = death_strangulation
+				killer = scope:actor
+			}
+		}
+		scope:actor.primary_heir = {
+			if = {
+				limit = {
+					this = scope:recipient
+				}
+				add_opinion = {
+					modifier = supportive_parent
+					target = scope:actor
+				}
+			}
+		}
+		scope:actor = {
+			every_child = {
+				limit = {
+					NOT = {
+						this = scope:actor.primary_heir
+						this = scope:recipient
+					}
+				}
+				add_opinion = { 
+					modifier = supportive_parent
+					target = scope:actor
+				}
+			}
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = children
+		max = 10
+	}
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_frequency = 72
+	
+	ai_potential = {
+		NOT = {
+			this = character:amsari_mahndayana_2
+		}
+		any_child = {
+			count >= 3
+		}
+	}
+}

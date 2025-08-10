@@ -1,0 +1,326 @@
+﻿# if this needs to destroy a title (e.g. a 1-county duke with no vassals), it reads the destroying character from scope:destroyer
+spawn_ruin = {
+	if = {
+		limit = { # Standard checks
+			$COUNTY$ = {
+				tier = tier_county
+				exists = title_province
+			}
+		}
+		create_character = {
+			template = ruin_template
+			location = $COUNTY$.title_province
+			save_scope_as = ruin
+		}
+		# Create an empire-tier title to give the dummy wasteland character in order to ensure he is never anyone's vassal.
+		# This will prevent the wastelanded county from being immediately revoked if it's a 1-county emperor's last county
+		# (since default game behavior is that such an emperor would immediately steal a county from one of their vassals,
+		# of which Count Wasteland briefly is one).
+		# We have to do this instead of granting them independence since independence fires _after_ the revocation, so it never
+		# actually works.
+		hidden_effect = {
+			if = {	# Only create a dynamic title if one such utility title does not already exist, to prevent extreme bloat
+				limit = { NOT = { exists = global_var:wasteland_utility_empire } }
+				create_dynamic_title = { # Always saves to scope:new_title
+					tier = empire
+					name = godherja_generic_adventurer_conquest # Literally any name will do, since this title is immediately destroyed
+				}
+				set_global_variable = {
+					name = wasteland_utility_empire
+					value = scope:new_title
+				}
+			}
+			else = { global_var:wasteland_utility_empire = { save_scope_as = new_title } }
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = setup_change
+				add_claim_on_loss = no
+			}
+			scope:new_title = {
+				set_delete_on_destroy = yes
+				set_capital_county = title:c_niidinos
+				set_landless_title = yes
+				set_no_automatic_claims = yes
+				set_can_be_named_after_dynasty = no
+				change_title_holder = {
+					holder = scope:ruin
+					change = scope:setup_change
+				}
+				save_scope_as = ruin_empire
+			}
+			resolve_title_and_vassal_change = scope:setup_change
+		}
+		$COUNTY$ = {
+			save_temporary_scope_as = ruined_county
+			holder = {
+				save_scope_as = old_holder
+				# First, if this is the last county of a single count, then we destroy any higher titles they may have
+				# (otherwise we won't be able to take their last county from them to give to the dummy wasteland char)
+				if = {
+					limit = { # Doesn't directly hold any counties other than this one
+						NOT = { 
+							any_held_title = {
+								NOT = { this = $COUNTY$ }
+								tier = tier_county
+							} 
+						}
+						vassal_count = 0
+					}
+					every_held_title = { # Destroy all titles above county
+						limit = { tier > tier_county }
+						save_temporary_scope_as = destroyed_title
+						if = {
+							limit = { exists = scope:destroyer }
+							scope:destroyer = { destroy_title = scope:destroyed_title }
+						}
+						else = { scope:ruin = { destroy_title = scope:destroyed_title } }
+					}
+				}
+				# Then, if this is the target of a claim war, end the war (so it isn't inherited by Count Wasteland)
+				every_character_war = {
+					limit = { casus_belli = { any_target_title = { this = $COUNTY$ } } }
+					end_war = invalidated
+				}
+			}
+		
+			# Then do the actual wastelanding, but as a hidden effect (and show a custom tooltip for it instead)
+			custom_tooltip = wasteland_effect_tt
+			hidden_effect = {
+				set_county_culture = culture:wasteland
+				set_county_faith = faith:wasteland_faith
+				change_development_level = -100
+				every_county_province = {
+					limit = { NOT = { this = $COUNTY$.title_province } }
+					scope:ruin = { get_title = prev.barony }
+				}
+				if = { # Wipe various colonization modifiers
+					limit = { title_province = { has_holding_type = colony_holding } }
+					remove_all_colonization_modifiers = yes
+				}
+				every_county_province = {
+					limit = { 
+						OR = {
+							has_holding_type = castle_holding
+							has_holding_type = city_holding
+							has_holding_type = church_holding
+							has_holding_type = tribal_holding
+							has_holding_type = necropolis_holding
+							has_holding_type = colony_holding
+						}
+						has_special_building_slot = no
+					}
+					set_holding_type = wasteland_empty_holding
+				}
+				every_county_province = {
+					limit = { 
+						OR = {
+							has_holding_type = castle_holding
+							has_holding_type = city_holding
+							has_holding_type = church_holding
+							has_holding_type = tribal_holding
+							has_holding_type = necropolis_holding
+							has_holding_type = colony_holding
+						}
+						has_special_building_slot = yes
+					}
+					set_holding_type = ruin_holding
+				}
+				every_county_province = {
+					limit = { is_any_metropolis_district = yes }
+					set_holding_type = ruined_district_holding
+				}
+				if = {
+					limit = { has_county_modifier = settling_ruins_modifier }
+					remove_county_modifier = settling_ruins_modifier
+				}
+				if = {
+					limit = {
+						var:overridden_holding_type ?= flag:ruin
+						title_province = { NOT = { has_holding_type = ruin_holding } }
+					}
+					title_province = { set_holding_type = ruin_holding }
+				}
+				if = {
+					limit = {
+						var:overridden_holding_type ?= flag:ruined_district_holding
+						title_province = { NOT = { has_holding_type = ruined_district_holding } }
+					}
+					title_province = { set_holding_type = ruined_district_holding }
+				}
+			}
+		}
+		hidden_effect = {
+			scope:ruin = { # Clean up the fake empire we created
+				get_title = $COUNTY$
+				destroy_title = scope:ruin_empire
+				change_government = wasteland_government
+			}
+			if = { # Unify wastelands under duchies
+				limit = { $COUNTY$.duchy = { has_variable = duchy_wasteland_title } }
+				$COUNTY$.duchy.var:duchy_wasteland_title = { save_temporary_scope_as = duchy_wasteland_title }
+				if = {
+					limit = { NOT = { exists = scope:duchy_wasteland_title.holder } }
+					scope:ruin = { get_title = scope:duchy_wasteland_title }
+				}
+				else = { scope:duchy_wasteland_title.holder = { get_title = $COUNTY$ } }
+			}
+			else = {
+				$COUNTY$.duchy = { save_scope_as = temporary_duchy_scope }
+				create_dynamic_title = {
+					tier = duchy
+					name = BLANK_KINGDOM_NAME
+				}
+				scope:new_title = {
+					set_capital_county = title:c_the_eternal_grove
+					generate_coa = yes
+					set_color_from_title = title:k_wasteland_black
+				}
+				scope:ruin = { get_title = scope:new_title }
+				$COUNTY$.duchy = { 
+					set_variable = {
+						name = duchy_wasteland_title
+						value = scope:new_title
+					}
+					save_scope_as = last_created_wasteland_duchy
+				}
+			}
+			if = {
+				limit = { exists = scope:ruin.liege }
+				scope:ruin = {
+					create_title_and_vassal_change = {
+						type = independency
+						save_scope_as = change
+					}
+					change_liege_or_become_independent = {
+						CHANGE = scope:change
+						VASSAL = this
+					}
+					resolve_title_and_vassal_change = scope:change
+				}
+			}
+		}
+	}
+}
+
+ruin_county_effect = {	# GH URGENT: Unfuck this convoluted bullshit and remove spawn_ruin
+	save_temporary_scope_as = county_to_ruin_scope
+	spawn_ruin = { COUNTY = scope:county_to_ruin_scope }
+}
+
+remove_ruin = {
+	$COUNTY$ = {
+		every_county_province = {
+			if = {
+				limit = {
+					is_county_capital = yes
+					OR = {
+						has_holding_type = wasteland_empty_holding
+						has_holding_type = ruin_holding
+						has_holding_type = colony_holding
+					}
+				}
+				if = {
+					limit = { prev.holder = { GH_is_any_tribal_government_trigger = yes } }
+					set_holding_type = tribal_holding
+				}
+				else_if = { # To make sure if liches take wastelands they become necropoles not castles
+					limit = { prev.holder = { is_undead = yes } }
+					set_holding_type = necropolis_holding
+				}
+				else = { set_holding_type = castle_holding }
+			}
+			else_if = { # Catch any stray wastelands
+				limit = {
+					is_county_capital = no
+					has_holding_type = wasteland_empty_holding
+				}
+				set_holding_type = ruin_holding
+			}
+		}
+	}
+	if = { # Flip culture and faith if necessary
+		limit = {
+			OR = {
+				culture = culture:wasteland
+				faith = faith:wasteland_faith
+			}
+		}
+		set_county_culture = holder.culture
+		set_county_faith = holder.faith
+	}
+}
+
+remove_colonization_progress_modifiers = { # When finishing colonization
+	if = {
+		limit = { has_county_modifier = colonial_boom_modifier }
+		remove_county_modifier = colonial_boom_modifier
+	}
+	if = {
+		limit = { has_county_modifier = colonial_prosperity_modifier }
+		remove_county_modifier = colonial_prosperity_modifier
+	}
+	if = {
+		limit = { has_county_modifier = bandit_stronghold_modifier }
+		remove_county_modifier = bandit_stronghold_modifier
+	}
+	if = {
+		limit = { has_county_modifier = frontier_banditry_modifier }
+		remove_county_modifier = frontier_banditry_modifier
+	}
+	if = {
+		limit = { has_county_modifier = safe_roads_modifier }
+		remove_county_modifier = safe_roads_modifier
+	}
+	if = {
+		limit = { has_county_modifier = adventurer_patrols_modifier }
+		remove_county_modifier = adventurer_patrols_modifier
+	}
+	if = {
+		limit = { has_county_modifier = acute_food_shortages_modifier }
+		remove_county_modifier = acute_food_shortages_modifier
+	}
+	if = {
+		limit = { has_county_modifier = colonial_mismanagement_modifier }
+		remove_county_modifier = colonial_mismanagement_modifier
+	}
+	if = {
+		limit = { has_county_modifier = monster_infestation_modifier }
+		remove_county_modifier = monster_infestation_modifier
+	}
+	if = {
+		limit = { has_county_modifier = adventurer_influx_modifier }
+		remove_county_modifier = adventurer_influx_modifier
+	}
+	if = {
+		limit = { has_county_modifier = gold_rush_modifier }
+		remove_county_modifier = gold_rush_modifier
+	}
+	if = {
+		limit = { has_county_modifier = migrant_influx_modifier }
+		remove_county_modifier = migrant_influx_modifier
+	}
+	if = {
+		limit = { has_county_modifier = settling_ruins_modifier }
+		remove_county_modifier = settling_ruins_modifier
+	}
+}
+
+remove_all_colonization_modifiers = { # When wastelanding colonies
+	if = {
+		limit = { has_county_modifier = infrastructure_expansion_modifier }
+		remove_county_modifier = infrastructure_expansion_modifier
+	}
+	if = {
+		limit = { has_county_modifier = thriving_economy_modifier }
+		remove_county_modifier = thriving_economy_modifier
+	}
+	if = {
+		limit = { has_county_modifier = unruly_population_modifier }
+		remove_county_modifier = unruly_population_modifier
+	}
+	if = {
+		limit = { has_county_modifier = legacy_of_eons_modifier }
+		remove_county_modifier = legacy_of_eons_modifier
+	}
+	remove_colonization_progress_modifiers = yes
+}

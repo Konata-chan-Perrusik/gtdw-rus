@@ -1,0 +1,2239 @@
+﻿gh_call_for_loyal_banners_interaction = {
+	category = interaction_category_diplomacy
+	ai_min_reply_days = 4
+	ai_max_reply_days = 9
+	icon = icon_combat
+	cooldown = { years = 10 }
+	send_name = gh_call_for_loyal_banners_interaction
+
+	interface_priority = 60
+	desc = gh_call_for_loyal_banners_interaction_desc
+
+	greeting = positive
+	notification_text = GH_INTERACTION_REQUEST_LOYALISTS_NOTIFICATION
+
+	is_shown = {
+		exists = global_var:story_gh_amsari_civil_war
+		scope:recipient = { NOT = { this = scope:actor } }
+		scope:actor = {
+			is_ruler = yes
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= scope:recipient
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			is_imprisoned = no
+		}
+		scope:actor = {
+			is_playable_character = yes
+			is_imprisoned = no
+			NOT = {
+				is_at_war_with = scope:recipient
+			}
+		}
+		scope:recipient = { is_busy_in_events_localised = yes }
+		custom_description = {
+			text = "gh_has_already_asked_for_loyalists"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_has_asked_for_loyalists  } }
+		}
+	}
+
+	is_valid = {
+		custom_description = {
+			text = "gh_acw_is_passive_supporter"
+			subject = scope:actor
+			NOT = { 
+				scope:recipient = {	
+					this.var:gh_amsari_civil_war_info_story ?= {	
+						is_target_in_variable_list = {
+							name = gh_acw_forced_acknowledgement_list
+							target = scope:actor
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_auto_accept = {
+		scope:recipient = {
+			trigger_event = gh_amsari_interaction.0001
+		}
+		scope:actor = {
+			add_character_flag = {
+				flag = gh_has_asked_for_loyalists
+				years = 8
+			}
+			if = {
+				limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } }
+				spawn_army = {
+					name = "amsari_loyalists"
+					location = scope:actor.capital_province
+					levies = 200
+					men_at_arms = {
+						type = prophets_sons
+						stacks = 1
+					}
+					inheritable = yes
+					uses_supply = no
+				}		
+			}
+			else_if = {
+				limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive } }
+				spawn_army = {
+					name = "amsari_loyalists"
+					location = scope:actor.capital_province
+					levies = 600
+					men_at_arms = {
+						type = prophets_sons
+						stacks = 3
+					}
+					men_at_arms = {
+						type = light_footmen
+						stacks = 1
+					}
+					inheritable = yes
+					uses_supply = no
+				}		
+			}
+			else = {
+				spawn_army = {
+					name = "amsari_loyalists"
+					location = scope:actor.capital_province
+					levies = 800
+					men_at_arms = {
+						type = prophets_sons
+						stacks = 3
+					}
+					men_at_arms = {
+						type = light_footmen
+						stacks = 2
+					}
+					inheritable = yes
+					uses_supply = no
+				}
+			}
+		}
+	}
+
+	#Use hook
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+		}
+		flag = hook	
+		localization = GENERIC_SPEND_A_HOOK
+	}
+	should_use_extra_icon = {
+		scope:actor = { has_usable_hook = scope:recipient }
+	}
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+
+	# Admin Gov can spend Influence to increase AI acceptance towards other same-realm admin characters
+	send_option = {
+		is_shown = {
+			scope:actor = {
+				government_allows = administrative
+			}
+			scope:recipient = {
+				top_liege = scope:actor.top_liege
+				government_allows = administrative
+			}
+		}
+		is_valid = {
+			scope:actor = {
+				influence >= major_influence_value
+			}
+			custom_tooltip = {
+				text = ALREADY_USING_HOOK
+				NOT = { scope:hook = yes }
+			}
+		}
+		flag = influence	
+		localization = SPEND_INFLUENCE
+	}
+
+	send_options_exclusive = no
+		
+	on_accept = {
+		scope:actor = {
+			trigger_event = gh_amsari_interaction.0002
+			add_character_flag = {
+				flag = gh_has_asked_for_loyalists
+				years = 10
+			}
+			stress_impact = {
+				shy = minor_stress_impact_gain
+			}
+
+			if = {
+				limit = {
+					scope:hook = yes
+					has_hook = scope:recipient
+				}
+				use_hook = scope:recipient
+			}
+			if = {
+				limit = {
+					scope:influence = yes
+				}
+				change_influence = major_influence_loss
+			}
+			hidden_effect = {
+				if = {
+					limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } }
+					spawn_army = {
+						name = "amsari_loyalists"
+						location = scope:actor.capital_province
+						levies = 200
+						men_at_arms = {
+							type = prophets_sons
+							stacks = 1
+						}
+						inheritable = yes
+						uses_supply = no
+					}		
+				}
+				else_if = {
+					limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive } }
+					spawn_army = {
+						name = "amsari_loyalists"
+						location = scope:actor.capital_province
+						levies = 600
+						men_at_arms = {
+							type = prophets_sons
+							stacks = 3
+						}
+						men_at_arms = {
+							type = light_footmen
+							stacks = 1
+						}
+						inheritable = yes
+						uses_supply = no
+					}		
+				}
+				else = {
+					spawn_army = {
+						name = "amsari_loyalists"
+						location = scope:actor.capital_province
+						levies = 800
+						men_at_arms = {
+							type = prophets_sons
+							stacks = 3
+						}
+						men_at_arms = {
+							type = light_footmen
+							stacks = 2
+						}
+						inheritable = yes
+						uses_supply = no
+					}
+				}
+			}
+		}
+		scope:recipient = {
+			custom_tooltip = gh_amsari_interaction.0002.recipient_tooltip
+		}
+
+	}
+	
+	on_decline = {
+		scope:actor = {
+			trigger_event = gh_amsari_interaction.0003
+			add_opinion = {
+				modifier = gh_refused_to_rally_loyalists_opinion
+				target = scope:recipient
+			}			
+		}
+
+		add_clan_unity_interaction_effect = {
+			CHARACTER = scope:actor
+			TARGET = scope:recipient
+			VALUE = minor_unity_loss
+			DESC = gh_clan_unity_loyalists_refusal.desc
+			REVERSE_NON_HOUSE_TARGET = no
+		}
+	}
+
+	auto_accept = {
+		custom_description = {
+			text = "spending_hook"
+			subject = scope:actor
+			object = scope:recipient
+			scope:hook = yes
+		}
+	}
+	ai_accept = {
+		base = 40
+		
+		modifier = {
+			add = 20
+			scope:recipient = {
+				is_close_family_of = scope:actor
+			}
+			desc = CLOSE_FAMILY_REASON
+		}
+		
+		modifier = {
+			add = 10
+			scope:recipient = {
+				NOT = { is_close_family_of = scope:actor }
+				is_extended_family_of = scope:actor
+			}
+			desc = EXTENDED_FAMILY_REASON
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				NOT = { is_close_or_extended_family_of = scope:actor }
+				any_spouse = {
+					NOT = { is_close_family_of = scope:actor }
+					is_extended_family_of = scope:actor
+				}
+			}
+			desc = DISTANT_FAMILY_CONNECTION_REASON
+		}
+
+		# Tier Differences
+		modifier = {
+			scope:actor = {
+				tier_difference = {
+					target = scope:recipient
+					value >= 1
+				}
+			}
+			add = {
+				value = 30
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = 2
+						}
+					}
+					add = 30
+				}
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = 3
+						}
+					}
+					add = 60
+				}
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = 4
+						}
+					}
+					add = 90
+				}
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = 5
+						}
+					}
+					add = 120
+				}
+			}
+			desc = RANK_DIFFERENCE_REASON
+		}
+		modifier = {
+			scope:actor = {
+				tier_difference = {
+					target = scope:recipient
+					value <= -1
+				}
+			}
+			add = {
+				value = -30
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = -2
+						}
+					}
+					add = -30
+				}
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = -3
+						}
+					}
+					add = -60
+				}
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = -4
+						}
+					}
+					add = -90
+				}
+				if = {
+					limit = {
+						tier_difference = {
+							target = scope:recipient
+							value = -5
+						}
+					}
+					add = -120
+				}
+			}
+			desc = RANK_DIFFERENCE_REASON
+		}
+		modifier = {
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+			add = {
+				value = 25
+			}
+			desc = WE_ARE_LOVERS
+		}		
+		modifier = {
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+			add = {
+				value = 25
+			}
+			desc = WE_ARE_FRIENDS
+		}
+		modifier = {
+			scope:recipient = {
+				is_heir_of = scope:actor
+			}
+			scope:actor = {
+				tier_difference = {
+					target = scope:recipient
+					value > 0
+				}
+			}
+			add = {
+				value = 10
+				if = {
+					limit = {
+						scope:actor = { player_heir = scope:recipient }
+					}
+					add = 10
+				}
+			}
+			desc = IS_HEIR_REASON
+		}
+		opinion_modifier = { # More likely to accept if Recipient likes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.25
+			min = 0
+			desc = AI_OPINION_REASON
+		}
+		opinion_modifier = { # Less likely to accept if Recipient dislikes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1
+			max = 0
+			desc = AI_OPINION_REASON
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = loyal
+			}
+			desc = INTERACTION_LOYAL
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = trusting
+			}
+			desc = INTERACTION_TRUSTING
+		}
+
+		modifier = {
+			add = 5
+			scope:recipient = {
+				has_trait = craven
+			}
+			desc = INTERACTION_CRAVEN
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = paranoid
+			}
+			desc = INTERACTION_PARANOID
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = arrogant
+			}
+			desc = INTERACTION_ARROGANT
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = ambitious
+			}
+			desc = INTERACTION_AMBITIOUS
+		}
+
+		modifier = {
+			add = -40
+			scope:recipient = {
+				has_trait = disloyal
+			}
+			desc = INTERACTION_DISLOYAL
+		}
+
+		modifier = {
+			add = -10
+			scope:recipient = {
+				has_trait = fickle
+			}
+			desc = INTERACTION_FICKLE
+		}
+
+		# Rivalry
+		modifier = { # Say no to rivals
+			add = -100
+			scope:recipient = {
+				has_relation_rival = scope:actor
+				NOT = { has_relation_nemesis = scope:actor }
+			}
+			desc = "ACTOR_RIVAL_TO_ME_REASON"
+		}
+		modifier = { # Say no to nemesis
+			add = -300
+			scope:recipient = {
+				has_relation_nemesis = scope:actor
+			}
+			desc = "ACTOR_NEMESIS_TO_ME_REASON"
+		}
+		
+		# Dynasty Prestige Levels
+		modifier = {
+			add = -5
+			desc = AI_DYNASTY_PRESTIGE_REASON
+			scope:actor = { has_dynasty = yes }
+			NOT = { scope:actor.dynasty = scope:recipient.dynasty }
+			scope:actor.dynasty = { dynasty_prestige_level = 0 }
+		}
+		modifier = {
+			desc = AI_DYNASTY_PRESTIGE_REASON
+			scope:actor = { has_dynasty = yes }
+			NOT = { scope:actor.dynasty = scope:recipient.dynasty }
+			scope:actor.dynasty = { dynasty_prestige_level >= 2 }
+			add = {
+				value = 10
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 3 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 4 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 5 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 6 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 7 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 8 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 9 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 10 }
+					}
+					add = 5
+				}
+			}
+		}
+		modifier = { #Faith compatibility
+			scope:recipient.faith = {
+				faith_hostility_level = {
+					target = scope:actor.faith
+					value > faith_fully_accepted_level
+				}
+			}
+			NOT = {
+				scope:recipient.ai_zeal <= -50
+			}
+			add = {
+				value = -10
+				if = {
+					limit = {
+						# Exempt certain struggle phases.
+						NOT = { is_struggle_parameter_active_interfaith_marriages_available_between_involved_characters_trigger = yes }
+					}
+					if = {
+						limit = {
+							scope:recipient.faith = {
+								faith_hostility_level = {
+									target = scope:actor.faith
+									value >= faith_astray_level
+								}
+							}
+						}
+						subtract = 20
+					}
+					if = {
+						limit = {
+							scope:recipient.faith = {
+								faith_hostility_level = {
+									target = scope:actor.faith
+									value >= faith_hostile_level
+								}
+							}
+						}
+						subtract = 20
+					}
+					if = {
+						limit = {
+							scope:recipient.faith = {
+								faith_hostility_level = {
+									target = scope:actor.faith
+									value >= faith_evil_level
+								}
+							}
+						}
+						subtract = 50
+					}
+					if = {
+						limit = {
+							scope:recipient.ai_zeal <= -25
+						}
+						divide = 2
+					}
+					else_if = {
+						limit = {
+							scope:recipient.ai_zeal >= 50
+						}
+						multiply = 2
+					}										
+					if = {
+						limit = {
+							scope:recipient.faith = { has_doctrine = doctrine_pluralism_pluralistic }
+						}
+						divide = 2
+					}
+				}
+			}
+			desc = MARRY_DIFFERENT_FAITH_REASON
+		}
+		
+		# Recipient is a Claimant to Actor's titles.
+		modifier = {
+			scope:recipient = {
+				any_claim = {
+					holder = scope:actor
+				}
+				NOR = {
+					is_heir_of = scope:actor
+					ai_greed <= -25
+				}
+			}
+			add = {
+				value = -50
+				if = {
+					limit = {
+						scope:recipient.ai_greed >= 25
+					}
+					add = ai_greed
+				}
+				if = {
+					limit = {
+						NOT = {
+							scope:recipient.house = scope:actor.house
+						}
+					}
+					multiply = 2
+				}
+			}
+			desc = IS_CLAIMANT_TO_ACTORS_TITLES
+		}
+		# Feud
+		modifier = {
+			add = -25
+			scope:recipient = {
+				existing_feud_against_target_trigger = { TARGET = scope:actor }
+			}
+			desc = MARRY_FAMILY_FEUD_REASON
+		}
+		
+		modifier = {
+			add = intimidated_reason_value
+			scope:recipient = {
+				target_is_liege_or_above = scope:actor
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 1
+				}
+			}
+			desc = INTIMIDATED_REASON
+		}
+		modifier = {
+			add = cowed_reason_value
+			scope:recipient = {
+				target_is_liege_or_above = scope:actor
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 2
+				}
+			}
+			desc = COWED_REASON
+		}
+		
+		modifier = {
+			add = intimidated_external_reason_value
+			scope:recipient = {
+				NOT = { target_is_liege_or_above = scope:actor }
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 1
+				}
+			}
+			desc = INTIMIDATED_REASON
+		}
+		modifier = {
+			add = cowed_external_reason_value
+			scope:recipient = {
+				NOT = { target_is_liege_or_above = scope:actor }
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 2
+				}
+			}
+			desc = COWED_REASON
+		}
+	}
+	ai_frequency = 120
+	ai_targets = {
+		ai_recipients = courtiers
+		ai_recipients = guests
+		max = 20
+	}
+	ai_potential = {
+		is_adult = yes
+	}
+	
+	ai_will_do = {
+		base = 100
+	}
+}
+
+
+
+gh_acw_request_gold_interaction = {
+	category = interaction_category_diplomacy
+	ai_min_reply_days = 4
+	ai_max_reply_days = 9
+	icon = icon_gold
+	cooldown = { years = 3 }
+	send_name = gh_acw_request_gold_interaction
+
+	interface_priority = 70
+	desc = gh_acw_request_gold_interaction_desc
+
+	greeting = positive
+	notification_text = GH_ACW_REQUEST_GOLD_NOTIFICATION
+
+	is_shown = {
+		exists = global_var:story_gh_amsari_civil_war
+		scope:recipient = { NOT = { this = scope:actor } }
+		scope:actor = {
+			is_ruler = yes
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= scope:recipient
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			is_imprisoned = no
+		}
+		scope:actor = {
+			is_playable_character = yes
+			is_imprisoned = no
+			NOT = {
+				is_at_war_with = scope:recipient
+			}
+		}
+		scope:recipient = { is_busy_in_events_localised = yes }
+		custom_description = {
+			text = "gh_has_already_request_gold"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_has_gh_acw_request_gold_interaction  } }
+		}
+	}
+
+	is_valid = {
+		custom_description = {
+			text = "gh_acw_is_passive_supporter"
+			subject = scope:actor
+			NOT = { 
+				scope:recipient = {	
+					this.var:gh_amsari_civil_war_info_story ?= {	
+						is_target_in_variable_list = {
+							name = gh_acw_forced_acknowledgement_list
+							target = scope:actor
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_auto_accept = {
+		scope:recipient = {
+			trigger_event = gh_amsari_interaction.0004
+		}
+		scope:actor = {
+			add_character_flag = {
+				flag = gh_has_gh_acw_request_gold_interaction
+				years = 5
+			}
+			random_list = {
+				10 = {
+					trigger = { scope:recipient = { gold <= tiny_gold_value } }
+					scope:recipient = {
+						pay_short_term_gold = {
+							target = scope:actor
+							gold = tiny_gold_value
+						}
+					}
+				}
+				50 = {
+					trigger = { scope:recipient = { gold <= minor_gold_value } }
+					scope:recipient = {
+						pay_short_term_gold = {
+							target = scope:actor
+							gold = minor_gold_value
+						}
+					}
+				}
+				30 = {
+					trigger = { scope:recipient = { gold <= medium_gold_value } }
+					scope:recipient = {
+						pay_short_term_gold = {
+							target = scope:actor
+							gold = medium_gold_value
+						}
+					}
+				}
+				9 = {
+					trigger = { scope:recipient = { gold <= major_gold_value } }
+					scope:recipient = {
+						pay_short_term_gold = {
+							target = scope:actor
+							gold = major_gold_value
+						}
+					}
+				}
+				1 = {
+					trigger = { scope:recipient = { gold <= massive_gold_value } }
+					scope:recipient = {
+						pay_short_term_gold = {
+							target = scope:actor
+							gold = massive_gold_value
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#Use hook
+	send_option = {
+		is_valid = {
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+		}
+		flag = hook	
+		localization = GENERIC_SPEND_A_HOOK
+	}
+	should_use_extra_icon = {
+		scope:actor = { has_usable_hook = scope:recipient }
+	}
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+
+	# Admin Gov can spend Influence to increase AI acceptance towards other same-realm admin characters
+	send_option = {
+		is_shown = {
+			scope:actor = {
+				government_allows = administrative
+			}
+			scope:recipient = {
+				top_liege = scope:actor.top_liege
+				government_allows = administrative
+			}
+		}
+		is_valid = {
+			scope:actor = {
+				influence >= major_influence_value
+			}
+			custom_tooltip = {
+				text = ALREADY_USING_HOOK
+				NOT = { scope:hook = yes }
+			}
+		}
+		flag = influence	
+		localization = SPEND_INFLUENCE
+	}
+
+	send_options_exclusive = no
+		
+	on_accept = {
+		scope:actor = {
+			trigger_event = gh_amsari_interaction.0005
+			add_character_flag = {
+				flag = gh_has_gh_acw_request_gold_interaction
+				years = 5
+			}
+			stress_impact = {
+				shy = minor_stress_impact_gain
+				greedy = medium_stress_impact_loss
+			}
+
+			if = {
+				limit = {
+					scope:hook = yes
+					has_hook = scope:recipient
+				}
+				use_hook = scope:recipient
+			}
+			if = {
+				limit = {
+					scope:influence = yes
+				}
+				change_influence = major_influence_loss
+			}
+		}
+
+		random_list = {
+			10 = {
+				trigger = { scope:recipient = { gold <= tiny_gold_value } }
+				scope:recipient = {
+					pay_short_term_gold = {
+						target = scope:actor
+						gold = tiny_gold_value
+					}
+				}
+			}
+			50 = {
+				trigger = { scope:recipient = { gold <= minor_gold_value } }
+				scope:recipient = {
+					pay_short_term_gold = {
+						target = scope:actor
+						gold = minor_gold_value
+					}
+				}
+			}
+			30 = {
+				trigger = { scope:recipient = { gold <= medium_gold_value } }
+				scope:recipient = {
+					pay_short_term_gold = {
+						target = scope:actor
+						gold = medium_gold_value
+					}
+				}
+			}
+			9 = {
+				trigger = { scope:recipient = { gold <= major_gold_value } }
+				scope:recipient = {
+					pay_short_term_gold = {
+						target = scope:actor
+						gold = major_gold_value
+					}
+				}
+			}
+			1 = {
+				trigger = { scope:recipient = { gold <= massive_gold_value } }
+				scope:recipient = {
+					pay_short_term_gold = {
+						target = scope:actor
+						gold = massive_gold_value
+					}
+				}
+			}
+		}
+	}
+	
+	on_decline = {
+		scope:actor = {
+			trigger_event = gh_amsari_interaction.0006
+		}
+		scope:actor = {
+			add_opinion = {
+				modifier = gh_refused_ask_gold_opinion
+				target = scope:recipient
+			}
+		}
+
+		add_clan_unity_interaction_effect = {
+			CHARACTER = scope:actor
+			TARGET = scope:recipient
+			VALUE = minor_unity_loss
+			DESC = gh_clan_unity_loyalists_refusal.desc
+			REVERSE_NON_HOUSE_TARGET = no
+		}
+	}
+
+	auto_accept = {
+		custom_description = {
+			text = "spending_hook"
+			subject = scope:actor
+			object = scope:recipient
+			scope:hook = yes
+		}
+	}
+	ai_accept = {
+		base = 0
+
+		# Circumstances.
+		## Low on gold
+		modifier = {
+			add = -100
+			gold <= 20
+		}		
+		modifier = {
+			add = 20
+			scope:recipient = {
+				is_close_family_of = scope:actor
+			}
+			desc = CLOSE_FAMILY_REASON
+		}
+		
+		modifier = {
+			add = 10
+			scope:recipient = {
+				NOT = { is_close_family_of = scope:actor }
+				is_extended_family_of = scope:actor
+			}
+			desc = EXTENDED_FAMILY_REASON
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				NOT = { is_close_or_extended_family_of = scope:actor }
+				any_spouse = {
+					NOT = { is_close_family_of = scope:actor }
+					is_extended_family_of = scope:actor
+				}
+			}
+			desc = DISTANT_FAMILY_CONNECTION_REASON
+		}
+		modifier = {
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+			add = {
+				value = 25
+			}
+			desc = WE_ARE_LOVERS
+		}		
+		modifier = {
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+			add = {
+				value = 25
+			}
+			desc = WE_ARE_FRIENDS
+		}
+		modifier = {
+			scope:recipient = {
+				is_heir_of = scope:actor
+			}
+			scope:actor = {
+				tier_difference = {
+					target = scope:recipient
+					value > 0
+				}
+			}
+			add = {
+				value = 10
+				if = {
+					limit = {
+						scope:actor = { player_heir = scope:recipient }
+					}
+					add = 10
+				}
+			}
+			desc = IS_HEIR_REASON
+		}
+		opinion_modifier = { # More likely to accept if Recipient likes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.25
+			min = 0
+			desc = AI_OPINION_REASON
+		}
+		opinion_modifier = { # Less likely to accept if Recipient dislikes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1
+			max = 0
+			desc = AI_OPINION_REASON
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = loyal
+			}
+			desc = INTERACTION_LOYAL
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = trusting
+			}
+			desc = INTERACTION_TRUSTING
+		}
+
+		modifier = {
+			add = 5
+			scope:recipient = {
+				has_trait = craven
+			}
+			desc = INTERACTION_CRAVEN
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = paranoid
+			}
+			desc = INTERACTION_PARANOID
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = arrogant
+			}
+			desc = INTERACTION_ARROGANT
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = ambitious
+			}
+			desc = INTERACTION_AMBITIOUS
+		}
+
+		modifier = {
+			add = -40
+			scope:recipient = {
+				has_trait = disloyal
+			}
+			desc = INTERACTION_DISLOYAL
+		}
+
+		modifier = {
+			add = -10
+			scope:recipient = {
+				has_trait = fickle
+			}
+			desc = INTERACTION_FICKLE
+		}
+
+		# Rivalry
+		modifier = { # Say no to rivals
+			add = -100
+			scope:recipient = {
+				has_relation_rival = scope:actor
+				NOT = { has_relation_nemesis = scope:actor }
+			}
+			desc = "ACTOR_RIVAL_TO_ME_REASON"
+		}
+		modifier = { # Say no to nemesis
+			add = -300
+			scope:recipient = {
+				has_relation_nemesis = scope:actor
+			}
+			desc = "ACTOR_NEMESIS_TO_ME_REASON"
+		}
+		
+		# Dynasty Prestige Levels
+		modifier = {
+			add = -5
+			desc = AI_DYNASTY_PRESTIGE_REASON
+			scope:actor = { has_dynasty = yes }
+			NOT = { scope:actor.dynasty = scope:recipient.dynasty }
+			scope:actor.dynasty = { dynasty_prestige_level = 0 }
+		}
+		modifier = {
+			desc = AI_DYNASTY_PRESTIGE_REASON
+			scope:actor = { has_dynasty = yes }
+			NOT = { scope:actor.dynasty = scope:recipient.dynasty }
+			scope:actor.dynasty = { dynasty_prestige_level >= 2 }
+			add = {
+				value = 10
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 3 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 4 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 5 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 6 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 7 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 8 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 9 }
+					}
+					add = 5
+				}
+				if = {
+					limit = {
+						scope:actor.dynasty = { dynasty_prestige_level >= 10 }
+					}
+					add = 5
+				}
+			}
+		}
+		modifier = { #Faith compatibility
+			scope:recipient.faith = {
+				faith_hostility_level = {
+					target = scope:actor.faith
+					value > faith_fully_accepted_level
+				}
+			}
+			NOT = {
+				scope:recipient.ai_zeal <= -50
+			}
+			add = {
+				value = -10
+				if = {
+					limit = {
+						# Exempt certain struggle phases.
+						NOT = { is_struggle_parameter_active_interfaith_marriages_available_between_involved_characters_trigger = yes }
+					}
+					if = {
+						limit = {
+							scope:recipient.faith = {
+								faith_hostility_level = {
+									target = scope:actor.faith
+									value >= faith_astray_level
+								}
+							}
+						}
+						subtract = 20
+					}
+					if = {
+						limit = {
+							scope:recipient.faith = {
+								faith_hostility_level = {
+									target = scope:actor.faith
+									value >= faith_hostile_level
+								}
+							}
+						}
+						subtract = 20
+					}
+					if = {
+						limit = {
+							scope:recipient.faith = {
+								faith_hostility_level = {
+									target = scope:actor.faith
+									value >= faith_evil_level
+								}
+							}
+						}
+						subtract = 50
+					}
+					if = {
+						limit = {
+							scope:recipient.ai_zeal <= -25
+						}
+						divide = 2
+					}
+					else_if = {
+						limit = {
+							scope:recipient.ai_zeal >= 50
+						}
+						multiply = 2
+					}										
+					if = {
+						limit = {
+							scope:recipient.faith = { has_doctrine = doctrine_pluralism_pluralistic }
+						}
+						divide = 2
+					}
+				}
+			}
+			desc = MARRY_DIFFERENT_FAITH_REASON
+		}
+		
+		# Recipient is a Claimant to Actor's titles.
+		modifier = {
+			scope:recipient = {
+				any_claim = {
+					holder = scope:actor
+				}
+				NOR = {
+					is_heir_of = scope:actor
+					ai_greed <= -25
+				}
+			}
+			add = {
+				value = -50
+				if = {
+					limit = {
+						scope:recipient.ai_greed >= 25
+					}
+					add = ai_greed
+				}
+				if = {
+					limit = {
+						NOT = {
+							scope:recipient.house = scope:actor.house
+						}
+					}
+					multiply = 2
+				}
+			}
+			desc = IS_CLAIMANT_TO_ACTORS_TITLES
+		}
+		# Feud
+		modifier = {
+			add = -25
+			scope:recipient = {
+				existing_feud_against_target_trigger = { TARGET = scope:actor }
+			}
+			desc = MARRY_FAMILY_FEUD_REASON
+		}
+		
+		modifier = {
+			add = intimidated_reason_value
+			scope:recipient = {
+				target_is_liege_or_above = scope:actor
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 1
+				}
+			}
+			desc = INTIMIDATED_REASON
+		}
+		modifier = {
+			add = cowed_reason_value
+			scope:recipient = {
+				target_is_liege_or_above = scope:actor
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 2
+				}
+			}
+			desc = COWED_REASON
+		}
+		
+		modifier = {
+			add = intimidated_external_reason_value
+			scope:recipient = {
+				NOT = { target_is_liege_or_above = scope:actor }
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 1
+				}
+			}
+			desc = INTIMIDATED_REASON
+		}
+		modifier = {
+			add = cowed_external_reason_value
+			scope:recipient = {
+				NOT = { target_is_liege_or_above = scope:actor }
+				has_dread_level_towards = {
+					target = scope:actor
+					level = 2
+				}
+			}
+			desc = COWED_REASON
+		}
+	}
+	ai_frequency = 120
+	ai_targets = {
+		ai_recipients = courtiers
+		ai_recipients = guests
+		max = 20
+	}
+	ai_potential = {
+		always = no
+	}
+	
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+gh_acw_give_gold_interaction = {
+	category = interaction_category_diplomacy
+	icon = icon_gold
+	cooldown = { years = 2 }
+	interface_priority = 80
+	desc = gh_acw_give_gold_interaction_desc
+	common_interaction = yes
+	
+	is_shown = {
+		exists = global_var:story_gh_amsari_civil_war
+		scope:recipient = { NOT = { this = scope:actor } }
+		scope:actor = {
+			is_ruler = yes
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= scope:recipient
+		}
+	}
+
+	is_valid = {
+		custom_description = {
+			text = "gh_acw_is_passive_supporter"
+			subject = scope:actor
+			NOT = { 
+				scope:recipient = {	
+					this.var:gh_amsari_civil_war_info_story ?= {	
+						is_target_in_variable_list = {
+							name = gh_acw_forced_acknowledgement_list
+							target = scope:actor
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			is_imprisoned = no
+		}
+		scope:actor = {
+			is_imprisoned = no
+			NOT = {
+				is_at_war_with = scope:recipient
+			}
+		}
+		scope:recipient = { is_busy_in_events_localised = yes }
+		custom_description = {
+			text = "gh_has_already_asked_for_loyalists"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_has_acw_given_gold  } }
+		}
+	}
+
+	send_option = {
+		flag = gold_value_tiny
+		localization = gh_acw_give_gold_value_tiny
+	}
+
+	send_option = {
+		flag = gold_value_minor
+		localization = gh_acw_give_gold_value_minor
+	}
+
+	send_option = {
+		flag = gold_value_medium
+		localization = gh_acw_give_gold_value_medium
+	}
+
+	send_option = {
+		flag = gold_value_major
+		localization = gh_acw_give_gold_value_major
+	}
+
+	send_option = {
+		flag = gold_value_massive
+		localization = gh_acw_give_gold_value_massive
+	}
+
+	send_option = {
+		flag = gold_value_monumental
+		localization = gh_acw_give_gold_value_monumental
+	}
+
+	on_accept = {
+		scope:actor = {
+			add_character_flag = {
+				flag = gh_has_acw_given_gold
+				years = 5
+			}		
+			switch = {
+				trigger = yes
+				scope:gold_value_tiny = {
+					stress_impact = { greedy = major_stress_impact_gain }
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = tiny_gold_value
+					}
+					scope:recipient = {
+						add_opinion = {
+							target = scope:actor
+							modifier = gh_acw_gave_gold_opinion
+							opinion = 5
+						}
+					}
+					random_list = {
+						99 = {}
+						1 = {
+							scope:recipient = {
+								add_hook = {
+									target = scope:actor
+									type = favor_hook
+								}
+							}
+						}
+					}
+				}
+				scope:gold_value_minor = {
+					stress_impact = { greedy = minor_stress_impact_gain }
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = minor_gold_value
+					}
+					scope:recipient = {
+						add_opinion = {
+							target = scope:actor
+							modifier = gh_acw_gave_gold_opinion
+							opinion = 10
+						}
+					}
+					random_list = {
+						95 = {}
+						5 = {
+							scope:recipient = {
+								add_hook = {
+									target = scope:actor
+									type = favor_hook
+								}
+							}
+						}
+					}
+				}
+				scope:gold_value_medium = {
+					stress_impact = { greedy = medium_stress_impact_gain }
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = medium_gold_value
+					}
+					scope:recipient = {
+						add_opinion = {
+							target = scope:actor
+							modifier = gh_acw_gave_gold_opinion
+							opinion = 20
+						}
+					}
+					random_list = {
+						90 = {}
+						10 = {
+							scope:recipient = {
+								add_hook = {
+									target = scope:actor
+									type = favor_hook
+								}
+							}
+						}
+					}
+				}
+				scope:gold_value_major = {
+					stress_impact = { greedy = major_stress_impact_gain }
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = major_gold_value
+					}
+					scope:recipient = {
+						add_opinion = {
+							target = scope:actor
+							modifier = gh_acw_gave_gold_opinion
+							opinion = 30
+						}
+					}
+					random_list = {
+						85 = {}
+						15 = {
+							scope:recipient = {
+								add_hook = {
+									target = scope:actor
+									type = favor_hook
+								}
+							}
+						}
+					}
+				}
+				scope:gold_value_massive = {
+					stress_impact = { greedy = major_stress_impact_gain }
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = massive_gold_value
+					}
+					scope:recipient = {
+						add_opinion = {
+							target = scope:actor
+							modifier = gh_acw_gave_gold_long_opinion
+							opinion = 40
+						}
+					}
+					random_list = {
+						70 = {}
+						30 = {
+							scope:recipient = {
+								add_hook = {
+									target = scope:actor
+									type = favor_hook
+								}
+							}
+						}
+					}
+				}
+				scope:gold_value_monumental = {
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = monumental_gold_value
+					}
+					scope:recipient = {
+						add_opinion = {
+							target = scope:actor
+							modifier = gh_acw_gave_gold_long_opinion
+							opinion = 60
+						}
+					}
+					random_list = {
+						50 = {}
+						50 = {
+							scope:recipient = {
+								add_hook = {
+									target = scope:actor
+									type = favor_hook
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	ai_frequency = 120
+	ai_targets = {
+		ai_recipients = courtiers
+		ai_recipients = guests
+		max = 20
+	}
+	ai_potential = {
+		always = no
+	}
+	auto_accept = yes
+}
+
+
+#################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
+gh_acw_support_pretender = {
+	category = interaction_category_diplomacy
+	ai_min_reply_days = 2
+	ai_max_reply_days = 4
+	icon = icon_scheme_foster_legitimacy
+	popup_on_receive = yes
+	interface_priority = 70
+	desc = gh_acw_support_pretender_desc
+	cooldown_against_recipient = { years = 3 } 	
+	cooldown = { years = 1 } 	
+	greeting = positive
+
+	ai_maybe = yes		
+	is_shown = {
+		exists = global_var:story_gh_amsari_civil_war
+		scope:recipient = {
+			age >= 14
+			NOR = { 
+				this = scope:actor 
+				has_trait = gh_trait_renounced_claim
+				has_trait = disinherited
+			}
+			OR = { 
+				has_trait = gh_blood_of_prophet
+				has_trait = gh_trait_amsari_pretender
+			}
+		}
+		scope:actor = {
+			trigger_if = {
+				limit = { is_ai = yes }
+				is_landed = yes
+			}
+			NAND = { 
+				this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= scope:recipient 
+				scope:recipient = {	
+					this.var:gh_amsari_civil_war_info_story ?= {	
+						is_target_in_variable_list = {
+							name = gh_acw_forced_acknowledgement_list
+							target = scope:actor
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			is_imprisoned = no
+		}
+		scope:actor = {
+			is_playable_character = yes
+			is_imprisoned = no
+			NOT = { is_at_war_with = scope:recipient }
+		}
+		scope:recipient = { is_busy_in_events_localised = yes }
+		custom_description = {
+			text = "gh_has_recently_supported_pretender"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_has_recently_supported_pretender  } }
+		}
+		custom_description = {
+			text = "gh_acw_forced_to_acknowledge_another_pretender"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_acw_forced_to_acknowledge_another_pretender  } }
+		}
+	}
+
+	is_valid = { 
+		scope:recipient = { NOT = { this = scope:actor } } 
+		scope:actor = { is_independent_ruler = yes }
+	}
+
+	on_auto_accept = {
+
+	}
+	send_option = {
+		flag = demand_strong_hook
+		localization = gh_acw_demand_strong_hook
+	}
+	send_option = {
+		flag = give_gold
+		localization = gh_acw_give_gold_support_pretender
+	}
+
+	send_options_exclusive = no
+		
+	on_accept = {
+		if = {
+			limit = {
+				scope:recipient = {	
+					this.var:gh_amsari_civil_war_info_story ?= {	
+						is_target_in_variable_list = {
+							name = gh_acw_forced_acknowledgement_list
+							target = scope:actor
+						}
+					}
+				}
+			}
+			scope:recipient = {	
+				this.var:gh_amsari_civil_war_info_story ?= {	
+					remove_list_variable = {
+						name = gh_acw_forced_acknowledgement_list
+						target = scope:actor
+					}
+				}
+			}
+		}
+		support_amsari_pretender_effect = {
+			SUPPORTER = scope:actor
+			PRETENDER = scope:recipient
+		}
+		if = {
+			limit = { scope:demand_strong_hook = yes }
+			scope:actor = {
+				custom_tooltip = {
+					text = gh_will_receive_strong_hook_on_throne_taken
+					scope:recipient = {
+						var:gh_amsari_civil_war_info_story ?= {
+							add_to_variable_list = { 
+								name = gh_acw_will_get_strong_hook
+								target = scope:actor
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = { scope:give_gold = yes }
+			scope:actor = {
+				pay_short_term_gold = {
+					target = scope:recipient
+					gold = major_gold_value
+				}
+			}
+		}
+		if = {
+			limit = { scope:recipient = { has_trait = gh_blood_of_prophet } }
+			scope:recipient = {
+				house = {
+					add_unity_value = {
+						value = medium_unity_loss
+						character = scope:recipient
+						desc = gh_has_become_pretender.desc
+					}
+				}
+			}
+		}
+		scope:actor = {
+			if = {
+				limit = {
+					NOT = {
+						is_target_in_global_variable_list = {
+							name = involved_character_amsari_civil_war
+							target = this
+						}
+					}
+				}
+				add_to_global_variable_list = {
+					name = involved_character_amsari_civil_war
+					target = this
+				}
+			}
+		}
+	}
+	
+	on_decline = {
+	}
+
+	ai_accept = {
+		base = 100
+
+		modifier = {
+			add = -40
+			NOT = { scope:recipient = { has_title = title:e_amsari } }
+			OR = {
+				NOT = { scope:recipient = { var:gh_amsari_civil_war_info_story ?= { has_variable_list = amsari_civil_war_supporter_list } } }
+				scope:recipient = {
+					var:gh_amsari_civil_war_info_story ?= {
+						variable_list_size = {
+							name = amsari_civil_war_supporter_list
+							value = 0
+						}
+					}
+				}
+			}
+			desc = GH_ASKING_FOR_STRONG_HOOK
+			scope:demand_strong_hook = yes
+		}
+		modifier = {
+			add = -100
+			scope:recipient = { has_title = title:e_amsari }
+			OR = {
+				NOT = { scope:recipient = { var:gh_amsari_civil_war_info_story ?= { has_variable_list = amsari_civil_war_supporter_list } } }
+				scope:recipient = {
+					var:gh_amsari_civil_war_info_story ?= {
+						variable_list_size = {
+							name = amsari_civil_war_supporter_list
+							value >= 1
+						}
+					}
+				}
+			}
+			desc = GH_ASKING_FOR_STRONG_HOOK
+			scope:demand_strong_hook = yes
+		}
+		modifier = {
+			add = -100
+			trigger_if = {
+				limit = { scope:recipient.var:gh_amsari_civil_war_info_story ?= { has_variable_list = amsari_civil_war_supporter_list } }
+				scope:recipient = {
+					var:gh_amsari_civil_war_info_story ?= {
+						variable_list_size = {
+							name = amsari_civil_war_supporter_list
+							value >= 1
+						}
+					}
+				}
+			}
+			trigger_else = { always = no }			
+			desc = GH_ASKING_FOR_STRONG_HOOK
+			scope:demand_strong_hook = yes
+		}
+		modifier = {
+			add = 50
+			desc = GH_GIVE_GOLD_FOR_SUPPORT
+			scope:give_gold = yes
+		}		
+		modifier = {
+			add = 10
+			scope:recipient = {
+				is_close_family_of = scope:actor
+			}
+			desc = CLOSE_FAMILY_REASON
+		}
+		
+		modifier = {
+			add = 10
+			scope:recipient = {
+				NOT = { is_close_family_of = scope:actor }
+				is_extended_family_of = scope:actor
+			}
+			desc = EXTENDED_FAMILY_REASON
+		}
+
+		modifier = {
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+			add = {
+				value = 15
+			}
+			desc = WE_ARE_LOVERS
+		}		
+		modifier = {
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+			add = {
+				value = 15
+			}
+			desc = WE_ARE_FRIENDS
+		}
+		opinion_modifier = { # More likely to accept if Recipient likes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.25
+			min = 0
+			desc = AI_OPINION_REASON
+		}
+		opinion_modifier = { # Less likely to accept if Recipient dislikes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1
+			max = 0
+			desc = AI_OPINION_REASON
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = content
+			}
+			desc = INTERACTION_LOYAL
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = craven
+			}
+			desc = INTERACTION_CRAVEN
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = paranoid
+			}
+			desc = INTERACTION_PARANOID
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = arrogant
+			}
+			desc = INTERACTION_ARROGANT
+		}
+
+		modifier = {
+			add = 30
+			scope:recipient = {
+				has_trait = ambitious
+			}
+			desc = INTERACTION_AMBITIOUS
+		}
+
+		# Rivalry
+		modifier = { # Say no to rivals
+			add = -100
+			scope:recipient = {
+				has_relation_rival = scope:actor
+				NOT = { has_relation_nemesis = scope:actor }
+			}
+			desc = "ACTOR_RIVAL_TO_ME_REASON"
+		}
+		modifier = { # Say no to nemesis
+			add = -300
+			scope:recipient = {
+				has_relation_nemesis = scope:actor
+			}
+			desc = "ACTOR_NEMESIS_TO_ME_REASON"
+		}
+		
+		# Recipient is a Claimant to Actor's titles.
+		modifier = {
+			scope:recipient = {
+				any_claim = {
+					holder = scope:actor
+				}
+				NOR = {
+					is_heir_of = scope:actor
+					ai_greed <= -25
+				}
+			}
+			add = {
+				value = -50
+				if = {
+					limit = {
+						scope:recipient.ai_greed >= 25
+					}
+					add = ai_greed
+				}
+				if = {
+					limit = {
+						NOT = {
+							scope:recipient.house = scope:actor.house
+						}
+					}
+					multiply = 2
+				}
+			}
+			desc = IS_CLAIMANT_TO_ACTORS_TITLES
+		}
+		# Feud
+		modifier = {
+			add = -25
+			scope:recipient = {
+				existing_feud_against_target_trigger = { TARGET = scope:actor }
+			}
+			desc = MARRY_FAMILY_FEUD_REASON
+		}
+	}
+	ai_frequency = 64
+	
+	ai_targets = {
+		ai_recipients = courtiers
+		max = 10
+	}
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	
+	ai_potential = {
+		NOR = {
+			has_trait = craven
+			has_trait = content
+		}
+		is_imprisoned = no
+		is_physically_able = yes
+	}
+	
+	ai_will_do = {
+		base = 50
+		modifier = {
+			scope:actor = { 
+				var:gh_amsari_civil_war_info_story ?= { 
+					has_variable = amsari_civil_war_supporting
+				}
+			}
+			add = -200
+		}
+		
+		modifier = {
+			scope:recipient = { has_relation_lover = scope:actor }
+			add = 25
+		}		
+		modifier = {
+			scope:recipient = { has_relation_friend = scope:actor }
+			add = 25
+		}
+		opinion_modifier = { # More likely to accept if Recipient likes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.25
+			min = 0
+		}
+		opinion_modifier = { # Less likely to accept if Recipient dislikes the Actor
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 1
+			max = 0
+		}
+
+		modifier = {
+			add = 20
+			scope:recipient = {
+				has_trait = content
+			}
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = craven
+			}
+		}
+
+		modifier = {
+			add = -20
+			scope:recipient = {
+				has_trait = paranoid
+			}
+		}
+
+		modifier = {
+			add = 30
+			scope:recipient = {
+				has_trait = arrogant
+			}
+		}
+
+		modifier = {
+			add = 50
+			scope:recipient = {
+				has_trait = ambitious
+			}
+		}
+
+		modifier = {
+			add = -10
+			scope:recipient = {
+				has_trait = fickle
+			}
+		}
+
+		# Rivalry
+		modifier = { # Say no to rivals
+			add = -100
+			scope:recipient = {
+				has_relation_rival = scope:actor
+				NOT = { has_relation_nemesis = scope:actor }
+			}
+		}
+		modifier = { # Say no to nemesis
+			add = -300
+			scope:recipient = {
+				has_relation_nemesis = scope:actor
+			}
+		}
+	}
+}
+
+
+
+
+gh_acw_stop_support_pretender = {
+	category = interaction_category_diplomacy
+	icon = icon_scheme_damage_legitimacy
+
+	interface_priority = 80
+	desc = gh_acw_stop_support_pretender_desc
+	common_interaction = yes
+	
+	is_shown = {
+		exists = global_var:story_gh_amsari_civil_war
+		scope:recipient = { NOT = { this = scope:actor } }
+		scope:actor = {
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= scope:recipient
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			is_imprisoned = no
+			is_at_war = yes
+		}
+		scope:recipient = { is_busy_in_events_localised = yes }
+		custom_description = {
+			text = "gh_has_recently_supported_pretender"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_has_recently_supported_pretender  } }
+		}
+		custom_description = {
+			text = "gh_acw_forced_to_acknowledge_another_pretender"
+			subject = scope:actor
+			NOT = { scope:actor = { has_character_flag = gh_acw_forced_to_acknowledge_another_pretender  } }
+		}
+	}
+	auto_accept = yes
+
+	on_accept = {
+		scope:recipient = { custom_tooltip = gh_acw_stop_support_pretender.recipient_tooltip }
+		remove_support_to_amsari_pretender_effect = {
+			CHARACTER = scope:actor
+			OLD_PRETENDER = scope:recipient
+		}
+		scope:actor = { 
+			# Why does it need to be here and not work in remove_support_to_amsari_pretender_effect is a mystery to me 
+			var:gh_amsari_civil_war_info_story ?= { remove_variable = amsari_civil_war_supporting }
+			custom_tooltip = gh_acw_stop_support_pretender.actor_tooltip 
+		}		
+	}
+}

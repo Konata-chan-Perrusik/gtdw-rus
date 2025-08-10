@@ -1,0 +1,1317 @@
+﻿### Special effect for characters having access to extort subjects through religion but not faith
+religious_extort_subjects_effect = {
+	random_list = {
+		5 = { # A County
+			trigger = {
+				is_ai = no # So that this doesn't wreak havoc in the player's realm
+				any_held_title = {
+					extortion_county_trigger = yes
+				}
+			}
+			save_temporary_scope_value_as = {
+				name = found_suitable_target
+				value = yes
+			}
+			if = {
+				limit = {
+					any_held_title = {
+						extortion_county_trigger = yes
+						NOT = { faith = root.faith }
+					}
+				}
+				random_held_title = {
+					limit = {
+						extortion_county_trigger = yes
+						NOT = { faith = root.faith }
+					}
+					save_scope_as = extortion_target
+				}
+			}
+			else = {
+				random_held_title = {
+					limit = {
+						extortion_county_trigger = yes
+					}
+					save_scope_as = extortion_target
+				}
+			}
+			trigger_event = subject_extortion.0002
+		}
+		5 = { # Courtiers
+			trigger = {
+				NOT = { has_character_flag = recently_extorted_courtiers }
+				any_courtier = {
+					extortion_courtier_representative_trigger = yes
+				}
+			}
+			save_temporary_scope_value_as = {
+				name = found_suitable_target
+				value = yes
+			}
+			random_courtier = {
+				limit = {
+					extortion_courtier_representative_trigger = yes
+				}
+				save_scope_as = extortion_target
+			}
+			trigger_event = subject_extortion.0005
+		}
+	}
+
+	# Fallback in case no-one could be found
+	if = {
+		limit = {
+			NOT = { exists = scope:found_suitable_target }
+		}
+		trigger_event = subject_extortion.9998
+	}
+}
+
+### Thysian Healing Treatment effects - most of them are just vanilla treatment effects with stuff specifically referencing court physicians removed to avoid errors
+
+###DISEASE TREATMENT OPTIONS###
+
+thysian_safe_disease_treatment_effect = {
+	$TREATMENT_PICKER$ = { save_scope_as = treatment_picker }
+	$PATIENT$ = {
+		custom_tooltip = safe_diseaste_treatment.tt
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					exists = scope:physician
+				}
+
+				#Physician skill up
+				scope:physician = {
+					if = {
+						limit = {
+							NAND = {
+								has_trait = lifestyle_physician
+								has_trait_xp = {
+									trait = lifestyle_physician
+									value >= 100
+								}
+							}
+						}
+						physician_level_up_chance_effect = { CHANCE = 10 }
+					}
+				}
+
+				# OUTCOME RANDOMIZATION
+				random_list = {
+					70 = { # Success
+						modifier = {
+							factor = scope:physician.physician_safe_treatment_skill_factor
+							# 1 for an average learning skill character without traits
+							# 0.2 min for low learning
+							# ~3 for high skill character without traits
+							# ~12 for high skill character with best trait (physician_3)
+						}
+						# Perk bonus
+						modifier = {
+							has_perk = anatomical_studies_perk
+							factor = 2
+						}
+						scope:physician = { trigger_event = thysian.0013 } #Success
+					}
+					30 = { # Failure
+						scope:physician = { trigger_event = thysian.0014 } #Failure
+					}
+					70 = { # Failure on purpose
+						trigger = {
+							AND = {
+								is_ai = yes
+								court_physician_can_fail_on_purpose_trigger = yes
+							}
+						}
+						opinion_modifier = {
+							who = scope:physician
+							opinion_target = scope:sick_character
+							multiplier = -1 # Adds 100 for -100 opinion
+						}
+						modifier = {
+							factor = { #To keep it scaling with success
+								add = scope:physician.physician_safe_treatment_skill_factor
+								divide = 2
+							}
+						}
+						modifier = { #Are they already trying to kill you?
+							add = 40
+							scope:sick_character = {
+								any_targeting_scheme = {
+									scheme_type = murder
+									OR = {
+										scheme_owner = scope:physician
+										any_scheme_agent_character = { this = scope:physician }
+									}
+								}
+							}
+						}
+
+						scope:physician = { trigger_event = thysian.0014 } #Failure
+					}	
+				}
+			}
+		}
+	}
+}
+
+
+thysian_risky_disease_treatment_effect = {
+	$TREATMENT_PICKER$ = { save_scope_as = treatment_picker }
+	$PATIENT$ = {
+		custom_tooltip = risky_diseaste_treatment.tt
+
+		scope:treatment_picker = {
+			stress_impact = {
+				craven = medium_stress_impact_gain
+				content = minor_stress_impact_gain
+			}
+		}
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					exists = scope:physician
+				}
+
+				#Physician skill up
+				scope:physician = {
+					physician_level_up_chance_effect = { CHANCE = 10 }
+				}
+
+				random_list = {
+					1 = { #Success
+						modifier = {
+							scope:physician = {
+								learning >= mediocre_skill_rating
+								learning < medium_skill_rating
+							}
+							factor = 2
+						}
+						modifier = {
+							scope:physician = {
+								learning >= medium_skill_rating
+								learning < decent_skill_rating
+							}
+							factor = 4
+						}
+						modifier = {
+							scope:physician = {
+								learning >= decent_skill_rating
+								learning < high_skill_rating
+							}
+							factor = 7
+						}
+						modifier = {
+							scope:physician = {
+								learning >= high_skill_rating
+							}
+							factor = 10
+						}
+						modifier = {
+							scope:physician = { has_trait = lifestyle_physician }
+							factor = 2
+						}
+						modifier = {
+							scope:physician = {
+								has_trait = lifestyle_physician
+								has_trait_xp = {
+									trait = lifestyle_physician
+									value >= 50
+								}
+							}
+							factor = 5
+						}
+						modifier = {
+							scope:physician = {
+								has_trait = lifestyle_physician
+								has_trait_xp = {
+									trait = lifestyle_physician
+									value >= 100
+								}
+							}
+							factor = 5
+						}
+						# Perk bonus
+						modifier = {
+							has_perk = anatomical_studies_perk
+							factor = 2
+						}
+
+						#Critical or normal success?
+						random_list = {
+							1 = {
+								modifier = {
+									scope:physician = { has_trait = lifestyle_physician }
+									factor = 2
+								}
+								modifier = {
+									scope:physician = {
+										has_trait = lifestyle_physician
+										has_trait_xp = {
+											trait = lifestyle_physician
+											value >= 50
+										}
+									}
+									factor = 2
+								}
+								modifier = {
+									scope:physician = {
+										has_trait = lifestyle_physician
+										has_trait_xp = {
+											trait = lifestyle_physician
+											value >= 100
+										}
+									}
+									factor = 2
+								}
+								modifier = {
+									scope:disease_type = flag:leper
+									factor = 0
+								}
+								modifier = {
+									scope:disease_type = flag:cancer
+									factor = 0.2
+								}
+								# Perk bonus
+								modifier = {
+									has_perk = anatomical_studies_perk
+									factor = 2
+								}
+								scope:physician = { trigger_event = thysian.0015 } #Critical success
+							}
+							5 = {
+								scope:physician = { trigger_event = thysian.0016 } #Normal success
+							}
+						}
+					}
+					10 = { #Failure
+						scope:physician = { trigger_event = thysian.0017 } #Failure
+					}
+					5 = { #Failure on purpose
+						trigger = {
+							AND = {
+								is_ai = yes
+								court_physician_can_fail_on_purpose_trigger = yes
+							}
+						}
+						modifier = {	
+							OR = {
+								has_relation_rival = scope:physician
+								reverse_opinion = {
+									target = scope:physician
+									value <= -20
+								}
+							}
+							factor = 2
+						}
+						modifier = { #Are they already trying to kill you?
+							add = 40
+							scope:sick_character = {
+								any_targeting_scheme = {
+									scheme_type = murder
+									OR = {
+										scheme_owner = scope:physician
+										any_scheme_agent_character = { this = scope:physician }
+									}
+								}
+							}
+						}
+						scope:physician = { trigger_event = thysian.0017 } #Failure
+					}
+				}
+			}
+		}
+	}
+}
+
+thysian_mystic_disease_treatment_effect = {
+	$TREATMENT_PICKER$ = { save_scope_as = treatment_picker }
+	$PATIENT$ = {
+		custom_tooltip = mystic_diseaste_treatment.tt
+
+		scope:treatment_picker = {
+			stress_impact = {
+				paranoid = minor_stress_impact_gain
+				zealous = major_stress_impact_gain
+				craven = medium_stress_impact_gain
+			}
+		}
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					exists = scope:physician
+				}
+				#Physician skill up
+				scope:physician = {
+					mystic_level_up_chance_effect = { CHANCE = 15 }
+				}
+			}
+			else = {
+				debug_log = "No Physician existed in a mystic_treatment_effect! Why was the option even available?"
+			}
+
+			random_list = {
+				1 = { #Success
+					modifier = {
+						scope:physician = {
+							learning >= mediocre_skill_rating
+							learning < medium_skill_rating
+						}
+						factor = 2
+					}
+					modifier = {
+						scope:physician = {
+							learning >= medium_skill_rating
+							learning < decent_skill_rating
+						}
+						factor = 4
+					}
+					modifier = {
+						scope:physician = {
+							learning >= decent_skill_rating
+							learning < high_skill_rating
+						}
+						factor = 7
+					}
+					modifier = {
+						scope:physician = {
+							learning >= high_skill_rating
+						}
+						factor = 10
+					}
+					modifier = {
+						scope:physician = { has_trait = lifestyle_mystic }
+						factor = 2
+					}
+					modifier = {
+						scope:physician = {
+							has_trait = lifestyle_mystic
+							has_trait_xp = {
+								trait = lifestyle_mystic
+								value >= 50
+							}
+						}
+						factor = 5
+					}
+					modifier = {
+						scope:physician = {
+							has_trait = lifestyle_mystic
+							has_trait_xp = {
+								trait = lifestyle_mystic
+								value >= 50
+							}
+						}
+						factor = 5
+					}
+					# Perk bonus
+					modifier = {
+						has_perk = anatomical_studies_perk
+						factor = 2
+					}
+
+					#Critical or normal success?
+					random_list = {
+						1 = {
+							modifier = {
+								scope:physician = { has_trait = lifestyle_physician }
+								factor = 1.5
+							}
+							modifier = {
+								scope:physician = {
+									has_trait = lifestyle_physician
+									has_trait_xp = {
+										trait = lifestyle_physician
+										value >= 50
+									}
+								}
+								factor = 2
+							}
+							modifier = {
+								scope:physician = {
+									has_trait = lifestyle_physician
+									has_trait_xp = {
+										trait = lifestyle_physician
+										value >= 50
+									}
+								}
+								factor = 3
+							}
+							modifier = {
+								scope:disease_type = flag:leper
+								factor = 0
+							}
+							modifier = {
+								scope:disease_type = flag:cancer
+								factor = 0.1
+							}
+							
+							# Perk bonus
+							modifier = {
+								has_perk = anatomical_studies_perk
+								factor = 2
+							}
+							
+							scope:physician = { trigger_event = thysian.0018 } #Critical success
+						}
+						5 = {
+							scope:physician = { trigger_event = thysian.0019 } #Normal success
+						}
+					}
+				}
+				10 = { #Failure
+					scope:physician = { trigger_event = health.3110  } #Failure
+				}
+				5 = { #Failure on purpose
+					trigger = {
+						AND = {
+							is_ai = yes
+							court_physician_can_fail_on_purpose_trigger = yes
+						}
+					}
+					modifier = {	
+						OR = {
+							has_relation_rival = scope:physician
+							reverse_opinion = {
+								target = scope:physician
+								value <= -20
+							}
+						}
+						factor = 2
+					}
+					modifier = { #Are they already trying to kill you?
+						add = 40
+						scope:sick_character = {
+							any_targeting_scheme = {
+								scheme_type = murder
+								OR = {
+									scheme_owner = scope:physician
+									any_scheme_agent_character = { this = scope:physician }
+								}
+							}
+						}
+					}
+					scope:physician = { trigger_event = thysian.0020 } #Failure
+				}	
+			}
+		}
+	}
+}
+
+###################################
+# EXECUTION NON-EXECUTION EFFECTS #
+###################################
+execution_non_execution_effects = {
+	$VICTIM$ = {
+		save_scope_as = victim
+	}
+
+	$EXECUTIONER$ = {
+		save_scope_as = executioner
+		save_scope_as = imprisoner #Save this scope to show correct tyranny tooltip
+	}
+
+	show_as_tooltip = {
+		$VICTIM$ = {
+			death = {
+				death_reason = death_execution
+				killer = $EXECUTIONER$
+			}
+		}
+	}
+
+	scope:executioner = {
+		# Dread gain
+		if = {
+			limit = {
+				scope:victim = {
+					time_in_prison = { years > 15 } # No one even remembers who they are anymore
+				}
+			}
+			# No dread for you
+		}
+		else_if = { # Executing Emperors/HoF is quite dreadful
+			limit = {
+				scope:victim = {
+					OR = {
+						highest_held_title_tier >= tier_empire
+						scope:executioner.faith.religious_head = scope:victim # Your head of faith
+					}
+				}
+			}
+			add_dread = execute_interaction_massive_dread_gain
+		}
+		else_if = {
+			limit = {
+				scope:victim = {
+					OR = {
+						highest_held_title_tier >= tier_kingdom
+						tier_or_related_liege_tier_greater_or_equal_trigger = { TIER = tier_empire }
+						is_powerful_vassal_of = scope:executioner # Is your powerful vassal
+						target_is_vassal_or_below = scope:executioner # Your liege/s
+						is_close_family_of = scope:executioner
+					}
+				}
+			}
+			add_dread = execute_interaction_major_dread_gain
+		}
+		else_if = {
+			limit = {
+				scope:victim = {
+					OR = {
+						highest_held_title_tier >= tier_duchy
+						tier_or_related_liege_tier_greater_or_equal_trigger = { TIER = tier_kingdom }
+						AND = { # Is your vassal, and higher than Baron
+							is_vassal_of = scope:executioner
+							primary_title.tier > tier_barony
+						}
+						AND = { # Peer Vassals
+							exists = primary_title
+							primary_title.tier > tier_barony
+							exists = liege
+							liege = scope:executioner.liege
+						}
+						has_trait = peasant_leader
+					}
+				}
+			}
+			add_dread = execute_interaction_medium_dread_gain
+		}
+		else_if = {
+			limit = {
+				scope:victim = {
+					OR = {
+						highest_held_title_tier >= tier_county
+						tier_or_related_liege_tier_greater_or_equal_trigger = { TIER = tier_duchy }
+						is_vassal_of = scope:executioner # Is your Baron vassal
+						is_close_or_extended_family_of = scope:executioner
+						
+						scope:executioner = { # Executing close family of your vassals is dreadful...
+							any_vassal = {
+								is_close_family_of = scope:victim
+							}
+						}
+						scope:executioner = { # Executing close family of your liege/s is the same...
+							any_liege_or_above = {
+								is_close_family_of = scope:victim
+							}
+						}
+					}
+				}
+			}
+			add_dread = execute_interaction_minor_dread_gain
+		}
+		
+		# Piety loss (or gain) from executions
+		if = {
+			limit = {
+				OR = {
+					faith = { has_doctrine_parameter = human_sacrifice_active }
+					faith = { has_doctrine_parameter = piety_for_rival_kill }
+					AND = {
+						faith = { has_doctrine_parameter = chosen_man_mechanics_active }
+						scope:victim.culture = { has_cultural_pillar = heritage_aversarian }
+					}
+				}
+			}
+			scope:victim = {
+				if = {
+					limit = {
+						OR = {
+							highest_held_title_tier >= tier_empire
+							any_close_family_member = {
+								highest_held_title_tier >= tier_empire
+							}
+						}
+						AND = { # Don't give massive piety to characters who are only getting piety from a rival kill
+							faith = { has_doctrine_parameter = piety_for_rival_kill }
+							NOR = {
+								faith = { has_doctrine_parameter = human_sacrifice_active }
+								faith = { has_doctrine_parameter = chosen_man_mechanics_active }
+							}
+						}
+					}
+					scope:executioner = { add_piety = massive_piety_gain }
+				}
+				else_if = {
+					limit = {
+						OR = {
+							highest_held_title_tier >= tier_kingdom
+							any_close_family_member = {
+								highest_held_title_tier >= tier_kingdom
+							}
+							AND = {
+								has_relation_rival = scope:executioner
+								faith = { has_doctrine_parameter = piety_for_rival_kill }
+							}
+						}
+					}
+					scope:executioner = { add_piety = major_piety_gain }
+				}
+				else_if = {
+					limit = {
+						OR = {
+							highest_held_title_tier >= tier_duchy
+							any_close_family_member = {
+								highest_held_title_tier >= tier_duchy
+							}
+						}
+					}
+					scope:executioner = { add_piety = medium_piety_gain }
+				}
+				else_if = {
+					limit = {
+						OR = {
+							is_ruler = yes
+							is_lowborn = no
+							any_close_family_member = {
+								is_ruler = yes
+							}
+						}
+					}
+					scope:executioner = { add_piety = minor_piety_gain }
+				}
+				else = {
+					scope:executioner = { add_piety = miniscule_piety_gain }
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				faith = scope:victim.faith
+				NOT = { has_perk = divine_retribution_perk }
+				scope:victim = {
+					has_no_particular_noble_roots_trigger = yes
+				}
+			}
+			add_piety = miniscule_piety_loss
+		}
+		else_if = {
+			limit = {
+				faith = scope:victim.faith
+				NOT = { has_perk = divine_retribution_perk }
+			}
+			add_piety = medium_piety_loss
+		}
+		
+		# Stress loss
+		if = {
+			limit = { has_relation_rival = scope:victim }
+
+			if = {
+				limit = {
+					NOR = {
+						has_trait = sadistic
+						has_trait = vengeful
+						has_trait = compassionate
+						has_trait = forgiving
+					}
+				}
+				add_stress = medium_stress_loss
+			}
+			else = {
+				stress_impact = {
+					sadistic = major_stress_impact_loss
+					vengeful = massive_stress_impact_loss
+					compassionate = minor_stress_impact_gain
+					forgiving = minor_stress_impact_gain
+				}
+			}
+		}
+		else_if = { #Killing infidels is relaxing
+			limit = {
+				has_trait = zealous
+				NOT = { scope:executioner.faith = scope:victim.faith }
+			}
+
+			if = {
+				limit = {
+					NOR = {
+						has_trait = sadistic
+						has_trait = compassionate
+						has_trait = forgiving
+					}
+				}
+				add_stress = medium_stress_loss
+			}
+			else = {
+				stress_impact = {
+					sadistic = major_stress_impact_loss
+					compassionate = minor_stress_impact_gain
+					forgiving = minor_stress_impact_gain
+				}
+			}
+		}
+		# Stress Gain
+		else_if = {
+			limit = {
+				exists = scope:victim
+				has_execute_reason = scope:victim
+				NOT = {
+					has_trait = sadistic
+				}
+				scope:victim = {
+					OR = {
+						is_child_of = scope:executioner
+						is_grandchild_of = scope:executioner
+						is_great_grandchild_of = scope:executioner
+					}
+				}
+			}
+			stress_impact = {
+				base = minor_stress_impact_gain
+				compassionate = massive_stress_impact_gain
+				forgiving = major_stress_impact_gain
+				generous = minor_stress_impact_gain
+				family_first = minor_stress_impact_gain
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					has_trait = sadistic
+				}
+				scope:victim = {
+					OR = {
+						is_child_of = scope:executioner
+						is_grandchild_of = scope:executioner
+						is_great_grandchild_of = scope:executioner
+					}
+				}
+			}
+			stress_impact = {
+				base = medium_stress_impact_gain
+				compassionate = massive_stress_impact_gain
+				forgiving = major_stress_impact_gain
+				generous = medium_stress_impact_gain
+				trusting = minor_stress_impact_gain
+				content = minor_stress_impact_gain
+				family_first = minor_stress_impact_gain
+				just = medium_stress_impact_gain # GH ADDITION: Do we still want this?
+			}
+			if = {
+				limit = {
+					exists = scope:execution_sacrifice
+					NOT = { always = scope:execution_sacrifice }
+				}
+				stress_impact = {
+					just = medium_stress_impact_gain
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					has_trait = sadistic
+				}
+				scope:victim = {
+					OR = {
+						has_relation_friend = scope:executioner
+						has_relation_lover = scope:executioner
+					}
+				}
+			}
+			stress_impact = {
+				base = medium_stress_impact_gain
+				compassionate = massive_stress_impact_gain
+				forgiving = major_stress_impact_gain
+				generous = medium_stress_impact_gain
+				trusting = minor_stress_impact_gain
+				content = minor_stress_impact_gain
+			}
+			if = {
+				limit = {
+					exists = scope:execution_sacrifice
+					NOT = { always = scope:execution_sacrifice }
+				}
+				stress_impact = {
+					just = medium_stress_impact_gain
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				exists = scope:victim
+				has_execute_reason = scope:victim
+			}
+			stress_impact = {
+				sadistic = medium_stress_impact_loss
+				compassionate = medium_stress_impact_gain
+				forgiving = minor_stress_impact_gain
+				generous = minor_stress_impact_gain
+			}
+		}
+		else_if = {
+			limit = { # Cynical skulltakers probably dont think this is quite as dope as the rest
+				faith = { has_doctrine_parameter = can_take_skulls }
+				NOT = { has_trait = cynical }
+			}
+			if = { # Zealous skulltakers shouldn't pull their heartstrings
+				limit = { has_trait = zealous }
+				stress_impact = {
+					sadistic = medium_stress_impact_loss
+				}
+			}
+			stress_impact = { # Otherwise, give boost
+				base = minor_stress_impact_loss
+				sadistic = medium_stress_impact_loss
+			}
+		}
+		else = {
+			stress_impact = {
+				sadistic = medium_stress_impact_loss
+				compassionate = major_stress_impact_gain
+				forgiving = medium_stress_impact_gain
+				generous = medium_stress_impact_gain
+				trusting = minor_stress_impact_gain
+				content = minor_stress_impact_gain
+			}
+			if = {
+				limit = {
+					exists = scope:execution_sacrifice
+					NOT = { always = scope:execution_sacrifice }
+				}
+				stress_impact = {
+					just = medium_stress_impact_gain
+				}
+			}
+		}
+		
+		#Kinslaying
+		add_kinslayer_trait_or_nothing_effect = { VICTIM = scope:victim }
+
+		#Tyranny
+		if = { # GH ADDITION: You're allowed to punish however you wish for any crime - justice!
+			limit = {
+				crimes_allow_any_punishment_trigger = yes
+				has_any_crime_trigger = { WHO = victim }
+			}
+			patron_saint_affinity_just_rule_check = { PUNISHED = scope:victim }
+			custom_tooltip = IS_ALLOWED_TO_EXECUTE_ANY_CRIMINAL_DESC
+		}
+		else_if = { # GH ADDITION: Mandate of Purity allows executing Aversarians if you're not Aversarian yourself
+			limit = {
+				scope:executioner.faith = { has_doctrine_parameter = chosen_man_mechanics_active }
+				NOT = { scope:executioner.culture = { has_cultural_pillar = heritage_aversarian } }
+				scope:victim.culture = { has_cultural_pillar = heritage_aversarian }
+			}
+			custom_tooltip = IS_ALLOWED_TO_EXECUTE_MANDATE_OF_PURITY_DESC
+		}
+		else_if = {
+			limit = {
+				exists = scope:recipient
+					has_execute_reason = scope:victim
+			}
+			custom_tooltip = IS_ALLOWED_TO_EXECUTE_DESC
+		}
+		else_if = {
+			limit = {
+				OR = {
+					AND = {
+						NOT = { exists = scope:recipient }
+						has_execute_reason = scope:victim
+					}
+					is_at_war_with = scope:victim
+				}
+			}
+			custom_tooltip = IS_ALLOWED_TO_EXECUTE_NO_RECIPIENT_DESC
+		}
+		else_if = {
+			limit = {
+				scope:victim = {
+					OR = {
+						is_playable_character = no
+						NOT = { is_of_major_or_minor_interest_trigger = { CHARACTER = scope:executioner } }
+					}
+				}
+	   			scope:executioner.faith = {
+	  				faith_hostility_level = {
+	 					target = scope:victim.faith
+						value > faith_astray_level
+	 				}
+				}
+			}
+			custom_tooltip = IS_ALLOWED_TO_EXECUTE_HOSTILE_RELIGION_DESC
+		}
+		else_if = {
+			limit = {
+				scope:victim = { target_is_liege_or_above = prev }
+			}
+			add_tyranny = execution_tyranny_gain
+		}
+		else_if = {
+			limit = {
+				scope:victim = {
+					NOT = { exists = liege }
+					exists = host
+				}
+				any_pool_guest = { count > 0 }
+			}
+			every_pool_guest = {
+				limit = {
+					NOR = {
+						this = scope:victim
+						is_in_list = guest_list
+					}
+				}
+				add_to_temporary_list = guest_list
+			}
+			every_in_list = {
+				list = guest_list
+				custom = all_your_guests
+				limit = {
+					NOT = { this = scope:executioner }
+				}
+				add_opinion = {
+					target = scope:executioner
+					modifier = executed_guest_modifier
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					exists = scope:victim.liege
+					NOT = { scope:victim.liege = scope:victim }
+				}
+				scope:victim.liege = {
+					add_opinion = {
+						target = scope:executioner
+						modifier = executed_my_countryman_modifier
+					}
+				}
+			}
+		}
+	}
+
+	execute_opinion_effect = { VICTIM = scope:victim EXECUTIONER = scope:executioner }
+	
+	if = {
+		limit = {
+			scope:executioner = {
+				has_any_nickname = no
+				has_relation_lover = scope:victim
+			}
+		}
+		random = {
+			chance = 20
+			scope:executioner = {
+				set_nickname_effect = { NICKNAME = nick_the_heartless }
+			}
+		}
+	}
+
+	if = { # GH ADDITION: Chosen Man trait gain
+		limit = {
+			scope:executioner = {
+				faith = { has_doctrine_parameter = chosen_man_mechanics_active }
+				NOT = { has_trait = gh_chosen_man }
+			}
+			scope:victim = {
+				culture = { has_cultural_pillar = heritage_aversarian }
+				OR = {
+					is_lowborn = no
+					is_ruler = yes
+					any_close_family_member = { is_ruler = yes }
+				}
+			}
+		}
+		add_trait = gh_chosen_man
+	}
+
+	if = { # GH ADDITION: Give the Haradar their prize
+		limit = {
+			scope:executioner = { faith = { has_doctrine_parameter = magi_hunters_active } }
+			scope:victim = { has_trait = magic_good }
+		}
+		scope:victim = { save_scope_as = murdered_magi }
+		scope:executioner = {
+			save_scope_as = magi_killer
+			trigger_event = haradar_flavor.1000
+		}
+	}
+	
+	# Saint Affinity 
+	if = {
+		limit = {
+			character_has_any_patron_saint = yes
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_executing_heathens }
+			scope:executioner.faith = {
+				faith_hostility_level = {
+					target = scope:victim.faith
+					value > faith_astray_level
+				}
+			}
+		}
+		patron_saint_affinity_from_executing_heathens_check = yes
+	}
+}
+
+###############################
+# MEDICAL EXPERIMENTS EFFECTS #
+###############################
+
+medical_experiment_show_effects_tooltip = {
+	torture_blind_castrate_disfigure_opinion_effect = { VERB = experimented_on }
+	custom_tooltip = medical_experiments_following_effects_tooltip_tt
+	show_as_tooltip = {
+		custom_tooltip = medical_experiments_damage_to_victim_tooltip_tt
+		medical_experiment_stress_effect = yes
+		if = {
+			limit = { faith = { has_doctrine_parameter = can_perform_medical_experiments } }
+			add_piety = medium_piety_gain
+		}
+		if = {
+			limit = { 
+				character_has_any_patron_saint = yes
+				any_character_patron_saint_has_aspect_trigger = { ASPECT = values_medical_experiments } 
+			}
+			custom_tooltip = medical_experiments_future_increase_to_saint_affinity_tt
+		}
+	}
+}
+
+medical_experiment_stress_effect = {
+	stress_impact = {
+		sadistic = medium_stress_impact_loss
+		compassionate = monumental_stress_gain
+	}
+}
+
+medical_experiment_damage_effects = {
+	random_list = {
+		10 = {
+			trigger = { NOT = { has_trait = wounded_3 } }
+			change_trait_rank = {
+				trait = wounded
+				rank = 1
+				max = 3
+			}
+		}
+		10 = {
+			trigger = { 
+				NOR = { 
+					has_trait = wounded_2
+					has_trait = wounded_3 
+				} 
+			}
+			change_trait_rank = {
+				trait = wounded
+				rank = 2
+				max = 3
+			}
+		}
+		10 = {
+			trigger = { NOT = { has_trait = wounded } }
+			change_trait_rank = {
+				trait = wounded
+				rank = 3
+				max = 3
+			}
+		}
+		20 = {
+			medical_experiment_random_maim = yes
+		}
+		20 = {
+			save_scope_value_as = { name = victim_dies value = yes }
+		}
+	}
+	if = {
+		limit = {
+			NOR = {
+				has_trait = craven
+				has_trait = brave
+			}
+		}
+		add_stress = massive_stress_impact_gain
+	}
+	else = {
+		stress_impact = {
+			craven = monumental_stress_gain
+			brave = medium_stress_impact_gain
+		}
+	}
+	save_scope_as = recipient
+	scope:owner = { save_scope_as = actor }
+	torture_blind_castrate_disfigure_opinion_effect = { VERB = experimented_on }
+}
+medical_experiments_kill_victim_if_necessary = {
+	if = {
+		limit = { exists = scope:victim_dies }
+		scope:victim = {
+			death = {
+				death_reason = death_experimented_on
+				killer = scope:owner
+			}
+		}
+	}
+}
+
+medical_experiment_random_maim = {
+	random_list = {
+		10 = {
+			trigger = { NOT = { has_trait = maimed } }
+			add_trait = maimed
+		}
+		10 = {
+			trigger = { NOT = { has_trait = one_eyed } }
+			add_trait = one_eyed
+		}
+		10 = {
+			trigger = { NOT = { has_trait = one_legged } }
+			add_trait = one_legged
+		}
+		10 = {
+			trigger = { NOT = { has_trait = disfigured } }
+			add_trait = disfigured
+		}
+	}
+}
+
+medical_experiments_success_event_effect = {
+	random_list = {
+		75 = { 
+			save_scope_value_as = { name = standard_success value = yes }
+			trigger_event = patron_saint_event.0101
+		}
+		20 = {
+			modifier = {
+				add = medical_experiments_great_success_bonus_value
+			}
+			save_scope_value_as = { name = great_success value = yes }
+			trigger_event = patron_saint_event.0102
+		}
+		5 = {
+			modifier = {
+				add = medical_experiments_critical_success_bonus_value
+			}
+			save_scope_value_as = { name = critical_success value = yes }
+			trigger_event = patron_saint_event.0103
+		}
+	}
+}
+
+medical_experiments_success_experience_effect = {
+	if = {
+		limit = { exists = scope:standard_success }
+		medical_experiment_standard_success_effect = yes
+		if = {
+			limit = { exists = scope:court_physician }
+			scope:court_physician = { medical_experiment_standard_success_effect = yes }
+		}
+	}
+	else_if = {
+		limit = { exists = scope:great_success }
+		medical_experiment_great_success_effect = yes
+		if = {
+			limit = { exists = scope:court_physician }
+			scope:court_physician = { medical_experiment_great_success_effect = yes }
+		}
+	}
+	else = {
+		medical_experiment_critical_success_effect = yes
+		if = {
+			limit = { exists = scope:court_physician }
+			scope:court_physician = { medical_experiment_critical_success_effect = yes }
+		}
+	}
+}
+
+medical_experiment_standard_success_effect = {
+	patron_saint_affinity_from_medical_experiments_check = { VALUE = 3 }
+	add_learning_lifestyle_xp = 100
+	if = {
+		limit = {
+			NOT = { has_trait = lifestyle_physician }
+		}
+		add_trait = lifestyle_physician
+	}
+	else_if = {
+		limit = {
+			has_trait_xp = {
+				trait = lifestyle_physician
+				value < 100
+			}
+		}
+		add_trait_xp = {
+			trait = lifestyle_physician
+			value = 5
+		}
+	}
+	if = {
+		limit = { faith = { has_doctrine_parameter = can_perform_medical_experiments } }
+		add_piety = medium_piety_gain
+	}
+}
+
+medical_experiment_great_success_effect = {
+	patron_saint_affinity_from_medical_experiments_check = { VALUE = 4 }
+	add_learning_lifestyle_xp = 150
+	if = {
+		limit = {
+			NOT = { has_trait = lifestyle_physician }
+		}
+		add_trait = lifestyle_physician
+	}
+	else_if = {
+		limit = {
+			has_trait_xp = {
+				trait = lifestyle_physician
+				value < 100
+			}
+		}
+		add_trait_xp = {
+			trait = lifestyle_physician
+			value = 10
+		}
+	}
+	if = {
+		limit = { faith = { has_doctrine_parameter = can_perform_medical_experiments } }
+		add_piety = major_piety_gain
+	}
+}
+
+medical_experiment_critical_success_effect = {
+	patron_saint_affinity_from_medical_experiments_check = { VALUE = 5 }
+	add_learning_lifestyle_xp = 250
+	if = {
+		limit = {
+			NOT = { has_trait = lifestyle_physician }
+		}
+		add_trait = lifestyle_physician
+	}
+	else_if = {
+		limit = {
+			has_trait_xp = {
+				trait = lifestyle_physician
+				value < 100
+			}
+		}
+		add_trait_xp = {
+			trait = lifestyle_physician
+			value = 15
+		}
+	}
+	if = {
+		limit = { faith = { has_doctrine_parameter = can_perform_medical_experiments } }
+		add_piety = massive_piety_gain
+	}
+}
+
+offend_religion_effect = { #GH: For travel_events.4038
+	send_interface_toast = {
+		title = travel.bad_cermon
+		left_icon = root
+		add_piety = minor_piety_loss
+		gh_add_offended_religion_character_modifier_effect = {
+			RELIGION = $RELIGION$
+			YEARS = 5
+		}
+	}
+}

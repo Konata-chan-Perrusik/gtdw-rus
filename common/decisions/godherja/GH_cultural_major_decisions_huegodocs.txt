@@ -1,0 +1,895 @@
+﻿###huegodocs cultural decisions. Shamelessly built with code copied from TBPineapple's Kingdom of the Clouds decision
+found_k_heurgordica_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = huegodoc
+	ai_check_interval = 36
+	desc = found_k_heurgordica_decision_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_huegodoc }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:k_heurgordica_decision
+			}
+			any_held_title = {
+				count >= 1
+				tier >= tier_empire
+			}
+			OR = {
+				has_title = title:k_dathothica
+				has_title = title:k_heurgordica
+				has_title = title:k_rithogedica
+			}
+			has_character_flag = formed_huegodoc_kingdom
+		}
+	}
+	
+	is_valid = {
+		is_independent_ruler = yes
+		is_at_war = no
+		OR = {
+			AND = {
+				highest_held_title_tier <= tier_kingdom
+				highest_held_title_tier = tier_duchy
+				custom_description = {
+					text = need_3_duchies
+					any_held_title = {
+						count > 2
+						tier = tier_duchy
+					} 
+				}
+			}
+			AND = {
+				highest_held_title_tier = tier_kingdom
+				custom_description = {
+					text = just_one_kingdom
+					highest_held_title_tier = tier_kingdom
+					any_held_title = {
+						count = 1
+						tier = tier_kingdom
+					} 
+				}
+			}
+		}
+	}
+	effect = {
+		add_character_flag = formed_huegodoc_kingdom
+		add_prestige = 750
+		capital_county = {
+			change_development_level = 15
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+		}
+		IF = {
+			limit = {
+				NOT = {
+					OR = {
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_heurgordica_decision
+						}
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_dathothica_decision
+						}
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_rithogedica_decision
+						}
+					}
+				}
+			}
+			custom_tooltip = heurgordica_tradition_custom_desc
+			root.culture = {
+				add_culture_tradition = tradition_equal_inheritance
+			}
+		}
+		hidden_effect = {
+			save_scope_as = founder
+			primary_title = {
+				save_scope_as = old_title
+			}
+		
+			get_title = title:k_heurgordica
+			set_primary_title_to = title:k_heurgordica
+			GH_livinthedream_check = yes
+			primary_title = {
+				save_scope_as = new_title
+			}
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			
+			scope:new_title = {
+				change_title_holder = {
+					holder = root
+					change = scope:change
+				}
+			}
+		
+			resolve_title_and_vassal_change = scope:change
+	
+			#Check if all territory is from a single Empire, and if so, make Kingdom de jure of that Empire
+			every_sub_realm_county = {
+				if = {
+					limit = {
+						exists = empire
+					}
+					empire = {
+						if = {
+							limit = {
+								NOT = {
+									is_in_list = potential_empires
+								}
+							}
+							add_to_list = potential_empires
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = potential_empires
+						count > 0
+					}
+				}
+				ordered_in_list = {
+					list = potential_empires
+					order_by = {
+						every_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_county
+							}
+							limit = {
+								tier = tier_county
+								holder.top_liege = root
+							}
+							add = 1
+						}
+					}
+					position = 0
+					save_scope_as = old_empire
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:old_empire
+				}
+				scope:new_title = {
+					set_de_jure_liege_title = scope:old_empire
+				}
+			}
+			
+			every_held_title = {
+				limit = {
+					tier = tier_duchy
+				}
+				if = {
+					limit = {
+						#Check if you need to notify a player
+						OR = {
+							AND = {
+								exists = kingdom
+								kingdom = {
+									exists = holder
+									holder = {
+										NOT = { this = root }
+										is_ai = no
+									}
+								}
+							}
+							AND = {
+								exists = empire
+								empire = {
+									exists = holder
+									holder = {
+										NOT = { this = root }
+										is_ai = no
+									}
+								}
+							}
+						}
+					}
+					add_to_temporary_list = duchy_for_notification
+					root = {
+						save_temporary_scope_value_as = {
+							name = send_notifications
+							value = yes
+						}
+					}
+				}
+				set_de_jure_liege_title = scope:new_title
+			}
+
+			every_sub_realm_county = {
+				limit = {
+					exists = duchy
+					NOT = { exists = duchy.holder }
+					holder.top_liege = root
+					duchy = {
+						save_temporary_scope_as = test_duchy
+					}
+					holder.top_liege = {
+						completely_controls = scope:test_duchy
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							duchy = {
+								is_in_list = additional_de_jure_duchies
+							}
+						}
+					}
+					duchy = {
+						set_de_jure_liege_title = scope:new_title
+						add_to_list = additional_de_jure_duchies
+					}
+				}
+			}
+			
+			scope:new_title = {
+				set_capital_county = scope:old_title.title_capital_county
+			}
+			set_primary_title_to = scope:new_title
+			
+			
+			every_player = {
+				if = {
+					limit = {
+						top_liege = scope:founder
+						NOT = { this = root }
+					}
+				}
+				else_if = {
+					limit = {
+						exists = scope:send_notifications
+						NOT = { this = root }
+						NOT = { top_liege = scope:founder }
+						any_held_title = {
+							any_in_de_jure_hierarchy = {
+								continue = {
+									tier > tier_duchy
+								}
+								tier = tier_duchy
+								is_in_list = duchy_for_notification
+							}
+						}
+					}
+					every_held_title = {
+						every_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_duchy
+							}
+							limit = {
+								tier = tier_duchy
+								is_in_list = duchy_for_notification
+							}
+							add_to_list = notification_titles	
+						}
+					}			
+					if = {
+						limit = {
+							any_in_list = {
+								list = notification_titles
+								count > 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+}
+
+###huegodocs cultural decisions. Shamelessly built with code copied from TBPineapple's Kingdom of the Clouds decision
+found_k_dathothica_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = huegodoc
+	ai_check_interval = 36
+	desc = found_k_dathothica_decision_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_huegodoc }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:k_dathothica_decision
+			}
+			any_held_title = {
+				count >= 1
+				tier >= tier_empire
+			}
+			OR = {
+				has_title = title:k_dathothica
+				has_title = title:k_heurgordica
+				has_title = title:k_rithogedica
+			}
+			has_character_flag = formed_huegodoc_kingdom
+		}
+	}
+	
+	is_valid = {
+		is_independent_ruler = yes
+		is_at_war = no
+		OR = {
+			AND = {
+				highest_held_title_tier <= tier_kingdom
+				highest_held_title_tier = tier_duchy
+				custom_description = {
+					text = need_3_duchies
+					any_held_title = {
+								count > 2
+								tier = tier_duchy
+							} 
+						}
+					}
+			AND = {
+				highest_held_title_tier = tier_kingdom
+					custom_description = {
+						text = just_one_kingdom
+						highest_held_title_tier = tier_kingdom
+							any_held_title = {
+								count = 1
+								tier = tier_kingdom
+							} 
+						} 
+						}
+					}
+			}
+	effect = {
+		add_character_flag = formed_huegodoc_kingdom
+		capital_county = {
+			change_development_level = 15
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+		}
+		if = {
+			limit = {
+				NOT = {
+					OR = {
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_heurgordica_decision
+						}
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_dathothica_decision
+						}
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_rithogedica_decision
+						}
+					}
+				}
+			}
+			custom_tooltip = dathothica_tradition_custom_desc
+			root.culture = {
+				add_culture_tradition = tradition_storytellers
+			}
+		}
+		hidden_effect = {
+			save_scope_as = founder
+			primary_title = {
+				save_scope_as = old_title
+			}
+		
+			get_title = title:k_dathothica
+			set_primary_title_to = title:k_dathothica
+			GH_livinthedream_check = yes
+			primary_title = {
+				save_scope_as = new_title
+			}
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			
+			scope:new_title = {
+				change_title_holder = {
+					holder = root
+					change = scope:change
+				}
+			}
+		
+			resolve_title_and_vassal_change = scope:change
+	
+			#Check if all territory is from a single Empire, and if so, make Kingdom de jure of that Empire
+			every_sub_realm_county = {
+				if = {
+					limit = {
+						exists = empire
+					}
+					empire = {
+						if = {
+							limit = {
+								NOT = {
+									is_in_list = potential_empires
+								}
+							}
+							add_to_list = potential_empires
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = potential_empires
+						count > 0
+					}
+				}
+				ordered_in_list = {
+					list = potential_empires
+					order_by = {
+						every_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_county
+							}
+							limit = {
+								tier = tier_county
+								holder.top_liege = root
+							}
+							add = 1
+						}
+					}
+					position = 0
+					save_scope_as = old_empire
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:old_empire
+				}
+				scope:new_title = {
+					set_de_jure_liege_title = scope:old_empire
+				}
+			}
+			
+			every_held_title = {
+				limit = {
+					tier = tier_duchy
+				}
+				if = {
+					limit = {
+						#Check if you need to notify a player
+						OR = {
+							AND = {
+								exists = kingdom
+								kingdom = {
+									exists = holder
+									holder = {
+										NOT = { this = root }
+										is_ai = no
+									}
+								}
+							}
+							AND = {
+								exists = empire
+								empire = {
+									exists = holder
+									holder = {
+										NOT = { this = root }
+										is_ai = no
+									}
+								}
+							}
+						}
+					}
+					add_to_temporary_list = duchy_for_notification
+					root = {
+						save_temporary_scope_value_as = {
+							name = send_notifications
+							value = yes
+						}
+					}
+				}
+				set_de_jure_liege_title = scope:new_title
+			}
+
+			every_sub_realm_county = {
+				limit = {
+					exists = duchy
+					NOT = { exists = duchy.holder }
+					holder.top_liege = root
+					duchy = {
+						save_temporary_scope_as = test_duchy
+					}
+					holder.top_liege = {
+						completely_controls = scope:test_duchy
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							duchy = {
+								is_in_list = additional_de_jure_duchies
+							}
+						}
+					}
+					duchy = {
+						set_de_jure_liege_title = scope:new_title
+						add_to_list = additional_de_jure_duchies
+					}
+				}
+			}
+			
+			scope:new_title = {
+				set_capital_county = scope:old_title.title_capital_county
+			}
+			set_primary_title_to = scope:new_title
+			
+			
+			every_player = {
+				if = {
+					limit = {
+						top_liege = scope:founder
+						NOT = { this = root }
+					}
+				}
+				else_if = {
+					limit = {
+						exists = scope:send_notifications
+						NOT = { this = root }
+						NOT = { top_liege = scope:founder }
+						any_held_title = {
+							any_in_de_jure_hierarchy = {
+								continue = {
+									tier > tier_duchy
+								}
+								tier = tier_duchy
+								is_in_list = duchy_for_notification
+							}
+						}
+					}
+					every_held_title = {
+						every_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_duchy
+							}
+							limit = {
+								tier = tier_duchy
+								is_in_list = duchy_for_notification
+							}
+							add_to_list = notification_titles	
+						}
+					}			
+					if = {
+						limit = {
+							any_in_list = {
+								list = notification_titles
+								count > 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+}
+
+###huegodocs cultural decisions. Shamelessly built with code copied from TBPineapple's Kingdom of the Clouds decision
+found_k_rithogedica_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = huegodoc
+	ai_check_interval = 36
+	desc = found_k_rithogedica_decision_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_huegodoc }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:k_rithogedica_decision
+			}
+			any_held_title = {
+				count >= 1
+				tier >= tier_empire
+			}
+			OR = {
+				has_title = title:k_dathothica
+				has_title = title:k_heurgordica
+				has_title = title:k_rithogedica
+			}
+			has_character_flag = formed_huegodoc_kingdom
+		}
+	}
+	
+	is_valid = {
+		is_independent_ruler = yes
+		is_at_war = no
+		OR = {
+			AND = {
+				highest_held_title_tier <= tier_kingdom
+				highest_held_title_tier = tier_duchy
+				custom_description = {
+					text = need_3_duchies
+					any_held_title = {
+								count > 2
+								tier = tier_duchy
+							} 
+						}
+					}
+			AND = {
+			custom_description = {
+				text = just_one_kingdom
+				highest_held_title_tier = tier_kingdom
+					any_held_title = {
+								count = 1
+								tier = tier_kingdom
+							} 
+						}
+					}
+				}
+			}
+	effect = {
+		add_character_flag = formed_huegodoc_kingdom
+		add_prestige = 750
+		capital_county = {
+			change_development_level = 15
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+		}
+		IF = {
+			limit = {
+				NOT = {
+					OR = {
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_heurgordica_decision
+						}
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_dathothica_decision
+						}
+						is_target_in_global_variable_list = {
+							name = unavailable_unique_decisions
+							target = flag:k_rithogedica_decision
+						}
+					}
+				}
+			}
+			custom_tooltip = rithogedica_tradition_custom_desc
+				root.culture = {
+					add_culture_tradition = tradition_fp1_performative_honour
+				}
+		}
+
+		hidden_effect = {
+			save_scope_as = founder
+			primary_title = {
+				save_scope_as = old_title
+			}
+		
+			get_title = title:k_rithogedica
+			set_primary_title_to = title:k_rithogedica
+			GH_livinthedream_check = yes
+			
+			primary_title = {
+				save_scope_as = new_title
+			}
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			
+			scope:new_title = {
+				change_title_holder = {
+					holder = root
+					change = scope:change
+				}
+			}
+		
+			resolve_title_and_vassal_change = scope:change
+	
+			#Check if all territory is from a single Empire, and if so, make Kingdom de jure of that Empire
+			every_sub_realm_county = {
+				if = {
+					limit = {
+						exists = empire
+					}
+					empire = {
+						if = {
+							limit = {
+								NOT = {
+									is_in_list = potential_empires
+								}
+							}
+							add_to_list = potential_empires
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = potential_empires
+						count > 0
+					}
+				}
+				ordered_in_list = {
+					list = potential_empires
+					order_by = {
+						every_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_county
+							}
+							limit = {
+								tier = tier_county
+								holder.top_liege = root
+							}
+							add = 1
+						}
+					}
+					position = 0
+					save_scope_as = old_empire
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:old_empire
+				}
+				scope:new_title = {
+					set_de_jure_liege_title = scope:old_empire
+				}
+			}
+			
+			every_held_title = {
+				limit = {
+					tier = tier_duchy
+				}
+				if = {
+					limit = {
+						#Check if you need to notify a player
+						OR = {
+							AND = {
+								exists = kingdom
+								kingdom = {
+									exists = holder
+									holder = {
+										NOT = { this = root }
+										is_ai = no
+									}
+								}
+							}
+							AND = {
+								exists = empire
+								empire = {
+									exists = holder
+									holder = {
+										NOT = { this = root }
+										is_ai = no
+									}
+								}
+							}
+						}
+					}
+					add_to_temporary_list = duchy_for_notification
+					root = {
+						save_temporary_scope_value_as = {
+							name = send_notifications
+							value = yes
+						}
+					}
+				}
+				set_de_jure_liege_title = scope:new_title
+			}
+
+			every_sub_realm_county = {
+				limit = {
+					exists = duchy
+					NOT = { exists = duchy.holder }
+					holder.top_liege = root
+					duchy = {
+						save_temporary_scope_as = test_duchy
+					}
+					holder.top_liege = {
+						completely_controls = scope:test_duchy
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							duchy = {
+								is_in_list = additional_de_jure_duchies
+							}
+						}
+					}
+					duchy = {
+						set_de_jure_liege_title = scope:new_title
+						add_to_list = additional_de_jure_duchies
+					}
+				}
+			}
+			
+			scope:new_title = {
+				set_capital_county = scope:old_title.title_capital_county
+			}
+			set_primary_title_to = scope:new_title
+					
+			every_player = {
+				if = {
+					limit = {
+						top_liege = scope:founder
+						NOT = { this = root }
+					}
+				}
+				else_if = {
+					limit = {
+						exists = scope:send_notifications
+						NOT = { this = root }
+						NOT = { top_liege = scope:founder }
+						any_held_title = {
+							any_in_de_jure_hierarchy = {
+								continue = {
+									tier > tier_duchy
+								}
+								tier = tier_duchy
+								is_in_list = duchy_for_notification
+							}
+						}
+					}
+					every_held_title = {
+						every_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_duchy
+							}
+							limit = {
+								tier = tier_duchy
+								is_in_list = duchy_for_notification
+							}
+							add_to_list = notification_titles	
+						}
+					}			
+					if = {
+						limit = {
+							any_in_list = {
+								list = notification_titles
+								count > 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+}

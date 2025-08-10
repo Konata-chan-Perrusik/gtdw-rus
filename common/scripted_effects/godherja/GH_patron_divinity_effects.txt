@@ -1,0 +1,2012 @@
+﻿###########################
+# PATRON SAINT EFFECTS    #
+###########################
+
+##################
+# INITIALIZATION #
+##################
+
+initialize_patron_saint_effect = {
+
+	create_patron_saint_effect = {	NAME = eos_pure_patron_saint }
+	scope:eos_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = military_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = eos_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = eos_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:centralimperial_aversarinas_aagiokrata_60
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_oegora.title_province.barony } # Home of Eos
+		
+		set_patron_saint_trait_effect = { TRAIT = brave VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = just VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = honest VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = gallant VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_blademaster VALUE = 7 }
+		
+		set_patron_saint_trait_effect = { TRAIT = craven VALUE = -20 }
+
+		
+		set_patron_saint_skill_effect = { SKILL = prowess MODIFIER = 1 }
+		set_patron_saint_skill_effect = { SKILL = martial MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_duels MOD = 1 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = orange }
+		
+	}
+	initialize_agionist_saints = yes # putting all non-Eos saints in a separate effect so I can quickly comment them out
+	
+	every_religion_global = {
+		every_faith = {
+			limit = { should_have_patron_saints_trigger = yes }
+			add_patron_saints_to_faith_effect = yes
+		}
+	}
+	
+	global_assign_patron_saint_effect_everyone = yes
+}
+
+initialize_agionist_saints = {
+	create_patron_saint_effect = { NAME = sansia_pure_patron_saint }
+	scope:sansia_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = military_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = sansia_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = sansia_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:centralimperial_aversarinas_aagiokrata_59
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_rhamnythrae.title_province.barony } # Home of Sansia
+		
+		set_patron_saint_trait_effect = { TRAIT = brave VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = wrathful VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = compassionate VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = strategist VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_reveler VALUE = 7 }
+		set_patron_saint_trait_effect = { TRAIT = craven VALUE = -20 }
+		
+		set_patron_saint_skill_effect = { SKILL = diplomacy MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = martial MODIFIER = 1 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_battle_victory MOD = 1 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = red }
+	}
+	create_patron_saint_effect = { NAME = dikaynos_pure_patron_saint }
+	scope:dikaynos_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = dikaynos_pure_patron_saint_modifier
+		}
+		add_to_global_variable_list = {
+			name = dikaynos_pure_only_patron_saints
+			target = this
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:westernimperial_aversarinas_aagiokrata_130
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:b_rhypystus } # Home of Dikaynos
+		
+		set_patron_saint_trait_effect = { TRAIT = just VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = diligent VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = calm VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = scholar VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = administrator VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = arbitrary VALUE = -20 }
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 0.5 }
+		
+		set_patron_saint_skill_effect = { SKILL = stewardship MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = diplomacy MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_just_rule MOD = 1 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = green }
+	}
+	create_patron_saint_effect = { NAME = katharitos_pure_patron_saint }
+	scope:katharitos_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = katharitos_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = katharitos_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:southernimperial_aversarinas_aagiokrata_26
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:b_argita } # Home of Katharitos
+		
+		set_patron_saint_trait_effect = { TRAIT = content VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = compassionate VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = humble VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = arrogant VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_mystic VALUE = 7 }
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_traveler VALUE = 5 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 0.75 }
+		set_patron_saint_skill_effect = { SKILL = diplomacy MODIFIER = 0.75 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_languages MOD = 1 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = white }
+	}
+	create_patron_saint_effect = { NAME = katharitos_corrupt_patron_saint }
+	scope:katharitos_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = katharitos_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = katharitos_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:southernimperial_aversarinas_aagiokrata_26
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:b_argita } # Home of Katharitos
+		
+		set_patron_saint_trait_effect = { TRAIT = arrogant VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = zealous VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = stubborn VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = humble VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = whole_of_body VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_mystic VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 1 }
+		set_patron_saint_skill_effect = { SKILL = prowess MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_executing_heathens MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = white }
+	}
+	create_patron_saint_effect = { NAME = thysia_pure_patron_saint }
+	scope:thysia_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = thysia_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = thysia_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:westernimperial_aversarinas_aagiokrata_150
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_ithi.title_province.barony } # Home of Thysia
+		
+		set_patron_saint_trait_effect = { TRAIT = compassionate VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = generous VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = patient VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = callous VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = whole_of_body VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_physician VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 1.25 }
+		set_patron_saint_skill_effect = { SKILL = diplomacy MODIFIER = 0.25 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_healing MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = white }
+	}
+	create_patron_saint_effect = { NAME = philanthros_pure_patron_saint }
+	scope:philanthros_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = philanthros_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = philanthros_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:westernimperial_aversarinas_aagiokrata_151
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_asiupoli.title_province.barony } # Home of Philantros
+		
+		set_patron_saint_trait_effect = { TRAIT = generous VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = temperate VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = humble VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = greedy VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = theologian VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = improvident VALUE = 20 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 1 }
+		set_patron_saint_skill_effect = { SKILL = stewardship MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_generosity MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = gold }
+	}
+	create_patron_saint_effect = { NAME = forgotten_pure_patron_saint }
+	scope:forgotten_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = forgotten_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = forgotten_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:erridai_forgotten_1
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:b_kosebes } # Home of the FS
+		
+		set_patron_saint_trait_effect = { TRAIT = humble VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = cynical VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = shy VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = arrogant VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = theologian VALUE = 20 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 1 }
+		set_patron_saint_skill_effect = { SKILL = intrigue MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_humility MOD = 1  }
+		set_patron_saint_aspect_effect = { ASPECT = values_piety MOD = 1  }
+		
+		#set_patron_saint_ui_color_effect = { COLOR = purple }
+	}
+	create_patron_saint_effect = { NAME = calysto_pure_patron_saint }
+	scope:calysto_pure_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = pure_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = calysto_pure_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = calysto_pure_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:islander_aversarinas_aagiokrata_12
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_lofoarax.title_province.barony } # Home of Thysia
+		
+		set_patron_saint_trait_effect = { TRAIT = gregarious VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = generous VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = vengeful VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = lazy VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = reaver VALUE = 15 }
+		set_patron_saint_trait_effect = { TRAIT = forder VALUE = 15 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_reveler VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = prowess MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = martial MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = intrigue MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_raiding_antislavery MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = blue }
+	}
+	create_patron_saint_effect = {	NAME = eos_corrupt_patron_saint }
+	scope:eos_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = military_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = eos_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = eos_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:centralimperial_aversarinas_aagiokrata_60
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_oegora.title_province.barony } # Home of Eos
+		
+		set_patron_saint_trait_effect = { TRAIT = brave VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = arbitrary VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = ambitious VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = craven VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = gallant VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_blademaster VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = prowess MODIFIER = 1 }
+		set_patron_saint_skill_effect = { SKILL = martial MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_duels MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = orange }
+	}
+	create_patron_saint_effect = { NAME = sansia_corrupt_patron_saint }
+	scope:sansia_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = military_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = sansia_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = sansia_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:centralimperial_aversarinas_aagiokrata_59
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_rhamnythrae.title_province.barony } # Home of Sansia
+		
+		set_patron_saint_trait_effect = { TRAIT = brave VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = wrathful VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = sadistic VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = craven VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = strategist VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_blademaster VALUE = 7 }
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = scarred VALUE = 5 }
+		
+		set_patron_saint_skill_effect = { SKILL = prowess MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = martial MODIFIER = 1 }
+		
+		# GH NOTE: This doesn't add up to one, since they also get Saint Affinity from scars 
+		set_patron_saint_aspect_effect = { ASPECT = values_battle_slaughter MOD = 0.5 }
+		set_patron_saint_aspect_effect = { ASPECT = values_pain MOD = 0.3 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = red }
+	}
+	create_patron_saint_effect = { NAME = dikaynos_corrupt_patron_saint }
+	scope:dikaynos_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = dikaynos_corrupt_patron_saint_modifier
+		}
+		add_to_global_variable_list = {
+			name = dikaynos_corrupt_only_patron_saints
+			target = this
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:westernimperial_aversarinas_aagiokrata_130
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:b_rhypystus } # Home of Dikaynos
+		
+		set_patron_saint_trait_effect = { TRAIT = vengeful VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = diligent VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = wrathful VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = forgiving VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = scholar VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = overseer VALUE = 20 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = stewardship MODIFIER = 1 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_dread MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = green }
+	}
+	create_patron_saint_effect = { NAME = thysia_corrupt_patron_saint }
+	scope:thysia_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = thysia_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = thysia_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:westernimperial_aversarinas_aagiokrata_150
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_ithi.title_province.barony } # Home of Thysia
+		
+		set_patron_saint_trait_effect = { TRAIT = ambitious VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = patient VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = callous VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = content VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = torturer VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_physician VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 1.25 }
+		set_patron_saint_skill_effect = { SKILL = intrigue MODIFIER = 0.25 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_medical_experiments MOD = 1  }
+		
+		set_patron_saint_ui_color_effect = { COLOR = white }
+	}
+	create_patron_saint_effect = { NAME = philanthros_corrupt_patron_saint }
+	scope:philanthros_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = philanthros_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = philanthros_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:westernimperial_aversarinas_aagiokrata_151
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_asiupoli.title_province.barony } # Home of Philantros
+		
+		set_patron_saint_trait_effect = { TRAIT = gregarious VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = arrogant VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = gluttonous VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = temperate VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = avaricious VALUE = 20 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_reveler VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = stewardship MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = diplomacy MODIFIER = 1 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_frivolous_expenses MOD = 1 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = gold }
+	}
+	create_patron_saint_effect = { NAME = forgotten_corrupt_patron_saint }
+	scope:forgotten_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = common_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = forgotten_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = forgotten_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:erridai_forgotten_1
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:b_kosebes } # Home of the FS
+		
+		set_patron_saint_trait_effect = { TRAIT = humble VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = zealous VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = paranoid VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = arrogant VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = schemer VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = torturer VALUE = 20 }
+		
+		set_patron_saint_skill_effect = { SKILL = learning MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = intrigue MODIFIER = 1 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_scheming MOD = 1 }
+		
+		#set_patron_saint_ui_color_effect = { COLOR = purple }
+	}
+	create_patron_saint_effect = { NAME = calysto_corrupt_patron_saint }
+	scope:calysto_corrupt_patron_saint = {
+		add_to_global_variable_list = {
+			name = corrupt_agionist_patron_saints
+			target = this
+		}
+		add_to_global_variable_list = {
+			name = calysto_corrupt_only_patron_saints
+			target = this
+		}
+		set_patron_saint_modifier_effect = {
+			MODIFIER = calysto_corrupt_patron_saint_modifier
+		}
+		add_to_variable_list = {
+			name = patron_saint_patron_character_list
+			target = character:islander_aversarinas_aagiokrata_12
+		}
+		set_variable = {
+			name = patron_saint_requirements
+			value = flag:generic_patron_saint
+		}
+		
+		add_patron_saint_holy_site = { HOLY_SITE = title:c_lofoarax.title_province.barony } # Home of Thysia
+		
+		set_patron_saint_trait_effect = { TRAIT = gregarious VALUE = 20 }
+		set_patron_saint_trait_effect = { TRAIT = greedy VALUE = 10 }
+		set_patron_saint_trait_effect = { TRAIT = vengeful VALUE = 10 }
+		
+		set_patron_saint_opposed_trait_effect = { TRAIT = generous VALUE = 20 }
+		
+		set_patron_saint_trait_effect = { TRAIT = reaver VALUE = 15 }
+		set_patron_saint_trait_effect = { TRAIT = forder VALUE = 15 }
+		
+		set_patron_saint_lifestyle_trait_effect = { TRAIT = lifestyle_reveler VALUE = 7 }
+		
+		set_patron_saint_skill_effect = { SKILL = prowess MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = martial MODIFIER = 0.5 }
+		set_patron_saint_skill_effect = { SKILL = intrigue MODIFIER = 0.5 }
+		
+		set_patron_saint_aspect_effect = { ASPECT = values_raiding MOD = 1 }
+		
+		set_patron_saint_ui_color_effect = { COLOR = blue }
+	}
+}
+
+##############################
+# Patron Saint Faith Effects #
+##############################
+
+add_patron_saints_to_faith_effect = {
+	save_scope_as = patron_saint_faith
+	if = {
+		limit = { religion = religion:agionism_religion }
+		add_agionist_patron_saints_to_faith_effect = yes
+	}
+	else_if = {
+		limit = { has_doctrine = tenet_agionism_religion_syncretism }
+		add_agionist_patron_saints_to_faith_effect = yes
+	}
+}
+
+add_agionist_patron_saints_to_faith_effect = {
+
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_eos_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = eos_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = eos_pure_patron_saint }
+	}
+	#else_if = {
+	#	limit = { has_doctrine_parameter = exclusive_worship_eos_corrupt }
+	#	add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = eos_corrupt_only_patron_saints }
+	#	add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+	#	remove_patron_saint_from_faith_view_only = { PATRON_SAINT = eos_corrupt_patron_saint }
+	#}
+	
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_sansia_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = sansia_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = sansia_pure_patron_saint }
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = exclusive_worship_sansia_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = sansia_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = sansia_corrupt_patron_saint }
+	}
+	
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_dikaynos_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = dikaynos_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = dikaynos_pure_patron_saint }
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = exclusive_worship_dikaynos_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = dikaynos_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = dikaynos_corrupt_patron_saint }
+	}
+	
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_katharitos_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = katharitos_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = katharitos_pure_patron_saint }
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = exclusive_worship_katharitos_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = katharitos_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = katharitos_corrupt_patron_saint }
+	}
+	
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_thysia_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = thysia_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = thysia_pure_patron_saint }
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = exclusive_worship_thysia_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = thysia_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = thysia_corrupt_patron_saint }
+	}
+	
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_philanthros_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = philanthros_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = philanthros_pure_patron_saint }
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = exclusive_worship_philanthros_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = philanthros_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = philanthros_corrupt_patron_saint }
+	}
+	
+	#if = {
+	#	limit = { has_doctrine_parameter = exclusive_worship_forgotten_pure }
+	#	add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = forgotten_pure_only_patron_saints }
+	#	add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+	#	remove_patron_saint_from_faith_view_only = { PATRON_SAINT = forgotten_pure_patron_saint }
+	#}
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_forgotten_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = forgotten_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = forgotten_corrupt_patron_saint }
+	}
+	
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_calysto_pure }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = calysto_pure_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = calysto_pure_patron_saint }
+	}
+	if = {
+		limit = { has_doctrine_parameter = exclusive_worship_calysto_corrupt }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = calysto_corrupt_only_patron_saints }
+		add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+		remove_patron_saint_from_faith_view_only = { PATRON_SAINT = calysto_corrupt_patron_saint }
+	}
+	
+	if = {
+		limit = { has_doctrine_parameter = worship_pure_agionist }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = worship_corrupt_agionist }
+		add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+	}
+}
+
+add_patron_saints_from_list_to_faith_effect = {
+	save_scope_as = patron_saint_faith
+	every_in_global_list = {
+		variable = $PATRON_SAINT_LIST$
+		scope:patron_saint_faith = {
+			add_to_variable_list = { 
+				name = patron_saint_list
+				target = prev
+			}
+		}
+	}
+}
+
+add_patron_saints_from_list_to_faith_view_only_effect = {
+	save_scope_as = patron_saint_faith
+	every_in_global_list = {
+		variable = $PATRON_SAINT_LIST$
+		scope:patron_saint_faith = {
+			add_to_variable_list = { 
+				name = patron_saint_view_only_list
+				target = prev
+			}
+		}
+	}
+}
+
+remove_patron_saint_from_faith = {
+	save_scope_as = patron_saint_faith
+	every_in_list = {
+		variable = patron_saint_list
+		limit = {
+			has_variable = patron_saint_name
+			var:patron_saint_name = flag:$PATRON_SAINT$
+		}
+		scope:patron_saint_faith = {
+			remove_list_variable = { 
+				name = patron_saint_list
+				target = prev
+			}
+		}
+	}
+	every_faith_character = {
+		limit = { has_variable_list = character_patron_saint_list }
+		every_in_list = {
+			variable = character_patron_saint_list
+			limit = {
+				var:patron_saint_name ?= flag:$PATRON_SAINT$
+			}
+			save_scope_as = patron_saint_to_be_removed
+			prev = { renounce_patron_saint_effect = { PATRON_SAINT = scope:patron_saint_to_be_removed } }
+		}
+	}
+}
+
+remove_patron_saint_from_faith_view_only = {
+	save_scope_as = patron_saint_faith
+	every_in_list = {
+		variable = patron_saint_list
+		limit = {
+			has_variable = patron_saint_name
+			var:patron_saint_name = flag:$PATRON_SAINT$
+		}
+		scope:patron_saint_faith = {
+			remove_list_variable = { 
+				name = patron_saint_view_only_list
+				target = prev
+			}
+		}
+	}
+}
+
+remove_patron_saint_from_list_to_faith = {
+	save_scope_as = patron_saint_faith
+	every_in_global_list = {
+		variable = $PATRON_SAINT_LIST$
+		scope:patron_saint_faith = {
+			remove_list_variable = { 
+				name = patron_saint_list
+				target = prev
+			}
+		}
+	}
+}
+
+remove_patron_saint_from_list_to_faith_view_only = {
+	save_scope_as = patron_saint_faith
+	every_in_global_list = {
+		variable = $PATRON_SAINT_LIST$
+		scope:patron_saint_faith = {
+			remove_list_variable = { 
+				name = patron_saint_view_only_list
+				target = prev
+			}
+		}
+	}
+}
+
+################################
+# UNCORRUPT SAINT EFFECT       #
+################################
+
+uncorrupt_patron_saint_effect = {
+	save_scope_as = patron_saint_faith
+	remove_patron_saint_from_faith = { PATRON_SAINT = $PATRON_SAINT$_corrupt_patron_saint }
+	remove_patron_saint_from_list_to_faith_view_only = { PATRON_SAINT_LIST = corrupt_agionist_patron_saints }
+	add_patron_saints_from_list_to_faith_effect = { PATRON_SAINT_LIST = $PATRON_SAINT$_pure_only_patron_saints }
+	add_patron_saints_from_list_to_faith_view_only_effect = { PATRON_SAINT_LIST = pure_agionist_patron_saints }
+	remove_patron_saint_from_faith_view_only = { PATRON_SAINT = $PATRON_SAINT$_pure_patron_saint }
+	every_faith_character = {
+		limit = { is_ai = yes }
+		assign_ai_patron_wrapper_effect = yes
+	}
+}
+
+################################
+# PATRON SAINT BACKEND EFFECTS #
+################################
+
+# Create a patron saint
+create_patron_saint_effect = {
+	# Stores a random province for the patron saint
+	random_province = {
+		limit = { 
+			NOT = { has_variable = patron_saint_name } 
+		}
+		save_temporary_scope_as = patron_saint_storage_province
+		save_scope_as = created_patron_saint
+		add_to_global_variable_list = {
+			name = all_patron_saints
+			target = scope:patron_saint_storage_province
+		}
+	}
+	scope:patron_saint_storage_province = {
+		save_scope_as = $NAME$
+		set_variable = {
+			name = patron_saint_name
+			value = flag:$NAME$
+		}
+	}
+}
+
+adopt_patron_saint_effect = {
+	adopt_patron_saint_raw_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+	add_patron_saint_level = { LEVEL = 1 PATRON_SAINT = $PATRON_SAINT$ }
+	patron_saint_modifier_effect = { MODE = set_valid PATRON_SAINT = $PATRON_SAINT$ }
+}
+
+adopt_patron_saint_raw_effect = {
+	custom_description = {
+		text = "adopt_patron_saint_effect"
+		subject = this
+		object = $PATRON_SAINT$
+			
+		add_to_variable_list = { 
+			name = character_patron_saint_list
+			target = $PATRON_SAINT$
+		}
+		#if = {
+		#	limit = { is_ai = no }
+		#	set_variable = {
+		#		name = patron_saint_change_cooldown
+		#		days = 1850
+		#	}
+		#}
+	}
+}
+
+renounce_patron_saint_effect = {
+	if = {
+		limit = { has_variable_list = character_patron_saint_list }
+		custom_description = {
+			text = "renounce_patron_saint_effect"
+			subject = this
+			
+			remove_list_variable = {
+				name = character_patron_saint_list
+				target = $PATRON_SAINT$
+			}
+		}
+		patron_saint_modifier_effect = { MODE = remove PATRON_SAINT = $PATRON_SAINT$ }
+		remove_all_patron_levels_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+	}
+}
+
+renounce_all_patron_saints_effect = {
+	every_in_list = {
+		variable = character_patron_saint_list
+		save_temporary_scope_as = patron_to_be_removed
+		prev = { renounce_patron_saint_effect = { PATRON_SAINT = scope:patron_to_be_removed } }
+	}
+}
+
+set_patron_saint_trait_effect = {
+	add_to_variable_list = {
+		name = patron_saint_traits
+		target = flag:$TRAIT$
+	}
+	set_variable = {
+		name = patron_saint_$TRAIT$_affinity_value
+		value = $VALUE$
+	}
+}
+
+set_patron_saint_lifestyle_trait_effect = {
+	add_to_variable_list = {
+		name = patron_saint_traits
+		target = flag:$TRAIT$
+	}
+	set_variable = {
+		name = patron_saint_$TRAIT$_affinity_value
+		value = $VALUE$
+	}
+	set_variable = {
+		name = patron_saint_$TRAIT$_lifestyle_affinity_value
+		value = 1
+	}
+}
+
+remove_patron_saint_trait_effect = {
+	remove_list_variable = {
+		name = patron_saint_traits
+		target = flag:$TRAIT$
+	}
+	remove_variable = patron_saint_$TRAIT$_affinity_value
+}
+
+set_patron_saint_opposed_trait_effect = {
+	add_to_variable_list = {
+		name = patron_saint_opposed_traits
+		target = flag:$TRAIT$
+	}
+	set_variable = {
+		name = patron_saint_$TRAIT$_affinity_value
+		value = $VALUE$
+	}
+}
+
+remove_patron_saint_opposed_trait_effect = {
+	remove_list_variable = {
+		name = patron_saint_opposed_traits
+		target = flag:$TRAIT$
+	}
+	remove_variable = patron_saint_$TRAIT$_affinity_value
+}
+
+set_patron_saint_skill_effect = {
+	add_to_variable_list = {
+		name = patron_saint_skills
+		target = flag:$SKILL$
+	}
+	add_to_variable_list = {
+		name = patron_saint_skills_ui
+		target = flag:$SKILL$_skill
+	}
+	set_variable = {
+		name = patron_saint_$SKILL$_affinity_modifier
+		value = $MODIFIER$
+	}
+	set_variable = {
+		name = patron_saint_$SKILL$_skill_affinity_modifier
+		value = $MODIFIER$
+	}
+}
+
+remove_patron_saint_skill_effect = {
+	remove_list_variable = {
+		name = patron_saint_skills
+		target = flag:$SKILL$
+	}
+	remove_variable = patron_saint_$SKILL$_affinity_modifier
+}
+
+set_patron_saint_aspect_effect = {
+	add_to_variable_list = {
+		name = patron_saint_aspects
+		target = flag:$ASPECT$
+	}
+	set_variable = {
+		name = patron_saint_aspect_$ASPECT$
+		value = 1
+	}
+	set_variable = {
+		name = patron_saint_aspect_$ASPECT$_mod
+		value = $MOD$
+	}
+}
+
+remove_patron_saint_aspect_effect = {
+	remove_list_variable = {
+		name = patron_saint_aspects
+		target = flag:$ASPECT$
+	}
+	remove_variable = patron_saint_aspect_$ASPECT$
+	remove_variable = patron_saint_aspect_$ASPECT_mod$
+}
+
+add_patron_saint_holy_site = {
+	add_to_variable_list = {
+		name = patron_saint_holy_sites_list
+		target = $HOLY_SITE$
+	}
+	set_variable = {
+		name = patron_saint_holy_site
+		value = $HOLY_SITE$
+	}
+}
+
+set_patron_saint_ui_color_effect = {
+	set_variable = {
+		name = patron_saint_ui_color
+		value = flag:$COLOR$
+	}
+}
+
+####################
+# MODIFIER EFFECTS #
+####################
+
+patron_saint_modifier_effect = {
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = eos_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = sansia_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = dikaynos_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = katharitos_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = katharitos_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = thysia_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = philanthros_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = forgotten_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = calysto_pure_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = eos_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = sansia_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = dikaynos_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = thysia_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = philanthros_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = forgotten_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+	$MODE$_patron_saint_modifier_effect = { MODIFIER = calysto_corrupt_patron_saint_modifier PATRON_SAINT = $PATRON_SAINT$ }
+}
+
+set_patron_saint_modifier_effect = { # this is for assigning modifiers TO patron saints
+	set_variable = $MODIFIER$
+}
+
+set_valid_patron_saint_modifier_effect = { # this is for assigning patron saint modifiers to characters
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		add_character_modifier = $MODIFIER$_1
+		remove_all_patron_levels_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+		add_patron_saint_level = { LEVEL = 1 PATRON_SAINT = $PATRON_SAINT$ }
+	}
+}
+
+set_valid_level_2_patron_saint_modifier_effect = { # this is for assigning patron saint modifiers to characters
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		hidden_effect = {
+			remove_patron_saint_modifier_effect_not_table = { MODIFIER = $MODIFIER$ }
+		}
+		add_character_modifier = $MODIFIER$_2
+		remove_all_patron_levels_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+		add_patron_saint_level = { LEVEL = 2 PATRON_SAINT = $PATRON_SAINT$ }
+	}
+}
+
+set_valid_level_3_patron_saint_modifier_effect = { # this is for assigning patron saint modifiers to characters
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		hidden_effect = {
+			remove_patron_saint_modifier_effect_not_table = { MODIFIER = $MODIFIER$ }
+		}
+		add_character_modifier = $MODIFIER$_3
+		remove_all_patron_levels_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+		add_patron_saint_level = { LEVEL = 3 PATRON_SAINT = $PATRON_SAINT$ }
+	}
+}
+
+set_valid_level_4_patron_saint_modifier_effect = { # this is for assigning patron saint modifiers to characters
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		hidden_effect = {
+			remove_patron_saint_modifier_effect_not_table = { MODIFIER = $MODIFIER$ }
+		}
+		add_character_modifier = $MODIFIER$_4
+		remove_all_patron_levels_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+		add_patron_saint_level = { LEVEL = 4 PATRON_SAINT = $PATRON_SAINT$ }
+	}
+}
+
+set_valid_level_5_patron_saint_modifier_effect = { # this is for assigning patron saint modifiers to characters
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		hidden_effect = {
+			remove_patron_saint_modifier_effect_not_table = { MODIFIER = $MODIFIER$ }
+		}
+		add_character_modifier = $MODIFIER$_5
+		remove_all_patron_levels_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+		add_patron_saint_level = { LEVEL = 5 PATRON_SAINT = $PATRON_SAINT$ }
+	}
+}
+
+remove_patron_saint_modifier_effect = {
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		remove_patron_saint_modifier_effect_not_table = { MODIFIER = $MODIFIER$ }
+	}
+}
+
+remove_patron_saint_modifier_effect_not_table = {
+	if = {
+		limit = { has_character_modifier = $MODIFIER$_1 }
+		remove_character_modifier = $MODIFIER$_1
+	}
+	if = {
+		limit = { has_character_modifier = $MODIFIER$_2 }
+		remove_character_modifier = $MODIFIER$_2
+	}
+	if = {
+		limit = { has_character_modifier = $MODIFIER$_3 }
+		remove_character_modifier = $MODIFIER$_3
+	}
+	if = {
+		limit = { has_character_modifier = $MODIFIER$_4 }
+		remove_character_modifier = $MODIFIER$_4
+	}
+	if = {
+		limit = { has_character_modifier = $MODIFIER$_5 }
+		remove_character_modifier = $MODIFIER$_5
+	}
+}
+
+increase_level_patron_saint_modifier_effect = {
+	if = {
+		limit = {
+			$PATRON_SAINT$ = { has_variable = $MODIFIER$ }
+		}
+		if = {
+			limit = { has_character_modifier = $MODIFIER$_1 }
+			remove_character_modifier = $MODIFIER$_1
+			add_character_modifier = $MODIFIER$_2
+		}
+		else_if = {
+			limit = { has_character_modifier = $MODIFIER$_2 }
+			remove_character_modifier = $MODIFIER$_2
+			add_character_modifier = $MODIFIER$_3
+		}
+		else_if = {
+			limit = { has_character_modifier = $MODIFIER$_3 }
+			remove_character_modifier = $MODIFIER$_3
+			add_character_modifier = $MODIFIER$_4
+		}
+		else_if = {
+			limit = { has_character_modifier = $MODIFIER$_4 }
+			remove_character_modifier = $MODIFIER$_4
+			add_character_modifier = $MODIFIER$_5
+		}
+	}
+}
+
+remove_all_patron_levels_effect = {
+	remove_patron_saint_level = { LEVEL = 1 PATRON_SAINT = $PATRON_SAINT$ }
+	remove_patron_saint_level = { LEVEL = 2 PATRON_SAINT = $PATRON_SAINT$ }
+	remove_patron_saint_level = { LEVEL = 3 PATRON_SAINT = $PATRON_SAINT$ }
+	remove_patron_saint_level = { LEVEL = 4 PATRON_SAINT = $PATRON_SAINT$ }
+	remove_patron_saint_level = { LEVEL = 5 PATRON_SAINT = $PATRON_SAINT$ }
+}
+
+remove_patron_saint_level = {
+	if = {
+		limit = {
+			character_has_patron_saint_level = { LEVEL = $LEVEL$ PATRON_SAINT = $PATRON_SAINT$ }
+		}
+		remove_list_variable = {
+			name = character_patron_saint_level_$LEVEL$_list
+			target = $PATRON_SAINT$
+		}
+	}
+}
+
+add_patron_saint_level = {
+	add_to_variable_list = {
+		name = character_patron_saint_level_$LEVEL$_list
+		target = $PATRON_SAINT$
+	}
+}
+
+##########################
+# Saint Affinity Effects #
+##########################
+
+increase_saint_affinity_effect = {
+	if = { 
+		limit = { 
+			NOT = { has_variable = patron_saint_$TYPE$_affinity } 
+		}
+		set_variable = {
+			name = patron_saint_$TYPE$_affinity
+			value = $VALUE$
+		}
+	}
+	else = {
+		change_variable = {
+			name = patron_saint_$TYPE$_affinity
+			add = $VALUE$
+		}
+	}
+}
+
+increase_saint_affinity_effect_with_max = {
+	if = { 
+		limit = { 
+			NOT = { has_variable = patron_saint_$TYPE$_affinity } 
+		}
+		set_variable = {
+			name = patron_saint_$TYPE$_affinity
+			value = $VALUE$
+		}
+	}
+	else = {
+		change_variable = {
+			name = patron_saint_$TYPE$_affinity
+			add = $VALUE$
+		}
+	}
+	if = {
+		limit = { 
+			has_variable = patron_saint_$TYPE$_affinity
+			var:patron_saint_$TYPE$_affinity > $MAX$
+		}
+		set_variable = {
+			name = patron_saint_$TYPE$_affinity
+			value = $MAX$
+		}
+	}
+}
+
+increase_saint_affinity_effect_no_max = {
+	if = { 
+		limit = { 
+			NOT = { has_variable = patron_saint_$TYPE$_affinity } 
+		}
+		set_variable = {
+			name = patron_saint_$TYPE$_affinity
+			value = $VALUE$
+		}
+	}
+	else = {
+		change_variable = {
+			name = patron_saint_$TYPE$_affinity
+			add = $VALUE$
+		}
+	}
+}
+
+calculate_total_patron_saint_affinity_for_current_patron = {
+
+	# calculate_patron_saint_trait_affinity_for_current_patron = yes
+	
+	set_variable = {
+		name = patron_saint_total_affinity
+		value = patron_saint_affinity_total_value
+	}
+
+}
+
+calculate_patron_saint_trait_affinity_for_current_patron = { # GH TODO: What is this used for? Doesn't the patron_saint_affinity_values already account for this?
+	set_variable = {
+		name = patron_saint_trait_affinity
+		value = 0
+	}
+	
+	if = {
+		limit = {
+			has_variable = character_patron_saint 
+		}
+		
+		calculate_affinity_for_trait = { TRAIT = brave PATRON_SAINT = var:character_patron_saint }
+		calculate_affinity_for_trait = { TRAIT = just PATRON_SAINT = var:character_patron_saint }
+		calculate_affinity_for_trait = { TRAIT = honest PATRON_SAINT = var:character_patron_saint }
+		calculate_affinity_for_trait = { TRAIT = craven PATRON_SAINT = var:character_patron_saint }
+		
+		calculate_affinity_for_trait = { TRAIT = gallant PATRON_SAINT = var:character_patron_saint }
+		
+		calculate_affinity_for_trait = { TRAIT = lifestyle_blademaster PATRON_SAINT = var:character_patron_saint }
+		calculate_affinity_for_trait = { TRAIT = lifestyle_mystic PATRON_SAINT = var:character_patron_saint }
+		calculate_affinity_for_trait = { TRAIT = lifestyle_reveler PATRON_SAINT = var:character_patron_saint }
+	}
+}
+
+calculate_affinity_for_trait = {
+	if = {
+		limit = { 
+			has_patron_saint_trait_trigger = { TRAIT = $TRAIT$ PATRON_SAINT = $PATRON_SAINT$ }
+		}
+		change_variable = {
+			name = patron_saint_trait_affinity
+			add = $PATRON_SAINT$.var:patron_saint_$TRAIT$_affinity_value
+		}
+	}
+	else_if = {
+		limit = { 
+			has_patron_saint_opposed_trait_trigger = { TRAIT = $TRAIT$ PATRON_SAINT = $PATRON_SAINT$ }
+		}
+		change_variable = {
+			name = patron_saint_trait_affinity
+			subtract = $PATRON_SAINT$.var:patron_saint_$TRAIT$_affinity_value
+		}
+	}
+	
+}
+
+patron_saint_pilgrimage_check_effect = {
+	if = {
+		limit = {
+			any_character_patron_saint_has_holy_site_trigger = { HOLY_SITE = scope:activity.activity_location.barony }
+			NOT = { character_has_visited_patron_saint_holy_site = { HOLY_SITE =  scope:activity.activity_location.barony } }
+		}
+		add_to_variable_list = {
+			name = patron_saint_visited_holy_sites_list
+			target = scope:activity.activity_location.barony 
+		}
+		custom_tooltip = pilgrimage_improves_saint_affinity_tt
+	}
+}
+
+patron_saint_single_combat_victory_check_effect = {
+	if = {
+		limit = { 
+			character_has_any_patron_saint = yes 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_duels }
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_duel_affinity }
+					AND = {
+						has_variable = patron_saint_duel_affinity
+						var:patron_saint_duel_affinity < scope:sc_loser.prowess
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = 10 MAX = scope:sc_loser.prowess TYPE = duel }
+			custom_tooltip = single_combat_actual_increase_to_saint_affinity_tt
+		}
+		else = {
+			custom_tooltip = single_combat_no_increase_to_saint_affinity_tt
+		}
+	}
+}
+
+patron_saint_knight_victory_saint_affinity_check = {
+	$WINNING_KNIGHT$ = {
+		if = {
+			limit = {
+				character_has_any_patron_saint = yes
+				any_character_patron_saint_has_aspect_trigger = { ASPECT = values_duels }
+			}
+			if = {
+				limit = {
+					OR = {
+						NOT = { has_variable = patron_saint_duel_affinity }
+						AND = {
+							has_variable = patron_saint_duel_affinity
+							var:patron_saint_duel_affinity < $LOSING_KNIGHT$.prowess
+						}
+					}
+				}
+				increase_saint_affinity_effect_with_max = { VALUE = 10 MAX = $LOSING_KNIGHT$.prowess TYPE = duel }
+			}
+		}
+	}
+}
+
+patron_saint_affinity_from_hunting_check_effect = {
+	if = {
+		limit = {
+			character_has_any_patron_saint = yes
+			NOT = { exists = scope:skittish }
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_duels }
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_duel_affinity }
+					AND = {
+						has_variable = patron_saint_duel_affinity
+						var:patron_saint_duel_affinity < scope:game_prowess
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = 10 MAX = scope:game_prowess TYPE = duel }
+			custom_tooltip = hunting_combat_actual_increase_to_saint_affinity_tt
+		}
+		else = {
+			custom_tooltip = hunting_combat_no_increase_to_saint_affinity_tt
+		}
+	}
+}
+
+patron_saint_affinity_from_hostile_scheme_effect = {
+	if = {
+		limit = { 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_scheming } 
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_scheme_affinity }
+					AND = {
+						has_variable = patron_saint_scheme_affinity
+						var:patron_saint_scheme_affinity < scope:target.patron_saint_max_scheme_target_affinity_value
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = 3 MAX = scope:target.patron_saint_max_scheme_target_affinity_value TYPE = scheme }
+			save_scope_value_as = {
+				name = patron_saint_scheme_has_given_affinity
+				value = 1
+			}
+		}
+		else = {
+			save_scope_value_as = {
+				name = patron_saint_scheme_has_not_given_affinity
+				value = 1
+			}
+		}
+	}
+}
+
+patron_saint_affinity_from_battle_victory_check_effect = {
+	if = {
+		limit = { 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_battle_victory } 
+		}
+		save_scope_value_as = {
+			name = max_affinity_from_battle_victory_value
+			value = patron_saint_battle_victory_max_affinity_from_battle_value
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_battle_victory_affinity }
+					AND = {
+						has_variable = patron_saint_battle_victory_affinity
+						var:patron_saint_battle_victory_affinity < patron_saint_battle_victory_max_affinity_from_battle_value
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = prev.patron_saint_battle_victory_affinity_from_battle_value MAX = scope:max_affinity_from_battle_victory_value TYPE = battle_victory }
+		}
+	}
+}
+
+patron_saint_affinity_from_battle_slaughter_check_effect = {
+	if = {
+		limit = { 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_battle_slaughter } 
+		}
+		save_scope_value_as = {
+			name = max_affinity_from_battle_slaughter_value
+			value = patron_saint_battle_slaughter_max_affinity_from_battle_value
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_battle_slaughter_affinity }
+					AND = {
+						has_variable = patron_saint_battle_slaughter_affinity
+						var:patron_saint_battle_slaughter_affinity < patron_saint_battle_slaughter_max_affinity_from_battle_value
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = prev.patron_saint_battle_slaughter_affinity_from_battle_value MAX = scope:max_affinity_from_battle_slaughter_value TYPE = battle_slaughter }
+		}
+	}
+}
+
+patron_saint_affinity_from_executing_heathens_check = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = patron_saint_executed_heathens_affinity }
+				AND = {
+					has_variable = patron_saint_executed_heathens_affinity
+					var:patron_saint_executed_heathens_affinity < scope:victim.patron_saint_from_heathen_execution_max_value
+				}
+			}
+		}
+		increase_saint_affinity_effect_with_max = { VALUE = scope:victim.patron_saint_from_heathen_execution_gain_value MAX = scope:victim.patron_saint_from_heathen_execution_max_value TYPE = executed_heathens }
+		custom_tooltip = heathen_execution_increase_to_saint_affinity_tt
+	}
+	else = {
+		custom_tooltip = heathen_execution_no_increase_to_saint_affinity_tt
+	}
+}
+
+patron_saint_affinity_from_ransom_check = {
+	if = {
+		limit = { 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_raiding } 
+		}
+		if = { 
+			limit = { 
+				NOT = { has_variable = accumulated_ransom_total }
+			}
+			set_variable = {
+				name = accumulated_ransom_total
+				value = $GOLD$
+			}
+		}
+		else = {
+			change_variable = {
+				name = accumulated_ransom_total
+				add = $GOLD$
+			}
+		}
+	}
+}
+
+patron_saint_frivolous_spending_affinity_check = {
+	if = {
+		limit = { 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_frivolous_expenses } 
+			}
+		if = {
+			limit = { NOT = { has_variable = patron_saint_frivolous_spending } }
+			set_variable = {
+				name = patron_saint_frivolous_spending
+				value = $GOLD$
+			}
+		}
+		else = {
+			change_variable = {
+				name = patron_saint_frivolous_spending
+				add = $GOLD$
+			}
+		}
+		custom_tooltip = frivolous_spending_increase_to_saint_affinity_tt
+	}
+}
+
+patron_saint_generosity_affinity_check = {
+	if = {
+		limit = { 
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_generosity } 
+			}
+		if = {
+			limit = { NOT = { has_variable = patron_saint_generosity_gold } }
+			set_variable = {
+				name = patron_saint_generosity_gold
+				value = $GOLD$
+			}
+		}
+		else = {
+			change_variable = {
+				name = patron_saint_generosity_gold
+				add = $GOLD$
+			}
+		}
+		custom_tooltip = generosity_increase_to_saint_affinity_tt
+	}
+}
+
+patron_saint_affinity_just_rule_check = {
+	if = {
+		limit = {
+			character_has_any_patron_saint = yes
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_just_rule } 
+		}
+		$PUNISHED$ = { save_scope_as = punished }
+		save_scope_as = punisher
+		increase_saint_affinity_effect_with_max = { VALUE = scope:punished.patron_saint_affinity_just_rule_punishment_gain_value MAX = scope:punished.patron_saint_affinity_just_rule_punishment_max_value TYPE = just_rule }
+	}
+}
+
+patron_saint_affinity_from_healing_check = {
+	if = {
+		limit = {
+			scope:treatment_result_outcome = flag:critical_success
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_healing_affinity }
+					AND = {
+						has_variable = patron_saint_healing_affinity
+						var:patron_saint_healing_affinity < 50
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = 5 MAX = 50 TYPE = healing }
+			custom_tooltip = healing_success_increase_to_saint_affinity_tt
+		}
+		else = {
+			custom_tooltip = healing_success_no_increase_to_saint_affinity_tt
+		}
+	}
+	else = {
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_healing_affinity }
+					AND = {
+						has_variable = patron_saint_healing_affinity
+						var:patron_saint_healing_affinity < 30
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = 3 MAX = 30 TYPE = healing }
+			custom_tooltip = healing_success_increase_to_saint_affinity_tt
+		}
+		else = {
+			custom_tooltip = healing_success_no_increase_to_saint_affinity_tt
+		}
+	}
+}
+
+patron_saint_affinity_from_heal_the_sick_great_check = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = patron_saint_healing_affinity }
+				AND = {
+					has_variable = patron_saint_healing_affinity
+					var:patron_saint_healing_affinity < 50
+				}
+			}
+		}
+		increase_saint_affinity_effect_with_max = { VALUE = 5 MAX = 50 TYPE = healing }
+		custom_tooltip = healing_success_increase_to_saint_affinity_tt
+	}
+	else = {
+		custom_tooltip = healing_success_no_increase_to_saint_affinity_tt
+	}
+}
+
+patron_saint_affinity_from_heal_the_sick_good_check = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = patron_saint_healing_affinity }
+				AND = {
+					has_variable = patron_saint_healing_affinity
+					var:patron_saint_healing_affinity < 30
+				}
+			}
+		}
+		increase_saint_affinity_effect_with_max = { VALUE = 3 MAX = 30 TYPE = healing }
+		custom_tooltip = healing_success_increase_to_saint_affinity_tt
+	}
+	else = {
+		custom_tooltip = healing_success_no_increase_to_saint_affinity_tt
+	}
+}
+
+patron_saint_affinity_from_medical_experiments_check = {
+	if = {
+		limit = {
+			character_has_any_patron_saint = yes
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_medical_experiments } 
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = patron_saint_medical_experiments_affinity }
+					AND = {
+						has_variable = patron_saint_medical_experiments_affinity
+						var:patron_saint_healing_affinity < 50
+					}
+				}
+			}
+			increase_saint_affinity_effect_with_max = { VALUE = $VALUE$ MAX = 50 TYPE = medical_experiments }
+			custom_tooltip = medical_experiments_increase_to_saint_affinity_tt
+		}
+		else = {
+			custom_tooltip = medical_experiments_no_increase_to_saint_affinity_tt
+		}
+	}
+}
+
+patron_saint_affinity_from_pain_check = {
+	if = {
+		limit = {
+			character_has_any_patron_saint = yes
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_pain } 
+		}
+	increase_saint_affinity_effect_no_max = { VALUE = $VALUE$ TYPE = values_pain }
+	custom_tooltip = pain_increase_to_saint_affinity_tt
+	}
+}
+
+###########################
+# PATRON SAINT AI EFFECTS #
+###########################
+
+global_assign_patron_saint_effect = {
+	if = {
+		limit = { gh_year_divisable_by_15_trigger = yes }
+		global_assign_patron_saint_effect_everyone = yes
+	}
+	else_if = {
+		limit = { gh_year_divisable_by_5_trigger = yes }
+		global_assign_patron_saint_effect_rulers = yes
+	}
+}
+
+global_assign_patron_saint_effect_everyone = {
+	every_religion_global = {
+		every_faith = {
+			limit = {
+				faith_has_patron_saints = yes
+				should_have_patron_saints_trigger = yes	
+			}
+			every_faith_character = {
+				limit = { is_ai = yes }
+				assign_ai_patron_wrapper_effect = yes
+			}
+		}
+	}
+}
+
+global_assign_patron_saint_effect_rulers = {
+	every_religion_global = {
+		every_faith = {
+			limit = {
+				faith_has_patron_saints = yes
+				should_have_patron_saints_trigger = yes	
+			}
+			every_faith_ruler = {
+				limit = { is_ai = yes }
+				assign_ai_patron_wrapper_effect = yes
+			}
+		}
+	}
+}
+
+assign_ai_patron_wrapper_effect = {
+	faith = { save_temporary_scope_as = patron_faith }
+	add_to_temporary_list = checked_patrons # To make the list exist
+	save_temporary_scope_as = character_to_be_assigned_patron
+	scope:patron_faith = {
+		ordered_in_list = {
+			variable = patron_saint_list
+
+			order_by = {
+				save_temporary_scope_as = relevant_patron_saint
+				value = scope:character_to_be_assigned_patron.patron_saint_affinity_total_value
+
+			}
+			save_scope_as = primary_patron
+		}
+		if = {
+			limit = { scope:character_to_be_assigned_patron = { ai_should_have_secondary_patron = yes } }
+			ordered_in_list = {
+				variable = patron_saint_list
+				limit = { NOT = { this = scope:primary_patron } }
+				order_by = {
+					save_temporary_scope_as = relevant_patron_saint
+					value = scope:character_to_be_assigned_patron.patron_saint_affinity_total_value
+
+				}
+				save_scope_as = secondary_patron
+			}
+		}
+	}
+	every_in_list = {
+		variable = character_patron_saint_list
+		limit = {
+			NOR = {
+				this = scope:primary_patron
+				AND = {
+					exists = scope:secondary_patron
+					this = scope:secondary_patron
+				}
+			}
+		}
+		save_temporary_scope_as = patron_to_be_removed
+		prev = { renounce_patron_saint_effect = { PATRON_SAINT = scope:patron_to_be_removed } }
+	}
+	find_proper_level_for_patron_saint = { PATRON_SAINT = scope:primary_patron }
+	if = {
+		limit = { exists = scope:secondary_patron }
+		find_proper_level_for_patron_saint = { PATRON_SAINT = scope:secondary_patron }
+	}
+}
+
+find_proper_level_for_patron_saint = {
+	$PATRON_SAINT$ = { save_temporary_scope_as = relevant_patron_saint }
+	if = {
+		limit = { 
+			NOT = { character_has_patron_saint = { PATRON_SAINT = $PATRON_SAINT$ } }
+			character_can_take_relevant_patron_saint_level = { LEVEL = 1 }
+		}
+		adopt_patron_saint_effect = { PATRON_SAINT = $PATRON_SAINT$ }
+	}
+	set_highest_possible_patron_saint_level = { PATRON_SAINT = $PATRON_SAINT$ }
+}
+
+set_highest_possible_patron_saint_level = {
+	if = {
+		limit = {
+			character_can_take_relevant_patron_saint_level = { LEVEL = 5 }
+			character_can_have_patron_saint_level = { LEVEL = 5 }
+			general_patron_saint_requirement_trigger = { LEVEL = 5 }
+		}
+		patron_saint_modifier_effect = { MODE = set_valid_level_5 PATRON_SAINT = $PATRON_SAINT$ }	
+	}
+	else_if = {
+		limit = {
+			character_can_take_relevant_patron_saint_level = { LEVEL = 4 }
+			character_can_have_patron_saint_level = { LEVEL = 4 }
+			general_patron_saint_requirement_trigger = { LEVEL = 4 }
+		}
+		patron_saint_modifier_effect = { MODE = set_valid_level_4 PATRON_SAINT = $PATRON_SAINT$ }	
+	}
+	else_if = {
+		limit = {
+			character_can_take_relevant_patron_saint_level = { LEVEL = 3 }
+			character_can_have_patron_saint_level = { LEVEL = 3 }
+			general_patron_saint_requirement_trigger = { LEVEL = 3 }
+		}
+		patron_saint_modifier_effect = { MODE = set_valid_level_3 PATRON_SAINT = $PATRON_SAINT$ }	
+	}
+	else_if = {
+		limit = {
+			character_can_take_relevant_patron_saint_level = { LEVEL = 2 }
+			character_can_have_patron_saint_level = { LEVEL = 2 }
+			general_patron_saint_requirement_trigger = { LEVEL = 2 }
+		}
+		patron_saint_modifier_effect = { MODE = set_valid_level_2 PATRON_SAINT = $PATRON_SAINT$ }	
+	}
+	else = {
+		patron_saint_modifier_effect = { MODE = set_valid PATRON_SAINT = $PATRON_SAINT$ }	
+	}
+}

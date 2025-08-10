@@ -1,0 +1,952 @@
+﻿establish_thura_bawadi_decision = { #HOF decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+	desc = establish_thura_bawadi_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		has_title = title:d_the_sepattan
+		NOT = {
+			OR =  {
+				faith = faith:korlenalmic
+				faith = faith:korlonalmic
+			}
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_thura_bawadi_decision
+			}
+			primary_title.tier >= tier_empire
+		}
+	}
+	
+	is_valid = {
+		has_title = title:d_the_sepattan
+		prestige_level >= 3
+		piety_level >= 3
+		completely_controls = title:d_lowlandtide
+		completely_controls = title:d_graythorpe
+		title:d_lowlandtide = { title_held_years >= 15 }
+		title:d_graythorpe = { title_held_years >= 15 }
+		custom_tooltip = {
+			text = arise_graythorpe_tt
+			title:d_graythorpe = {
+				any_de_jure_county = {
+					percent >= 1
+					faith = root.faith
+				}
+			}
+		}
+		custom_tooltip = {
+			text = arise_lowlandtide_tt
+			title:d_lowlandtide = {
+				any_de_jure_county = {
+					percent >= 1
+					faith = root.faith
+				}
+			}
+		}
+		OR =  {
+			faith = faith:nathanalmic
+			faith = faith:katharnalmic
+			faith = faith:gotharnalmic
+		}
+		is_independent_ruler = yes
+		title:b_spinstersmonastery = {
+			title_province = {
+				has_building = 01_tarfal_garden
+			}
+		}
+		title:b_9219 = {
+			title_province = {
+				has_building = 01_ruins_of_korlacu
+			}
+		}
+		OR = {
+			custom_description = { # Has the Staff of Tarfal
+				text = establish_thura_bawadi_staff_of_tarfal
+				any_artifact = {
+					artifact_owner = root
+					has_variable = staff_of_tarfal
+				}
+			}
+			custom_description = { # Generic
+				text = establish_thura_bawadi_generic
+				prestige_level >= 4
+				piety_level >= 4
+			}
+		}
+	}
+	is_valid_showing_failures_only = { is_at_war = no }
+	effect = {
+		root.culture = {
+			add_innovation = innovation_jerniems_rangers
+		}
+		custom_tooltip = new_thura_bawadi_tooltip
+		gain_holy_legend_seed_tooltip_effect = yes
+		spawn_army = {
+			name = primeval_horde
+			men_at_arms = {
+				type = leshens
+				stacks = 4
+			}
+			men_at_arms = {
+				type = mountain_spirit_elementals
+				stacks = 4
+			}
+			inheritable = no
+			location = root.location
+		}
+		capital_county = {
+			change_development_level = 5
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+			save_scope_as = character_capital
+		}
+		trigger_event = gh_nattanan_events.0009
+		gh_achiev_sacredandholy_check = yes #achievement check
+		hidden_effect = {
+			save_scope_as = founder
+			primary_title = { save_scope_as = old_title }
+			get_title = title:k_thura_bawadi
+			set_primary_title_to = title:k_thura_bawadi
+			primary_title = { save_scope_as = new_title }
+			if = { # Get rid of a previous kingdom title
+				limit = { scope:old_title = { tier = tier_kingdom } }
+				destroy_title = scope:old_title
+			}
+
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			resolve_title_and_vassal_change = scope:change
+	
+			#Check if all territory is from a single Empire, and if so, make Kingdom de jure of that Empire
+			every_sub_realm_county = {
+			if = {
+				limit = { exists = empire }
+				empire = {
+					if = {
+						limit = { NOT = { is_in_list = potential_empires } }
+						add_to_list = potential_empires
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = potential_empires
+					count > 0
+				}
+			}
+			ordered_in_list = {
+				list = potential_empires
+				order_by = {
+					every_in_de_jure_hierarchy = {
+						continue = { tier > tier_county }
+						limit = {
+							tier = tier_county
+							holder.top_liege = root
+						}
+						add = 1
+					}
+				}
+				position = 0
+				save_scope_as = old_empire
+			}
+		}
+		if = {
+			limit = { exists = scope:old_empire }
+			scope:new_title = { set_de_jure_liege_title = scope:old_empire }
+		}
+		
+		every_held_title = {
+			limit = { tier = tier_duchy }
+			if = {
+				limit = {
+					#Check if you need to notify a player
+					OR = {
+						AND = {
+							exists = kingdom
+							kingdom = {
+								exists = holder
+								holder = {
+									NOT = { this = root }
+									is_ai = no
+								}
+							}
+						}
+						AND = {
+							exists = empire
+							empire = {
+								exists = holder
+								holder = {
+									NOT = { this = root }
+									is_ai = no
+								}
+							}
+						}
+					}
+				}
+				add_to_temporary_list = duchy_for_notification
+				root = {
+					save_temporary_scope_value_as = {
+						name = send_notifications
+						value = yes
+					}
+				}
+			}
+			set_de_jure_liege_title = scope:new_title
+		}
+
+		every_sub_realm_county = {
+			limit = {
+				exists = duchy
+				NOT = { exists = duchy.holder }
+				holder.top_liege = root
+				duchy = { save_temporary_scope_as = test_duchy }
+				holder.top_liege = { completely_controls = scope:test_duchy }
+			}
+			if = {
+				limit = { NOT = { duchy = { is_in_list = additional_de_jure_duchies } } }
+				duchy = {
+					set_de_jure_liege_title = scope:new_title
+					add_to_list = additional_de_jure_duchies
+				}
+			}
+		}
+		
+		if = { # Resolve capital change if old primary title is titular
+			limit = { scope:old_title = { is_titular = no } }
+			scope:new_title = { set_capital_county = scope:old_title.title_capital_county }
+		}
+		else = { scope:new_title = { set_capital_county = scope:character_capital } }
+		
+		every_player = {
+			if = {
+				limit = {
+					top_liege = scope:founder
+					NOT = { this = root }
+				}
+			}
+			else_if = {
+				limit = {
+					exists = scope:send_notifications
+					NOT = { this = root }
+					NOT = { top_liege = scope:founder }
+					any_held_title = {
+						any_in_de_jure_hierarchy = {
+							continue = { tier > tier_duchy }
+							tier = tier_duchy
+							is_in_list = duchy_for_notification
+						}
+					}
+				}
+				every_held_title = {
+					every_in_de_jure_hierarchy = {
+						continue = { tier > tier_duchy }
+						limit = {
+							tier = tier_duchy
+							is_in_list = duchy_for_notification
+						}
+						add_to_list = notification_titles	
+					}
+				}			
+				if = {
+					limit = {
+						any_in_list = {
+							list = notification_titles
+							count > 0
+						}
+					}
+				}
+			}
+		}
+		}
+		dynasty = { 
+			add_dynasty_prestige = 400
+		}
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:establish_thura_bawadi_decision
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+}
+
+
+assert_nattanan_supremacy_decision = { #first decision 
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_catching_a_heretic.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+	desc = assert_nattanan_supremacy_decision_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		game_start_date >= 1254.1.1
+		highest_held_title_tier <= tier_kingdom
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:assert_nattanan_supremacy_decision
+			}
+		}
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		piety_level >= 3
+		title:c_batreef = {
+			faith = root.faith
+		}
+		title:c_herder_hills = {
+			faith = root.faith
+		}
+		
+		custom_tooltip = {
+			text = landed_korlacan_tooltip
+			dynasty:dyn_mikyawhmunn = {
+				NOT = {
+					any_dynasty_member = {
+						#is_landed = yes
+						highest_held_title_tier >= tier_county
+					}
+				}
+			}
+		}
+		
+		custom_tooltip = {
+			text = landed_qazaq_tooltip
+			dynasty:dyn_nursultan = {
+				NOT = {
+					any_dynasty_member = {
+						#is_landed = yes
+						highest_held_title_tier >= tier_county
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		add_piety = 500
+		dynasty = {
+			add_dynasty_prestige = 700
+		}
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:assert_nattanan_supremacy_decision
+		}
+		add_character_modifier = scourge_of_the_heretics_modifier
+		trigger_event = gh_nattanan_events.0005
+	}
+	ai_potential = {
+        always = yes
+    }
+
+    ai_will_do = {
+        base = 100
+    }
+}
+
+offer_patronage_to_sepattan_decision = { #second decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		game_start_date >= 1200.1.1
+		NOT = {
+			has_title = title:d_the_sepattan
+			exists = title:d_the_sepattan 
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:offer_patronage_to_sepattan_decision
+			}
+		}
+	}
+
+	is_valid = {
+		OR = {
+			highest_held_title_tier = tier_kingdom
+			has_title = title:k_currentsprings
+		}
+		custom_tooltip = {
+			exists = title:d_the_sepattan.holder
+			text = sepattan_exists_tooltip
+		}
+		OR = {
+			piety_level >= 4
+			has_character_modifier = scourge_of_the_heretics_modifier
+		}
+		OR =  {
+			faith = faith:nathanalmic
+			faith = faith:katharnalmic
+			faith = faith:gotharnalmic
+		}
+		#HoF preference conditions.
+		trigger_if = {
+			limit = {
+				is_ai = no
+			}
+			OR = {
+				faith.religious_head = {  
+					opinion = {
+						target = root
+						value >= high_positive_opinion
+					}
+				}
+				root = { has_strong_usable_hook = faith.religious_head }
+				root = { has_weak_hook = faith.religious_head }
+			}
+		}
+	}
+	effect = {
+		add_piety = 500
+		dynasty = {
+			add_dynasty_prestige = 500
+		}
+		
+		spawn_army = {
+			name = nattanan_zealots
+			men_at_arms = {
+				type = grove_guardians
+				stacks = 15
+			}
+			inheritable = no
+			location = root.location
+		}
+		trigger_event = gh_nattanan_events.0006
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:offer_patronage_to_sepattan_decision
+		}
+	}
+	ai_potential = {
+        always = yes
+    }
+
+    ai_will_do = {
+        base = 100
+    }
+}
+
+establish_thura_taw_decision = { #third decision 
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+	desc = establish_thura_taw_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		game_start_date >= 1200.1.1
+		OR = {
+			calc_true_if = { #At least 2 of the titles has de jure land
+				amount >= 2
+				title:k_currentsprings = { any_in_de_jure_hierarchy = { tier = tier_county } }
+				title:k_west_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } }
+				title:k_east_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } }
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_thura_taw_decision
+			}
+		}
+		highest_held_title_tier < tier_empire
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		prestige_level >= 4
+		piety_level >= 4
+		trigger_if = {
+			limit = { title:k_currentsprings = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_currentsprings
+			has_title = title:k_currentsprings
+		}
+		trigger_if = {
+			limit = { title:k_west_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_west_nattana
+			has_title = title:k_west_nattana
+		}
+		trigger_if = {
+			limit = { title:k_east_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_east_nattana
+			has_title = title:k_east_nattana
+		}
+
+	
+	}
+	
+	is_valid_showing_failures_only = {
+		is_landed = yes
+	}
+
+	effect = {
+		gain_heroic_legend_seed_tooltip_effect = yes
+		give_nickname = nick_champion_twin_gods
+		dynasty = {
+			add_dynasty_prestige = 1500
+			add_dynasty_prestige_level = 1
+		}
+		save_scope_as = nattanan_uniter
+		get_title = title:e_thura_taw
+		set_primary_title_to = title:e_thura_taw
+		show_as_tooltip = { establish_thura_taw_decision_effects = yes } #Actually applied in gh_nattanan_events.0003 - prestige, laws, title changes
+
+		
+		#Events
+		trigger_event = gh_nattanan_events.0003 #United Ppl Once More
+		every_player = {
+			limit = {
+				NOT = { this = scope:nattanan_uniter }
+				is_within_diplo_range = { CHARACTER = scope:nattanan_uniter }
+			}
+			trigger_event = gh_nattanan_events.0004 #notification
+		}
+
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:establish_thura_taw_decision
+		}
+		set_global_variable = {
+			name = establish_thura_taw_decision
+			value = scope:nattanan_uniter
+		}
+		set_global_variable = {
+			name = establish_thura_taw_decision_title
+			value = scope:nattanan_uniter.primary_title
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+	
+establish_thura_myo_decision = { #Foreign ruler 
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+	desc = establish_thura_myo_decision_desc
+
+	is_shown = {
+		culture = { 
+			NOT = { 
+				has_cultural_pillar = heritage_nattanan
+				has_cultural_pillar = heritage_korlacan
+			}
+		} 
+		any_held_title = {
+			tier = tier_county
+			title_province = { geographical_region = nattanan_highlands_biozone }
+		}
+   		game_start_date >= 1200.1.1
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_thura_myo_decision
+			}
+		}
+	}
+
+	is_valid = {
+		culture = { 					
+					not = {
+						has_cultural_pillar = heritage_nattanan 
+						has_cultural_pillar = heritage_korlacan
+					} 
+				}
+		prestige_level >= 4
+		piety_level >= 4
+		trigger_if = {
+			limit = { title:k_currentsprings = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_currentsprings
+			has_title = title:k_currentsprings
+		}
+		trigger_if = {
+			limit = { title:k_west_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_west_nattana
+			has_title = title:k_west_nattana
+		}
+		trigger_if = {
+			limit = { title:k_east_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_east_nattana
+			has_title = title:k_east_nattana
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_landed = yes
+	}
+
+	effect = {
+		gain_heroic_legend_seed_tooltip_effect = yes
+		give_nickname = nick_tamer_of_nattanan
+		dynasty = {
+			add_dynasty_prestige = 1500
+			add_dynasty_prestige_level = 1
+		}
+		save_scope_as = nattanan_uniter
+		get_title = title:e_thura_myo
+		set_primary_title_to = title:e_thura_myo
+		show_as_tooltip = { establish_thura_myo_decision_effects = yes } #Actually applied in gh_nattanan_events.0010 - prestige, laws, title changes
+
+		
+		#Events
+		trigger_event = gh_nattanan_events.0010 #United Nattanan
+		gh_achiev_notfromaroundhere_check = yes # Achievement check
+		every_player = {
+			limit = {
+				NOT = { this = scope:nattanan_uniter }
+				is_within_diplo_range = { CHARACTER = scope:nattanan_uniter }
+			}
+			trigger_event = gh_nattanan_events.0011 #notification
+		}
+
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:establish_thura_taw_decision
+		}
+		set_global_variable = {
+			name = establish_thura_taw_decision
+			value = scope:nattanan_uniter
+		}
+		set_global_variable = {
+			name = establish_thura_taw_decision_title
+			value = scope:nattanan_uniter.primary_title
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+become_thura_myinthein_decision = { # fourth decision (not available for HoF)
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+	desc = become_thura_myinthein_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		NOT = {
+			has_title = title:d_the_sepattan
+		}
+		game_start_date >= 1200.1.1
+		#highest_held_title_tier < tier_empire
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:become_thura_myinthein_decision
+			}
+		}
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		NOT = {
+			has_title = title:d_the_sepattan
+		}
+		has_title = title:e_thura_taw
+		completely_controls = title:e_thura_taw
+		title:e_thura_taw = { title_held_years >= 30 }
+		prestige_level >= 4
+		piety_level >= 4
+		custom_tooltip = {
+			text = arise_thura_taw_tt
+			title:e_thura_taw = {
+			any_de_jure_county = {
+					percent >= 0.7
+				   faith = root.faith
+				}
+			}
+		}
+
+		#HoF preference conditions.
+		trigger_if = {
+			limit = {
+				is_ai = no
+			}
+			OR = {
+				faith.religious_head = {  
+					opinion = {
+						target = root
+						value >= high_positive_opinion
+					}
+				}
+				root = { has_strong_usable_hook = faith.religious_head }
+				root = { has_weak_hook = faith.religious_head }
+				has_trait = paragon
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_independent_ruler = yes
+		is_at_war = no
+	}
+
+	effect = {
+		trigger_event = gh_nattanan_events.0007
+		gh_achiev_numberoneprophet_check = yes # Achievement check
+		spawn_army = {
+			name = wild_rangers
+			men_at_arms = {
+				type = jerniems_rangers
+				stacks = 30
+			}
+			inheritable = no
+			location = root.location
+		}
+		gain_heroic_legend_seed_tooltip_effect = yes
+		show_as_tooltip = {
+			become_thura_myinthein_decision_effect = yes
+		}
+		root.culture = {
+			add_innovation = innovation_jerniems_rangers
+		}
+		
+		capital_county = {
+			change_development_level = 15
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+			save_scope_as = character_capital
+		}
+		create_artifact = {
+			name = legendary_nattanan_spear
+			description = legendary_nattanan_spear_desc
+			type = spear
+			visuals = spear
+			creator = scope:priest
+			rarity = illustrious
+			modifier = legendary_nattanan_spear_modifier
+			save_scope_as = legendary_nattanan_spear
+		}	
+		scope:legendary_nattanan_spear = {
+			set_owner = scope:root
+		}
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:become_thura_myinthein_decision
+		}
+	}
+}
+
+reforge_thura_taw_decision = { #5th decision if needed later
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = nattanan
+	ai_check_interval = 120
+	desc = reforge_thura_taw_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		game_start_date >= 1200.1.1
+		NOT = { exists = title:e_thura_taw }
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_nattanan }
+		custom_tooltip = {
+			NOT = {
+				exists = title:e_thura_taw.holder
+			}
+			text = no_thura_taw_exists_tooltip
+		}
+		prestige_level >= 5
+		piety_level >= 5
+		OR = {
+			has_trait = thura_myinthein
+			has_trait = thura_myinthein_descendant
+		}
+		custom_tooltip = {
+			text = has_taken_first_decision_tooltip
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_thura_taw_decision
+			}
+		}
+	}
+	effect = {
+		gain_heroic_legend_seed_tooltip_effect = yes
+		dynasty = {
+			add_dynasty_prestige = 2000
+			add_dynasty_prestige_level = 1
+		}
+		get_title = title:e_thura_taw
+		set_primary_title_to = title:e_thura_taw
+	}
+}
+
+
+request_magi_from_the_grove_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_garden.dds"
+	} 
+	sort_order = 81
+	desc = request_magi_from_the_grove_decision_desc
+	selection_tooltip = request_magi_from_the_grove_decision_tooltip
+	ai_check_interval = 24
+	decision_group_type = nattanan
+	is_shown = {
+		is_ruler = yes
+		NOT = {
+			has_title = title:d_the_sepattan
+		}
+		culture = { has_cultural_pillar = heritage_nattanan }
+		NOT = {
+			faith = faith:korlenalmic
+			faith = faith:korlonalmic
+		}
+	}
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_nattanan}
+		piety_level >= 3
+		prestige_level >= 1
+		any_held_title = {
+			count >= 1
+			tier >= tier_county
+		}
+		title:b_spinstersmonastery = {
+			title_province = {
+				has_building = 01_tarfal_garden
+			}
+		}
+	}
+	cooldown = { years = 10 }
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+	}
+	cost = {
+		piety = 1300
+	}
+	effect = {
+		if = {
+			limit = {
+				OR = {
+					has_government = tribal_government
+					has_government = feudal_government
+				}
+				
+			}
+			trigger_event = gh_nattanan_events.0002
+				custom_tooltip = request_magi_from_the_grove_decision_tooltip
+				custom_tooltip = request_magi_from_the_grove_decision_quality_tooltip
+		}
+	}
+	ai_potential = {
+        always = yes
+    }
+
+    ai_will_do = {
+        base = 100
+    }
+}
+
+
+request_heir_from_the_grove_decision = { 
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_garden.dds"
+	} 
+	sort_order = 81
+	decision_group_type = nattanan
+	desc = request_heir_from_the_grove_decision_desc
+	selection_tooltip = request_heir_from_the_grove_decision_tooltip
+
+	ai_check_interval = 120
+
+	is_shown = {
+		is_ruler = yes
+		has_title = title:d_the_sepattan
+		culture = { has_cultural_pillar = heritage_nattanan }
+		NOT = {
+			faith = faith:korlenalmic
+			faith = faith:korlonalmic
+		}
+	}
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_nattanan}
+		piety_level >= 3
+		prestige_level >= 1
+		any_held_title = {
+			count >= 1
+			tier >= tier_county
+		}
+		title:b_spinstersmonastery = {
+			title_province = {
+				has_building = 01_tarfal_garden
+			}
+		}
+	}
+	cooldown = { years = 10 }
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+	}
+
+	cost = {
+		piety = 1300
+	}
+	
+	effect = {
+		if = {
+			limit = {
+				has_government = magocratic_government
+			}
+			trigger_event = gh_nattanan_events.0001
+				custom_tooltip = request_heir_from_the_grove_decision_tooltip
+				custom_tooltip = request_heir_from_the_grove_decision_quality_tooltip
+		}
+	}
+	ai_potential = {
+		highest_held_title_tier > tier_barony
+		is_landed = yes
+		#NOT = { exists = player_heir }
+		is_at_war = no
+	}
+	ai_will_do = {
+		base = 100
+	}
+}

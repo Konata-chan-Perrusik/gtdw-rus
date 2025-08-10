@@ -1,0 +1,281 @@
+﻿base_standard_spell_difficulty_success_chance_value = {
+	value = 0
+	if = {
+		limit = { root.var:magic_lvl = 0 }
+		add = 90
+	}
+	if = {
+		limit = { root.var:magic_lvl = 1 }
+		add = 75
+	}
+	if = {
+		limit = { root.var:magic_lvl = 2 }
+		add = 50
+	}
+	if = {
+		limit = { root.var:magic_lvl = 3 }
+		add = 25
+	}
+	min = 0
+}
+
+base_standard_spell_difficulty_failure_chance_value = {
+	value = 0
+	if = {
+		limit = { root.var:magic_lvl = 0 }
+		add = 10
+	}
+	if = {
+		limit = { root.var:magic_lvl = 1 }
+		add = 25
+	}
+	if = {
+		limit = { root.var:magic_lvl = 2 }
+		add = 50
+	}
+	if = {
+		limit = { root.var:magic_lvl = 3 }
+		add = 75
+	}
+	min = 0
+}
+
+base_difficult_spell_difficulty_success_chance_value = {
+	value = 0
+	if = {
+		limit = { root.var:magic_lvl = 0 }
+		add = 70
+	}
+	if = {
+		limit = { root.var:magic_lvl = 1 }
+		add = 50
+	}
+	if = {
+		limit = { root.var:magic_lvl = 2 }
+		add = 30
+	}
+	if = {
+		limit = { root.var:magic_lvl = 3 }
+		add = 10
+	}
+	min = 0
+}
+
+base_difficult_spell_difficulty_failure_chance_value = {
+	value = 0
+	if = {
+		limit = { root.var:magic_lvl = 0 }
+		add = 30
+	}
+	if = {
+		limit = { root.var:magic_lvl = 1 }
+		add = 50
+	}
+	if = {
+		limit = { root.var:magic_lvl = 2 }
+		add = 70
+	}
+	if = {
+		limit = { root.var:magic_lvl = 3 }
+		add = 90
+	}
+	min = 0
+}
+
+hostile_magic_defense_base_mundane_value = {
+	## RELIGIOUS DOCTRINES ##
+	if = {
+		limit = {
+			faith = { has_doctrine_parameter = magic_illegal }
+			NOT = { exists = cp:councillor_court_magi }
+		}
+		add = magic_defense_from_magic_criminal
+	}
+	else_if = {
+		limit = {
+			faith = { has_doctrine_parameter = magic_shunned }
+			NOT = { exists = cp:councillor_court_magi }
+		}
+		add = magic_defense_from_magic_shunned
+	}
+	add = {
+		value = 0
+		add = intrigue
+		divide = 1
+	}
+	add = {
+		value = 0
+		add = learning
+		divide = 2
+	}
+	if = {
+		limit = { has_variable = arcana_character_counter }
+		add = character_arcana_baseline_value
+		divide = 2
+	}
+}
+
+hostile_magic_defense_base_magic_value = {
+	if = {
+		limit = { has_variable = magic_prowess }
+		add = var:magic_prowess
+	}
+	min = 0
+}
+
+hostile_magic_defense_value = {
+	value = 0
+	every_in_list = {
+		variable = spell_targets
+		add = hostile_magic_defense_base_mundane_value
+		add = hostile_magic_defense_base_magic_value
+		# Court Magi
+		if = {
+			limit = {  
+				trigger_if = {
+					limit = { exists = cp:councillor_court_magi }
+					cp:councillor_court_magi = {
+						has_variable = magic_prowess
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+			cp:councillor_court_magi = {
+				add = hostile_magic_defense_base_magic_value
+			}
+		}
+	}
+	if = {
+		limit = { has_perk = arcana_erudition_perk2_tree3 }
+		add = 10
+	}
+	min = 0
+}
+
+hostile_magic_defense_county_value = {
+	value = 0
+	every_in_list = {
+		variable = spell_l_targets
+		if = {
+			limit = { 
+				exists = holder
+				holder = { 
+					has_variable = magic_prowess
+					NOT = { this = root	}
+				}
+			}
+			add = holder.var:hostile_magic_defense_base_value
+		}
+		else_if = {
+			limit = {
+				trigger_if = {
+					limit = { 
+						exists = holder
+						holder = { 
+							exists = cp:councillor_court_magi
+							NOT = { this = root }
+						}
+						holder.cp:councillor_court_magi = { has_variable = magic_prowess }
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+			holder.cp:councillor_court_magi = {
+				add = var:hostile_magic_defense_base_value
+			}
+		}
+	}
+	min = 0
+}
+caster_or_court_magi_value = {
+	value = 0
+	#if = {
+	#	limit = {
+	#		root = {
+	#			exists = cp:councillor_court_magi
+	#			cp:councillor_court_magi = {
+	#				has_variable = magic_prowess
+	#				is_performing_council_task = task_court_magi_cast_spells
+	#			}
+	#		}
+	#	}
+	#	root = {
+	#		cp:councillor_court_magi = {
+	#			add = var:magic_prowess
+	#		}
+	#	}
+	#}
+	#else_if = {
+	if = { # GH URGENT: Fix this
+		limit = { root = { has_variable = magic_prowess } }
+		add = root.var:magic_prowess
+	}
+	min = 0
+}
+
+legacy_spell_chance_value = {
+	value = 0
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { is_lowborn = no }
+				dynasty = { has_dynasty_perk = magic_legacy_4 }
+			}
+			trigger_else = { always = no }
+		}
+		add = 15
+	}
+	min = 0
+}
+
+good_moon_spell_chance_value = {
+	value = 0
+	if = {
+		limit = {
+			is_any_good_moon_trigger = yes
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			is_any_good_moon_trigger = yes
+			stone_aspect_skill_trigger = { VALUE = 15 }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			is_full_moon_trigger = yes
+		}
+		add = 10
+	}
+	if = {
+		limit = {
+			is_full_moon_trigger = yes
+			stone_aspect_skill_trigger = { VALUE = 15 }
+		}
+		add = 10
+	}
+	min = 0
+}
+
+bad_moon_spell_chance_value = {
+	value = 0
+	if = {
+		limit = {
+			is_any_bad_moon_trigger = yes
+		}
+		add = 10
+	}
+	if = {
+		limit = {
+			is_new_moon_trigger = yes
+		}
+		add = 10
+	}
+	min = 0
+}

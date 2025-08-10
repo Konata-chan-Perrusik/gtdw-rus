@@ -1,0 +1,82 @@
+﻿action_gh_acw_no_supported_pretender = {
+	type = alert
+	priority = 1000
+	check_create_action = {
+		if = {
+			limit = {
+				exists = global_var:story_gh_amsari_civil_war
+				NOT = { this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting } }
+				is_landed = yes
+				is_independent_ruler = yes
+				capital_county.title_province ?= { geographical_region = world_ws_amsari }
+			}
+			try_create_important_action = {
+				important_action_type = action_gh_acw_no_supported_pretender
+			}
+		}
+	}
+	
+	effect = {
+		open_view_data = {
+			view = factions_window
+			player = root
+		}
+	}
+}
+
+
+action_gh_acw_has_started = {
+	type = alert
+	priority = 1100
+	check_create_action = {
+		if = {
+			limit = {
+				exists = global_var:story_gh_amsari_civil_war
+				exists = global_var:gh_amsari_recent_civil_war
+			}
+			try_create_important_action = {
+				important_action_type = action_gh_acw_has_started
+			}
+		}
+	}
+	
+	effect = {
+		open_view_data = {
+			view = factions_window
+			player = root
+		}
+	}
+}
+
+
+action_gh_acw_can_call_for_banners = {
+	type = alert
+	check_create_action = {
+		if = {
+			limit = {
+				exists = global_var:story_gh_amsari_civil_war
+				has_variable = gh_amsari_civil_war_info_story
+				this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+				is_character_interaction_valid = {
+					interaction = gh_call_for_loyal_banners_interaction				
+					recipient = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+				}
+			}
+			try_create_important_action = {
+				important_action_type = action_gh_acw_can_call_for_banners
+				actor = root
+			}
+		}
+	}
+	effect = {
+		open_interaction_window = {
+			interaction = gh_call_for_loyal_banners_interaction
+			actor = root
+			recipient = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+		}
+		open_view_data = {
+			view = factions_window
+			player = root
+		}
+	}
+}

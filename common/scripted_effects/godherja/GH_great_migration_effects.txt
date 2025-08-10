@@ -1,0 +1,338 @@
+﻿
+add_great_migration_migrating_pop_in_county_effect = {
+	if = {
+		limit = { exists = $STORY_CYCLE_SCOPE$ }
+		$STORY_CYCLE_SCOPE$ = {
+			if = {
+				limit = { has_variable_list = migrating_development_pops_list }
+				random_in_list = {
+					variable = migrating_development_pops_list
+					limit = {
+						var:migrating_pop_culture = $CULTURE$
+						var:migrating_pop_faith = $FAITH$
+					}
+					save_scope_as = migrating_pop_scope
+				}
+			}
+			if = {
+				limit = { NOT = { exists = scope:migrating_pop_scope } }
+				$STORY_CYCLE_SCOPE$.story_owner = {
+					create_story = {
+						type = story_generic_storage
+						save_scope_as = migrating_pop_scope
+					}
+				}
+				scope:migrating_pop_scope = {
+					set_variable = {
+						name = migrating_pop_culture
+						value = $CULTURE$
+					}
+					set_variable = {
+						name = migrating_pop_faith
+						value = $FAITH$
+					}
+					set_variable = {
+						name = migrating_pop_size
+						value = 0
+					}
+					set_variable = {
+						name = migration_story
+						value = $STORY_CYCLE_SCOPE$
+					}
+				}
+				add_to_variable_list = {
+					name = migrating_development_pops_list
+					target = scope:migrating_pop_scope
+				}
+			}
+			scope:migrating_pop_scope = {
+				if = {
+					limit = { has_variable = migrating_pop_size }
+					change_variable = {
+						name = migrating_pop_size
+						add = $SIZE$
+					}
+					if = {
+						limit = { exists = $COUNTY$ }
+						$COUNTY$ = {
+							if = {
+								limit = { NOT = { has_variable = migrating_pop_in_county } }
+								set_variable = {
+									name = migrating_pop_in_county
+									value = scope:migrating_pop_scope
+								}
+								set_variable = {
+									name = migrating_development_in_county
+									value = $SIZE$
+								}
+							}
+							else = {
+								change_variable = {
+									name = migrating_development_in_county
+									add = $SIZE$
+								}
+							}
+							set_variable = {
+								name = affected_by_great_migration
+								value = $STORY_CYCLE_SCOPE$
+							}
+						}
+						add_to_variable_list = {
+							name = transit_counties_list
+							target = $COUNTY$
+						}
+					}
+					$STORY_CYCLE_SCOPE$ = {
+						change_variable = {
+							name = current_migration_size
+							add = $SIZE$
+						}
+						if = {
+							limit = { var:current_migration_size > $STORY_CYCLE_SCOPE$.var:max_migration_size }
+							set_variable = {
+								name = max_migration_size
+								value = var:current_migration_size
+							}
+						}
+					}
+				}
+			}
+			clear_saved_scope = migrating_pop_scope
+		}
+	}
+}
+
+add_migrating_development_to_county_effect = {
+	save_temporary_scope_as = county_to_increase_migrating_development_in
+	if = {
+		limit = { NOT = { has_variable = migrating_pop_in_county } }
+		set_variable = {
+			name = migrating_pop_in_county
+			value = $POP_SCOPE$
+		}
+		set_variable = {
+			name = migrating_development_in_county
+			value = $AMOUNT$
+		}
+		$POP_SCOPE$ = {
+			add_to_variable_list = {
+				name = transit_counties_list
+				target = scope:county_to_increase_migrating_development_in
+			}
+		}
+	}
+	else = {
+		change_variable = {
+			name = migrating_development_in_county
+			add = $AMOUNT$
+		}
+	}
+}
+
+reduce_migrating_development_in_county_effect = {
+	save_temporary_scope_as = county_to_reduce_migrating_development_in
+	change_variable = {
+		name = migrating_development_in_county
+		subtract = $AMOUNT$
+	}
+	if = {
+		limit = { var:migrating_development_in_county <= 0 }
+		remove_variable = migrating_development_in_county
+		if = {
+			limit = { exists = var:migrating_pop_in_county }
+			var:migrating_pop_in_county = {
+				remove_list_variable = {
+					name = transit_counties_list
+					target = scope:county_to_reduce_migrating_development_in
+				}
+			}
+			remove_variable = migrating_pop_in_county
+		}
+	}
+}
+
+partially_settle_migrating_pops_effect = {
+	save_temporary_scope_as = county_scope
+	change_variable = {
+		name = migrating_development_in_county
+		subtract = $AMOUNT$
+	}
+	var:migrating_pop_in_county = {
+		if = {
+			limit = { exists = var:migration_story }
+			var:migration_story = {
+				change_variable = {
+					name = current_migration_size
+					subtract = $AMOUNT$
+				}
+				if = {
+					limit = { scope:county_scope.var:migrating_development_in_county < 0 }
+					change_variable = {
+						name = current_migration_size
+						add = {
+							value = scope:county_scope.var:migrating_development_in_county
+							multiply = -1
+						}
+					}
+				}
+			}
+		}
+	}
+	if = {
+		limit = {
+			var:migrating_development_in_county <= 0
+		}
+		remove_variable = migrating_development_in_county
+		var:migrating_pop_in_county = {
+			remove_list_variable = {
+				name = transit_counties_list
+				target = scope:county_scope
+			}
+		}
+		remove_variable = migrating_pop_in_county
+	}
+	change_development_progress = {
+		value = $AMOUNT$
+		multiply = 50
+	}
+}
+
+transfer_migrating_development_to_county_effect = {
+	reduce_migrating_development_in_county_effect = { AMOUNT = $AMOUNT$ }
+	$TARGET$ = {
+		add_migrating_development_to_county_effect = {
+			AMOUNT = $AMOUNT$
+			POP_SCOPE = $POP_SCOPE$
+		}
+	}
+}
+
+execute_mass_migration_of_pop_effect = {
+	save_temporary_scope_as = pop_scope
+	random_county = {
+		limit = {
+			NOT = { has_variable = affected_by_great_migration }
+			save_temporary_scope_as = county_being_checked
+			trigger_if = {
+				limit = {
+					scope:pop_scope.var:migration_story = {
+						has_variable_list = allowed_titles_to_migrate_to
+					}
+				}
+				scope:pop_scope.var:migration_story = {
+					any_in_list = {
+						variable = allowed_titles_to_migrate_to
+						is_de_jure_liege_or_above_target = scope:county_being_checked
+					}
+				}
+			}
+			any_neighboring_county = {
+				has_variable = affected_by_great_migration
+				var:affected_by_great_migration = scope:pop_scope.var:migration_story
+			}
+		}
+		alternative_limit = {
+			NOT = { has_variable = affected_by_great_migration }
+			save_temporary_scope_as = county_being_checked
+			trigger_if = {
+				limit = {
+					scope:pop_scope.var:migration_story = {
+						has_variable_list = allowed_titles_to_migrate_to
+					}
+				}
+				scope:pop_scope.var:migration_story = {
+					any_in_list = {
+						variable = allowed_titles_to_migrate_to
+						is_de_jure_liege_or_above_target = scope:county_being_checked
+					}
+				}
+			}
+			is_coastal_county = yes
+			any_county = {
+				has_variable = affected_by_great_migration
+				squared_distance = {
+					target = scope:county_being_checked
+					value <= short_pilgrimage_max_length
+				}
+			}
+		}
+		save_scope_as = mass_migration_target_scope
+	}
+	if = {
+		limit = { exists = scope:mass_migration_target_scope }
+		scope:mass_migration_target_scope = { 
+			add_to_list = mass_migration_target_counties_list
+			every_neighboring_county = {
+				limit = { NOT = { has_variable = affected_by_great_migration } }
+				if = {
+					limit = {
+						list_size = {
+							name = mass_migration_target_counties_list
+							value < scope:pop_scope.pop_movement_county_cap_value
+						}
+					}
+					add_to_list = mass_migration_target_counties_list
+					every_neighboring_county = {
+						limit = { NOT = { has_variable = affected_by_great_migration } }
+						add_to_list = mass_migration_target_counties_list
+					}
+				}
+			}
+		}
+		every_in_list = {
+			list = mass_migration_target_counties_list
+			every_neighboring_county = {
+				limit = { NOT = { has_variable = affected_by_great_migration } }
+				if = {
+					limit = {
+						list_size = {
+							name = mass_migration_target_counties_list
+							value < scope:pop_scope.pop_movement_county_cap_value
+						}
+					}
+					add_to_list = mass_migration_target_counties_list
+					every_neighboring_county = {
+						limit = { NOT = { has_variable = affected_by_great_migration } }
+						add_to_list = mass_migration_target_counties_list
+					}
+				}
+			}
+		}
+		every_in_list = {
+			list = mass_migration_target_counties_list
+			save_temporary_scope_as = county_to_transfer_migrating_development_to_scope
+			scope:pop_scope = {
+				every_in_list = {
+					variable = transit_counties_list
+					transfer_migrating_development_to_county_effect = { 
+						AMOUNT = 1
+						TARGET = scope:county_to_transfer_migrating_development_to_scope
+						POP_SCOPE = scope:pop_scope
+					}
+					scope:county_to_transfer_migrating_development_to_scope = {
+						set_variable = {
+							name = affected_by_great_migration
+							value = scope:pop_scope.var:migration_story
+						}
+					}
+				}
+			}
+		}
+		clear_saved_scope = mass_migration_target_scope
+		clear_local_variable_list = mass_migration_target_counties_list
+		clear_local_variable_list = expanded_mass_migration_target_counties_list
+	}
+}
+
+debug_convert_counties_to_migration_culture_effect = {
+	every_county = {
+		limit = { 
+			has_variable = migrating_pop_in_county
+			NOT = { culture = var:migrating_pop_in_county.var:migrating_pop_culture  }
+		}
+		save_temporary_scope_as = county_scope
+		partially_settle_migrating_pops_effect = { AMOUNT = scope:county_scope.development_level }
+		set_county_culture = var:migrating_pop_in_county.var:migrating_pop_culture
+		set_county_faith = var:migrating_pop_in_county.var:migrating_pop_faith
+	}
+}

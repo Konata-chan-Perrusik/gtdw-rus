@@ -1,0 +1,104 @@
+﻿settle_ruin_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		OR = {
+			has_holding_type = ruin_holding
+			has_holding_type = ruined_district_holding
+		}
+	}
+	
+	is_valid = {
+		custom_description = { # Must be in an already colonized county
+			text = "settle_ruin_still_colonizing"
+			county.title_province = { NOT = { has_holding_type = colony_holding } }
+		}
+		custom_description = { # Must be a holder or their liege
+			text = "settle_ruin_not_holder_or_liege"
+			county.holder = {
+				OR = {
+					this = scope:actor
+					any_liege_or_above = { this = scope:actor }
+				}
+			}
+		}
+		custom_description = { # Only non-tribals can settle ruins
+			text = "settle_ruin_not_tribal"
+			scope:actor = { GH_is_any_tribal_government_trigger = no }
+		}
+		custom_description = { # Capital must not be tribal
+			text = "settle_ruin_tribal_capital"
+			county.title_province = { NOT = { has_holding_type = tribal_holding } }
+		}
+		custom_description = { # Cant construct holdings in provinces with Extreme Desert modifier
+			text = "settle_ruin_extreme_desert"
+			NOT = { has_province_modifier = extreme_desert_modifier }
+		}
+	}
+	
+	effect = {
+	}
+}
+
+settle_ruin_pick_holding_scripted_gui = {
+    scope = province
+
+    is_shown = {
+    }
+
+    is_valid = {
+		scope:actor = { short_term_gold >= 250 }
+		trigger_if = {
+			limit = { scope:holding_type_scope = flag:castle_holding }
+			county = {
+				OR = {
+					NOT = { any_county_province = { has_holding_type = castle_holding } }
+					AND = {
+						any_county_province = { has_holding_type = city_holding }
+						any_county_province = { has_holding_type = church_holding }
+					}
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = { scope:holding_type_scope = flag:city_holding }
+			county = {
+				OR = {
+					NOT = { any_county_province = { has_holding_type = city_holding } }
+					AND = {
+						any_county_province = { has_holding_type = castle_holding }
+						any_county_province = { has_holding_type = church_holding }
+					}
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = { scope:holding_type_scope = flag:church_holding }
+			county = {
+				OR = {
+					NOT = { any_county_province = { has_holding_type = church_holding } }
+					AND = {
+						any_county_province = { has_holding_type = castle_holding }
+						any_county_province = { has_holding_type = city_holding }
+					}
+				}
+			}
+		}
+		trigger_else = { }
+    }
+
+    effect = {
+		scope:actor = { remove_short_term_gold = 250 }
+		if = {
+			limit = { scope:holding_type_scope = flag:castle_holding }
+			set_holding_type = castle_holding
+		}
+		else_if = {
+			limit = { scope:holding_type_scope = flag:city_holding }
+			set_holding_type = city_holding
+		}
+		else = {
+			set_holding_type = church_holding
+		}
+	}
+}

@@ -1,0 +1,1050 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_magic_spell_effect_target_list.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+
+# Fired from spell scope
+generate_spell_effect_target_lists_effect = {
+	every_in_list = {
+		list = target_list
+		remove_from_list = target_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_target_effect_list
+			}
+		}
+		$SOURCE$ = {
+			if = {
+			    limit = { has_variable_list = spell_targets }
+			    every_in_list = {
+			        variable = spell_targets
+			        add_to_list = target_list
+			    }
+			}
+
+			if = {
+				limit = { list_size = { name = target_list value <= 0 } }
+				scope:spell_organizer = { add_to_list = target_list }
+			}
+		}
+	}
+	every_in_list = {
+		list = spell_organizer_list
+		remove_from_list = spell_organizer_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_spell_organizer_effect_list
+			}
+		}
+		$SOURCE$ = {
+			scope:spell_organizer ?= { add_to_list = spell_organizer_list }
+		}
+	}
+	every_in_list = {
+		list = caster_list
+		remove_from_list = caster_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_caster_effect_list
+			}
+		}
+		$SOURCE$ = {
+			scope:caster ?= { add_to_list = caster_list }
+		}
+	}
+	every_in_list = {
+		list = target_province_list
+		remove_from_list = target_province_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_target_province_effect_list
+				has_variable_list = affects_target_province_character_effect_list
+			}
+		}
+		$SOURCE$ = {
+			if = {
+			    limit = { has_variable_list = spell_target_province_list }
+			    every_in_list = {
+			        variable = spell_target_province_list
+			        add_to_list = target_province_list
+			    }
+			}
+
+			if = {
+				limit = { list_size = { name = target_province_list value <= 0 } }
+				if = {
+				    limit = { exists = capital_province }
+				    capital_province = { 
+				        add_to_list = target_province_list
+				    }
+				}
+				else_if = {
+				    limit = { exists = location }
+				    location = { 
+				        add_to_list = target_province_list
+				    } 
+				}
+
+			}
+		}
+	}
+	every_in_list = {
+		list = target_title_list
+		remove_from_list = target_title_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_target_title_effect_list
+			}
+		}
+		$SOURCE$ = {
+			if = {
+			    limit = { list_size = { name = target_province_list value > 0 } }
+			    every_in_list = {
+			        list = target_province_list
+			        county = { add_to_list = target_title_list }
+			    }
+			}
+
+			if = {
+				limit = { list_size = { name = target_title_list value <= 0 } }
+				if = {
+				    limit = { exists = capital_county }
+				    capital_county = { 
+				        add_to_list = target_title_list
+				    }
+				}
+				else_if = {
+				    limit = { exists = location }
+				    location.county = { 
+				        add_to_list = target_title_list
+				    } 
+				}
+
+			}
+		}
+	}
+	every_in_list = {
+		list = target_artifact_list
+		remove_from_list = target_artifact_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_target_artifact_effect_list
+			}
+		}
+		$SOURCE$ = {
+			if = {
+			    limit = { has_variable_list = spell_target_titles }
+			    every_in_list = {
+			        variable = spell_target_titles
+			        add_to_list = target_title_list
+			    }
+			}
+
+			if = {
+				limit = { list_size = { name = target_artifact_list value <= 0 } }
+				if = {
+				    limit = { has_variable_list = spell_target_artifacts }
+				    every_in_list = {
+				        variable = spell_target_artifacts
+				        add_to_list = target_artifact_list
+				    }
+				}
+
+			}
+		}
+	}
+	every_in_list = {
+		list = target_province_character_list
+		remove_from_list = target_province_character_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_target_province_character_effect_list
+			}
+		}
+		$SOURCE$ = {
+			if = {
+			    limit = { list_size = { name = target_province_list value > 0 } }
+			    every_in_list = {
+			        list = target_province_list
+			        every_character_in_location = {
+			            add_to_list = target_province_character_list
+			        }
+			    }
+			}
+
+		}
+	}
+	every_in_list = {
+		list = target_newborn_child_list
+		remove_from_list = target_newborn_child_list
+	}
+	if = {
+		limit = {
+			OR = {
+				has_variable_list = affects_target_newborn_child_effect_list
+			}
+		}
+		$SOURCE$ = {
+			scope:child ?= { add_to_list = target_newborn_child_list }
+		}
+	}
+}
+
+# Fired from spell scope
+generate_unwanted_spell_target_list_effect = {
+	if = {
+		limit = { list_size = { name = target_list value > 0 } }
+		every_in_list = {
+			list = target_list
+			if = {
+				limit = { NOT = { exists = scope:spell_being_checked_ai_target } }
+				save_temporary_scope_as = spell_being_checked_ai_target
+			}
+			if = {
+				limit = {
+					NOR = {
+						this = scope:spell_organizer
+						this = scope:caster
+					}
+					OR = {
+						is_ai = no
+						prev.ai_spell_weight_value < 0
+					}
+				}
+				add_to_list = unwanted_spell_targets
+			}
+		}
+	}
+	if = {
+		limit = { list_size = { name = spell_organizer_list value > 0 } }
+		every_in_list = {
+			list = spell_organizer_list
+			if = {
+				limit = { NOT = { exists = scope:spell_being_checked_ai_target } }
+				save_temporary_scope_as = spell_being_checked_ai_target
+			}
+			if = {
+				limit = {
+					NOR = {
+						this = scope:spell_organizer
+						this = scope:caster
+					}
+					OR = {
+						is_ai = no
+						prev.ai_spell_weight_value < 0
+					}
+				}
+				add_to_list = unwanted_spell_targets
+			}
+		}
+	}
+	if = {
+		limit = { list_size = { name = caster_list value > 0 } }
+		every_in_list = {
+			list = caster_list
+			if = {
+				limit = { NOT = { exists = scope:spell_being_checked_ai_target } }
+				save_temporary_scope_as = spell_being_checked_ai_target
+			}
+			if = {
+				limit = {
+					NOR = {
+						this = scope:spell_organizer
+						this = scope:caster
+					}
+					OR = {
+						is_ai = no
+						prev.ai_spell_weight_value < 0
+					}
+				}
+				add_to_list = unwanted_spell_targets
+			}
+		}
+	}
+	if = {
+		limit = { list_size = { name = target_province_character_list value > 0 } }
+		every_in_list = {
+			list = target_province_character_list
+			if = {
+				limit = { NOT = { exists = scope:spell_being_checked_ai_target } }
+				save_temporary_scope_as = spell_being_checked_ai_target
+			}
+			if = {
+				limit = {
+					NOR = {
+						this = scope:spell_organizer
+						this = scope:caster
+					}
+					OR = {
+						is_ai = no
+						prev.ai_spell_weight_value < 0
+					}
+				}
+				add_to_list = unwanted_spell_targets
+			}
+		}
+	}
+	if = {
+		limit = { list_size = { name = target_newborn_child_list value > 0 } }
+		every_in_list = {
+			list = target_newborn_child_list
+			if = {
+				limit = { NOT = { exists = scope:spell_being_checked_ai_target } }
+				save_temporary_scope_as = spell_being_checked_ai_target
+			}
+			if = {
+				limit = {
+					NOR = {
+						this = scope:spell_organizer
+						this = scope:caster
+					}
+					OR = {
+						is_ai = no
+						prev.ai_spell_weight_value < 0
+					}
+				}
+				add_to_list = unwanted_spell_targets
+			}
+		}
+	}
+}
+
+generate_unwanted_spell_target_secrets_effect = {
+	# This list is compiled before the effects take place because the effects of the spell itself might change the calculus of whether a spell is desired or no
+	every_in_list = {
+		list = unwanted_spell_targets
+		save_temporary_scope_as = spell_being_checked_ai_target
+		save_temporary_scope_as = spell_defender
+		random_list = {
+			100 = {
+				modifier = {
+					add = {
+						value = scope:spell_being_casted.spellcasting_discovery_chance_value
+						multiply = -1
+					}
+				}
+				scope:spell_organizer = {
+					add_secret = { 
+						type = secret_magic_harm
+						target = scope:spell_being_checked_ai_target
+					}
+					if = {
+						limit = { NOT = { scope:caster = scope:spell_organizer } }
+						random_secret = { #Find the secret
+							limit = {
+								secret_type = secret_magic_harm
+								secret_target = scope:spell_being_checked_ai_target
+							}
+							add_secret_participant = scope:caster
+						}
+					}
+				}
+			}
+			0 = {
+				trigger = {
+					NOT = { scope:spell_being_casted = { scope:spell_being_casted = { has_variable_list = spell_activation_trigger_list } } }
+				}
+				modifier = {
+					add = scope:spell_being_casted.spellcasting_discovery_chance_value
+				}
+				casted_unwanted_magic_effect = { TARGET = scope:spell_being_checked_ai_target CASTER = scope:spell_organizer }
+			}
+		}
+	}
+}
+
+copy_spell_target_lists_effect = {
+	save_temporary_scope_as = list_copy_destination_scope
+	$SOURCE$ = {
+		if = {
+			limit = { has_variable_list = spell_targets }
+			every_in_list = {
+				variable = spell_targets
+				scope:list_copy_destination_scope ?= {
+					add_to_variable_list = {
+						name = spell_targets
+						target = prev
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_variable_list = spell_target_titles }
+			every_in_list = {
+				variable = spell_target_titles
+				scope:list_copy_destination_scope ?= {
+					add_to_variable_list = {
+						name = spell_target_titles
+						target = prev
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_variable_list = spell_target_artifacts }
+			every_in_list = {
+				variable = spell_target_artifacts
+				scope:list_copy_destination_scope ?= {
+					add_to_variable_list = {
+						name = spell_target_artifacts
+						target = prev
+					}
+				}
+			}
+		}
+	}
+}
+
+apply_regular_spell_effects_or_create_hex_effect = {
+	# If a hex, add it to the spell organizer's owned hexes
+	if = {
+		limit = { has_variable_list = spell_activation_trigger_list }
+		show_as_tooltip = { apply_regular_spell_effects = yes }
+		if = {
+			limit = { NOT = { exists = scope:spell_organizer.var:spell_preparation_story_cycle } }
+			save_temporary_scope_as = hex_template_scope
+			scope:spell_organizer ?= { start_preparing_spell_effect = { SPELL = scope:hex_template_scope } }
+		}
+		if = {
+			limit = { exists = scope:spell_organizer.var:spell_preparation_story_cycle }
+			scope:spell_organizer.var:spell_preparation_story_cycle = {
+				set_variable = hex
+				copy_spell_target_lists_effect = { SOURCE = scope:spell_organizer }
+				set_variable = { name = spell_organizer value = scope:spell_organizer }
+				set_variable = { name = caster value = scope:caster }
+				if = {
+					limit = { has_variable_list = spell_targets }
+					every_in_list = {
+						variable = spell_targets
+						add_to_variable_list = {
+							name = hex_list
+							target = prev
+						}
+					}
+				}
+				if = {
+					limit = { has_variable_list = spell_target_titles }
+					every_in_list = {
+						variable = spell_target_titles
+						add_to_variable_list = {
+							name = hex_list
+							target = prev
+						}
+					}
+				}
+				if = {
+					limit = { exists = var:spell_being_prepared.var:lifespan }
+					set_variable = {
+						name = remaining_lifespan
+						value = var:spell_being_prepared.var:lifespan
+					}
+				}
+			}
+			scope:spell_organizer = {
+				add_to_variable_list = {
+					name = owned_hex_list
+					target = var:spell_preparation_story_cycle
+				}
+			}
+		}
+	}
+	else = {
+		apply_regular_spell_effects = yes
+	}
+}
+
+apply_regular_spell_effects = {
+	save_scope_as = spell_being_casted
+	
+	if = {
+		limit = { NOT = { exists = scope:target_lists_already_generated } }
+		generate_spell_effect_target_lists_effect = { SOURCE = scope:spell_organizer }
+	}
+	generate_unwanted_spell_target_list_effect = yes
+	generate_unwanted_spell_target_secrets_effect = yes
+	
+	scope:spell_organizer ?= {
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_target_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = target_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = target_list
+					save_temporary_scope_as = spell_defender
+					if = {
+						limit = { NOT = { is_in_list = unwanted_spell_targets } }
+						if = {
+							limit = {
+								OR = {
+									this = scope:spell_organizer
+									is_ai = yes
+								}
+							}
+							apply_spell_effects_to_targets = { TARGET = target }
+						}
+						else = {
+							show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = target } }
+							trigger_event = magic.0011
+						}
+					}
+					else = {
+						random_list = {
+							100 = {
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = -1
+									}
+								}
+								if = {
+									limit = {
+										is_ai = yes
+									}
+									apply_spell_effects_to_targets = { TARGET = target }
+								}
+								else = {
+									show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = target } }
+									trigger_event = magic.0011
+								}
+							}
+							0 = {
+								trigger = {
+									NOT = { scope:spell_being_casted = { scope:spell_being_casted = { has_variable_list = spell_activation_trigger_list } } }
+								}
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = 1
+									}
+								}
+								custom_tooltip = successful_magic_resistance_tooltip
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_spell_organizer_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = spell_organizer_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = spell_organizer_list
+					save_temporary_scope_as = spell_defender
+					if = {
+						limit = { NOT = { is_in_list = unwanted_spell_targets } }
+						if = {
+							limit = {
+								OR = {
+									this = scope:spell_organizer
+									is_ai = yes
+								}
+							}
+							apply_spell_effects_to_targets = { TARGET = spell_organizer }
+						}
+						else = {
+							show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = spell_organizer } }
+							trigger_event = magic.0011
+						}
+					}
+					else = {
+						random_list = {
+							100 = {
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = -1
+									}
+								}
+								if = {
+									limit = {
+										is_ai = yes
+									}
+									apply_spell_effects_to_targets = { TARGET = spell_organizer }
+								}
+								else = {
+									show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = spell_organizer } }
+									trigger_event = magic.0011
+								}
+							}
+							0 = {
+								trigger = {
+									NOT = { scope:spell_being_casted = { scope:spell_being_casted = { has_variable_list = spell_activation_trigger_list } } }
+								}
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = 1
+									}
+								}
+								custom_tooltip = successful_magic_resistance_tooltip
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_caster_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = caster_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = caster_list
+					save_temporary_scope_as = spell_defender
+					if = {
+						limit = { NOT = { is_in_list = unwanted_spell_targets } }
+						if = {
+							limit = {
+								OR = {
+									this = scope:spell_organizer
+									is_ai = yes
+								}
+							}
+							apply_spell_effects_to_targets = { TARGET = caster }
+						}
+						else = {
+							show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = caster } }
+							trigger_event = magic.0011
+						}
+					}
+					else = {
+						random_list = {
+							100 = {
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = -1
+									}
+								}
+								if = {
+									limit = {
+										is_ai = yes
+									}
+									apply_spell_effects_to_targets = { TARGET = caster }
+								}
+								else = {
+									show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = caster } }
+									trigger_event = magic.0011
+								}
+							}
+							0 = {
+								trigger = {
+									NOT = { scope:spell_being_casted = { scope:spell_being_casted = { has_variable_list = spell_activation_trigger_list } } }
+								}
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = 1
+									}
+								}
+								custom_tooltip = successful_magic_resistance_tooltip
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_target_province_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = target_province_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = target_province_list
+					save_temporary_scope_as = spell_defender
+					apply_spell_effects_to_targets = { TARGET = target_province }
+					#if = {
+					#	limit = { holder = { NOT = { is_in_list = unwanted_spell_targets } } }
+					#	apply_spell_effects_to_targets = { TARGET = target_province }
+					#}
+					#else = {
+					#	random_list = {
+					#		100 = {
+					#			modifier = {
+					#				add = {
+					#					value = scope:spell_being_casted.magic_resistance_chance
+					#					multiply = -1
+					#				}
+					#			}
+					#			apply_spell_effects_to_targets = { TARGET = target_province }
+					#		}
+					#		0 = {
+					#			trigger = {
+					#				NOT = { has_variable_list = spell_activation_trigger_list }
+					#			}
+					#			modifier = {
+					#				add = {
+					#					value = scope:spell_being_casted.magic_resistance_chance
+					#					multiply = 1
+					#				}
+					#			}
+					#			holder = { custom_tooltip = successful_magic_resistance_tooltip }
+					#		}
+					#	}
+					#}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_target_title_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = target_title_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = target_title_list
+					save_temporary_scope_as = spell_defender
+					apply_spell_effects_to_targets = { TARGET = target_title }
+					#if = {
+					#	limit = { holder = { NOT = { is_in_list = unwanted_spell_targets } } }
+					#	apply_spell_effects_to_targets = { TARGET = target_title }
+					#}
+					#else = {
+					#	random_list = {
+					#		100 = {
+					#			modifier = {
+					#				add = {
+					#					value = scope:spell_being_casted.magic_resistance_chance
+					#					multiply = -1
+					#				}
+					#			}
+					#			apply_spell_effects_to_targets = { TARGET = target_title }
+					#		}
+					#		0 = {
+					#			trigger = {
+					#				NOT = { has_variable_list = spell_activation_trigger_list }
+					#			}
+					#			modifier = {
+					#				add = {
+					#					value = scope:spell_being_casted.magic_resistance_chance
+					#					multiply = 1
+					#				}
+					#			}
+					#			holder = { custom_tooltip = successful_magic_resistance_tooltip }
+					#		}
+					#	}
+					#}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_target_artifact_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = target_artifact_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = target_artifact_list
+					save_temporary_scope_as = spell_defender
+					apply_spell_effects_to_targets = { TARGET = target_artifact }
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_target_province_character_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = target_province_character_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = target_province_character_list
+					save_temporary_scope_as = spell_defender
+					if = {
+						limit = { NOT = { is_in_list = unwanted_spell_targets } }
+						if = {
+							limit = {
+								OR = {
+									this = scope:spell_organizer
+									is_ai = yes
+								}
+							}
+							apply_spell_effects_to_targets = { TARGET = target_province_character }
+						}
+						else = {
+							show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = target_province_character } }
+							trigger_event = magic.0011
+						}
+					}
+					else = {
+						random_list = {
+							100 = {
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = -1
+									}
+								}
+								if = {
+									limit = {
+										is_ai = yes
+									}
+									apply_spell_effects_to_targets = { TARGET = target_province_character }
+								}
+								else = {
+									show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = target_province_character } }
+									trigger_event = magic.0011
+								}
+							}
+							0 = {
+								trigger = {
+									NOT = { scope:spell_being_casted = { scope:spell_being_casted = { has_variable_list = spell_activation_trigger_list } } }
+								}
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = 1
+									}
+								}
+								custom_tooltip = successful_magic_resistance_tooltip
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:spell_being_casted ?= { has_variable_list = affects_target_newborn_child_effect_list }
+			}
+			if = {
+				limit = { list_size = { name = target_newborn_child_list value > 0 } }
+				every_in_list = { #Apply all relevant spell effects to every character targeted
+					list = target_newborn_child_list
+					save_temporary_scope_as = spell_defender
+					if = {
+						limit = { NOT = { is_in_list = unwanted_spell_targets } }
+						if = {
+							limit = {
+								OR = {
+									this = scope:spell_organizer
+									is_ai = yes
+								}
+							}
+							apply_spell_effects_to_targets = { TARGET = target_newborn_child }
+						}
+						else = {
+							show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = target_newborn_child } }
+							trigger_event = magic.0011
+						}
+					}
+					else = {
+						random_list = {
+							100 = {
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = -1
+									}
+								}
+								if = {
+									limit = {
+										is_ai = yes
+									}
+									apply_spell_effects_to_targets = { TARGET = target_newborn_child }
+								}
+								else = {
+									show_as_tooltip = { apply_spell_effects_to_targets = { TARGET = target_newborn_child } }
+									trigger_event = magic.0011
+								}
+							}
+							0 = {
+								trigger = {
+									NOT = { scope:spell_being_casted = { scope:spell_being_casted = { has_variable_list = spell_activation_trigger_list } } }
+								}
+								modifier = {
+									add = {
+										value = scope:spell_being_casted.magic_resistance_chance
+										multiply = 1
+									}
+								}
+								custom_tooltip = successful_magic_resistance_tooltip
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+## GH URGENT: Move this to its own file eventually
+assign_magic_school_trait_effect = {
+	if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:living_magic }
+		add_trait = magic_school_living_magic_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:dead_magic }
+		add_trait = magic_school_dead_magic_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:silentspeak }
+		add_trait = magic_school_silentspeak_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:wood_law }
+		add_trait = magic_school_wood_law_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:keepers_of_the_grove }
+		add_trait = magic_school_keepers_of_the_grove_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:keepers_of_legends }
+		add_trait = magic_school_keepers_of_legends_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:day_court }
+		add_trait = magic_school_day_court_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:night_court }
+		add_trait = magic_school_night_court_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:school_of_esoterics }
+		add_trait = magic_school_school_of_esoterics_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:school_of_manifestations }
+		add_trait = magic_school_school_of_manifestations_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:school_of_malignancies }
+		add_trait = magic_school_school_of_malignancies_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:obsidian_mirror_oneiroscopy }
+		add_trait = magic_school_obsidian_mirror_oneiroscopy_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:greenwenders_of_sarradon }
+		add_trait = magic_school_greenwenders_of_sarradon_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:luminous_discipline }
+		add_trait = magic_school_luminous_discipline_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:absolution_of_the_void }
+		add_trait = magic_school_absolution_of_the_void_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:amber_cup_rites }
+		add_trait = magic_school_amber_cup_rites_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:illuminated_order_of_holy_principles }
+		add_trait = magic_school_illuminated_order_of_holy_principles_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:alchimuur }
+		add_trait = magic_school_alchimuur_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:school_of_night_scrying }
+		add_trait = magic_school_school_of_night_scrying_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:school_of_rejection }
+		add_trait = magic_school_school_of_rejection_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:songs_of_service_and_sight }
+		add_trait = magic_school_songs_of_service_and_sight_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:chants_of_the_tomb }
+		add_trait = magic_school_chants_of_the_tomb_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:dirges_of_the_burned_and_broken }
+		add_trait = magic_school_dirges_of_the_burned_and_broken_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:oraculars }
+		add_trait = magic_school_oraculars_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:empiricists }
+		add_trait = magic_school_empiricists_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:spirit_voice }
+		add_trait = magic_school_spirit_voice_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:adio_kasir }
+		add_trait = magic_school_adio_kasir_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:path_of_the_twin_gods }
+		add_trait = magic_school_path_of_the_twin_gods_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:99_marks_of_power }
+		add_trait = magic_school_99_marks_of_power_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:disciples_of_the_sacred_flame }
+		add_trait = magic_school_disciples_of_the_sacred_flame_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:rites_of_the_land_beyond }
+		add_trait = magic_school_rites_of_the_land_beyond_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:sungazers }
+		add_trait = magic_school_sungazers_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:lemad_dakta }
+		add_trait = magic_school_lemad_dakta_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:scarlet_bronze_formulae }
+		add_trait = magic_school_scarlet_bronze_formulae_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:azure_serpent_sect }
+		add_trait = magic_school_azure_serpent_sect_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:temple_of_the_vitreous_precept }
+		add_trait = magic_school_temple_of_the_vitreous_precept_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:wane_tender_harmoniarchy }
+		add_trait = magic_school_wane_tender_harmoniarchy_1
+	}
+	else_if = {
+		limit = { $MAGIC_SCHOOL$.var:unique_magic_school_identifier ?= flag:auroral_cycle }
+		add_trait = magic_school_auroral_cycle_1
+	}
+}

@@ -1,0 +1,305 @@
+﻿upgrade_marketplace = {
+	if = {
+		limit = {
+			NOT = {
+				has_building_or_higher = marketplace_01
+			}
+			free_building_slots = 0
+		}
+		add_province_modifier = extra_building_slot
+		add_building = marketplace_01
+	}
+	else_if = {
+		limit = {
+			NOT = {
+				has_building_or_higher = marketplace_01
+			}
+			free_building_slots > 1
+		}
+		add_building = marketplace_01
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_01
+		}
+		add_building = marketplace_02
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_02
+		}
+		add_building = marketplace_03
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_03
+		}
+		add_building = marketplace_04
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_04
+		}
+		add_building = marketplace_05
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_05
+		}
+		add_building = marketplace_06
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_06
+		}
+		add_building = marketplace_07
+	}
+	else_if = {
+		limit = {
+			has_building = marketplace_07
+		}
+		add_building = marketplace_08
+	}
+}
+
+# Metro version for court.8090
+add_random_metro_building_construct_effect = { # Province scope
+	if = {
+		limit = { has_variable = random_building_variable }
+		switch = {
+			trigger = var:random_building_variable
+			0 = {
+				add_next_building_tier_effect = { BUILDING = gh_walls }
+			}
+			1 = {
+				add_next_building_tier_effect = { BUILDING = harbor }
+			}
+			2 = {
+				add_next_building_tier_effect = { BUILDING = residential_infrastructure }
+			}
+			3 = {
+				add_next_building_tier_effect = { BUILDING = marketplace }
+			}
+			4 = {
+				add_next_building_tier_effect = { BUILDING = clinic }
+			}
+			5 = {
+				add_next_building_tier_effect = { BUILDING = guard_barracks }
+			}
+			6 = {
+				add_next_building_tier_effect = { BUILDING = luxury_goods }
+			}
+			7 = {
+				add_next_building_tier_effect = { BUILDING = merchant_guild }
+			}
+			8 = {
+				add_next_building_tier_effect = { BUILDING = city_center }
+			}
+			9 = {
+				add_next_building_tier_effect = { BUILDING = parks_and_gardens }
+			}
+			10 = {
+				add_next_building_tier_effect = { BUILDING = artisan_quarters }
+			}
+			11 = {
+				add_next_building_tier_effect = { BUILDING = waterworks }
+			}
+			12 = {
+				add_next_building_tier_effect = { BUILDING = arena }
+			}
+			13 = {
+				add_next_building_tier_effect = { BUILDING = embassy }
+			}
+			14 = {
+				add_next_building_tier_effect = { BUILDING = treasury }
+			}
+			15 = {
+				add_next_building_tier_effect = { BUILDING = gh_university }
+			}
+		}
+	}
+}
+
+# 1, sets variable based on fitness of possible *metro* buildings
+add_random_metro_building_variable_effect = { # Province scope
+	province_owner = { save_scope_as = build_owner }
+	province_owner = { save_scope_as = holder } # Building requirements reference scope:holder
+	random_list = { # Which building?
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = gh_walls }
+				generic_recruitment_building_innovations_trigger = { BUILDING = gh_walls }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 0
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = harbor }
+				generic_recruitment_building_innovations_trigger = { BUILDING = harbor }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 1
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = residential_infrastructure }
+				generic_recruitment_building_innovations_trigger = { BUILDING = residential_infrastructure }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 2
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = marketplace }
+				generic_recruitment_building_innovations_trigger = { BUILDING = marketplace }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 3
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = clinic }
+				generic_recruitment_building_innovations_trigger = { BUILDING = clinic }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 4
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = guard_barracks }
+				generic_recruitment_building_innovations_trigger = { BUILDING = guard_barracks }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 5
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = luxury_goods }
+				generic_recruitment_building_innovations_trigger = { BUILDING = luxury_goods}
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 6
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = merchant_guild }
+				generic_recruitment_building_innovations_trigger = { BUILDING = merchant_guild }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 7
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = city_center }
+				generic_recruitment_building_innovations_trigger = { BUILDING = city_center }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 8
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = parks_and_gardens }
+				generic_recruitment_building_innovations_trigger = { BUILDING = parks_and_gardens }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 9
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = artisan_quarters }
+				generic_recruitment_building_innovations_trigger = { BUILDING = artisan_quarters }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 10
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = waterworks }
+				generic_recruitment_building_innovations_trigger = { BUILDING = waterworks }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 11
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = arena }
+				generic_recruitment_building_innovations_trigger = { BUILDING = arena }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 12
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = embassy }
+				generic_recruitment_building_innovations_trigger = { BUILDING = embassy }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 13
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = treasury }
+				generic_recruitment_building_innovations_trigger = { BUILDING = treasury }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 14
+				days = 365
+			}
+		}
+		10 = {
+			trigger = {
+				add_random_building_trigger = { BUILDING = gh_university}
+				generic_recruitment_building_innovations_trigger = { BUILDING = gh_university }
+			}
+			set_variable = {
+				name = random_building_variable
+				value = 15
+				days = 365
+			}
+		}
+	}
+}

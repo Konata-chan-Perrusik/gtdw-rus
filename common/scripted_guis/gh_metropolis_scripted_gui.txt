@@ -1,0 +1,105 @@
+﻿redistrict_metropolis_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		county = {
+			any_county_province = {
+				is_any_metropolis_or_ruined_district_trigger = yes
+			}
+		}
+	}
+	
+	is_valid = {
+		exists = scope:county_owner
+		scope:county_owner = { 
+			culture = {
+				has_innovation = innovation_city_planning
+			}
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+build_district_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		NOT = {
+			any_in_list = {
+				variable = metro_districts
+				has_variable = district_type
+				var:district_type = scope:potential_district_type
+			}
+		}
+	}
+	
+	is_valid = {
+		exists = scope:county_owner
+		scope:county_owner = { 
+			gold >= 500
+		}
+	}
+	
+	effect = {
+		scope:county_owner = {
+			remove_short_term_gold = 500
+		}
+		every_in_list = {
+			variable = metro_districts
+			limit = {var:district_type = scope:district_type}
+			set_variable = {
+				name = district_type
+				value = scope:potential_district_type
+			}
+		}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = maritime_district_holding } }
+		#	set_holding_type = maritime_district_holding
+		#}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = military_district_holding } }
+		#	set_holding_type = military_district_holding
+		#}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = palatial_district_holding } }
+		#	set_holding_type = palatial_district_holding
+		#}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = trade_district_holding } }
+		#	set_holding_type = trade_district_holding
+		#}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = temple_district_holding } }
+		#	set_holding_type = temple_district_holding
+		#}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = workshop_district_holding } }
+		#	set_holding_type = workshop_district_holding
+		#}
+		#if = {
+		#	limit = { holding_is_type_from_flag_trigger = { FLAG_SCOPE = scope:holding_type_scope FLAG = urban_district_holding } }
+		#	set_holding_type = urban_district_holding
+		#}
+	}
+}
+
+change_district_scripted_gui = {
+
+}
+
+hide_built_district_options_scripted_gui = {
+	is_shown = {
+		NOT = {
+			scope:province = {
+				any_in_list = {
+					variable = metro_districts
+					has_variable = district_type
+					var:district_type = root
+				}
+			}
+		}
+	}
+}

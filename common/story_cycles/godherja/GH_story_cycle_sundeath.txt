@@ -1,0 +1,42 @@
+﻿
+story_cycle_sundeath = {
+
+	on_setup = {
+		set_global_variable = {
+			name = sundeath_initiator
+			value = story_owner
+		}
+		random_ruler = {
+			trigger_event = apocalypse_sundeath.0001
+		}
+	}
+
+	on_end = {
+	
+	}
+
+	on_owner_death = {
+		
+	}
+	
+	effect_group = {
+		weeks = 1
+	
+		trigger = {
+			exists = global_var:sundeath_phase_1_start
+		}
+	
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					global_variable_list_size = { name = midnight_countdown_county_list value > 0 }
+				}
+				effect = {
+					random_ruler = {
+						trigger_event = apocalypse_sundeath.0021
+					}
+				}
+			}
+		}
+	}
+}

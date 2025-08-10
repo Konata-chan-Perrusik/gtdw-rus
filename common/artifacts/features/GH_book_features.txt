@@ -1,0 +1,2436 @@
+﻿#########
+# Books #
+#########
+
+#book_ink
+	book_ink_blood = {
+		group = book_ink
+		trigger = {
+			exists = var:blood
+		}
+		weight = {
+			value = var:blood
+		}
+	}
+	
+	book_ink_stardew_ink = {
+		group = book_ink
+		trigger = {
+			exists = var:celestial
+		}
+		weight = {
+			value = var:celestial
+		}
+	}
+
+#book_subject
+	book_subject_arcana = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:arcana
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { has_education_arcana_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = character_arcana_baseline_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { has_education_arcana_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = character_arcana_baseline_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+
+	book_subject_celestial = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:celestial
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_celestial_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = celestial_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_celestial_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = celestial_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_light = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:light
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_light_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = light_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_light_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = light_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+
+	book_subject_blood = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:blood
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_blood_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = blood_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_blood_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = blood_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_fire = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:fire
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_fire_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = fire_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_fire_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = fire_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_nature = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:nature
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_nature_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = nature_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_nature_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = nature_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_water = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:water
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_water_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = water_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_water_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = water_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_air = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:air
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_air_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = air_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_air_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = air_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_stone = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:stone
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_stone_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = stone_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_stone_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = stone_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_dream = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:dream
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_dream_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = dream_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_dream_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = dream_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_death = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:death
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_death_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = death_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_death_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = death_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_ethereal = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:ethereal
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_ethereal_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = ethereal_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_ethereal_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = ethereal_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_ice = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:ice
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_ice_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = ice_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_ice_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = ice_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+	
+	book_subject_dark = {
+		group = book_subject
+		trigger = {
+			trigger_if = { # If the subject has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_subject }
+				scope:owner.var:book_artifact_subject = flag:dark
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { knows_magic_school_with_dark_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = dark_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { knows_magic_school_with_dark_aspect_trigger = yes }
+						add = 60
+					}
+					add = { #If they're good you get +, if they're shit you get -
+						value = average_skill_rating
+						subtract = dark_aspect_spellcasting_value
+						multiply = -5
+						min = 0
+					}
+				}
+			}
+		}
+	}
+
+# book_topic
+
+	# General GH-specific topics
+
+	book_topic_secret_histories_chronicle = {
+		group = book_topic
+		trigger = {
+			exists = scope:owner.var:book_artifact_topic
+			scope:owner.var:book_artifact_topic = flag:secret_histories_chronicle
+		}
+		weight = 1
+	}
+	
+	book_topic_secret_histories_secret_society = {
+		group = book_topic
+		trigger = {
+			exists = scope:owner.var:book_artifact_topic
+			scope:owner.var:book_artifact_topic = flag:secret_histories_secret_society
+		}
+		weight = 1
+	}
+	
+	# Arcana
+	book_topic_arcana_general = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_arcana
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:arcana_general
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_arcana_magic_school = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_arcana
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:arcana_magic_school
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_arcana_ethics = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_arcana
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:arcana_ethics
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Celestial
+	book_topic_celestial_star_lore = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_celestial
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:celestial_star_lore
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Light
+	book_topic_light_optics = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_light
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:light_optics
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Blood
+	book_topic_blood_medicine = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_blood
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:blood_medicine
+			}
+		}
+		weight = {
+			value = 1
+			if = {
+				limit = {
+					exists = scope:owner.var:book_artifact_author
+				}
+				scope:owner.var:book_artifact_author = {
+					if = {
+						limit = { book_subject_medicine_trigger = yes }
+						add = 10
+					}
+				}
+			}
+			else = {
+				scope:owner = {
+					if = {
+						limit = { book_subject_medicine_trigger = yes }
+						add = 10
+					}
+				}
+			}
+		}
+	}
+	book_topic_blood_play = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_blood
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:blood_play
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_blood_poetry = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_blood
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:blood_poetry
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Fire
+	book_topic_fire_sacrifice = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_fire
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:fire_sacrifice
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Nature
+	book_topic_nature_folklore = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_nature
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:nature_folklore
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Water
+	book_topic_water_folklore = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_water
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:water_folklore
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Air
+	book_topic_air_ornithology = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_air
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:air_ornithology
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_air_poetry = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_air
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:air_poetry
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Dream
+	book_topic_dream_journal = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_dream
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dream_journal
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_dream_architecture = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_dream
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dream_architecture
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_dream_wakeless = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_dream
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dream_wakeless
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Death
+	book_topic_death_funerary_rites = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_death
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:death_funerary_rites
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Ethereal
+	book_topic_ethereal_soul_theory = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_ethereal
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ethereal_soul_theory
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_ethereal_fog = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_ethereal
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ethereal_fog
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Ice
+	book_topic_ice_wards = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_ice
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ice_wards
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	# Dark
+	book_topic_dark_shades = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_dark
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dark_shades
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+	book_topic_dark_entities = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_dark
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dark_entities
+			}
+		}
+		weight = {
+			value = 1
+		}
+	}
+
+	# Unique GH-specific topics
+	
+	# GH NOTE: This is an OLD way of handling book topics; these should be removed and replaced with generic topics where the book in question is marked as "historical" so that it uses the relevant loc
+	# Old topic handling start
+	
+	book_topic_five_fathers = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_learning
+			trigger_if = {
+				limit = { exists = scope:owner.var:book_topic_category }
+				scope:owner.var:book_topic_category = flag:learning_faith
+			}
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:five_fathers
+			}
+			OR = {
+				scope:owner.faith.religion = religion:wardenism_religion
+				scope:owner.faith = { has_doctrine = tenet_wardenism_religion_syncretism }
+				scope:owner = { has_trait = theologian }
+			}
+		}
+		weight = 1
+	}
+	
+	book_topic_kam_gutaran = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_stewardship
+			trigger_if = {
+				limit = { exists = scope:owner.var:book_topic_category }
+				scope:owner.var:book_topic_category = flag:stewardship_development
+			}
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:kam_gutaran
+			}
+		}
+		weight = 1
+	}
+	
+	book_topic_skull_of_the_purest = {
+		group = book_topic
+		trigger = {
+			has_artifact_feature = book_subject_learning
+			trigger_if = {
+				limit = { exists = scope:owner.var:book_topic_category }
+				scope:owner.var:book_topic_category = flag:learning_faith
+			}
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:skull_of_the_purest
+			}
+		}
+		weight = 1
+	}
+	
+
+	book_topic_bookofmaps = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:bookofmaps
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_grimoireofmethinoire = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:grimoireofmethinoire
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_burntgrimoire = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:burntgrimoire
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_afynehestoree = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:afynehestoree
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_amazingslaves = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:amazingslaves
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_fraternityofmagi = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:fraternityofmagi
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_aversariancookinginformational = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:aversariancookinginformational
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_marcherswhatdoweknow = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:marcherswhatdoweknow
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_mightmagibuxommaiden = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:mightmagibuxommaiden
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_fiftyshades = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:fiftyshades
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_adabyssianreport = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:adabyssianreport
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_taleofsirkoeveux = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:taleofsirkoeveux
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_imperialcivilwar = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:imperialcivilwar
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_nameofthewindknockoff = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:nameofthewindknockoff
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_tragedyinoejeynica = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:tragedyinoejeynica
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_sarradoniansteps = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:sarradoniansteps
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_chivalriccode = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:chivalriccode
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_griffonbestiary = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:griffonbestiary
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_lasthippogriff = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:lasthippogriff
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_howtomaimadragon = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:howtomaimadragon
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_loveanddeathinasiupoli = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:loveanddeathinasiupoli
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_silastavroaliveordead = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:silastavroaliveordead
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_howtoreadabook = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:howtoreadabook
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_purelifefifth = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:purelifefifth
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_purebodyfifth = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:purebodyfifth
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_puremindfifth = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:puremindfifth
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_purelifefirst = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:purelifefirst
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_purebodyfirst = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:purebodyfirst
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_puremindfirst = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:puremindfirst
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_travelsofsaintkatharitos = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:travelsofsaintkatharitos
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_hundredtrials = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:hundredtrials
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_bookofremedies = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:bookofremedies
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_saintslawbook = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:saintslawbook
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_rendingthechains = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:rendingthechains
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_calystojournal = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:calystojournal
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_eosianswordcharter = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:eosianswordcharter
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_dangerofathousandstars = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dangerofathousandstars
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_bannediyrossipoetry = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:bannediyrossipoetry
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_aeladaxostoaeliadias = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:aeladaxostoaeliadias
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_compiledworksofvenodau = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:compiledworksofvenodau
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_pillarsofaversaria = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:pillarsofaversaria
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_ontheoriginofmankind = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ontheoriginofmankind
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_ataleoftwocities = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ataleoftwocities
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_parthenaxiada = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:parthenaxiada
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_edgeoftheworld = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:edgeoftheworld
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_ninetysixtasks = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ninetysixtasks
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_natureofmatter = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:natureofmatter
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_ruleofmany = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:ruleofmany
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_thedragonandthescorpion = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:thedragonandthescorpion
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_arakkariacwar = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:arakkariacwar
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_lostpolis = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:lostpolis
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_masenmalik = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:masenmalik
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_mawtalmunininguide = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:mawtalmunininguide
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_expeditiontothenorth = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:expeditiontothenorth
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_howtheendbegan = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:howtheendbegan
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_refutation = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:refutation
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_inquiryintothefog = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:inquiryintothefog
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_clockworkcity = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:clockworkcity
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_annalsofblank = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:annalsofblank
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_whenaervalbleed = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:whenaervalbleed
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_treatiseofgoodpractice = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:treatiseofgoodpractice
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_chevalienknightinoraispol = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:chevalienknightinoraispol
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_witchbreakerhero = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:witchbreakerhero
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_sjalvolkipoetry = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:sjalvolkipoetry
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_bookofthefallen = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:bookofthefallen
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_jacotwaldisse = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:jacotwaldisse
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_delenelbook = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:delenelbook
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_redlandsadventure = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:redlandsadventure
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_fourlodges = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:fourlodges
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_journalofseekers = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:journalofseekers
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_godslaverdictations_fix = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:godslaverdictations_fix
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_thekardwenwhatweknow = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:thekardwenwhatweknow
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_dethediaxnotes = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dethediaxnotes
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_dethediaxiancodex = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:dethediaxiancodex
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_bluerobetreatise = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:bluerobetreatise
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+
+	book_topic_boqqarofknives = {
+		group = book_topic
+		trigger = {
+			trigger_if = { # If the topic has been pre-saved from events etc. we make sure it's picked
+				limit = { exists = scope:owner.var:book_artifact_topic }
+				scope:owner.var:book_artifact_topic = flag:boqqarofknives
+			}
+			trigger_else = { always = no }
+		}
+		weight = 1
+	}
+	
+	# Old topic end
+
+# book_title
+
+	# General GH-specific titles
+
+	book_title_secret_histories_chronicle = {
+		group = book_title
+		trigger = {
+			exists = scope:owner.var:book_artifact_topic
+			scope:owner.var:book_artifact_topic = flag:secret_histories_chronicle
+		}
+		weight = 1
+	}
+	book_title_secret_histories_secret_society = {
+		group = book_title
+		trigger = {
+			exists = scope:owner.var:book_artifact_topic
+			scope:owner.var:book_artifact_topic = flag:secret_histories_secret_society
+		}
+		weight = 1
+	}
+
+#book_title
+	book_title_arcana_general = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_arcana_general }
+		weight = 1
+	}
+	
+	book_title_arcana_magic_school = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_arcana_magic_school }
+		weight = 1
+	}
+	
+	book_title_nature_folklore = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_nature_folklore }
+		weight = {
+			value = 1
+		}
+	}
+	
+	book_title_water_folklore = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_water_folklore }
+		weight = {
+			value = 1
+		}
+	}
+
+	book_title_dream_journal = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_dream_journal }
+		weight = {
+			value = 1
+		}
+	}
+
+	book_title_poetry = {
+		group = book_title
+		trigger = {
+			OR = {
+				has_artifact_feature = book_topic_blood_play
+				has_artifact_feature = book_topic_blood_poetry
+			}
+		}
+		weight = 1
+	}
+	
+	book_title_medical = {
+		group = book_title
+		trigger = {
+			OR = {
+				has_artifact_feature = book_topic_blood_medicine
+			}
+		}
+		weight = 1
+	}
+
+	# Unique GH-specific
+	# GH NOTE: Same as above, gradually phase these out
+	# Old titling start
+	
+	book_title_five_fathers = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_five_fathers }
+		weight = 1
+	}
+	book_title_kam_gutaran = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_kam_gutaran }
+		weight = 1
+	}
+	book_title_skull_of_the_purest = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_skull_of_the_purest }
+		weight = 1
+	}
+	book_title_bookofmaps = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_bookofmaps }
+		weight = 1
+	}
+	book_title_grimoireofmethinoire = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_grimoireofmethinoire }
+		weight = 1
+	}
+	book_title_burntgrimoire = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_burntgrimoire }
+		weight = 1
+	}
+	book_title_afynehestoree = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_afynehestoree }
+		weight = 1
+	}
+	book_title_amazingslaves = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_amazingslaves }
+		weight = 1
+	}
+	book_title_fraternityofmagi = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_fraternityofmagi }
+		weight = 1
+	}
+	book_title_aversariancookinginformational = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_aversariancookinginformational }
+		weight = 1
+	}
+	book_title_marcherswhatdoweknow = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_marcherswhatdoweknow }
+		weight = 1
+	}
+	book_title_mightmagibuxommaiden = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_mightmagibuxommaiden }
+		weight = 1
+	}
+	book_title_fiftyshades = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_fiftyshades }
+		weight = 1
+	}
+	book_title_adabyssianreport = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_adabyssianreport }
+		weight = 1
+	}
+	book_title_taleofsirkoeveux = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_taleofsirkoeveux }
+		weight = 1
+	}
+	book_title_imperialcivilwar = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_imperialcivilwar }
+		weight = 1
+	}
+	book_title_nameofthewindknockoff = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_nameofthewindknockoff }
+		weight = 1
+	}
+	book_title_tragedyinoejeynica = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_tragedyinoejeynica }
+		weight = 1
+	}
+	book_title_sarradoniansteps = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_sarradoniansteps }
+		weight = 1
+	}
+	book_title_chivalriccode = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_chivalriccode }
+		weight = 1
+	}
+	book_title_griffonbestiary = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_griffonbestiary }
+		weight = 1
+	}
+	book_title_lasthippogriff = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_lasthippogriff }
+		weight = 1
+	}
+	book_title_howtomaimadragon = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_howtomaimadragon }
+		weight = 1
+	}
+	book_title_loveanddeathinasiupoli = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_loveanddeathinasiupoli }
+		weight = 1
+	}
+	book_title_silastavroaliveordead = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_silastavroaliveordead }
+		weight = 1
+	}
+	book_title_howtoreadabook = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_howtoreadabook }
+		weight = 1
+	}
+	book_title_purelifefifth = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_purelifefifth }
+		weight = 1
+	}
+	book_title_purebodyfifth = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_purebodyfifth }
+		weight = 1
+	}
+	book_title_puremindfifth = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_puremindfifth }
+		weight = 1
+	}
+	book_title_purelifefirst = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_purelifefirst }
+		weight = 1
+	}
+	book_title_purebodyfirst = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_purebodyfirst }
+		weight = 1
+	}
+	book_title_puremindfirst = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_puremindfirst }
+		weight = 1
+	}
+	book_title_travelsofsaintkatharitos = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_travelsofsaintkatharitos }
+		weight = 1
+	}
+	book_title_hundredtrials = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_hundredtrials }
+		weight = 1
+	}
+	book_title_bookofremedies = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_bookofremedies }
+		weight = 1
+	}
+	book_title_saintslawbook = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_saintslawbook }
+		weight = 1
+	}
+	book_title_rendingthechains = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_rendingthechains }
+		weight = 1
+	}
+	book_title_calystojournal = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_calystojournal }
+		weight = 1
+	}
+	book_title_eosianswordcharter = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_eosianswordcharter }
+		weight = 1
+	}
+	book_title_dangerofathousandstars = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_dangerofathousandstars }
+		weight = 1
+	}
+	book_title_bannediyrossipoetry = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_bannediyrossipoetry }
+		weight = 1
+	}
+	book_title_aeladaxostoaeliadias = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_aeladaxostoaeliadias }
+		weight = 1
+	}
+	book_title_compiledworksofvenodau = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_compiledworksofvenodau }
+		weight = 1
+	}
+	book_title_pillarsofaversaria = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_pillarsofaversaria }
+		weight = 1
+	}
+	book_title_ontheoriginofmankind = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_ontheoriginofmankind }
+		weight = 1
+	}
+	book_title_ataleoftwocities = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_ataleoftwocities }
+		weight = 1
+	}
+	book_title_parthenaxiada = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_parthenaxiada }
+		weight = 1
+	}
+	book_title_edgeoftheworld = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_edgeoftheworld }
+		weight = 1
+	}
+	book_title_ninetysixtasks = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_ninetysixtasks }
+		weight = 1
+	}
+	book_title_natureofmatter = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_natureofmatter }
+		weight = 1
+	}
+	book_title_ruleofmany = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_ruleofmany }
+		weight = 1
+	}
+	book_title_thedragonandthescorpion = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_thedragonandthescorpion }
+		weight = 1
+	}
+	book_title_arakkariacwar = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_arakkariacwar }
+		weight = 1
+	}
+	book_title_lostpolis = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_lostpolis }
+		weight = 1
+	}
+	book_title_masenmalik = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_masenmalik }
+		weight = 1
+	}
+	book_title_mawtalmunininguide = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_mawtalmunininguide }
+		weight = 1
+	}
+	book_title_expeditiontothenorth = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_expeditiontothenorth }
+		weight = 1
+	}
+	book_title_howtheendbegan = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_howtheendbegan }
+		weight = 1
+	}
+	book_title_refutation = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_refutation }
+		weight = 1
+	}
+	book_title_inquiryintothefog = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_inquiryintothefog }
+		weight = 1
+	}
+	book_title_clockworkcity = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_clockworkcity }
+		weight = 1
+	}
+	book_title_annalsofblank = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_annalsofblank }
+		weight = 1
+	}
+	book_title_whenaervalbleed = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_whenaervalbleed }
+		weight = 1
+	}
+	book_title_treatiseofgoodpractice = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_treatiseofgoodpractice }
+		weight = 1
+	}
+	book_title_chevalienknightinoraispol = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_chevalienknightinoraispol }
+		weight = 1
+	}
+	book_title_witchbreakerhero = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_witchbreakerhero }
+		weight = 1
+	}
+	book_title_sjalvolkipoetry = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_sjalvolkipoetry }
+		weight = 1
+	}
+	book_title_bookofthefallen = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_bookofthefallen }
+		weight = 1
+	}
+	book_title_jacotwaldisse = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_jacotwaldisse }
+		weight = 1
+	}
+	book_title_delenelbook = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_delenelbook }
+		weight = 1
+	}
+	book_title_redlandsadventure = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_redlandsadventure }
+		weight = 1
+	}
+	book_title_fourlodges = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_fourlodges }
+		weight = 1
+	}
+	book_title_journalofseekers = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_journalofseekers }
+		weight = 1
+	}
+	book_title_godslaverdictations_fix = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_godslaverdictations_fix }
+		weight = 1
+	}
+	book_title_thekardwenwhatweknow = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_thekardwenwhatweknow }
+		weight = 1
+	}
+	book_title_dethediaxnotes = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_dethediaxnotes }
+		weight = 1
+	}
+	book_title_dethediaxiancodex = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_dethediaxiancodex }
+		weight = 1
+	}
+	book_title_bluerobetreatise = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_bluerobetreatise }
+		weight = 1
+	}
+	book_title_boqqarofknives = {
+		group = book_title
+		trigger = { has_artifact_feature = book_topic_boqqarofknives }
+		weight = 1
+	}
+	
+	# Old titling end

@@ -1,0 +1,143 @@
+﻿no_stance = { # GH: Empty stance for Wastelands and Fogeaters and the like
+	score = { # GH URGENT: 1. Make sure this gets added to all the random triggers and such for vassal stances where relevant 2. Make a different version for Fogeaters and such that's meant to actually have content
+		value = 0
+	}
+	heir_score = {
+		value = ai_compassion
+	}	
+	is_valid = { is_human = no }
+}
+
+magic_focused = { # For vassals that are focused on the arcane world rather than mundane affairs
+	score = {
+		value = ai_rationality
+		add = {
+			value = arcana
+			multiply = 10
+		}
+		if = {
+			limit = {
+				has_trait = education_arcana_1
+			}
+			add = 100
+		}
+		if = {
+			limit = {
+				has_trait = education_arcana_2
+			}
+			add = 200
+		}
+		if = {
+			limit = {
+				has_trait = education_arcana_3
+			}
+			add = 300
+		}
+		if = {
+			limit = {
+				has_trait = education_arcana_4
+			}
+			add = 400
+		}
+		if = {
+			limit = {
+				has_trait = education_arcana_5
+			}
+			add = 500
+		}
+		if = {
+			limit = {
+				culture = { has_cultural_tradition = tradition_world_tree }
+			}
+			add = 25
+		}
+		if = {
+			limit = {
+				culture = { has_cultural_tradition = tradition_blood_magi }
+			}
+			add = 25
+		}
+		if = {
+			limit = {
+				government_has_flag = government_is_magocratic
+			}
+			add = 150
+		}
+		if = {
+			limit = {
+				government_has_flag = government_is_magocratic_republic
+			}
+			add = 150
+		}
+		if = {
+			limit = {
+				scope:liege = { has_royal_court = yes has_court_type = court_magic }
+			}
+			add = 30
+		}
+		if = {
+			limit = {
+				has_trait = magic_good
+			}
+			multiply = 1.2
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = more_magic_focused_vassals
+				}
+			}
+			multiply = 1.2
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = much_more_magic_focused_vassals
+				}
+			}
+			multiply = 1.4
+		}
+		if = {
+			limit = {
+				culture = {
+					has_innovation = innovation_imperial_magic
+				}
+			}
+			multiply = 1.2
+		}
+		#if = {
+		#	limit = {
+		#		culture = {
+		#			has_cultural_parameter = less_magic_focused_vassals
+		#		}
+		#	}
+		#	multiply = 0.8
+		#}
+		if = {
+			limit = {
+				culture = {
+					has_innovation = innovation_anti_magic_combat
+				}
+			}
+			multiply = 0.8
+		}
+	}
+	heir_score = {
+		value = arcana
+		multiply = 20
+		add = ai_rationality
+		if = {
+			limit = { has_trait = education_arcana }
+			add = 100
+		}
+		if = {
+			limit = { has_magic = yes }
+			add = 50
+		}
+		if = {
+			limit = { is_adult = no }
+			multiply = 0.01
+			add = -100
+		}
+	}
+}

@@ -1,0 +1,2436 @@
+#Useful Notes:
+
+#SPELLS
+#A spell is an empty story cycle. We only use the story cycle for its ability
+#to hold variables and be saved as a scope. For simplicities sake this
+#document uses the word spell to refer to the story cycle
+
+#TAGS:
+#tags are the same as seplls, where we use a story cycle only for holding
+#data. These are referred to as tags
+
+########################################
+# SPELL CREATION QUICK-BUILD TEMPLATES #
+########################################
+
+create_blank_spell_scripted_effect = {
+	random_ruler = {
+		create_story = { #Empty story that's only used to hold data
+			type = story_generic_storage
+			save_scope_as = new_spell_scope #This scope is used for adding tags
+		}
+	}
+	add_to_global_variable_list = { #List of all spells
+		name = global_spell_list
+		target = scope:new_spell_scope
+	}
+}
+
+#creates a new spell using the above effect, and creates a global variable pointing to it
+#Used for premade spells where we manually define a name, while procedural effects skip this
+create_blank_spell_with_global_identifier_scripted_effect = {
+	create_blank_spell_scripted_effect = yes
+	set_global_variable = {
+		name = $SPELL_IDENTIFIER$
+		value = scope:new_spell_scope
+	}
+	scope:new_spell_scope = {
+		set_variable = { #Have the spell remember its name
+			name = unique_spell_identifier
+			value = flag:$SPELL_IDENTIFIER$
+		}
+	}
+}
+
+#Creates a new spell without an identifier. Used by procedural spells
+create_one_aspect_spell_scripted_effect = {
+	create_blank_spell_scripted_effect = yes
+	scope:new_spell_scope = {
+		#Adds the aspect, tier, and cost to the spell as variables
+		add_spell_aspect_effect = { ASPECT = $ASPECT_1$ TIER = $TIER_1$ }
+		set_spell_cost_effect = { VALUE = standard_spell_cost }
+		set_spell_gold_cost_effect = { VALUE = standard_spell_gold_cost }
+		spell_post_creation_effect = yes
+	}
+}
+
+#Creats a new spell with an identifier. Used for premade spells
+create_one_aspect_spell_with_global_identifier_effect = {
+	create_blank_spell_with_global_identifier_scripted_effect = { SPELL_IDENTIFIER = $SPELL_IDENTIFIER$ }
+	scope:new_spell_scope = {
+		add_spell_aspect_effect = { ASPECT = $ASPECT_1$ TIER = $TIER_1$ }
+		set_spell_cost_effect = { VALUE = standard_spell_cost }
+		set_spell_gold_cost_effect = { VALUE = standard_spell_gold_cost }
+		spell_post_creation_effect = yes
+		generate_spell_name_effect = yes
+	}
+}
+#See above
+create_two_aspect_spell_scripted_effect = {
+	create_blank_spell_scripted_effect = yes
+	scope:new_spell_scope = {
+		add_spell_aspect_effect = { ASPECT = $ASPECT_1$ TIER = $TIER_1$ }
+		add_spell_aspect_effect = { ASPECT = $ASPECT_2$ TIER = $TIER_2$ }
+		set_spell_cost_effect = { VALUE = standard_spell_cost }
+		set_spell_gold_cost_effect = { VALUE = standard_spell_gold_cost }
+		spell_post_creation_effect = yes
+		generate_spell_name_effect = yes
+	}
+}
+#See above
+create_two_aspect_spell_with_global_identifier_effect = {
+	create_blank_spell_with_global_identifier_scripted_effect = { SPELL_IDENTIFIER = $SPELL_IDENTIFIER$ }
+	scope:new_spell_scope = {
+		add_spell_aspect_effect = { ASPECT = $ASPECT_1$ TIER = $TIER_1$ }
+		add_spell_aspect_effect = { ASPECT = $ASPECT_2$ TIER = $TIER_2$ }
+		set_spell_cost_effect = { VALUE = standard_spell_cost }
+		set_spell_gold_cost_effect = { VALUE = standard_spell_gold_cost }
+		spell_post_creation_effect = yes
+		generate_spell_name_effect = yes
+	}
+}
+
+#########################
+# POST-CREATION EFFECTS #
+#########################
+
+spell_post_creation_effect = {
+	# GH URGENT: Implement a 'global spell component' system since this is extremely wasteful when it comes to the amount of SCs it creates
+	create_spell_component_effect = { COMPONENT_NAME = runic_scroll_spell_component REQUIRED = no }
+	if = {
+		limit = { exists = scope:runic_scroll_spell_component_scope }
+		scope:runic_scroll_spell_component_scope = {
+			add_spell_component_input_slot_effect = { TYPE = artifact_spell_component_input }
+			add_spell_component_input_slot_modifier_effect = { TYPE = artifact_type IDENTIFIER = runic_scroll VALUE = 0 }
+			add_spell_component_bonus_or_cost_effect = { TYPE = inherits_aspects VALUE = 0 }
+		}
+	}
+	if = {
+		limit = { NOT = { exists = var:secondary_aspect } }
+		random_in_list = {
+			variable = spell_aspect_list
+			limit = {
+				NOT = { prev.var:primary_aspect ?= this }
+			}
+			prev = {
+				set_variable = {
+					name = secondary_aspect
+					value = prev
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { exists = var:secondary_aspect } }
+			set_variable = {
+				name = secondary_aspect
+				value = var:primary_aspect
+			}
+		}
+	}
+	generate_spell_name_effect = yes
+	generate_spell_icon_effect = yes
+}
+
+########################
+# MAGIC SCHOOL EFFECTS #
+########################
+
+create_blank_magic_school_scripted_effect = {
+	random_ruler = {
+		create_story = { #Empty story that's only used to hold data
+			type = story_generic_storage
+			save_scope_as = new_magic_school_scope #This scope is used for adding tags
+		}
+	}
+	if = {
+		limit = { exists = scope:new_magic_school_scope }
+		add_to_global_variable_list = { #List of all spells
+			name = global_magic_school_list
+			target = scope:new_magic_school_scope
+		}
+		scope:new_magic_school_scope = {
+			# Too long to explain why this is needed, if you *really* need a technical tl;dr contact Hapchazzard
+			set_variable = {
+				name = magic_school
+				value = scope:new_magic_school_scope
+			}
+			set_variable = {
+				name = mastery
+				value = 1 # Magic schools are assumed to have a mastery of 1% if they are directly connected to a culture rather than through a mastery structure
+			}
+		}
+	}
+}
+
+#Used for premade magic schools where we manually define a name, while procedural effects skip this
+create_magic_school_with_global_identifier_effect = {
+	create_blank_magic_school_scripted_effect = yes
+	if = {
+		limit = { exists = scope:new_magic_school_scope }
+		set_global_variable = {
+			name = $MAGIC_SCHOOL_IDENTIFIER$
+			value = scope:new_magic_school_scope
+		}
+		scope:new_magic_school_scope = {
+			set_variable = { #Have the magic school remember its name
+				name = unique_magic_school_identifier
+				value = flag:$MAGIC_SCHOOL_IDENTIFIER$
+			}
+			save_scope_as = $MAGIC_SCHOOL_IDENTIFIER$
+		}
+	}
+}
+
+add_aspect_to_last_created_magic_school_effect = {
+	if = {
+		limit = { exists = scope:new_magic_school_scope }
+		scope:new_magic_school_scope = {
+			if = {
+				limit = { exists = var:$ASPECT$ }
+				change_variable = {
+					name = $ASPECT$
+					add = $VALUE$
+				}
+			}
+			else = {
+				set_variable = {
+					name = $ASPECT$
+					value = $VALUE$
+				}
+				if = {
+					limit = { NOT = { exists = var:primary_aspect } }
+					set_variable = {
+						name = primary_aspect
+						value = flag:$ASPECT$
+					}
+					set_variable = {
+						name = primary_aspect_aesthetics
+						value = flag:$ASPECT$
+					}
+					set_variable = {
+						name = secondary_aspect_aesthetics
+						value = flag:$ASPECT$
+					}
+					set_variable = {
+						name = tertiary_aspect_aesthetics
+						value = flag:$ASPECT$
+					}
+				}
+				else_if = {
+					limit = { NOT = { exists = var:secondary_aspect } }
+					set_variable = {
+						name = secondary_aspect
+						value = flag:$ASPECT$
+					}
+					set_variable = {
+						name = secondary_aspect_aesthetics
+						value = flag:$ASPECT$
+					}
+				}
+				else = {
+					set_variable = {
+						name = tertiary_aspect
+						value = flag:$ASPECT$
+					}
+					set_variable = {
+						name = tertiary_aspect_aesthetics
+						value = flag:$ASPECT$
+					}
+				}
+				add_to_variable_list = {
+					name = aspect_list
+					target = flag:$ASPECT$
+				}
+			}
+		}
+	}
+}
+
+assign_spell_to_magic_school_effect = {
+	add_to_variable_list = {
+		name = spell_list
+		target = $SPELL$
+	}
+	$SPELL$ = {
+		set_variable = {
+			name = magic_school
+			value = prev
+		}
+	}
+}
+
+# This will leave the spell's magic school as unset; for very general spells not truly specific to a school like ritual sacrifice
+assign_general_spell_to_magic_school_effect = {
+	add_to_variable_list = {
+		name = spell_list
+		target = $SPELL$
+	}
+}
+
+assign_magic_school_to_culture_effect = {
+	if = {
+		limit = { 
+			$MASTERY$ <= 1
+		}
+		add_to_variable_list = {
+			name = magic_school_list
+			target = $MAGIC_SCHOOL$
+		}
+	}
+	else = {
+		random_ruler = {
+			create_story = { #Empty story that's only used to hold data
+				type = story_generic_storage
+				save_scope_as = new_magic_school_mastery_scope
+			}
+		}
+		if = {
+			limit = { exists = scope:new_magic_school_mastery_scope }
+			scope:new_magic_school_mastery_scope = {
+				set_variable = {
+					name = magic_school
+					value = $MAGIC_SCHOOL$
+				}
+				set_variable = {
+					name = mastery
+					value = $MASTERY$
+				}
+			}
+			add_to_variable_list = {
+				name = magic_school_list
+				target = scope:new_magic_school_mastery_scope
+			}
+		}
+	}
+}
+
+# For handling divergences and hybridizations
+assign_magic_school_to_created_culture_effect = {
+	if = {
+		limit = { exists = scope:parent_culture_1 }
+		scope:parent_culture_1 = {
+			every_in_list = {
+				variable = magic_school_list
+				add_to_list = possible_magic_schools_list_1
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:parent_culture_2 }
+		scope:parent_culture_2 = {
+			every_in_list = {
+				variable = magic_school_list
+				add_to_list = possible_magic_schools_list_1
+			}
+		}
+	}
+	every_in_list = {
+		list = possible_magic_schools_list_1
+		limit = {	
+			save_temporary_scope_as = magic_school_being_checked_scope
+			trigger_if = {
+				limit = { scope:founder = { has_variable_list = culture_creation_selected_magic_school_list } }
+				scope:founder = {
+					is_target_in_variable_list = {
+						name = culture_creation_selected_magic_school_list
+						target = scope:magic_school_being_checked_scope.var:magic_school
+					}
+				}
+			}
+			NOT = {
+				any_in_list = {
+					list = possible_magic_schools_list_1
+					var:magic_school = scope:magic_school_being_checked_scope.var:magic_school
+					var:mastery > scope:magic_school_being_checked_scope.var:mastery
+				}
+			}
+		}
+		add_to_list = possible_magic_schools_list_2
+	}
+	if = {
+		limit = { list_size = { name = possible_magic_schools_list_2 value <= culture_max_magic_schools_value } }
+		every_in_list = {
+			list = possible_magic_schools_list_2
+			root = {
+				add_to_variable_list = {
+					name = magic_school_list
+					target = prev
+				}
+			}
+		}
+	}
+	else = {
+		while = {
+			count = culture_max_magic_schools_value
+			random_in_list = {
+				list = possible_magic_schools_list_2
+				root = {
+					add_to_variable_list = {
+						name = magic_school_list
+						target = prev
+					}
+				}
+			}
+		}
+	}
+	scope:founder = {
+		clear_variable_list = culture_creation_selected_magic_school_list
+	}
+}
+
+################
+# TAG CREATION #
+################
+
+#Needs to be called from a spell's scope
+#Creates and attatches a new tag to that spell
+#Saves scope as new_tag for further use
+create_spell_tag_scripted_effect = {
+	random_ruler = {#Create an empty story used only as a container
+		create_story = {
+			type = story_generic_storage
+			save_scope_as = new_tag
+		}
+	}
+	scope:new_tag = {
+		set_variable = {
+			name = spell_tag_name
+			value = flag:$NAME$
+		}
+		set_variable = {
+			name = parent_spell
+			value = prev
+		}
+	}
+	# This is so that we know what tag is relevant to event loc
+	if = {
+		limit = { 
+			NOT = { has_variable_list = spell_tag_list }
+		}
+		set_variable = {
+			name = primary_spell_tag
+			value = scope:new_tag
+		}
+	}
+	add_to_variable_list = {
+		name = spell_tag_list
+		target = scope:new_tag
+	}
+	# GUI-related stuff
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable_list = first_spell_tags_list }
+			}
+		}
+		add_to_variable_list = { name = first_spell_tags_list target = scope:new_tag }
+	}
+	else = {
+		if = {
+			limit = { NOT = { exists = var:spell_tag_list_overflow } }
+			set_variable = {
+				name = spell_tag_list_overflow
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = spell_tag_list_overflow
+				add = 1
+			}
+		}
+	}
+	# For faster checking and scoping to the tag (rather than having to go through the whole list every time)
+	set_variable = $NAME$
+}
+
+#Basic wrapper for above effect that automatically moves over to the new spell's scope
+add_spell_tag_to_last_created_spell_scripted_effect = {
+	if = {
+		limit = { exists = scope:new_spell_scope }
+		scope:new_spell_scope = {
+			create_spell_tag_scripted_effect = { NAME = $NAME$ }
+		}
+	}
+}
+
+#Creates a basic spell effect tag from a blank spell tag
+create_simple_spell_effect_tag_scripted_effect = {
+	create_spell_tag_scripted_effect = { NAME = $NAME$ }
+	scope:new_tag = {
+		set_variable = {
+			name = spell_tag_id
+			value = $NAME$_id
+		}
+		set_variable = {
+			name = target_type
+			value = flag:$TARGET$
+		}
+	}
+	add_to_variable_list = {
+		name = spell_effect_list
+		target =  scope:new_tag
+	}
+	add_to_variable_list = {
+		name = affects_$TARGET$_effect_list
+		target =  scope:new_tag
+	}
+	$NAME$_assign_spell_category_effect = yes	# For more efficient AI categorization
+}
+
+#Basic wrapper for above effect that automatically moves over to the new spell's scope
+add_simple_spell_effect_tag_to_last_created_spell_scripted_effect = {
+	if = {
+		limit = { exists = scope:new_spell_scope }
+		scope:new_spell_scope = {
+			create_simple_spell_effect_tag_scripted_effect = { NAME = $NAME$ TARGET = $TARGET$ }
+		}
+	}
+}
+
+#Creates a new spell tag, and then adds additional details to that tag
+create_spell_effect_tag_scripted_effect = {
+	create_simple_spell_effect_tag_scripted_effect = { NAME = $NAME$ TARGET = $TARGET$ }
+	scope:new_tag = {
+		add_to_variable_list = {
+			name = scaled_by_list
+			target = $SCALED_BY$
+		}
+		set_variable = {
+			name = scalar_1
+			value = $SCALED_BY$
+		}
+		set_variable = {
+			name = scalar_threshold
+			value = $THRESHOLD$
+		}
+		# For displaying nonstandard effects in the GUI
+		if = {
+			limit = {
+				prev = { save_temporary_scope_as = spell_being_casted }
+				spell_tag_scalar_value > $THRESHOLD$ 
+			}
+			prev = {
+				add_to_variable_list = {
+					name = standard_spell_effect_list
+					target = scope:new_tag
+				}
+			}
+		}
+		else = {
+			prev = {
+				add_to_variable_list = {
+					name = nonstandard_spell_effect_list
+					target = scope:new_tag
+				}
+			}
+		}
+	}
+	# For checking for the minimum aspect casting requirements
+	if = {
+		limit = { NOT = { exists = var:minimum_level } }
+		set_variable = {
+			name = minimum_level
+			value = $THRESHOLD$
+		}
+	}
+	else_if = {
+		limit = { var:minimum_level > $THRESHOLD$ }
+		set_variable = {
+			name = minimum_level
+			value = $THRESHOLD$
+		}
+	}
+}
+#Simple wrapper that moves to the new spell's scope
+add_spell_effect_tag_to_last_created_spell_scripted_effect = {
+	scope:new_spell_scope ?= {
+		create_spell_effect_tag_scripted_effect = { NAME = $NAME$ TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	}
+}
+
+add_spell_effect_tag_with_secondary_target_to_last_created_spell_scripted_effect = {
+	scope:new_spell_scope ?= {
+		create_spell_effect_tag_scripted_effect = { NAME = $NAME$ TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+		scope:new_tag ?= {
+			set_variable = {
+				name = second_target_type
+				value = flag:$SECOND_TARGET$
+			}
+		}
+	}
+}
+
+# Create activation condition; i.e. when a spell's effects will actually activate and take effects
+create_spell_trigger_tag_scripted_effect = {
+	create_spell_tag_scripted_effect = { NAME = $NAME$ }
+	if = {
+		limit = { exists = scope:new_tag }
+		scope:new_tag = {
+			set_variable = {
+				name = spell_tag_id
+				value = $NAME$_id
+			}
+			set_variable = {
+				name = target_type
+				value = flag:$TARGET$
+			}
+		}
+		add_to_variable_list = {
+			name = spell_$GROUP$_trigger_list
+			target =  scope:new_tag
+		}
+		add_to_variable_list = {
+			name = affects_$TARGET$_trigger_list
+			target =  scope:new_tag
+		}
+	}
+}
+
+#Simple wrapper that moves to the new spell's scope
+add_spell_casting_trigger_tag_to_last_created_spell_scripted_effect = {
+	scope:new_spell_scope ?= {
+		create_spell_trigger_tag_scripted_effect = { NAME = $NAME$ TARGET = $TARGET$ GROUP = casting }
+	}
+}
+
+add_spell_activation_trigger_tag_to_last_created_spell_scripted_effect = {
+	scope:new_spell_scope ?= {
+		create_spell_trigger_tag_scripted_effect = { NAME = $NAME$ TARGET = $TARGET$ GROUP = activation }
+	}
+}
+
+add_variable_to_last_created_spell = {
+	scope:new_spell_scope ?= {
+		set_variable = {
+			name = $VARIABLE_TYPE$
+			value = $VALUE$
+		}
+	}
+}
+
+add_variable_to_last_created_spell_effect_tag = {
+	scope:new_tag ?= {
+		set_variable = {
+			name = $VARIABLE_TYPE$
+			value = $VALUE$
+		}
+	}
+}
+
+#########################
+# SPELL BACKEND EFFECTS #
+#########################
+
+add_spell_aspect_effect = {
+	add_to_variable_list = {
+		name = spell_aspect_list
+		target = flag:$ASPECT$
+	}
+	if = {
+		limit = { NOT = { exists = var:$ASPECT$ } }
+		set_variable = {
+			name = $ASPECT$
+			value = $TIER$
+		}
+	}
+	else = {
+		change_variable = {
+			name = $ASPECT$
+			add = $TIER$
+		}
+	}
+	if = {
+		limit = { NOT = { exists = var:spell_level } }
+		set_variable = {
+			name = spell_level
+			value = $TIER$
+		}
+	}
+	else = {
+		change_variable = {
+			name = spell_level
+			add = $TIER$
+		}
+	}
+	magic_aspect_effect = { MODE = calculate_primary }
+}
+
+determine_spellcasting_outcome_effect = {
+	save_scope_value_as = {
+		name = precalculate_spellcasting_outcome
+		value = yes
+	}
+	random_list = {
+		0 = {
+			trigger = {
+				NOR = {
+					exists = scope:caster.var:always_fail_spellcasting
+					exists = scope:always_fail_spellcasting
+				}
+			}
+			modifier = {
+				add = { value = scope:selected_spell_scope.spell_success_chance }
+			}
+			save_scope_value_as = {
+				name = always_succeed_spellcasting
+				value = yes
+			}
+		}
+		0 = {
+			trigger = {
+				NOR = {
+					exists = scope:caster.var:always_succeed_spellcasting
+					exists = scope:always_succeed_spellcasting 
+				}
+			}
+			modifier = {
+				add = { value = scope:selected_spell_scope.spell_inverse_success_chance }
+			}
+			save_scope_value_as = {
+				name = always_fail_spellcasting
+				value = yes
+			}
+		}
+	}
+	apply_regular_spell_effects = yes	# For outcome precalculation
+	save_scope_value_as = {
+		name = spellcasting_outcome_predetermined
+		value = yes
+	}
+}
+
+apply_regular_spell_effects_with_success_chance_effect = {
+	random_list = {
+		0 = {
+			trigger = {
+				OR = {
+					exists = scope:backfire_force_normal_effects
+					NOR = {
+						exists = scope:caster.var:always_fail_spellcasting
+						exists = scope:spell_organizer.var:always_fail_spellcasting
+						exists = scope:always_fail_spellcasting
+					}
+				}
+			}
+			modifier = {
+				add = { value = scope:selected_spell_scope.spell_success_chance }
+			}
+			apply_regular_spell_effects_or_create_hex_effect = yes
+		}
+		0 = {
+			trigger = {
+				NOR = {
+					exists = scope:backfire_force_normal_effects
+					exists = scope:caster.var:always_succeed_spellcasting
+					exists = scope:spell_organizer.var:always_succeed_spellcasting
+					exists = scope:always_succeed_spellcasting 
+				}
+			}
+			modifier = {
+				add = { value = scope:selected_spell_scope.spell_inverse_success_chance }
+			}
+			apply_regular_spell_backfire_effects_effect = yes
+		}
+	}
+}
+
+# Apply mana and resource costs for a spell if we are somehow firing it outside of the normal execute_spell_effect for some reason
+apply_spell_costs_effect = {
+	scope:caster = { gain_magical_power_effect = { VALUE = $SPELL$.total_spell_cost_inverted } }
+	if = {
+		limit = { $SPELL$.total_spell_gold_cost > 0 }
+		scope:spell_organizer = { remove_short_term_gold = $SPELL$.total_spell_gold_cost }
+	}
+	if = {
+		limit = { $SPELL$.total_spell_cost > 0 }
+		$SPELL$ = { save_scope_as = spell_being_casted }
+		scope:caster = { increase_exposure_spell = yes }
+	}
+	if = {
+		limit = { $SPELL$.total_spell_cost > 0 }
+		$SPELL$ = { save_scope_as = spell_being_casted }
+		scope:caster = { increase_mutation_points_spell = yes }
+	}
+}
+
+# Executes a spell's effects and does auxilliary functions like deducing magic and increasing exposure
+execute_spell_effect = {
+	# Finalize preparations
+	apply_spell_costs_effect = { SPELL = $SPELL$ }
+	# Run the actual effects of the spell
+	$SPELL$ = {
+		apply_regular_spell_effects_with_success_chance_effect = yes
+	}
+	# Handle component effects (i.e. ingredient costs, killing sacrifices)
+	if = {
+		limit = {
+			# Only show component effects if they are prepared for the spell that is currently selected
+			exists = var:spell_preparation_story_cycle
+			var:spell_preparation_story_cycle.var:spell_being_prepared = $SPELL$
+		}
+		var:spell_preparation_story_cycle = { apply_spell_component_effects = yes }
+	}
+	# Clear out target list
+	scope:spell_organizer ?= {
+		clear_variable_list = spell_targets
+		clear_variable_list = spell_target_titles
+		clear_variable_list = spell_target_artifacts
+	}
+}
+
+execute_every_valid_hex_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			has_variable_list = hex_list 
+		}
+		every_in_list = {
+			variable = hex_list
+			save_scope_as = spell_preparation_story_cycle_scope
+			var:spell_organizer ?= { save_scope_as = spell_organizer }
+			var:caster ?= { save_scope_as = caster }
+			if = {
+				limit = {
+					var:spell_being_prepared = { conditional_spell_tags_fulfilled_trigger = { TARGET_LIST_SOURCE = scope:spell_preparation_story_cycle_scope GROUP = activation } }
+				} 
+				var:spell_being_prepared ?= { generate_spell_effect_target_lists_effect = { SOURCE = scope:spell_preparation_story_cycle_scope } }
+				save_scope_value_as = { name = target_lists_already_generated value = yes }
+				scope:spell_organizer ?= {
+					send_interface_toast = {
+						title = "Hex Fired"
+						prev.var:spell_being_prepared ?= { apply_regular_spell_effects = yes }
+					}
+				}
+				if = {
+					limit = { exists = scope:spell_preparation_story_cycle_scope }
+					prev = {
+						remove_list_variable = {
+							name = hex_list
+							target = scope:spell_preparation_story_cycle_scope
+						}
+					}
+					remove_list_variable = {
+						name = spell_targets
+						target = prev
+					}
+					if = {
+						limit = {
+							OR = {
+								NOT = { has_variable_list = spell_targets }
+								NOT = {
+									any_in_list = {
+										variable = spell_targets
+										is_alive = yes
+									}
+								}
+							}
+						}
+						end_story = yes
+					}
+				}
+			}
+		}
+	}
+}
+
+apply_spell_effects_to_targets = {
+	save_temporary_scope_as = spell_target
+	scope:spell_being_casted = {
+		every_in_list = {
+			variable = affects_$TARGET$_effect_list
+			limit = {
+				spell_tag_scalar_threshold_diff_value > 0
+				spell_tag_has_fulfilled_conditions_trigger = yes
+				NOT = { exists = var:spell_effect_modifier }
+			}
+			if = {
+				limit = { exists = scope:spellcasting_outcome_predetermined }
+				save_temporary_scope_as = spell_effect
+				if = {
+					limit = {
+						exists = var:spell_tag_id
+						var:spell_tag_id > -1
+					}
+					index_and_apply_spell_effect = { MODE = apply_precalculated }
+				}
+			}
+			else_if = {
+				limit = { exists = scope:precalculate_spellcasting_outcome }
+				save_temporary_scope_as = spell_effect
+				if = {
+					limit = {
+						exists = var:spell_tag_id
+						var:spell_tag_id > -1
+					}
+					index_and_apply_spell_effect = { MODE = precalculate }
+				}
+			}
+			else_if = {
+				limit = { spell_effect_chance_value >= 100 }
+				apply_spell_effect = yes
+			}
+			else = {
+				random = {
+					chance = spell_effect_chance_value
+					apply_spell_effect = yes
+				}
+			}
+		}
+	}
+}
+
+apply_spell_effect = {
+	save_temporary_scope_as = spell_effect
+	if = {
+		limit = {
+			exists = var:spell_tag_id
+			var:spell_tag_id > -1
+		}
+		index_and_apply_spell_effect = { MODE = apply }
+	}
+}
+
+apply_spell_component_effects = {
+	every_in_list = {
+		variable = spell_component_being_prepared_list
+		save_temporary_scope_as = spell_component_being_checked
+		if = {
+			limit = { exists = var:spell_component_template.var:artifact_spell_component_input exists = var:spell_component_artifact_selection }
+			var:spell_component_artifact_selection = {
+				save_temporary_scope_as = artifact_being_checked_for_suitability
+			}
+			# GH URGENT: Reimplement
+			if = {
+				limit = { exists = var:spell_component_template.var:bone_for_crafting }
+				scope:artifact_being_checked_for_suitability = {
+					save_scope_as = bone_for_crafting_scope
+				}
+				if = { #GH_TODO: Temporary until I can figure out a better way of handling this
+				    limit = { scope:bone_for_crafting_scope = { has_artifact_feature = bone_type_small_animal } }
+				    scope:spell_organizer = { trigger_event = bonecrafting.0202 }
+				}
+				else_if = {
+				    limit = { scope:bone_for_crafting_scope = { has_artifact_feature = bone_type_medium_animal } }
+				    scope:spell_organizer = { trigger_event = bonecrafting.0203 }
+				}
+				else_if = {
+				    limit = { scope:bone_for_crafting_scope = { has_artifact_feature = bone_type_large_animal } }
+				    scope:spell_organizer = { trigger_event = bonecrafting.0206 }
+				}
+				else_if = {
+				    limit = { scope:bone_for_crafting_scope = { has_artifact_feature = bone_type_human_bone } }
+				    scope:spell_organizer = { trigger_event = bonecrafting.0209 }
+				}
+				else_if = {
+				    limit = { scope:bone_for_crafting_scope = { has_artifact_feature = bone_type_monster_bone } }
+				    scope:spell_organizer = { trigger_event = bonecrafting.0213 }
+				}
+			}
+			if = {
+				limit = { exists = var:spell_component_template.var:magic_add }
+				scope:caster = { gain_magical_power_effect = { VALUE = scope:spell_component_being_checked.var:spell_component_template.artifact_spell_component_suitability_value } }
+			}
+			if = {
+				limit = { exists = var:spell_component_template.var:consumes_artifact_input }
+				destroy_artifact = scope:artifact_being_checked_for_suitability
+			}
+		}
+		if = {
+			limit = {
+				exists = var:spell_component_template.var:character_spell_component_input
+				exists = var:spell_component_character_selection
+			}
+			var:spell_component_character_selection = {
+				save_temporary_scope_as = character_being_checked_for_suitability
+			}
+			if = {
+				limit = { exists = var:spell_component_template.var:consumes_input }
+				#scope:caster = {
+				#	custom_tooltip = ritual_sacrifice_crime_warning_tooltip
+				#}
+				scope:character_being_checked_for_suitability = {
+					add_character_flag = being_ritual_sacrificed
+				}
+				execute_prisoner_effect = {
+					VICTIM = scope:character_being_checked_for_suitability
+					EXECUTIONER = scope:spell_organizer
+				}
+				scope:character_being_checked_for_suitability = {
+					save_scope_as = main_sacrifice_victim_scope
+				}
+			}
+			if = {
+				limit = { exists = var:spell_component_template.var:needed_for_event }
+				scope:character_being_checked_for_suitability = {
+					save_scope_as = inter_in_ice_prisoner_scope
+				}
+				 #GH_TODO: Temporary until I can figure out a better way of handling this
+				scope:spell_organizer ?= { trigger_event = magic.2750 }
+			}		
+		}
+		var:spell_component_ingredient_selection ?= {
+			scope:spell_organizer ?= { remove_short_term_gold = prev.var:ingredient_price }
+			if = {
+				limit = { var:spell_component_target_type = flag:caster }
+				save_temporary_scope_value_as = {
+					name = force_apply_spell_effects_on_caster
+					value = yes
+				}
+			}
+			apply_regular_spell_effects = yes
+		}
+	}
+}
+
+# Backfire Effects
+add_valid_backfire_to_last_created_spell_effect = {
+	scope:new_spell_scope ?= {
+		add_to_variable_list = {
+			name = valid_backfire_list
+			target = $BACKFIRE$
+		}
+	}
+}
+
+apply_regular_spell_backfire_effects_effect = {
+	# Logic is now handled within the events themselves
+	custom_tooltip = spell_backfire_tt
+}
+
+mutate_spell_targets_effect = {
+	set_local_variable = {
+		name = mutated_spell_target_number
+		value = {	# At least 1 target will get swapped, but it's entirely possible for a miscast to hit a mixture of real and correct targets
+			integer_range = {
+				min = 1
+				max = spell_target_number_value
+			}
+		}
+	}
+	scope:selected_spell_scope = {
+		save_scope_as = spell_being_casted
+	}
+	while = {
+		limit = {
+			exists = local_var:mutated_spell_target_number
+			local_var:mutated_spell_target_number > 0
+		}
+		random_in_list = {
+			variable = spell_targets
+			prev = {
+				remove_list_variable = {
+					name = spell_targets
+					target = prev
+				}
+			}
+		}
+		random_list = {
+			50 = {	# The spellcaster is at the greatest risk
+				trigger = {
+					exists = scope:caster
+					NOT = {
+						is_target_in_variable_list = {
+							name = spell_targets
+							target = scope:caster
+						}
+					}
+				}
+				add_to_variable_list = {
+					name = spell_targets
+					target = scope:caster
+				}
+			}
+			20 = {	# The spell organizer, significantly less so
+				trigger = {
+					exists = scope:spell_organizer
+					NOT = {
+						is_target_in_variable_list = {
+							name = spell_targets
+							target = scope:spell_organizer
+						}
+					}
+				}
+				add_to_variable_list = {
+					name = spell_targets
+					target = scope:spell_organizer
+				}
+			}
+			30 = {	# Randos in court
+				if = {
+					limit = {
+						is_playable_character = yes
+					}
+					random_courtier = {
+						save_scope_as = temporary_target
+					}
+				}
+				else = {
+					court_owner = {
+						random_courtier = {
+							save_scope_as = temporary_target
+						}
+					}
+				}
+				scope:spell_organizer = {
+					add_to_variable_list = {
+						name = spell_targets
+						target = scope:temporary_target
+					}
+				}
+			}
+		}
+		change_local_variable = {
+			name = mutated_spell_target_number
+			subtract = 1
+		}
+	}
+}
+
+apply_spell_on_random_county_realm = {
+	save_scope_value_as = { name = spell_l_target_number value = spell_l_target_number_value   }
+	scope:caster = { clear_variable_list = spell_l_targets }
+	scope:caster = { clear_variable_list = spell_targets }
+	if = {
+		limit = { is_playable_character = yes }
+		if = {
+			limit = {
+				highest_held_title_tier >= 2
+			}
+		apply_spell_on_random_county_realm_ruler_effect = yes }
+		else_if = {
+			limit = { exists = liege }
+			liege = {
+				apply_spell_on_random_county_realm_ruler_effect = yes
+			}
+		}
+	}
+	else = {
+		court_owner = {
+			apply_spell_on_random_county_realm_ruler_effect = yes
+		}
+	}
+	scope:spell_being_casted = { apply_regular_spell_effects = yes }
+}
+
+apply_spell_on_random_county_realm_ruler_effect = {
+	set_local_variable = {
+		name = for_counter
+		value = 0
+	}
+	while = {
+		limit = {
+			exists = local_var:for_counter
+			exists = scope:spell_l_target_number
+			scope:spell_l_target_number > local_var:for_counter
+		}
+		random_list = {
+			10 = { 
+				capital_county = { save_scope_as = temporary_target }
+			}
+			30 = {
+				random_held_title = {
+					limit = { tier = tier_county }
+					save_scope_as = temporary_target
+				}
+			}
+			10 = {
+				random_realm_county = {
+					save_scope_as = temporary_target
+				}
+			}
+		}
+		change_local_variable = {
+			name = for_counter
+			add = 1
+		}
+		scope:caster = {
+			add_to_variable_list = {
+				name = spell_l_targets
+				target = scope:temporary_target
+			}
+		}
+	}
+}
+
+apply_backfire_county_debuff_on_capital_or_location = {
+	if = {
+		limit = { is_playable_character = yes }
+		capital_county = { save_scope_as = temporary_target }
+	}
+	else = {
+		location.county = { save_scope_as = temporary_target }
+	}
+	scope:temporary_target = {
+		save_scope_as = spell_target
+		save_scope_as = spell_target
+		# GH_COMPATCH_TODO: Why is this saved twice?
+		# Also the below effect does not exist, NEEDS to be added!
+		#affect_county_backfire_negative_effect = yes
+	}
+}
+
+# Aspect Effecs
+
+calculate_primary_aspect_effect = {
+	if = {
+		limit = { exists = var:$ASPECT$ }
+		if = {
+			limit = {
+				exists = var:primary_aspect_level
+				var:$ASPECT$ > var:primary_aspect_level
+			}
+			set_variable = {
+				name = primary_aspect_level
+				value = var:$ASPECT$
+			}
+			set_variable = {
+				name = primary_aspect
+				value = flag:$ASPECT$
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { exists = var:primary_aspect_level }
+			}
+			set_variable = {
+				name = primary_aspect_level
+				value = var:$ASPECT$
+			}
+			set_variable = {
+				name = primary_aspect
+				value = flag:$ASPECT$
+			}
+		}
+	}
+}
+
+increase_overcharge_aspect_effect = {
+	if = {
+		limit = { NOT = { exists = scope:overcharge_increase_amount } }
+		save_scope_value_as = {
+			name = overcharge_increase_amount
+			value = 1
+		}
+	}
+	if = {
+		limit = { 
+			exists = scope:aspect_being_overcharged
+			scope:aspect_being_overcharged = flag:$ASPECT$
+		}
+		if = {
+			limit = { 
+				NOT = { exists = scope:spell_organizer.var:spell_preparation_story_cycle.var:$ASPECT$_overcharge }
+			}
+			scope:spell_organizer.var:spell_preparation_story_cycle = {
+				set_variable = {
+					name = $ASPECT$_overcharge
+					value = scope:overcharge_increase_amount
+				}
+			}
+		}
+		else = {
+			scope:spell_organizer.var:spell_preparation_story_cycle = {
+				change_variable = {
+					name = $ASPECT$_overcharge
+					add = scope:overcharge_increase_amount
+				}
+			}
+		}
+		if = {
+			limit = { 
+				NOT = { exists = scope:spell_organizer.var:spell_preparation_story_cycle.var:total_overcharge }
+			}
+			scope:spell_organizer.var:spell_preparation_story_cycle = {
+				set_variable = {
+					name = total_overcharge
+					value = scope:overcharge_increase_amount
+				}
+			}
+		}
+		else = {
+			scope:spell_organizer.var:spell_preparation_story_cycle = {
+				change_variable = {
+					name = total_overcharge
+					add = scope:overcharge_increase_amount
+				}
+			}
+		}
+	}
+}
+
+decrease_overcharge_aspect_effect = {
+	if = {
+		limit = { NOT = { exists = scope:overcharge_decrease_amount } }
+		save_scope_value_as = {
+			name = overcharge_decrease_amount
+			value = 1
+		}
+	}
+	if = {
+		limit = { 
+			exists = scope:aspect_being_overcharged
+			scope:aspect_being_overcharged = flag:$ASPECT$
+		}
+		if = {
+			limit = { 
+				exists = scope:spell_organizer.var:spell_preparation_story_cycle.var:$ASPECT$_overcharge
+			}
+			scope:spell_organizer.var:spell_preparation_story_cycle = {
+				change_variable = {
+					name = $ASPECT$_overcharge
+					subtract = scope:overcharge_decrease_amount
+				}
+				change_variable = {
+					name = total_overcharge
+					subtract = scope:overcharge_decrease_amount
+				}
+				if = {
+					limit = {
+						var:$ASPECT$_overcharge <= 0
+					}
+					remove_variable = $ASPECT$_overcharge
+				}
+				if = {
+					limit = {
+						var:total_overcharge <= 0
+					}
+					remove_variable = total_overcharge
+				}
+			}
+		}
+	}
+}
+
+set_spell_component_aspect_effect = {
+	if = {
+		limit = {
+			has_variable = $ASPECT$
+		}
+		set_variable = spell_component_scales_aspect
+	}
+}
+
+add_aspect_skill_from_runologic_geometry_perk_aspect_effect = {
+	if = {
+		limit = {
+			exists = scope:spell_to_learn_scope
+			exists = scope:spell_to_learn_scope.var:$ASPECT$
+			OR = {
+				NOT = { exists = var:runologic_geometry_perk_$ASPECT$ }
+				scope:spell_to_learn_scope.var:$ASPECT$ > var:runologic_geometry_perk_$ASPECT$
+			}
+		}
+		set_variable = {
+			name = runologic_geometry_perk_$ASPECT$
+			value = scope:spell_to_learn_scope.var:$ASPECT$
+		}
+	}
+}
+
+add_aspect_skill_from_experimentation_perk_aspect_effect = {
+	if = {
+		limit = {
+			exists = scope:selected_spell_scope
+			exists = scope:selected_spell_scope.var:$ASPECT$
+			scope:selected_spell_scope.var:primary_aspect ?= flag:$ASPECT$
+		}
+		add_aspect_skill_effect = { ASPECT = $ASPECT$ VALUE = 1 }
+		add_to_variable_list = {
+			name = experimentation_perk_spell_list
+			target = scope:selected_spell_scope
+		}
+	}
+}
+
+add_aspect_skill_from_learned_spell_aspect_effect = {
+	if = {
+		limit = {
+			exists = scope:spell_to_learn_scope
+			exists = scope:spell_to_learn_scope.var:$ASPECT$
+		}
+		add_aspect_skill_effect = { ASPECT = $ASPECT$ VALUE = 1 }
+	}
+}
+
+#############################
+# SPELL PREPARATION EFFECTS #
+#############################
+
+start_preparing_spell_effect = {
+	if = {
+		limit = { 
+			exists = var:spell_preparation_story_cycle
+			trigger_if = {
+				limit = { exists = scope:spell_to_start_preparation_for_scope }
+				NOT = { var:spell_preparation_story_cycle.var:spell_being_prepared = $SPELL$ }
+			}
+		}
+		end_preparing_spell_effect = yes
+	}
+	if = {
+		limit = {
+			NOT = { exists = var:spell_preparation_story_cycle }
+		}
+		create_story = {
+			type = story_spell_preparation
+			save_scope_as = story_spell_preparation_scope
+		}
+		if = {
+			limit = { exists = scope:story_spell_preparation_scope }
+			set_variable = {
+				name = spell_preparation_story_cycle
+				value = scope:story_spell_preparation_scope
+			}
+			scope:story_spell_preparation_scope = {
+				set_variable = {
+					name = spell_being_prepared
+					value = $SPELL$
+				}
+			}
+		}
+	}
+}
+
+end_preparing_spell_effect = {
+	var:spell_preparation_story_cycle ?= { save_temporary_scope_as = spell_preparation_scope_to_delete } # In my experience ending the story before removing the variable caused a weird memory leak
+	remove_variable = spell_preparation_story_cycle
+	scope:spell_preparation_scope_to_delete ?= {
+		# End the spell preparation story if it's not being used to memorize a hex
+		if = {
+			limit = { NOT = { exists = var:hex } }
+			end_story = yes
+		}
+	}
+}
+
+##########################
+# SECRET/OPINION EFFECTS #
+##########################
+
+# casting a deadly spell secretly
+magic_unknown_murder_effect = {
+	$VICTIM$ = {
+		#Killed by murder: set this up first to keep the killer hidden.
+		death = {
+			killer = $CASTER$
+			death_reason = $REASON$
+		}
+	}
+	$CASTER$ = {
+		if = {
+			limit = { 
+				is_alive = yes 
+				NOT = { this = $VICTIM$ }
+			}
+			hidden_effect = {
+				add_secret = {
+					type = secret_magic_murder
+					target = $VICTIM$
+				}
+			}
+		}
+	}
+}
+
+# casting a deadly spell "publicly"
+magic_known_murder_effect = {
+	$VICTIM$ = {
+		death = {
+			death_reason = death_magic_targeted_spell
+			killer = $CASTER$
+		}
+		hidden_effect = { set_killer_public = yes }
+	}
+	$CASTER$ = {
+		hidden_effect = {
+			add_secret = {
+				type = secret_magic_murder
+				target = $VICTIM$
+			}
+			random_secret = {
+				limit = {
+					secret_type = secret_magic_murder
+					secret_target = $VICTIM$
+				}
+
+				set_variable = {
+					name = known_murder
+					value = yes
+				}
+
+				expose_secret = $EXPOSER$
+			}
+		}
+	}
+	show_as_tooltip = {
+		murder_consequences_known_or_exposed_effect = {
+			MURDERER = $CASTER$
+			VICTIM = $VICTIM$
+			POV = root
+		}
+	}
+}
+
+# casting a harmful spell secretly
+magic_unknown_harm_effect = {
+	$CASTER$ = {
+		if = {
+			limit = { 
+				is_alive = yes
+				exists = $VICTIM$
+				NOT = { this = $VICTIM$ }
+			}
+			hidden_effect = {
+				add_secret = {
+					type = secret_magic_harm
+					target = $VICTIM$
+				}
+			}
+		}
+	}
+}
+
+# casting a harmful spell "publicly"
+magic_known_harm_effect = {
+	attempted_murder_opinion_effect = { MURDERER = $CASTER$ VICTIM = $VICTIM$ }
+}
+
+# this is called from an event invoked by on_expose for magic murder secrets
+magic_secret_exposed_owner_effects_effect = {
+	$SECRET$ = {
+		if = {
+			limit = { #Checks to make sure the right target gets saved. Confusion might arise from the secret's "on_expose" effect since it sends the same event (secrets.0008) for both target and owner.
+				exists = secret_target
+				exists = scope:target
+				scope:target = secret_owner
+				NOT = { secret_owner = $POV$ } #To not mess up tooltips (in e.g. secrets.0108)
+			}
+			secret_owner = { save_scope_as = exposed_secret_target }
+		}
+		else_if = {
+			limit = {
+				exists = secret_target
+			}
+			secret_target = { save_scope_as = exposed_secret_target }
+		}
+	}
+
+	# Magical harm
+	if = {
+		limit = { $SECRET$ = { secret_type = secret_magic_harm } }
+
+		#Hide this for everyone else
+		if = {
+			limit = { root = scope:murderer }
+			add_dread = 10
+			attempted_murder_opinion_effect = { VICTIM = scope:victim MURDERER = scope:murderer }
+		}
+	}
+	# Magical murder
+	else_if = {
+		limit = { $SECRET$ = { secret_type = secret_magic_murder } }
+
+		#Traits, (crime) opinions, dread
+		murder_consequences_known_or_exposed_effect = { MURDERER = scope:murderer VICTIM = scope:victim POV = $POV$ }
+	}
+}
+
+casted_unwanted_magic_effect = {
+	$TARGET$ = {
+		if = {
+			limit = { is_alive = yes }
+			add_opinion = {
+				target = $CASTER$
+				modifier = casted_unwanted_magic_me_crime
+			}
+			add_character_flag = { # This will give the AI a small boost toward unfriendly spellcasting after being attacked
+				flag = recently_affected_by_negative_magic
+				days = 365
+			}
+			trigger_event = magic_ai.0001 # AI get's a chance to strike back immediately if they know who the caster was
+		}
+
+		every_spouse = {
+			limit = { NOT = { this = $CASTER$ } }
+			add_to_temporary_list = close_family_unwanted_magic_opinion_list
+		}
+		every_close_family_member = {
+			limit = { NOT = { this = $CASTER$ } }
+			add_to_temporary_list = close_family_unwanted_magic_opinion_list
+		}
+
+		if = {
+			limit = {
+				any_in_list = {
+					list = close_family_unwanted_magic_opinion_list
+					always = yes
+				}
+			}
+			every_in_list = {
+				list = close_family_unwanted_magic_opinion_list
+				custom = all_close_family_and_spouses
+
+				add_opinion = {
+					target = $CASTER$
+					modifier = casted_unwanted_magic_close_family_crime
+					years = 20
+				}
+			}
+		}
+	}
+}
+
+######################
+# SPELL ICON EFFECTS #
+######################
+
+generate_spell_icon_effect = {
+	generate_spell_icon_background_effect = yes
+	generate_spell_icon_centerpiece_effect = yes
+}
+
+generate_spell_icon_background_effect = {
+	if = {
+		limit = { exists = var:secondary_aspect }
+		set_variable = { name = spell_icon_bg_color value = var:secondary_aspect }
+	}
+}
+
+generate_spell_icon_centerpiece_effect = {
+	random_list = {
+		1 = { set_variable = { name = spell_icon_centerpiece value = flag:droplet } }
+	}
+	if = {
+		limit = { exists = var:primary_aspect }
+		set_variable = { name = spell_icon_centerpiece_color value = var:primary_aspect }
+	}
+}
+
+set_spell_icon_element_effect = {
+	set_variable = { name = spell_icon_$ELEMENT_TYPE$ value = flag:$NAME$ }
+}
+
+#############################
+# SPELL ACQUISITION EFFECTS #
+#############################
+
+learn_spell_effect = {
+	add_to_variable_list = {
+		name = known_spell_list
+		target = $SPELL$
+	}
+	add_learned_spell_to_quick_selection_list = { SPELL = $SPELL$ }
+	$SPELL$ = { save_temporary_scope_as = spell_to_learn_scope }
+	save_scope_as = spell_learner # For the interface message
+	magic_aspect_effect = { MODE = add_aspect_skill_from_learned_spell }
+	magic_aspect_effect = { MODE = add_aspect_skill_from_runologic_geometry_perk }
+	add_to_magi_list = yes
+	custom_tooltip = learn_spell_effect_tooltip
+	send_interface_message = {
+		type = event_generic_good_text
+		title = learned_spell_notification.title
+		left_icon = scope:spell_learner
+		desc = learned_spell_notification.desc
+	}
+	every_relation = {
+		type = guardian
+		send_interface_message = {
+			type = event_generic_good_text
+			title = learned_spell_notification.title
+			left_icon = scope:spell_learner
+			desc = learned_spell_notification_relation.desc
+		}
+	}
+}
+
+learn_global_spell_effect = {
+	if = {
+		limit = { exists = global_var:$SPELL_IDENTIFIER$ }
+		learn_spell_effect = { SPELL = global_var:$SPELL_IDENTIFIER$ }
+	}
+	else = {
+		add_to_variable_list = {
+			name = spells_to_learn_queue
+			target = flag:$SPELL_IDENTIFIER$
+		}
+	}
+}
+
+learn_magic_school_effect = {
+	learn_magic_school_level_effect = { MAGIC_SCHOOL = $MAGIC_SCHOOL$ LEVEL = 1 }
+}
+
+learn_magic_school_level_effect = {
+	add_to_variable_list = {
+		name = known_magic_school_list
+		target = $MAGIC_SCHOOL$
+	}
+	add_to_variable_list = {
+		name = magic_school_level_$LEVEL$_list
+		target = $MAGIC_SCHOOL$
+	}
+	if = {
+		limit = { 
+			NOT = { exists = var:primary_magic_school }
+		}
+		set_variable = {
+			name = primary_magic_school
+			value = $MAGIC_SCHOOL$
+		}
+	}
+	assign_magic_school_trait_effect = { MAGIC_SCHOOL = $MAGIC_SCHOOL$ }
+	# For the notification message
+	save_scope_as = magic_school_learner # For the interface message
+	$MAGIC_SCHOOL$ = {
+		save_scope_as = learned_magic_school_scope
+	}
+	send_interface_message = {
+		type = event_generic_good_text
+		title = learned_magic_school_notification.title
+		left_icon = scope:magic_school_learner
+		desc = learned_magic_school_notification.desc
+	}
+	every_relation = {
+		type = guardian
+		send_interface_message = {
+			type = event_generic_good_text
+			title = learned_magic_school_notification.title
+			left_icon = scope:magic_school_learner
+			desc = learned_magic_school_notification_relation.desc
+		}
+	}
+}
+
+all_characters_learn_magic_schools_in_queue_effect = {
+	every_living_character = {
+		limit = {
+			OR = {
+				exists = var:historical_magic_school
+				has_variable_list = historical_magic_school_list
+			}
+		}
+		if = {	# GH TODO: Make this SE less of a mess
+			limit = { has_variable_list = historical_magic_school_list }
+			every_in_global_list = {
+				variable = global_magic_school_list
+				limit = {
+					exists = var:unique_magic_school_identifier
+					prev = {
+						is_target_in_variable_list = {
+							name = historical_magic_school_list
+							target = prev.var:unique_magic_school_identifier
+						}
+					}
+				}
+				save_temporary_scope_as = magic_school_to_learn_scope
+				save_temporary_scope_value_as = {
+					name = min_spells_number
+					value = prev.var:historical_magic_school_min_spells
+				}
+				save_temporary_scope_value_as = {
+					name = max_spells_number
+					value = {
+						value = prev.var:historical_magic_school_min_spells
+						multiply = 2
+					}
+				}
+				prev = {
+					learn_magic_school_effect = { MAGIC_SCHOOL = scope:magic_school_to_learn_scope }
+					learn_magic_knowledge_for_magic_school_effect = { 
+						MAGIC_SCHOOL = scope:magic_school_to_learn_scope
+						MIN_SPELLS = scope:min_spells_number
+						MAX_SPELLS = scope:max_spells_number
+						MAX_SPELL_LEVEL = 3
+					}
+				}
+			}
+		}
+		else = {
+			random_in_global_list = {
+				variable = global_magic_school_list
+				limit = {
+					exists = var:unique_magic_school_identifier
+					var:unique_magic_school_identifier = prev.var:historical_magic_school
+				}
+				save_temporary_scope_as = magic_school_to_learn_scope
+				save_temporary_scope_value_as = {
+					name = min_spells_number
+					value = prev.var:historical_magic_school_min_spells
+				}
+				save_temporary_scope_value_as = {
+					name = max_spells_number
+					value = {
+						value = prev.var:historical_magic_school_min_spells
+						multiply = 2
+					}
+				}
+				prev = {
+					learn_magic_school_effect = { MAGIC_SCHOOL = scope:magic_school_to_learn_scope }
+					learn_magic_knowledge_for_magic_school_effect = { 
+						MAGIC_SCHOOL = scope:magic_school_to_learn_scope
+						MIN_SPELLS = scope:min_spells_number
+						MAX_SPELLS = scope:max_spells_number
+						MAX_SPELL_LEVEL = 3
+					}
+					remove_variable = historical_magic_school
+					remove_variable = historical_magic_school_min_spells
+				}
+			}
+		}
+		remove_variable = historical_magic_school
+		clear_variable_list = historical_magic_school_list
+		remove_variable = historical_magic_school_min_spells
+	}
+}
+
+all_characters_learn_global_spells_in_queue_effect = {
+	every_living_character = {
+		limit = { has_variable_list = spells_to_learn_queue }
+		every_in_list = {
+			variable = spells_to_learn_queue
+			save_temporary_scope_as = spell_to_learn_identifier
+			random_in_global_list = {
+				variable = global_spell_list
+				limit = {   
+					exists = var:unique_spell_identifier
+					var:unique_spell_identifier = scope:spell_to_learn_identifier
+				}
+				save_temporary_scope_as = spell_to_learn
+			}
+			prev = { learn_spell_effect = { SPELL = scope:spell_to_learn } }
+		}
+		clear_variable_list = spells_to_learn_queue
+	}
+}
+
+learn_character_creation_magic_effect = {
+	if = {
+		limit = {
+			title:c_oraispol ?= {
+				OR = {
+					has_variable_list = selected_magic_school_list
+					has_variable_list = selected_spell_list
+				}
+			}
+		}
+		save_temporary_scope_as = ruler_to_learn_magic
+		title:c_oraispol = {
+			every_in_list = {
+				variable = selected_magic_school_list
+				save_temporary_scope_as = magic_school_to_learn
+				scope:ruler_to_learn_magic = { learn_magic_school_effect = { MAGIC_SCHOOL = scope:magic_school_to_learn } }
+			}
+			every_in_list = {
+				variable = selected_spell_list
+				save_temporary_scope_as = spell_to_learn
+				scope:ruler_to_learn_magic = { learn_spell_effect = { SPELL = scope:spell_to_learn } }
+			}
+			clear_variable_list = selected_magic_school_list
+			clear_variable_list = selected_spell_list
+		}
+	}
+}
+
+# Gives a randomized amount of magical knowledge in the form of known spells containing an aspect
+learn_magic_knowledge_for_aspect_effect = {
+	save_scope_value_as = {
+		name = spell_number_to_learn
+		value = {
+			integer_range = {
+				min = $MIN_SPELLS$
+				max = $MAX_SPELLS$
+			}
+		}
+	}
+	while = {
+		count = scope:spell_number_to_learn
+		random_in_global_list = {
+			variable = global_spell_list
+			limit = {
+				exists = var:$ASPECT$
+				spell_level_value <= $MAX_SPELL_LEVEL$
+				NOT = { prev = { is_target_in_variable_list = { name = known_spell_list target = prev } } }
+			}
+			save_temporary_scope_as = generate_magic_knowledge_for_aspect_spell_to_learn
+			prev = { learn_spell_effect = { SPELL = scope:generate_magic_knowledge_for_aspect_spell_to_learn } }
+		}
+	}
+}
+
+# Gives a randomized amount of magical knowledge in the form of known spells from a school
+learn_magic_knowledge_for_magic_school_effect = {
+	save_temporary_scope_as = generate_magic_knowledge_for_magic_school_learner
+	save_scope_value_as = {
+		name = spell_number_to_learn
+		value = {
+			integer_range = {
+				min = $MIN_SPELLS$
+				max = $MAX_SPELLS$
+			}
+		}
+	}
+	while = {
+		count = scope:spell_number_to_learn
+		$MAGIC_SCHOOL$ = {
+			random_in_list = {
+				variable = spell_list
+				limit = {
+					spell_level_value <= $MAX_SPELL_LEVEL$
+					NOT = { scope:generate_magic_knowledge_for_magic_school_learner = { is_target_in_variable_list = { name = known_spell_list target = prev } } }
+				}
+				save_temporary_scope_as = generate_magic_knowledge_for_magic_school_spell_to_learn
+				scope:generate_magic_knowledge_for_magic_school_learner = { learn_spell_effect = { SPELL = scope:generate_magic_knowledge_for_magic_school_spell_to_learn } }
+			}
+		}
+	}
+}
+
+# Picks a random magic school of the character's culture, weighted by mastery, and learns a number of spells from it
+learn_random_culture_magic_school_effect = {
+	culture = {
+		random_in_list = {
+			variable = magic_school_list
+			weight = {
+				base = 0
+				modifier = {
+					add = var:mastery
+					always = yes
+				}
+			}
+			save_scope_as = magic_school_mastery_scope
+			var:magic_school = { save_scope_as = magic_school_to_learn_scope }
+		}
+	}
+	if = {
+		limit = { exists = scope:magic_school_to_learn_scope }
+		learn_magic_school_effect = { MAGIC_SCHOOL = scope:magic_school_to_learn_scope }
+		learn_magic_knowledge_for_magic_school_effect = {
+			MAGIC_SCHOOL = scope:magic_school_to_learn_scope
+			MIN_SPELLS = $MIN_SPELLS$
+			MAX_SPELLS = $MAX_SPELLS$
+			MAX_SPELL_LEVEL = $MAX_SPELL_LEVEL$
+		}
+	}
+}
+
+# Gives a randomized amount of magical knowledge in the form of known spells that another character knows
+learn_magic_knowledge_from_character_effect = {
+	save_temporary_scope_as = learn_magic_knowledge_from_character_learner
+	save_scope_value_as = {
+		name = spell_number_to_learn
+		value = {
+			integer_range = {
+				min = $MIN_SPELLS$
+				max = $MAX_SPELLS$
+			}
+		}
+	}
+	while = {
+		count = scope:spell_number_to_learn
+		$MENTOR$ = {
+			random_in_list = {
+				variable = known_spell_list
+				limit = {
+					spell_level_value <= $MAX_SPELL_LEVEL$
+					NOT = { scope:learn_magic_knowledge_from_character_learner = { is_target_in_variable_list = { name = known_spell_list target = prev } } }
+				}
+				save_temporary_scope_as = learn_magic_knowledge_from_character_spell_to_learn
+				scope:learn_magic_knowledge_from_character_learner = { learn_spell_effect = { SPELL = scope:learn_magic_knowledge_from_character_spell_to_learn } }
+			}
+		}
+	}
+}
+
+# Gives a randomized amount of magical knowledge in the form of known spells from a specific school that another character knows
+learn_magic_knowledge_from_character_and_magic_school_effect = {
+	save_temporary_scope_as = learn_magic_knowledge_from_character_learner
+	save_scope_value_as = {
+		name = spell_number_to_learn
+		value = {
+			integer_range = {
+				min = $MIN_SPELLS$
+				max = $MAX_SPELLS$
+			}
+		}
+	}
+	while = {
+		count = scope:spell_number_to_learn
+		$MENTOR$ = {
+			random_in_list = {
+				variable = known_spell_list
+				limit = {
+					spell_level_value <= $MAX_SPELL_LEVEL$
+					NOT = { scope:learn_magic_knowledge_from_character_learner = { is_target_in_variable_list = { name = known_spell_list target = prev } } }
+					$MAGIC_SCHOOL$ = { is_target_in_variable_list = { name = spell_list target = prev } }
+				}
+				save_temporary_scope_as = learn_magic_knowledge_from_character_spell_to_learn
+				scope:learn_magic_knowledge_from_character_learner = { learn_spell_effect = { SPELL = scope:learn_magic_knowledge_from_character_spell_to_learn } }
+			}
+		}
+	}
+}
+
+####################
+# ARTIFACT EFFECTS #
+####################
+
+add_spell_to_artifact_effect = {
+	add_to_variable_list = {
+		name = artifact_spell_list
+		target = $SPELL$
+	}
+	add_to_variable_list = {
+		name = artifact_spell_$ACQUISITION_TYPE$_list
+		target = $SPELL$
+	}
+}
+
+#################
+# MISC. EFFECTS #
+#################
+
+set_spell_cost_of_last_created_spell_effect = { scope:new_spell_scope = { set_spell_cost_effect = { VALUE = $VALUE$ } } }
+
+set_spell_cost_effect = {
+	set_variable = {
+		name = spell_cost
+		value = $VALUE$
+	}
+	set_variable = {
+		name = spell_cost_inverted
+		value = {
+			value = $VALUE$
+			multiply = -1
+		}
+	}
+}
+
+set_spell_gold_cost_of_last_created_spell_effect = { scope:new_spell_scope = { set_spell_gold_cost_effect = { VALUE = $VALUE$ } } }
+
+set_spell_gold_cost_effect = {
+	set_variable = {
+		name = spell_gold_cost
+		value = $VALUE$
+	}
+}
+
+set_spell_base_success_chance_effect = {
+	set_variable = {
+		name = spell_base_success_chance
+		value = $VALUE$
+	}
+}
+
+add_spell_cost_tag_of_last_created_spell = {
+	scope:new_spell_scope ?= {
+		create_spell_tag_scripted_effect = { NAME = spell_cost_tag }
+		scope:new_tag ?= {
+			set_variable = {
+				name = target_type
+				value = flag:$TARGET$
+			}
+			set_variable = {
+				name = scalar_1
+				value = flag:$SCALED_BY$
+			}
+			set_variable = {
+				name = cost_change_value
+				value = $VALUE$
+			}
+		}
+		add_to_variable_list = {
+			name = spell_cost_tag_list
+			target = scope:new_tag
+		}
+	} 
+}
+
+set_spell_faith_last_created_spell_effect = { scope:new_spell_scope = { set_spell_faith_effect = { FAITH = $FAITH$ } } }
+
+set_spell_faith_effect = {
+	set_variable = {
+		name = spell_faith
+		value = $FAITH$
+	}
+}
+
+# Event Effects
+
+execute_spell_event_effect = {
+	custom_tooltip = $EVENT_NAMESPACE$_$EVENT_ID$_tooltip
+	if = {
+		limit = { exists = scope:execute_$EVENT_NAMESPACE$_$EVENT_ID$ }
+		trigger_event = $EVENT_NAMESPACE$.$EVENT_ID$
+	}
+	else = {
+		save_scope_value_as = {
+			name = execute_$EVENT_NAMESPACE$_$EVENT_ID$
+			value = yes
+		}
+	}
+}
+
+# Stacking Modifier Effects
+
+set_stacking_modifier_to_level_with_overflow_effect = {
+	if = {
+		limit = { 
+			$LEVEL$ > 0
+		}
+		save_scope_value_as = {
+			name = modifier
+			value = flag:$MODIFIER$
+		}
+		save_scope_value_as = {
+			name = level
+			value = $LEVEL$
+		}
+		save_scope_value_as = {
+			name = years
+			value = $YEARS$
+		}
+		hidden_effect = {
+			remove_$TYPE$_modifier = $MODIFIER$
+			remove_variable = $MODIFIER$_scale
+			if = {
+				limit = { $YEARS$ > 0 }
+				add_$TYPE$_modifier = { modifier = $MODIFIER$ years = $YEARS$ }
+			}
+			else = {
+				add_$TYPE$_modifier = $MODIFIER$
+			}
+			set_variable = {
+				name = $MODIFIER$_scale
+				value = $LEVEL$
+				days = GH_magic_modifier_years_to_days_value
+			}
+		}
+		if = {
+			limit = { $YEARS$ > 0 }
+			custom_tooltip = set_stacking_modifier_to_level_$TYPE$_effect_tooltip
+		}
+		else = {
+			custom_tooltip = set_stacking_modifier_to_level_permanently_$TYPE$_effect_tooltip
+		}
+	}
+}
+
+upgrade_stacking_modifier_by_level_effect = {
+	if = {
+		limit = { 
+			$LEVEL$ > 0
+		}
+		save_scope_value_as = {
+			name = modifier
+			value = flag:$MODIFIER$
+		}
+		save_scope_value_as = {
+			name = level
+			value = $LEVEL$
+		}
+		save_scope_value_as = {
+			name = years
+			value = $YEARS$
+		}
+		hidden_effect = {
+			remove_$TYPE$_modifier = $MODIFIER$
+			if = {
+				limit = { $YEARS$ > 0 }
+				add_$TYPE$_modifier = { modifier = $MODIFIER$ years = $YEARS$ }
+			}
+			else = {
+				add_$TYPE$_modifier = $MODIFIER$
+			}
+			if = {
+				limit = { exists = var:$MODIFIER$_scale }
+				change_variable = {
+					name = $MODIFIER$_scale
+					add = $LEVEL$
+				}
+			}
+			else = {
+				set_variable = {
+					name = $MODIFIER$_scale
+					value = $LEVEL$
+					days = GH_magic_modifier_years_to_days_value
+				}
+			}
+		}
+		if = {
+			limit = { $YEARS$ > 0 }
+			custom_tooltip = set_stacking_modifier_to_level_$TYPE$_effect_tooltip
+		}
+		else = {
+			custom_tooltip = set_stacking_modifier_to_level_permanently_$TYPE$_effect_tooltip
+		}
+	}
+}
+
+# Artifact modifier can't be scaled in the same way normal modifiers can, so we need to use the old stacking method instead
+upgrade_stacking_modifier_by_level_artifact_effect = {
+	if = {
+		limit = { 
+			$LEVEL$ > 0
+		}
+		save_scope_value_as = {
+			name = modifier
+			value = flag:$MODIFIER$
+		}
+		save_scope_value_as = {
+			name = level
+			value = $LEVEL$
+		}
+		hidden_effect = {
+			set_local_variable = {
+				name = for_counter
+				value = 0
+			}
+			while = {
+				limit = {
+					exists = local_var:for_counter
+					exists = scope:level
+					scope:level > local_var:for_counter
+				}
+				add_$TYPE$_modifier = $MODIFIER$
+				change_local_variable = {
+					name = for_counter
+					add = 1
+				}
+			}
+		}
+		custom_tooltip = upgrade_stacking_modifier_by_level_permanently_$TYPE$_effect_tooltip
+	}
+}
+
+spawn_army_with_maa_tooltip_effect = {
+	save_scope_value_as = {
+		name = maa
+		value = flag:$MAA$
+	}
+	save_scope_value_as = {
+		name = stacks
+		value = $SCALED_BY$
+	}
+	hidden_effect = {
+		spawn_army = {
+			name = $ARMY_NAME$
+			location = this.location
+			men_at_arms = {
+				type = $MAA$
+				stacks = scope:stacks
+			}
+			inheritable = no
+			uses_supply = yes
+		}
+	}
+	custom_tooltip = spawn_army_with_maa_tooltip
+}
+
+add_or_increase_permanent_variable_magic_effect = {
+	if = {
+		limit = { 
+			$LEVEL$ > 0
+		}
+		if = {
+			limit = {
+				NOT = { exists = var:$VARIABLE$ }
+			}
+			set_variable = {
+				name = $VARIABLE$
+				value = $LEVEL$
+				years = -1
+			}
+		}
+		else = {
+			change_variable = {
+				name = $VARIABLE$
+				add = $LEVEL$
+			}
+		}
+	}
+}
+
+pick_spell_location_effect = {
+	# Some spells should have hardcoded backgrounds, check these first
+	if = {
+		limit = {
+			OR = {
+				scope:selected_spell_scope.var:unique_spell_identifier ?= flag:wisdom_of_the_leaf_whispers 
+				scope:selected_spell_scope.var:unique_spell_identifier ?= flag:twin_gods_hex_of_wrath
+			}
+		}
+		save_scope_value_as = { name = spell_location value = flag:spell_location_grove }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				scope:selected_spell_scope.var:unique_spell_identifier ?= flag:cedar_witchs_hex
+				scope:selected_spell_scope.var:unique_spell_identifier ?= flag:embercrown_coronation
+			}
+		}
+		save_scope_value_as = { name = spell_location value = flag:spell_location_bonfire }
+	}
+	else = {
+		random_list = {
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:stone
+						scope:selected_spell_scope.var:primary_aspect = flag:dark
+						scope:selected_spell_scope.var:primary_aspect = flag:water
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_cave }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:stone
+						scope:selected_spell_scope.var:primary_aspect = flag:dark
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_cavern }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:dream
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_bedroom }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:stone
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_quarry }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:stone
+						scope:selected_spell_scope.var:primary_aspect = flag:metal
+						scope:selected_spell_scope.var:primary_aspect = flag:dark
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_mine }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:fire
+						scope:selected_spell_scope.var:primary_aspect = flag:nature
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_poppy_field }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:nature
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_meadow }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:nature
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_grove }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:air
+						scope:selected_spell_scope.var:primary_aspect = flag:celestial
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_cliff }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:air
+						scope:selected_spell_scope.var:primary_aspect = flag:celestial
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_peak }
+			}
+			1 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:air
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_carriage }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:fire
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_bonfire }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:ethereal
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_cemetery }
+			}
+			3 = {
+				trigger = { 
+					exists = scope:selected_spell_scope.var:primary_aspect
+					OR = {
+						scope:selected_spell_scope.var:primary_aspect = flag:ethereal
+					}
+				}
+				save_scope_value_as = { name = spell_location value = flag:spell_location_haunted_ruins }
+			}
+			1 = {
+				save_scope_value_as = { name = spell_location value = flag:spell_location_hall }
+			}
+			1 = {
+				save_scope_value_as = { name = spell_location value = flag:spell_location_tower }
+			}
+		}
+	}
+	
+	if = {
+		limit = { NOT = { exists = scope:spell_location_province } }
+		scope:spell_organizer.location ?= { save_scope_as = spell_location_province }
+	}
+}
+
+# Bound Entity Effects # GH URGENT: Move to its own file eventually
+
+set_bound_entity_attribute_effect = {
+	add_to_variable_list = {
+		name = bound_entity_attribute_list
+		target = flag:$ATTRIBUTE$
+	}
+	set_variable = {
+		name = $ATTRIBUTE$
+		value = $SKILL$
+	}
+}

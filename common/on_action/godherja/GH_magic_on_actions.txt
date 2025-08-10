@@ -1,0 +1,92 @@
+﻿
+magic_backfire_events = {
+	random_events = {
+		# Generic Backfires
+		300 = magic_backfire.0001 # Harmless Backfire
+		100 = magic_backfire.0011 # Arcane Explosion
+		100 = magic_backfire.0021 # Miscast
+		#Dream Invasion Backfires
+		100 = magic_backfire.0031 # Poisoned Dreams
+		100 = magic_backfire.0032 # Dreamin of Hole
+		100 = magic_backfire.0033 # Serpent Dreams
+		100 = magic_backfire.0034 # Gazing Back on Me
+		100 = magic_backfire.0035 # temptation dreaming
+		100 = magic_backfire.0036 #ambition dreaming
+		100 = magic_backfire.0400 # whiteflame of revelation
+		100 = magic_backfire.0401 # Green Flame of Renewal
+		100 = magic_backfire.0402 # Immense Firestorm
+		100 = magic_backfire.0500 # Moon Interferance
+		
+	}
+}
+
+fog_magic_on_stress_increase_1 = {
+	trigger = { ethereal_aspect_skill_trigger = { VALUE = 10 } }
+
+	effect = {
+		random_list = {
+			90 = { }
+			10 = { trigger_event = magic.2420 }
+		}
+	}
+}
+
+fog_magic_on_stress_increase_2 = {
+	trigger = { ethereal_aspect_skill_trigger = { VALUE = 10 } }
+
+	effect = {
+		random_list = {
+			70 = { }
+			30 = { trigger_event = magic.2420 }
+		}
+	}
+}
+
+fog_magic_on_stress_increase_3 = {
+	trigger = { ethereal_aspect_skill_trigger = { VALUE = 10 } }
+
+	effect = {
+		random_list = {
+			50 = { }
+			50 = { trigger_event = magic.2420 }
+		}
+	}
+}
+
+on_stress_level_1 = {
+	on_actions = { fog_magic_on_stress_increase_1 }
+}
+on_stress_level_2 = {
+	on_actions = { fog_magic_on_stress_increase_2 }
+}
+on_stress_level_3 = {
+	on_actions = { fog_magic_on_stress_increase_3 }
+}
+on_stress_level_4 = {
+	on_actions = { fog_magic_on_stress_increase_3 }
+}
+
+magic_riftsight_pulse = {
+	effect = {
+		every_in_global_list = {
+			variable = magi_list
+			limit = {
+				is_ruin = no
+				OR = {
+					ethereal_aspect_skill_trigger = { VALUE = 10 }
+					dream_aspect_skill_trigger = { VALUE = 10 }
+				}
+			}
+			give_mixed_magi_riftsight_effect = yes
+		}
+	}
+}
+
+magic_prowess_pulse = {
+	effect = {
+		every_in_global_list = {
+			variable = magi_list
+			calculate_magic_prowess_effect = yes
+		}
+	}
+}

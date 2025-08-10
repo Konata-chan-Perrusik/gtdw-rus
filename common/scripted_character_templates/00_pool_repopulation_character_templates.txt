@@ -1,0 +1,2000 @@
+﻿#################################### THE DUKE AND THE BODENSEE ######################################
+#																									#
+# The Duke of Swabia sat by the shores of the Bodensee with his fishing rod for many months without #
+# reward. He had even put a lovely slice of dove pie on the hook, but his bucket remained empty.	#
+# "Are there no characters in the lake?" he thought to himself and sighed. "At this rate, my court 	#
+# will become desolate within a generation! My heir will have no diligent councillors, no brave 	#
+# knights, and no wise crones to help him rule the lands!" 											#		
+#																									#
+# The Duke cried for a long, long while, and then stood up to gathering his things.					#
+# "Thank God!" he suddenly exclaimed. "I have an idea!"												#
+# If the lake was empty, could he not create some new characters and release them into the waters?  #
+# If some of them married, the Bodensee would surely be repopulated in just a few years!			#
+#																									#
+# The clever Duke quickly got to work. He made maidens and adventurers, matrons and fools. Young	#
+# and old he made them, weak and strong, wicked and pious. The sun rose in the sky and set again.	#
+# Under the light of moon and stars, the Duke put the final touch on his creation. 					#
+#																									#
+# The next morning, he gently released the little characters into the waters. He watched them swim 	#
+# away with tears of happiness trailing down his whiskered cheeks. This was farewell, but he was 	#
+# certain - they would not be gone for long.														#
+#																									#
+# And this is the story behind why pools spawn new characters for the royal courts all over the 	#
+# world. Whenever we throw our hook into the depths, we send a thought of gratitude to the noble 	#
+# Duke of Swabia, and his marvelous creation.														#
+#																									#
+#####################################################################################################
+
+
+
+
+
+#Notes
+#Random Traits List contains relevant lifestyle traits and all personality traits exist in 1 template
+#Template-specific skill min/max regulated through scripted values
+#Template-specific education trait is weighted
+
+pool_repopulate_prowess = {
+	age = { 20 40 }
+	random_traits = yes
+	gender_female_chance = root_soldier_female_chance
+	culture = root.culture
+	faith = root.faith
+	prowess = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	random_traits_list = {
+		education_martial_1 = { weight = { base = 35 } }
+		education_martial_2 = { weight = { base = 35 } }
+		education_martial_3 = { weight = { base = 20 } }
+		education_martial_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		lifestyle_blademaster = {}
+		gallant = {}
+		brave = {}
+		gluttonous = {}
+		strong = {}
+		athletic = {}
+		lifestyle_hunter = {}
+	}
+	dynasty = none
+	after_creation = {
+		random = {
+			chance = 1
+			
+			add_trait = poet
+			
+			modifier = {
+				add = 10
+				culture = { has_cultural_parameter = poet_trait_more_common }
+			}
+			modifier = {
+				add = 5
+				faith_or_culture_likes_poets_trigger = yes
+			}
+		}
+		
+		# Cultural Traditions
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = winter_soldier_trait_more_common
+				}
+				NOT = {
+					has_trait = winter_soldier
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = winter_soldier
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = forest_fighter_trait_more_common
+				}
+				NOT = {
+					has_trait = forest_fighter
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = forest_fighter
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = rough_terrain_expert_trait_more_common
+				}
+				NOT = {
+					has_trait = rough_terrain_expert
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = rough_terrain_expert
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = desert_warrior_trait_more_common
+				}
+				NOT = {
+					has_trait = desert_warrior
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = desert_warrior
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = jungle_stalker_trait_more_common
+				}
+				NOT = {
+					has_trait = jungle_stalker
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = jungle_stalker
+			}
+		}
+		## GH ADDITIONS ##
+		if = { # Bestow sarminian trait
+			limit = {
+				eligible_for_gh_steppe_queenhood = yes
+				NOT = { has_trait = lifestyle_gh_steppe_queen }
+			}
+			random = {
+				chance = 75
+				add_trait = lifestyle_gh_steppe_queen
+				add_trait_xp = {
+					trait = lifestyle_gh_steppe_queen
+					value = { 5 75 }
+				}
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		add_random_tiered_trait_xp_effect = {
+			TRAIT = lifestyle_blademaster
+			LEVEL_1 = yes
+			LEVEL_3 = yes
+		}
+		add_random_tiered_trait_track_xp_effect = {
+			TRAIT = lifestyle_hunter
+			TRACK = hunter
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		# ToTo Hastiluder
+		if = {
+			limit = { has_dlc_feature = tours_and_tournaments }
+			random = {
+				chance = 33
+				add_trait = tourney_participant
+				add_random_tourney_participant_level_effect = yes
+			}
+		}
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 90 CHANCE_OF_TRAIT = 10 }
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+pool_repopulate_diplomacy = {
+	age = { 20 40 }
+	gender_female_chance = root_faith_dominant_gender_adjusted_female_chance #because chancellor gender is doctrine dependent
+	random_traits = yes
+	culture = root.culture
+	faith = root.faith
+	diplomacy = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	random_traits_list = {
+		education_diplomacy_1 = { weight = { base = 35 } }
+		education_diplomacy_2 = { weight = { base = 35 } }
+		education_diplomacy_3 = { weight = { base = 20 } }
+		education_diplomacy_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		diplomat = {}
+		family_first = {}
+		august = {}
+		lifestyle_reveler = {}
+		generous = {}
+		arrogant = {}
+		honest = {}
+		gregarious = {}
+		trusting = {}
+		compassionate = {}
+		fickle = {}
+		forgiving = {}
+		poet = {}
+		tourney_participant = {}
+		lifestyle_traveler = {}
+	}
+	dynasty = none
+	after_creation = {
+		random = {
+			chance = 1
+			
+			add_trait = poet
+			
+			modifier = {
+				add = 15
+				culture = { has_cultural_parameter = poet_trait_more_common }
+			}
+			modifier = {
+				add = 10
+				OR = {
+					culture = { has_cultural_pillar = heritage_sjalvolki }
+					religion = religion:sjalvolki_religion
+				}
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		if = {
+			limit = { has_trait = lifestyle_reveler }
+			add_trait_xp = {
+				trait = lifestyle_reveler
+				value = {
+					integer_range = {
+						min = small_lifestyle_random_xp_low
+						max = small_lifestyle_random_xp_high
+					}
+				}
+			}
+		}
+		add_random_tiered_trait_track_xp_effect = {
+			TRAIT = tourney_participant
+			TRACK = wit
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 80 CHANCE_OF_TRAIT = 20 }
+		if = { # Glassinger
+			limit = { culture = { culture_knows_magic_school = { MAGIC_SCHOOL = global_var:temple_of_the_vitreous_precept } } }
+			random = {
+				chance = 15
+				add_character_modifier = glassinger_modifier
+				set_variable = {
+					name = glassinger_modifier_scale
+					value = { 1 3 }
+				}
+			}
+		}
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+pool_repopulate_martial = {
+	age = { 30 45 }
+	gender_female_chance = root_faith_dominant_gender_adjusted_female_chance #because marshal gender is doctrine dependent
+	random_traits = yes
+	culture = root.culture
+	faith = root.faith
+	martial = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	random_traits_list = {
+		education_martial_1 = { weight = { base = 35 } }
+		education_martial_2 = { weight = { base = 35 } }
+		education_martial_3 = { weight = { base = 20 } }
+		education_martial_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		strategist = {}
+		overseer = {}
+		wrathful = {}
+		zealous = {}
+		impatient = {}
+		lifestyle_hunter = {}
+		tourney_participant = {}
+	}
+	dynasty = none
+	after_creation = {
+		# Cultural Traditions
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = poet_trait_more_common
+				}
+				NOT = {
+					has_trait = poet
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = poet
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = winter_soldier_trait_more_common
+				}
+				NOT = {
+					has_trait = winter_soldier
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = winter_soldier
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = forest_fighter_trait_more_common
+				}
+				NOT = {
+					has_trait = forest_fighter
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = forest_fighter
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = rough_terrain_expert_trait_more_common
+				}
+				NOT = {
+					has_trait = rough_terrain_expert
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = rough_terrain_expert
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = desert_warrior_trait_more_common
+				}
+				NOT = {
+					has_trait = desert_warrior
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = desert_warrior
+			}
+		}
+		if = {
+			limit = {
+				culture = {
+					has_cultural_parameter = jungle_stalker_trait_more_common
+				}
+				NOT = {
+					has_trait = jungle_stalker
+				}
+			}
+			random = {
+				chance = 10
+				add_trait = jungle_stalker
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		add_random_tiered_trait_track_xp_effect = {
+			TRAIT = lifestyle_hunter
+			TRACK = hunter
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		add_random_tiered_trait_track_xp_effect = {
+			TRAIT = tourney_participant
+			TRACK = wit
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 90 CHANCE_OF_TRAIT = 10 }
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+		if = { # Bestow sarminian trait
+			limit = {
+				eligible_for_gh_steppe_queenhood = yes
+				NOT = { has_trait = lifestyle_gh_steppe_queen }
+			}
+			random = {
+				chance = 75
+				add_trait = lifestyle_gh_steppe_queen
+				add_trait_xp = {
+					trait = lifestyle_gh_steppe_queen
+					value = { 5 60 }
+				}
+			}
+		}
+	}
+}
+
+pool_repopulate_stewardship = {
+	age = { 20 40 }
+	gender_female_chance = root_faith_dominant_gender_adjusted_female_chance #because steward gender is doctrine dependent
+	random_traits = yes
+	culture = root.culture
+	faith = root.faith
+	stewardship = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	random_traits_list = {
+		education_stewardship_1 = { weight = { base = 35 } }
+		education_stewardship_2 = { weight = { base = 35 } }
+		education_stewardship_3 = { weight = { base = 20 } }
+		education_stewardship_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		architect = {}
+		administrator = {}
+		avaricious = {}
+		temperate = {}
+		greedy = {}
+		just = {}
+		stubborn = {}
+		ambitious = {}
+	}
+	dynasty = none
+	after_creation = {
+		random = {
+			chance = 1
+			
+			add_trait = poet
+			
+			modifier = {
+				add = 10
+				culture = { has_cultural_parameter = poet_trait_more_common }
+			}
+			modifier = {
+				add = 5
+				faith_or_culture_likes_poets_trigger = yes
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 80 CHANCE_OF_TRAIT = 20 }
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+pool_repopulate_intrigue = {
+	age = { 25 40 }
+	random_traits = yes
+	gender_female_chance = 50 #No gender blocks for spymaster
+	culture = root.culture
+	faith = root.faith
+	intrigue = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	random_traits_list = {
+		education_intrigue_1 = { weight = { base = 35 } }
+		education_intrigue_2 = { weight = { base = 35 } }
+		education_intrigue_3 = { weight = { base = 20 } }
+		education_intrigue_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		schemer = {}
+		seducer = {}
+		torturer = {}
+		deceitful = {}
+		lustful = {}
+		calm = {}
+		arbitrary = {}
+		paranoid = {}
+		callous = {}
+		sadistic = {}
+		vengeful = {}
+		craven = {}
+	}
+	dynasty = none
+	after_creation = {
+		random = {
+			chance = 1
+			
+			add_trait = poet
+			
+			modifier = {
+				add = 10
+				culture = { has_cultural_parameter = poet_trait_more_common }
+			}
+			modifier = {
+				add = 5
+				faith_or_culture_likes_poets_trigger = yes
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 90 CHANCE_OF_TRAIT = 10 }
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+pool_repopulate_learning = {
+	age = { 25 60 }
+	gender_female_chance = 50 #No gender blocks for physicians
+	random_traits = yes
+	culture = root.culture
+	faith = root.faith
+	learning = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	random_traits_list = {
+		education_learning_1 = { weight = { base = 35 } }
+		education_learning_2 = { weight = { base = 35 } }
+		education_learning_3 = { weight = { base = 20 } }
+		education_learning_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		scholar = {}
+		theologian = {}
+		whole_of_body = {}
+		lifestyle_physician = {}
+		lifestyle_mystic = {}
+		lifestyle_herbalist = {}
+		chaste = {}
+		diligent = {}
+		patient = {}
+		humble = {}
+		shy = {}
+		content = {}
+		cynical = {}
+		lazy = {}
+	}
+	dynasty = none
+	after_creation = {
+		if = {
+			limit = {
+				faith = {
+					has_doctrine = tenet_monasticism
+				}
+			}
+			random_list = {
+				75 = {}
+				25 = {
+					add_trait = devoted
+				}
+			}
+		}
+		random = {
+			chance = 1
+			
+			add_trait = poet
+			
+			modifier = {
+				add = 10
+				culture = { has_cultural_parameter = poet_trait_more_common }
+			}
+			modifier = {
+				add = 5
+				faith_or_culture_likes_poets_trigger = yes
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		add_random_tiered_trait_xp_effect = {
+			TRAIT = lifestyle_physician
+			LEVEL_1 = yes
+			LEVEL_3 = yes
+		}
+		add_random_tiered_trait_xp_effect = {
+			TRAIT = lifestyle_mystic
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 0 CHANCE_OF_TRAIT = 1 }
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+		
+
+pool_repopulate_spouse = {
+	gender_female_chance = root.marriage_gender_adjusted_female_chance
+	age = { 16 26 }
+	random_traits = yes
+	culture = root.culture
+	faith = root.faith
+	random_traits_list = {
+		education_diplomacy_1 = { weight = { base = 35 } }
+		education_diplomacy_2 = { weight = { base = 35 } }
+		education_diplomacy_3 = { weight = { base = 20 } }
+		education_diplomacy_4 = { weight = { base = 10 } }
+		education_martial_1 = {
+			weight = {
+				base = 35
+				modifier = { # Less common with martial education if character can't be combatant because of gender
+					factor = 0.3
+					trigger_if = {
+						limit = { root = { is_female = yes } }
+						dummy_male = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+					trigger_else = {
+						dummy_female = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+				}
+			}
+		}
+		education_martial_2 = {
+			weight = {
+				base = 35
+				modifier = { # Less common with martial education if character can't be combatant because of gender
+					factor = 0.3
+					trigger_if = {
+						limit = { root = { is_female = yes } }
+						dummy_male = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+					trigger_else = {
+						dummy_female = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+				}
+			}
+		}
+		education_martial_3 = {
+			weight = {
+				base = 20
+				modifier = { # Less common with martial education if character can't be combatant because of gender
+					factor = 0.3
+					trigger_if = {
+						limit = { root = { is_female = yes } }
+						dummy_male = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+					trigger_else = {
+						dummy_female = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+				}
+			}
+		}
+		education_martial_4 = {
+			weight = {
+				base = 10
+				modifier = { # Less common with martial education if character can't be combatant because of gender
+					factor = 0.3
+					trigger_if = {
+						limit = { root = { is_female = yes } }
+						dummy_male = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+					trigger_else = {
+						dummy_female = { NOT = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = root } } }
+					}
+				}
+			}
+		}
+		education_stewardship_1 = { weight = { base = 35 } }
+		education_stewardship_2 = { weight = { base = 35 } }
+		education_stewardship_3 = { weight = { base = 20 } }
+		education_stewardship_4 = { weight = { base = 10 } }
+		education_intrigue_1 = { weight = { base = 35 } }
+		education_intrigue_2 = { weight = { base = 35 } }
+		education_intrigue_3 = { weight = { base = 20 } }
+		education_intrigue_4 = { weight = { base = 10 } }
+		education_learning_1 = { weight = { base = 35 } }
+		education_learning_2 = { weight = { base = 35 } }
+		education_learning_3 = { weight = { base = 20 } }
+		education_learning_4 = { weight = { base = 10 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		diplomat = {}
+		strategist = {}
+		architect = {}
+		schemer = {}
+		scholar = {}
+		whole_of_body = {}
+		fecund = {}
+		intellect_good_1 = {}
+		physique_good_1 = {}
+		beauty_good_1 = {}
+	}
+	dynasty = none
+	after_creation = {
+		random = {
+			chance = 1
+			
+			add_trait = poet
+			
+			modifier = {
+				add = 10
+				culture = { has_cultural_parameter = poet_trait_more_common }
+			}
+			modifier = {
+				add = 5
+				faith_or_culture_likes_poets_trigger = yes
+			}
+		}
+		set_interesting_traits_and_modifiers_effect = yes
+		
+		# GH ADDITIONS: Wastelands, magic, wardenite stuff...
+		increase_congenital_and_living_magic_effect = yes
+		convert_wasteland_to_fogeater_effect = yes
+		give_jurist_trait_if_clergy = { CHANCE_OF_NONE = 90 CHANCE_OF_TRAIT = 10 }
+		random = {
+			chance = culture.culture_magic_training_chance_value
+			learn_random_culture_magic_school_effect = {
+				MIN_SPELLS = generated_character_min_spells_default_value
+				MAX_SPELLS = generated_character_max_spells_default_value
+				MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+#Lonely Note: GH could really use us digging down into this one
+pool_repopulate_local_flavor = {
+	age = { 25 45 }
+	gender_female_chance = root_faith_dominant_gender_adjusted_female_chance #because council gender is doctrine dependent
+	random_traits = yes
+	faith = root.faith
+	
+	random_culture = {
+		root.culture = {	# Fallback
+			trigger = {
+				always = yes
+			}
+			weight = { base = 1 }
+		}
+		culture:apokiakas = {	# Meant to simulate refugees from the Foglands
+			trigger = {
+				root = {
+					NOR = {
+						culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					OR = {	
+						geographical_region = world_ga_clanlands			# From northeast Greater Aversaria
+						geographical_region = world_ga_central_aversaria	# From the Thanatosia valley
+					}
+				}
+				current_date <= 1300.1.1	# After 50 years, safe to say that everyone of this culture is either dead, assimilated or irrelevant
+			}
+			weight = { base = 20 }
+		}
+		culture:northernimperial = {	# Very much on the way to becoming deader than the Dodo at game start, but vestigial populations should stick around in sjalvolki courts for some time
+			trigger = {
+				root = {
+					NOR = {
+						culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely
+			}
+			weight = { base = 20 }
+		}
+		culture:easternimperial = {
+			trigger = {
+				root = {
+					NOR = {
+						culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_aironoi
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 20 }
+		}
+		culture:southernimperial = {
+			trigger = {
+				root = {
+					NOR = {
+						culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					OR = {	
+						geographical_region = world_ga_central_aversaria
+						geographical_region = world_ga_opakhasia_formable
+					}
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 20 }
+		}
+		culture:westernimperial = {
+			trigger = {
+				root = {
+					NOR = {
+						culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_western_aversaria
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 20 }
+		}
+		culture:centralimperial = {
+			trigger = {
+				root = {
+					NOR = {
+						#culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 20 }
+		}
+		culture:erimatos = {
+			trigger = {
+				root = {
+					NOR = {
+						#culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = governate_aversarian_sarradon
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 10 }
+		}
+		culture:makryenis = {
+			trigger = {
+				root = {
+					NOR = {
+						#culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = governate_aversarian_sarradon
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 20 }
+		}
+		culture:practitioner = {
+			trigger = {
+				root = {
+					NOR = {
+						culture = { has_cultural_pillar = heritage_iyrossi }	# Iyrossi usually just kill Aversarians on sight
+						faith = faith:kikarsagi_aagiokrata	# As do Kikirsagi Aagiokratians
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					OR = {
+						geographical_region = world_ga_aversarian_homelands
+						geographical_region = world_ga_clanlands
+					}
+				}
+				current_date <= 1350.1.1	# After 100 years, should fade away completely if the region has been conquered by barbarians
+			}
+			weight = { base = 10 }
+		}
+		#Malcois Natives
+		culture:cerussiai = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:deresstae = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:jassi = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:kinambrosti = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:iyronisti = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:oxalanti = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:scusstari = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:dubadin = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_malcois_formable
+				}
+			}
+			weight = { base = 5 }
+		}
+		#Clanland Natives
+		culture:bricotaves = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_eastern_clanlands
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:ardothanes = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_eastern_clanlands
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:ordikin = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_eastern_clanlands
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:corvosnari = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_eastern_clanlands
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:sarridians = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = black_mountains_biozone
+				}
+			}
+			weight = { base = 10 }
+		}
+		#Mayikrata slaves
+		culture:skausmas = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_mayikprolollan_mayikprolollan_surface
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:meistras = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_mayikprolollan_mayikprolollan_surface
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:mineris = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_mayikprolollan_mayikprolollan_surface
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:ukininkas = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_mayikprolollan_mayikprolollan_surface
+				}
+			}
+			weight = { base = 5 }
+		}
+		#Imperrech Minors
+		culture:karzarads = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 10 }
+		}
+		culture:mondecny = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 5 }
+		}
+		culture:drothacny = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 5 }
+		}
+		culture:kardwens = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 10 }
+		}
+		culture:goans = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 10 }
+		}
+		culture:sarminians = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 10 }
+		}
+		culture:huegodocs = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_clanlands
+				}
+				current_date <= 1300.1.1	# Pre-Migration
+			}
+			weight = { base = 10 }
+		}
+		culture:auteonic = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_western_clanlands
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:brigandines = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_western_clanlands
+				}
+			}
+			weight = { base = 5 }
+		}
+		culture:voluntic = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+						culture = { has_cultural_pillar = heritage_aversarian }
+						faith = { religion = { is_in_family = gh_rf_aversarian } }
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_western_clanlands
+				}
+			}
+			weight = { base = 10 }
+		}
+		culture:oejeynica = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					geographical_region = world_ga_marcher_kingdoms
+				}
+			}
+			weight = { base = 10 }
+		}
+		culture:voyagen = {
+			trigger = {
+				root = {
+					NOR = {
+						faith = faith:fogeater	# For obvious reasons
+					}
+				}
+				root.capital_province = {
+					OR = {
+						geographical_region = world_ga_marcher_kingdoms
+						geographical_region = world_ga_aversarian_homelands
+						AND = {
+							geographical_region = world_sarradon
+							NOR = {
+								geographical_region = world_es_desert
+								geographical_region = world_es_damota
+								geographical_region = world_es_adabyss
+							}
+						}
+					}
+				}
+			}
+			weight = { base = 10 }
+		}
+	}
+	
+	learning = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	
+	stewardship = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	
+	diplomacy = {
+		min_guest_template_skill max_guest_template_skill
+	}
+	
+	random_traits_list = {
+		education_learning_3 = { weight = { base = 10 } }
+		education_learning_4 = { weight = { base = 20 } }
+		education_stewardship_3 = { weight = { base = 5 } }
+		education_stewardship_4 = { weight = { base = 10 } }
+		education_diplomacy_3 = { weight = { base = 10 } }
+		education_diplomacy_4 = { weight = { base = 20 } }
+	}
+	random_traits_list = {
+		scholar = {}
+		theologian = {}
+		lifestyle_physician = {}
+		lifestyle_mystic = {}
+		lifestyle_herbalist = {}
+		administrator = {}
+		architect = {}
+		diplomat = {}
+	}
+	dynasty = none
+	
+	after_creation = { # GH URGENT: Fill this out - possibly make a scripted trigger for associating cultures, faiths and regions and excluding dead ones
+		#Religions
+		if = {
+			limit = {
+				culture = culture:makryenis
+			}
+			random_list = {
+				3 = {
+					set_character_faith = faith:sansia
+				}
+				3 = {
+					set_character_faith = faith:eos
+				}
+				3 = {
+					set_character_faith = faith:philanthrios
+				}
+				3 = {
+					set_character_faith = faith:calysto
+				}
+				3 = {
+					set_character_faith = faith:thysia
+				}
+				3 = {
+					set_character_faith = faith:katharitos
+				}
+				3 = {
+					set_character_faith = faith:dikaynos
+				}
+				1 = {
+					set_character_faith = faith:forgotten
+				}
+				10 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = agionism_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					culture = { has_cultural_pillar = heritage_aversarian }
+					culture = culture:sarridians
+				}
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:aversarinas_aagiokrata
+				}
+				10 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = aversarinas_aagiokrata_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_clanlander }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:innerpath
+				}
+				2 = {
+					set_character_faith = faith:coastpath
+				}
+				2 = {
+					set_character_faith = faith:becledienism
+				}
+				2 = {
+					set_character_faith = faith:darrallianism
+				}
+				2 = {
+					set_character_faith = faith:arderism
+				}
+				2 = {
+					set_character_faith = faith:saintsmarch
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = lifepath_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_samojitian }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:dejorig
+				}
+				20 = {
+					trigger = {
+						culture = culture:meistras
+					}
+					set_character_faith = faith:oirigan
+				}
+				40 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = samojitian_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_iyrossi }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:iyrossi_aagiokrata
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = iyrossi_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_sarminian }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:salacad
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = salacad_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_goan }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:gethian
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = gethian_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_kardwen }
+			}
+			random_list = {
+				2 = {
+					set_character_faith = faith:benkassai
+				}
+				10 = {
+					set_character_faith = faith:kardawai
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = kardawai_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_mondecny }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:portenchant
+				}
+				20 = {
+					trigger = {
+						culture = culture:drothacny
+					}
+					set_character_faith = faith:dethedklann
+				}
+				30 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = stodherrn_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_karzarad }
+			}
+			random_list = {
+				2 = {
+					set_character_faith = faith:akrolenaki
+				}
+				10 = {
+					set_character_faith = faith:kakarataki
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = kakarataki_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_huegodoc }
+			}
+			random_list = {
+				2 = {
+					set_character_faith = faith:caradounars
+				}
+				10 = {
+					set_character_faith = faith:apti
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = apti_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_partic }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:partic
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = partic_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					culture = culture:oejeynica
+					culture = { has_cultural_pillar = heritage_ojyczaynz }
+				}
+			}
+			random_list = {
+				20 = {
+					trigger = {
+						culture = culture:oejeynica
+					}
+					set_character_faith = faith:gravewatch
+				}
+				10 = {
+					set_character_faith = faith:graveright
+				}
+				2 = {
+					set_character_faith = faith:lifepath
+				}
+				5 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = lifepath_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = graveright_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_marcher }
+			}
+			random_list = {
+				10 = {
+					set_character_faith = faith:lifepath
+				}
+				20 = {
+					trigger = {
+						root.capital_county.faith = {
+							religion_tag = lifepath_religion
+						}
+					}
+					set_character_faith = root.capital_county.faith
+				}
+			}
+		}
+		
+		#Making new characters more interesting
+		if = { #Sarminian warriors
+			limit = {
+				culture = culture:sarminians
+			}
+			remove_trait = education_learning_3
+			remove_trait = education_learning_4
+			remove_trait = education_stewardship_3
+			remove_trait = education_stewardship_4
+			remove_trait = education_diplomacy_3
+			remove_trait = education_diplomacy_4
+			remove_trait = lifestyle_physician
+			remove_trait = lifestyle_mystic
+			remove_trait = theologian
+			remove_trait = lifestyle_herbalist
+			remove_trait = diplomat
+			remove_trait = administrator
+			remove_trait = architect
+			remove_trait = scholar
+			add_martial_skill = 4
+			add_prowess_skill = 6
+			random_list = {
+				50 = {
+					add_trait = education_martial_3
+				}
+				50 = {
+					add_trait = education_martial_4
+				}
+			}
+			random_list = {
+				10 = {
+					add_trait = strategist
+				}
+				30 = {
+					add_trait = lifestyle_blademaster
+					add_random_tiered_trait_xp_effect = {
+						TRAIT = lifestyle_blademaster
+						LEVEL_1 = yes
+						LEVEL_3 = yes
+					}
+				}
+				10 = {
+					add_trait = tourney_participant
+					add_random_tiered_trait_track_xp_effect = {
+						TRAIT = tourney_participant
+						TRACK = bow
+						LEVEL_1 = yes
+						LEVEL_3 = yes
+					}
+				}
+				10 = {
+					add_trait = overseer
+				}
+			}
+			give_random_commander_trait_effect = yes
+		}
+		else_if = { #Kardwen Cannibals
+			limit = {
+				culture = culture:kardwens
+			}
+			random_list = {
+				50 = {
+					add_trait = cannibal
+				}
+				25 = {
+					
+				}
+			}
+		}
+		else_if = { #Practicioner Mages
+			limit = {
+				culture = culture:practitioner
+			}
+			random_list = {
+				25 = {
+					give_low_to_medium_magical_trait_effect = yes
+					set_trait_rank = {
+						trait = education_arcana
+						rank = 1
+					}
+				}
+				10 = {
+					give_low_to_medium_magical_trait_effect = yes
+					set_trait_rank = {
+						trait = education_arcana
+						rank = 2
+					}
+				}
+				5 = {
+					give_low_to_medium_magical_trait_effect = yes
+					set_trait_rank = {
+						trait = education_arcana
+						rank = 3
+					}
+				}
+				3 = {
+					give_medium_magical_trait_effect = yes
+					set_trait_rank = {
+						trait = education_arcana
+						rank = 3
+					}
+				}
+				1 = {
+					give_medium_magical_trait_effect = yes
+					set_trait_rank = {
+						trait = education_arcana
+						rank = 4
+					}
+				}
+			}
+			increase_congenital_magic_from_culture_parameter_effect = yes
+			add_to_magi_list = yes
+		}
+		else_if = { #Partic Mages
+			limit = {
+				OR = {
+					culture = culture:auteonic
+					culture = culture:brigandines
+					culture = culture:voluntic
+				}
+			}
+			random_list = {
+				30 = {
+					
+				}
+				10 = {
+					give_low_magical_trait_effect = yes
+				}
+				10 = {
+					give_low_magical_trait_effect = yes
+					random_list = {
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 1
+							}
+						}
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 2
+							}
+						}
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 3
+							}
+							add_random_living_magi_trait = yes
+						}
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 1
+							}
+						}
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 2
+							}
+							add_random_dead_magi_trait = yes
+						}
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 1
+							}
+						}
+						10 = {
+							set_trait_rank = {
+								trait = education_arcana
+								rank = 2
+							}
+							give_mixed_magi_riftsight_effect = yes
+						}
+					}
+					increase_congenital_magic_from_culture_parameter_effect = yes
+					add_to_magi_list = yes
+				}
+			}
+		}
+		
+		if = { #Vanilla pagan thing
+			limit = {
+				religion = { is_in_family = rf_pagan }
+			}
+			random_list = {
+				50 = {
+				}
+				10 = {
+					add_trait = one_eyed
+				}
+				10 = {
+					add_trait = albino
+				}
+				10 = {
+					add_trait = scaly
+				}
+				10 = {
+					add_trait = torturer
+				}
+				10 = {
+					add_trait = whole_of_body
+				}
+				10 = {
+					add_trait = flagellant
+				}
+				10 = {
+					add_trait = scarred
+				}
+				10 = {
+					add_trait = blind
+				}
+				10 = {
+					add_trait = shrewd
+				}
+				10 = {
+					add_trait = strong
+				}
+				10 = {
+					add_trait = giant
+				}
+				10 = {
+					add_trait = poet
+				}
+				20 = {
+					trigger = {
+						faith = {
+							has_doctrine = tenet_warmonger
+						}
+						NOR = {
+							has_trait = craven
+							has_trait = berserker
+							has_trait = calm
+						}
+					}
+					add_trait = berserker
+				}
+			}
+		}
+	}
+}

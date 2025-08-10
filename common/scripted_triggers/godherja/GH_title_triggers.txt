@@ -1,0 +1,483 @@
+﻿#####################
+### GH TITLE TRIGGERS
+# GH TODO: Give the animal_in_title triggers content
+
+hunt_animal_has_antelope_in_title_trigger = { # For GH_SWAP_hunt_animal_antelope_trigger in 0000_GH_vanilla_trigger_swaps
+	trigger_if = {
+		limit = { exists = duchy }
+		#NOR = { # Lambakanna
+		#	duchy = title:d_sinhala # Not native
+		#	duchy = title:d_dakhina_desa # Not native
+		#	duchy = title:d_ruhunu # Not native
+		#}
+		always = yes
+	}
+}
+
+hunt_animal_has_fox_in_title_trigger = { # For GH_SWAP_hunt_animal_fox_trigger in 0000_GH_vanilla_trigger_swaps
+	trigger_if = {
+		limit = { exists = duchy }
+		#NOT = { duchy = title:d_socotra } # Not native
+		always = yes
+	}
+}
+
+hunt_animal_has_animal_big_in_title_trigger = { # For GH_SWAP_hunt_animal_big_available_trigger in 0000_GH_vanilla_trigger_swaps
+	AND = {
+		trigger_if = {
+			limit = { exists = county }
+			#NOR = {
+			#	# Counties
+			#	county = title:c_dahlak # Not native
+			#	county = title:c_faereyar # Not native
+			#	county = title:c_hormuz # Not native
+			#	county = title:c_lesbos # Extinct
+			#	county = title:c_maldives # Not native
+			#	county = title:c_malta # Extinct
+			#	county = title:c_naxos # Extinct
+			#}
+			always = yes
+		}
+		trigger_if = {
+			limit = { exists = duchy }
+			#NOR = {
+			#	duchy = title:d_canarias # Not native
+			#	duchy = title:d_krete # Extinct
+			#	duchy = title:d_iceland # Not native
+			#	duchy = title:d_mallorca # Not native
+			#	duchy = title:d_socotra # Not native
+			#}
+			always = yes
+		}
+	}
+}
+
+hunt_animal_has_animal_small_in_title_trigger = { # For hunt_animal_small_available_trigger
+	AND = {
+		trigger_if = {
+			limit = { exists = county }
+			#NOR = {
+			#	county = title:c_dahlak # Not native
+			#	county = title:c_maldives # Not native
+			#}
+			always = yes
+		}
+		trigger_if = {
+			limit = { exists = duchy }
+			#NOT = { duchy = title:d_canarias } # Not native
+			always = yes
+		}
+	}
+}
+
+## TO SORT ##
+
+gh_duchies_and_above_allowed_trigger = {
+	trigger_if = {
+		limit = {
+			gh_is_cultist = yes
+			NOR = {
+				exists = global_var:redlander_victory
+				exists = global_var:sundeath_phase_1_start
+			}
+		}
+		custom_tooltip = {
+			text = must_not_be_redlander_or_must_end_crisis
+			always = no
+		}
+	}
+}
+
+gh_kingdoms_and_above_allowed_trigger = {
+	custom_description = {
+		text = must_not_be_redlander_or_must_end_sun
+		OR = {
+			gh_duchies_and_above_allowed_trigger = yes
+			AND = {
+				gh_is_cultist  = yes
+				NOT = { exists = global_var:redlander_victory }
+				exists = global_var:redlander_sun_victory
+			}
+			exists = global_var:sundeath_phase_1_start
+		}
+	}
+	NOT = {
+		has_title = title:e_migrant_coalition
+	}
+}
+
+gh_empires_allowed_trigger = {
+	gh_kingdoms_and_above_allowed_trigger = yes
+}
+
+gh_e_sarradon_can_create_trigger = {
+	gh_empires_allowed_trigger = yes
+
+	custom_description = {
+		text = must_hold_key_sarradonian_cities
+		any_sub_realm_county = { this = title:c_el_qulatha }
+		any_sub_realm_county = { this = title:c_sophocene }
+		any_sub_realm_county = { this = title:c_new_yrim }
+		any_sub_realm_county = { this = title:c_kudahhar }
+	}
+}
+
+gh_e_damota_can_create_trigger = {
+	gh_empires_allowed_trigger = yes
+	has_title = title:c_zahali
+}
+
+gh_e_chevalie_can_create_trigger = {
+	OR = {
+		has_character_modifier = claimant_to_the_high_kingdom
+		NOT = {
+			any_living_character = {
+				has_character_modifier = claimant_to_the_high_kingdom
+			}
+		}
+	}
+	gh_empires_allowed_trigger = yes
+}
+
+gh_e_thura_taw_can_create_trigger = {
+	trigger_if = {
+		limit = { current_date <= 1354.1.1 }
+		culture = {
+			OR = {
+				has_cultural_pillar = heritage_nattanan 
+				has_cultural_pillar = heritage_korlacan
+			}
+		}
+		custom_tooltip = {
+			text = thura_taw_requirements_tooltip
+			has_character_modifier = scourge_of_the_heretics_modifier
+		}
+	}
+	gh_kingdoms_and_above_allowed_trigger = yes
+}
+
+gh_k_eternal_flame_can_create_trigger = {
+	trigger_if = {
+		limit = { current_date >= 1254.1.1 }
+		culture = {
+			has_cultural_pillar = heritage_korlacan
+		}
+		custom_tooltip = {
+			text = has_taken_eternal_flame_decision_tooltip
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:restore_the_eternal_flame_decision
+			}
+		}
+	}
+	gh_kingdoms_and_above_allowed_trigger = yes
+}
+
+gh_is_cultist = {
+	has_religion = religion:redland_cults_religion
+}
+
+###################
+## HasTitle Triggers
+
+has_title_aversarinas_aautokrata_trigger = { has_title = title:e_aversarinas_aautokrata }
+has_title_band_of_bastards_trigger = { has_title = title:d_band_of_bastards }
+has_title_bloodied_throne_trigger = { has_title = title:k_the_bloodied_throne }
+has_title_ebony_league_trigger = { has_title = title:k_epavarion }
+has_title_high_kingdom_of_the_isles_trigger = { has_title = title:k_high_kingdom_of_the_isles }
+has_title_legio_lxi_anoterion_trigger = { has_title = title:k_legio_lxi_anoterion }
+has_title_legio_lxxvii_pirateslayers_trigger = { has_title = title:d_legio_lxxvii_pirateslayers }
+has_title_legio_xciv_shipbreakers_trigger = { has_title = title:d_legio_xciv_shipbreakers }
+has_title_legio_xcv_viesuados_heir_trigger = { has_title = title:d_legio_xcv_viesuados_heir }
+has_title_legio_xcv_viesuados_wrath_trigger = { has_title = title:d_legio_xcv_viesuados_wrath }
+has_title_migrant_coalition_trigger = { has_title = title:e_migrant_coalition }
+has_title_oraispol_aautokrata_trigger = { has_title = title:e_oraispol_aautokrata }
+
+#######################
+## HasAnyTitle Triggers
+
+# Governorates and Empires
+has_any_major_aversarian_title_trigger = {
+	OR = {
+		has_any_governorate_title_trigger = yes
+		has_any_imperial_aversarian_title_trigger = yes
+	}
+}
+
+# For the Aautokrata and pretenders
+has_any_imperial_aversarian_title_trigger = {
+	OR = {
+		has_title = title:e_aversarinas_aautokrata
+		has_title = title:e_oraispol_aautokrata
+		has_title = title:e_asiupoli_aautokrata
+	}
+}
+
+has_any_governorate_title_trigger = {
+	OR = {
+		has_any_ducal_governorate_title_trigger = yes
+		has_any_king_governorate_title_trigger = yes
+	}
+}
+
+has_any_ducal_governorate_title_trigger = {
+	OR = {
+		has_title = title:d_governorate_aironoi_duchy
+		has_title = title:d_governorate_etepezea_duchy
+		has_title = title:d_governorate_katraddia_duchy
+		has_title = title:d_governorate_malcois_duchy
+		has_title = title:d_governorate_cornucopia_duchy
+		has_title = title:d_governorate_the_reach_duchy
+		has_title = title:d_governorate_opakhasia_duchy
+	}
+}
+
+has_any_king_governorate_title_trigger = {
+	OR = {
+		has_title = title:k_governorate_aironoi_kingdom
+		has_title = title:k_governorate_etepezea_kingdom
+		has_title = title:k_governorate_katraddia_kingdom
+		has_title = title:k_governorate_malcois_kingdom
+		has_title = title:k_governorate_cornucopia_kingdom
+		has_title = title:k_governorate_the_reach_kingdom
+		has_title = title:k_governorate_opakhasia_kingdom
+		has_title = title:k_governorate_oreikalos
+	}
+}
+
+has_any_legion_title_trigger = { # GH TODO: Add a Legion flag for titles so they can be dynamic
+	OR = {
+		has_title = title:d_legio_iv_elenos
+		has_title = title:d_legio_lix_parfovos
+		has_title = title:d_legio_lxxvii_pirateslayers
+		has_title = title:d_legio_lxxx_shield_of_the_north
+		has_title = title:d_legio_vii_parataros
+		has_title = title:d_legio_xciv_shipbreakers
+		has_title = title:d_legio_xcv_viesuados_heir
+		has_title = title:d_legio_xcv_viesuados_jackals
+		has_title = title:d_legio_xcv_viesuados_wrath
+		has_title = title:d_legio_xiv_chainforgers
+		has_title = title:d_legio_xxvi_exodian
+		has_title = title:d_legio_xxxiv_heartfire
+		has_title = title:k_legio_lxi_anoterion
+		has_title = title:k_legio_vii_anthiope
+		has_title = title:k_legio_xcv_viesuados
+		has_title = title:k_legio_xvii_stereon
+		has_title = title:k_legio_xxi_axiaothea
+		has_title = title:k_winter_legion
+		has_title = title:d_legio_liv_particulars
+		has_title = title:d_legio_xlv_silverbloods
+		has_title = title:d_legio_xxxix_protemaxos
+		has_title = title:d_legio_lxxii_potirion
+		has_title = title:d_legio_lxxi_brassarms
+		has_title = title:d_legio_lxxiii_goldclad
+		has_title = title:d_legio_lxv_axedancers
+		has_title = title:d_legio_li_riverfiends
+		has_title = title:k_legio_xxv_flamestriders
+		has_title = title:k_legio_xxxiii_blackeyes
+		has_title = title:d_legio_xcii_swords_of_tharenion
+		has_title = title:d_legio_xxxviii_vigilant
+		has_title = title:d_legio_lxxiv_riverwards
+		has_title = title:d_legio_xxi_heartrenders
+		has_title = title:d_legio_xliv_kartharaddis_fear
+		has_title = title:d_legio_lxiv_gravitas
+		has_title = title:d_legio_lxxxvii_shatter_swords
+		has_title = title:d_legio_xviii_philantros
+		has_title = title:d_legio_xii_sea_walkers
+		has_title = title:d_legio_v_golems_fury
+		has_title = title:d_legio_xliii_firstborn
+		has_title = title:d_legio_xx_conclaves_own
+		has_title = title:d_legio_xxviii_the_invincibles
+		has_title = title:d_legio_x_bravest
+		has_title = title:d_legio_xix_mavia
+		has_title = title:d_legio_viii_enortax
+		has_title = title:d_legio_xvii_pathos
+		has_title = title:d_legio_ii_proudest
+		has_title = title:d_legio_xliv_stalwart
+		has_title = title:d_legio_xxxv_diyotesmaxos
+		has_title = title:d_legio_xxiii_greenfingers
+		has_title = title:k_legio_xlii_pride_of_aversaria
+		has_title = title:d_legio_viii_tomanyros
+		has_title = title:d_legio_xxxviii_winters_wolves
+		has_title = title:d_legio_xlix_starward
+		has_title = title:k_legio_xiii_aautosaxias
+		has_title = title:d_legio_xxi_veracity
+		has_title = title:d_legio_vi_manherders
+		has_title = title:d_legio_xxii_resplendent
+		has_title = title:k_legio_lii_redrock_guard
+		has_title = title:d_legio_clxxxvi_intrepid
+		has_title = title:d_legio_lxviii_trailblazers
+		has_title = title:k_legio_xi_silverwind
+		has_title = title:d_legio_lxxxv_iron_wolves
+		has_title = title:d_shattered_legions
+	}
+}
+
+has_any_scary_adabyssian_title_trigger = { # GH TODO: Add a Legion flag for titles so they can be dynamic
+	OR = {
+		has_title = title:e_adabyssian_warlord
+		has_title = title:e_adabyssian_damned
+		has_title = title:e_limpegail
+	}
+}
+
+##########################
+## Title Behavior Triggers
+
+title_behavior_independence_faction_blocker_trigger = { # GH TODO: Currently blocks factions forming in faction_demands.txt - make sure this is everything we want and whether or not we want these empires here
+	OR = {
+		has_title_aversarinas_aautokrata_trigger = yes # GH QUESTION: Do we want this?
+		has_title_migrant_coalition_trigger = yes
+		has_any_scary_adabyssian_title_trigger = yes
+		has_title = title:e_foglands
+		ai_has_conqueror_personality = yes
+	}
+}
+title_behavior_vassals_always_allow_imprisonment_trigger = { # Replacing a Mongol modifier in 00_prison_interaction that prevents tyranny wars - GH QUESTION: Can this get wrapped up into something more general?
+	OR = {
+		has_title_migrant_coalition_trigger = yes
+		has_any_scary_adabyssian_title_trigger = yes
+		has_title = title:e_foglands
+	}
+}
+
+##########################
+## CanKeep Triggers
+
+title_can_always_keep_partition_succession_law_trigger = { # The 'can_keep' triggers are dependent on actually having the law. If they aren't, the trigger breakdown for the player breaks and shows incomplete information. - GH TODO: Add relevant GH empires
+	#OR = {
+	#	# Mongol Empires
+	#	has_title = title:e_mongol_empire
+	#	has_title = title:e_ilkhanate
+	#	has_title = title:e_golden_horde
+	#	has_title = title:e_chagatai
+	#	has_title = title:e_black_horde
+	#	has_title = title:e_white_horde
+	#	has_title = title:e_aarlud_khanate
+	#	has_title = title:e_togskol_khanate
+	#	has_title = title:e_baruun_khanate
+	#}
+	always = no
+}
+
+title_can_always_keep_high_partition_succession_law_trigger = { # The 'can_keep' triggers are dependent on actually having the law. If they aren't, the trigger breakdown for the player breaks and shows incomplete information. - GH TODO: Add relevant GH empires
+	#OR = {
+	#	# Mongol Empires
+	#	has_title = title:e_mongol_empire
+	#	has_title = title:e_ilkhanate
+	#	has_title = title:e_golden_horde
+	#	has_title = title:e_chagatai
+	#	has_title = title:e_black_horde
+	#	has_title = title:e_white_horde
+	#	has_title = title:e_aarlud_khanate
+	#	has_title = title:e_togskol_khanate
+	#	has_title = title:e_baruun_khanate
+	#}
+	always = no
+}
+
+GH_historical_succession_access_single_heir_succession_law_trigger = { always = no }
+GH_historical_succession_access_single_heir_succession_law_youngest_trigger = { always = no }
+GH_historical_succession_access_single_heir_dynasty_house_trigger = { culture = { has_cultural_pillar = heritage_kardwen } }
+
+
+tribal_title = { #should be destroyed if owner gains landed title of same rank
+	OR = { # GH TODO: Make this into some sort of flag
+		this = title:k_fenvir
+		this = title:k_adrakamp
+		this = title:k_tribocicai
+		this = title:k_vrodkin
+		this = title:k_greulokin
+		this = title:k_caemansi
+		this = title:k_barki
+		this = title:k_daukeni
+		this = title:k_warisnik
+		this = title:k_mastikigni
+		this = title:k_irmionoth
+		this = title:k_curgerski
+		this = title:k_calagonii
+		this = title:k_archexate_ti_karanthos
+		this = title:k_kardwen_confederacy
+		this = title:d_sayuha_ko_wedo
+		this = title:d_sayuha_ko_khoya
+		this = title:d_vhadrodizen
+		this = title:k_marrudolem
+	}
+}
+
+primary_title_blocks_random_families = {
+	OR = {
+		is_mercenary_company = yes
+		is_magocracy_trigger = yes
+		is_landed_order_trigger = yes
+		is_peasant_republic_trigger = yes
+		is_military_unit_trigger = yes
+		is_holy_order = yes
+	}
+}
+
+geo_region_has_black_bears_trigger = { # For GH_SWAP_hunt_animal_antelope_trigger in 0000_GH_vanilla_trigger_swaps
+	OR = {
+		geographical_region = kalathipsomi_biozone
+		geographical_region = mayikprolollan_biozone
+		geographical_region = chevalie_biozone
+		geographical_region = black_mountains_biozone
+		geographical_region = vyshtanka_biozone
+		geographical_region = kharadamat_biozone
+		geographical_region = amaghea_mountains_biozone
+		geographical_region = aironoian_southeast_biozone
+		geographical_region = hyrea_biozone
+		geographical_region = western_aironoi_biozone
+		geographical_region = opakhasia_biozone
+		geographical_region = malcois_biozone
+	}
+}
+
+geo_region_has_lions_trigger = { # For GH_SWAP_hunt_animal_antelope_trigger in 0000_GH_vanilla_trigger_swaps
+	OR = {
+		geographical_region = damota_biozone
+		geographical_region = sinhamiyah_biozone
+		geographical_region = amsar_biozone
+		geographical_region = malcois_biozone 
+	}
+}
+
+geo_region_has_tigers_trigger = { # For GH_SWAP_hunt_animal_antelope_trigger in 0000_GH_vanilla_trigger_swaps
+	OR = {
+		geographical_region = crater_biozone
+		geographical_region = aekershaan_biozone
+		geographical_region = world_ga_kashirya
+	}
+}
+
+gh_heartwood_percent_controlled_trigger = {
+	any_county_in_region = {
+		region = migration_heartwood_controlled_region
+		percent <= sjalvolki_conquest_controlled_regions_percent_value
+		holder.top_liege = root
+	}
+}
+
+gh_faegift_percent_controlled_trigger = {
+	any_county_in_region = {
+		region = migration_faegift_controlled_region
+		percent <= sjalvolki_conquest_controlled_regions_percent_value
+		holder.top_liege = root
+	}
+}
+
+gh_everrain_percent_controlled_trigger = {
+	any_county_in_region = {
+		region = migration_everrain_controlled_region
+		percent <= sjalvolki_conquest_controlled_regions_percent_value
+		holder.top_liege = root
+	}
+}
+
+gh_aldergreen_percent_controlled_trigger = {
+	any_county_in_region = {
+		region = migration_aldergreen_controlled_region
+		percent <= sjalvolki_conquest_controlled_regions_percent_value
+		holder.top_liege = root
+	}
+}

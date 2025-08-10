@@ -1,0 +1,751 @@
+﻿########################
+##DECISIONS LIST##
+#redistrict_metro_cap
+#found_metro_in_kingdom_cap
+#gh_debase_currency_decision
+#gh_strengthen_currency_decision
+#search_for_notable_decision
+########################
+
+########################
+# metropolis founding decisions
+# by Syzygy
+
+#redistrict_metro_cap = {
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+#	}
+#	decision_group_type = major
+#	ai_check_interval = 0
+#	desc = redistrict_metro_cap_desc
+#	selection_tooltip = redistrict_metro_cap_tooltip
+#	is_shown = {
+#		capital_county = {
+#			any_county_province = {
+#				is_any_metropolis_district = yes
+#			}
+#		}
+#	}
+#	is_valid = {
+#		capital_province = {
+#			is_any_metropolis_district = yes
+#		}
+#	}
+#	effect = {
+#		trigger_event = gh_misc_decision_events.001
+#	}
+#	cost = {
+#		gold = monumental_gold_value
+#	}
+#}
+found_metro_in_kingdom_cap = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	
+	ai_check_interval = 72
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = found_metro_in_kingdom_cap_desc 
+	selection_tooltip = redistrict_metro_cap_tooltip
+	is_shown = {
+		capital_province = {
+			is_any_metropolis_district = no
+		}
+		#any_held_title = {
+		#	count >= 1
+		#	tier >= tier_kingdom
+		#}
+	}
+	is_valid = {
+		any_held_title = {
+			count >= 1 
+			tier >= tier_kingdom 
+		}
+		prestige_level >= 4
+		OR = {
+			diplomacy >= 20
+			martial >= 20
+			stewardship >= 20
+			intrigue >= 20
+			learning >= 20
+			custom_description = {
+				text = has_arcana_above_twenty
+				root.character_arcana_baseline_value >= 20
+			}
+		}
+		capital_county = {
+			development_level >= 25
+			NOT = { any_county_province = { has_holding_type = metro_holding } } #cheaters!
+		}
+		is_fogeater = no
+	}
+	effect = {
+		trigger_event = gh_misc_decision_events.002
+		hidden_effect = {
+			GH_humblebeginnings_check = yes
+		}
+	}
+	cost = {
+		gold = {
+			value = 1500
+		}
+	}
+}
+####debasing_currency_decisions
+gh_debase_currency_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_debase_currency_decision_desc
+
+	selection_tooltip = gh_debase_currency_decision_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_landed = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_01
+					has_building = treasury_02
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_01
+					has_building = treasury_02
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_strengthen_currency_modifier
+		}
+	}
+	
+	cost = {
+		prestige = 500
+	}
+
+	effect = {
+		add_gold = 300
+		add_character_modifier = {
+			modifier = gh_debased_currency_modifier
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_greed >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_honor <= high_negative_ai_value
+		}
+	}
+}
+
+gh_debase_currency_decision_2 = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_debase_currency_decision_2_desc
+
+	selection_tooltip = gh_debase_currency_2_decision_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_03
+					has_building = treasury_04
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_03
+					has_building = treasury_04
+				}
+			}
+		}   
+		NOT = {
+			has_character_modifier = gh_strengthen_currency_modifier
+		}
+	}
+	
+	cost = {
+		prestige = 750
+	}
+
+	effect = {
+		add_gold = 450
+		add_character_modifier = {
+			modifier = gh_debased_currency_modifier
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_greed >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_honor <= high_negative_ai_value
+		}
+	}
+}
+
+gh_debase_currency_decision_3 = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_debase_currency_decision_3_desc
+
+	selection_tooltip = gh_debase_currency_decision_3_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_05
+					has_building = treasury_06
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_05
+					has_building = treasury_06
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_strengthen_currency_modifier
+		}
+	}
+	
+	cost = {
+		prestige = 1000
+	}
+
+	effect = {
+		add_gold = 600
+		add_character_modifier = {
+			modifier = gh_debased_currency_modifier
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_greed >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_honor <= high_negative_ai_value
+		}
+	}
+}
+
+gh_debase_currency_decision_4 = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_debase_currency_decision_4_desc
+
+	selection_tooltip = gh_debase_currency_decision_4_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_07
+					has_building = treasury_08
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_07
+					has_building = treasury_08
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_strengthen_currency_modifier_2
+		}
+	}
+	
+	cost = {
+		prestige = 1500
+	}
+
+	effect = {
+		add_gold = 800
+		add_character_modifier = {
+			modifier = gh_debased_currency_modifier_2
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_greed >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_honor <= high_negative_ai_value
+		}
+	}
+}
+
+######
+
+gh_strengthen_currency_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_strengthen_currency_decision_desc
+
+	selection_tooltip = gh_strengthen_currency_decision_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_landed = yes
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_01
+					has_building = treasury_02
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_01
+					has_building = treasury_02
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_debased_currency_modifier
+		}
+	}
+	
+	cost = {
+		gold = 200
+	}
+
+	effect = {
+		add_prestige = 300
+		add_character_modifier = {
+			modifier = gh_strengthen_currency_modifier
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_honor >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_greed <= high_negative_ai_value
+		}
+	}
+}
+
+gh_strengthen_currency_decision_2 = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_strengthen_currency_decision_2_desc
+
+	selection_tooltip = gh_strengthen_currency_decision_2_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_03
+					has_building = treasury_04
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_03
+					has_building = treasury_04
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_debased_currency_modifier
+		}
+	}
+	
+	cost = {
+		gold = 400
+	}
+
+	effect = {
+		add_prestige = 600
+		add_character_modifier = {
+			modifier = gh_strengthen_currency_modifier
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_honor >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_greed <= high_negative_ai_value
+		}
+	}
+}
+
+gh_strengthen_currency_decision_3 = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_strengthen_currency_decision_3_desc
+
+	selection_tooltip = gh_strengthen_currency_decision_3_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_05
+					has_building = treasury_06
+				}
+			}
+		}
+	}
+	
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_05
+					has_building = treasury_06
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_debased_currency_modifier
+		}
+	}
+	
+	cost = {
+		gold = 600
+	}
+
+	effect = {
+		add_prestige = 900
+		add_character_modifier = {
+			modifier = gh_strengthen_currency_modifier
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_honor >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_greed <= high_negative_ai_value
+		}
+	}
+}
+
+gh_strengthen_currency_decision_4 = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+
+	desc = gh_strengthen_currency_decision_4_desc
+
+	selection_tooltip = gh_strengthen_currency_decision_4_tooltip
+
+	decision_group_type = major
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_07
+					has_building = treasury_08
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_ruler = yes
+		is_playable_character = yes
+		capital_county = {
+			any_county_province = {
+				OR = {
+					has_building = treasury_07
+					has_building = treasury_08
+				}
+			}
+		}	
+		NOT = {
+			has_character_modifier = gh_debased_currency_modifier_2
+		}
+	}
+	
+	cost = {
+		gold = 900
+	}
+
+	effect = {
+		add_prestige = 1200
+		add_character_modifier = {
+			modifier = gh_strengthen_currency_modifier_2
+			years = 10
+		}
+	}
+	
+	cooldown = { years = 10 }
+	
+	ai_check_interval = 72
+	
+	ai_potential = {
+		ai_greed >= medium_positive_ai_value
+		ai_honor <= medium_negative_ai_value
+		gold < medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			add = 45
+			ai_honor >= high_positive_ai_value
+		}
+		modifier = {
+			add = 45
+			ai_greed <= high_negative_ai_value
+		}
+	}
+}
+
+#Search for a courtier decision
+search_for_notable_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+
+	sort_order = 81
+	decision_group_type = courtier
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_ruler = yes
+	}
+
+	cooldown = { years = 5 }
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		any_councillor = { has_council_position = councillor_chancellor }
+	}
+
+	desc = search_for_notable_decision_desc
+	selection_tooltip = search_for_notable_decision_tooltip
+
+	effect = {
+		trigger_event = {
+			id = notable.0001
+		}
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

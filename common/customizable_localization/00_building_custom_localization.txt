@@ -1,0 +1,3323 @@
+﻿BaronyTownType = {
+	type = landed_title
+
+	text = {
+		trigger = {
+			title_province = {
+				county = {
+					development_level > medium_development_level
+				}
+			}
+		}
+		localization_key = barony_town_type_city
+	}
+
+	text = {
+		trigger = {
+			title_province = {
+				fort_level > 0
+			}
+		}
+		localization_key = barony_town_type_castle_town
+	}
+
+	text = {
+		trigger = {
+			title_province = {
+				county = {
+					development_level <= medium_development_level
+					development_level >= bad_development_level
+				}
+			}
+		}
+		localization_key = barony_town_type_town
+	}
+
+	text = {
+		trigger = {
+			title_province = {
+				county = {
+					development_level < bad_development_level
+				}
+			}
+		}
+		localization_key = barony_town_type_village
+	}
+}
+
+# GH TODO: GHIFY GHIFY GHIFY
+GetFaithGrandTemple = { # Get name of Grand Temple in religion
+	type = character
+
+	text = {
+		trigger = { graphical_christian_religion_trigger = yes }
+		localization_key = building_holy_site_cathedral_01
+	}
+
+	text = {
+		trigger = { always = yes }
+		localization_key = building_type_holy_site_other_grand_temple_01
+	}
+}
+
+# GH TODO: GHify
+GetFaithTemple = { # Get name of regular temple in religion
+	type = character
+
+	text = {
+		trigger = { always = yes }
+		localization_key = building_temple_temple
+	}
+}
+
+# To be used in a province scope
+# Notice it uses a random valid for some variety
+GetGuildType = {
+	type = province
+	
+	random_valid = yes
+
+	text = { # Plain guild
+		trigger = {
+			has_building = guild_halls_01
+		}
+		localization_key = building_guild_halls
+	}
+	
+	text = { # Carver's guild
+		trigger = {
+			has_building = guild_halls_02
+		}
+		localization_key = building_carvers_guild
+	}
+	
+	text = { # Carpenter's guild
+		trigger = {
+			has_building = guild_halls_03
+		}
+		localization_key = building_carpenters_guild
+	}
+	
+	text = { # Hunter's guild
+		trigger = {
+			has_building = guild_halls_04
+		}
+		localization_key = building_hunters_guild
+	}
+	
+	text = { # Mason's guild
+		trigger = {
+			has_building = guild_halls_05
+		}
+		localization_key = building_masons_guild
+	}
+	
+	text = { # Tailor's guild
+		trigger = {
+			has_building = guild_halls_06
+		}
+		localization_key = building_tailors_guild
+	}
+	
+	text = { # Glassworker's guild
+		trigger = {
+			has_building = guild_halls_07
+		}
+		localization_key = building_glassworkers_guild
+	}
+	
+	text = { # Artisan's guild
+		trigger = {
+			has_building = guild_halls_08
+		}
+		localization_key = building_artisans_guild
+	}
+	
+	text = { # Fallback fishmongers
+		trigger = {
+			OR = {
+				is_coastal = yes
+				is_riverside_province = yes
+			}
+		}
+		localization_key = building_fishmonger_guild
+	}
+	
+	text = { # Fallback not-really-guilds / smiths
+		trigger = {
+			always = yes
+		}
+		localization_key = building_fallback_guild
+	}
+}
+
+# Get name of a special building in a province
+# To be used in a province scope
+GetSpecialBuildingNameFromProvince = { 
+	type = province
+
+	text = { #Ruined Ashmarite Hospital
+		trigger = {
+			has_special_building = yes
+			has_building = 00_ashmarite_hospital
+		}
+		localization_key = building_00_ashmarite_hospital
+	}
+
+	text = { #Ruined Candamārun Academy
+		trigger = {
+			has_special_building = yes
+			has_building = 00_candamarun_academy
+		}
+		localization_key = building_00_candamarun_academy
+	}
+
+	text = { #Ruined Statue to Carthara
+		trigger = {
+			has_special_building = yes
+			has_building = 00_carthara_statue
+		}
+		localization_key = building_00_carthara_statue
+	}
+
+	text = { #Ruined Grod Cruprag
+		trigger = {
+			has_special_building = yes
+			has_building = 00_grod_cruprag
+		}
+		localization_key = building_00_grod_cruprag
+	}
+
+	text = { #Ruined Mond Graz Castle
+		trigger = {
+			has_special_building = yes
+			has_building = 00_mond_graz_castle
+		}
+		localization_key = building_00_mond_graz_castle
+	}
+
+	text = { #Ruined Protoshliti
+		trigger = {
+			has_special_building = yes
+			has_building = 00_champion_grounds
+		}
+		localization_key = building_00_champion_grounds
+	}
+
+	text = { #Ruined Chrys Lymani
+		trigger = {
+			has_special_building = yes
+			has_building = 00_chrys_lymani
+		}
+		localization_key = building_00_chrys_lymani
+	}
+
+	text = { #Ruined Degasho Bedēlam
+		trigger = {
+			has_special_building = yes
+			has_building = 00_degasho_bedelam
+		}
+		localization_key = building_00_degasho_bedelam
+	}
+
+	text = { #Dessicated Stilto Katharoteras
+		trigger = {
+			has_special_building = yes
+			has_building = 00_desert_stilto_katharoteras
+		}
+		localization_key = building_00_desert_stilto_katharoteras
+	}
+
+	text = { #Ruined Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 00_dihasma_xiidan
+		}
+		localization_key = building_00_dihasma_xiidan
+	}
+
+	text = { #Forgotten Elysian Pass
+		trigger = {
+			has_special_building = yes
+			has_building = 00_elysian_pass
+		}
+		localization_key = building_00_elysian_pass
+	}
+
+	text = { #Ruined Eternal Grove
+		trigger = {
+			has_special_building = yes
+			has_building = 00_eternal_grove
+		}
+		localization_key = building_00_eternal_grove
+	}
+
+	text = { #Fogswept Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_dihasma_xiidan
+		}
+		localization_key = building_00_fog_dihasma_xiidan
+	}
+
+	text = { #Fogswept Elysian Pass
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_elysian_pass
+		}
+		localization_key = building_00_fog_elysian_pass
+	}
+
+	text = { #Fogswept Eternal Grove
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_eternal_grove
+		}
+		localization_key = building_00_fog_eternal_grove
+	}
+
+	text = { #Fogswept Irōchi Damotada
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_irochi_damotada
+		}
+		localization_key = building_00_fog_irochi_damotada
+	}
+
+	text = { #Fogswept Nāgóm Kakezihī
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_nagom_kakezihi
+		}
+		localization_key = building_00_fog_nagom_kakezihi
+	}
+
+	text = { #Fogswept Riduvian Barrows
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_riduvianbarrows
+		}
+		localization_key = building_00_fog_riduvianbarrows
+	}
+
+	text = { #Fogswept Stilto Katharoteras
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_stilto_katharoteras
+		}
+		localization_key = building_00_fog_stilto_katharoteras
+	}
+
+	text = { #Fogswept Tabik Bētemisīt
+		trigger = {
+			has_special_building = yes
+			has_building = 00_fog_tabik_betemisit
+		}
+		localization_key = building_00_fog_tabik_betemisit
+	}
+
+	text = { #Ruined Ḥāseti Mekab
+		trigger = {
+			has_special_building = yes
+			has_building = 00_haseti_mekab
+		}
+		localization_key = building_00_haseti_mekab
+	}
+
+	text = { #Ruined Irōchi Damotada
+		trigger = {
+			has_special_building = yes
+			has_building = 00_irochi_damotada
+		}
+		localization_key = building_00_irochi_damotada
+	}
+
+	text = { #Sorrowed Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_dihasma_xiidan
+		}
+		localization_key = building_00_lich_dihasma_xiidan
+	}
+
+	text = { #Sorrowed Elysian Pass
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_elysian_pass
+		}
+		localization_key = building_00_lich_elysian_pass
+	}
+
+	text = { #Sorrowed Eternal Grove
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_eternal_grove
+		}
+		localization_key = building_00_lich_eternal_grove
+	}
+
+	text = { #Sorrowed Irōchi Damotada
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_irochi_damotada
+		}
+		localization_key = building_00_lich_irochi_damotada
+	}
+
+	text = { #Sorrowed Nāgóm Kakezihī
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_nagom_kakezihi
+		}
+		localization_key = building_00_lich_nagom_kakezihi
+	}
+
+	text = { #Sorrowed Stilto Katharoteras
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_stilto_katharoteras
+		}
+		localization_key = building_00_lich_stilto_katharoteras
+	}
+
+	text = { #Sorrowed Tabik Bētemisīt
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lich_tabik_betemisit
+		}
+		localization_key = building_00_lich_tabik_betemisit
+	}
+
+	text = { #Ruined Keahsltna Jeasha
+		trigger = {
+			has_special_building = yes
+			has_building = 00_lionspalace
+		}
+		localization_key = building_00_lionspalace
+	}
+
+	text = { #Ruined Pyrgon to Theyssia
+		trigger = {
+			has_special_building = yes
+			has_building = 00_mountain_tower
+		}
+		localization_key = building_00_mountain_tower
+	}
+
+	text = { #Ruined Nāgóm Kakezihī
+		trigger = {
+			has_special_building = yes
+			has_building = 00_nagom_kakezihi
+		}
+		localization_key = building_00_nagom_kakezihi
+	}
+
+	text = { #Abandoned Riduvian Barrows
+		trigger = {
+			has_special_building = yes
+			has_building = 00_riduvianbarrows
+		}
+		localization_key = building_00_riduvianbarrows
+	}
+
+	text = { #Ruined Sonas Sikelenīzi
+		trigger = {
+			has_special_building = yes
+			has_building = 00_sonas_sikelenizi
+		}
+		localization_key = building_00_sonas_sikelenizi
+	}
+
+	text = { #Ruined Pyrgon to Anatokion Asteron
+		trigger = {
+			has_special_building = yes
+			has_building = 00_star_tower
+		}
+		localization_key = building_00_star_tower
+	}
+
+	text = { #Ruined Stilto Katharoteras
+		trigger = {
+			has_special_building = yes
+			has_building = 00_stilto_katharoteras
+		}
+		localization_key = building_00_stilto_katharoteras
+	}
+
+	text = { #Ruined Sunarsarwena Shrine
+		trigger = {
+			has_special_building = yes
+			has_building = 00_sunarsarwena_gardens
+		}
+		localization_key = building_00_sunarsarwena_gardens
+	}
+
+	text = { #Ruined Táfon to Agíonis
+		trigger = {
+			has_special_building = yes
+			has_building = 00_tombofthesaints
+		}
+		localization_key = building_00_tombofthesaints
+	}
+
+	text = { #Ruined Umloj Covenant
+		trigger = {
+			has_special_building = yes
+			has_building = 00_umlojtemplecomplex
+		}
+		localization_key = building_00_umlojtemplecomplex
+	}
+
+	text = { #The Ruined Walls of Qarmuz
+		trigger = {
+			has_special_building = yes
+			has_building = 00_walls_of_qarmuz
+		}
+		localization_key = building_00_walls_of_qarmuz
+	}
+
+	text = { #Seat of Abathon
+		trigger = {
+			has_special_building = yes
+			has_building = 01_abathon_throne
+		}
+		localization_key = building_01_abathon_throne
+	}
+
+	text = { #[Concept('mayikprolollans','Mayikprolollan')|E] sto Spathas
+		trigger = {
+			has_special_building = yes
+			has_building = 01_academyofswords
+		}
+		localization_key = building_01_academyofswords
+	}
+
+	text = { #[Concept('mayikprolollans','Mayikprolollan')|E] Aironoiakaan
+		trigger = {
+			has_special_building = yes
+			has_building = 01_aironoiakaan
+		}
+		localization_key = building_01_aironoiakaan
+	}
+
+	text = { #Amaghean Tower
+		trigger = {
+			has_special_building = yes
+			has_building = 01_amagheantower
+		}
+		localization_key = building_01_amagheantower
+	}
+
+	text = { #The Ashmarite Hospital
+		trigger = {
+			has_special_building = yes
+			has_building = 01_ashmarite_hospital
+		}
+		localization_key = building_01_ashmarite_hospital
+	}
+
+	text = { #Ashuku Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_ashuku_mines
+		}
+		localization_key = building_01_ashuku_mines
+	}
+
+	text = { #Qaleada Haradar
+		trigger = {
+			has_special_building = yes
+			has_building = 01_assassinskeep
+		}
+		localization_key = building_01_assassinskeep
+	}
+
+	text = { #The Cattle Run
+		trigger = {
+			has_special_building = yes
+			has_building = 01_bastards_run
+		}
+		localization_key = building_01_bastards_run
+	}
+
+	text = { #Bastonport
+		trigger = {
+			has_special_building = yes
+			has_building = 01_bastonport
+		}
+		localization_key = building_01_bastonport
+	}
+
+	text = { #Beban Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_beban_mines
+		}
+		localization_key = building_01_beban_mines
+	}
+
+	text = { #Bēnorīya Ātawek
+		trigger = {
+			has_special_building = yes
+			has_building = 01_benoriya_atawek
+		}
+		localization_key = building_01_benoriya_atawek
+	}
+
+	text = { #Kyynel Glaciers
+		trigger = {
+			has_special_building = yes
+			has_building = 01_bigglacier
+		}
+		localization_key = building_01_bigglacier
+	}
+
+	text = { #Biyakaddu
+		trigger = {
+			has_special_building = yes
+			has_building = 01_biyakaddu
+		}
+		localization_key = building_01_biyakaddu
+	}
+
+	text = { #Black Bones of [arthenax|E]
+		trigger = {
+			has_special_building = yes
+			has_building = 01_blackbonesofarthenax
+		}
+		localization_key = building_01_blackbonesofarthenax
+	}
+
+	#text = { #Chleros Glade
+	#	trigger = {
+	#		has_special_building = yes
+	#		has_building = 01_blackforest
+	#	}
+	#	localization_key = building_01_blackforest
+	#}
+	text = { #Tarfal's Garden
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tarfal_garden
+		}
+		localization_key = building_01_tarfal_garden
+	}
+
+	text = { #Burning Palace
+		trigger = {
+			has_special_building = yes
+			has_building = 01_burning_palace
+		}
+		localization_key = building_01_burning_palace
+	}
+
+	text = { #Fire Temple of Korlacu
+			trigger = {
+				has_special_building = yes
+				has_building = 01_temple_of_korlacu
+			}
+			localization_key = building_01_temple_of_korlacu
+		}
+
+
+	text = { #Overgrown Temple
+		trigger = {
+			has_special_building = yes
+			has_building = 01_overgrown_temple
+		}
+		localization_key = building_01_overgrown_temple
+	}
+
+	text = { #Temple of Wisdom
+		trigger = {
+			has_special_building = yes
+			has_building = 01_temple_of_wisdom
+		}
+		localization_key = building_01_temple_of_wisdom
+	}
+
+	text = { #Hanging Gardens
+		trigger = {
+			has_special_building = yes
+			has_building = 01_hanging_gardens
+		}
+		localization_key = building_01_hanging_gardens
+	}
+
+	text = { #Ruins of Thuriya Pyinnya 
+		trigger = {
+			has_special_building = yes
+			has_building = 01_ruins_of_thuriya_pyinnya 
+		}
+		localization_key = building_01_ruins_of_thuriya_pyinnya 
+	}
+
+	text = { #Thuriya Pyinnya 
+		trigger = {
+			has_special_building = yes
+			has_building = 01_thuriya_pyinnya
+		}
+		localization_key = building_01_thuriya_pyinnya
+	}
+
+
+	text = { #Forsaken Fortress
+			trigger = {
+				has_special_building = yes
+				has_building = 01_forsaken_fortress
+			}
+			localization_key = building_01_forsaken_fortress
+		}
+
+	text = { #Restored Fortress
+			trigger = {
+				has_special_building = yes
+				has_building = 01_restored_fortress
+			}
+			localization_key = building_01_restored_fortress
+		}
+
+	text = { #Renewed Fortress
+			trigger = {
+				has_special_building = yes
+				has_building = 01_renewed_fortress
+			}
+			localization_key = building_01_renewed_fortress
+		}
+
+	text = { #The Grey Gates
+		trigger = {
+			has_special_building = yes
+			has_building = 01_blackgates
+		}
+		localization_key = building_01_blackgates
+	}
+
+	text = { #The Blood Market
+		trigger = {
+			has_special_building = yes
+			has_building = 01_blood_market
+		}
+		localization_key = building_01_blood_market
+	}
+
+	text = { #To Ierotostóni
+		trigger = {
+			has_special_building = yes
+			has_building = 01_boneshrine
+		}
+		localization_key = building_01_boneshrine
+	}
+
+	text = { #Bones of [the_worldeater|E]
+		trigger = {
+			has_special_building = yes
+			has_building = 01_bonesoftheworldeater
+		}
+		localization_key = building_01_bonesoftheworldeater
+	}
+
+	text = { #Buraiwf Pass
+		trigger = {
+			has_special_building = yes
+			has_building = 01_buraiwf_pass
+		}
+		localization_key = building_01_buraiwf_pass
+	}
+
+	text = { #Grande Barrotgeis Councilhouse 
+		trigger = {
+			has_special_building = yes
+			has_building = 01_calmensons_crest
+		}
+		localization_key = building_01_calmensons_crest
+	}
+
+	text = { #Candamārun Academy
+		trigger = {
+			has_special_building = yes
+			has_building = 01_candamarun_academy
+		}
+		localization_key = building_01_candamarun_academy
+	}
+
+	text = { #Haryaadad Academy
+		trigger = {
+			has_special_building = yes
+			has_building = 01_haryaadad_academy
+		}
+		localization_key = building_01_haryaadad_academy
+	}
+
+	text = { #Statue to Carthara the Conqueress
+		trigger = {
+			has_special_building = yes
+			has_building = 01_carthara_statue
+		}
+		localization_key = building_01_carthara_statue
+	}
+
+	text = { #Grod Cruprag
+		trigger = {
+			has_special_building = yes
+			has_building = 01_grod_cruprag
+		}
+		localization_key = building_01_grod_cruprag
+	}
+
+	text = { #Mond Graz Castle
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mond_graz_castle
+		}
+		localization_key = building_01_mond_graz_castle
+	}
+
+	text = { #Protoshliti
+		trigger = {
+			has_special_building = yes
+			has_building = 01_champion_grounds
+		}
+		localization_key = building_01_champion_grounds
+	}
+
+	text = { #Chrys Lymani
+		trigger = {
+			has_special_building = yes
+			has_building = 01_chrys_lymani
+		}
+		localization_key = building_01_chrys_lymani
+	}
+
+	text = { #Citadel of Almi
+		trigger = {
+			has_special_building = yes
+			has_building = 01_citadel_of_almi
+		}
+		localization_key = building_01_citadel_of_almi
+	}
+
+	text = { #Conclave den Raocourt
+		trigger = {
+			has_special_building = yes
+			has_building = 01_conclave_of_raocourt
+		}
+		localization_key = building_01_conclave_of_raocourt
+	}
+
+	text = { #Creonta Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_creonta_mines
+		}
+		localization_key = building_01_creonta_mines
+	}
+
+	text = { #Creusons
+		trigger = {
+			has_special_building = yes
+			has_building = 01_creusons
+		}
+		localization_key = building_01_creusons
+	}
+
+	text = { #The Gate of Crows
+		trigger = {
+			has_special_building = yes
+			has_building = 01_crow_gate
+		}
+		localization_key = building_01_crow_gate
+	}
+
+	text = { #Dalath Analoth
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dalath_analoth
+		}
+		localization_key = building_01_dalath_analoth
+	}
+
+	text = { #Dederak
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dederak
+		}
+		localization_key = building_01_dederak
+	}
+
+	text = { #The Dead City
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dederak_ruin
+		}
+		localization_key = building_01_dederak_ruin
+	}
+
+	text = { #Degasho Bedēlam
+		trigger = {
+			has_special_building = yes
+			has_building = 01_degasho_bedelam
+		}
+		localization_key = building_01_degasho_bedelam
+	}
+
+	text = { #Dielecport
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dielecport
+		}
+		localization_key = building_01_dielecport
+	}
+
+	text = { #Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dihasma_xiidan
+		}
+		localization_key = building_01_dihasma_xiidan
+	}
+
+	text = { #Dovatelskistlo
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dovatelskistlo
+		}
+		localization_key = building_01_dovatelskistlo
+	}
+
+	text = { #Drakavil
+		trigger = {
+			has_special_building = yes
+			has_building = 01_drakavil
+		}
+		localization_key = building_01_drakavil
+	}
+
+	text = { #Alkaba Alalmadi
+		trigger = {
+			has_special_building = yes
+			has_building = 01_easterncabal
+		}
+		localization_key = building_01_easterncabal
+	}
+
+	text = { #The Eastern Tower
+		trigger = {
+			has_special_building = yes
+			has_building = 01_easterntower
+		}
+		localization_key = building_01_easterntower
+	}
+
+	text = { #Elysian Pass
+		trigger = {
+			has_special_building = yes
+			has_building = 01_elysian_pass
+		}
+		localization_key = building_01_elysian_pass
+	}
+
+	text = { #Edidaphos Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_epidaphos_mines
+		}
+		localization_key = building_01_epidaphos_mines
+	}
+
+	text = { #Eponthos Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_eponthos_mines
+		}
+		localization_key = building_01_eponthos_mines
+	}
+
+	text = { #The Eternal Grove
+		trigger = {
+			has_special_building = yes
+			has_building = 01_eternal_grove
+		}
+		localization_key = building_01_eternal_grove
+	}
+
+	text = { #First [aervalr|E] Landing
+		trigger = {
+			has_special_building = yes
+			has_building = 01_firstshard
+		}
+		localization_key = building_01_firstshard
+	}
+
+	text = { #Fort Ranos
+		trigger = {
+			has_special_building = yes
+			has_building = 01_fort_ranos
+		}
+		localization_key = building_01_fort_ranos
+	}
+
+	text = { #Fortenorns
+		trigger = {
+			has_special_building = yes
+			has_building = 01_fortenorn
+		}
+		localization_key = building_01_fortenorn
+	}
+
+	text = { #Four Cliffs of Chalcamahos
+		trigger = {
+			has_special_building = yes
+			has_building = 01_four_cliffs_five_walls
+		}
+		localization_key = building_01_four_cliffs_five_walls
+	}
+
+	text = { #Frozen Spire
+		trigger = {
+			has_special_building = yes
+			has_building = 01_frozentower
+		}
+		localization_key = building_01_frozentower
+	}
+
+	text = { #The Frozen Village
+		trigger = {
+			has_special_building = yes
+			has_building = 01_frozenvillage
+		}
+		localization_key = building_01_frozenvillage
+	}
+
+	text = { #Water Gardens of De Illiterat
+		trigger = {
+			has_special_building = yes
+			has_building = 01_gardens_of_de_illiterat
+		}
+		localization_key = building_01_gardens_of_de_illiterat
+	}
+
+	text = { #Gehaze Lake
+		trigger = {
+			has_special_building = yes
+			has_building = 01_gehazetower
+		}
+		localization_key = building_01_gehazetower
+	}
+
+	text = { #Qasmudha
+		trigger = {
+			has_special_building = yes
+			has_building = 01_qasmudha
+		}
+		localization_key = building_01_qasmudha
+	}
+
+	text = { #Black Docks
+		trigger = {
+			has_special_building = yes
+			has_building = 01_gisreddeport
+		}
+		localization_key = building_01_gisreddeport
+	}
+
+	#text = { #Caves of Light
+	#	trigger = {
+	#		has_special_building = yes
+	#		has_building = 01_glowcave
+	#	}
+	#	localization_key = building_01_glowcave
+	#}
+
+	text = { #Golgelea Silver Mine Remnants
+		trigger = {
+			has_special_building = yes
+			has_building = 01_golgelea_mines
+		}
+		localization_key = building_01_golgelea_mines
+	}
+
+	text = { #Grave of the Million
+		trigger = {
+			has_special_building = yes
+			has_building = 01_graveofthemillion
+		}
+		localization_key = building_01_graveofthemillion
+	}
+
+	text = { #Great Temple of El-Qulatha
+		trigger = {
+			has_special_building = yes
+			has_building = 01_greattempleofelqulatha
+		}
+		localization_key = building_01_greattempleofelqulatha
+	}
+
+	text = { #Gujak Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_gujak_mines
+		}
+		localization_key = building_01_gujak_mines
+	}
+
+	text = { #Gurardport
+		trigger = {
+			has_special_building = yes
+			has_building = 01_gurardport
+		}
+		localization_key = building_01_gurardport
+	}
+
+	text = { #Great Halls of Everard
+		trigger = {
+			has_special_building = yes
+			has_building = 01_halls_of_everard
+		}
+		localization_key = building_01_halls_of_everard
+	}
+
+	text = { #Harēkana Observatory
+		trigger = {
+			has_special_building = yes
+			has_building = 01_harekana_observatory
+		}
+		localization_key = building_01_harekana_observatory
+	}
+
+	text = { #Ḥāseti Mekab
+		trigger = {
+			has_special_building = yes
+			has_building = 01_haseti_mekab
+		}
+		localization_key = building_01_haseti_mekab
+	}
+
+	text = { #Grand Courthouse
+		trigger = {
+			has_special_building = yes
+			has_building = 01_holy_site_grand_courthouse
+		}
+		localization_key = building_01_holy_site_grand_courthouse
+	}
+
+	text = { #Hallowed Náon
+		trigger = {
+			has_special_building = yes
+			has_building = 01_holy_site_hallowed_naon
+		}
+		localization_key = building_01_holy_site_hallowed_naon
+	}
+
+	text = { #Grand Cathedral
+		trigger = {
+			has_special_building = yes
+			has_building = 01_holy_site_marcher_cathedral
+		}
+		localization_key = building_01_holy_site_marcher_cathedral
+	}
+
+	text = { #Saintly Cathedral
+		trigger = {
+			has_special_building = yes
+			has_building = 01_holy_site_saintly_cathedral
+		}
+		localization_key = building_01_holy_site_saintly_cathedral
+	}
+
+	text = { #House of Ohrasik
+		trigger = {
+			has_special_building = yes
+			has_building = 01_house_of_ohrasik
+		}
+		localization_key = building_01_house_of_ohrasik
+	}
+
+	text = { #The Huraihr
+		trigger = {
+			has_special_building = yes
+			has_building = 01_huraihr
+		}
+		localization_key = building_01_huraihr
+	}
+
+	text = { #On Parádeon
+		trigger = {
+			has_special_building = yes
+			has_building = 01_imperialresort
+		}
+		localization_key = building_01_imperialresort
+	}
+
+	text = { #Irōchi Damotada
+		trigger = {
+			has_special_building = yes
+			has_building = 01_irochi_damotada
+		}
+		localization_key = building_01_irochi_damotada
+	}
+
+	text = { #Isle of Iyondel
+		trigger = {
+			has_special_building = yes
+			has_building = 01_isle_of_iyondel
+		}
+		localization_key = building_01_isle_of_iyondel
+	}
+
+	text = { #The Gate of Jackals
+		trigger = {
+			has_special_building = yes
+			has_building = 01_jackal_gate
+		}
+		localization_key = building_01_jackal_gate
+	}
+
+	text = { #The Winking Rose
+		trigger = {
+			has_special_building = yes
+			has_building = 01_jans_market
+		}
+		localization_key = building_01_jans_market
+	}
+
+	text = { #Paerasjatan's Spire
+		trigger = {
+			has_special_building = yes
+			has_building = 01_kashiryatower
+		}
+		localization_key = building_01_kashiryatower
+	}
+
+	text = { #Cathedral of Kasmeze
+		trigger = {
+			has_special_building = yes
+			has_building = 01_kasmeze_cathedral
+		}
+		localization_key = building_01_kasmeze_cathedral
+	}
+
+	text = { #Klyābasala
+		trigger = {
+			has_special_building = yes
+			has_building = 01_klyabasala
+		}
+		localization_key = building_01_klyabasala
+	}
+
+	text = { #Kresox's Grave
+		trigger = {
+			has_special_building = yes
+			has_building = 01_kresoxgrave
+		}
+		localization_key = building_01_kresoxgrave
+	}
+
+	text = { #Lachish Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_lachish_mines
+		}
+		localization_key = building_01_lachish_mines
+	}
+
+	text = { #Lascife Silver Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 01_lascife_mines
+		}
+		localization_key = building_01_lascife_mines
+	}
+
+	text = { #The People's Armory
+		trigger = {
+			has_special_building = yes
+			has_building = 01_last_standers_street
+		}
+		localization_key = building_01_last_standers_street
+	}
+
+	text = { #Great Library of Zheggarah
+		trigger = {
+			has_special_building = yes
+			has_building = 01_libraryofzheggarah
+		}
+		localization_key = building_01_libraryofzheggarah
+	}
+
+	text = { #Light of Guillate
+		trigger = {
+			has_special_building = yes
+			has_building = 01_light_of_guillate
+		}
+		localization_key = building_01_light_of_guillate
+	}
+
+	text = { #The Light Wall
+		trigger = {
+			has_special_building = yes
+			has_building = 01_light_wall
+		}
+		localization_key = building_01_light_wall
+	}
+
+	text = { #Keahsltna Jeasha
+		trigger = {
+			has_special_building = yes
+			has_building = 01_lionspalace
+		}
+		localization_key = building_01_lionspalace
+	}
+
+	text = { #Listikraxos
+		trigger = {
+			has_special_building = yes
+			has_building = 01_listikraxos
+		}
+		localization_key = building_01_listikraxos
+	}
+
+	text = { #Mesbadh Orin'to
+		trigger = {
+			has_special_building = yes
+			has_building = 01_losttempleofmesbadh
+		}
+		localization_key = building_01_losttempleofmesbadh
+	}
+
+	text = { #Lygudista Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_lygudista_mines
+		}
+		localization_key = building_01_lygudista_mines
+	}
+
+	text = { #Magic Abyss
+		trigger = {
+			has_special_building = yes
+			has_building = 01_magic_hole
+		}
+		localization_key = building_01_magic_hole
+	}
+
+	text = { #Malah Enlevettah
+		trigger = {
+			has_special_building = yes
+			has_building = 01_malah_enlevettah
+		}
+		localization_key = building_01_malah_enlevettah
+	}
+
+	text = { #Palát to Mytidon
+		trigger = {
+			has_special_building = yes
+			has_building = 01_malcoispalace
+		}
+		localization_key = building_01_malcoispalace
+	}
+
+	text = { #Kénitrod Kavaseví
+		trigger = {
+			has_special_building = yes
+			has_building = 01_malcoisslavefactory
+		}
+		localization_key = building_01_malcoisslavefactory
+	}
+
+	text = { #Mayaliha Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mayaliha_mines
+		}
+		localization_key = building_01_mayaliha_mines
+	}
+
+	text = { #[mayikrata|E]
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mayikprolollan
+		}
+		localization_key = building_01_mayikprolollan
+	}
+
+	text = { #Pyrgon to Theyssia
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mountain_tower
+		}
+		localization_key = building_01_mountain_tower
+	}
+
+	text = { #Krátivoún
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mountainhold
+		}
+		localization_key = building_01_mountainhold
+	}
+
+	text = { #Limanovo
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mountainport
+		}
+		localization_key = building_01_mountainport
+	}
+
+	text = { #Mourner's Rest
+		trigger = {
+			has_special_building = yes
+			has_building = 01_mourners_rest
+		}
+		localization_key = building_01_mourners_rest
+	}
+
+	text = { #Nāgóm Kakezihī
+		trigger = {
+			has_special_building = yes
+			has_building = 01_nagom_kakezihi
+		}
+		localization_key = building_01_nagom_kakezihi
+	}
+
+	text = { #The Teutrovna Zirrus
+		trigger = {
+			has_special_building = yes
+			has_building = 01_new_iyrossi_palace
+		}
+		localization_key = building_01_new_iyrossi_palace
+	}
+
+	text = { #Voreia Nkéit
+		trigger = {
+			has_special_building = yes
+			has_building = 01_northgate
+		}
+		localization_key = building_01_northgate
+	}
+
+	text = { #Róxirvoreais
+		trigger = {
+			has_special_building = yes
+			has_building = 01_northwatch
+		}
+		localization_key = building_01_northwatch
+	}
+
+	text = { #Gonan Oasis
+		trigger = {
+			has_special_building = yes
+			has_building = 01_oasisofgonan
+		}
+		localization_key = building_01_oasisofgonan
+	}
+
+	text = { #Oetanai Gold Deposits
+		trigger = {
+			has_special_building = yes
+			has_building = 01_oetanai_mines
+		}
+		localization_key = building_01_oetanai_mines
+	}
+
+	text = { #The Öltenic Tower
+		trigger = {
+			has_special_building = yes
+			has_building = 01_oltenictower
+		}
+		localization_key = building_01_oltenictower
+	}
+
+	text = { #Hoen ver 'dt Grostvordre
+		trigger = {
+			has_special_building = yes
+			has_building = 01_orangepalace
+		}
+		localization_key = building_01_orangepalace
+	}
+
+	text = { #Ordus Gold Mine Ruins
+		trigger = {
+			has_special_building = yes
+			has_building = 01_ordus_mines
+		}
+		localization_key = building_01_ordus_mines
+	}
+
+	text = { #Paccai Malai Pit Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 01_paccai_mines
+		}
+		localization_key = building_01_paccai_mines
+	}
+
+	text = { #Palát to Creso Maertýrion
+		trigger = {
+			has_special_building = yes
+			has_building = 01_palaceofthegoldenmartyrs
+		}
+		localization_key = building_01_palaceofthegoldenmartyrs
+	}
+
+	text = { #Palace of the Wizard King
+		trigger = {
+			has_special_building = yes
+			has_building = 01_palaceofthewizardking
+		}
+		localization_key = building_01_palaceofthewizardking
+	}
+
+	text = { #Palát tou Pathos
+		trigger = {
+			has_special_building = yes
+			has_building = 01_pathospalace
+		}
+		localization_key = building_01_pathospalace
+	}
+
+	text = { #Phanapetra Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_phanapetra_mines
+		}
+		localization_key = building_01_phanapetra_mines
+	}
+
+	text = { #[Concept('mayikprolollans','Mayikprolollan')|E] sto Thallas
+		trigger = {
+			has_special_building = yes
+			has_building = 01_portacademy
+		}
+		localization_key = building_01_portacademy
+	}
+
+	text = { #Vyrjilliaars Crown Potion Works
+		trigger = {
+			has_special_building = yes
+			has_building = 01_potionworks
+		}
+		localization_key = building_01_potionworks
+	}
+
+	text = { #Waysaint Remi's Discount Prayers
+		trigger = {
+			has_special_building = yes
+			has_building = 01_preachers_hill
+		}
+		localization_key = building_01_preachers_hill
+	}
+
+	text = { #Rafhamah Pass
+		trigger = {
+			has_special_building = yes
+			has_building = 01_rafhamah_pass
+		}
+		localization_key = building_01_rafhamah_pass
+	}
+
+	text = { #Aeynor's Void
+		trigger = {
+			has_special_building = yes
+			has_building = 01_redportal
+		}
+		localization_key = building_01_redportal
+	}
+
+	text = { #Riduvian Barrows
+		trigger = {
+			has_special_building = yes
+			has_building = 01_riduvianbarrows
+		}
+		localization_key = building_01_riduvianbarrows
+	}
+
+	text = { #The Gate of Serpents
+		trigger = {
+			has_special_building = yes
+			has_building = 01_serpent_gate
+		}
+		localization_key = building_01_serpent_gate
+	}
+
+	text = { #Waysaint Ivre's Hospice
+		trigger = {
+			has_special_building = yes
+			has_building = 01_seychunds_square
+		}
+		localization_key = building_01_seychunds_square
+	}
+
+	text = { #[silver_palace|E] Ruins
+		trigger = {
+			has_special_building = yes
+			has_building = 01_silverpalace
+		}
+		localization_key = building_01_silverpalace
+	}
+
+	text = { #Six Cities of Den Tériatrixx
+		trigger = {
+			has_special_building = yes
+			has_building = 01_slums_of_den_teriatrixx
+		}
+		localization_key = building_01_slums_of_den_teriatrixx
+	}
+
+	text = { #Sonas Sikelenīzi
+		trigger = {
+			has_special_building = yes
+			has_building = 01_sonas_sikelenizi
+		}
+		localization_key = building_01_sonas_sikelenizi
+	}
+
+	text = { #Sophocos
+		trigger = {
+			has_special_building = yes
+			has_building = 01_sophocos
+		}
+		localization_key = building_01_sophocos
+	}
+
+	text = { #[aervalr|E] Shard
+		trigger = {
+			has_special_building = yes
+			has_building = 01_special_aervalr_shard
+		}
+		localization_key = building_01_special_aervalr_shard
+	}
+
+	text = { #[bloodcrystal|E] Deposits
+		trigger = {
+			has_special_building = yes
+			has_building = 01_special_bloodcrystal
+		}
+		localization_key = building_01_special_bloodcrystal
+	}
+
+	text = { #Pyrgon to Anatokion Asteron
+		trigger = {
+			has_special_building = yes
+			has_building = 01_star_tower
+		}
+		localization_key = building_01_star_tower
+	}
+
+	text = { #Ancient Statue
+		trigger = {
+			has_special_building = yes
+			has_building = 01_statuefacingwest
+		}
+		localization_key = building_01_statuefacingwest
+	}
+
+	text = { #Stilto Katharoteras
+		trigger = {
+			has_special_building = yes
+			has_building = 01_stilto_katharoteras
+		}
+		localization_key = building_01_stilto_katharoteras
+	}
+
+	text = { #Stone Battlefield
+		trigger = {
+			has_special_building = yes
+			has_building = 01_stone_battlefield
+		}
+		localization_key = building_01_stone_battlefield
+	}
+
+	text = { #Sunarsarwena Shrine
+		trigger = {
+			has_special_building = yes
+			has_building = 01_sunarsarwena_gardens
+		}
+		localization_key = building_01_sunarsarwena_gardens
+	}
+
+	text = { #The Sunken Tower
+		trigger = {
+			has_special_building = yes
+			has_building = 01_sunkentower
+		}
+		localization_key = building_01_sunkentower
+	}
+
+	text = { #Tabik Bētemisīt
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tabik_betemisit
+		}
+		localization_key = building_01_tabik_betemisit
+	}
+
+	text = { #The Ten Trees
+		trigger = {
+			has_special_building = yes
+			has_building = 01_ten_trees
+		}
+		localization_key = building_01_ten_trees
+	}
+
+	text = { #Tenenae
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tenenae
+		}
+		localization_key = building_01_tenenae
+	}
+
+	text = { #The Eye
+		trigger = {
+			has_special_building = yes
+			has_building = 01_the_eye
+		}
+		localization_key = building_01_the_eye
+	}
+
+	text = { #Wayrest Charterhouse
+		trigger = {
+			has_special_building = yes
+			has_building = 01_the_minteries
+		}
+		localization_key = building_01_the_minteries
+	}
+
+	text = { #Aίthousamatas
+		trigger = {
+			has_special_building = yes
+			has_building = 01_thebloodyard
+		}
+		localization_key = building_01_thebloodyard
+	}
+
+	text = { #Sacrificial Site
+		trigger = {
+			has_special_building = yes
+			has_building = 01_theeffigy
+		}
+		localization_key = building_01_theeffigy
+	}
+
+	text = { #To Pedíthípsi
+		trigger = {
+			has_special_building = yes
+			has_building = 01_thesorrowfield
+		}
+		localization_key = building_01_thesorrowfield
+	}
+
+	text = { #Rolos Pýrgo
+		trigger = {
+			has_special_building = yes
+			has_building = 01_thetowerwatch
+		}
+		localization_key = building_01_thetowerwatch
+	}
+
+	text = { #The Watchers
+		trigger = {
+			has_special_building = yes
+			has_building = 01_thewatchers
+		}
+		localization_key = building_01_thewatchers
+	}
+
+	text = { #Circle of a Thousand Heroes
+		trigger = {
+			has_special_building = yes
+			has_building = 01_thousand_hero_circle
+		}
+		localization_key = building_01_thousand_hero_circle
+	}
+
+	text = { #Tiwu Anaan Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tiwu_anaan_mines
+		}
+		localization_key = building_01_tiwu_anaan_mines
+	}
+
+	text = { #Grubonwc Zargabonych
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tomb_of_the_lost
+		}
+		localization_key = building_01_tomb_of_the_lost
+	}
+
+	text = { #Tomb of Suns
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tomb_of_the_suns
+		}
+		localization_key = building_01_tomb_of_the_suns
+	}
+
+	text = { #Táfon to Agíonis
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tombofthesaints
+		}
+		localization_key = building_01_tombofthesaints
+	}
+
+	text = { #Tower of the Golden Seekers
+		trigger = {
+			has_special_building = yes
+			has_building = 01_tower_golden_seeker
+		}
+		localization_key = building_01_tower_golden_seeker
+	}
+
+	text = { #Towers of Pytheceas
+		trigger = {
+			has_special_building = yes
+			has_building = 01_towers_of_pytheceas
+		}
+		localization_key = building_01_towers_of_pytheceas
+	}
+
+	text = { #Turayyil Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_turayyil_mines
+		}
+		localization_key = building_01_turayyil_mines
+	}
+
+	text = { #Umloj Covenant
+		trigger = {
+			has_special_building = yes
+			has_building = 01_umlojtemplecomplex
+		}
+		localization_key = building_01_umlojtemplecomplex
+	}
+
+	text = { #Manzi Alfaynsufi"
+		trigger = {
+			has_special_building = yes
+			has_building = 01_universityofgiherehalwajaf
+		}
+		localization_key = building_01_universityofgiherehalwajaf
+	}
+
+	text = { #Velostadd
+		trigger = {
+			has_special_building = yes
+			has_building = 01_velostadd
+		}
+		localization_key = building_01_velostadd
+	}
+
+	text = { #Vilunnak Satra Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 01_vilunnak_mines
+		}
+		localization_key = building_01_vilunnak_mines
+	}
+
+	text = { #Vounill
+		trigger = {
+			has_special_building = yes
+			has_building = 01_vounill
+		}
+		localization_key = building_01_vounill
+	}
+
+	text = { #The Walls of Qarmuz
+		trigger = {
+			has_special_building = yes
+			has_building = 01_walls_of_qarmuz
+		}
+		localization_key = building_01_walls_of_qarmuz
+	}
+
+	text = { #Wehydka'ha
+		trigger = {
+			has_special_building = yes
+			has_building = 01_wehydkaha
+		}
+		localization_key = building_01_wehydkaha
+	}
+
+	text = { #Bay Alqurati
+		trigger = {
+			has_special_building = yes
+			has_building = 01_westerncabal
+		}
+		localization_key = building_01_westerncabal
+	}
+
+	text = { #Desert Tower
+		trigger = {
+			has_special_building = yes
+			has_building = 01_westtower
+		}
+		localization_key = building_01_westtower
+	}
+
+	text = { #Khanhe Peashmbra
+		trigger = {
+			has_special_building = yes
+			has_building = 01_whitegoldpalace
+		}
+		localization_key = building_01_whitegoldpalace
+	}
+
+	text = { #Yaawdet Maw
+		trigger = {
+			has_special_building = yes
+			has_building = 01_yaawdetmaw
+		}
+		localization_key = building_01_yaawdetmaw
+	}
+
+	text = { #Fledgling Zakran Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 01_zakran_mines
+		}
+		localization_key = building_01_zakran_mines
+	}
+
+	text = { #[Concept('mayikprolollans','Mayikprolollan')|E] Aironoiakaan
+		trigger = {
+			has_special_building = yes
+			has_building = 02_aironoiakaan
+		}
+		localization_key = building_02_aironoiakaan
+	}
+
+	text = { #The Ashmarite Hospital
+		trigger = {
+			has_special_building = yes
+			has_building = 02_ashmarite_hospital
+		}
+		localization_key = building_02_ashmarite_hospital
+	}
+
+	text = { #Ashuku Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_ashuku_mines
+		}
+		localization_key = building_02_ashuku_mines
+	}
+
+	text = { #Sir Jayla's Drinkery
+		trigger = {
+			has_special_building = yes
+			has_building = 02_bastards_run
+		}
+		localization_key = building_02_bastards_run
+	}
+
+	text = { #Beban Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_beban_mines
+		}
+		localization_key = building_02_beban_mines
+	}
+
+	text = { #Bēnorīya Ātawek
+		trigger = {
+			has_special_building = yes
+			has_building = 02_benoriya_atawek
+		}
+		localization_key = building_02_benoriya_atawek
+	}
+
+	text = { #Biyakaddu
+		trigger = {
+			has_special_building = yes
+			has_building = 02_biyakaddu
+		}
+		localization_key = building_02_biyakaddu
+	}
+
+	text = { #Megos Náon to [arthenax|E]
+		trigger = {
+			has_special_building = yes
+			has_building = 02_blackbonesofarthenax
+		}
+		localization_key = building_02_blackbonesofarthenax
+	}
+
+	text = { #The Citizenry Chartery
+		trigger = {
+			has_special_building = yes
+			has_building = 02_calmensons_crest
+		}
+		localization_key = building_02_calmensons_crest
+	}
+
+	text = { #Protoshliti Apokatas
+		trigger = {
+			has_special_building = yes
+			has_building = 02_champion_grounds
+		}
+		localization_key = building_02_champion_grounds
+	}
+
+	text = { #Creonta Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_creonta_mines
+		}
+		localization_key = building_02_creonta_mines
+	}
+
+	text = { #The Gate of Crows
+		trigger = {
+			has_special_building = yes
+			has_building = 02_crow_gate
+		}
+		localization_key = building_02_crow_gate
+	}
+
+	text = { #Dalath Analoth
+		trigger = {
+			has_special_building = yes
+			has_building = 02_dalath_analoth
+		}
+		localization_key = building_02_dalath_analoth
+	}
+
+	text = { #Degasho Bedēlam
+		trigger = {
+			has_special_building = yes
+			has_building = 02_degasho_bedelam
+		}
+		localization_key = building_02_degasho_bedelam
+	}
+
+	text = { #Dielecport
+		trigger = {
+			has_special_building = yes
+			has_building = 02_dielecport
+		}
+		localization_key = building_02_dielecport
+	}
+
+	text = { #Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 02_dihasma_xiidan
+		}
+		localization_key = building_02_dihasma_xiidan
+	}
+
+	text = { #Edidaphos Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_epidaphos_mines
+		}
+		localization_key = building_02_epidaphos_mines
+	}
+
+	text = { #Eponthos Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_eponthos_mines
+		}
+		localization_key = building_02_eponthos_mines
+	}
+
+	text = { #Four Cliffs and Two Walls of Chalcamahos
+		trigger = {
+			has_special_building = yes
+			has_building = 02_four_cliffs_five_walls
+		}
+		localization_key = building_02_four_cliffs_five_walls
+	}
+
+	text = { #The Gisreddeport
+		trigger = {
+			has_special_building = yes
+			has_building = 02_gisreddeport
+		}
+		localization_key = building_02_gisreddeport
+	}
+
+	text = { #Golgelea Silver Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 02_golgelea_mines
+		}
+		localization_key = building_02_golgelea_mines
+	}
+
+	text = { #Gujak Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_gujak_mines
+		}
+		localization_key = building_02_gujak_mines
+	}
+
+	text = { #Gurardport
+		trigger = {
+			has_special_building = yes
+			has_building = 02_gurardport
+		}
+		localization_key = building_02_gurardport
+	}
+
+	text = { #Irōchi Damotada
+		trigger = {
+			has_special_building = yes
+			has_building = 02_irochi_damotada
+		}
+		localization_key = building_02_irochi_damotada
+	}
+
+	text = { #The Gate of Jackals
+		trigger = {
+			has_special_building = yes
+			has_building = 02_jackal_gate
+		}
+		localization_key = building_02_jackal_gate
+	}
+
+	text = { #Crazy Castos's Confounding Curiosities
+		trigger = {
+			has_special_building = yes
+			has_building = 02_jans_market
+		}
+		localization_key = building_02_jans_market
+	}
+
+	text = { #Karth Watchtower
+		trigger = {
+			has_special_building = yes
+			has_building = 02_karth_tower
+		}
+		localization_key = building_02_karth_tower
+	}
+
+	text = { #Destroyed Cathedral of Kasmeze
+		trigger = {
+			has_special_building = yes
+			has_building = 02_kasmeze_cathedral
+		}
+		localization_key = building_02_kasmeze_cathedral
+	}
+
+	text = { #Korkivo Port
+		trigger = {
+			has_special_building = yes
+			has_building = 02_korkivo_port
+		}
+		localization_key = building_02_korkivo_port
+	}
+
+	text = { #Lachish Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 02_lachish_mines
+		}
+		localization_key = building_02_lachish_mines
+	}
+
+	text = { #Lascife Mining Settlement
+		trigger = {
+			has_special_building = yes
+			has_building = 02_lascife_mines
+		}
+		localization_key = building_02_lascife_mines
+	}
+
+	text = { #Barber's Alley
+		trigger = {
+			has_special_building = yes
+			has_building = 02_last_standers_street
+		}
+		localization_key = building_02_last_standers_street
+	}
+
+	text = { #Grand Library of Zheggarah
+		trigger = {
+			has_special_building = yes
+			has_building = 02_libraryofzheggarah
+		}
+		localization_key = building_02_libraryofzheggarah
+	}
+
+	text = { #Mesbadh Orin'to
+		trigger = {
+			has_special_building = yes
+			has_building = 02_losttempleofmesbadh
+		}
+		localization_key = building_02_losttempleofmesbadh
+	}
+
+	text = { #Lygudista Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_lygudista_mines
+		}
+		localization_key = building_02_lygudista_mines
+	}
+
+	text = { #Malah Enlevettah
+		trigger = {
+			has_special_building = yes
+			has_building = 02_malah_enlevettah
+		}
+		localization_key = building_02_malah_enlevettah
+	}
+
+	text = { #Palát to Mytidon
+		trigger = {
+			has_special_building = yes
+			has_building = 02_malcoispalace
+		}
+		localization_key = building_02_malcoispalace
+	}
+
+	text = { #Mayaliha Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_mayaliha_mines
+		}
+		localization_key = building_02_mayaliha_mines
+	}
+
+	text = { #$building_01_mountainhold$
+		trigger = {
+			has_special_building = yes
+			has_building = 02_mountainhold
+		}
+		localization_key = building_02_mountainhold
+	}
+
+	text = { #The Teutrovna Zirrus
+		trigger = {
+			has_special_building = yes
+			has_building = 02_new_iyrossi_palace
+		}
+		localization_key = building_02_new_iyrossi_palace
+	}
+
+	text = { #Gonan Oasis
+		trigger = {
+			has_special_building = yes
+			has_building = 02_oasisofgonan
+		}
+		localization_key = building_02_oasisofgonan
+	}
+
+	text = { #Oetanai Gold Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 02_oetanai_mines
+		}
+		localization_key = building_02_oetanai_mines
+	}
+
+	text = { #Hoen ver 'dt Grosdvordre
+		trigger = {
+			has_special_building = yes
+			has_building = 02_orangepalace
+		}
+		localization_key = building_02_orangepalace
+	}
+
+	text = { #Ordus Gold Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 02_ordus_mines
+		}
+		localization_key = building_02_ordus_mines
+	}
+
+	text = { #Paccai Malai Pit Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_paccai_mines
+		}
+		localization_key = building_02_paccai_mines
+	}
+
+	text = { #Palát to Creso Maertýrion
+		trigger = {
+			has_special_building = yes
+			has_building = 02_palaceofthegoldenmartyrs
+		}
+		localization_key = building_02_palaceofthegoldenmartyrs
+	}
+
+	text = { #Holy Palace of Kathanouxa
+		trigger = {
+			has_special_building = yes
+			has_building = 02_palaceofthewizardking
+		}
+		localization_key = building_02_palaceofthewizardking
+	}
+
+	text = { #Phanapetra Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_phanapetra_mines
+		}
+		localization_key = building_02_phanapetra_mines
+	}
+
+	text = { #All-Saints Cathedral
+		trigger = {
+			has_special_building = yes
+			has_building = 02_preachers_hill
+		}
+		localization_key = building_02_preachers_hill
+	}
+
+	text = { #Repurposed Riduvian Barrows
+		trigger = {
+			has_special_building = yes
+			has_building = 02_riduvianbarrows
+		}
+		localization_key = building_02_riduvianbarrows
+	}
+
+	text = { #The Gate of Serpents
+		trigger = {
+			has_special_building = yes
+			has_building = 02_serpent_gate
+		}
+		localization_key = building_02_serpent_gate
+	}
+
+	text = { #Seychund's Square
+		trigger = {
+			has_special_building = yes
+			has_building = 02_seychunds_square
+		}
+		localization_key = building_02_seychunds_square
+	}
+
+	text = { #[silver_palace|E] Restored
+		trigger = {
+			has_special_building = yes
+			has_building = 02_silverpalace
+		}
+		localization_key = building_02_silverpalace
+	}
+
+	text = { #Sonas Sikelenīzi
+		trigger = {
+			has_special_building = yes
+			has_building = 02_sonas_sikelenizi
+		}
+		localization_key = building_02_sonas_sikelenizi
+	}
+
+	text = { #Sophocos
+		trigger = {
+			has_special_building = yes
+			has_building = 02_sophocos
+		}
+		localization_key = building_02_sophocos
+	}
+
+	text = { #Large [aervalr|E] Shard
+		trigger = {
+			has_special_building = yes
+			has_building = 02_special_aervalr_shard
+		}
+		localization_key = building_02_special_aervalr_shard
+	}
+
+	text = { #Small [bloodcrystal|E] Shaft
+		trigger = {
+			has_special_building = yes
+			has_building = 02_special_bloodcrystal
+		}
+		localization_key = building_02_special_bloodcrystal
+	}
+
+	text = { #Sunarsarwena Walled Shrine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_sunarsarwena_gardens
+		}
+		localization_key = building_02_sunarsarwena_gardens
+	}
+
+	text = { #Tabik Bētemisīt
+		trigger = {
+			has_special_building = yes
+			has_building = 02_tabik_betemisit
+		}
+		localization_key = building_02_tabik_betemisit
+	}
+
+	text = { #The Coin Trap
+		trigger = {
+			has_special_building = yes
+			has_building = 02_the_minteries
+		}
+		localization_key = building_02_the_minteries
+	}
+
+	text = { #Aίthousamatas
+		trigger = {
+			has_special_building = yes
+			has_building = 02_thebloodyard
+		}
+		localization_key = building_02_thebloodyard
+	}
+
+	text = { #Great Wooden Effigy
+		trigger = {
+			has_special_building = yes
+			has_building = 02_theeffigy
+		}
+		localization_key = building_02_theeffigy
+	}
+
+	text = { #Tiwu Anaan Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_tiwu_anaan_mines
+		}
+		localization_key = building_02_tiwu_anaan_mines
+	}
+
+	text = { #Grubonwc Zargabonych
+		trigger = {
+			has_special_building = yes
+			has_building = 02_tomb_of_the_lost
+		}
+		localization_key = building_02_tomb_of_the_lost
+	}
+
+	text = { #Turayyil Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_turayyil_mines
+		}
+		localization_key = building_02_turayyil_mines
+	}
+
+	text = { #Umloj Covenant
+		trigger = {
+			has_special_building = yes
+			has_building = 02_umlojtemplecomplex
+		}
+		localization_key = building_02_umlojtemplecomplex
+	}
+
+	text = { #Manzi Alfaynsufi
+		trigger = {
+			has_special_building = yes
+			has_building = 02_universityofgiherehalwajaf
+		}
+		localization_key = building_02_universityofgiherehalwajaf
+	}
+
+	text = { #Vilunnak Satra Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 02_vilunnak_mines
+		}
+		localization_key = building_02_vilunnak_mines
+	}
+
+	text = { #Small Zakran Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 02_zakran_mines
+		}
+		localization_key = building_02_zakran_mines
+	}
+
+	text = { #The Ashmarite Hospital
+		trigger = {
+			has_special_building = yes
+			has_building = 03_ashmarite_hospital
+		}
+		localization_key = building_03_ashmarite_hospital
+	}
+
+	text = { #Large Ashuku Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_ashuku_mines
+		}
+		localization_key = building_03_ashuku_mines
+	}
+
+	text = { #Tadesz's Tinkerage
+		trigger = {
+			has_special_building = yes
+			has_building = 03_bastards_run
+		}
+		localization_key = building_03_bastards_run
+	}
+
+	text = { #Large Beban Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_beban_mines
+		}
+		localization_key = building_03_beban_mines
+	}
+
+	text = { #Biyakaddu
+		trigger = {
+			has_special_building = yes
+			has_building = 03_biyakaddu
+		}
+		localization_key = building_03_biyakaddu
+	}
+
+	text = { #Ducal Heights
+		trigger = {
+			has_special_building = yes
+			has_building = 03_calmensons_crest
+		}
+		localization_key = building_03_calmensons_crest
+	}
+
+	text = { #Protoshliti Aíttitos
+		trigger = {
+			has_special_building = yes
+			has_building = 03_champion_grounds
+		}
+		localization_key = building_03_champion_grounds
+	}
+
+	text = { #Large Creonta Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_creonta_mines
+		}
+		localization_key = building_03_creonta_mines
+	}
+
+	text = { #Degasho Bedēlam
+		trigger = {
+			has_special_building = yes
+			has_building = 03_degasho_bedelam
+		}
+		localization_key = building_03_degasho_bedelam
+	}
+
+	text = { #Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 03_dihasma_xiidan
+		}
+		localization_key = building_03_dihasma_xiidan
+	}
+
+	text = { #Large Epidaphos Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_epidaphos_mines
+		}
+		localization_key = building_03_epidaphos_mines
+	}
+
+	text = { #Large Eponthos Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_eponthos_mines
+		}
+		localization_key = building_03_eponthos_mines
+	}
+
+	text = { #Four Cliffs and Four Walls of Chalcamahos
+		trigger = {
+			has_special_building = yes
+			has_building = 03_four_cliffs_five_walls
+		}
+		localization_key = building_03_four_cliffs_five_walls
+	}
+
+	text = { #The Foreign Quarter
+		trigger = {
+			has_special_building = yes
+			has_building = 03_gisreddeport
+		}
+		localization_key = building_03_gisreddeport
+	}
+
+	text = { #Developed Golgelea Silver Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 03_golgelea_mines
+		}
+		localization_key = building_03_golgelea_mines
+	}
+
+	text = { #Large Gujak Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_gujak_mines
+		}
+		localization_key = building_03_gujak_mines
+	}
+
+	text = { #Irōchi Damotada
+		trigger = {
+			has_special_building = yes
+			has_building = 03_irochi_damotada
+		}
+		localization_key = building_03_irochi_damotada
+	}
+
+	text = { #Good Sir Ranos's Paltry Interest Loans
+		trigger = {
+			has_special_building = yes
+			has_building = 03_jans_market
+		}
+		localization_key = building_03_jans_market
+	}
+
+	text = { #Cathedral of Kasmeze
+		trigger = {
+			has_special_building = yes
+			has_building = 03_kasmeze_cathedral
+		}
+		localization_key = building_03_kasmeze_cathedral
+	}
+
+	text = { #Large Lachish Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 03_lachish_mines
+		}
+		localization_key = building_03_lachish_mines
+	}
+
+	text = { #Large Lascife Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_lascife_mines
+		}
+		localization_key = building_03_lascife_mines
+	}
+
+	text = { #Watch House № 3343
+		trigger = {
+			has_special_building = yes
+			has_building = 03_last_standers_street
+		}
+		localization_key = building_03_last_standers_street
+	}
+
+	text = { #Large Lygudista Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_lygudista_mines
+		}
+		localization_key = building_03_lygudista_mines
+	}
+
+	text = { #Palát to Mytidon
+		trigger = {
+			has_special_building = yes
+			has_building = 03_malcoispalace
+		}
+		localization_key = building_03_malcoispalace
+	}
+
+	text = { #Large Mayaliha Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_mayaliha_mines
+		}
+		localization_key = building_03_mayaliha_mines
+	}
+
+	text = { #Gonan Oasis
+		trigger = {
+			has_special_building = yes
+			has_building = 03_oasisofgonan
+		}
+		localization_key = building_03_oasisofgonan
+	}
+
+	text = { #Developing Oetanai Gold Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 03_oetanai_mines
+		}
+		localization_key = building_03_oetanai_mines
+	}
+
+	text = { #Large Ordus Gold Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 03_ordus_mines
+		}
+		localization_key = building_03_ordus_mines
+	}
+
+	text = { #Large Paccai Malai Pit Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_paccai_mines
+		}
+		localization_key = building_03_paccai_mines
+	}
+
+	text = { #Large Phanapetra Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_phanapetra_mines
+		}
+		localization_key = building_03_phanapetra_mines
+	}
+
+	text = { #Conclave Heights
+		trigger = {
+			has_special_building = yes
+			has_building = 03_preachers_hill
+		}
+		localization_key = building_03_preachers_hill
+	}
+
+	text = { #The Fourteen Shrines
+		trigger = {
+			has_special_building = yes
+			has_building = 03_seychunds_square
+		}
+		localization_key = building_03_seychunds_square
+	}
+
+	text = { #Sonas Sikelenīzi
+		trigger = {
+			has_special_building = yes
+			has_building = 03_sonas_sikelenizi
+		}
+		localization_key = building_03_sonas_sikelenizi
+	}
+
+	text = { #Sophocos
+		trigger = {
+			has_special_building = yes
+			has_building = 03_sophocos
+		}
+		localization_key = building_03_sophocos
+	}
+
+	text = { #Huge [aervalr|E] Shard
+		trigger = {
+			has_special_building = yes
+			has_building = 03_special_aervalr_shard
+		}
+		localization_key = building_03_special_aervalr_shard
+	}
+
+	text = { #[bloodcrystal|E] Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_special_bloodcrystal
+		}
+		localization_key = building_03_special_bloodcrystal
+	}
+
+	text = { #Ikluwad Walled Garden
+		trigger = {
+			has_special_building = yes
+			has_building = 03_sunarsarwena_gardens
+		}
+		localization_key = building_03_sunarsarwena_gardens
+	}
+
+	text = { #Thrice-Blessed Guild of Fancinorousality
+		trigger = {
+			has_special_building = yes
+			has_building = 03_the_minteries
+		}
+		localization_key = building_03_the_minteries
+	}
+
+	text = { #Large Tiwu Anaan Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_tiwu_anaan_mines
+		}
+		localization_key = building_03_tiwu_anaan_mines
+	}
+
+	text = { #Grubonwc Zargabonych
+		trigger = {
+			has_special_building = yes
+			has_building = 03_tomb_of_the_lost
+		}
+		localization_key = building_03_tomb_of_the_lost
+	}
+
+	text = { #Large Turayyil Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_turayyil_mines
+		}
+		localization_key = building_03_turayyil_mines
+	}
+
+	text = { #Manzi Alfaynsufi
+		trigger = {
+			has_special_building = yes
+			has_building = 03_universityofgiherehalwajaf
+		}
+		localization_key = building_03_universityofgiherehalwajaf
+	}
+
+	text = { #Large Vilunnak Satra Mines
+		trigger = {
+			has_special_building = yes
+			has_building = 03_vilunnak_mines
+		}
+		localization_key = building_03_vilunnak_mines
+	}
+
+	text = { #Large Zakran Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 03_zakran_mines
+		}
+		localization_key = building_03_zakran_mines
+	}
+
+	text = { #The Ashmarite Medicinal School
+		trigger = {
+			has_special_building = yes
+			has_building = 04_ashmarite_hospital
+		}
+		localization_key = building_04_ashmarite_hospital
+	}
+
+	text = { #Ashuku Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_ashuku_mines
+		}
+		localization_key = building_04_ashuku_mines
+	}
+
+	text = { #The Council Registry Charter
+		trigger = {
+			has_special_building = yes
+			has_building = 04_bastards_run
+		}
+		localization_key = building_04_bastards_run
+	}
+
+	text = { #Beban Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_beban_mines
+		}
+		localization_key = building_04_beban_mines
+	}
+
+	text = { #The Hotel Gisredde
+		trigger = {
+			has_special_building = yes
+			has_building = 04_calmensons_crest
+		}
+		localization_key = building_04_calmensons_crest
+	}
+
+	text = { #Creonta Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_creonta_mines
+		}
+		localization_key = building_04_creonta_mines
+	}
+
+	text = { #Dihasma Xiidan
+		trigger = {
+			has_special_building = yes
+			has_building = 04_dihasma_xiidan
+		}
+		localization_key = building_04_dihasma_xiidan
+	}
+
+	text = { #Epidaphos Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_epidaphos_mines
+		}
+		localization_key = building_04_epidaphos_mines
+	}
+
+	text = { #Eponthos Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_eponthos_mines
+		}
+		localization_key = building_04_eponthos_mines
+	}
+
+	text = { #Four Cliffs and Five Walls of Chalcamahos
+		trigger = {
+			has_special_building = yes
+			has_building = 04_four_cliffs_five_walls
+		}
+		localization_key = building_04_four_cliffs_five_walls
+	}
+
+	text = { #The Coinblessed Charter of Shipwrights
+		trigger = {
+			has_special_building = yes
+			has_building = 04_gisreddeport
+		}
+		localization_key = building_04_gisreddeport
+	}
+
+	text = { #Golgelea Silver Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_golgelea_mines
+		}
+		localization_key = building_04_golgelea_mines
+	}
+
+	text = { #Gujak Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_gujak_mines
+		}
+		localization_key = building_04_gujak_mines
+	}
+
+	text = { #The Grand Emporium
+		trigger = {
+			has_special_building = yes
+			has_building = 04_jans_market
+		}
+		localization_key = building_04_jans_market
+	}
+
+	text = { #Lachish Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_lachish_mines
+		}
+		localization_key = building_04_lachish_mines
+	}
+
+	text = { #Lascife Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_lascife_mines
+		}
+		localization_key = building_04_lascife_mines
+	}
+
+	text = { #Bender's Trap
+		trigger = {
+			has_special_building = yes
+			has_building = 04_last_standers_street
+		}
+		localization_key = building_04_last_standers_street
+	}
+
+	text = { #Lygudista Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_lygudista_mines
+		}
+		localization_key = building_04_lygudista_mines
+	}
+
+	text = { #Mayaliha Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_mayaliha_mines
+		}
+		localization_key = building_04_mayaliha_mines
+	}
+
+	text = { #Oetanai Gold Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_oetanai_mines
+		}
+		localization_key = building_04_oetanai_mines
+	}
+
+	text = { #Ordus Gold Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_ordus_mines
+		}
+		localization_key = building_04_ordus_mines
+	}
+
+	text = { #Paccai Malai Pit Mine Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_paccai_mines
+		}
+		localization_key = building_04_paccai_mines
+	}
+
+	text = { #Phanapetra Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_phanapetra_mines
+		}
+		localization_key = building_04_phanapetra_mines
+	}
+
+	text = { #Temple of the Holy Champion
+		trigger = {
+			has_special_building = yes
+			has_building = 04_preachers_hill
+		}
+		localization_key = building_04_preachers_hill
+	}
+
+	text = { #The Conclave of Grande Gisredde
+		trigger = {
+			has_special_building = yes
+			has_building = 04_seychunds_square
+		}
+		localization_key = building_04_seychunds_square
+	}
+
+	text = { #Sophocos
+		trigger = {
+			has_special_building = yes
+			has_building = 04_sophocos
+		}
+		localization_key = building_04_sophocos
+	}
+
+	text = { #Colossal [aervalr|E] Shard
+		trigger = {
+			has_special_building = yes
+			has_building = 04_special_aervalr_shard
+		}
+		localization_key = building_04_special_aervalr_shard
+	}
+
+	text = { #[bloodcrystal|E] Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_special_bloodcrystal
+		}
+		localization_key = building_04_special_bloodcrystal
+	}
+
+	text = { #The Gardens of El Qulatha
+		trigger = {
+			has_special_building = yes
+			has_building = 04_sunarsarwena_gardens
+		}
+		localization_key = building_04_sunarsarwena_gardens
+	}
+
+	text = { #Good King Bastione's Charter of Fellow Minters
+		trigger = {
+			has_special_building = yes
+			has_building = 04_the_minteries
+		}
+		localization_key = building_04_the_minteries
+	}
+
+	text = { #Tiwu Anaan Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_tiwu_anaan_mines
+		}
+		localization_key = building_04_tiwu_anaan_mines
+	}
+
+	text = { #Grubonwc Zargabonych
+		trigger = {
+			has_special_building = yes
+			has_building = 04_tomb_of_the_lost
+		}
+		localization_key = building_04_tomb_of_the_lost
+	}
+
+	text = { #Turayyil Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_turayyil_mines
+		}
+		localization_key = building_04_turayyil_mines
+	}
+
+	text = { #Vilunnak Satra Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_vilunnak_mines
+		}
+		localization_key = building_04_vilunnak_mines
+	}
+
+	text = { #Zakran Mining Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 04_zakran_mines
+		}
+		localization_key = building_04_zakran_mines
+	}
+
+	text = { #The Ashmarite Medicinal School
+		trigger = {
+			has_special_building = yes
+			has_building = 05_ashmarite_hospital
+		}
+		localization_key = building_05_ashmarite_hospital
+	}
+
+	text = { #The Gardens of El Qulatha
+		trigger = {
+			has_special_building = yes
+			has_building = 05_sunarsarwena_gardens
+		}
+		localization_key = building_05_sunarsarwena_gardens
+	}
+
+	text = { #The $c_el_qulatha$ Medicinal School
+		trigger = {
+			has_special_building = yes
+			has_building = 06_ashmarite_hospital
+		}
+		localization_key = building_06_ashmarite_hospital
+	}
+
+	text = { #The Grand Gardens of El Qulatha
+		trigger = {
+			has_special_building = yes
+			has_building = 06_sunarsarwena_gardens
+		}
+		localization_key = building_06_sunarsarwena_gardens
+	}
+
+	text = { #The $c_el_qulatha$ Medicinal University
+		trigger = {
+			has_special_building = yes
+			has_building = 07_ashmarite_hospital
+		}
+		localization_key = building_07_ashmarite_hospital
+	}
+
+	text = { #The Decadent Gardens of El Qulatha
+		trigger = {
+			has_special_building = yes
+			has_building = 07_sunarsarwena_gardens
+		}
+		localization_key = building_07_sunarsarwena_gardens
+	}
+
+	text = { #The $c_el_qulatha$ Medicinal University
+		trigger = {
+			has_special_building = yes
+			has_building = 08_ashmarite_hospital
+		}
+		localization_key = building_08_ashmarite_hospital
+	}
+
+	text = { #The Blood Orchards
+		trigger = {
+			has_special_building = yes
+			has_building = blood_market_00
+		}
+		localization_key = building_blood_market_00
+	}
+
+	text = { #Waymaker's Fort
+		trigger = {
+			has_special_building = yes
+			has_building = waymakers_fort
+		}
+		localization_key = building_waymakers_fort
+	}
+
+	text = { # Ruins of Khanazdar Khanduz
+		trigger = {
+			has_special_building = yes
+			has_building = 01_khanazdar_khanduz
+		}
+		localization_key = building_01_khanazdar_khanduz
+	}
+
+	text = { # Citadel of Khanazdar Khanduz
+		trigger = {
+			has_special_building = yes
+			has_building = 02_khanazdar_khanduz
+		}
+		localization_key = building_02_khanazdar_khanduz
+	}
+
+	text = { # Spires of Khanazdar Khanduz
+		trigger = {
+			has_special_building = yes
+			has_building = 03_khanazdar_khanduz
+		}
+		localization_key = building_03_khanazdar_khanduz
+	}
+
+	text = { # Ruins of Old Ialyrian
+		trigger = {
+			has_special_building = yes
+			has_building = 01_temples_of_old_ialyrian
+		}
+		localization_key = building_01_temples_of_old_ialyrian
+	}
+
+	text = { # Restored Temples of Old Ialyrian
+		trigger = {
+			has_special_building = yes
+			has_building = 02_temples_of_old_ialyrian
+		}
+		localization_key = building_02_temples_of_old_ialyrian
+	}
+
+	text = { # Kazvosk Salt Flats
+		trigger = {
+			has_special_building = yes
+			has_building = 01_gates_of_kaz
+		}
+		localization_key = building_01_gates_of_kaz
+	}
+
+	text = { # Restored Gates of Kaz
+		trigger = {
+			has_special_building = yes
+			has_building = 02_gates_of_kaz
+		}
+		localization_key = building_02_gates_of_kaz
+	}
+
+	text = { # Quartz House of Ysanda
+		trigger = {
+			has_special_building = yes
+			has_building = 01_glassworks_of_ysanda
+		}
+		localization_key = building_01_glassworks_of_ysanda
+	}
+
+	text = { # Glass House of Ysanda
+		trigger = {
+			has_special_building = yes
+			has_building = 02_glassworks_of_ysanda
+		}
+		localization_key = building_02_glassworks_of_ysanda
+	}
+
+	text = { # Crystal House of Ysanda
+		trigger = {
+			has_special_building = yes
+			has_building = 03_glassworks_of_ysanda
+		}
+		localization_key = building_03_glassworks_of_ysanda
+	}
+
+	text = { # Abandoned Labyrinth
+		trigger = {
+			has_special_building = yes
+			has_building = 01_abandoned_labyrinth
+		}
+		localization_key = building_01_abandoned_labyrinth
+	}
+
+	text = { # Ruins of the Halite Temple
+		trigger = {
+			has_special_building = yes
+			has_building = 01_halite_temple
+		}
+		localization_key = building_01_halite_temple
+	}
+
+	text = { # Halite Temple Complex
+		trigger = {
+			has_special_building = yes
+			has_building = 02_halite_temple
+		}
+		localization_key = building_02_halite_temple
+	}
+	
+	################
+	# KALATHIPSOMI #
+	################
+	
+	text = { # Dragoncourt
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dragoncourt
+		}
+		localization_key = building_type_01_dragoncourt
+	}
+	
+	text = { # Silverspruce Mine
+		trigger = {
+			has_special_building = yes
+			has_building = 01_silverspruce_mines
+		}
+		localization_key = building_type_01_silverspruce_mines
+	}
+	
+	text = { # Dryadstones
+		trigger = {
+			has_special_building = yes
+			has_building = 01_dryadstones
+		}
+		localization_key = building_type_01_dryadstones
+	}
+	
+	text = { # Saint Hugomer's Cathedral
+		trigger = {
+			has_special_building = yes
+			has_building = 01_saint_hugomers_cathedral
+		}
+		localization_key = building_type_01_saint_hugomers_cathedral
+	}
+	
+	text = { # Kathanouxa's Bridge
+		trigger = {
+			has_special_building = yes
+			has_building = 01_wizardsbridge
+		}
+		localization_key = building_type_01_wizardsbridge
+	}
+	
+	text = { # Altar of Spring
+		trigger = {
+			has_special_building = yes
+			has_building = 01_altar_of_spring
+		}
+		localization_key = building_type_01_altar_of_spring
+	}
+	
+	text = { # Altar of Summer
+		trigger = {
+			has_special_building = yes
+			has_building = 01_altar_of_summer
+		}
+		localization_key = building_type_01_altar_of_summer
+	}
+	
+	text = { # Circle of the Nira Yew
+		trigger = {
+			has_special_building = yes
+			has_building = 01_nira_yew
+		}
+		localization_key = building_type_01_nira_yew
+	}
+	
+	text = { # Duragarn-Kharathi
+		trigger = {
+			has_special_building = yes
+			has_building = 01_duragarn_kharathi
+		}
+		localization_key = building_type_01_duragarn_kharathi
+	}
+}

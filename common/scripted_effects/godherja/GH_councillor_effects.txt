@@ -1,0 +1,175 @@
+﻿
+update_pirate_commerce_raiding_list = {
+	if = { 
+		limit = { has_variable_list = nearby_coastal_counties}
+		clear_variable_list = nearby_coastal_counties
+	}
+	every_in_global_list = {
+		variable = coastal_counties
+		limit = {
+			title_province = {
+				save_temporary_scope_as = county_cap
+			}
+			save_temporary_scope_as = county_cap
+			NOT = { holder.top_liege = root }
+			prev = {
+				any_held_title = {
+					tier = tier_county
+					squared_distance ={
+						target = scope:county_cap
+						value <= squared_distance_medium
+					}
+				}
+			}
+		}
+		prev = {
+			add_to_variable_list = {
+				name = nearby_coastal_counties
+				target = prev
+			}
+		}
+	}
+	update_pirate_commerce_raiding_gold_value = yes
+	update_shadow_ports_list_and_value = yes
+}
+
+update_pirate_commerce_raiding_gold_value = {
+	set_variable = {
+		name = commerce_raiding_gold_potential
+		value = 0
+	}
+	every_in_list = {
+		variable = nearby_coastal_counties
+		save_scope_as = county
+		prev = {
+			change_variable = {
+				name = commerce_raiding_gold_potential
+				add = {
+					value = scope:county.development_level
+					min = 1
+				}
+			}
+		}
+	}
+}
+
+update_shadow_ports_list_and_value = {
+	set_variable = {
+		name = shadow_trade_base
+		value = 200 #allows you to have some free trade.
+	}
+	set_variable = {
+		name = shadow_trade_shadow_ports
+		value = 0
+	}
+	set_variable = {
+		name = shadow_trade_controlled_territories
+		value = 0
+	}
+	if = {
+		limit = {
+			has_variable_list = shadow_ports
+		}
+		every_in_list = {
+			variable = shadow_ports
+			save_scope_as = county
+			prev = {
+				if = {
+					limit = {
+						OR = {
+							scope:county.county_control = 100
+							NOT = {
+								is_target_in_variable_list = {
+									name = nearby_coastal_counties
+									target = scope:county
+								}
+							}
+						}
+					}
+					remove_list_variable = {
+						name = shadow_ports
+						target = scope:county
+					}
+					scope:county = {
+						remove_county_modifier = shadow_port
+					}
+					if = {
+						limit = {
+							scope:county.county_control = 100
+						}
+						send_interface_message = {
+							type = msg_steward_task_bad
+							title = lost_shadow_port_notification
+							desc = lost_shadow_port_notification_control_increase.desc
+						}
+					}
+					else ={
+						send_interface_message = {
+							type = msg_steward_task_bad
+							title = lost_shadow_port_notification
+							desc = lost_shadow_port_notification_range.desc
+						}
+					}
+				}
+				else = {
+					change_variable = {
+						name = shadow_trade_shadow_ports
+						add = scope:county.development_level
+						min = 1
+						#add = 5 #even devlopment zero counties should give some increase in cap
+					}
+				}
+			}
+		}
+	}
+	change_variable = {
+		name = shadow_trade_shadow_ports
+		multiply = 20
+	}
+	every_sub_realm_county = { #your own subrealm allows you to ship some goods
+		save_scope_as = county
+		prev = {
+			change_variable = {
+				name = shadow_trade_controlled_territories
+				#add = scope:county.development_level #can't get this to work for some reason
+				add = 10
+			}
+		}
+	}
+}
+
+shadow_port_succession = {
+	every_in_list = { #go throug each Shadow Port the old pirate held and see if you keep it or not.
+		variable = shadow_ports
+		root.primary_heir = {
+			add_gold = 100
+			duel = {
+				skill = stewardship
+				value = medium_skill_rating
+				10 = {
+					prev = {
+						remove_county_modifier = shadow_port
+					}
+				}
+				10 = {
+					compare_modifier = {
+						value = scope:duel_value
+						multiplier = 1
+					}
+					add_to_variable_list = {
+						name = shadow_ports
+						target = prev
+					}
+				}
+			}
+		}
+	}
+}
+
+#if there is no heir, destroy all shadow ports
+remove_all_shadow_ports = {
+	every_in_list = {
+		variable = shadow_ports
+		remove_county_modifier = shadow_port
+	}
+}

@@ -1,0 +1,42 @@
+﻿initialize_historical_information = {
+	if = {	# Initialize whoever the current Aautokratir is
+		limit = { any_aautokratir_exists = yes }
+		if = {
+			limit = { title:e_aversarinas_aautokrata = { is_title_created = yes } }
+			title:e_aversarinas_aautokrata = { 
+				holder = { 
+					set_global_variable = {
+						name = reigning_aautokratir
+						value = this
+					}
+				} 
+			}
+		}
+		else_if = {
+			limit = { title:e_oraispol_aautokrata = { is_title_created = yes } }
+			title:e_oraispol_aautokrata = { 
+				holder = { 
+					set_global_variable = {
+						name = reigning_aautokratir
+						value = this
+					}
+				} 
+			}
+		}
+		else_if = {
+			limit = { title:e_asiupoli_aautokrata = { is_title_created = yes } }
+			title:e_asiupoli_aautokrata = { 
+				holder = { 
+					set_global_variable = {
+						name = reigning_aautokratir
+						value = this
+					}
+				} 
+			}
+		}
+	}
+	if = {	# Check whether the Fog has spawn
+		limit = { game_start_date >= 1200.3.1 }
+		set_global_variable = fog_has_appeared
+	}
+}

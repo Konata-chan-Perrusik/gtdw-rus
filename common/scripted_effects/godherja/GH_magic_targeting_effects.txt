@@ -1,0 +1,348 @@
+﻿# General utility effects for targeted+resistable spells.
+
+
+# implementation of a general-purpose "save or X" effect with some number of SLs.
+# SUCCESS50_VALUE is the value of RESIST_VALUE at which any sort of success
+# happens 50% of the time.
+# RESIST_VALUE is evaluated with scope of the target.
+# against a defender with RESIST_VALUE:
+# - equal to 0.5x SUCCESS50_VALUE:
+#   * 1/3 chance of being unhurt
+#   * 2/9 chance of gaining one rank of wounded
+#   * 4/27 chance of gaining two ranks of wounded and maimed
+#   * 8/27 chance of death
+# - equal to 1x SUCCESS50_VALUE:
+#   * 1/2 chance of being unhurt
+#   * 1/4 chance of gaining one rank of wounded
+#   * 1/8 chance of gaining two ranks of wounded and maimed
+#   * 1/8 chance of death
+# - equal to 2x SUCCESS50_VALUE
+#   * 2/3 chance of being unhurt
+#   * 2/9 chance of gaining one rank of wounded
+#   * 2/27 chance of gaining two ranks of wounded and maimed
+# * 1/27 chance of death
+# NUM_SLS number of possible SLs (1-3)
+# EFFECT_SUCCESS[1-3] and EFFECT_FAILURE are effects with the single parameter of CASTER
+magic_calculate_and_apply_resistable_effect = {
+	save_temporary_scope_value_as = { name = num_sls value = $NUM_SLS$ }
+	if = {
+		limit = { scope:num_sls = 1 }
+		random_list = {
+			0 = {
+				# p_success
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $SUCCESS50_VALUE$
+					}
+				}
+				$EFFECT_SUCCESS1$ = { CASTER = $CASTER$ }
+			}
+			0 = {
+				# p_failure
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $RESIST_VALUE$
+					}
+				}
+				$EFFECT_FAILURE$ = { CASTER = $CASTER$ }
+			}
+		}
+	}
+	else_if = {
+		limit = { scope:num_sls = 2 }
+		random_list = {
+			0 = {
+				# p_success^2
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $SUCCESS50_VALUE$
+						multiply = $SUCCESS50_VALUE$
+					}
+				}
+				$EFFECT_SUCCESS2$ = { CASTER = $CASTER$ }
+			}
+			0 = {
+				# p_success * p_failure
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $SUCCESS50_VALUE$
+						multiply = $RESIST_VALUE$
+					}
+				}
+				$EFFECT_SUCCESS1$ = { CASTER = $CASTER$ }
+			}
+			0 = {
+				# p_failure
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $RESIST_VALUE$
+						multiply = {
+							value = $RESIST_VALUE$
+							add = $SUCCESS50_VALUE$
+						}
+					}
+				}
+				$EFFECT_FAILURE$ = { CASTER = $CASTER$ }
+			}
+		}
+	}
+	else_if = {
+		limit = { scope:num_sls = 3 }
+		# we divide in each case to prevent overflow problems with extremely
+		# high values of RESIST_VALUE
+		random_list = {
+			0 = {
+				# p_success^3
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $SUCCESS50_VALUE$
+						divide = {
+							value = $RESIST_VALUE$
+							add = $SUCCESS50_VALUE$
+						}
+						multiply = $SUCCESS50_VALUE$
+						multiply = $SUCCESS50_VALUE$
+					}
+				}
+				$EFFECT_SUCCESS3$ = { CASTER = $CASTER$ }
+			}
+			0 = {
+				# p_success^2 * p_failure
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $SUCCESS50_VALUE$
+						divide = {
+							value = $RESIST_VALUE$
+							add = $SUCCESS50_VALUE$
+						}
+						multiply = $SUCCESS50_VALUE$
+						multiply = $RESIST_VALUE$
+					}
+				}
+				$EFFECT_SUCCESS2$ = { CASTER = $CASTER$ }
+			}
+			0 = {
+				# p_success * p_failure
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $SUCCESS50_VALUE$
+						divide = {
+							value = $RESIST_VALUE$
+							add = $SUCCESS50_VALUE$
+						}
+						multiply = $RESIST_VALUE$
+						multiply = {
+							value = $RESIST_VALUE$
+							add = $SUCCESS50_VALUE$
+						}
+					}
+				}
+				$EFFECT_SUCCESS1$ = { CASTER = $CASTER$ }
+			}
+			0 = {
+				# p_failure
+				modifier = {
+					add = {
+						value = 0.1
+						multiply = $RESIST_VALUE$
+						multiply = {
+							value = $RESIST_VALUE$
+							add = $SUCCESS50_VALUE$
+						}
+					}
+				}
+				$EFFECT_FAILURE$ = { CASTER = $CASTER$ }
+			}
+		}
+	}
+}
+
+# dummy effect for magic_calculate_and_apply_resistable_effect_$N$sl (used to handle higher SLs)
+resistable_null_effect = { $CASTER$ = { } }
+
+magic_calculate_and_apply_resistable_effect_3sl = {
+	magic_calculate_and_apply_resistable_effect = {
+		CASTER = $CASTER$
+		SUCCESS50_VALUE = $SUCCESS50_VALUE$
+		RESIST_VALUE = $RESIST_VALUE$
+		NUM_SLS = 3
+		EFFECT_SUCCESS1 = $EFFECT_SUCCESS1$
+		EFFECT_SUCCESS2 = $EFFECT_SUCCESS2$
+		EFFECT_SUCCESS3 = $EFFECT_SUCCESS3$
+		EFFECT_FAILURE = $EFFECT_FAILURE$
+	}
+}
+
+magic_calculate_and_apply_resistable_effect_2sl = {
+	magic_calculate_and_apply_resistable_effect = {
+		CASTER = $CASTER$
+		SUCCESS50_VALUE = $SUCCESS50_VALUE$
+		RESIST_VALUE = $RESIST_VALUE$
+		NUM_SLS = 2
+		EFFECT_SUCCESS1 = $EFFECT_SUCCESS1$
+		EFFECT_SUCCESS2 = $EFFECT_SUCCESS2$
+		EFFECT_SUCCESS3 = resistable_null_effect
+		EFFECT_FAILURE = $EFFECT_FAILURE$
+	}
+}
+
+magic_calculate_and_apply_resistable_effect_1sl = {
+	magic_calculate_and_apply_resistable_effect = {
+		CASTER = $CASTER$
+		SUCCESS50_VALUE = $SUCCESS50_VALUE$
+		RESIST_VALUE = $RESIST_VALUE$
+		NUM_SLS = 1
+		EFFECT_SUCCESS1 = $EFFECT_SUCCESS1$
+		EFFECT_SUCCESS2 = resistable_null_effect
+		EFFECT_SUCCESS3 = resistable_null_effect
+		EFFECT_FAILURE = $EFFECT_FAILURE$
+	}
+}
+
+magic_calculate_resistable_set_return_success3 = {
+	$CASTER$ = {
+		save_scope_value_as = {
+			name = result_value
+			value = flag:success3
+		}
+	}
+}
+magic_calculate_resistable_set_return_success2 = {
+	$CASTER$ = {
+		save_scope_value_as = {
+			name = result_value
+			value = flag:success2
+		}
+	}
+}
+magic_calculate_resistable_set_return_success1 = {
+	$CASTER$ = {
+		save_scope_value_as = {
+			name = result_value
+			value = flag:success1
+		}
+	}
+}
+magic_calculate_resistable_set_return_failure = {
+	$CASTER$ = {
+		save_scope_value_as = {
+			name = result_value
+			value = flag:failure
+		}
+	}
+}
+# as above, but returns flag corresponding to degree of success as
+# scope:result_value instead of executing effect. Designed to be used in events
+# (where this can be run in immediate, and then the result lists used in the
+# option)
+magic_calculate_resistable_effect = {
+	magic_calculate_and_apply_resistable_effect = {
+		CASTER = this # we never use caster in any of our effects, so just use whatever
+		SUCCESS50_VALUE = $SUCCESS50_VALUE$
+		RESIST_VALUE = $RESIST_VALUE$
+		NUM_SLS = $NUM_SLS$
+		EFFECT_SUCCESS1 = magic_calculate_resistable_set_return_success1
+		EFFECT_SUCCESS2 = magic_calculate_resistable_set_return_success2
+		EFFECT_SUCCESS3 = magic_calculate_resistable_set_return_success3
+		EFFECT_FAILURE = magic_calculate_resistable_set_return_failure
+	}
+}
+
+# returns lists of characters as success1_list, success2_list, success3_list, failure_list.
+# We do this so that events can properly display the list of affected
+# characters in the options tooltips. this is inefficient, as it checks
+# every_living_character, so only run this from events and not directly from the
+# spell effect
+magic_calculate_multi_resistable_at_county_effect = {
+	$COUNTY$ = {
+		every_county_province = {
+			save_scope_as = affected_province
+			# TODO: this checks every_living_character once for each province
+			every_living_character = {
+				limit = { is_at_location = scope:affected_province }
+				magic_calculate_resistable_effect = {
+					SUCCESS50_VALUE = $SUCCESS50_VALUE$
+					RESIST_VALUE = $RESIST_VALUE$
+					NUM_SLS = 3
+				}
+				if = {
+					limit = { scope:result_value = flag:success1 }
+					add_to_list = success1_list
+				}
+				else_if = {
+					limit = { scope:result_value = flag:success2 }
+					add_to_list = success2_list
+				}
+				else_if = {
+					limit = { scope:result_value = flag:success3 }
+					add_to_list = success3_list
+				}
+				else_if = {
+					limit = { scope:result_value = flag:failure }
+					add_to_list = failure_list
+				}
+			}
+		}
+	}
+}
+
+
+# applies hurt status to a single target based on the results of
+# magic_calculate_resistable_effect above
+magic_apply_resistable_hurt_effect = {
+	if = {
+		limit = { scope:result_value = flag:success1 }
+		change_trait_rank = {
+			trait = wounded
+			rank = 1
+		}
+	}
+	else_if = {
+		limit = { scope:result_value = flag:success2 }
+		change_trait_rank = {
+			trait = wounded
+			rank = 2
+		}
+		add_trait = maimed
+	}
+	else_if = {
+		limit = { scope:result_value = flag:success3 }
+		death = { death_reason = $DEATH_REASON$ killer = $CASTER$ }
+	}
+}
+
+# applies hurt status to multiple targets based on the results of
+# magic_calculate_multi_resistable_at_county_effect above
+magic_apply_multi_resistable_hurt_effect = {
+	every_in_list = {
+		list = success1_list
+		change_trait_rank = {
+			trait = wounded
+			rank = 1
+		}
+	}
+	every_in_list = {
+		list = success2_list
+		change_trait_rank = {
+			trait = wounded
+			rank = 2
+		}
+		add_trait = maimed
+	}
+	every_in_list = {
+		list = success3_list
+		death = { death_reason = $DEATH_REASON$ killer = $CASTER$ }
+	}
+}
+
+
+
+

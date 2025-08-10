@@ -1,0 +1,527 @@
+﻿GH_study_knowledge_entry_scheme = {
+	skill = learning
+	desc = GH_study_knowledge_entry_scheme_desc
+	category = personal
+	target_type = nothing
+	is_secret = no
+	is_basic = yes
+	cooldown = { months = 2 }
+	illustration = "gfx/interface/illustrations/event_scenes/corridor.dds"
+	icon = learning
+
+	# Parameters
+	speed_per_skill_point = t1_spsp_owner_value
+	spymaster_speed_per_skill_point = 0
+	uses_resistance = no
+	base_progress_goal = 180
+	base_maximum_success = 95
+	minimum_success = 5
+	
+	allow = {
+		is_available_healthy_adult = yes
+	}
+	
+	valid = {
+		is_available_healthy_adult = yes
+		trigger_if = {
+			limit = { exists = var:required_artifact }
+			var:required_artifact.artifact_owner ?= scheme_owner
+		}
+	}
+
+	# Prediction (abysmal/low/medium/high/excellent)
+	odds_prediction = {
+		#value = knowledge_entry_success_chance_value
+		value = 0 # Not displayed anywhere atm so not really relevant either
+		min = 0
+	}
+
+
+	base_success_chance = {
+		base = 0
+		
+		modifier = {
+			add = {
+				value = var:knowledge_entry.var:knowledge_entry_difficulty
+				multiply = -3
+			}
+			desc = SCHEME_KNOWLEDGE_ENTRY_DIFFICULTY_MODIFIER
+			exists = var:knowledge_entry
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.learning
+				multiply = 3
+			}
+			desc = LEARNING_SKILL_REASON
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:learning
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.character_arcana_baseline_value
+				multiply = 3
+			}
+			OR = {
+				var:knowledge_entry.var:knowledge_entry_skill ?= flag:arcana
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:fire
+					scheme_owner.fire_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:water
+					scheme_owner.water_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:ice
+					scheme_owner.ice_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:air
+					scheme_owner.air_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:stone
+					scheme_owner.stone_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:dream
+					scheme_owner.dream_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:celestial
+					scheme_owner.celestial_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:dark
+					scheme_owner.dark_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:light
+					scheme_owner.light_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:blood
+					scheme_owner.blood_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:nature
+					scheme_owner.nature_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:ethereal
+					scheme_owner.ethereal_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:hymns
+					scheme_owner.hymns_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:death
+					scheme_owner.death_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:sand
+					scheme_owner.sand_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:metal
+					scheme_owner.metal_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:time
+					scheme_owner.time_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+				AND = {
+					var:knowledge_entry.var:knowledge_entry_skill ?= flag:dawn
+					scheme_owner.dawn_aspect_spellcasting_value < scheme_owner.character_arcana_baseline_value
+				}
+			}
+			desc = SCHEME_ARCANA_SKILL_MODIFIER
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.fire_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_FIRE_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:fire
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.water_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_WATER_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:water
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.ice_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_ICE_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:ice
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.air_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_AIR_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:air
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.stone_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_STONE_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:stone
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.dream_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_DREAM_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:dream
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.celestial_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_CELESTIAL_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:celestial
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.dark_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_DARK_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:dark
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.light_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_LIGHT_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:light
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.blood_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_BLOOD_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:blood
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.nature_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_NATURE_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:nature
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.ethereal_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_ETHEREAL_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:ethereal
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.hymns_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_HYMNS_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:hymns
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.death_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_DEATH_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:death
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.sand_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_SAND_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:sand
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.metal_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_METAL_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:metal
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.time_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_TIME_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:time
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.dawn_aspect_spellcasting_value
+				multiply = 3
+			}
+			desc = SCHEME_DAWN_SKILL_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:dawn
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.physician_level_value
+				multiply = 3
+			}
+			desc = SCHEME_PHYSICIAN_XP_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:lifestyle_physician
+		}
+		modifier = {
+			add = {
+				value = scheme_owner.mystic_level_value
+				multiply = 3
+			}
+			desc = SCHEME_MYSTIC_XP_MODIFIER
+			var:knowledge_entry.var:knowledge_entry_skill ?= flag:lifestyle_mystic
+		}
+	}
+
+	on_phase_completed = {
+		# Grab our scopes.
+		save_scope_as = scheme
+		scheme_owner = { save_scope_as = owner }
+		scope:scheme = {
+			var:knowledge_entry = { save_scope_as = knowledge_entry_scope }
+			random = {
+				chance = scope:scheme.scheme_success_chance
+
+				save_scope_value_as = {
+					name = scheme_successful
+					value = yes
+				}
+			}
+			scope:owner = {
+				if = {
+					limit = {
+						exists = scope:scheme_successful
+					}
+					trigger_event = study_knowledge_entry.0001
+				}
+				else = {
+					trigger_event = study_knowledge_entry.0002
+				}
+			}
+		}
+	}
+
+	on_invalidated = {
+		#scheme_target_character = {
+		#	save_scope_as = target
+		#}
+		#scheme_owner = {
+		#	save_scope_as = owner
+		#}
+		#if = {
+		#	limit = {
+		#		scope:target = { is_alive = no }
+		#	}
+		#	scope:owner = {
+		#		send_interface_toast = {
+		#			title = medical_experiment_scheme_invalidated
+		#			custom_tooltip = medical_experiment_scheme_dead_desc
+		#			left_icon = scope:target
+		#		}
+		#	}
+		#}
+		#else_if = {
+		#	limit = {
+		#		scope:target = { is_alive = no }
+		#	}
+		#	scope:owner = {
+		#		send_interface_toast = {
+		#			title = medical_experiment_scheme_invalidated
+		#			custom_tooltip = medical_experiment_scheme_imprisoned_desc
+		#			left_icon = scope:target
+		#		}
+		#	}
+		#}
+
+	}
+	
+	success_desc = "GH_STUDY_KNOWLEDGE_ENTRY_SCHEME_SUCCESS_DESC"
+}
+
+medical_experiment_scheme = {
+	
+	skill = learning
+	desc = medical_experiment_scheme_desc
+	cooldown = { years = 1 }
+	is_basic = yes
+	target_type = character
+	illustration = "gfx/interface/illustrations/event_scenes/corridor.dds"
+	icon = icon_scheme_culture
+
+	# Parameters
+	speed_per_skill_point = 2
+	spymaster_speed_per_skill_point = 0	
+	target_spymaster_speed_per_skill_point = 0
+	uses_resistance = no
+	#minimum_progress_chance = 95
+	#maximum_progress_chance = 95
+	minimum_success = 95
+	base_maximum_success = 95
+	
+	allow = {
+		age >= 16
+		OR = {
+			faith = { has_doctrine_parameter = can_perform_medical_experiments }
+			AND = {
+				character_has_any_patron_saint = yes
+				any_character_patron_saint_has_aspect_trigger = { ASPECT = values_humility }
+			}
+		}
+	}
+	
+	valid = {
+		scope:target = {
+			is_imprisoned_by = scope:owner
+		}
+	}
+
+	# Prediction (abysmal/low/medium/high/excellent)
+	# scope:owner - Character starting the scheme
+	# scope:target - Whatever the scheme is targeting
+	odds_prediction = {
+		add = base_odds_prediction_target_is_char_value
+		add = odds_skill_contribution_learning_value
+		add = odds_learn_language_scheme_misc_value
+		min = 0
+	}
+
+	base_success_chance = {
+		base = 10
+		
+		modifier = {
+			add = {
+				value = scope:owner.learning
+				multiply = 1
+			}
+			desc = SCHEME_LEARNING_MODIFIER
+			scope:owner.learning > 0
+		}
+		
+		modifier = {
+			add = scope:owner.physician_lifestyle_experiments_value
+			desc = SCHEME_PHYSICIAN_SKILL_MODIFIER
+		}
+		
+		modifier = {
+			desc = SCHEME_COURT_PHYSICIAN_LEARNING_MODIFIER
+			scope:owner = {
+				employs_court_position = court_physician_court_position
+				any_court_position_holder = {
+					type = court_physician_court_position
+					is_physically_able = yes
+				}
+			}
+			add = scope:owner.court_physician_learning_value
+		}
+		
+		modifier = {
+			desc = SCHEME_COURT_PHYSICIAN_PHYSICIAN_SKILL_MODIFIER
+			scope:owner = {
+				employs_court_position = court_physician_court_position
+				any_court_position_holder = {
+					type = court_physician_court_position
+					is_physically_able = yes
+				}
+			}
+			add = scope:owner.court_physician_lifestyle_value
+		}
+	}
+
+	on_phase_completed = {
+		random = {
+			chance = scope:scheme.scheme_success_chance
+
+			save_scope_value_as = {
+				name = scheme_successful
+				value = yes
+			}
+		}
+		scope:owner = {
+			if = {
+				limit = {
+					exists = scope:scheme_successful
+				}
+				medical_experiments_success_event_effect = yes
+				
+			}
+			else = {
+				trigger_event = patron_saint_event.0104 # failure event
+			}
+		}
+	}
+
+	on_invalidated = {
+		scheme_target_character = {
+			save_scope_as = target
+		}
+		scheme_owner = {
+			save_scope_as = owner
+		}
+		if = {
+			limit = {
+				scope:target = { is_alive = no }
+			}
+			scope:owner = {
+				send_interface_toast = {
+					title = medical_experiment_scheme_invalidated
+					custom_tooltip = medical_experiment_scheme_dead_desc
+					left_icon = scope:target
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				scope:target = { is_alive = no }
+			}
+			scope:owner = {
+				send_interface_toast = {
+					title = medical_experiment_scheme_invalidated
+					custom_tooltip = medical_experiment_scheme_imprisoned_desc
+					left_icon = scope:target
+				}
+			}
+		}
+
+	}
+
+	on_monthly = {
+		save_scope_as = scheme
+		scheme_target_character = { save_scope_as = target }
+		scheme_owner = {
+			save_scope_as = owner
+			#trigger_event = { on_action = learn_magic_school_scheme_ongoing }
+			random_court_position_holder = {
+				type = court_physician_court_position
+				save_scope_as = court_physician
+			}
+		}
+	}
+	success_desc = "MEDICAL_EXPERIMENT_SCHEME_SUCCESS_DESC"
+}

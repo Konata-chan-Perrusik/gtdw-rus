@@ -1,0 +1,320 @@
+﻿#############################
+# Mutation Progress Effects #
+#############################
+
+increase_mutation_points_spell = {
+	if = {
+		limit = {
+			has_variable = general_mutation_progress_variable
+		}
+		change_variable = {
+			name = general_mutation_progress_variable
+			add = scope:spell_being_casted.total_aspect_total_spell_level_value
+		}
+	}
+	else = {
+		set_variable = {
+			name = general_mutation_progress_variable
+			value = scope:spell_being_casted.total_aspect_total_spell_level_value
+		}
+	}
+	magic_aspect_effect = { MODE = increase_mutation_progress_spell }
+	give_mutation_if_above_threshold_effect = yes
+}
+
+increase_mutation_progress_spell_aspect_effect = {
+	if = {
+		limit = {
+			scope:spell_being_casted.$ASPECT$_aspect_total_spell_level_value > 0
+		}
+		increase_mutation_progress_aspect = { INCREASE = scope:spell_being_casted.$ASPECT$_aspect_total_spell_level_value ASPECT = $ASPECT$ }
+	}
+}
+
+increase_mutation_progress_aspect = {
+	if = {
+		limit = {
+			has_variable = $ASPECT$_mutation_progress_variable
+		}
+		change_variable = {
+			name = $ASPECT$_mutation_progress_variable
+			add = $INCREASE$
+		}
+	}
+	else = {
+		set_variable = {
+			name = $ASPECT$_mutation_progress_variable
+			value = $INCREASE$
+		}
+	}
+}
+
+give_mutation_if_above_threshold_effect = {
+	if = {
+		limit = {
+			has_variable = general_mutation_progress_variable
+			var:general_mutation_progress_variable >= mutation_threshold_value
+		}
+		assign_random_mutation_effect = yes
+		increase_mutation_count = yes
+		reset_mutation_progress_effect = yes
+	}
+}
+
+reset_mutation_progress_effect = {
+	remove_variable = general_mutation_progress_variable
+	magic_aspect_effect = { MODE = remove_mutation_progress }
+}
+
+remove_mutation_progress_aspect_effect = {
+	if = {
+		limit = {
+			has_variable = $ASPECT$_mutation_progress_variable
+		}
+		remove_variable = $ASPECT$_mutation_progress_variable
+	}
+}
+
+increase_mutation_count = {
+	if = { 
+		limit = { has_variable = mutation_count_variable }
+		change_variable = {
+			name = mutation_count_variable
+			add = 1
+		}
+	}
+	else = { # intentional that it gets set to 2
+		set_variable = {
+			name = mutation_count_variable
+			value = 2
+		}
+	}
+}
+
+assign_random_mutation_effect = {
+	random_list = {
+		2 = {
+			trigger = {
+				NOR = {
+					has_trait = gh_exhausted
+					has_trait = gh_stimulated
+				}
+			}
+			modifier = {
+				add = {
+					value = var:general_mutation_progress_variable
+					multiply = 1
+				}
+			}
+			modifier = {
+				add = {
+					value = var:fire_mutation_progress_variable
+					multiply = 1
+				}
+				has_variable = fire_mutation_progress_variable
+			}
+			trigger_event = magic.1101
+		}
+		2 = {
+			trigger = {
+				NOR = {
+					has_trait = gh_exhausted
+					has_trait = gh_stimulated
+				}
+			}
+			modifier = {
+				add = {
+					value = var:general_mutation_progress_variable
+					multiply = 1
+				}
+			}
+			modifier = {
+				add = {
+					value = var:ice_mutation_progress_variable
+					multiply = 1
+				}
+				has_variable = ice_mutation_progress_variable
+			}
+			trigger_event = magic.1102
+		}
+		1 = {
+			trigger = {
+				NOT = {
+					has_trait = gh_racked_by_voices
+				}
+			}
+			modifier = {
+				add = {
+					value = var:general_mutation_progress_variable
+					divide = 5
+					floor = yes
+				}
+			}
+			trigger_event = magic.1103
+		}
+		1 = {
+			trigger = {
+				NOT = {
+					has_trait = gh_beset_by_visions
+				}
+			}
+			modifier = {
+				add = {
+					value = var:ethereal_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = ethereal_mutation_progress_variable
+			}
+			trigger_event = magic.1105
+		}
+		2 = {
+			trigger = {
+				can_have_red_magic_mutations_trigger = yes
+				NOT = {
+					has_trait = gh_glowing_eyes
+				}
+			}
+			modifier = {
+				add = {
+					value = var:fire_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = fire_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:blood_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = blood_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:nature_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = nature_mutation_progress_variable
+			}
+			trigger_event = magic.1106
+		}
+		2 = {
+			trigger = {
+				can_have_green_magic_mutations_trigger = yes
+				NOT = {
+					has_trait = gh_glowing_eyes
+				}
+			}
+			modifier = {
+				add = {
+					value = var:celestial_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = celestial_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:stone_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = stone_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:dark_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = dark_mutation_progress_variable
+			}
+			trigger_event = magic.1109
+		}
+		2 = {
+			trigger = {
+				NOT = {
+					has_trait = gh_excessively_pale
+				}
+			}
+			modifier = {
+				add = {
+					value = var:general_mutation_progress_variable
+					multiply = 1
+				}
+			}
+			modifier = {
+				factor = 4
+				has_trait = gh_glowing_veins
+			}
+			trigger_event = magic.1107
+		}
+		2 = {
+			trigger = {
+				NOT = {
+					has_trait = gh_glowing_veins
+				}
+			}
+			modifier = {
+				add = {
+					value = var:general_mutation_progress_variable
+					multiply = 1
+				}
+
+			}
+			modifier = {
+				add = {
+					value = var:blood_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = blood_mutation_progress_variable
+			}
+			modifier = {
+				factor = 4
+				has_trait = gh_excessively_pale	# Characters that are already excessively pale have a much greater chance of their veins becoming prominent
+			}
+			trigger_event = magic.1108
+		}
+		2 = {
+			trigger = {
+				NOT = {
+					has_trait = gh_necronic_skin
+				}
+			}
+			modifier = {
+				add = {
+					value = var:stone_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = stone_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:death_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = death_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:dark_mutation_progress_variable
+					multiply = 2
+				}
+				has_variable = dark_mutation_progress_variable
+			}
+			trigger_event = magic.1110
+		}
+		1 = {
+			trigger = {
+				NOT = {
+					has_trait = gh_aervalrian_curse
+				}
+				has_variable = celestial_mutation_progress_variable
+			}
+			modifier = {
+				add = {
+					value = var:celestial_mutation_progress_variable
+					multiply = 3
+				}
+				has_variable = celestial_mutation_progress_variable
+			}
+			trigger_event = magic.1111
+		}
+	}
+}

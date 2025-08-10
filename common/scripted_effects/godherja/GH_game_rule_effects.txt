@@ -1,0 +1,154 @@
+﻿game_rule_special_hammarts_wild_ride_effect = {
+	every_living_character = {
+		if = {
+			limit = {
+				OR = {
+					NOT = { any_held_county = { any_county_province = { geographical_region = world_ga_marcher_kingdoms } } }
+					has_title = title:d_callesc
+				}
+			}
+			remove_magical_trait_effect = yes
+			#remove_magical_education_effect = yes GH_TODO: update for aspects
+			add_trait = magic_good_20
+			if = {
+			    limit = {
+					NOT = { can_access_magic = yes }
+			    }
+				learn_random_culture_magic_school_effect = {
+					MIN_SPELLS = generated_character_min_spells_default_value
+					MAX_SPELLS = generated_character_max_spells_default_value
+					MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+				}
+			}
+		}
+	}
+}
+
+game_rule_destroy_migrant_coalition_effect = {
+	if = { limit = { exists = title:e_migrant_coalition.holder } }
+	title:e_migrant_coalition.holder = { destroy_title = title:e_migrant_coalition }
+}
+
+game_rule_opening_event_effect = {
+	every_player = { # GH TODO: Should probably just be custom loc'ing a single event so that we don't fire off a hundred at once
+		#if = {
+		#	limit = { has_opening_event = yes } # GH TODO: Make sure this is implemented properly and remove the char triggers from the events themselves
+			if = {
+				limit = { current_year = 1254 }
+				trigger_opening_events_1254_effect = yes
+			}
+		#}
+	}
+}
+
+trigger_opening_events_1254_effect = {
+	trigger_event = { id = opening_event.1 } 			# Black Sun
+	trigger_event = { id = opening_event.2 } 			# Dexios
+	#trigger_event = { id = opening_event.3 }			#Aironoi Generic # GH TODO: Legacy event, consider custom regional openers in future
+	trigger_event = { id = opening_event.4 } 			# Hecuba
+	trigger_event = { id = opening_event.6 } 			# Gorassos
+	trigger_event = { id = opening_event.7 } 			# Magistos
+	trigger_event = { id = opening_event.8 } 			# Adriane
+	trigger_event = { id = opening_event.9 } 			# Heraklios
+	trigger_event = { id = opening_event.11 } 			# Adalgar
+	trigger_event = { id = opening_event.12 } 			# Epghar-Argeadh
+	trigger_event = { id = opening_event.13 } 			# Mathilde
+	trigger_event = { id = opening_event.14 } 			# Rene
+	trigger_event = { id = opening_event.15 } 			# Cliement
+	trigger_event = { id = opening_event.16 } 			# Ansfrei
+	trigger_event = { id = opening_event.17 } 			# Benouet
+	trigger_event = { id = opening_event.18 } 			# Cois
+	trigger_event = { id = opening_event.19 } 			# Fenrus
+	trigger_event = { id = opening_event.20 } 			# Kekropi
+	trigger_event = { id = opening_event.21 } 			# Melane
+	trigger_event = { id = opening_event.22 } 			# Ulfirx
+	trigger_event = { id = opening_event.24 } 			# Hammart
+	trigger_event = { id = opening_event.26 } 			# Msamaki
+	trigger_event = { id = opening_event.27 } 			# Ogiers
+	trigger_event = { id = opening_event.28 } 			# Aeschraes
+	trigger_event = { id = opening_event.29 } 			# Cenware
+	trigger_event = { id = opening_event.30 } 			# Sigrun
+	trigger_event = { id = opening_event.31 } 			# Dragos
+	trigger_event = { id = opening_event.32 } 			# Isa
+	trigger_event = { id = opening_event.33 } 			# Sirras
+	trigger_event = { id = opening_event.34 } 			# Iordanes
+	trigger_event = { id = opening_event.36 } 			# Aderi
+	trigger_event = { id = opening_event.37 } 			# Farwah
+	trigger_event = { id = opening_event.38 } 			# Rashali
+	trigger_event = { id = opening_event.39 } 			# Herizab
+	trigger_event = { id = opening_event.40 } 			# Runalem
+	trigger_event = { id = opening_event.41 } 			# Azhela
+	trigger_event = { id = opening_event.42 } 			# Krehejad Archex
+	trigger_event = { id = opening_event.43 } 			# FRIDGE
+	trigger_event = { id = opening_event.44 }			# ACHAKE
+	trigger_event = { id = opening_event.45 } 			# Metal Mask
+	trigger_event = { id = opening_event.46 } 			# Puppet Draneti
+	trigger_event = { id = opening_event.47 } 			# Akakih the White Lion
+	trigger_event = { id = opening_event.48 } 			# Last Ertomaxist
+	trigger_event = { id = opening_event.49 } 			# Vakhtan Vampire Uncle
+	trigger_event = { id = opening_event.50 } 			# Tarnaz Hedonist Brother
+	trigger_event = { id = opening_event.51 } 			# Khvicha Barbarian Brother
+	trigger_event = { id = opening_event.52 } 			# Parnaz paranoid Magi brother
+	trigger_event = { id = opening_event.53 } 			# esterax the glorious
+	trigger_event = { id = opening_event.54 } 			# Bane of Azzy'krazz
+	trigger_event = { id = opening_event.55 } 			# Garniex
+	trigger_event = { id = opening_event.56 } 			# Arch-Legan Dethas 'the Last Legionnaire'
+	trigger_event = { id = opening_event.57 } 			# Hierotheos IV Morgeuthernis
+	trigger_event = { id = opening_event.58 } 			# The Free One
+	trigger_event = { id = opening_event.59 } 			# Vlanthus of the Heugs
+	trigger_event = { id = opening_event.60 } 			# Legio Pirateslayers
+	trigger_event = { id = opening_event.61 } 			# Legio Shipbreakers
+	trigger_event = { id = opening_event.62 } 			# Returning Ehatm
+	trigger_event = { id = opening_event.63 } 			# The Hand that Bites
+	trigger_event = { id = opening_event.64 } 			# Hollow King Digbhanja of the Rahikaya
+	trigger_event = { id = opening_event.65 } 			# Gandadeva the Madlad of the Paidem
+	trigger_event = { id = opening_event.66 } 			# Duke Bhagwant Scar bound
+	trigger_event = { id = opening_event.67 } 			# 1254 Tahanati Duchess, Ahilyabai
+	trigger_event = { id = opening_event.68 } 			# 1254 Karana Duke, Nahusa
+	trigger_event = { id = opening_event.69 } 			# 1254 Sheytaran Queen Nahana
+	trigger_event = { id = opening_event.70 } 			# 1254 Omkhur Duke, Naivarman
+	trigger_event = { id = opening_event.71 } 			# 1254 Sakankra Duke, Damodara
+	trigger_event = { id = opening_event.72 } 			# Frostblood
+	trigger_event = { id = opening_event.73 } 			# Narses
+	trigger_event = { id = opening_event.74 } 			# Tangatha, occupation force in Assocaea
+	trigger_event = { id = opening_event.75 } 			# Kresjsla Kraken-Eater
+	trigger_event = { id = opening_event.76 } 			# Arderico, Seaborne Exalted
+	trigger_event = { id = opening_event.77 } 			# Athanasia, Cleansed Cultist islander
+	trigger_event = { id = opening_event.78 } 			# Antipatra, Black Fraternal islander
+	trigger_event = { id = opening_event.79 } 			# Wishiwashi kardwen chief
+	trigger_event = { id = opening_event.93 } 			# Viesuados Heirs' Makis & Yiorgos
+	trigger_event = { id = opening_event.94 } 			# Bhramkarod Vengeful Crusader against death
+	trigger_event = { id = opening_event.98 } 			# Shau, our bumblingly brilliant marshal
+	trigger_event = { id = opening_event.99 } 			# Bhramkarod's scheaming wife
+	trigger_event = { id = opening_event.100 } 			# Myliros, Aeschraes' strongest soldier
+	trigger_event = { id = opening_event.101 } 			# Melissa, last scion of house Varsaxoan
+	trigger_event = { id = opening_event.102 } 			# Akakios "Ash-Killer"
+	trigger_event = { id = opening_event.103 } 			# Rosier den va Sissaux
+	trigger_event = { id = opening_event.104 } 			# Legon Zenobios of Legio XXI 'Axiaothea'
+	trigger_event = { id = opening_event.105 } 			# Legon Pavron of Legio XVII 'Stereon'
+	trigger_event = { id = opening_event.106 } 			# Arch Letalagos Matthaios of Legio XXVI 'Exodian'
+	trigger_event = { id = opening_event.107 } 			# Arch Letalagos Kallistos of Magi Auxiliaros Corpus XII
+	trigger_event = { id = opening_event.108 } 			# Arch Letalagos Iros of Legio VII 'Parataros'
+	trigger_event = { id = opening_event.109 } 			# Arch Letalagos Narthos of Legio LXXI 'Brass-Arms'
+	trigger_event = { id = opening_event.110 } 			# Arch Letalagos Tolios of the River Authority
+	trigger_event = { id = opening_event.111 } 			# Arch Letalagos Hykopas of Legio LXXX 'Shield of the North'
+	trigger_event = { id = opening_event.112 } 			# Legan Olymphoros of Legio LII 'the Redrock Guard'
+	trigger_event = { id = opening_event.113 } 			# Arch Letalagos Pylartes of Legio IV 'Elenos'
+	trigger_event = { id = opening_event.120 }			# Triggers Truce for Dhodoli/Hyratan
+	trigger_event = { id = opening_event_sarradon.1 } 	# Aarif
+	trigger_event = { id = opening_event_sarradon.2 } 	# opening event for amsari vassals
+	trigger_event = { id = opening_event_sarradon.3 } 	# Mamur
+	trigger_event = { id = opening_event_sarradon.4 } 	# Harthah
+	trigger_event = { id = opening_event_sarradon.5 } 	# Pejman
+	trigger_event = { id = opening_event_sarradon.6 } 	# opening event for marcher trading company
+	trigger_event = { id = opening_event_sarradon.7 } 	# Manat
+	trigger_event = { id = opening_event_sarradon.8 }	# Pad'eyil the Hubarist
+	trigger_event = { id = opening_event_sarradon.9 }	# Aghlab the Engineer
+	trigger_event = { id = opening_event_sarradon.10 }	# Abdul-Jaleel the Greenwender
+	trigger_event = { id = opening_event_sarradon.11 }	# Angobo kin Mamakhim
+	trigger_event = { id = opening_event_bn.1 } # Min Thu
+	trigger_event = { id = opening_event_bn.2 } # Su Myat, the White Rose
+	trigger_event = { id = opening_event_bn.3 } # Nurbek Nursultan, the Black Whirlwind
+	trigger_event = { id = opening_event_bn.4 } # Yaza Zin, High Priest/Sepattan
+	trigger_event = { id = opening_event_bn.5 } # Htet Myat Aung
+}

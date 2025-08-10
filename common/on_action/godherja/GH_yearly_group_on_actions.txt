@@ -1,0 +1,145 @@
+﻿damota_yearly_events = {
+	trigger = {
+		culture = { has_cultural_pillar = heritage_damotan }
+	}
+	weight_multiplier = {
+		base = 1
+		modifier = {
+			factor = 0.33
+			NOT = {
+				religion = religion:mogowai_religion
+			}
+		}
+	}
+
+	random_events = {
+		chance_to_happen = 65
+		200 = 0
+		
+		#Lodge Events
+		200 = damota.0101 # Karavuux Exploitation
+		200 = damota.0111 # Karavuux Investments
+		200 = damota.0121 # Waranuux Recruitment Cutting Into Farm Hands
+		200 = damota.0131 # Waranuux Skirmishes
+		200 = damota.0141 # Qabuux Split
+		200 = damota.0151 # Qabuux Quibble With Non-Members
+		200 = damota.0161 # Rayakuux Fund Expedition
+		200 = damota.0171 # Bandits Preying on Rayakuux
+	}
+}
+
+sarradonian_yearly_events = {
+	trigger = {
+		OR = {
+			religion = religion:wardenism_religion
+			religion = religion:ritualist_religion
+			culture = { has_cultural_pillar = heritage_sarradonian }
+			culture = { has_cultural_pillar = heritage_dezhunic }
+			AND = {
+				exists = capital_province
+				capital_province = {
+					geographical_region = GH_geographic_sarradon
+				}
+			}
+		}
+	}
+	weight_multiplier = {
+		base = 1
+	}
+
+	random_events = {
+		chance_to_happen = 65
+		200 = 0
+		
+		#Lodge Events
+		100 = wardenite_yearly.0001 # Tusuffna Lodge Dispute
+		100 = wardenite_yearly.0011 # Child Swayed by Minbiri'a
+		
+		#FP2 Events
+		100 = fp2_yearly.4004	# The Wandering Master
+		20 = fp2_yearly.9005	# Toledan Nights
+	}
+}
+
+legal_tradition_yearly_events = {
+	trigger = {
+		has_trait = lifestyle_jurist
+		NOR = { 
+			has_variable = had_recent_legal_tradition_event
+			trigger_if = {
+				limit = { has_variable = judicial_workload }
+				var:judicial_workload = flag:low_workload
+			}
+		}
+	}
+	weight_multiplier = {
+		base = 1
+	}
+
+	random_events = {
+		chance_to_happen = 100
+		
+		#Legal Events
+		100 = legal_tradition.0501 # Criminal Law
+		100 = legal_tradition.0511 # Sentencing Policy
+		100 = legal_tradition.0521 # Torts
+		100 = legal_tradition.0531 # Financial Law
+		100 = legal_tradition.0541 # Guild Law
+		100 = legal_tradition.0551 # Religious Law
+		100 = legal_tradition.0561 # Feudal Law
+	}
+	
+	effect = {
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { exists = var:judicial_workload }
+					NOT = { var:judicial_workload = flag:high_workload }
+				}
+			}
+			set_variable = {
+				name = had_recent_legal_tradition_event
+				days = 365
+			}
+		}
+	}
+}
+
+dergi_yearly = {
+	trigger = {
+		any_county = {
+			culture = { has_cultural_pillar = heritage_dergi }
+			title_province = { has_building_or_higher = dergi_garden_01 }
+		}
+	}
+	weight_multiplier = {
+		base = 1
+	}
+
+	effect = {
+		every_county = {
+			limit = {
+				title_province = { has_building_or_higher = dergi_garden_01 }
+			}
+			dergi_garden_effect = yes
+		}
+	}
+}
+
+blackspawn_yearly_events = {
+	trigger = {
+		has_trait = blackspawn
+		is_ai = no
+	}
+	effect = {
+		if = {
+			limit = {
+				NOR = { 
+					has_variable_list = ongoing_missions
+					has_variable = blackspawn_mission_cooldown
+				} 
+			}
+			trigger_event = blackspawn.0001
+		}
+	}
+}

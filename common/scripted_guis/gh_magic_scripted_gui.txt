@@ -1,0 +1,573 @@
+﻿can_access_magic_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		can_access_magic = yes
+	}
+	
+	effect = { }
+}
+
+display_councillor_magi = {
+	scope = character
+	
+	is_shown = {
+		can_have_court_magi_trigger = yes
+	}
+}
+
+select_character_spells_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = var:selected_character_spells
+				var:selected_character_spells = scope:selected_magic_school_scope
+			}
+			remove_variable = selected_character_spells
+		}
+		else = {
+			set_variable = {
+				name = selected_character_spells
+				value = scope:selected_character_scope
+			}
+		}
+	}
+}
+
+unselect_character_spells_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		remove_variable = selected_character_spells
+	}
+}
+
+select_magic_school_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = var:selected_magic_school
+				var:selected_magic_school = scope:selected_magic_school_scope
+			}
+			remove_variable = selected_magic_school
+		}
+		else = {
+			set_variable = {
+				name = selected_magic_school
+				value = scope:selected_magic_school_scope
+			}
+		}
+	}
+}
+
+close_magic_school_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		remove_variable = selected_magic_school
+	}
+}
+
+character_creation_select_magic_school_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				is_target_in_variable_list = {
+					name = selected_magic_school_list
+					target = scope:selected_magic_school_scope
+				}
+			}
+			remove_list_variable = {
+				name = selected_magic_school_list
+				target = scope:selected_magic_school_scope
+			}
+		}
+		else = {
+			add_to_variable_list = {
+				name = selected_magic_school_list
+				target = scope:selected_magic_school_scope
+			}
+		}
+	}
+}
+
+character_creation_magic_school_is_selected_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		is_target_in_variable_list = {
+			name = selected_magic_school_list
+			target = scope:selected_magic_school_scope
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+character_creation_expand_magic_school_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = var:selected_magic_school
+				var:selected_magic_school = scope:selected_magic_school_scope
+			}
+			remove_variable = selected_magic_school
+		}
+		else = {
+			set_variable = {
+				name = selected_magic_school
+				value = scope:selected_magic_school_scope
+			}
+		}
+	}
+}
+
+character_creation_magic_school_is_expanded_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		exists = var:selected_magic_school
+		var:selected_magic_school = scope:selected_magic_school_scope
+	}
+	
+	effect = {
+		
+	}
+}
+
+character_creation_select_spell_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				is_target_in_variable_list = {
+					name = selected_spell_list
+					target = scope:selected_spell_scope
+				}
+			}
+			remove_list_variable = {
+				name = selected_spell_list
+				target = scope:selected_spell_scope
+			}
+		}
+		else = {
+			add_to_variable_list = {
+				name = selected_spell_list
+				target = scope:selected_spell_scope
+			}
+		}
+	}
+}
+
+character_creation_spell_is_selected_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		is_target_in_variable_list = {
+			name = selected_spell_list
+			target = scope:selected_spell_scope
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+character_finder_select_magic_school_filter_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		
+	}
+	
+	effect = {
+		if = {
+			limit = {
+				exists = var:character_finder_select_magic_school
+				var:character_finder_select_magic_school = scope:character_finder_select_magic_school_scope
+			}
+			remove_variable = character_finder_select_magic_school
+		}
+		else = {
+			set_variable = {
+				name = character_finder_select_magic_school
+				value = scope:character_finder_select_magic_school_scope
+			}
+		}
+	}
+}
+
+character_finder_has_magic_school_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		has_variable_list = known_magic_school_list
+		is_target_in_variable_list = {
+			name = known_magic_school_list
+			target = scope:character_finder_select_magic_school_scope
+		}
+	}
+	
+	effect = { }
+}
+
+culture_creation_generate_available_magic_schools_list_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		clear_variable_list = culture_creation_selectable_magic_school_list
+		clear_variable_list = culture_creation_selected_magic_school_list
+		culture = {
+			every_in_list = {
+				variable = magic_school_list
+				root = {
+					add_to_variable_list = {
+						name = culture_creation_selectable_magic_school_list
+						target = prev.var:magic_school
+					}
+				}
+			}
+		}
+		if = {
+			limit = { exists = scope:other_culture }
+			scope:other_culture = {
+				every_in_list = {
+					variable = magic_school_list
+					root = {
+						add_to_variable_list = {
+							name = culture_creation_selectable_magic_school_list
+							target = prev.var:magic_school
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+culture_creation_magic_school_is_selected_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+		has_variable_list = culture_creation_selected_magic_school_list
+		any_in_list = {
+			variable = culture_creation_selected_magic_school_list
+			this = scope:magic_school_scope
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+culture_creation_select_magic_school_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+		OR = {
+			AND = {
+				has_variable_list = culture_creation_selected_magic_school_list
+				any_in_list = {
+					variable = culture_creation_selected_magic_school_list
+					this = scope:magic_school_scope.var:magic_school
+				}
+			}
+			NOT = { has_variable_list = culture_creation_selected_magic_school_list }
+			variable_list_size = { 
+				name = culture_creation_selected_magic_school_list 
+				value < culture.hybrid_culture_max_magic_schools_value 
+			}
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { is_target_in_variable_list = { name = culture_creation_selected_magic_school_list target = scope:magic_school_scope.var:magic_school } } }
+			add_to_variable_list = {
+				name = culture_creation_selected_magic_school_list
+				target = scope:magic_school_scope.var:magic_school
+			}
+		}
+		else = {
+			remove_list_variable = {
+				name = culture_creation_selected_magic_school_list
+				target = scope:magic_school_scope.var:magic_school
+			}
+		}
+	}
+}
+
+character_creation_increase_arcana_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:arcana } }
+			set_variable = {
+				name = arcana
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = arcana
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_arcana_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:arcana }
+			change_variable = {
+				name = arcana
+				subtract = 1
+			}
+			if = {
+				limit = { var:arcana <= 0 }
+				remove_variable = arcana
+			}
+		}
+	}
+}
+
+learn_spell_from_character_start_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		
+	}
+	
+	effect = {
+		remove_variable = spell_to_learn_from_character
+		if = {
+			limit = { exists = scope:target_character_scope }
+			scope:target_character_scope = {
+				if = {
+					limit = {
+						has_variable_list = known_spell_list
+					}
+					random_in_list = {
+						variable = known_spell_list
+						limit = {
+							NOT = {
+								root = {
+									is_target_in_variable_list = {
+										name = known_spell_list
+										target = prev
+									}
+								}
+							}
+						}
+						root = {
+							set_variable = {
+								name = spell_to_learn_from_character
+								value = prev
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+learn_spell_from_character_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		NOT = {
+			is_target_in_variable_list = {
+				name = known_spell_list
+				target = scope:spell_to_learn_scope
+			}
+		}
+	}
+	
+	effect = {
+		set_variable = {
+			name = spell_to_learn_from_character
+			value = scope:spell_to_learn_scope
+		}
+	}
+}
+
+# Misc
+
+character_ritual_tattoo_list_scripted_gui = {
+	scope = character
+	
+	is_shown = {}
+	
+	effect = {
+		every_in_list = {
+			variable = GH_ritual_tattoo_list
+			custom_tooltip = RITUAL_TATTOO_NAME
+		}
+	}
+}
+
+province_has_activated_aspects_scripted_gui = {
+	scope = province
+	
+	is_shown = { has_building_with_flag = activates_province_aspects }
+	
+	effect = {}
+}
+
+activate_province_aspect_specialization_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		has_building_with_flag = activates_province_aspects
+		province_max_aspect_specializations_value > 0
+	}
+	
+	is_valid = {
+		OR = {
+			NOT = { has_variable_list = province_aspect_specialization_list }
+			variable_list_size = {
+				name = province_aspect_specialization_list
+				value < province_max_aspect_specializations_value
+			}
+			is_target_in_variable_list = {
+				name = province_aspect_specialization_list
+				target = scope:aspect
+			}
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = {
+				has_variable_list = province_aspect_specialization_list
+				is_target_in_variable_list = {
+					name = province_aspect_specialization_list
+					target = scope:aspect
+				}
+			}
+			remove_list_variable = {
+				name = province_aspect_specialization_list
+				target = scope:aspect
+			}
+		}
+		else = {
+			add_to_variable_list = {
+				name = province_aspect_specialization_list
+				target = scope:aspect
+			}
+		}
+	}
+}
+
+province_aspect_specialization_is_activated_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		has_variable_list = province_aspect_specialization_list
+		is_target_in_variable_list = {
+			name = province_aspect_specialization_list
+			target = scope:aspect
+		}
+	}
+	
+	effect = { }
+}
+
+# TODO: Move this to a more generic file, though right now it's only relevant to magic stuff
+
+character_creation_add_trait_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		add_to_variable_list = {
+			name = selected_trait_list
+			target = scope:trait_scope
+		}
+	}
+}
+
+character_creation_remove_trait_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		remove_list_variable = {
+			name = selected_trait_list
+			target = scope:trait_scope
+		}
+	}
+}
+

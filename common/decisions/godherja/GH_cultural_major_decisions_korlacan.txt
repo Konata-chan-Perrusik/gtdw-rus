@@ -1,0 +1,734 @@
+﻿restore_the_eternal_flame_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = korlacan
+	ai_check_interval = 120 
+	desc = restore_the_eternal_flame_desc
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_korlacan }
+		NOT = {
+			faith = {
+				OR = {
+					has_doctrine = sepattan_twin_gods_doctrine
+					has_doctrine = sepattan_reincarnate_twin_gods_doctrine
+				}
+			}
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:restore_the_eternal_flame_decision
+			}
+			#primary_title.tier >= tier_empire
+		}
+	}
+	
+	is_valid = {
+		prestige_level >= 3
+		OR = {
+			piety_level >= 4
+			has_character_modifier = scourge_of_the_heretics_modifier
+		}
+		OR = {
+			faith = {
+				OR = {
+					has_doctrine = sepattan_korlacu_doctrine
+					has_doctrine = sepattan_reincarnate_korlacu_doctrine
+				}
+			} 
+		}
+		is_independent_ruler = yes
+		title:b_spinstersmonastery = {
+			title_province = {
+				has_building = 01_burning_palace
+			}
+		}
+		title:b_9219 = {
+			title_province = {
+				has_building = 01_temple_of_korlacu
+			}
+		}
+		OR = {
+			highest_held_title_tier = tier_empire
+			custom_description = { # Has the Spear of Korlacu
+				text = restore_the_eternal_flame_spear_of_korlacu
+				any_held_title = {
+					count >= 3
+					tier = tier_duchy
+				}
+				any_artifact = {
+					artifact_owner = root
+					has_variable = spear_of_korlacu
+				}
+			}
+			custom_description = { # Generic
+				text = restore_the_eternal_flame_generic
+				any_held_title = {
+					count >= 4
+					tier = tier_duchy
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = { is_at_war = no }
+
+	effect = {
+		root.culture = {
+			add_innovation = innovation_molten_vanguard
+		}
+		trigger_event = gh_korlacan_events.0002
+		change_government = magocratic_government
+		custom_tooltip = new_flame_priest_tooltip
+		gain_holy_legend_seed_tooltip_effect = yes
+		spawn_army = {
+			name = korlacu_reborn
+			men_at_arms = {
+				type = metal_elementals
+				stacks = 4
+			}
+			men_at_arms = {
+				type = fire_elementals
+				stacks = 4
+			}
+			inheritable = no
+			location = root.location
+		}
+		capital_county = {
+			change_development_level = 5
+			set_county_culture = culture:korlacan
+			set_county_faith = faith:korlenalmic
+			save_scope_as = character_capital
+		}
+		hidden_effect = {
+			save_scope_as = founder
+			primary_title = { save_scope_as = old_title }
+		
+			get_title = title:k_eternal_flame
+			set_primary_title_to = title:k_eternal_flame
+			primary_title = { save_scope_as = new_title }
+			if = { # Get rid of a previous kingdom title
+				limit = { scope:old_title = { tier = tier_kingdom } }
+				destroy_title = scope:old_title
+			}
+
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			resolve_title_and_vassal_change = scope:change
+	
+			#Check if all territory is from a single Empire, and if so, make Kingdom de jure of that Empire
+			every_sub_realm_county = {
+			if = {
+				limit = { exists = empire }
+				empire = {
+					if = {
+						limit = { NOT = { is_in_list = potential_empires } }
+						add_to_list = potential_empires
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = potential_empires
+					count > 0
+				}
+			}
+			ordered_in_list = {
+				list = potential_empires
+				order_by = {
+					every_in_de_jure_hierarchy = {
+						continue = { tier > tier_county }
+						limit = {
+							tier = tier_county
+							holder.top_liege = root
+						}
+						add = 1
+					}
+				}
+				position = 0
+				save_scope_as = old_empire
+			}
+		}
+		if = {
+			limit = { exists = scope:old_empire }
+			scope:new_title = { set_de_jure_liege_title = scope:old_empire }
+		}
+		
+		every_held_title = {
+			limit = { tier = tier_duchy }
+			if = {
+				limit = {
+					#Check if you need to notify a player
+					OR = {
+						AND = {
+							exists = kingdom
+							kingdom = {
+								exists = holder
+								holder = {
+									NOT = { this = root }
+									is_ai = no
+								}
+							}
+						}
+						AND = {
+							exists = empire
+							empire = {
+								exists = holder
+								holder = {
+									NOT = { this = root }
+									is_ai = no
+								}
+							}
+						}
+					}
+				}
+				add_to_temporary_list = duchy_for_notification
+				root = {
+					save_temporary_scope_value_as = {
+						name = send_notifications
+						value = yes
+					}
+				}
+			}
+			set_de_jure_liege_title = scope:new_title
+		}
+
+		every_sub_realm_county = {
+			limit = {
+				exists = duchy
+				NOT = { exists = duchy.holder }
+				holder.top_liege = root
+				duchy = { save_temporary_scope_as = test_duchy }
+				holder.top_liege = { completely_controls = scope:test_duchy }
+			}
+			if = {
+				limit = { NOT = { duchy = { is_in_list = additional_de_jure_duchies } } }
+				duchy = {
+					set_de_jure_liege_title = scope:new_title
+					add_to_list = additional_de_jure_duchies
+				}
+			}
+		}
+		
+		if = { # Resolve capital change if old primary title is titular
+			limit = { scope:old_title = { is_titular = no } }
+			scope:new_title = { set_capital_county = scope:old_title.title_capital_county }
+		}
+		else = { scope:new_title = { set_capital_county = scope:character_capital } }
+		
+		every_player = {
+			if = {
+				limit = {
+					top_liege = scope:founder
+					NOT = { this = root }
+				}
+			}
+			else_if = {
+				limit = {
+					exists = scope:send_notifications
+					NOT = { this = root }
+					NOT = { top_liege = scope:founder }
+					any_held_title = {
+						any_in_de_jure_hierarchy = {
+							continue = { tier > tier_duchy }
+							tier = tier_duchy
+							is_in_list = duchy_for_notification
+						}
+					}
+				}
+				every_held_title = {
+					every_in_de_jure_hierarchy = {
+						continue = { tier > tier_duchy }
+						limit = {
+							tier = tier_duchy
+							is_in_list = duchy_for_notification
+						}
+						add_to_list = notification_titles	
+					}
+				}			
+				if = {
+					limit = {
+						any_in_list = {
+							list = notification_titles
+							count > 0
+						}
+					}
+				}
+			}
+		}
+		}
+		add_prestige = 500
+		dynasty = { 
+			add_dynasty_prestige = 400
+		}
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:restore_the_eternal_flame_decision
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+}
+
+assert_korlacan_supremacy_decision = { #1st decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_catching_a_heretic.dds"
+	}
+	decision_group_type = korlacan
+	ai_check_interval = 120
+	desc = assert_korlacan_supremacy_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_korlacan }
+		game_start_date >= 1200.1.1
+		highest_held_title_tier <= tier_kingdom
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:assert_korlacan_supremacy_decision
+			}
+		}
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_korlacan }
+		custom_tooltip = {
+			NOT = {
+				exists = title:d_the_sepattan.holder
+			}
+			text = no_sepattan_exists_tooltip
+		}
+		piety_level >= 3
+		custom_tooltip = {
+			text = landed_qazaq_tooltip
+			dynasty:dyn_nursultan = {
+				NOT = {
+					any_dynasty_member = {
+						#is_landed = yes
+						highest_held_title_tier >= tier_county
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = landed_nattanan_tooltip
+			dynasty:dyn_zeyathura = {
+				NOT = {
+					any_dynasty_member = {
+						#is_landed = yes
+						highest_held_title_tier >= tier_county
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		add_piety = 500
+		dynasty = {
+			add_dynasty_prestige = 700
+		}
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:assert_korlacan_supremacy_decision
+		}
+		add_character_modifier = scourge_of_the_heretics_modifier
+		trigger_event = gh_korlacan_events.0003
+	}
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+}
+
+#establish empire tier realm (special title only formable by heretics)
+
+establish_aungkyi_thuriya_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = korlacan
+	ai_check_interval = 120
+	desc = establish_aungkyi_thuriya_decision_desc
+
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_korlacan}
+		game_start_date >= 1200.1.1
+		OR = {
+			calc_true_if = { #At least 2 of the titles has de jure land
+				amount >= 2
+				title:k_currentsprings = { any_in_de_jure_hierarchy = { tier = tier_county } }
+				title:k_west_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } }
+				title:k_east_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } }
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_aungkyi_thuriya_decision
+			}
+		}
+		highest_held_title_tier < tier_empire
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_korlacan }
+		prestige_level >= 4
+		piety_level >= 4
+		trigger_if = {
+			limit = { title:k_currentsprings = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_currentsprings
+			has_title = title:k_currentsprings
+		}
+		trigger_if = {
+			limit = { title:k_west_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_west_nattana
+			has_title = title:k_west_nattana
+		}
+		trigger_if = {
+			limit = { title:k_east_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_east_nattana
+			has_title = title:k_east_nattana
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_landed = yes
+	}
+
+	effect = {
+		gain_heroic_legend_seed_tooltip_effect = yes
+		dynasty = {
+			add_dynasty_prestige = 1500
+			add_dynasty_prestige_level = 1
+		}
+		save_scope_as = korlacan_conquerer
+		get_title = title:e_aungkyi_thuriya
+		set_primary_title_to = title:e_aungkyi_thuriya
+		show_as_tooltip = { establish_aungkyi_thuriya_decision_effects = yes } #Actually applied in gh_korlacan_events.0003 - prestige, laws, title changes
+
+		
+		#Events
+		trigger_event = gh_korlacan_events.0004
+		every_player = {
+			limit = {
+				NOT = { this = scope:korlacan_conquerer }
+				is_within_diplo_range = { CHARACTER = scope:korlacan_conquerer }
+			}
+			trigger_event = gh_korlacan_events.0005
+		}
+
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:establish_aungkyi_thuriya_decision
+		}
+		set_global_variable = {
+			name = establish_aungkyi_thuriya_decision
+			value = scope:korlacan_conquerer
+		}
+		set_global_variable = {
+			name = establish_aungkyi_thuriya_decision_title
+			value = scope:korlacan_conquerer.primary_title
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+reignite_the_fires_of_industry_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_smith.dds"
+	}
+	decision_group_type = korlacan
+	ai_check_interval = 120
+	desc = reignite_the_fires_of_industry_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_korlacan}
+		game_start_date >= 1200.1.1
+		OR = {
+			calc_true_if = { #At least 2 of the titles has de jure land
+				amount >= 2
+				title:k_currentsprings = { any_in_de_jure_hierarchy = { tier = tier_county } }
+				title:k_west_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } }
+				title:k_east_nattana = { any_in_de_jure_hierarchy = { tier = tier_county } }
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reignite_the_fires_of_industry_decision
+			}
+		}
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_korlacan }
+		has_title = title:e_aungkyi_thuriya
+		title:e_aungkyi_thuriya = { title_held_years >= 30 }
+		prestige_level >= 4
+		piety_level >= 4
+		title:b_9216 = {
+			title_province = {
+				has_building = 01_renewed_fortress #tier 3 special fort
+			}
+		}
+		title:b_9342 = {
+			title_province = {
+				has_building = 05_korlacan_mines #tier 5 special mine
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_landed = yes
+	}
+
+	effect = {
+		trigger_event = gh_korlacan_events.0006
+		gh_achiev_withthesedarkarts_check = yes #Achievement check
+		add_piety = 2000
+		dynasty = { 
+			add_dynasty_prestige = 2000
+		}
+		root.culture = {
+			add_innovation = innovation_korlacan_metallurgy
+		}
+		capital_county = {
+			change_development_level = 15
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+			save_scope_as = character_capital
+		}
+		capital_province = {
+			if = {
+				limit = { free_building_slots = 0 }
+				add_province_modifier = extra_building_slot
+			}
+			add_special_building_slot = 01_forge_of_korlacu
+		}
+		gain_holy_legend_seed_tooltip_effect = yes
+		spawn_army = {
+			name = korlacu_reborn
+			men_at_arms = {
+				type = metal_elementals
+				stacks = 4
+			}
+			men_at_arms = {
+				type = fire_elementals
+				stacks = 4
+			}
+			men_at_arms = {
+				type = molten_vanguard
+				stacks = 8
+			}
+			# TOG Note: Should they get these for free with the decision that unlocks being able to build them, or actually have to build them?
+			men_at_arms = { 
+				type = darksteel_colossi
+				stacks = 1
+			}
+			men_at_arms = {
+				type = darksteel_bombards
+				stacks = 1
+			}
+			inheritable = no
+			location = root.location
+		}
+			#Can only be done once
+			add_to_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reignite_the_fires_of_industry_decision
+			}
+
+	}
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+
+
+
+
+summon_disciple_from_the_burning_temple_decision = { #NON-HOF; no heir
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_sun_temple_cm.dds"
+	}
+	
+	sort_order = 81
+	decision_group_type = korlacan
+	desc = summon_disciple_from_the_burning_temple_decision_desc
+	selection_tooltip = summon_disciple_from_the_burning_temple_decision_sel_tooltip
+
+	ai_check_interval = 120
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_korlacan}
+		NOT = {
+			has_title = title:k_eternal_flame
+		}
+		OR = {
+			faith = {
+				OR = {
+					has_doctrine = sepattan_korlacu_doctrine
+					has_doctrine = sepattan_reincarnate_korlacu_doctrine
+				}
+			} 
+		}
+		NOR = {
+			faith = {
+				OR = {
+					has_doctrine = sepattan_twin_gods_doctrine
+					has_doctrine = sepattan_reincarnate_twin_gods_doctrine
+				}
+			} 
+		}
+	}
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_korlacan }
+		NOR = {
+			OR = {
+				has_doctrine = sepattan_twin_gods_doctrine
+				has_doctrine = sepattan_reincarnate_twin_gods_doctrine
+			}
+		}
+		piety_level >= 3
+		prestige_level >= 1
+
+		any_held_title = {
+			count >= 1
+			tier >= tier_county
+		}
+		title:b_9219 = {
+			title_province = {
+					has_building = 01_temple_of_korlacu
+				}
+			}
+	}
+
+	cooldown = { years = 10 }
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+	}
+
+	cost = {
+		piety = 1300
+	}
+	
+	effect = {
+		trigger_event = gh_korlacan_events.0001
+		custom_tooltip = summon_disciple_from_the_burning_temple_decision_tooltip
+		custom_tooltip = summon_disciple_from_the_burning_temple_quality_tooltip
+	}
+	
+	ai_potential = {
+		highest_held_title_tier > tier_barony
+		is_landed = yes
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+
+request_heir_from_burning_temple_decision = { #HOF; HEIR
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_sun_temple_cm.dds"
+	}
+	
+	sort_order = 81
+	decision_group_type = korlacan
+	desc = request_heir_from_burning_temple_decision_desc
+	selection_tooltip = request_heir_from_burning_temple_decision_tooltip
+
+	ai_check_interval = 120
+
+	is_shown = {
+		is_ruler = yes
+		has_title = title:k_eternal_flame
+		culture = { has_cultural_pillar = heritage_korlacan }
+		NOT = {
+			OR = {
+				has_doctrine = sepattan_twin_gods_doctrine
+				has_doctrine = sepattan_reincarnate_twin_gods_doctrine
+			}
+		}
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_korlacan}
+		piety_level >= 3
+		prestige_level >= 1
+		any_held_title = {
+			count >= 1
+			tier >= tier_county
+		}
+		title:b_spinstersmonastery = {
+			title_province = {
+				has_building = 01_burning_palace
+			}
+		}
+	}
+
+	cooldown = { years = 10 }
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+	}
+	cost = {
+		piety = 1300
+	}
+
+	effect = {
+		if = {
+			limit = {
+				OR = {
+					has_government = tribal_government
+					has_government = feudal_government
+					has_government = magocratic_government
+				}
+				
+			}
+			trigger_event = gh_korlacan_events.0008
+				custom_tooltip = request_heir_from_burning_temple_decision_tooltip
+				custom_tooltip = request_heir_from_burning_temple_decision_quality_tooltip
+		}
+	}
+	ai_potential = {
+        always = yes
+    }
+
+    ai_will_do = {
+        base = 100
+    }
+
+}

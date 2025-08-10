@@ -1,0 +1,232 @@
+﻿gh_petition_liege_councillor_compare_modifier = {
+	modifier = {
+		add = 500
+		scope:petition_vassal = {
+			OR = { # GH TODO: Figure out how to integrate the 5 level Lich trait here
+				has_trait = education_$SKILL$_1
+				has_trait = education_$SKILL$_2
+				has_trait = education_$SKILL$_3
+				has_trait = education_$SKILL$_4
+				has_trait = education_$SKILL$_5
+			}
+		}
+	}
+	modifier = {
+		add = 10
+		NOT = { exists = cp:councillor_court_magi }
+	}
+	modifier = {
+		add = 10
+		NOT = { exists = cp:councillor_court_magi  }
+		scope:petition_vassal.character_arcana_baseline_value >= mediocre_skill_rating
+	}
+	modifier = {
+		add = 20
+		scope:petition_vassal = { character_arcana_baseline_value > 20 }
+	}
+	modifier = {
+		add = scope:petition_vassal.character_arcana_baseline_value
+	}
+	modifier = {
+		add = 20
+		exists = scope:petition_liege.cp:councillor_$ROLE$
+		scope:petition_liege.cp:councillor_$ROLE$.character_arcana_baseline_value < councillor_$SKILL$_threshold_value
+	}
+}
+
+GH_hunt_activity_monster_hunt_type_modifier = {
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_beast }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_dire_stag_trigger = yes
+					GH_hunt_animal_lymrill_trigger = yes
+					GH_hunt_animal_crocotta_trigger = yes
+					GH_hunt_animal_apep-ibizan_trigger = yes
+					GH_hunt_animal_kursha_trigger = yes
+					GH_hunt_animal_owlbear_trigger = yes
+					GH_hunt_animal_karkadann_trigger = yes
+					GH_hunt_animal_armazli_rhinoceros_trigger = yes
+					GH_hunt_animal_gajara_trigger = yes
+					GH_hunt_animal_manticore_trigger = yes
+					GH_hunt_animal_chimera_trigger = yes
+					GH_hunt_animal_hieracosphinx_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_aberration }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_troll_trigger = yes
+					#GH_hunt_animal_slime_trigger = yes
+					GH_hunt_animal_gargoyle_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_arthropod }
+			activity_location = {
+				GH_hunt_animal_adze_trigger = yes
+				GH_hunt_animal_dire_mosquito_trigger = yes
+				GH_hunt_animal_giant_bee_trigger = yes
+				GH_hunt_animal_giant_spider_trigger = yes
+				GH_hunt_animal_ukhinbooum_trigger = yes
+				GH_hunt_animal_bhramar_trigger = yes
+				GH_hunt_animal_myrmeke_trigger = yes
+				GH_hunt_animal_false_hydra_trigger = yes
+				GH_hunt_animal_ugkilrrrmag_trigger = yes
+				GH_hunt_animal_ubir_trigger = yes
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_bird }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_griffon_trigger = yes
+					GH_hunt_animal_cockatrice_trigger = yes
+					GH_hunt_animal_zilant_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_draconic }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_wyrm_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_elemental }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_spriggan_trigger = yes
+					GH_hunt_animal_rock_giant_trigger = yes
+					GH_hunt_animal_living_blizzard_trigger = yes
+					GH_hunt_animal_whisperwind_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_reptile }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_great_rahksasa_trigger = yes
+					GH_hunt_animal_naga_trigger = yes
+					GH_hunt_animal_coatl_trigger = yes
+					GH_hunt_animal_running_raptor_trigger = yes
+					GH_hunt_animal_roaring_lizard_trigger = yes
+					GH_hunt_animal_akapura_trigger = yes
+					GH_hunt_animal_tarasque_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_spirit }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_spirit_trigger = yes
+					GH_hunt_animal_banshee_trigger = yes
+					GH_hunt_animal_cor_trigger = yes
+					GH_hunt_animal_djinn_trigger = yes
+					GH_hunt_animal_shade_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_worm }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_dreadleech_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_humanoid }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_almas_trigger = yes
+					GH_hunt_animal_giant_trigger = yes
+					GH_hunt_animal_gaunt_trigger = yes
+					GH_hunt_animal_urmahlullu_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+	modifier = {
+		scope:activity ?= {
+			has_activity_type = activity_hunt
+			has_activity_option = { category = hunt_option_monster_type option = hunt_monster_type_aquatic }
+			activity_location = {
+				OR = {
+					GH_hunt_animal_doyarchu_trigger = yes
+				}
+			}
+		}
+		factor = 2
+	}
+}
+
+GH_will_hunt_modifiers = {
+	modifier = {
+		add = 10
+		#should_use_advanced_hunting_traits = yes
+		#desc = BASE_RELUCTANCE
+	}
+	modifier = {
+		add = 10
+		has_trait = lifestyle_hunter
+	}
+	modifier = {
+		add = -10
+		prowess < 10
+	}
+	modifier = {
+		add = -10
+		prowess < 5
+	}
+	modifier = {
+		add = -20
+		prowess < 0
+	}
+}

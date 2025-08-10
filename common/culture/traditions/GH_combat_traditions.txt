@@ -1,0 +1,186 @@
+﻿tradition_warriors_of_velos = {
+	category = combat
+
+	layers = {
+		0 = martial
+		1 = western
+		4 = mountain.dds
+	}
+
+	is_shown = {
+		any_parent_culture = {
+			has_cultural_tradition = tradition_warriors_of_velos
+		}
+	}
+
+	can_pick = {
+		NOR = { 
+			has_cultural_tradition = tradition_bounty_of_ureha 
+			has_cultural_tradition = tradition_skalds_of_zamistra
+		}
+	}
+
+	parameters = {
+		more_prestige_from_battles = yes
+		more_piety_from_battles = yes
+		warriors_of_velos_positive_trait_modifiers = yes
+		culture_can_raid_at_sea_even_if_feudal = yes
+		not_tribal_pirate_raiding_malus = yes		
+	}
+	character_modifier = {
+		negate_prowess_penalty_add = 2
+		development_growth_factor = -0.25
+		monthly_income_mult = -0.06
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOT = {
+						culture_pillar:heritage_sjalvolki = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = not_sjalvolki_heritage_desc
+				}
+			}
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = { value = 100 }
+}
+
+tradition_redlanders = {
+	category = combat
+
+	layers = {
+		0 = martial
+		1 = mena
+		4 = desert.dds
+	}
+
+	is_shown = { #Replaced by Mubarizuns
+		has_cultural_pillar = heritage_iseni
+	}
+	
+	can_pick = {
+		culture_not_pacifistic_trigger = yes
+		custom_description = {
+			text = culture_in_dryland_desc
+			any_culture_county = {
+				any_county_province = {
+					OR = {
+						GH_any_drylands_terrain_trigger = yes
+						GH_any_desert_terrain_trigger = yes
+					}
+				}
+			}
+		}
+		NOT = { has_cultural_tradition = tradition_mubaaizun }
+		NOT = { has_cultural_tradition = tradition_warriors_of_the_dry }
+		NOT = { has_cultural_tradition = tradition_dryland_dwellers }
+	}
+	parameters = {
+		desert_warrior_trait_more_common = yes
+		dry_trait_bonuses = yes
+		can_recruit_dry_specialist = yes
+		plantations_building_bonuses = yes
+		redlanders_colonization_bonus = yes
+		culture_can_raid_over_land_even_if_feudal = yes
+		culture_can_raid_at_sea_even_if_feudal = yes
+		no_standard_maa = yes
+	}
+	county_modifier = {
+		desert_development_growth_factor = 0.35
+		drylands_development_growth_factor = 0.15
+	}
+	province_modifier = {
+		drylands_levy_size = 0.1
+		desert_levy_size = 0.1
+		drylands_supply_limit_mult = 0.25
+		desert_supply_limit_mult = 0.25
+		desert_construction_gold_cost = -0.15
+		drylands_construction_gold_cost = -0.15
+		desert_holding_construction_gold_cost = -0.15
+		drylands_holding_construction_gold_cost = -0.15
+	}
+	character_modifier = {
+		mercenary_hire_cost_mult = 10
+	}
+	culture_modifier = {
+		mercenary_count_mult = -10
+	}
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_stoic_or_communal_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = {
+								OR = {
+									GH_any_drylands_terrain_trigger = yes
+									GH_any_desert_terrain_trigger = yes
+								}
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = dry_percentage_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = {
+				NOT = {
+					scope:character = {
+						any_sub_realm_county = {
+							percent >= 0.2
+							culture = scope:character.culture
+							any_county_province = {
+								OR = {
+									GH_any_drylands_terrain_trigger = yes
+									GH_any_desert_terrain_trigger = yes
+								}
+							}
+						}
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}

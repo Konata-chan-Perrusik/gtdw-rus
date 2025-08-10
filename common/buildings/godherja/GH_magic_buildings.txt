@@ -1,0 +1,487 @@
+﻿@holding_illustration_lich = "gfx/interface/illustrations/holding_types/necropolis_generic.dds"
+
+###################
+# MAGIC BUILDINGS #
+###################
+
+# Magi Towers
+
+magi_tower_01 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_01_effect_desc
+	can_construct_potential = {
+		trigger_if = { # Magic-oriented cultures can build these even if tribal
+			limit = {
+				always = yes	# GH TODO: When we add a magic-oriented ethos add the appropriate check here
+			}
+
+			building_requirement_castle_city_church = { LEVEL = 01 }
+		}
+		trigger_else = {
+			OR = {
+				has_building_or_higher = tribe_01
+				building_requirement_castle_city_church = { LEVEL = 01 }
+			}
+		}
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+
+	can_construct = {
+		#building_requirement_castle_city_church = { LEVEL = 01 }
+	}
+
+	
+	cost_gold = expensive_building_tier_1_cost
+
+	
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_1
+		fort_level = normal_building_fort_level_tier_1
+	}
+	county_modifier = {
+		development_growth_factor = 0.05
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_1
+		magi_toughness_mult = low_maa_toughness_tier_1
+	}
+	
+	flag = activates_province_aspects
+	
+	next_building = magi_tower_02
+	
+	type_icon = "icon_building_hill_forts.dds"
+	
+	ai_value = {
+		base = 5
+		ai_tier_1_building_modifier = yes
+		ai_tier_1_economical_building_preference_modifier = yes
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		
+		# GH TODO: Add more stuff here
+		modifier = {
+			factor = 0
+			building_farm_estates_requirement_terrain = yes
+			NOT = {
+				has_building_or_higher = farm_estates_01
+			}
+		}
+		modifier = {
+			factor = 0
+			building_orchards_requirement_terrain = yes
+			NOT = {
+				has_building_or_higher = orchards_01
+			}
+		}
+
+	}
+}
+
+magi_tower_02 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_02_effect_desc
+	can_construct_potential = {
+		trigger_if = { # Magic-oriented cultures can build these even if tribal
+			limit = {
+				always = yes	# GH TODO: When we add a magic-oriented ethos add the appropriate check here
+			}
+
+			building_requirement_castle_city_church = { LEVEL = 01 }
+		}
+		trigger_else = {
+			OR = {
+				has_building_or_higher = tribe_01
+				building_requirement_castle_city_church = { LEVEL = 01 }
+			}
+		}
+		culture = {	# GH TODO: Cultural parameter for next-level magic buildings
+			has_innovation = innovation_tribal_magic
+		}
+		
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+
+	can_construct = {
+		#building_requirement_castle_city_church = { LEVEL = 01 }
+	}
+
+	
+	cost_gold = expensive_building_tier_2_cost
+
+	
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_2
+		fort_level = normal_building_fort_level_tier_2
+	}
+	county_modifier = {
+		development_growth_factor = 0.10
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_2
+		magi_toughness_mult = low_maa_toughness_tier_2
+	}
+	
+	flag = activates_province_aspects
+	
+	next_building = magi_tower_03
+	ai_value = {
+		base = 9
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+magi_tower_03 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_03_effect_desc
+	can_construct_potential = {
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+	can_construct = {
+		culture = {
+			has_innovation = innovation_early_medieval_magic
+		}
+		building_requirement_castle_city_church = { LEVEL = 02 }
+	}
+	
+	cost_gold = expensive_building_tier_3_cost
+
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_3
+		fort_level = normal_building_fort_level_tier_3
+	}
+	county_modifier = {
+		development_growth_factor = 0.15
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_3
+		magi_toughness_mult = low_maa_toughness_tier_3
+	}
+	
+	flag = activates_province_aspects
+	
+	on_complete = {
+		if = { limit = { county.holder = { is_ai = yes } }  ai_select_province_aspect_specialization_effect = yes }
+	}
+	
+	next_building = magi_tower_04
+	ai_value = {
+		base = 9
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+magi_tower_04 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_04_effect_desc
+	can_construct_potential = {
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+	can_construct = {
+		culture = {
+			has_innovation = innovation_early_medieval_magic
+		}
+		building_requirement_castle_city_church = { LEVEL = 02 }
+	}
+	
+	cost_gold = expensive_building_tier_4_cost
+
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_4
+		fort_level = normal_building_fort_level_tier_4
+	}
+	county_modifier = {
+		development_growth_factor = 0.20
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_4
+		magi_toughness_mult = low_maa_toughness_tier_4
+	}
+	
+	flag = activates_province_aspects
+	
+	on_complete = {
+		if = { limit = { county.holder = { is_ai = yes } }  ai_select_province_aspect_specialization_effect = yes }
+	}
+	
+	next_building = magi_tower_05
+	ai_value = {
+		base = 9
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+magi_tower_05 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_05_effect_desc
+	can_construct_potential = {
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+	can_construct = {
+		culture = {
+			has_innovation = innovation_high_medieval_magic
+		}
+		building_requirement_castle_city_church = { LEVEL = 03 }
+	}
+	
+	cost_gold = expensive_building_tier_5_cost
+
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_5
+		fort_level = normal_building_fort_level_tier_5
+	}
+	county_modifier = {
+		development_growth_factor = 0.25
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_5
+		magi_toughness_mult = low_maa_toughness_tier_5
+	}
+	
+	flag = activates_province_aspects
+	
+	on_complete = {
+		if = { limit = { county.holder = { is_ai = yes } }  ai_select_province_aspect_specialization_effect = yes }
+	}
+	
+	next_building = magi_tower_06
+	ai_value = {
+		base = 6
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+magi_tower_06 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_06_effect_desc
+	can_construct_potential = {
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+	can_construct = {
+		culture = {
+			has_innovation = innovation_high_medieval_magic
+		}
+		building_requirement_castle_city_church = { LEVEL = 03 }
+	}
+	
+	cost_gold = expensive_building_tier_6_cost
+
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_6
+		fort_level = normal_building_fort_level_tier_6
+	}
+	county_modifier = {
+		development_growth_factor = 0.30
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_6
+		magi_toughness_mult = low_maa_toughness_tier_6
+	}
+	
+	flag = activates_province_aspects
+	
+	on_complete = {
+		if = { limit = { county.holder = { is_ai = yes } }  ai_select_province_aspect_specialization_effect = yes }
+	}
+	
+	next_building = magi_tower_07
+	ai_value = {
+		base = 5
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+magi_tower_07 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_07_effect_desc
+	can_construct_potential = {
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+	can_construct = {
+		culture = {
+			has_innovation = innovation_late_medieval_magic
+		}
+		building_requirement_castle_city_church = { LEVEL = 04 }
+	}
+	
+	cost_gold = expensive_building_tier_7_cost
+
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_7
+		fort_level = normal_building_fort_level_tier_7
+	}
+	county_modifier = {
+		development_growth_factor = 0.35
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_7
+		magi_toughness_mult = low_maa_toughness_tier_7
+	}
+	
+	flag = activates_province_aspects
+	
+	on_complete = {
+		if = { limit = { county.holder = { is_ai = yes } }  ai_select_province_aspect_specialization_effect = yes }
+	}
+	
+	next_building = magi_tower_08
+	ai_value = {
+		base = 4
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+magi_tower_08 = {
+	construction_time = quick_construction_time
+	effect_desc = building_magi_tower_08_effect_desc
+	can_construct_potential = {
+		scope:holder = {
+			has_any_positive_magic_doctrine = yes
+			faith = { NOT = { has_doctrine_parameter = can_build_dark_obelisks } }
+		}
+	}
+	can_construct = {
+		culture = {
+			has_innovation = innovation_late_medieval_magic
+		}
+		building_requirement_castle_city_church = { LEVEL = 04 }
+	}
+	
+	cost_gold = expensive_building_tier_8_cost
+
+	province_modifier = {
+		monthly_income = poor_building_tax_tier_8
+		fort_level = normal_building_fort_level_tier_8
+	}
+	county_modifier = {
+		development_growth_factor = 0.40
+	}
+	character_modifier = {
+		magi_damage_mult = low_maa_damage_tier_8
+		magi_toughness_mult = low_maa_toughness_tier_8
+	}
+	
+	flag = activates_province_aspects
+	
+	on_complete = {
+		if = { limit = { county.holder = { is_ai = yes } }  ai_select_province_aspect_specialization_effect = yes }
+	}
+	
+	ai_value = {
+		base = 3
+		ai_general_building_modifier = yes
+		directive_to_build_economy_modifier = yes
+		ai_economical_building_preference_modifier = yes
+		modifier = { # Fill all building slots before going for upgrades
+			factor = 0
+			free_building_slots > 0
+		}
+	}
+}
+
+# Misc
+
+magic_silver_mine_01 = {
+
+	asset = {
+		type = pdxmesh
+		name = "building_special_mines_mesh"
+	}
+
+	construction_time = slow_construction_time
+
+	type_icon = "icon_structure_mines.dds"
+
+	can_construct_potential = {
+		always = no
+	}
+	
+	cost_gold = expensive_building_tier_3_cost
+	
+	province_modifier = {
+		monthly_income = silver_mine_building_tax_tier_1
+	}
+	county_modifier = {
+		development_growth_factor = 0.1
+	}
+	
+	type = special
+}
+
+necropolis_01 = {
+	construction_time = slow_construction_time
+
+	asset = {
+		type = pdxmesh
+		name = "building_western_city_02_mesh"
+		illustration = @holding_illustration_lich
+		soundeffect = { soundeffect = "event:/SFX/Ambience/3DMapEmitters/Holdings/City/western_city" soundparameter = { "Tier" = 2 } }
+		graphical_regions = { konijkmener_biozone chevalie_biozone lichdoms_biozone migraddar_biozone vyshtanka_biozone knokidbes_biozone southern_kalath_biozone kalath_redwoods_biozone sulzegg_basin_biozone pathos_delta_biozone kalath_old_growth_biozone black_mountains_biozone foglands_biozone whisperveil_biozone mayikprolollan_biozone }
+		graphical_cultures = { western_building_gfx slavic_building_gfx }
+	}
+
+	county_modifier = {
+		fort_level = 7
+		defender_holding_advantage = 25
+	}
+	can_construct_potential = {
+		culture = { has_cultural_parameter = gives_lich_necropolis }
+	}
+}

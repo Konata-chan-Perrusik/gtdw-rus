@@ -1,0 +1,2064 @@
+﻿#RegionalDrink
+#RegionalAlcoholicDrink
+#get_region_root_vegetable & get_region_root_vegetable_plural
+#RegionalEdibleAnimal
+#RegionalEdibleMeat
+#FavoriteTreat
+#FavoriteTreatDemand
+#FavoriteTreatUppercase
+#GetLocalStreetFood & GetLocalStreetFoodPlural
+#GetFoodDetail
+#GetExpensiveMeal
+#GetExpensiveMealAlt
+#GetExpensiveDessert
+#GetExpensiveDessertInTheFace
+#GetExpensiveDrink
+#GetExpensiveDrink_Singular
+#RegionalFish
+
+#NOTE! All of these nouns should work with "a" (not "an")
+RegionalDrink = {
+	type = character
+	random_valid = yes
+
+	# GH ADDITIONS
+	text = {
+		localization_key = GH_beer	# Very popular (even among the nobility) in both Sarradonian and Sjalvolki cultures.
+		trigger = {
+			location.culture = {
+				OR = {
+					has_sarradonian_heritage_pillar_trigger = yes 
+					has_sjalvolki_heritage_pillar_trigger = yes 
+				}
+			}
+			faith_prohibits_alcohol_trigger = no
+		}
+	}
+	text = {
+		localization_key = GH_sharbat	# Based on the real life beverage of the same name. Nonalcoholic and popular in Sarradon.
+		trigger = {
+			location.culture = {
+				OR = {
+					has_sarradonian_heritage_pillar_trigger = yes 
+				}
+			}
+		}
+	}
+	text = {
+		localization_key = GH_emdvash	# Real life 'Sakanjabīl', a mixture of honey and vinegar. Nonalcoholic.
+		trigger = {
+			location.culture = { has_sarradonian_heritage_pillar_trigger = yes }
+		}
+	}
+	# GH ADDITIONS END
+	text = {
+		localization_key = wine
+		trigger = {
+			location = {
+				OR = {
+					geographical_region = GH_geographic_shattered_coast
+					geographical_region = GH_geographic_clanlands
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_kharadamat
+					geographical_region = GH_geographic_sinhamiyah
+				}
+			}
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+		}
+	}
+	text = {
+		localization_key = mead
+		trigger = {
+			location = {
+				OR = {
+					geographical_region = GH_geographic_clanlands
+					geographical_region = GH_geographic_marches
+				}
+			}
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+		}
+	}
+	text = {
+		localization_key = expensive_drink_spiced_wine_singular
+		trigger = { faith_prohibits_alcohol_trigger = no } # GH CHANGE: Generic trigger replacement
+	}
+	text = {
+		localization_key = tea
+		trigger = {
+			location = {
+				NAND = {
+					geographical_region = world_greater_aversaria
+					NOR = {
+						geographical_region = world_ga_kashirya
+						geographical_region = world_ga_aironoi
+					}
+				}
+			}
+		}
+	}
+
+	text = {
+		localization_key = soma
+		trigger = {
+			location = { geographical_region = world_ga_kashirya }
+			# GH ADDITION: Historians are still debating what soma even was but I'm going to go with
+			# the idea that it was some sort of extremely inconsistent hallucinogenic likely derived
+			# from Fly Agaric since that lets me shove in another random trigger we dont need
+			faith_prohibits_hallucinogenics_trigger = no
+		}
+	}
+
+	text = {
+		localization_key = expensive_drink_violet_sharbah
+		trigger = {
+			OR = {
+				faith_prohibits_alcohol_trigger = yes # GH CHANGE: Generic trigger replacement
+				location = { geographical_region = world_sarradon }
+			}
+			faith_exalts_alcohol_trigger = no # GH ADDITION: GIVE ME REAL BOOZE
+		}
+	}
+}
+
+RegionalAlcoholicDrink = {
+	type = character
+	random_valid = yes
+
+	text = {
+		localization_key = wine
+		trigger = { faith_prohibits_alcohol_trigger = no } # GH ADDITION: For consistency
+	}
+
+	text = {
+		localization_key = mead
+		trigger = { faith_prohibits_alcohol_trigger = no } # GH ADDITION: For consistency
+	}
+
+	text = {
+		localization_key = palm_wine
+		trigger = {
+			culture = { has_cultural_pillar = heritage_kashiryan }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = slivovitz
+		trigger = {
+			culture = { has_cultural_pillar = heritage_sjalvolki }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = imperial_mytosic
+		trigger = {
+			culture = { has_cultural_pillar = heritage_aversarian }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = shiraz_white
+		trigger = {
+			location = { geographical_region = world_sarradon }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = tharra
+		trigger = {
+			culture = { has_cultural_pillar = heritage_kashiryan }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = arrack
+		trigger = {
+			OR = {
+				culture = { has_cultural_pillar = heritage_kashiryan }
+				location = {
+					geographical_region = world_sarradon
+					geographical_region = world_ga_kashirya
+				}
+			}
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = sack_wine
+		trigger = {
+			culture = { has_cultural_tradition = tradition_islander }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		localization_key = prunelle_liquer
+		trigger = {
+			culture = { has_cultural_pillar = language_marcher }
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+		}
+	}
+	text = {
+		# GH ADDITION: A somewhat 'alcoholic' stimulant drink that might actually have some origins in rituals but has become
+		# extremely widespread across most of the world over the past millenia (partially thanks to Aversaria) and is now primarily
+		# enjoyed by muggle and Magi alike. Not as good as a good ol' beer but you get all of the drunken debauchery without
+		# enough legally viable medical studies proving mass rates of cancer for anyone to care, and is easily made en masse
+		# even by non-Magi for relatively cheap magical ingredients. Frequently enjoyed by, as the name implies, Aversarian
+		# post-grads who desperately need to study for their thesis but still want to get smashed at the same time before
+		# accidentally nuking the ritual graduation test chamber thinking that they're 'totally fine bro' because 'its not like
+		# i drank or anything bro' and soldiers in the legions who could drink the shit for hours a day on campaign and still
+		# manage to stay awake for firewatch.
+		localization_key = acolytes_eye
+		trigger = {
+			faith_prohibits_alcohol_trigger = yes # GH ADDITION: So that even the non-alcoholics can get in on it
+			faith_exalts_alcohol_trigger = no # GH ADDITION: "Whatsch the fukkkkkkkkkkkkkkkkkkk is this shitttttttttt broooooo"
+		}
+	}
+	text = { # Fermented mare's milk, further localized based on specific cultural heritage
+		localization_key = kumis_variant
+		trigger = { accustomed_to_drinking_kumis = yes }
+	}
+}
+
+GetCulturalKumisVariant = { # Cultural names for fermented mare's milk drinks
+	type = character
+	random_valid = yes
+
+	text = { # Kikarsag kumis, pseudo-turkic origin
+		localization_key = kuzum
+		trigger = { culture = { has_cultural_pillar = heritage_kikarsag } }
+	}
+
+	text = { # Sarminian kumis, Kikarsag origin
+		localization_key = czumij
+		trigger = { culture = { has_cultural_pillar = heritage_sarminian } }
+	}
+
+	text = { # Khokhuud kumis, pseudo-mongolic origin
+		localization_key = airagaang
+		trigger = { culture = { has_cultural_pillar = heritage_khokhuud } }
+	}
+
+	text = { # Vhanavid kumis, Khokhuud origin
+		localization_key = airagag
+		trigger = { culture = { has_cultural_pillar = heritage_vhanavid } }
+	}
+
+	text = { # Mahratian kumis, Vhanavid origin
+		localization_key = eireg
+		trigger = { culture = { has_cultural_tradition = tradition_kaegan_wind } }
+	}
+
+	text = { # Xajirkel kumis, isolate
+		localization_key = tsegun
+		trigger = { culture = { has_cultural_pillar = heritage_xajirkel } }
+	}
+
+	text = { # Fallback
+		localization_key = kumis
+		trigger = { always = no }
+		fallback = yes
+	}
+}
+
+#Coupled with select_root_vegetable_effect
+get_region_root_vegetable = {
+	type = character 
+	random_valid = yes
+
+	text = {
+		trigger = { location.var:root_vegetable = flag:onion }
+		localization_key = root_vegetable_onion
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:carrot }
+		localization_key = root_vegetable_carrot
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:parsnip }
+		localization_key = root_vegetable_parsnip
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:turnip }
+		localization_key = root_vegetable_turnip
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:yam }
+		localization_key = root_vegetable_yam
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:kokoro }
+		localization_key = root_vegetable_kokoro
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:ginger }
+		localization_key = root_vegetable_ginger
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:taro }
+		localization_key = root_vegetable_taro
+	}
+}
+
+get_region_root_vegetable_plural = {
+	type = character 
+	random_valid = yes
+
+	text = {
+		trigger = { location.var:root_vegetable = flag:onion }
+		localization_key = root_vegetable_onion_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:carrot }
+		localization_key = root_vegetable_carrot_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:parsnip }
+		localization_key = root_vegetable_parsnip_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:turnip }
+		localization_key = root_vegetable_turnip_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:yam }
+		localization_key = root_vegetable_yam_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:kokoro }
+		localization_key = root_vegetable_kokoro_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:ginger }
+		localization_key = root_vegetable_ginger_plural
+	}
+	text = {
+		trigger = { location.var:root_vegetable = flag:taro }
+		localization_key = root_vegetable_taro_plural
+	}
+}
+
+# Not coupled with anything! Do you hate having to use an effect to set your root vegetable? Me too!
+## All the same logic, none of the same fuss - basically, the above custom_loc is for use with an artefact and not just generally.
+RegionalRootVegetable = {
+	type = character
+	random_valid = yes
+
+	# Onion
+	text = {
+		# You can find these anywhere.
+		## Much like ogres.
+		localization_key = root_vegetable_onion
+	}
+	# Carrot
+	text = {
+		trigger = {
+			location = { province_has_vegetable_carrot_trigger = yes }
+		}
+		localization_key = root_vegetable_carrot
+	}
+	# Parsnip
+	text = {
+		trigger = {
+			location = { province_has_vegetable_parsnip_trigger = yes }
+		}
+		localization_key = root_vegetable_parsnip
+	}
+	# Turnip
+	text = {
+		trigger = {
+			location = { province_has_vegetable_turnip_trigger = yes }
+		}
+		localization_key = root_vegetable_turnip
+	}
+	# Yam
+	text = {
+		trigger = {
+			location = { province_has_vegetable_yams_trigger = yes }
+		}
+		localization_key = root_vegetable_yam
+	}
+	# Kokoro
+	text = {
+		trigger = {
+			location = { province_has_vegetable_kokoro_trigger = yes }
+		}
+		localization_key = root_vegetable_kokoro
+	}
+	# Ginger
+	text = {
+		trigger = {
+			location = { province_has_vegetable_ginger_trigger = yes }
+		}
+		localization_key = root_vegetable_ginger
+	}
+	# Taro
+	text = {
+		trigger = {
+			location = { province_has_vegetable_taro_trigger = yes }
+		}
+		localization_key = root_vegetable_taro
+	}
+}
+RegionalRootVegetablePlural = {
+	type = character
+	random_valid = yes
+
+	# Onion
+	text = {
+		# You can find these anywhere.
+		## Much like ogres.
+		localization_key = root_vegetable_onion_plural
+	}
+	# Carrot
+	text = {
+		trigger = {
+			location = { province_has_vegetable_carrot_trigger = yes }
+		}
+		localization_key = root_vegetable_carrot_plural
+	}
+	# Parsnip
+	text = {
+		trigger = {
+			location = { province_has_vegetable_parsnip_trigger = yes }
+		}
+		localization_key = root_vegetable_parsnip_plural
+	}
+	# Turnip
+	text = {
+		trigger = {
+			location = { province_has_vegetable_turnip_trigger = yes }
+		}
+		localization_key = root_vegetable_turnip_plural
+	}
+	# Yam
+	text = {
+		trigger = {
+			location = { province_has_vegetable_yams_trigger = yes }
+		}
+		localization_key = root_vegetable_yam_plural
+	}
+	# Kokoro
+	text = {
+		trigger = {
+			location = { province_has_vegetable_kokoro_trigger = yes }
+		}
+		localization_key = root_vegetable_kokoro_plural
+	}
+	# Ginger
+	text = {
+		trigger = {
+			location = { province_has_vegetable_ginger_trigger = yes }
+		}
+		localization_key = root_vegetable_ginger_plural
+	}
+	# Taro
+	text = {
+		trigger = {
+			location = { province_has_vegetable_taro_trigger = yes }
+		}
+		localization_key = root_vegetable_taro_plural
+	}
+}
+
+RegionalEdibleAnimal = {
+	type = character
+	random_valid = yes
+
+	#Hart
+	text = {
+		trigger = { faith_shuns_hare_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_animal_hart
+	}
+
+	#Chicken
+	text = {
+		trigger = { faith_shuns_poultry_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_animal_chicken
+	}
+
+	#Hare
+	text = {
+		trigger = { faith_shuns_hare_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_animal_hare
+	}
+
+	#Sheep
+	text = {
+		trigger = { faith_shuns_mutton_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_animal_lamb
+	}
+
+	#Pig
+	text = {
+		trigger = { faith_shuns_pork_trigger = no } # GH CHANGE: Vanilla reference replacement
+		localization_key = regional_edible_animal_pig
+	}
+
+	#Beef
+	text = {
+		trigger = { faith_shuns_beef_trigger = no } # GH CHANGE: Vanilla reference replacement
+		localization_key = regional_edible_animal_ox
+	}
+
+	#Boar
+	text = {
+		trigger = { faith_shuns_pork_trigger = no } # GH CHANGE: Vanilla reference replacement
+
+		localization_key = regional_edible_animal_boar
+	}
+
+	#Gazelle
+	text = {
+		trigger = {
+			location = {
+				geographical_region = world_sarradon
+			}
+			faith_shuns_venison_trigger = no # GH ADDITION: To fit in with the various meat triggers
+		}
+		localization_key = regional_edible_animal_gazelle
+	}
+
+}
+
+RegionalEdibleMeat = {
+	type = character
+	random_valid = yes
+
+	#Venison
+	text = {
+		trigger = { faith_shuns_venison_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_meat_venison
+	}
+
+	#Chicken
+	text = {
+		trigger = { faith_shuns_poultry_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_meat_chicken
+	}
+
+	#Hare
+	text = {
+		trigger = { faith_shuns_hare_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_meat_hare
+	}
+
+	#Sheep
+	text = {
+		trigger = { faith_shuns_mutton_trigger = no } # GH ADDITION: To fit in with the various meat triggers
+		localization_key = regional_edible_meat_lamb
+	}
+
+	#Beef
+	text = {
+		trigger = { faith_shuns_beef_trigger = no } # GH CHANGE: Vanilla reference replacement
+		localization_key = regional_edible_meat_beef
+	}
+
+	#Pork
+	text = {
+		trigger = { faith_shuns_pork_trigger = no } # GH CHANGE: Vanilla reference replacement
+		localization_key = regional_edible_meat_pork
+	}	
+
+}
+
+#Favourite Treat 
+FavoriteTreat = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = treat_comfit
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:comfit
+			}
+		}
+	}
+	text = {
+		localization_key = treat_roasted_almonds
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:roasted_almonds
+			}
+		}
+	}
+	text = {
+		localization_key = treat_nougat
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:nougat
+			}
+		}
+	}
+	text = {
+		localization_key = treat_marzipan
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:marzipan
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sweetroll
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sweetroll
+			}
+		}
+	}
+	text = {
+		localization_key = treat_poached_pear
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:poached_pear
+			}
+		}
+	}
+	text = {
+		localization_key = treat_pudding
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:pudding
+			}
+		}
+	}
+	text = {
+		localization_key = treat_apple_tart
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:apple_tart
+			}
+		}
+	}
+	text = {
+		localization_key = treat_strawberry_compote
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:strawberry_compote
+			}
+		}
+	}
+	text = {
+		localization_key = treat_gingerbread
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:gingerbread
+			}
+		}
+	}
+	text = {
+		localization_key = treat_frytour_blaunched
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:frytour_blaunched
+			}
+		}
+	}
+	text = {
+		localization_key = treat_fig_pie
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:fig_pie
+			}
+		}
+	}
+	text = {
+		localization_key = treat_pokerounce
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:pokerounce
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sambocade
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sambocade
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sesame_cake
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sesame_cake
+			}
+		}
+	}
+	text = {
+		localization_key = treat_baked_banana
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:baked_banana
+			}
+		}
+	}
+	#text = {
+	#	localization_key = treat_koptoplakous
+	#	trigger = {
+	#		OR = {
+	#			NOT = { has_variable = favorite_treat }
+	#			var:favorite_treat = flag:koptoplakous
+	#		}
+	#	}
+	#}
+	text = {
+		localization_key = treat_plakountas
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:plakountas
+			}
+		}
+	}
+}
+
+FavoriteTreatDemand = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = treat_comfit
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:comfit
+			}
+		}
+	}
+	text = {
+		localization_key = treat_roasted_almonds
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:roasted_almonds
+			}
+		}
+	}
+	text = {
+		localization_key = treat_nougat
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:nougat
+			}
+		}
+	}
+	text = {
+		localization_key = treat_marzipan
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:marzipan
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sweetrolls
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sweetroll
+			}
+		}
+	}
+	text = {
+		localization_key = treat_poached_pears
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:poached_pear
+			}
+		}
+	}
+	text = {
+		localization_key = treat_pudding
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:pudding
+			}
+		}
+	}
+	text = {
+		localization_key = treat_apple_tart
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:apple_tart
+			}
+		}
+	}
+	text = {
+		localization_key = treat_strawberry_compote
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:strawberry_compote
+			}
+		}
+	}
+	text = {
+		localization_key = treat_gingerbread
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:gingerbread
+			}
+		}
+	}
+	text = {
+		localization_key = treat_frytour_blaunched
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:frytour_blaunched
+			}
+		}
+	}
+	text = {
+		localization_key = treat_fig_pie
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:fig_pie
+			}
+		}
+	}
+	text = {
+		localization_key = treat_pokerounce
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:pokerounce
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sambocade
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sambocade
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sesame_cake
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sesame_cake
+			}
+		}
+	}
+	text = {
+		localization_key = treat_baked_banana
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:baked_banana
+			}
+		}
+	}
+	#text = {
+	#	localization_key = treat_koptoplakous
+	#	trigger = {
+	#		OR = {
+	#			NOT = { has_variable = favorite_treat }
+	#			var:favorite_treat = flag:koptoplakous
+	#		}
+	#	}
+	#}
+	text = {
+		localization_key = treat_plakountas
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:plakountas
+			}
+		}
+	}
+}
+
+FavoriteTreatUppercase = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = treat_comfit_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:comfit
+			}
+		}
+	}
+	text = {
+		localization_key = treat_roasted_almonds_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:roasted_almonds
+			}
+		}
+	}
+	text = {
+		localization_key = treat_nougat_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:nougat
+			}
+		}
+	}
+	text = {
+		localization_key = treat_marzipan_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:marzipan
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sweetroll_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sweetroll
+			}
+		}
+	}
+	text = {
+		localization_key = treat_poached_pear_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:poached_pear
+			}
+		}
+	}
+	text = {
+		localization_key = treat_pudding_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:pudding
+			}
+		}
+	}
+	text = {
+		localization_key = treat_apple_tart_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:apple_tart
+			}
+		}
+	}
+	text = {
+		localization_key = treat_strawberry_compote_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:strawberry_compote
+			}
+		}
+	}
+	text = {
+		localization_key = treat_gingerbread_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:gingerbread
+			}
+		}
+	}
+	text = {
+		localization_key = treat_frytour_blaunched_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:frytour_blaunched
+			}
+		}
+	}
+	text = {
+		localization_key = treat_fig_pie_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:fig_pie
+			}
+		}
+	}
+	text = {
+		localization_key = treat_pokerounce_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:pokerounce
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sambocade_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sambocade
+			}
+		}
+	}
+	text = {
+		localization_key = treat_sesame_cake_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:sesame_cake
+			}
+		}
+	}
+	text = {
+		localization_key = treat_baked_banana_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:baked_banana
+			}
+		}
+	}
+	#text = {
+	#	localization_key = treat_koptoplakous_uppercase
+	#	trigger = {
+	#		OR = {
+	#			NOT = { has_variable = favorite_treat }
+	#			var:favorite_treat = flag:koptoplakous
+	#		}
+	#	}
+	#}
+	text = {
+		localization_key = treat_plakountas_uppercase
+		trigger = {
+			OR = {
+				NOT = { has_variable = favorite_treat }
+				var:favorite_treat = flag:plakountas
+			}
+		}
+	}
+}
+
+GetLocalStreetFood = {
+	type = character
+
+	# GH ADDITIONS
+	text = {
+		trigger = {
+			OR = {
+				root.location.culture = { has_sarradonian_heritage_pillar_trigger = yes }
+			}
+		}
+		localization_key = GH_katief	# Real life 'Qatayef'
+	}
+
+	text = {
+		trigger = {
+			root.location.culture = {
+				OR = {
+					has_sarradonian_heritage_pillar_trigger = yes
+					this = culture:westernimperial
+					any_parent_culture_or_above = { this = culture:westernimperial }
+					this = culture:imperialislander
+					any_parent_culture_or_above = { this = culture:imperialislander }
+				}
+				NOT = { has_cultural_pillar = language_aversarian }
+			}
+		}
+		localization_key = GH_adiriyya	# A pinwheel-like flatbread sandwich, see the real life 'Kitāb al-Ṭabīkh'
+	}
+	text = {
+		trigger = {
+			root.location.culture = {
+				OR = {
+					has_sarradonian_heritage_pillar_trigger = yes
+					this = culture:westernimperial
+					any_parent_culture_or_above = { this = culture:westernimperial }
+					this = culture:imperialislander
+					any_parent_culture_or_above = { this = culture:imperialislander }
+				}
+				has_cultural_pillar = language_aversarian
+			}
+		}
+		localization_key = GH_kalamypsi	# Etepezean variant of Adiriyya
+	}
+	
+	text = {
+		trigger = {
+			OR = {
+				root.location.culture = { has_sarradonian_heritage_pillar_trigger = yes }
+			}
+		}
+		localization_key = GH_midinudi	# Real life 'Jalebi'. Originated in Kashirya but later became popular in Sarradon as well.
+	}
+	
+	text = {
+		trigger = {
+			root.location.culture = {
+				OR = {
+					has_sarradonian_heritage_pillar_trigger = yes
+					this = culture:westernimperial
+					any_parent_culture_or_above = { this = culture:westernimperial }
+					this = culture:imperialislander
+					any_parent_culture_or_above = { this = culture:imperialislander }
+				}
+			}
+		}
+		localization_key = GH_falafel	# Self-explanatory. Popular in Sarradon and Etepezea.
+		# GH TODO: Slightly alter this name and introduce an Aversarian variant of it.
+	}
+	
+	# GH ADDITIONS END
+	
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_byzantine }
+	#	}
+	#	localization_key = honey_fritter
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_latin }
+	#	}
+	#	localization_key = pizza
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_indo_aryan }
+	#	}
+	#	localization_key = pakhala
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_turkic }
+	#	}
+	#	localization_key = pilau
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_berber }
+	#	}
+	#	localization_key = pastilla
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_iberian }
+	#	}
+	#	localization_key = empanada
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_chinese }
+	#	}
+	#	localization_key = botuo
+	#}
+
+	text = {
+		localization_key = stew
+	}
+}
+
+GetLocalStreetFoodPlural = {
+	type = character
+
+	#text = {
+	#	trigger = {
+	#		OR = {
+	#			root.location.culture = { has_cultural_pillar = heritage_arabic }
+	#			root.location.culture = { has_cultural_pillar = heritage_iranian }
+	#		}
+	#	}
+	#	localization_key = sambusa_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_byzantine }
+	#	}
+	#	localization_key = honey_fritter_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_latin }
+	#	}
+	#	localization_key = pizza_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_indo_aryan }
+	#	}
+	#	localization_key = pakhala_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_turkic }
+	#	}
+	#	localization_key = pilau_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_berber }
+	#	}
+	#	localization_key = pastilla_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_iberian }
+	#	}
+	#	localization_key = empanada_plural
+	#}
+
+	#text = {
+	#	trigger = {
+	#		root.location.culture = { has_cultural_pillar = heritage_chinese }
+	#	}
+	#	localization_key = botuo_plural
+	#}
+
+	text = {
+		localization_key = stew_plural
+	}
+}
+
+GetFoodDetail = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = food_detail_cilantro
+	}
+
+	text = {
+		localization_key = food_detail_lemon
+	}
+
+	text = {
+		localization_key = food_detail_almond
+	}
+}
+
+GetExpensiveMeal = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = expensive_food_roast_swan
+		trigger = {
+			faith = {
+				NOR = {
+					has_doctrine_parameter = pacifist_opinion_active
+					faith_shuns_poultry_trigger = yes # GH ADDITION: To fit in with the various meat triggers
+				}
+			}
+			location = { NOT = { geographical_region = world_sarradon } }
+		}
+	}
+	text = {
+		localization_key = expensive_food_veal_cutlets
+		trigger = {
+			faith = {
+				NOR = {
+					faith_shuns_beef_trigger = yes # GH CHANGE: Vanilla reference replacement
+					has_doctrine_parameter = pacifist_opinion_active
+				}
+			}
+		}
+	}
+	text = {
+		localization_key = expensive_food_fresh_quail
+		trigger = {
+			faith = {
+				NOR = {
+					faith_shuns_poultry_trigger = yes # GH ADDITION: To fit in with the various meat triggers
+					has_doctrine_parameter = pacifist_opinion_active
+				}
+			}
+		}
+	}
+	text = {
+		localization_key = expensive_food_sturgeon_cheese
+		trigger = {
+			faith = {
+				NOR = {
+					has_doctrine_parameter = pacifist_opinion_active
+				}
+			}
+			location = {
+				NOT = { geographical_region = world_greater_aversaria } #Not in use in Europe during this time(though they did exist)!
+			}
+		}
+		localization_key = expensive_food_baked_truffles
+	}
+	text = {
+		trigger = {
+			always = no
+		}
+		fallback = yes
+		localization_key = expensive_food_spiced_breads
+	}
+	text = {
+		trigger = {
+			always = no
+		}
+		localization_key = expensive_food_mustard_rolls
+		fallback = yes
+	}
+}
+
+GetExpensiveMealAlt = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = expensive_food_fine_cheeses
+	}
+	text = {
+		localization_key = expensive_food_almond_eggs
+	}
+	text = {
+		trigger = {
+			location = {
+				geographical_region = world_greater_aversaria
+			}
+		}
+		localization_key = expensive_food_sturgeon_caviar
+	}
+}
+
+GetExpensiveDessert = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = expensive_dessert_saffron_cake
+	}
+	text = {
+		localization_key = expensive_dessert_candied_figs
+	}
+	text = {
+		localization_key = expensive_dessert_pomegranate_cake
+	}
+	text = {
+		trigger = {
+			location = {
+				geographical_region = chevalie_biozone
+			}
+		}
+		localization_key = expensive_dessert_entremets
+	}
+	text = {
+		localization_key = expensive_dessert_quince_tarts
+		trigger = {
+			location = {
+				geographical_region = world_ga_aversarian_homelands
+			}
+		}
+	}
+}
+
+GetExpensiveDessertInTheFace = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		localization_key = expensive_dessert_saffron_cake_face
+	}
+	text = {
+		localization_key = expensive_dessert_candied_figs_face
+	}
+	text = {
+		localization_key = expensive_dessert_pomegranate_cake_face
+	}
+	text = {
+		trigger = {
+			location = {
+				geographical_region = chevalie_biozone
+			}
+		}
+		localization_key = expensive_dessert_entremets_face
+	}
+	text = {
+		localization_key = expensive_dessert_quince_tarts_face
+		trigger = {
+			location = {
+				geographical_region = world_ga_aversarian_homelands
+			}
+		}
+	}
+}
+
+GetExpensiveDrink = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			location = {
+				OR = {
+					geographical_region = world_ga_aversarian_homelands
+					geographical_region = world_ga_clanlands
+					geographical_region = world_ga_marcher_kingdoms
+				}
+			}
+		}
+		localization_key = expensive_drink_hippocras
+	}
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			location = {
+				OR = {
+					geographical_region = world_ga_marcher_kingdoms
+					geographical_region = world_ga_clanlands
+					geographical_region = world_ga_foglands
+				}
+			}
+		}
+		localization_key = expensive_drink_mead
+	}
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			location = {
+				geographical_region = world_ga_foglands
+			}
+		}
+		localization_key = expensive_drink_imported_wine
+	}
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			location = {
+				OR = {
+					geographical_region = world_ga_marcher_kingdoms
+					geographical_region = world_ga_clanlands
+				}
+			}
+		}
+		localization_key = expensive_drink_salisian_claret #Salisian Claret
+	}
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			aqua_vitae_invented_minor_event = yes
+		}
+		localization_key = expensive_drink_aqua_vitae
+	}
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			brandy_invented_minor_event = yes
+		}
+		localization_key = expensive_drink_brandy
+	}
+	text = {
+		trigger = { faith_prohibits_alcohol_trigger = no } # GH CHANGE: Generic trigger replacement
+		localization_key = expensive_drink_spiced_wine
+	}
+	text = {
+		localization_key = expensive_drink_kosher_wine
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH ADDITION: For consistency
+			faith_prefers_kosher_trigger = yes # GH CHANGE: Generic trigger replacement
+		}
+	}
+	text = {
+		localization_key = expensive_drink_premium_tea
+		trigger = {
+			location = {
+				NOT = { geographical_region = world_greater_aversaria }
+			}
+		}
+	}
+	text = {
+		localization_key = expensive_drink_invigorating_herbal_infusions
+		trigger = {
+			always = yes
+		}
+	}
+	text = {
+		localization_key = expensive_drink_violet_sharbah
+		trigger = {
+			OR = {
+				faith_prohibits_alcohol_trigger = yes # GH CHANGE: Generic trigger replacement
+				location = { geographical_region = world_sarradon }
+			}
+			faith_exalts_alcohol_trigger = no # GH ADDITION: kidney failure go brrrrrrrr
+		}
+	}
+}
+
+GetExpensiveDrink_Singular = {
+	type = character
+
+	random_valid = yes
+
+	text = {
+		trigger = { # GH CHANGE: Generic trigger replacement, replaced geo regions
+			faith_prohibits_alcohol_trigger = no
+			location = {
+				OR = {
+					geographical_region = world_ga_aversarian_homelands
+					geographical_region = world_ga_clanlands
+					geographical_region = world_ga_marcher_kingdoms
+				}
+			}
+		}
+		localization_key = expensive_drink_singular_hippocras
+	}
+	text = {
+		trigger = {
+			faith_prohibits_alcohol_trigger = no # GH CHANGE: Generic trigger replacement
+			exists = liege
+			liege = {
+				exists = capital_province
+				capital_province = {
+					geographical_region = world_ga_foglands
+				}
+			}
+		}
+		localization_key = expensive_drink_singular_imported_wine
+	}
+	text = {
+		trigger = {
+			exists = liege
+			liege = {
+				exists = capital_province
+				capital_province = {
+					OR = {
+						geographical_region = world_ga_marcher_kingdoms
+						geographical_region = world_ga_clanlands
+					}
+				}
+			}
+		}
+		localization_key = expensive_drink_singular_bordeaux_claret #Salisian Claret
+	}
+	text = {
+		trigger = {
+			current_date > 1240.1.1 #random later date in GH history, happens in the late middle ages irl, magic or something enables aversarians get drunk as fuck to relieve the pain or w/e
+		}
+		localization_key = expensive_drink_singular_brandy
+	}
+	text = {
+		trigger = {
+			current_date > 1200.1.1 #first mention of brandy is in 1437 irl, but GH's alcoholics get it earlier
+		}
+		localization_key = expensive_drink_singular_brandy
+	}
+	text = {
+		localization_key = expensive_drink_singular_spiced_wine
+		trigger = {
+			always = yes
+		}
+	}
+	text = {
+		localization_key = expensive_drink_singular_premium_tea
+		trigger = {
+			exists = liege
+			liege = {
+				exists = capital_province
+				capital_province = {
+					NOT = { geographical_region = world_greater_aversaria }
+				}
+			}
+		}
+	}
+	text = {
+		localization_key = expensive_drink_singular_violet_sharbah
+		trigger = {
+			AND = {
+				exists = liege
+				liege = {
+					exists = capital_province
+					capital_province = {
+						OR = {
+							geographical_region = world_sarradon
+						}
+					}
+				}
+			}
+		}
+	}
+	text = {
+		localization_key = expensive_drink_singular_herbal_infusions
+		trigger = {
+			always = yes
+		}
+	}
+}
+
+GetRegionalFish = {
+	type = character
+
+	random_valid = yes
+
+	# Sturgeon is always available
+	text = {
+		localization_key = fish_sturgeon
+	}
+
+	# Ocean fishes
+		text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					geographical_region = etepezea_biozone
+					geographical_region = opakhasia_biozone
+					geographical_region = malcois_biozone
+					geographical_region = western_aironoi_biozone
+					geographical_region = tower_isles_biozone
+					geographical_region = central_isles_biozone
+					geographical_region = guillate_rocks_biozone
+					geographical_region = kharadamat_biozone
+					geographical_region = sinhamiyah_biozone
+					geographical_region = ayyar_coast_biozone
+					geographical_region = amsar_biozone
+				}
+			}
+		}
+		localization_key = fish_mackerel
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					geographical_region = etepezea_biozone
+					geographical_region = opakhasia_biozone
+					geographical_region = malcois_biozone
+					geographical_region = western_aironoi_biozone
+					geographical_region = tower_isles_biozone
+					geographical_region = central_isles_biozone
+					geographical_region = guillate_rocks_biozone
+					geographical_region = kharadamat_biozone
+					geographical_region = sinhamiyah_biozone
+					geographical_region = ayyar_coast_biozone
+					geographical_region = amsar_biozone
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+				}
+			}
+		}
+		localization_key = fish_bass
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_sea-bream
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_cod
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_pollock
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_red_snapper
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_trout
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_scamp
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_tuna
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_whitefish
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_ling
+	}
+
+	text = {
+		trigger = {
+			has_character_flag = ocean
+			location = {
+				OR = {
+					geographical_region = GH_geographic_pirate_coast
+					geographical_region = GH_geographic_sirwali
+				}
+			}
+		}
+		localization_key = fish_nemo
+	}
+
+	# North Atlantic fishes
+	text = {
+		trigger = {
+			location = {
+				OR = {
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_guillate_rocks
+					geographical_region = GH_geographic_oejeynica
+					geographical_region = GH_geographic_lonely_light
+				}
+			}
+		}
+		localization_key = fish_salmon
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_guillate_rocks
+					geographical_region = GH_geographic_oejeynica
+					geographical_region = GH_geographic_lonely_light
+				}
+			}
+		}
+		localization_key = fish_eel
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_guillate_rocks
+					geographical_region = GH_geographic_oejeynica
+					geographical_region = GH_geographic_lonely_light
+				}
+			}
+		}
+		localization_key = fish_smelt
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_guillate_rocks
+					geographical_region = GH_geographic_oejeynica
+					geographical_region = GH_geographic_lonely_light
+				}
+			}
+		}
+		localization_key = fish_plaice
+	}
+
+	text = {
+		trigger = {
+			location = {
+				OR = {
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_guillate_rocks
+					geographical_region = GH_geographic_oejeynica
+					geographical_region = GH_geographic_lonely_light
+				}
+			}
+		}
+		localization_key = fish_flounder
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = kalathipsomi_biozone
+					geographical_region = GH_geographic_marches
+					geographical_region = GH_geographic_guillate_rocks
+					geographical_region = GH_geographic_oejeynica
+					geographical_region = GH_geographic_lonely_light
+				}
+			}
+		}
+		localization_key = fish_herring
+	}
+
+	# Mediterranean fish
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_wrasse
+	}
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_anchovy
+	}
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_grouper
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_seahorse
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					always = no # GH TODO: Fish lore
+				}
+			}
+		}
+		localization_key = fish_angler_fish
+	}
+
+	# African fish
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = crater_biozone
+					geographical_region = rojihlat_biozone
+					geographical_region = cyrat_biozone
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		localization_key = fish_needlefish
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = damota_biozone
+				}
+			}
+		}
+		localization_key = fish_squeaker
+	}
+
+	# Indian fish
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = GH_geographic_kashirya
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		localization_key = fish_arowana
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		localization_key = fish_barramundi
+	}
+
+	text = {
+		trigger = {
+			NOT = {
+				has_character_flag = ocean
+			}
+			location = {
+				OR = {
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		localization_key = fish_croaker
+	}
+}

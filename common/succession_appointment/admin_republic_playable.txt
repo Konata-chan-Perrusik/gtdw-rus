@@ -1,0 +1,1224 @@
+﻿admin_republican = {
+	default_candidates = { holder_close_family landed_vassal unlanded_noble_house_head holder_councilor }
+	invested_candidates = { holder_close_extended_family landed_vassal_close_extended_family unlanded_noble_close_extended_family }
+
+	allow_children = no
+
+	candidate_score = {
+		value = {
+			# AGE
+			if = {
+				limit = { age <= 5 }
+				subtract = {
+					value = 100
+					desc = infant_candidate_desc
+				}
+			}
+			else_if = {
+				limit = { age < 10 }
+				subtract = {
+					value = 50
+					desc = child_candidate_desc
+				}
+			}
+			else_if = {
+				limit = { age < 16 }
+				subtract = {
+					value = 20
+					desc = adolescent_candidate_desc
+				}
+			}
+			else_if = {
+				limit = { age < 25 }
+				subtract = {
+					value = 50
+					desc = not_elder_statesman_candidate_desc
+				}
+			}
+			else_if = {
+				limit = { age > 40 }
+				add = {
+					value = 50
+					desc = elder_statesman_candidate_desc
+				}
+			}
+			else_if = {
+				limit = { age > 50 }
+				add = {
+					value = 100
+					desc = elder_statesman_candidate_desc
+				}
+			}
+			else_if = {
+				limit = { age > 60 }
+				add = {
+					value = 150
+					desc = elder_statesman_candidate_desc
+				}
+			}
+
+
+			# SKILLS
+			add = {
+				value = {
+					add = diplomacy
+					add = learning
+					add = martial
+					add = intrigue
+					add = stewardship
+					multiply = 2
+				}
+				desc = sum_of_skills_desc
+			}
+
+			# TRAITS
+			if = {
+				limit = {
+					has_trait = born_in_the_purple
+				}
+				subtract = {
+					value = 50
+					desc = trait_born_in_the_purple
+				}
+			}
+			if = {
+				limit = {
+					has_trait = disfigured
+					scope:title.holder.culture = { has_cultural_parameter = physical_disfigurement_blocks_inheritance }
+				}
+				subtract = {
+					value = 1000
+					desc = trait_disfigured
+				}
+			}
+			if = {
+				limit = { has_trait = clubfooted }
+				subtract = {
+					value = 15
+					desc = trait_clubfooted
+				}
+			}
+			if = {
+				limit = { has_trait = dwarf }
+				subtract = {
+					value = 15
+					desc = trait_dwarf
+				}
+			}
+			if = {
+				limit = { has_trait = hunchbacked }
+				subtract = {
+					value = 15
+					desc = trait_hunchbacked
+				}
+			}
+			if = {
+				limit = { has_trait = lisping }
+				subtract = {
+					value = 20
+					desc = trait_lisping
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						has_trait = inbred
+						has_trait = spindly
+						has_trait = scaly
+						has_trait = albino
+						has_trait = wheezing
+						has_trait = bleeder
+						has_trait = infirm
+					}
+				}
+				subtract = {
+					value = 50
+					desc = negative_trait_succession
+				}
+			}
+			if = {
+				limit = {
+					has_trait = incapable
+				}
+				subtract = {
+					value = 1000
+					desc = trait_incapable
+				}
+			}
+			if = {
+				limit = {
+					has_trait = blind
+					scope:title.holder.culture = { has_cultural_parameter = physical_disfigurement_blocks_inheritance }
+				}
+				subtract = {
+					value = 1000
+					desc = trait_blind
+				}
+			}
+			if = {
+				limit = {
+					has_trait = eunuch_1
+					scope:title.holder.culture = { has_cultural_parameter = physical_disfigurement_blocks_inheritance }
+				}
+				subtract = {
+					value = 1000
+					desc = trait_eunuch
+				}
+			}
+			if = {
+				limit = {
+					has_trait = beardless_eunuch
+					scope:title.holder.culture = { has_cultural_parameter = physical_disfigurement_blocks_inheritance }
+				}
+				subtract = {
+					value = 1500
+					desc = trait_beardless_eunuch
+				}
+			}
+			if = {
+				limit = {
+					has_trait = disinherited
+					scope:title.holder.culture = { has_cultural_parameter = physical_disfigurement_blocks_inheritance }
+				}
+				subtract = {
+					value = 1000
+					desc = trait_disinherited
+				}
+			}
+			if = {
+				limit = { has_trait = gallivanter }
+				subtract = {
+					value = 1000
+					desc = trait_gallivanter
+				}
+			}
+
+			# CRIMINAL
+			if = {
+				limit = {
+					has_trait = deviant
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = deviant FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "deviant_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = incestuous
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = incestuous FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "incestuous_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = sodomite
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = sodomite FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "sodomite_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = cannibal
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = cannibal FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "cannibal_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = kinslayer_1
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = kinslayer_1 FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "kinslayer_1_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = kinslayer_2
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = kinslayer_2 FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "kinslayer_2_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = kinslayer_3
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = kinslayer_3 FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "kinslayer_3_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = adulterer
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = adulterer FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "adulterer_and_criminal_desc"
+				}
+			}
+			if = {
+				limit = {
+					has_trait = fornicator
+					exists = top_liege.primary_title.state_faith
+					trait_is_criminal_in_faith_trigger = { TRAIT = fornicator FAITH = top_liege.primary_title.state_faith GENDER_CHARACTER = root }
+				}
+				add = {
+					value = -20
+					desc = "fornicator_and_criminal_desc"
+				}
+			}
+
+			# COUNCIL POSITIONS
+			if = {
+				limit = {
+					top_liege ?= {
+						legitimacy_level >= 3
+						any_councillor ?= { this = root }
+					}
+				}
+				add = {
+					value = 20
+					desc = councillor_position_desc
+				}
+			}
+			else_if = {
+				limit = {
+					top_liege ?= {
+						any_councillor ?= { this = root }
+					}
+				}
+				add = {
+					value = 10
+					desc = councillor_position_desc
+				}
+			}
+
+			# COURT POSITIONS
+			if = {
+				limit = {
+					top_liege ?= {
+						legitimacy_level >= 3
+						any_court_position_holder ?= {
+							this = root
+						}
+					}
+				}
+				add = {
+					value = 10
+					desc = court_position_succession_desc
+				}
+			}
+			else_if = {
+				limit = {
+					top_liege ?= {
+						any_court_position_holder ?= {
+							this = root
+						}
+					}
+				}
+				add = {
+					value = 5
+					desc = court_position_succession_desc
+				}
+			}
+
+			# FAITH HOSTILITY
+			if = {
+				limit = {
+					top_liege.primary_title.state_faith ?= {
+						NOT = { this = root.faith }
+						faith_hostility_level = {
+							target = root.faith
+							value = faith_fully_accepted_level
+						}
+					}
+				} #Change to faith acceptance
+				subtract = {
+					value = 5
+					desc = accepted_faith_succession_desc
+				}
+			}
+			else_if = {
+				limit = {
+					top_liege.primary_title.state_faith ?= {
+						faith_hostility_level = {
+							target = root.faith
+							value = faith_astray_level
+						}
+					}
+				} #Change to faith acceptance
+				subtract = {
+					value = 20
+					desc = astray_faith_succession_desc
+				}
+			}
+			else_if = {
+				limit = {
+					top_liege.primary_title.state_faith ?= {
+						faith_hostility_level = {
+							target = root.faith
+							value = faith_hostile_level
+						}
+					}
+				} #Change to faith acceptance
+				subtract = {
+					value = 50
+					desc = hostile_faith_succession_desc
+				}
+			}
+			else_if = {
+				limit = {
+					top_liege.primary_title.state_faith ?= {
+						faith_hostility_level = {
+							target = root.faith
+							value >= faith_evil_level
+						}
+					}
+				} #Change to faith acceptance
+				subtract = {
+					value = 100
+					desc = evil_faith_sucession_desc
+				}
+			}
+
+			# CLAIMS
+			if = {
+				limit = { has_strong_claim_on = scope:title }
+				add = {
+					value = 50
+					desc = title_claim_desc
+				}
+			}
+			else_if = {
+				limit = { has_weak_claim_on = scope:title }
+				add = {
+					value = 30
+					desc = title_weak_claim_desc
+				}
+			}
+
+			# POPULAR OPINION
+			if = {
+				limit = { is_landed = yes }
+				add = {
+					value = {
+						value = capital_county.county_holder_opinion
+						multiply = 2.0
+					}
+					desc = county_holder_opinion_desc
+				}
+			}
+
+			# LIFESTYLE PERKS
+			if = {
+				limit = { has_perk = dignitas_perk }
+				add = {
+					value = 30
+					desc = dignitas_perk_name
+				}
+			}
+
+			#TITLE TIER
+			if = {
+				limit = {
+					is_landed = yes
+					highest_held_title_tier = tier_duchy
+				}
+				add = {
+					value = 10
+					desc = duchy_tier_desc
+				}
+			}
+			if = {
+				limit = {
+					is_landed = yes
+					highest_held_title_tier = tier_kingdom
+				}
+				add = {
+					value = 20
+					desc = kingdom_tier_desc
+				}
+			}
+
+			#LOWBORN? EW no
+			if = {
+				limit = {
+					is_lowborn = yes
+				}
+				subtract = {
+					value = 10
+					desc = lowborn_desc_succession
+				}
+			}
+
+			#INFLUENCE LEVEL
+			if = {
+				limit = {
+					influence_level = 0
+				}
+				subtract = {
+					value = 20
+					desc = "[influence_level|E]"
+				}
+			}
+			if = {
+				limit = {
+					influence_level >= 2
+				}
+				add = {
+					value = 20
+					multiply = {
+						value = influence_level
+						subtract = 1 # Base value should start at 2
+					}
+					desc = "[influence_level|E]"
+				}
+			}
+
+			#DIFFERENT CULTURE FROM IMPERIAL CAPITAL
+			if = {
+				limit = {
+					root.top_liege.capital_county.culture ?= {
+						NOT = { this = root.culture }
+						cultural_acceptance = {
+							target = root.culture
+							value = 0
+						}
+					}
+				}
+				subtract = {
+					value = 50
+					desc = no_cultural_acceptance
+				}
+			}
+			else_if = {
+				limit = {
+					root.top_liege.capital_county.culture ?= {
+						NOT = { this = root.culture }
+						cultural_acceptance = {
+							target = root.culture
+							value <= 20
+						}
+					}
+				}
+				subtract = {
+					value = 40
+					desc = terrible_cultural_acceptance
+				}
+			}
+			else_if = {
+				limit = {
+					root.top_liege.capital_county.culture ?= {
+						NOT = { this = root.culture }
+						cultural_acceptance = {
+							target = root.culture
+							value <= 40
+						}
+					}
+				}
+				subtract = {
+					value = 30
+					desc = poor_cultural_acceptance
+				}
+			}
+			else_if = {
+				limit = {
+					root.top_liege.capital_county.culture ?= {
+						NOT = { this = root.culture }
+						cultural_acceptance = {
+							target = root.culture
+							value <= 60
+						}
+					}
+				}
+				subtract = {
+					value = 20
+					desc = mediocre_cultural_acceptance
+				}
+			}
+			else_if = {
+				limit = {
+					root.top_liege.capital_county.culture ?= {
+						NOT = { this = root.culture }
+						cultural_acceptance = {
+							target = root.culture
+							value <= 80
+						}
+					}
+				}
+				subtract = {
+					value = 10
+					desc = accepted_foreign_culture
+				}
+			}
+
+			#ELDEST ELIGIBLE CHILD OF RULER
+			#REPUBLICS GIVE A MALUS TO SUCH INDIVIDUALS
+			if = {
+				limit = {
+					scope:title.holder = {
+						OR = {
+							has_realm_law = male_preference_law
+							has_realm_law = male_only_law
+						}
+					}
+					is_male = yes
+					is_child_of = scope:title.holder
+					is_eunuch_trigger = no
+					NOT = { has_trait = bastard }
+					any_sibling = {
+						count = 0
+						is_male = yes
+						age > prev.age
+						is_eunuch_trigger = no
+						NOT = { has_trait = bastard }
+					}
+				}
+				subtract = {
+					value = 20
+					multiply = scope:title.holder.legitimacy_level
+					desc = eldest_ruler_son_desc
+				}
+			}
+			else_if = {
+				limit = {
+					scope:title.holder = {
+						OR = {
+							has_realm_law = female_preference_law
+							has_realm_law = female_only_law
+						}
+					}
+					is_female = yes
+					is_child_of = scope:title.holder
+					NOT = { has_trait = bastard }
+					any_sibling = {
+						count = 0
+						is_female = yes
+						age > prev.age
+						NOT = { has_trait = bastard }
+					}
+				}
+				subtract = {
+					value = 10
+					multiply = scope:title.holder.legitimacy_level
+					desc = eldest_ruler_daughter_desc
+				}
+			}
+			else_if = {
+				limit = {
+					scope:title.holder = {
+						has_realm_law = equal_law
+					}
+					is_eunuch_trigger = no
+					NOT = { has_trait = bastard }
+					is_child_of = scope:title.holder
+					any_sibling = {
+						count = 0
+						age > prev.age
+						is_eunuch_trigger = no
+						NOT = { has_trait = bastard }
+					}
+				}
+				subtract = {
+					value = 20
+					multiply = scope:title.holder.legitimacy_level
+					desc = eldest_ruler_child_desc
+				}
+			}
+			#CLOSE FAMILY
+			else_if = {
+				limit = {
+					is_close_family_of = scope:title.holder
+				}
+				subtract = {
+					value = 4
+					multiply = scope:title.holder.legitimacy_level
+					desc = ruler_close_family_desc
+				}
+			}
+			#EXTENDED FAMILY
+			else_if = {
+				limit = {
+					is_close_or_extended_family_of = scope:title.holder
+				}
+				subtract = {
+					value = 3
+					multiply = scope:title.holder.legitimacy_level
+					desc = ruler_close_extended_family_desc
+				}
+			}
+			#SAME HOUSE
+			else_if = {
+				limit = {
+					house = top_liege.house
+				}
+				subtract = {
+					value = 2
+					multiply = scope:title.holder.legitimacy_level
+					desc = ruler_same_house_desc
+				}
+			}
+
+			#SPOUSE AND THEIR FAMILY
+			if = {
+				limit = {
+					is_spouse_of = scope:title.holder
+				}
+				subtract = {
+					value = 1
+					multiply = scope:title.holder.legitimacy_level
+					desc = spouse_of_ruler_desc
+				}
+			}
+			if = {
+				limit = {
+					scope:title.holder = {
+						any_spouse = { is_close_family_of = root }
+						NOT = { is_close_family_of = root }
+					}
+				}
+				subtract = {
+					value = 1
+					multiply = scope:title.holder.legitimacy_level
+					desc = close_family_married_to_holder_desc
+				}
+			}
+
+			#FRIENDS OF THE RULER
+			if = {
+				limit = {
+					has_relation_friend = scope:title.holder
+				}
+				add = {
+					value = scope:title.holder.legitimacy_level
+					multiply = 4
+					desc = ruler_friend_desc
+				}
+			}
+			if = {
+				limit = {
+					has_relation_best_friend = scope:title.holder
+				}
+				add = {
+					value = scope:title.holder.legitimacy_level
+					multiply = 8
+					desc = ruler_best_friend_desc
+				}
+			}
+			if = {
+				limit = {
+					has_relation_guardian = scope:title.holder
+				}
+				add = {
+					value = scope:title.holder.legitimacy_level
+					multiply = 8
+					desc = ruler_guardian_desc
+				}
+			}
+			if = {
+				limit = {
+					exists = house
+				}
+				# All get to use their Family Rating
+				add = {
+					value = house.house_power_score
+					multiply = 0.5
+					desc = "[powerful_family_rating|E]"
+				}
+			}
+
+			#CO-RULER
+			if = {
+				limit = {
+					is_diarch_of_target = scope:title.holder
+					scope:title.holder = { character_has_co_emperorship_trigger = yes }
+				}
+				# Once for their raw status.
+				add = {
+					value = 50
+					desc = imperial_co_emperor_desc
+				}
+				# And once again for their actual power.
+				add = {
+					value = scope:title.holder.diarchy_swing
+					desc = imperial_diarch_desc
+				}
+			}
+			#OTHER DIARCHS OF EMPEROR
+			else_if = {
+				limit = {
+					is_diarch_of_target = scope:title.holder
+					# Civil servants excluded.
+					scope:title.holder = {
+						NOT = { has_diarchy_active_parameter = diarchy_is_primeministership }
+					}
+				}
+				add = {
+					value = scope:title.holder.diarchy_swing
+					desc = imperial_diarch_desc
+				}
+			}
+
+			# MODIFIERS
+			if = {
+				limit = {
+					has_character_flag = patriarch_support_2030
+				}
+				add = {
+					value = 10
+					desc = patriarch_support_2030_desc
+				}
+			}
+
+			if = {
+				limit = { has_character_modifier = restored_greek_theme_modifier }
+				add = {
+					value = 50
+					desc = restored_greek_theme_modifier
+				}
+			}
+			if = {
+				limit = {
+					has_character_flag = decried_weakness_score
+				}
+				add = {
+					value = 20
+					desc = decried_weakness_score_desc
+				}
+			}
+			if = {
+				limit = {
+					has_character_flag = insulted_trait_candidate_score
+				}
+				add = {
+					value = 15
+					desc = insulted_trait_score_desc
+				}
+			}
+			if = {
+				limit = {
+					has_character_flag = boosted_by_sycophant_score
+				}
+				add = {
+					value = 15
+					desc = boosted_by_sycophant_score_desc
+				}
+			}
+
+			# SCHEMES
+			if = {
+				limit = {
+					has_character_modifier = scheme_slandered_modifier
+				}
+				add = {
+					value = slander_acclamation_score_value
+					desc = scheme_slandered_modifier
+				}
+			}
+			if = {
+				limit = {
+					has_character_modifier = scheme_promoted_modifier
+				}
+				add = {
+					value = promote_acclamation_score_value # Keep this balanced if more values are added!
+					desc = scheme_promoted_modifier
+				}
+			}
+			
+			# Renounced imperial aspriations (from decision)
+			if = {
+				limit = {
+					OR = {
+						has_character_modifier = ep3_admin_renounce_throne_personal
+						house ?= { has_house_modifier = ep3_admin_renounce_throne_house }
+					}
+				}
+				add = {
+					value = -1000
+					desc = admin_renounced_throne
+				}
+			}
+
+			if = {
+				limit = {
+					OR = {
+						scope:title.holder ?= {
+							has_realm_law_flag = oligarchic_election_law
+						}
+						scope:title.holder.liege ?= {
+							has_realm_law_flag = oligarchic_election_law 
+						}
+						has_realm_law_flag = oligarchic_election_law
+					}
+				}
+				if = {
+					limit = {
+						highest_held_title_tier = tier_county
+					}
+					add = {
+						value = 15
+						desc = tooltip_feudal_vote_strength_count_tier
+					}
+				}
+				if = {
+					limit = {
+						highest_held_title_tier = tier_duchy
+					}
+					add = {
+						value = 30
+						desc = tooltip_feudal_vote_strength_duke_tier
+					}
+				}
+				if = {
+					limit = {
+						highest_held_title_tier = tier_kingdom
+					}
+					add = {
+						value = 45
+						desc = tooltip_feudal_vote_strength_king_tier
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					OR = {
+						scope:title.holder ?= {
+							has_realm_law_flag = mercantile_election_law
+						}
+						scope:title.holder.liege ?= {
+							has_realm_law_flag = mercantile_election_law 
+						}
+						has_realm_law_flag = mercantile_election_law
+					}
+				}
+				add = {
+					value = gold
+					multiply = 0.2
+					desc = tooltip_appointment_strength_gold
+				}
+				add = {
+					value = monthly_character_income
+					multiply = 5
+					desc = tooltip_appointment_strength_monthly_income
+				}
+				
+				####
+				if = {
+					limit = {
+						has_trait = education_stewardship
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_education_stewardship
+					}
+				}
+				if = {
+					limit = {
+						stewardship_lifestyle_perks > 0
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_lifestyle_stewardship
+					}
+				}
+				if = {
+					limit = {
+						has_stewardship_lifestyle_trait_trigger = yes
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_lifestyle_stewardship_trait
+					}
+				}
+				if = {
+					limit = {
+						has_trait = education_stewardship_3
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_education_stewardship_3
+					}
+				}
+				if = {
+					limit = {
+						OR = {
+							has_trait = education_stewardship_4
+							has_trait = education_stewardship_5
+						}
+					}
+					add = {
+						value = 16
+						desc = tooltip_appointment_strength_education_stewardship_4
+					}
+				}
+				add = {
+					value = stewardship
+					multiply = 1.2
+					desc = tooltip_appointment_strength_stewardship_points
+				}
+				if = {
+					limit = {
+						has_council_position = councillor_steward
+					}
+					add = {
+						value = 30
+						desc = tooltip_appointment_strength_steward
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					OR = {
+						scope:title.holder ?= {
+							has_realm_law_flag = stratocratic_election_law
+						}
+						scope:title.holder.liege ?= {
+							has_realm_law_flag = stratocratic_election_law
+						}
+						has_realm_law_flag = stratocratic_election_law
+					}
+				}
+				add = {
+					value = current_military_strength
+					multiply = 0.1
+					desc = tooltip_appointment_military_strength
+				}
+				add = {
+					value = max_number_of_knights
+					multiply = 2.5
+					desc = tooltip_appointment_number_of_knights
+				}
+				
+				####
+				if = {
+					limit = {
+						has_trait = education_martial
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_education_martial
+					}
+				}
+				if = {
+					limit = {
+						martial_lifestyle_perks > 0
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_lifestyle_martial
+					}
+				}
+				if = {
+					limit = {
+						has_martial_lifestyle_trait_trigger = yes
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_lifestyle_martial_trait
+					}
+				}
+				if = {
+					limit = {
+						has_trait = education_martial_3
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_education_martial_3
+					}
+				}
+				if = {
+					limit = {
+						OR = {
+							has_trait = education_martial_4
+							has_trait = education_martial_5
+						}
+					}
+					add = {
+						value = 16
+						desc = tooltip_appointment_strength_education_martial_4
+					}
+				}
+				if = {
+					limit = {
+						number_of_commander_traits > 0
+					}
+					add = {
+						value = 8
+						desc = tooltip_appointment_strength_commander_traits
+					}
+				}
+				add = {
+					value = number_of_commander_traits
+					multiply = 8
+					desc = tooltip_appointment_strength_commander_traits_number
+				}
+				add = {
+					value = martial
+					multiply = 1.2
+					desc = tooltip_appointment_strength_martial_points
+				}
+				if = {
+					limit = {
+						has_council_position = councillor_marshal
+					}
+					add = {
+						value = 30
+						desc = tooltip_appointment_strength_marshal
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					vassal_contract_has_flag = republican_privateers
+				}
+				add = {
+					value = slander_acclamation_score_value
+					value = slander_appointment_score_value
+					desc = privateer_desc_succession
+				}
+			}
+
+			# ADJUST BASED ON GENDER LAW - MUST GO AT THE END
+			save_temporary_value_as = pre_gender_law_calc
+			if = { # If the temp value is negative, flip it for the coming calculations
+				limit = { scope:pre_gender_law_calc < 0 }
+				if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = male_preference_law
+						}
+						is_female = yes
+					}
+					subtract = {
+						value = scope:pre_gender_law_calc
+						multiply = -1
+						multiply = 0.5
+						desc = male_preference_law
+					}
+				}
+				else_if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = male_only_law
+						}
+						is_female = yes
+					}
+					multiply = {
+						value = 0
+						desc = male_only_law
+					}
+				}
+				else_if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = female_preference_law
+						}
+						is_female = no
+					}
+					subtract = {
+						value = scope:pre_gender_law_calc
+						multiply = -1
+						multiply = 0.5
+						desc = female_only_law
+					}
+				}
+				else_if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = female_only_law
+						}
+						is_female = no
+					}
+					multiply = {
+						value = 0
+						desc = female_only_law
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = male_preference_law
+						}
+						is_female = yes
+					}
+					subtract = {
+						value = scope:pre_gender_law_calc
+						multiply = 0.5
+						desc = male_preference_law
+					}
+				}
+				else_if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = male_only_law
+						}
+						is_female = yes
+					}
+					multiply = {
+						value = 0
+						desc = male_only_law
+					}
+				}
+				else_if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = female_preference_law
+						}
+						is_female = no
+					}
+					subtract = {
+						value = scope:pre_gender_law_calc
+						multiply = 0.5
+						desc = female_only_law
+					}
+				}
+				else_if = {
+					limit = {
+						scope:title.holder = {
+							has_realm_law = female_only_law
+						}
+						is_female = no
+					}
+					multiply = {
+						value = 0
+						desc = female_only_law
+					}
+				}
+			}
+
+			# ROUND THE NUMBER
+			divide = 1
+			ceiling = yes
+			multiply = 1
+		}
+	}
+}

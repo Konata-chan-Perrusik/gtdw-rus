@@ -1,0 +1,631 @@
+﻿
+#########################
+# Censure (WIP)
+# by Hapchazzard
+#########################
+
+censure_interaction = {
+	category = interaction_category_hostile
+	common_interaction = yes
+	
+	icon = legal_interaction
+	desc = censure_interaction_desc
+	
+	cooldown = { years = 1 }
+	cooldown_against_recipient = { years = 5 }
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			has_trait = lifestyle_jurist
+		}
+		OR = {
+			scope:actor = scope:actor.faith.religious_head
+			scope:actor = { is_liege_or_above_of = scope:recipient }
+		}
+		scope:actor.faith = {
+			this = scope:recipient.faith
+		}
+		
+		scope:recipient = {
+			NOT = {
+				this = scope:actor
+			}
+		}
+		
+		can_use_legal_action_character_interaction_trigger = yes
+	}
+
+	is_valid_showing_failures_only = {
+		NOT = {
+			scope:recipient = {
+				has_character_modifier = censured_modifier
+			}
+		}
+		scope:recipient = {
+			age >= 16
+		}
+		scope:recipient = {
+			NOT = { has_strong_hook = scope:actor }
+			can_be_censured_trigger = yes
+		}
+		custom_description = {
+			text = sufficient_mamurial_authority_high_judge
+			subject = scope:recipient
+			NOT = {
+				scope:recipient = { has_variable = high_court_seat }
+			}
+		}
+	}
+
+	auto_accept = yes
+
+	on_accept = {
+		scope:actor = {
+			custom_tooltip = temporal_condemnation_revoke_reason
+			hidden_effect = {
+				send_interface_toast = {	
+					title = censure_interaction.tt
+					left_icon = scope:recipient
+					show_as_tooltip = { custom_tooltip = temporal_condemnation_got_revoke_reason }
+				}
+			}
+			stress_impact = {
+				cynical = minor_stress_impact_gain
+			}
+		}
+		scope:recipient = {
+			add_character_modifier = {
+				modifier = censured_modifier
+				years = 5
+			}
+			liege = {
+				add_opinion = {
+					target = scope:recipient
+					modifier = censure_opinion
+					years = 10
+				}
+			}
+			add_opinion = {
+				target = scope:actor
+				modifier = censured_me_opinion
+			}
+		}
+
+		scope:recipient = {
+			hidden_effect = { #Nudge towards rivalry
+				if = {
+					limit = {
+						NOR = {
+							has_relation_rival = scope:actor
+							has_relation_potential_rival = scope:actor
+						}
+					}
+					set_relation_potential_rival = scope:actor
+				}
+			}
+		}
+	}
+	
+	cost = {
+		piety = censure_cost_value
+	}
+	
+	ai_potential = {
+		is_adult = yes
+		piety >= censure_cost_value
+	}
+	
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+
+	ai_targets = {
+		ai_recipients = vassals
+	}
+	
+	ai_frequency = 36
+
+	ai_will_do = {
+		base = 50
+
+		ai_value_modifier = { # +50 to -50
+			who = scope:actor
+			ai_vengefulness = 0.5
+		}
+		
+		modifier = {
+			factor = 0
+			NOR = {
+				scope:recipient = {
+					NOR = {
+						has_relation_rival = scope:actor
+						has_relation_nemesis = scope:actor
+						is_at_war_with = scope:actor
+					}
+				}
+				ai_zeal >= medium_positive_ai_value
+			}
+		}
+	}
+}
+
+###################
+# Justify Legal Hook
+# by Hapchazzard
+###################
+legal_manipulation_interaction = {
+	interface_priority = 60
+	category = interaction_category_hostile
+	icon = legal_interaction
+	desc = legal_manipulation_interaction_desc
+	
+	cooldown = { years = 1 }
+	cooldown_against_recipient = { years = 5 }
+	
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			has_trait = lifestyle_jurist
+		}
+		NOT = { scope:recipient = scope:actor }
+		
+		can_use_legal_action_character_interaction_trigger = yes
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			is_physically_able_adult = yes
+		}
+		scope:recipient = {
+			is_physically_able_adult = yes
+		}
+		custom_description = {
+			text = sufficient_mamurial_authority_high_judge
+			subject = scope:recipient
+			trigger_if = {
+				limit = { scope:recipient = { has_variable = high_court_seat } }
+				scope:recipient.var:high_court_seat.var:high_court = { high_court_mamurial_authority_value >= 75 }
+			}
+		}
+	}
+
+	is_valid = {
+		
+	}
+
+	on_accept = {
+		find_jurisdiction_effect = { ATTACKER = scope:actor DEFENDER = scope:recipient }
+		scope:actor = {
+			random = {
+				chance = 25
+				add_corruption_effect = { VALUE = 10 }
+			}
+			stress_impact = {
+				lazy = medium_stress_impact_gain
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { exists = scope:trial_presiding_character }
+					scope:trial_presiding_character = { has_variable = legal_manipulation_case_cooldown }
+				}
+			}
+			random_list = {
+				1 = {
+					modifier = {
+						add = scope:actor.judicial_power_value
+					}
+					scope:actor = {
+						add_hook = {
+							type = favor_hook
+							target = scope:recipient
+						}
+					}
+				}
+				1 = {
+					modifier = {
+						add = scope:recipient.judicial_power_value
+					}
+					scope:actor = {
+						add_prestige = medium_prestige_loss
+					}
+				}
+			}
+		}
+		else = {
+			show_as_tooltip = {
+				random_list = {
+					1 = {
+						modifier = {
+							add = scope:actor.judicial_power_value
+						}
+						scope:actor = {
+							add_hook = {
+								type = favor_hook
+								target = scope:recipient
+							}
+						}
+					}
+					1 = {
+						modifier = {
+							add = scope:recipient.judicial_power_value
+						}
+						scope:actor = {
+							add_prestige = medium_prestige_loss
+						}
+					}
+				}
+			}
+			scope:trial_presiding_character = {
+				trigger_event = legal_tradition.0001
+			}
+		}
+	}
+	
+	cost = {
+		piety = {
+			if = {
+				limit = {  
+					scope:recipient = {
+						highest_held_title_tier = tier_empire
+					}
+				}
+				value = massive_piety_value
+			}
+			else_if = {
+				limit = {
+					scope:recipient = {
+						OR = {
+							highest_held_title_tier = tier_kingdom
+							any_close_family_member = {
+								highest_held_title_tier = tier_empire
+							}
+						}
+					}
+				}
+				value = major_piety_value
+			}
+			else_if = {
+				limit = {
+					scope:recipient = {
+						OR = {
+							highest_held_title_tier = tier_duchy
+							any_close_family_member = {
+								highest_held_title_tier = tier_kingdom
+							}
+						}
+					}
+				}
+				value = medium_piety_value
+			}
+			else_if = {
+				limit = {
+					scope:recipient = {
+						OR = {
+							highest_held_title_tier = tier_county
+							any_close_family_member = {
+								highest_held_title_tier = tier_duchy
+							}
+						}
+					}
+				}
+				value = minor_piety_value
+			}
+			else = {
+				value = miniscule_piety_value
+			}
+		}
+	}
+	
+	ai_targets = {
+		ai_recipients = liege
+		ai_recipients = vassals
+	}
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = peer_vassals
+		max = 5
+	}
+	
+	ai_targets = {
+		ai_recipients = courtiers
+		max = 5
+	}
+	
+	ai_targets = {
+		ai_recipients = realm_characters
+		max = 10
+	}
+	ai_frequency = 36
+	
+	ai_potential = {
+		is_adult = yes
+		ai_greed >= low_positive_ai_value
+		NOT = { has_trait = content }
+	}
+	
+	ai_will_do = {
+		base = 50
+		
+		start_hostile_legal_action_ai_base_modifiers = yes # At the end so Cowed can block it completely
+	}
+	
+	auto_accept = yes
+}
+
+###################
+# Justify Claim
+# by Hapchazzard
+###################
+justify_claim_interaction = {
+	category = interaction_category_diplomacy
+	icon = legal_interaction
+	desc = justify_claim_interaction_desc
+	
+	cooldown = { years = 1 }
+	cooldown_against_recipient = { years = 5 }
+	
+	target_type = title
+	target_filter = recipient_domain_titles
+	ignores_pending_interaction_block = yes
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			has_variable = character_legal_tradition
+			var:character_legal_tradition = {
+				has_variable = can_justify_claims
+			}
+		}
+		NOR = {
+			scope:actor = scope:recipient
+			AND = {
+				scope:recipient = scope:actor.faith.religious_head
+				scope:actor.faith = {
+					NOT = { has_doctrine = doctrine_theocracy_temporal }
+				}
+			}
+		}
+		scope:recipient = {
+			is_playable_character = yes
+			primary_title.tier > tier_barony
+		}
+	}
+
+	can_be_picked_title = {
+		scope:target = { tier >= tier_county }
+	}
+	
+	is_valid_showing_failures_only = {
+		trigger_if = { # Can't request on titles you already have a claim on
+			limit = {
+				exists = scope:target
+				scope:actor = {
+					has_claim_on = scope:target
+				}
+			}
+			custom_description = {
+				text = buy_claim_has_pressed_claim_already
+				always = no
+			}
+		}
+		trigger_if = { # Can't request claims on baronies
+			limit = {
+				exists = scope:target
+				scope:target = {
+					tier = tier_barony
+				}
+			}
+			custom_description = {
+				text = "hof_ask_for_claim_no_baronies"
+				always = no
+			}
+		}
+		trigger_if = { # Can't buy Kingdom Claims if you're a King or Emperor
+			limit = {
+				exists = scope:target
+				scope:target = {
+					tier = tier_kingdom
+				}
+				scope:actor.highest_held_title_tier >= tier_kingdom
+			}
+			custom_description = {
+				text = buy_claim_no_king_or_emperor_kingdom
+				always = no
+			}
+		}
+		trigger_if = { # Can't buy Emperor Claims if you're already an Emperor
+			limit = {
+				exists = scope:target
+				scope:target = {
+					tier = tier_empire
+				}
+				scope:actor.highest_held_title_tier >= tier_empire
+			}
+			custom_description = {
+				text = buy_claim_no_emperor_empire
+				always = no
+			}
+		}
+		trigger_if = { # Can't buy claims on head of faith titles
+			limit = {
+				exists = scope:target
+				scope:target = { is_head_of_faith = yes }
+			}
+			custom_description = {
+				text = buy_claim_no_religious_titles
+				always = no
+			}
+		}
+		scope:actor = { # Variable piety cost depending on tier
+			trigger_if = {
+				limit = {
+					exists = scope:target
+					scope:target = {
+						tier = tier_county
+					}
+				}
+				piety >= minor_justify_claim_piety_value
+			}
+			trigger_if = {
+				limit = {
+					exists = scope:target
+					scope:target = {
+						tier = tier_duchy
+					}
+				}
+				piety >= medium_justify_claim_piety_value
+			}
+			trigger_if = {
+				limit = {
+					exists = scope:target
+					scope:target = {
+						tier = tier_kingdom
+					}
+				}
+				piety >= major_justify_claim_piety_value
+			}
+			trigger_if = {
+				limit = {
+					exists = scope:target
+					scope:target = {
+						tier = tier_empire
+					}
+				}
+				piety >= massive_justify_claim_piety_value
+			}
+		}
+		scope:recipient = { is_busy_in_events_localised = yes }
+		scope:recipient = { NOT = { has_strong_hook = scope:actor } }
+	}
+	
+	auto_accept = yes
+	
+	on_accept = {
+		scope:actor = {
+			stress_impact = {
+				just = medium_stress_impact_gain
+			}
+		}
+		scope:recipient = {
+			add_opinion = {
+				target = scope:actor
+				modifier = claimed_my_title_opinion
+				opinion = -40
+			}
+		}
+		find_jurisdiction_effect = { ATTACKER = scope:actor DEFENDER = scope:recipient }
+		if = {
+			limit = {
+				OR = {
+					NOT = { exists = scope:trial_presiding_character }
+					scope:trial_presiding_character = { has_variable = claim_case_cooldown }
+				}
+			}
+			random_list = {
+				1 = {
+					modifier = {
+						add = scope:actor.judicial_power_value
+					}
+					scope:actor = {
+						add_unpressed_claim = scope:target
+					}
+				}
+				1 = {
+					modifier = {
+						add = scope:recipient.judicial_power_value
+					}
+				}
+			}
+		}
+		else = {
+			show_as_tooltip = {
+				random_list = {
+					1 = {
+						modifier = {
+							add = scope:actor.judicial_power_value
+						}
+						scope:actor = {
+							scope:actor = {
+								add_unpressed_claim = scope:target
+							}
+						}
+					}
+					1 = {
+						modifier = {
+							add = scope:recipient.judicial_power_value
+						}
+					}
+				}
+			}
+			scope:trial_presiding_character = {
+				trigger_event = legal_tradition.0011
+			}
+		}
+	}
+	
+	cost = {
+		piety = {
+			if = {
+				limit = {
+					scope:target = {
+						tier = tier_county
+					}
+				}
+				value = minor_justify_claim_piety_value
+			}
+			if = {
+				limit = {
+					scope:target = {
+						tier = tier_duchy
+					}
+				}
+				value = medium_justify_claim_piety_value
+			}
+			if = {
+				limit = {
+					scope:target = {
+						tier = tier_kingdom
+					}
+				}
+				value = major_justify_claim_piety_value
+			}
+			if = {
+				limit = {
+					scope:target = {
+						tier = tier_empire
+					}
+				}
+				value = massive_justify_claim_piety_value
+			}
+		}
+	}
+	
+	ai_targets = {
+		ai_recipients = liege
+	}
+
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		max = 5
+	}
+	ai_frequency = 36
+	
+	ai_potential = {
+		is_adult = yes
+		ai_greed >= low_positive_ai_value
+		NOR = { 
+			has_trait = content
+			has_trait = just
+		}
+	}
+	
+	ai_will_do = {
+		base = 50
+		
+		start_hostile_legal_action_ai_base_modifiers = yes
+	}
+}

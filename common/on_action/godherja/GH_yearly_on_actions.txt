@@ -1,0 +1,474 @@
+﻿GH_yearly_global_pulse = {
+	effect = {
+		# Exodian fogging
+		if = {
+			limit = {
+				game_start_date = 1254.1.1 # Exodian exists in the fog in this start
+				NOT = { has_global_variable = exodian_fogged }
+				current_date <= 1260.1.1 # By this point Exodian is dead
+			}
+			random = {
+				chance = 0 # No chance the first year of play
+				modifier = {
+					add = 20
+					current_date >= 1254.6.1
+				}
+				modifier = { # Steadily increases as the years pass
+					add = 20
+					current_date >= 1255.6.1
+				}
+				modifier = {
+					add = 20
+					current_date >= 1256.6.1
+				}
+				modifier = { # Exodian should die by the 4-5 year mark
+					add = 40
+					current_date >= 1257.6.1
+				}
+				set_global_variable = {
+					name = exodian_fogged
+					value = yes
+				}
+				trigger_event = {
+					id = exodian.0001
+					days = { 60 300 }
+				}
+			}
+		}
+		
+		## GH URGENT: REMOVE THIS ONCE WE GET TO THE NEXT SAVEGAME-INCOMPATIBLE PATCH!!!!!!
+		if = {
+			limit = { NOT = { has_global_variable_list = global_aspect_list } }
+			initialize_global_aspect_list_effect = yes
+		}
+
+		## Maintenance for Republic elections
+		every_ruler = {
+			limit = {
+				highest_held_title_tier >= tier_duchy
+				government_has_flag = government_is_administrative_republic
+				primary_title = {
+					NOR = {
+						has_title_law_flag = elective_succession_law
+						has_title_law = republican_election_succession_law
+					}
+				}
+			}
+			trigger_event = {
+				id = gh_realm_maintenance.0037
+				days = { 2 6 }
+			}
+		}
+	}
+
+	events = {
+		magic.1201
+		ruin.0001
+	}
+	on_actions = {
+		#worldstate_yearly_onaction_effect
+		yearly_gedeora_pulse
+		yearly_aervalr_shard_pulse
+		biannual_moon_cycle
+		#annual_unlanded_magi_ai_pulse
+		dergi_yearly
+		on_biannual_fog
+		yearly_clique_pulse
+		yearly_patron_pulse
+		#repopulation_pulse
+		#yearly_magic_prowess_pulse
+		decade_arcane_fallout_pulse
+		decade_lichdom_sorrow_pulse
+		decade_desertification_pulse
+		decade_arcane_frost_pulse
+		#Bookmark character AI
+		#GH_yearly_ai_pulse
+		
+		delay = { months = 6 }
+		on_biannual_fog
+		biannual_moon_cycle
+		GH_yearly_ai_pulse
+		magic_riftsight_pulse
+		magic_prowess_pulse
+		#harthah_ai_pulse
+		#yearly_fogeater_invasion_check_pulse
+	}
+}
+
+GH_yearly_playable_pulse = {
+	on_actions = {
+		#GH_yearly_playable_repopulation_pulse
+		legal_tradition_yearly_events
+		blackspawn_yearly_events
+		#dergi_yearly
+		nickname_random_check
+		sjal_nickname_random_check
+		
+		delay = { days = 75 }
+	}
+	events = {
+		gh_realm_maintenance.0040
+	}
+}
+
+GH_three_year_playable_pulse = {
+	effect = {
+		if = {
+			limit = { 
+				should_have_own_cliques_trigger = yes
+				NOT = {
+					any_held_title = {
+						has_variable = clique_number
+					}
+				}
+			}
+			assign_cliques_to_primary_title = yes
+		}
+	}
+}
+
+GH_random_yearly_playable_pulse = {
+	random_on_action = {
+		chance_of_no_event = {
+			value = 0
+			if = {
+				limit = {
+					is_ai = yes
+					highest_held_title_tier < tier_duchy
+				}
+				add = 75 # AI counts aren't particularly important
+			}
+		}
+		4 = damota_yearly_events
+		4 = sarradonian_yearly_events
+		4 = gh_acw_yearly_events
+	}
+}
+
+GH_magic_ai_pulse = {
+	random_events = {
+		chance_to_happen = 70
+		10 = magic_ai.0001 #AI Magic
+	}
+}
+
+GH_five_year_everyone_pulse = {
+	effect = {
+		root = {
+			if = { # Theocratic barons in judicial religions should gain experience
+				limit = {
+					faith = { has_doctrine_parameter = judges_act_as_clergy }
+					highest_held_title_tier = tier_barony
+					OR = {
+						GH_is_any_theocracy_government_trigger = yes
+						AND = {
+							exists = primary_title.title_province
+							primary_title.title_province = {
+								has_holding_type = church_holding
+							}
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { has_trait = lifestyle_jurist } }
+					add_trait = lifestyle_jurist
+				}
+				else = {
+					add_jurist_progress_effect = { VALUE = five_year_jurist_progress_value }
+				}
+			}
+			
+			if = { # Extra possibility to get cancer - health events are fired from the vanilla 5 year everyone pulse
+				limit = {
+					culture = { has_cultural_parameter = cancer_trait_more_common }
+					NOT = { has_trait = cancer }
+				}
+				random = {
+					chance = {
+						value = 8
+						# Perk reduces chance of sickness for yourself and for Courtiers/Guests
+						if = {
+							limit = {
+								has_perk = wash_your_hands_perk
+							}
+							add = -4
+						}
+						else_if = {
+							limit = {
+								exists = host
+								host = { has_perk = wash_your_hands_perk }
+							}
+							add = -2
+						}
+						if = { #Wet Nurse reduces chance of sickness for children
+							limit = {
+								OR = {
+									liege ?= {
+										any_court_position_holder ?= {
+											type = wet_nurse_court_position
+											has_relation_nursed_child = root
+										}
+									}
+									root = {
+										any_court_position_holder ?= {
+											type = wet_nurse_court_position
+											has_relation_nursed_child = root
+										}
+									}
+								}
+								root = { is_adult = no }
+							}
+							add = -2
+						}
+					}
+					trigger_event = health.1007
+				}
+			}
+		}
+	}
+}
+
+GH_on_yearly_events = {
+	random_events = {
+		chance_to_happen = 25
+		200 = 0
+
+		## General Events ##
+		#75 = yearly.2000										#Wandering Adventurer arrives
+
+		## Artifact Events ##
+		25 = gh_artifact.0001 									# Book Seller Visits
+		25 = artifacts_flavor.1000 								# Creepy Dancing Automata
+		25 = artifacts_flavor.1014								# Achromatic Mirror Reflections
+
+		## Marcher Events ##
+		# Lonely Note: The two below used to be in their own on_yearly check with 1, 1, and 98 (for nothing) weights. Set it low to try and match,
+		# feel free to adjust if I noticeably threw something off
+		25 = marcher.0101 										# Wounded Griffon
+		25 = marcher.0103 										# Griffon Trainer
+		25 = marcher.1150   									# Griffon terrorizes a province
+		10 = marcher_lich.0001 									# Lich Raid
+
+		## Amsari Events ##
+		25 = amsari_flavor.1000 								# Escaped slaves come to your realm for freedom.
+
+		## Iyrossi Events ##
+		200 = iyrossi_monthly.1000 								# yearly pulse event for Iyrossi refugee Aversarians encounter
+
+		## Sjalvolki Events ##
+		200 = sjalvolki_monthly.1000 							# flavor event for dispute between developing province or leaving it for hunters
+		150 = sjalvolki_monthly.1001 							# flavor event for hunters leading you to Aversarian ruins
+
+		## Sarminian Events ##
+		25 = gh_sarminian_events.0003						# Surplus Arrowheads
+		50 = gh_sarminian_events.0004						# Local Falcons Eliminate Rats
+		25 = gh_sarminian_events.0008						# Lye Merchant
+		100 = gh_sarminian_events.0101						# A Friendly Archery Competition
+		50 = gh_sarminian_events.0201						# A Veteran Steppe Queen Offers Their Services
+
+		## Olteni Events ##
+		100 = gh_olteni_events.0101							# Wandering Elder
+
+		## Partic Events ##
+		100 = gh_partic_events.0101							# Secrets of the Partic
+		100 = gh_partic_events.0108							# Secrets of the Partic: Outsider Vers.
+
+		## Aeschraes Events ##
+		200 = aeschraes_event.0001							#Aeschraes gets mad at axi
+		50 = aeschraes_event.0002							#Aeschraes gets mad at randoms
+	}
+}
+
+GH_yearly_ai_pulse = {
+	effect = {
+		adabyss_ai_effect = yes
+	}
+}
+
+
+# GH TODO Fully replace alongside LP trait rework
+#GH_yearly_playable_repopulation_pulse = {
+#	effect = {
+#		populate_with_wayfathers = yes
+#	}
+#}
+
+decade_arcane_fallout_pulse = {
+	effect = {
+		if = {
+			limit = { 
+				save_temporary_scope_value_as = {
+					name = current_year_modulo
+					value = {
+						value = current_year
+						modulo = 10
+					}
+				}
+				scope:current_year_modulo = 0
+			}
+			every_county = {
+				limit = { exists = var:arcane_fallout }
+				save_scope_value_as = {
+					name = arcane_fallout_decay
+					value = {
+						value = arcane_fallout_decay_value
+						multiply = -1
+					}
+				}
+				gain_arcane_fallout_effect = { VALUE = scope:arcane_fallout_decay }
+			}
+		}
+	}
+}
+
+decade_lichdom_sorrow_pulse = {
+	effect = {
+		if = {
+			limit = { 
+				save_temporary_scope_value_as = {
+					name = current_year_modulo
+					value = {
+						value = current_year
+						modulo = 50
+					}
+				}
+				scope:current_year_modulo = 0
+			}
+		}
+		every_county = {
+			limit = { exists = var:lichdom_sorrow }
+			save_scope_value_as = {
+				name = lichdom_sorrow_decay
+				value = {
+					value = lichdom_sorrow_decay_value
+					multiply = -1
+				}
+			}
+			gain_arcane_fallout_effect = { VALUE = scope:lichdom_sorrow_decay }
+		}
+	}
+}
+
+decade_desertification_pulse = {
+	effect = {
+		if = {
+			limit = { 
+				save_temporary_scope_value_as = {
+					name = current_year_modulo
+					value = {
+						value = current_year
+						modulo = 50
+					}
+				}
+				scope:current_year_modulo = 0
+			}
+		}
+		every_county = {
+			limit = { exists = var:desertification }
+			save_scope_value_as = {
+				name = desertification_decay
+				value = {
+					value = desertification_decay_value
+					multiply = -1
+				}
+			}
+			#gain_arcane_desert_effect = { VALUE = scope:desertification_decay } # GH URGENT: Where did this go
+		}
+	}
+}
+
+decade_arcane_frost_pulse = {
+	effect = {
+		if = {
+			limit = { 
+				save_temporary_scope_value_as = {
+					name = current_year_modulo
+					value = {
+						value = current_year
+						modulo = 50
+					}
+				}
+				scope:current_year_modulo = 0
+			}
+		}
+		every_county = {
+			limit = { exists = var:arcane_frost }
+			save_scope_value_as = {
+				name = arcane_frost_decay
+				value = {
+					value = arcane_frost_decay_value
+					multiply = -1
+				}
+			}
+			#gain_frozen_wasteland_effect = { VALUE = arcane_frost_decay_value } # GH URGENT: Where did this go
+		}
+	}
+}
+
+yearly_clique_pulse = {
+	effect = {
+		update_global_clique_information = yes
+	}
+}
+
+yearly_patron_pulse = {
+	effect = {
+		global_assign_patron_saint_effect = yes
+	}
+}
+
+#worldstate_yearly_onaction_effect = {
+#	effect = {
+#		#worldstate_yearly_effect = yes
+#	}
+#}
+
+#yearly_fogeater_invasion_check_pulse = {
+#	effect = {
+#		any_realm_county = {
+#			count >= 30
+#			culture = { has_cultural_pillar = heritage_fog_eaters }
+#			trigger_event = fogeater_invasion.0001
+#		}
+#	}
+#}
+
+gh_acw_yearly_events = {
+	trigger = {
+		has_global_variable = story_gh_amsari_civil_war
+		has_variable = gh_amsari_civil_war_info_story
+		root.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+		NOT = { root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= root }
+	}
+	weight_multiplier = {
+		base = 1
+	}
+
+	random_events = {
+		chance_to_happen = 25
+		200 = 0
+		
+		#Pretender Events
+		100 = gh_acw_yearly.0001 # The Worthiest Claim
+		100 = gh_acw_yearly.0002 # An Idle Claim
+		50 = gh_acw_yearly.0003 # A Clash of Words
+		100 = gh_acw_yearly.0004 # A Fool’s Challenge
+		100 = gh_acw_yearly.0005 # Faithless Soldiers
+		150 = gh_acw_yearly.0006 # The Weight of Time
+		100 = gh_acw_yearly.0007 # Unsettling Proximity
+		50 = gh_acw_yearly.0009 # Common Ground
+		50 = gh_acw_yearly.0010 # An Irritating Guest
+		50 = gh_acw_yearly.0011 # The Burden of Power
+		100 = gh_acw_yearly.0012 # Steel and Determination
+		150 = gh_acw_yearly.0013 # Words of Praise
+		30 = gh_acw_yearly.0014 # Unkind Words
+		150 = gh_acw_yearly.0018 # A Token of Gratitude
+		150 = gh_acw_yearly.0019 # Costly Ambitions
+		150 = gh_acw_yearly.0020 # Unexpected Visitor
+		150 = gh_acw_yearly.0024 # A Dangerous Proposal
+		100 = gh_acw_yearly.0025 # A Servant's Shift
+		100 = gh_acw_yearly.0026 # Visions of a Better Realm
+		100 = gh_acw_yearly.0027 # Boiling Frustrations
+		100 = gh_acw_yearly.0028 # Tale Embellished
+	}
+}

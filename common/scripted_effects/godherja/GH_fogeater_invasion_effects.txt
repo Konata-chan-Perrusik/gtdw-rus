@@ -1,0 +1,563 @@
+﻿spawn_fogeater_invader_effect = { # Spawn the character leading the invasion
+	if = {
+		limit = { has_global_variable = fogeater_spawn_location_kalath }
+		title:c_dyffrinloyw = { save_scope_as = invasion_origin }
+	}
+	else_if = {
+		limit = { has_global_variable = fogeater_spawn_location_amaghea }
+		title:c_southkatraddia_9 = { save_scope_as = invasion_origin }
+	}
+	create_character = {
+		name = "Aerthawen"
+		location = scope:invasion_origin.title_province
+		template = fogeater_emperor_template
+		save_scope_as = fogeater_leader
+	}
+	scope:fogeater_leader = {
+		dynasty = {
+			add_dynasty_prestige_level = 6
+			add_dynasty_perk = warfare_legacy_1
+			add_dynasty_perk = warfare_legacy_2
+			add_dynasty_perk = warfare_legacy_3
+			add_dynasty_perk = warfare_legacy_4
+			add_dynasty_perk = magic_legacy_1
+			add_dynasty_perk = magic_legacy_2
+			add_dynasty_perk = magic_legacy_3
+			add_dynasty_perk = magic_legacy_4
+			add_dynasty_perk = magic_legacy_5
+		}
+	}
+}
+
+spawn_fogeater_empire_effect = { # Spawn the Aelhyoer
+	create_title_and_vassal_change = {
+		type = conquest
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_foglands = {
+		change_title_holder = {
+			holder = scope:fogeater_leader
+			change = scope:change
+		}
+	}
+	scope:invasion_origin = {
+		change_title_holder = {
+			holder = scope:fogeater_leader
+			change = scope:change
+		}
+		resolve_title_and_vassal_change = scope:change
+		remove_ruin = { COUNTY = this }
+	}
+	scope:fogeater_leader = {
+		add_dread = 100
+		add_legitimacy = 1700
+		if = {
+			limit = { NOT = { has_government = tribal_government } }
+			change_government = tribal_government
+		}
+	}
+}
+
+spawn_fogeater_court_effect = { # Populate Aelhyoer court
+	while = {
+		count = { 7 15 }
+		create_character = {
+			gender_female_chance = 50
+			employer = scope:fogeater_leader
+			template = new_warrior_character
+			faith = scope:fogeater_leader.faith
+			culture = scope:fogeater_leader.culture
+		}
+	}
+	scope:fogeater_leader = { every_courtier = { convert_wasteland_to_fogeater_effect = yes } }
+}
+
+spawn_fogeater_troops_effect = { # Give Aelhyoer its troops
+	while = {
+		count = 2
+		spawn_army = {
+			uses_supply = no
+			inheritable = no
+			name = fogeater_event_troops
+			levies = {
+				value = 20000
+			}
+			men_at_arms = {
+				type = wodes
+				stacks = 25
+			}
+			men_at_arms = {
+				type = wodes
+				stacks = 25
+			}
+			men_at_arms = {
+				type = whisperers
+				stacks = 20
+			}
+			men_at_arms = {
+				type = mangonel
+				stacks = 20
+			}
+			men_at_arms = {
+				type = fogbeasts
+				stacks = 15
+			}
+			men_at_arms = {
+				type = fog_spirits
+				stacks = 15
+			}
+			location = scope:invasion_origin.title_province
+		}
+	}
+}
+
+fogeater_war_target_evaluation_and_declaration_effect = { # Guide Aelhyoer conquest direction
+	save_scope_as = fogeater_emperor
+	random_neighboring_top_liege_realm_owner = { # Select a new target
+		limit = { is_ruin = no }
+		weight = {
+			base = 0
+			modifier = { # Determines invasion direction
+				add = fogeater_invasion_target_character_weight
+				always = yes
+			}
+		}
+		random_sub_realm_county = { # Pick a suitable kingdom to conquer
+			limit = { is_neighbor_to_realm = scope:fogeater_emperor }
+			weight = {
+				base = 0
+				modifier = { # Determines invasion direction
+					add = fogeater_invasion_target_county_weight
+					always = yes
+				}
+			}
+			save_temporary_scope_as = invasion_target
+		}
+	}
+	scope:invasion_target.kingdom = {
+		every_de_jure_top_liege = { # All proper independent rulers become war targets
+			limit = {
+				NOR = {
+					is_in_list = top_liege_targets
+					this = scope:fogeater_emperor
+					has_trait = gh_wasteland
+				}
+			}
+			if = { # Fogeaters submit
+				limit = { is_fogeater = no }
+				add_to_temporary_list = top_liege_targets
+			}
+			else = { trigger_event = fogeater_invasion.2001 }
+		}
+	}
+	ordered_in_list = { # Find the primary war target
+		list = top_liege_targets
+		order_by = {
+			value = 0
+			if = { # Invasion kingdom title holders or their lieges
+				limit = {
+					OR = {
+						has_title = scope:invasion_target.kingdom
+						any_vassal = { has_title = scope:invasion_target.kingdom }
+					}
+				}
+				add = 100
+			}
+			if = { # Other emperors
+				limit = { highest_held_title_tier = tier_empire }
+				add = 90
+			}
+			if = { # Multi-kings
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_kingdom
+						any_held_title = {
+							count >= 2
+							tier = tier_kingdom
+						}
+					}
+				}
+				add = 80
+			}
+			if = { # Other Kings
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_kingdom
+						any_held_title = {
+							count < 2
+							tier = tier_kingdom
+						}
+					}
+				}
+				add = 70
+			}
+			if = { # Multi-dukes
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_duchy
+						any_held_title = {
+							count >= 2
+							tier = tier_duchy
+						}
+					}
+				}
+				add = 60
+			}
+			if = { # Other Dukes
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_duchy
+						any_held_title = {
+							count < 2
+							tier = tier_duchy
+						}
+					}
+				}
+				add = 50
+			}
+			if = { # Multi-counts
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_county
+						any_held_title = {
+							count >= 4
+							tier = tier_county
+						}
+					}
+				}
+				add = 40
+			}
+			if = { # Other Counts
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_county
+						any_held_title = {
+							count < 2
+							tier = tier_county
+						}
+					}
+				}
+				add = 30
+			}
+			if = { # Prioritize Players
+				limit = { is_ai = no }
+				add = 5
+			}
+			if = { # Prioritize Neighbors
+				limit = { any_realm_county = { is_neighbor_to_realm = scope:fogeater_emperor } }
+				add = 1
+			}
+		}
+		scope:fogeater_emperor = { # Declare war on them
+			start_war = {
+				cb = fogeater_invasion_cb
+				target = prev
+				target_title = scope:invasion_target.kingdom
+			}
+		}
+	}
+}
+
+fogeater_defence_coaltion_effect = { # Form Aelhyoer/Lich defence coalition
+	every_in_list = {
+		list = target_titles
+		save_scope_as = target_title
+		every_in_de_jure_hierarchy = {
+			holder ?= {
+				if = {
+					limit = {
+						is_ruin = no
+						is_fogeater = no
+						is_undead = no
+						NOT = { is_defender_in_war = scope:war }
+					}
+					scope:war = { add_defender = prev }
+				}
+			}
+		}
+		empire = { # Give nearby rulers an option to join as well
+			every_de_jure_top_liege = {
+				limit = {
+					NOR = {
+						this = scope:attacker
+						is_defender_in_war = scope:war
+						is_ruin = yes
+						is_fogeater = yes
+						is_undead = yes
+					}
+				}
+				if = {
+					limit = { NOT = { has_character_flag = fogeater_defence_coalition_member } }
+					trigger_event = {
+						id = fogeater_invasion.3001
+						days = { 12 30 }
+					}
+				}
+				else = { scope:war = { add_defender = prev } }
+				every_vassal_or_below = { # Vassals
+					limit = {
+						has_character_flag = fogeater_defence_coalition_member
+						NOT = { is_defender_in_war = scope:war }
+					}
+					scope:war = { add_defender = prev }
+				}
+			}
+		}
+	}
+}
+
+fogeater_consume_effect = { # Flip conquered provinces to Fogeater
+	hidden_effect = {
+		every_realm_county = { # Change county culture
+			limit = {
+				tier = tier_county
+				NOT = { culture = { has_cultural_pillar = heritage_fog_eaters } }
+			}
+			every_county_province = {
+				limit = { 
+					OR = {
+						has_holding_type = castle_holding
+						has_holding_type = city_holding
+						has_holding_type = church_holding
+						has_holding_type = necropolis_holding
+						has_holding_type = colony_holding
+					}
+					has_special_building_slot = no
+				}
+				set_holding_type = tribal_holding
+			}
+			every_county_province = {
+				limit = { 
+					OR = {
+						has_holding_type = castle_holding
+						has_holding_type = city_holding
+						has_holding_type = church_holding
+						has_holding_type = tribal_holding
+						has_holding_type = necropolis_holding
+						has_holding_type = colony_holding
+					}
+					has_special_building_slot = yes
+				}
+				set_holding_type = ruin_holding
+			}
+			every_county_province = {
+				limit = { is_any_metropolis_district = yes }
+				set_holding_type = ruined_district_holding
+			}
+			set_county_culture = prev.culture
+			set_county_faith = prev.faith
+			prev = {
+				change_variable = { # Add county development to consumption tracker variable
+					name = fogeater_consumed_variable
+					add = prev.development_level
+				}
+			}
+			change_development_level = -100
+		}
+		every_prisoner = {
+			limit = { is_fogeater = no }
+			death = {
+				death_reason = death_execution
+				killer = prev
+			}
+		}
+		spawn_army = {
+			uses_supply = no
+			inheritable = no
+			name = fogeater_event_troops
+			levies = {
+				value = var:fogeater_consumed_variable
+				multiply = 25
+				round = yes
+				min = 3000
+			}
+			men_at_arms = {
+				type = wodes
+				stacks = {
+					value = var:fogeater_consumed_variable
+					divide = 60
+					round = yes
+					min = 1
+				}
+			}
+			men_at_arms = {
+				type = whisperers
+				stacks = {
+					value = var:fogeater_consumed_variable
+					divide = 60
+					round = yes
+					min = 1
+				}
+			}
+			men_at_arms = {
+				type = fogbeasts
+				stacks = {
+					value = var:fogeater_consumed_variable
+					divide = 80
+					round = yes
+					min = 1
+				}
+			}
+			men_at_arms = {
+				type = fog_spirits
+				stacks = {
+					value = var:fogeater_consumed_variable
+					divide = 80
+					round = yes
+					min = 1
+				}
+			}
+			location = capital_province
+		}
+		set_variable = {
+			name = fogeater_consumed_variable
+			value = 0
+		}
+	}
+}
+
+gh_fogeater_region_fall_effect = { # Notify that an important landmark fell to the Aelhyoer
+	save_scope_as = fogeater_conqueror
+	if = { # Fall of the Grey Gates
+		limit = {
+			NOT = { has_global_variable = gh_fogeater_region_fall_grey_gates }
+			any_realm_county = { this = title:c_lwydmyny_uchav }
+		}
+		every_player = {
+			trigger_event = {
+				id = fogeater_invasion.4001
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_fogeater_region_fall_grey_gates
+			value = yes
+		}
+	}
+	if = { # Fall of Kalathipsomi
+		limit = {
+			NOR = {
+				has_global_variable = gh_fogeater_region_fall_kalathipsomi
+				any_county_in_region = {
+					region = special_fogeater_empire_conquest_region_grey_gates_kalathipsomi_fall
+					holder = {
+						NOR = {
+							this = scope:fogeater_conqueror
+							is_ruin = yes
+							is_fogeater = yes
+						}
+					}
+				}
+			}
+		}
+		every_player = {
+			trigger_event = {
+				id = fogeater_invasion.4002
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_fogeater_region_fall_kalathipsomi
+			value = yes
+		}
+	}
+	if = { # Fall of Chevalie
+		limit = {
+			NOR = {
+				has_global_variable = gh_fogeater_region_fall_chevalie
+				any_county_in_region = {
+					region = special_fogeater_empire_conquest_region_grey_gates_chevalie_fall
+					holder = {
+						NOR = {
+							this = scope:fogeater_conqueror
+							is_ruin = yes
+							is_fogeater = yes
+						}
+					}
+				}
+			}
+		}
+		every_player = {
+			trigger_event = {
+				id = fogeater_invasion.4003
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_fogeater_region_fall_chevalie
+			value = yes
+		}
+	}
+	if = { # Fall of Amaghea
+		limit = {
+			NOR = {
+				has_global_variable = gh_fogeater_region_fall_amaghea
+				any_county_in_region = {
+					region = special_fogeater_empire_conquest_region_amaghea_amaghea_fall
+					holder = {
+						NOR = {
+							this = scope:fogeater_conqueror
+							is_ruin = yes
+							is_fogeater = yes
+						}
+					}
+				}
+			}
+		}
+		every_player = {
+			trigger_event = {
+				id = fogeater_invasion.4004
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_fogeater_region_fall_amaghea
+			value = yes
+		}
+	}
+	if = { # Fall of Asiupoli
+		limit = {
+			NOT = { has_global_variable = gh_fogeater_region_fall_asiupoli }
+			any_realm_county = { this = title:c_asiupoli }
+		}
+		title:c_asiupoli = { save_scope_as = asiupoli }
+		every_player = {
+			trigger_event = {
+				id = fogeater_invasion.4005
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_fogeater_region_fall_asiupoli
+			value = yes
+		}
+	}
+	if = { # Fall of Aironoi
+		limit = {
+			NOR = {
+				has_global_variable = gh_fogeater_region_fall_aironoi
+				any_county_in_region = {
+					region = special_fogeater_empire_conquest_region_amaghea_aironoi_fall
+					holder = {
+						NOR = {
+							this = scope:fogeater_conqueror
+							is_ruin = yes
+							is_fogeater = yes
+						}
+					}
+				}
+			}
+		}
+		every_player = {
+			trigger_event = {
+				id = fogeater_invasion.4006
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_fogeater_region_fall_aironoi
+			value = yes
+		}
+	}
+}

@@ -1,0 +1,440 @@
+﻿sjalvolki_conquest_contribution_value = {
+	value = 0
+	if = {
+		limit = { has_variable = sjalvolki_conquest_contribution }
+		add = var:sjalvolki_conquest_contribution
+	}
+	multiply = sjalvolki_conquest_contribution_tier_multiplier	# Higher tiered characters have an advantage due to realpolitik
+	if = {
+		limit = {	# Cenware's friends, family members, lovers and direct allies get a colossal advantage due to nepotism
+			OR = {
+				has_relation_friend = title:e_migrant_coalition.holder
+				has_relation_best_friend = title:e_migrant_coalition.holder
+				has_relation_lover = title:e_migrant_coalition.holder
+				has_relation_soulmate = title:e_migrant_coalition.holder
+				is_close_family_of = title:e_migrant_coalition.holder
+				is_allied_to = title:e_migrant_coalition.holder
+			}
+		}
+		multiply = 5
+	}
+	if = {
+		limit = {	# Extended family, councillors and powerful vassals gain a smaller boost
+			OR = {
+				is_extended_family_of = title:e_migrant_coalition.holder
+				is_councillor_of = title:e_migrant_coalition.holder
+				is_powerful_vassal_of = title:e_migrant_coalition.holder
+			}
+		}
+		multiply = 2
+	}
+	if = {
+		limit = {	# Culture heads get a massive advantage as well - Cenware gave them serious promises
+			culture.culture_head = this
+		}
+		multiply = 8
+	}
+	if = {
+		limit = {
+			exists = culture.var:already_received_kingdom_in_great_migration
+			trigger_if = {
+				limit = { exists = scope:model }
+				NOT = { exists = scope:model.var:great_migration_kingdom_recipient }
+			}
+		}
+		multiply = 0.25
+	}
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { 
+					exists = scope:model
+					exists = scope:model.var:great_migration_kingdom_recipient
+				}
+				NOT = { culture = scope:model.culture }
+			}
+			trigger_else_if = {
+				limit = {
+					scope:title_to_be_given ?= {
+						tier = tier_county
+						exists = duchy.holder
+					}
+				}
+				NOT = { culture = scope:title_to_be_given.duchy.holder.culture }
+			}
+			trigger_else = { always = no }
+		}
+		multiply = 0
+	}
+	if = {
+		limit = {
+			trigger_if = {
+				limit = {
+					exists = scope:model
+					exists = var:sjalvolki_conquest_contribution
+					is_landed = yes
+				}
+				var:sjalvolki_conquest_contribution < sjalvolki_conquest_contribution_minimum_treshold
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+		multiply = 0
+	}
+	if = { # Aversarian AI should not be considered for this when possible, let's avoid them migrating to prevent headache
+		limit = {
+			OR = {
+				culture = { has_cultural_pillar = heritage_aversarian } 
+				religion = religion:aversarinas_aagiokrata_religion
+			}
+			is_ai = yes
+		}
+		multiply = 0
+	}
+	if = { # Sjalvolki should be slightly weighted up specifically in Etepezea
+		limit = {
+			culture = { has_cultural_pillar = heritage_sjalvolki }
+			exists = scope:title_to_be_given
+			scope:title_to_be_given = { de_jure_liege = title:e_etepezea }
+		}
+		multiply = 1.25
+	}
+	if = {
+		limit = {
+			exists = scope:model
+			this = scope:model
+		}
+		add = 100000 # To guarantee that they're always the top choice after getting picked
+	}
+	if = {
+		limit = { 
+			OR = {
+				has_variable = refused_title # If you refused a title
+				has_character_flag = cant_receive_migration_titles # If youre a vassal of a ruler that gets conquered that doesnt lose their title
+				has_character_flag = aversarian_bent_the_knee # If youre an aversarian that begged for mercy
+				has_character_flag = aversarian_migration # Settled characters & descendants shouldnt migrate
+				NOT = { top_liege ?= { has_title = title:e_migrant_coalition } } # Your liege must be the migrant coalition, this includes migrant laamps, to be valid for getting titles
+				is_ruin = yes # Wastelands should never be considered for titles 
+			}
+		}
+		multiply = 0
+	}
+}
+
+sjalvolki_conquest_contribution_model_value = {
+	value = 0
+	scope:model = {
+		if = {
+			limit = { has_variable = sjalvolki_conquest_contribution_previous }
+			add = var:sjalvolki_conquest_contribution_previous
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { exists = scope:model }
+					has_faith = scope:model.faith
+				}
+				trigger_else = { always = no }
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { exists = scope:model }
+					culture = { has_same_culture_heritage = scope:model.culture }
+				}
+				trigger_else = { always = no }
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { exists = scope:model }
+					has_culture = scope:model.culture
+				}
+				trigger_else = { always = no }
+			}
+			multiply = 2
+		}
+		multiply = sjalvolki_conquest_contribution_tier_multiplier	# Higher tiered characters have an advantage due to realpolitik
+		if = {
+			limit = {	# Cenware's friends, family members, lovers and direct allies get a colossal advantage due to nepotism
+				OR = {
+					has_relation_friend = title:e_migrant_coalition.holder
+					has_relation_best_friend = title:e_migrant_coalition.holder
+					has_relation_lover = title:e_migrant_coalition.holder
+					has_relation_soulmate = title:e_migrant_coalition.holder
+					is_close_family_of = title:e_migrant_coalition.holder
+					is_allied_to = title:e_migrant_coalition.holder
+				}
+			}
+			multiply = 5
+		}
+		if = {
+			limit = {	# Extended family, councillors and powerful vassals gain a smaller boost
+				OR = {
+					is_extended_family_of = title:e_migrant_coalition.holder
+					is_councillor_of = title:e_migrant_coalition.holder
+					is_powerful_vassal_of = title:e_migrant_coalition.holder
+				}
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {	# Culture heads get a massive advantage as well - Cenware gave them serious promises
+				culture.culture_head = this
+			}
+			multiply = 8
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { 
+						exists = scope:model
+						exists = var:sjalvolki_conquest_contribution
+					}
+					var:sjalvolki_conquest_contribution < sjalvolki_conquest_contribution_minimum_treshold
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+			multiply = 0
+		}
+	}
+}
+
+sjalvolki_conquest_contribution_tier_multiplier = {	# Higher tier characters should inherently gain more contribution based on their rank alone, because life isn't fair
+	value = 1
+	if = {
+		limit = { highest_held_title_tier = tier_duchy }
+		multiply = 2
+	}
+	else_if = {
+		limit = { highest_held_title_tier >= tier_kingdom }
+		multiply = 4
+	}
+}
+
+sjalvolki_conquest_contribution_minimum_treshold = {	# If below this, you won't even be offered anything in the kingdom
+	value = 0
+	if = {
+		limit = { is_imperrech_landless_adventurer = yes }
+		add = 0
+	}
+	else_if = {
+		limit = {
+			has_faith = scope:model.faith
+			has_culture = scope:model.culture
+		}
+		add = 0
+	}
+	else_if = {
+		limit = {
+			has_faith = scope:model.faith
+			culture = { has_same_culture_heritage = scope:model.culture }
+		}
+		add = 10
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_faith = scope:model.faith
+				has_culture = scope:model.culture
+			}
+		}
+		add = 15
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_faith = scope:model.faith
+				culture = { has_same_culture_heritage = scope:model.culture }
+			}
+		}
+		add = 20
+	}
+	else = {
+		add = 30
+	}
+}
+
+sjalvolki_conquest_contribution_from_gathering_troops_value = {
+	value = 0
+	add = {
+		value = martial
+		divide = 2
+	}
+	add = {
+		value = prowess
+		divide = 2
+	}
+	add = {
+		value = diplomacy
+		divide = 3
+	}
+}
+
+sjalvolki_conquest_prestige_from_gathering_troops_value = {
+	value = 0
+	add = {
+		value = sjalvolki_conquest_contribution_from_gathering_troops_value
+		multiply = 5
+	}
+}
+
+sjalvolki_conquest_prestige_from_current_contribution = {
+	value = 0
+	add = {
+		value = var:sjalvolki_conquest_contribution
+		multiply = 5
+	}
+}
+
+sjalvolki_conquest_renown_from_current_contribution = {
+	value = 0
+	add = {
+		if = {
+			limit = { has_variable = sjalvolki_conquest_contribution }
+			value = var:sjalvolki_conquest_contribution
+		}
+		multiply = 2
+	}
+}
+
+sjalvolki_conquest_gathered_troops_number_value = {
+	value = 0
+	add = {
+		value = martial
+		multiply = 2
+	}
+	add = {
+		value = prowess
+		multiply = 1
+	}
+	add = {
+		value = diplomacy
+		multiply = 2
+	}
+	multiply = 3.5
+	if = {
+		limit = {
+			character:westernimperial_omitilos_aagiokrata_2 = {
+				has_title = title:k_palitake
+				has_character_flag = beat_cenware_cois
+			}
+		}
+		multiply = 1.5
+	}
+}
+
+sjalvolki_conquest_county_value = {
+	value = 0
+	every_county_province = {
+		add = 2
+		if = {
+			limit = {
+				has_special_building = yes
+			}
+			add = 4
+		}
+		if = {
+			limit = {
+				OR = {
+					has_special_building = yes
+					is_any_metropolis_district = yes
+				}
+			}
+			add = 4
+		}
+	}
+	add = development_level
+	if = {
+		limit = {
+			title_province = { 
+				OR = { 
+					GH_any_farmlands_terrain_trigger = yes
+					GH_any_floodplains_terrain_trigger = yes
+				}
+			}
+		}
+		multiply = 1.2
+	}
+	else_if = {
+		limit = { title_province = { GH_any_hills_terrain_trigger = yes } }
+		multiply = 0.9
+	}
+	else_if = {
+		limit = {
+			title_province = {
+				OR = { 
+					GH_any_mountains_terrain_trigger = yes
+					GH_any_wetlands_terrain_trigger = yes
+				}
+			}
+		}
+		multiply = 0.75
+	}
+	if = {
+		limit = {
+			is_sjalvolki_kingdom_capital = yes
+		}
+		multiply = 100
+	}
+}
+
+sjalvolki_conquest_duchy_value = {
+	value = 0
+	every_in_de_jure_hierarchy = {
+		limit = { tier = tier_county }
+		add = this.sjalvolki_conquest_county_value
+	}
+}
+
+piety_gain_from_dishonorable_action_value = {
+	value = 0
+	faith = {
+		if = {
+			limit = { trait_is_virtue = deceitful }
+			add = medium_piety_gain
+		}
+		if = {
+			limit = { trait_is_virtue = arbitrary }
+			add = minor_piety_gain
+		}
+		if = {
+			limit = { trait_is_virtue = just }
+			add = minor_piety_loss
+		}
+		if = {
+			limit = { trait_is_virtue = honest }
+			add = medium_piety_loss
+		}
+	}
+}
+
+destroy_fort_with_magic_duel_value = {
+	value = -10
+	if = {
+		limit = { exists = var:magic_prowess }
+		add = var:magic_prowess
+	}
+}
+
+sjalvolki_conquest_controlled_regions_percent_value = {
+	value = 75
+}
+
+sjalvolki_great_migration_pop_county_size_value = {
+	value = 0
+	if = {
+		limit = {
+			exists = scope:county_scope
+		}
+		add = scope:county_scope.development_level
+		multiply = 2
+	}
+}

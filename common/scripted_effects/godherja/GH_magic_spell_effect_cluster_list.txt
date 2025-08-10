@@ -1,0 +1,59 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_magic_spell_effect_cluster_list.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+###########################################
+# LIST OF GENERATED SPELL EFFECT CLUSTERS #
+###########################################
+add_sanity_loss_spell_effect_cluster_scripted_effect = {
+	create_spell_effect_tag_scripted_effect = { NAME = stress_gain TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	scope:new_tag ?= {
+		if = {
+			limit = { exists = var:scalar_threshold }
+			change_variable = {
+				name = scalar_threshold
+				subtract = -2
+			}
+		}
+	}
+	create_spell_effect_tag_scripted_effect = { NAME = add_trait_lunatic_1 TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 2 }
+	create_spell_effect_tag_scripted_effect = { NAME = add_trait_depressed_1 TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 2 }
+	create_spell_effect_tag_scripted_effect = { NAME = reduce_diplomacy_skill TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 5 }
+	create_spell_effect_tag_scripted_effect = { NAME = reduce_intrigue_skill TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 5 }
+	create_spell_effect_tag_scripted_effect = { NAME = reduce_martial_skill TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 5 }
+	create_spell_effect_tag_scripted_effect = { NAME = reduce_stewardship_skill TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 5 }
+	create_spell_effect_tag_scripted_effect = { NAME = reduce_learning_skill TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 5 }
+}
+add_reduce_development_add_arcane_fallout_spell_effect_cluster_scripted_effect = {
+	create_spell_effect_tag_scripted_effect = { NAME = reduce_development TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	create_spell_effect_tag_scripted_effect = { NAME = add_arcane_fallout TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+}
+add_death_effect_add_trait_wounded_spell_effect_cluster_scripted_effect = {
+	create_spell_effect_tag_scripted_effect = { NAME = death_effect TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 5 }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance_iteration VALUE = 1 }
+	create_spell_effect_tag_scripted_effect = { NAME = add_trait_wounded TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance VALUE = 20 }
+	add_variable_to_last_created_spell_effect_tag = { VARIABLE_TYPE = spell_effect_chance_iteration VALUE = 5 }
+}
+
+################
+# NONGENERATED #
+################
+
+add_spell_effect_cluster_to_last_created_spell_scripted_effect = {
+	scope:new_spell_scope ?= {
+		add_$NAME$_spell_effect_cluster_scripted_effect = { TARGET = $TARGET$ SCALED_BY = $SCALED_BY$ THRESHOLD = $THRESHOLD$ }
+	}
+}

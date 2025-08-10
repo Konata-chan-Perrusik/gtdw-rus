@@ -1,0 +1,517 @@
+﻿#################################
+##DECISIONS LIST##				#
+# reform_the_shattered_empire	#
+# reform_the_obliterated_empire	#
+# hire_marcher_mercenaries		#
+# the_hiklahn_needs_change		#
+# marcher_empire_amsari			#
+#################################
+# Reform the shattered Empire
+# by Netgearghost
+gh_reform_the_shattered_empire_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+
+	title = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { any_independent_ruler =	{ has_title = title:e_amsari } }
+				desc = gh_reform_the_shattered_empire_decision_title
+			}
+			desc = gh_reform_the_obliterated_empire_decision_title
+		}
+	}
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { any_independent_ruler =	{ has_title = title:e_amsari } }
+				desc = gh_reform_the_shattered_empire_decision_desc
+			}
+			desc = gh_reform_the_obliterated_empire_decision_desc
+		}
+	}
+	
+	decision_group_type = amsari
+	ai_check_interval = 60
+
+	is_shown = {
+		has_global_variable = story_gh_amsari_civil_war
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		NOT = { has_title = title:e_amsari }
+	}
+
+	is_valid = {
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		has_title = title:c_tchouran
+		custom_tooltip = {
+			text = gh_acw_target_percent_land_value_tt
+			any_county_in_region = {
+				region = world_ws_amsari
+				percent >= gh_acw_target_percent_decimal_value
+				holder.top_liege = root
+			}
+		}
+		is_playable_character = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_at_war = no
+		is_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = gh_reform_the_shattered_empire_decision_tt	
+		get_title = title:e_amsari
+		give_nickname = nick_the_restorer
+		trigger_event = gh_amsari.0004
+		add_prestige = major_prestige_gain
+		add_piety = major_piety_gain
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##########################
+# Hire Marcher Mercenaries
+# by Netgearghost
+hire_marcher_mercenaries = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_opening.dds"
+	}
+	decision_group_type = amsari
+	ai_check_interval = 24
+	desc = hire_marcher_mercenaries_desc
+
+	is_shown = {
+		has_global_variable = story_gh_amsari_civil_war
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		OR = { 
+			any_independent_ruler =	{ has_title = title:d_marcher_amsari_republic } 
+			any_county_in_region = {
+				region = world_ws_amsari
+				culture_has_marcher_heritage_pillar_trigger = yes
+			}		
+		}
+	}
+
+	is_valid = {
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+	}
+
+	cost = { gold = major_gold_value }
+
+	cooldown = { days = 1460 }
+
+	effect = {		
+		spawn_army = {
+			uses_supply = no
+			inheritable = no
+			name = marcher_mercenaries
+			levies = {
+				value = 300
+			}
+			men_at_arms = {
+				type = marcher_anti_mage
+				stacks = 3
+			}
+			location = capital_province
+		}
+		hidden_effect = {
+			if = {
+				limit = { exists = title:d_marcher_amsari_republic.holder }
+				title:d_marcher_amsari_republic.holder = { add_gold = 100 }	
+			}
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##########################
+# Form a new Marcher Empire	
+# by Netgearghost
+marcher_empire_amsari = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = marcher
+	ai_check_interval = 16
+	desc = marcher_empire_amsari_desc
+
+	is_shown = {
+		has_global_variable = story_gh_amsari_civil_war
+		culture = { has_cultural_pillar = heritage_marcher }
+		NOT = { has_title = title:e_amsari }
+	}
+
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_marcher }
+		has_title = title:c_tchouran
+		any_held_title = {
+			count >= 2 
+			tier = tier_kingdom
+		}
+		is_playable_character = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	effect = {
+		custom_tooltip = marcher_empire_amsari_tt	
+		get_title = title:e_amsari
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+
+
+gh_acw_claim_hiklahn_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = amsari
+	ai_check_interval = 120
+	
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_trait = gh_blood_of_prophet }
+				desc = gh_acw_claim_hiklahn_decision_desc.has_blood
+			}
+			desc = gh_acw_claim_hiklahn_decision_desc.no_blood
+		}
+	}
+	
+	is_shown = {
+		has_global_variable = story_gh_amsari_civil_war
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		religion = religion:amsari_religion
+		NOR = {
+			has_trait = gh_trait_amsari_pretender
+			has_trait = gh_trait_renounced_claim
+			has_trait = disinherited
+		}
+	}
+
+	is_valid = {
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+
+		trigger_if = {
+			limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } }
+			prestige_level >= medium_prestige_level
+		}
+		trigger_else_if = {
+			limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive } }
+			prestige_level >= high_prestige_level
+		}
+		trigger_else = { prestige_level >= very_high_prestige_level }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_at_peace_adult = yes
+		is_independent_ruler = yes
+	}
+
+	effect = {
+		if = {
+			limit = { exists = title:e_amsari.holder }
+			add_pressed_claim = title:e_amsari
+		}
+		if = {
+			limit = { NOT = { has_trait = gh_blood_of_prophet } }
+			set_global_variable = reformed_amsari
+		}
+		support_amsari_pretender_effect = {
+			SUPPORTER = root
+			PRETENDER = root
+		}
+	}
+	
+	cost = {
+		prestige = {
+			value = 4000
+			if = {
+				limit = {
+					has_trait = gh_blood_of_prophet
+				}
+				add = -2000
+			}
+			if = {
+				limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive } }
+				add = -500
+			}
+			if = {
+				limit = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } }
+				add = -1000
+			}
+			if = {
+				limit = { is_ruler = yes }
+				add = -1000
+			}
+			if = {
+				limit = { highest_held_title_tier >= tier_kingdom }
+				add = -500
+			}
+		}
+		piety = {
+			value = 200
+			if = {
+				limit = { faith = { has_doctrine = tenet_divine_marriage } }
+				add = 500
+			}
+		}		
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+gh_acw_renounce_claims_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/ep3_decision_laamp_neutral_mountain.dds"
+	}
+	decision_group_type = amsari
+	ai_check_interval = 140
+	desc = gh_acw_renounce_claims_decision_desc
+
+	is_shown = {
+		has_global_variable = story_gh_amsari_civil_war
+		has_trait = gh_blood_of_prophet
+		NOR = { 
+			has_trait = disinherited 
+			has_trait = gh_trait_renounced_claim
+			has_title = title:e_amsari
+		}
+	}
+
+	is_valid = {
+		is_playable_character = yes
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	effect = {
+		if = {
+			limit = { has_claim_on = title:e_amsari }
+			remove_claim = title:e_amsari
+		}
+		add_trait = gh_trait_renounced_claim
+		remove_variable = gh_amsari_civil_war_info_story
+		remove_list_global_variable = {
+			name = gh_global_list_acw_pretenders
+			target = this
+		}
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+gh_acw_reunite_amsar_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_conciliation.dds"
+	}
+	decision_group_type = amsari
+	ai_check_interval = 140
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { 
+					has_variable = gh_amsari_civil_war_info_story
+					this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+					NOT = { root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting = root }
+				}
+				desc = gh_acw_reunite_amsar_decision_desc
+			}
+			triggered_desc = {
+				trigger = { 
+					has_variable = gh_amsari_civil_war_info_story
+					this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+					root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting = root
+				}
+				desc = gh_acw_reunite_amsar_decision_desc.self_pretender
+			}
+			desc = gh_acw_reunite_amsar_decision_desc.no_pretender
+		}
+	}
+
+	is_shown = {
+		has_global_variable = story_gh_amsari_civil_war
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		is_ruler = yes
+	}
+
+	is_valid = {
+		has_title = title:c_tchouran
+		prestige_level >= medium_prestige_level
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		religion = religion:amsari_religion
+		custom_tooltip = {
+			text = gh_acw_every_ruler_support_amsari_pretender
+			gh_current_number_of_pretender_supporter_value = gh_acw_total_amount_of_valid_rulers_value
+		}
+		custom_tooltip = {
+			text = gh_acw_current_non_amsari_counties_count_value_tt
+			any_county_in_region = {
+				region = world_ws_amsari
+				percent <= gh_acw_target_non_amsari_counties_percent_decimal_value
+				holder.top_liege = {
+					NOR = {
+						AND = { 
+							culture = { has_cultural_pillar = heritage_zarasadari }
+							religion = religion:amsari_religion
+						}
+						AND = { 
+							culture = { has_cultural_pillar = heritage_thyssae }
+							religion = religion:amsari_religion
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	effect = {
+		save_scope_as = emperor
+		root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= {
+			get_title = title:e_amsari
+			add_prestige = major_prestige_gain
+			add_piety = major_piety_gain
+			hidden_effect = {
+				custom_tooltip = gh_acw_reunite_amsar_decision.vassals.tt
+				title:e_amsari = {
+					set_capital_county = title:c_tchouran
+					every_dejure_vassal_title_holder = {
+						limit = {
+							is_landed = yes
+							NOR = { 
+								THIS = PREV.holder
+								OR = { 
+									has_title = title:d_marcher_amsari_republic
+									AND = {
+										culture = { has_cultural_pillar = heritage_marcher }
+										has_religion = religion:lifepath_religion
+									}	
+								}		
+							}
+						}
+						create_title_and_vassal_change = {
+							type = swear_fealty
+							save_scope_as = change
+							add_claim_on_loss = no
+						}
+						change_liege = {
+							liege = scope:emperor
+							change = scope:change
+						}
+						resolve_title_and_vassal_change = scope:change
+					}
+				}
+			}
+		}
+		remove_global_variable = story_gh_amsari_civil_war
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 200
+	}
+}
+
+#Just here for the global situation might get transformed at some point
+gh_acw_assassinate_decision = {
+	ai_check_interval = 0
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_assassination.dds"
+	}
+	decision_group_type = amsari
+	desc = gh_acw_reunite_amsar_decision_desc.no_pretender
+
+	is_shown = {
+		always = no
+	}
+
+	is_valid = {
+		always = no
+	}
+
+	effect = {
+	}
+
+	ai_potential = {
+		always = no
+	}
+	
+	ai_will_do = {
+		base = 0
+	}
+}

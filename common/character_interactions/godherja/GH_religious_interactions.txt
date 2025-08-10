@@ -1,0 +1,312 @@
+﻿offer_treatment_interaction = {
+	category = interaction_category_friendly
+
+	cooldown = { years = 1 }
+	
+	desc = offer_treatment_interaction_desc
+	
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		ai_recipients = courtiers
+		ai_recipients = prisoners
+	}
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_frequency = 12
+
+	is_shown = {
+		bilateral_nonsentient_diplomatic_block = yes
+		# Forbid between Fogeaters and non-Fogeaters
+		scope:actor = {
+			is_ruler = yes
+			character_has_any_patron_saint = yes
+			any_character_patron_saint_has_aspect_trigger = { ASPECT = values_healing  }
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			has_treatable_disease_trigger = yes
+			has_recent_treatment_trigger = no
+		}
+	}
+
+	greeting = positive
+	notification_text = OFFER_TREATMENT_INTERACTION_NOTIFICATION
+
+	ai_min_reply_days = 2
+	ai_max_reply_days = 4
+
+	ai_accept = {
+		base = -30
+		
+		opinion_modifier = { #Compare Opinion modifier.
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.25
+		}
+		
+		modifier = { # learning
+			add = {
+				value = scope:actor.learning
+				max = 25
+			}
+			desc = offer_treatment_learning_reason.tt
+		}
+		
+		modifier = {
+			add = scope:actor.offer_treatment_physican_skill_value
+			scope:actor = { has_trait = lifestyle_physician }
+			desc = offer_treatment_physician_reason.tt
+		}
+		
+		modifier = {
+			add = scope:actor.offer_treatment_mystic_skill_value
+			scope:actor = { has_trait = lifestyle_mystic }
+			desc = offer_treatment_mystic_reason.tt
+		}
+		
+		modifier = {
+			add = 10
+			scope:actor = { has_trait = lifestyle_herbalist }
+			desc = offer_treatment_herbalist_reason.tt
+		}
+		
+		modifier = {
+			add = {
+				value = 0
+				subtract = 15
+			}
+			OR = {
+				scope:paid_treatment = yes
+				scope:hook_for_treatment = yes
+			}
+			desc = offer_treatment_payment_reason.tt
+		}
+		
+		modifier = {
+			add = 10
+			scope:free_treatment = yes
+			scope:recipient = {
+				is_courtier_of = scope:actor
+			}
+			desc = offer_treatment_court_owner_reason.tt
+		}
+		
+	}
+
+	# Free Treatment
+	send_option = {
+		flag = free_treatment
+		localization = free_treatment_offer_treatment	
+		starts_enabled = { always = yes	}	
+	}
+
+	# Paid Treatment
+	send_option = {										
+		flag = paid_treatment							# If selected then scope:flag_name will be set to yes
+		localization = paid_treatment_offer_treatment	# Loc_key for option label
+	}
+
+	# Demand Hook for Treatment
+	send_option = {
+		flag = hook_for_treatment
+		localization = hook_for_treatment_offer_treatment
+	}
+
+	send_options_exclusive = yes
+
+	on_accept = {
+		scope:actor = { save_scope_as = physician }
+		scope:recipient = { save_scope_as = sick_character }
+		scope:actor = {
+			trigger_event = thysian.0010
+		}
+		custom_tooltip = offer_treatment_will_attempt_to_cure_disease_tooltip_tt
+		if = {
+			limit = { scope:paid_treatment = yes }
+			scope:recipient = { pay_short_term_gold = { target = scope:actor gold = minor_gold_value } }
+		}
+		if = {
+			limit = { scope:hook_for_treatment = yes }
+			scope:actor = {
+				add_hook = {
+					target = scope:recipient
+					type = favor_hook
+				} 
+			}
+		}
+	}
+
+	on_decline = {
+		scope:actor = {
+			trigger_event = thysian.0011
+		}
+	}
+	
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 20
+	}
+}
+
+medical_experiment_scheme_interaction = {
+	icon = icon_culture
+	common_interaction = yes
+	interface_priority = 90
+	category = interaction_category_prison
+
+	ignores_pending_interaction_block = yes
+
+	scheme = medical_experiment_scheme
+
+	send_name = START_SCHEME_MEDICAL_EXPERIMENT
+	
+	ai_frequency = 12
+	
+	ai_potential = {
+		primary_title.tier >= tier_county
+		NOR = {
+			any_scheme = {
+				OR = {
+					scheme_type = befriend
+					scheme_type = sway
+					scheme_type = seduce
+					scheme_type = courting
+					scheme_type = elope
+					scheme_type = learn_language
+					scheme_type = learn_magic_school_scheme
+					scheme_type = learn_magic_spell_scheme
+					scheme_type = medical_experiment_scheme
+				}
+			}
+		}
+	}
+	
+	ai_targets = {
+		ai_recipients = prisoners
+	}
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			OR = {
+				faith = { has_doctrine_parameter = can_perform_medical_experiments }
+				AND = {
+					character_has_any_patron_saint = yes
+					any_character_patron_saint_has_aspect_trigger = { ASPECT = values_medical_experiments }
+				}
+			}
+		}
+		scope:recipient = {
+			is_imprisoned_by = scope:actor
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = { is_busy_in_events_localised = yes } #Prisoner
+		scope:recipient = { NOT = { has_strong_hook = scope:actor } }
+		scope:recipient = {
+			custom_description = {
+				text = "currently_being_tortured"
+				NOT = { has_character_flag = is_being_tortured }
+			}
+		}
+
+		# Blocked by current struggle phase
+		custom_tooltip = {
+			text = struggle_parameter_struggle_cannot_execute_involved_prisoners
+			NOT = {
+				scope:actor = {
+					any_character_struggle = {
+						involvement = involved
+						is_struggle_type = rite_wars_south_struggle
+						has_struggle_phase_parameter = struggle_cannot_execute_involved_prisoners
+						is_secondary_character_involvement_involved_trigger = {
+							CHAR = scope:recipient
+						}
+					}
+				}
+			}
+		}
+	}
+
+	desc = {
+		triggered_desc = {
+			trigger = {
+				scope:actor = {
+					can_start_scheme = {
+						type = medical_experiment_scheme
+						target_character = scope:recipient
+					}
+				}
+			}
+			desc = scheme_interaction_tt_medical_experiment
+		}
+	}
+
+	on_accept = {
+		hidden_effect = {
+			scope:actor = {
+				send_interface_toast = {
+					title = medical_experiment_scheme_interaction_notification
+
+					left_icon = scope:actor					
+					right_icon = scope:recipient
+
+					start_scheme = {
+						type = medical_experiment_scheme
+						target_character = scope:recipient
+					}
+				}
+			}
+		}
+		
+		scope:recipient = { save_scope_as = victim }
+		scope:actor = {
+			medical_experiment_show_effects_tooltip = yes
+		}
+	}
+	
+	auto_accept = yes
+
+	ai_will_do = {
+		base = 10
+		
+		modifier = {
+			has_trait = sadistic
+			add = 30
+		}
+		ai_value_modifier = {
+			ai_compassion = tiny_chance_impact_negative_ai_value #Adds +50 for highly uncompassionate characters, -50 for highly compassionate characters
+		}
+		opinion_modifier = {
+			opinion_target = scope:recipient
+			multiplier = -0.25
+		}
+		#Scope:target has caused internal strife in the realm
+		character_hates_scope_due_to_strife_modifier = { TARGET = scope:recipient }
+		modifier = { # Family Feud
+			exists = scope:actor.house
+			exists = scope:recipient.house
+			scope:actor = {
+				house.house_head = {
+					any_owned_story = {
+						story_type = story_cycle_house_feud
+						has_variable = house_feud_house
+						var:house_feud_house = scope:recipient.house
+					}
+				}
+				has_opinion_modifier = {
+					modifier = house_feud_opinion
+					target = scope:recipient.house.house_head
+				}
+			}
+			add = 30
+		}
+	}
+}

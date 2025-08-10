@@ -1,0 +1,226 @@
+﻿reformer_convert_county_effect = {
+	duel = {
+		skill = learning
+		value = $COUNTY$.development_level
+		50 = {
+			compare_modifier = {
+				value = scope:duel_value
+				multiplier = 3.5
+				min = -49
+			}
+			desc = sjalvolki_reformation.conversion_success.tt
+			$COUNTY$.holder = {
+				send_interface_toast = {
+					title = sjalvolki_reformation.conversion_success.tt
+					left_icon = $COUNTY$.holder
+					right_icon = scope:sjalvolki_reformer
+					$COUNTY$ = {
+						set_county_faith = faith:orispolj_rite
+					}
+					scope:sjalvolki_reformer = {
+						add_prestige = {
+							value = $COUNTY$.development_level
+							multiply = 10
+						}
+						add_piety = {
+							value = $COUNTY$.development_level
+							multiply = 5
+						}
+					}
+				}
+			}
+			set_local_variable = {
+				name = notoriety_increase
+				value = {
+					value = $COUNTY$.development_level
+					multiply = 0.1
+					min = 1
+				}
+			}
+			increase_reformer_notoriety_and_fervor_effect = { VALUE = local_var:notoriety_increase }
+		}
+		50 = {
+			compare_modifier = {
+				value = scope:duel_value
+				multiplier = -3.5
+				min = -49
+			}
+			desc = sjalvolki_reformation.conversion_failure.tt
+			send_interface_toast = {
+				title = sjalvolki_reformation.conversion_failure.tt
+				left_icon = $COUNTY$.holder
+				right_icon = scope:sjalvolki_reformer
+				scope:sjalvolki_reformer = {
+					add_prestige = minor_prestige_loss
+				}
+			}
+			increase_reformer_notoriety_and_fervor_effect = { VALUE = 1 }
+		}
+	}
+}
+
+increase_fervor_effect = {
+	if = {
+		limit = { exists = scope:sjalvolki_reformist_story.var:reform_fervor }
+		scope:sjalvolki_reformist_story = {
+			change_variable = {
+				name = reform_fervor
+				add = $VALUE$
+			}
+		}
+	}
+	else = {
+		scope:sjalvolki_reformist_story = {
+			set_variable = {
+				name = reform_fervor
+				value = $VALUE$
+			}
+		}
+	}
+}
+
+increase_reformer_notoriety_and_fervor_effect = {
+	scope:sjalvolki_reformer = {
+		change_variable = {
+			name = notoriety
+			add = $VALUE$
+		}
+		if = {
+			limit = { exists = scope:sjalvolki_reformist_story }
+			if = {
+				limit = { exists = scope:sjalvolki_reformist_story.var:reform_fervor }
+				scope:sjalvolki_reformist_story = {
+					change_variable = {
+						name = reform_fervor
+						add = {
+							value = $VALUE$
+							multiply = 0.5
+						}
+					}
+				}
+			}
+			else = {
+				scope:sjalvolki_reformist_story = {
+					set_variable = {
+						name = reform_fervor
+						value = $VALUE$
+					}
+					change_variable = {
+						name = reform_fervor
+						multiply = 0.5
+					}
+				}
+			}
+		}
+	}
+}
+
+waymakers_of_velos_formed_decision_effect = {
+		hidden_effect = {
+			get_title = title:d_waymakers_of_velos
+			set_primary_title_to = title:d_waymakers_of_velos
+		}
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = title_change
+		}
+		title:d_waymakers_of_velos = {
+			change_title_holder = {
+				holder = root
+				change = scope:title_change
+			}
+		}
+
+		if = {
+			limit = {
+				NOT = { has_character_modifier = founded_holy_order_modifier }
+			}
+			add_character_modifier = {
+				modifier = founded_holy_order_modifier
+				years = 15
+			}
+		}
+
+		spawn_army = {
+			levies = { add = 800 }
+			men_at_arms = {
+				type = sjalvolki_berserkers
+				stacks = 6
+			}
+			men_at_arms = {
+				type = sjalvolki_waymakers
+				stacks = 4
+			}
+			inheritable = yes
+			uses_supply = yes
+			location = scope:founder.capital_province
+			name = waymakers_of_velos_event_troops
+		}
+
+		hidden_effect = {
+			every_vassal_or_below = {
+				change_government = landed_order_government
+			}
+		}
+}
+
+
+#form_the_solar_rite_decision_effects_scripted_effect = {
+#	set_character_faith_with_conversion = faith:solar_rite
+#	hidden_effect = {
+#		primary_title = {
+#			every_in_de_facto_hierarchy = {
+#				limit = {
+#					tier = tier_county
+#					exists = scope:old_faith
+#					OR = {
+#						religion = scope:old_faith.religion
+#						religion = religion:sjalvolki_religion
+#					}
+#				}
+#				if = {
+#					limit = { culture = { has_cultural_pillar = heritage_karzarad } }
+#					random = {
+#						chance = 70
+#						set_county_faith = faith:solar_rite
+#					}
+#				}
+#				else_if = {
+#					limit = { culture = { has_cultural_pillar = heritage_sjalvolki } }
+#					random = {
+#						chance = 50
+#						set_county_faith = faith:solar_rite
+#					}
+#				}
+#				else = {
+#					random = {
+#						chance = 25
+#						set_county_faith = faith:solar_rite
+#					}
+#				}
+#			}
+#		}
+#	}
+#	primary_title = {
+#		every_in_de_facto_hierarchy = {
+#			limit = {
+#				tier = tier_county
+#				faith = faith:solar_rite
+#			}
+#			add_county_modifier = {
+#				modifier = zaumiere_jubilance_modifier
+#				years = 20
+#			}
+#		}
+#	}
+#
+#	hidden_effect = {
+#		faith:solar_rite = {
+#			save_temporary_scope_as = solar_rite_faith
+#			change_fervor = {
+#				value = 100
+#				desc = fervor_gain_solar_rite_foundation
+#			}
+#		}
+#	}
+#}

@@ -1,0 +1,207 @@
+﻿childhood_ongoing = {
+	on_actions = {
+		GH_childhood_ongoing
+	}
+}
+
+on_10th_birthday = {
+	on_actions = {
+		GH_on_10th_birthday
+	}
+}
+
+on_15th_birthday = {
+	on_actions = {
+		GH_on_15th_birthday
+	}
+}
+
+on_16th_birthday = {
+	on_actions = {
+		GH_on_16th_birthday
+	}
+	events = {
+		gh_coming_of_age.0001#Arcana
+	}
+}
+
+
+on_birthday_education_events = {
+	on_actions = {
+		gh_magic_school_education
+	}
+}
+
+GH_childhood_ongoing = {
+	random_events = {
+		400 = sjalvolki_monthly.1007 #chance for Sjalvolki children to get the hunter trait
+	}
+}
+
+GH_on_10th_birthday = {
+	events = {
+		gedeora.0020 # So that Gedeora children get vices
+	}
+}
+
+GH_on_15th_birthday = {
+	events = {
+		gedeora.0020 # So that Gedeora children get vices
+	}
+}
+
+GH_on_16th_birthday = {
+	events = {
+		marcher_lifepath.0001 #If Lifepath, get your lifepath focus
+		marcher_lifepath.0003 #If Opak Lifepath, get your lifepath focus
+		marcher_lifepath.0004 #Four Steps, get your own lifepath focus
+		marcher_lifepath.0005 #Tripath, get your own lifepath focus
+		magic.1202 # Notifies the world of extremely potent Magi, and make sure they always gain at least some level of magic education
+
+		delay = { days = 2 }
+
+		thysian.0001 #Physician education for thysians
+	}
+
+	effect = {
+		# Chance of voluntarily studying law at this age
+		if = {
+			limit = {
+				faith = {
+					has_doctrine_parameter = enables_practising_law
+				}
+				OR = {
+					has_focus = education_learning
+					trigger_if = {
+						limit = { exists = dynasty }
+						dynasty = { has_dynasty_perk = wardenite_legacy_2 }
+					}
+				}
+			}
+			random = {
+				chance = 10
+				modifier = {
+					add = 10
+					has_trait = zealous
+				}
+				modifier = {
+					add = 10
+					has_trait = ambitious
+				}
+				modifier = {
+					add = 25
+					any_relation = {
+						type = guardian
+						has_trait = lifestyle_jurist
+						count >= 1
+					}
+				}
+				modifier = {
+					add = 100
+					exists = dynasty
+					dynasty = { has_dynasty_perk = wardenite_legacy_2 }
+				}
+				add_trait = lifestyle_jurist
+			}
+		}
+	}
+}
+
+#To gain education points
+gh_magic_school_education = {
+	trigger = {
+		is_adult = no
+		age >= childhood_education_start_age
+		any_relation = {
+			type = guardian
+			has_variable_list = known_magic_school_list
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { 
+				NOT = { 
+					has_variable_list = known_magic_school_list
+				} 
+			}
+			# 30% chance of learning the basics of the school each year, with a guarantee to learn the basics after 3 years of uninterrupted education
+			random_list = {
+				30 = {
+					modifier = {
+						exists = cp:councillor_court_magi
+						cp:councillor_court_magi = { is_performing_council_task = task_court_magi_boost_magic_power }
+						add = 20
+					}
+					random_relation = {
+						type = guardian
+						random_in_list = {
+							variable = known_magic_school_list
+							save_scope_as = magic_school_to_learn_from_guardian_scope
+						}
+						save_scope_as = guardian_scope
+					}
+					learn_magic_school_effect = {
+						MAGIC_SCHOOL = scope:magic_school_to_learn_from_guardian_scope
+					}
+					learn_magic_knowledge_from_character_and_magic_school_effect = { 
+						MENTOR = scope:guardian_scope 
+						MAGIC_SCHOOL = scope:magic_school_to_learn_from_guardian_scope
+						MIN_SPELLS = 3
+						MAX_SPELLS = 5
+						MAX_SPELL_LEVEL = 3
+					}
+					remove_variable = magic_school_education_three_year_countdown
+				}
+				70 = {
+					trigger = {
+						OR = {
+							NOT = { exists = var:magic_school_education_three_year_countdown }
+							var:magic_school_education_three_year_countdown < 3
+						}
+					}
+					if = {
+						limit = { NOT = { exists = var:magic_school_education_three_year_countdown } }
+						set_variable = { name = magic_school_education_three_year_countdown value = 1 }
+					}
+					else = {
+						change_variable = { name = magic_school_education_three_year_countdown add = 1 }
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				any_relation = {
+					type = guardian
+					has_variable_list = known_magic_school_list
+					any_in_list = {
+						variable = known_magic_school_list
+						this = root.var:primary_magic_school
+					}
+				}
+			}
+			# 30% yearly chance of learning a guardian's spell
+			random = {
+				chance = 30
+				random_relation = {
+					type = guardian
+					save_scope_as = guardian_scope
+					random_in_list = {
+						variable = known_magic_school_list
+						limit = { this = root.var:primary_magic_school }
+						save_scope_as = magic_school_to_learn_from_guardian_scope
+					}
+				}
+				learn_magic_knowledge_from_character_and_magic_school_effect = { 
+					MENTOR = scope:guardian_scope 
+					MAGIC_SCHOOL = scope:magic_school_to_learn_from_guardian_scope
+					MIN_SPELLS = 1
+					MAX_SPELLS = 1
+					MAX_SPELL_LEVEL = 3
+				}
+			}
+		}
+	}
+}
+

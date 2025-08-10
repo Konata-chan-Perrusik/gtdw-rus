@@ -1,0 +1,143 @@
+﻿# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 3.5
+@cultural_maa_extra_ai_score = 60 # Equivalent to having 6 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+accolade_maa_mammothiers = {
+	type = elephant_cavalry
+	icon = war_mammoths
+
+	can_recruit = {
+		any_active_accolade = {
+			primary_type = { this = accolade_type:mammothry_attribute }
+			accolade_rank >= 3
+		}
+	}
+
+	damage = 400
+	toughness = 100
+	pursuit = 0
+	screen = 0
+
+	siege_value = 0.2
+
+	terrain_bonus = {
+		taiga = { damage = 100 }
+		mountains = { damage = -100 }
+		wetlands = { damage = -150 toughness = -20 }
+		desert = { damage = -150 toughness = -20 }
+		desert_mountains = { damage = -150 toughness = -20 }
+
+		## GH ADDITIONS ##
+		# Marcher Terrain
+		marcher_mountains = { damage = -100 }
+		marcher_wetlands = { damage = -150 toughness = -20 }
+
+		# Underground Terrain
+		mayik_caverns = { damage = -150 toughness = -20 }
+		mayik_corridors = { damage = -150 toughness = -20 }
+		mayik_chamber = { damage = -150 toughness = -20 }
+	}
+
+	counters = {
+		skirmishers = 2
+		heavy_infantry = 2
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = 30 toughness = 10 }
+		harsh_winter = { damage = 30 toughness = 10 }
+	}
+
+	buy_cost = { gold = accolade_war_mammoth_recruitment_cost }
+	low_maintenance_cost = { gold = war_mammoth_low_maint_cost }
+	high_maintenance_cost = { gold = war_mammoth_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	max_sub_regiments = 4
+
+	stack = 25
+	hired_stack_size = 10
+	ai_quality = {
+		value = @cultural_maa_extra_ai_score
+		add = 100
+	}
+}
+
+accolade_maa_magi = {
+	type = magi
+
+	can_recruit = {
+		any_active_accolade = {
+			primary_type = { this = accolade_type:magi_attribute }
+			accolade_rank >= 3
+		}
+	}
+
+	damage = 400
+	toughness = 200
+	pursuit = 80
+	screen = 80
+	siege_value = 0.2
+
+	terrain_bonus = {
+		hills = { damage = 100 toughness = 50 }
+		marcher_hills = { damage = -350 toughness = -180 siege_value = -0.2 }
+		marcher_farmlands = { damage = -350 toughness = -180 siege_value = -0.2 }
+		marcher_plains = { damage = -350 toughness = -180 siege_value = -0.2 }
+		marcher_mountains = { damage = -350 toughness = -180 siege_value = -0.2 }
+		marcher_forest = { damage = -350 toughness = -180 siege_value = -0.2 }
+		marcher_wetlands = { damage = -350 toughness = -180 siege_value = -0.2 }
+		marcher_floodplains = { damage = -350 toughness = -180 siege_value = -0.2 }
+		antimagic_terrain = { damage = -350 toughness = -180 siege_value = -0.2 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_hymns = 1
+		#magical_time = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = accolade_magi_recruitment_cost }
+	low_maintenance_cost = { gold = magi_low_maint_cost }
+	high_maintenance_cost = { gold = magi_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = culture_ai_weight_magi }
+	icon = magi_regular
+}

@@ -1,0 +1,262 @@
+﻿##############################
+## Metropolis Holding Level ##
+##############################
+
+building_requirement_metropolis_holding_level = {
+	trigger_if = {
+		limit = { has_holding_type = metro_holding }
+		has_building_or_higher = metro_$LEVEL$
+	}
+	trigger_else = {
+		custom_description = {
+			text = "building_requirement_metropolis_level_failed"
+			always = no
+		}
+	}
+}
+
+#######################################
+## Metropolis Districts Requirements ##
+#######################################
+
+district_requirements_trigger = {
+	any_in_list = {
+		variable = metro_districts
+		var:district_type = flag:$DISTRICT_TYPE$
+	}
+}
+
+##########################
+## Metropolis Buildings ##
+##########################
+
+is_any_metropolis_district = {
+    has_holding_type = metro_holding
+}
+
+is_any_metropolis_or_ruined_district_trigger = {
+    OR = {
+		has_holding_type = ruined_district_holding
+        has_holding_type = metro_holding
+    }
+}
+
+county_has_any_metropolis_or_ruined_district_trigger = {
+	trigger_if = {
+		limit = { exists = county }
+		county = {
+			any_county_province = {
+				OR = {
+					has_holding_type = ruined_district_holding
+					has_holding_type = metro_holding
+				}
+			}
+		}
+	}
+}
+
+is_urban_trigger = {
+	OR = {
+		has_holding_type = city_holding
+		is_any_metropolis_district = yes
+		has_holding_type = necropolis_holding
+	}
+}
+
+holding_is_type_from_flag_trigger = {
+	trigger_if = {
+		limit = { exists = $FLAG_SCOPE$ }
+		$FLAG_SCOPE$ = flag:$FLAG$
+	}
+	trigger_else = { always = no }
+}
+
+#######################
+## Special Buildings ##
+#######################
+
+	has_great_tower = {
+		OR = {
+			has_building = 01_sunkentower
+			has_building = 01_kashiryatower
+			has_building = 01_easterntower
+			has_building = 01_oltenictower
+			has_building = 01_westtower
+			has_building = 01_amagheantower
+			has_building = 01_gehazetower
+			has_building = 01_frozentower
+		}
+	}
+
+
+	has_generic_holy_site = {
+		OR = {
+			has_building = 01_holy_site_grand_courthouse
+			has_building = 01_holy_site_hallowed_naon
+			has_building = 01_holy_site_marcher_cathedral
+			has_building = holy_site_other_grand_temple_01 #Vanilla Building
+			has_building = 01_holy_site_saintly_cathedral
+			And = {
+				has_special_building_slot = yes
+				has_special_building = no
+			}
+		}
+	}
+
+	gh_has_mine = {
+		OR = {
+			#has_building_or_higher = malcoisslavefactory
+			has_building_or_higher = 01_oetanai_mines
+			has_building_or_higher = 01_eponthos_mines
+			has_building_or_higher = 01_ordus_mines
+			has_building_or_higher = 01_creonta_mines
+			has_building_or_higher = 01_epidaphos_mines
+			has_building_or_higher = 01_phanapetra_mines
+			has_building_or_higher = 01_turayyil_mines
+			has_building_or_higher = 01_golgelea_mines
+			has_building_or_higher = 01_lascife_mines
+			has_building_or_higher = 01_zakran_mines
+			has_building_or_higher = 01_mayaliha_mines
+			has_building_or_higher = 01_beban_mines
+			has_building_or_higher = 01_lygudista_mines
+			has_building_or_higher = 01_tiwu_anaan_mines
+			has_building_or_higher = 01_gujak_mines
+			has_building_or_higher = 01_ashuku_mines
+			has_building_or_higher = 01_paccai_mines
+			has_building_or_higher = 01_vilunnak_mines
+			has_building_or_higher = 01_lachish_mines
+		}
+	}
+
+########################
+## Regional Buildings ##
+########################
+
+building_xapanta_plantations_requirement_terrain = {
+	#terrain = jungle # There are non-jungle provinces in the heart of Cyrat, why?
+	geographical_region = cyrat_biozone
+}
+
+########################
+## Cultural Buildings ##
+########################
+
+building_reefmine_requirement_terrain = {
+	geographical_region = world_innovation_reefmine
+}
+
+building_mammoth_pens_requirement_terrain = {
+	OR = {
+		terrain = taiga
+		terrain = forest
+	}
+}
+
+building_dahangon_terraces_requirement_terrain = {
+	OR = {
+		terrain = hills
+		terrain = marcher_hills
+	}
+}
+
+building_aaimperon_plantations_requirement_terrain = {
+	geographical_region = GH_watermelon_growing_region
+	OR = {
+		GH_any_plains_terrain_trigger = yes
+		GH_any_farmlands_terrain_trigger = yes
+		GH_any_floodplains_terrain_trigger = yes
+		GH_any_wetlands_terrain_trigger = yes
+		GH_any_hills_terrain_trigger = yes
+	}
+}
+
+#####################
+## Metro Buildings ##
+#####################
+
+building_gh_walls_requirement_terrain = {
+	OR = {
+		GH_any_farmlands_terrain_trigger = yes
+		GH_any_plains_terrain_trigger = yes
+		GH_any_wetlands_terrain_trigger = yes
+	}
+	has_holding_type = metro_holding
+}
+
+building_harbor_requirement_terrain = {
+	OR = {
+		is_coastal = yes
+		is_riverside_province = yes
+	}
+	has_holding_type = metro_holding
+}
+
+building_residential_infrastructure_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_marketplace_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_clinic_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_guard_barracks_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_luxury_goods_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_merchant_guild_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_city_center_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_parks_and_gardens_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_artisan_quarters_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_waterworks_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_arena_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_embassy_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_treasury_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}
+
+building_gh_university_requirement_terrain = {
+	GH_any_terrain = yes
+	has_holding_type = metro_holding
+}

@@ -1,0 +1,237 @@
+﻿#Victory Prestige Experience Gain
+fogeater_invasion_cb_prestige_experience_gain = 10
+
+#Ally contribution prestige gain
+fogeater_invasion_cb_ally_prestige = 100
+
+#Prestige gain
+fogeater_invasion_cb_prestige_gain = 250
+
+#White peace prestige values
+fogeater_invasion_cb_prestige_white_peace = -100
+
+
+#Victory Prestige Experience Gain
+adabyss_invasion_cb_prestige_experience_gain = 10
+
+#Ally contribution prestige gain
+adabyss_invasion_cb_ally_prestige = 100
+
+#Prestige gain
+adabyss_invasion_cb_prestige_gain = 250
+
+#White peace prestige values
+adabyss_invasion_cb_prestige_white_peace = -100
+
+
+# Isle Retribution War values
+isles_retribution_owned_percent_decimal_value = {
+	value = isles_retribution_owned_percent_value
+	divide = 100
+	max = 1
+}
+
+# The AI in GH should be directed to target specific regions based on its background to avoid conquest oddities
+godherja_conquests_ai_score_value = {
+	value = 1
+	multiply = islander_continental_preferences_ai_score_value
+	multiply = kashirya_conquests_ai_score_value
+	multiply = sarradonian_conquests_ai_score_value
+	multiply = republican_preferences_ai_score_value
+	multiply = marcher_preferences_ai_score_value
+}
+
+# Islanders should prefer islands, Continental should prefer Land, unless theyve taken to the seas
+islander_continental_preferences_ai_score_value = {
+	value = 1
+	if = {
+		limit = {
+			scope:attacker.culture = {
+				OR = {
+					has_cultural_tradition = tradition_islander
+					has_cultural_tradition = tradition_settlers_of_krehejad
+					has_cultural_tradition = tradition_guillate_legacy
+				}
+			}
+		}
+		every_target_title = {
+			title_province = {
+				if = {
+					limit = {
+						geographical_region = GH_geographic_isles
+					}
+					add = 1000
+				}
+				else = { add = -1000 }
+			}
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				scope:attacker = { highest_held_title_tier < tier_duchy } # Counties should be less interested in expanding to the isles
+				scope:attacker.culture = {
+					NOR = {
+						has_cultural_tradition = tradition_islander
+						has_cultural_tradition = tradition_settlers_of_krehejad
+						has_cultural_tradition = tradition_guillate_legacy
+					}
+				}
+				scope:attacker.house ?= { NOT = { has_house_modifier = isles_naval_expedition_modifier} }
+			}
+		}
+		every_target_title = {
+			title_province = {
+				if = {
+					limit = {
+						geographical_region = GH_geographic_isles
+					}
+					add = -100
+				}
+			}
+		}
+	}
+}
+
+isles_retribution_owned_percent_value = 25
+
+redlands_adventure_cb_prestige_cost = {
+	add = { value = 100 desc = "CB_BASE_COST" }
+
+	
+}
+
+redlands_adventure_cb_gold_cost = {
+	add = { value = 100 desc = "CB_BASE_COST" }
+}
+
+kashirya_conquests_ai_score_value = {
+	value = 1
+	# Kashiryan is normally surrounded by steppes & tribes, leaving it open for easy outward conquest
+	# This keeps them interested on Kashirya proper until developing an empire title
+	if = {
+		limit = {
+			scope:attacker = {
+				# Nobody cares about counts :(
+				highest_held_title_tier >= tier_duchy
+				# And are roughly of Kashiryan heritage
+				culture = { has_cultural_tradition = tradition_otachedian_law } # more cultures  have this than a shared tradition
+			}
+		}
+		every_target_title = {
+			title_province = {
+				if = {
+					limit = { geographical_region = GH_geographic_kashirya }
+					add = 100
+				}
+				else_if = {
+					limit = { geographical_region = GH_geographic_pirate_coast }
+					add = 25
+				}
+				else_if = {
+					limit = { geographical_region = GH_geographic_kasiyrat }
+					add = 10
+				}
+				else_if = {
+					limit = { geographical_region = GH_geographic_dahangon }
+					add = 5
+				}
+				else = { add = -1000 }
+			}
+		}
+	}
+}
+
+sarradonian_conquests_ai_score_value = {
+	value = 1
+	# This is similarly for keeping Sarradonians focused on Sarradon, unless of suitable size to conquer the seas
+	if = {
+		limit = {
+			scope:attacker = {
+				# Nobody cares about counts :(
+				highest_held_title_tier >= tier_duchy
+				# And are roughly of Sarradonian heritage
+				faith = { 
+					OR = {
+						has_doctrine = sarradonian_hostility_doctrine
+						has_doctrine = ritualism_hostility_doctrine
+						has_doctrine = wardenism_hostility_doctrine
+					}
+				} # more cultures  have this than a shared tradition
+			}
+		}
+		every_target_title = {
+			title_province = {
+				if = {
+					limit = { geographical_region = GH_geographic_sarradon }
+					add = 100
+				}
+				else_if = {
+					limit = { geographical_region = GH_geographic_pirate_coast }
+					add = 25
+				}
+				else_if = {
+					limit = { geographical_region = GH_geographic_isles }
+					add = 10
+				}
+				else = { add = -1000 }
+			}
+		}
+	}
+}
+
+republican_preferences_ai_score_value = {
+	# Republics should generally not be interested in large swathes of inaccessible by sea land as you need healthy ports for good trade pre-industralization
+	# Silk Road notable exception but you didnt have republics on the silk road :P
+	value = 1
+	if = {
+		limit = {
+			scope:attacker = {
+				OR = {
+					GH_is_any_special_republic_government_trigger = yes
+					government_has_flag = government_is_republic_playable
+				}
+			}
+		}
+		every_target_title = {
+			title_province = {
+				if = {
+					limit = { is_coastal = yes }
+					multiply = 1.5
+				}
+				else = {
+					add = -1000
+				}
+			}
+		}
+	}
+}
+
+marcher_preferences_ai_score_value = {
+	# Marchers should focus on Chevalie until the High Kingdom is formed, then go outside it, and return back to Chevalie focus if the High Kingdom is gone
+	value = 1
+	if = {
+		limit = {
+			scope:attacker = {
+				capital_province ?= { geographical_region = GH_geographic_marches }
+				culture = { has_cultural_tradition = tradition_chevalien_identity }
+				NOR = {
+					has_title = title:e_chevalie
+					top_liege = { has_title = title:e_chevalie }
+					any_neighboring_top_liege_realm_owner = {
+						has_title = title:e_chevalie
+					}
+				}
+			}
+		}
+		every_target_title = {
+			title_province = {
+				if = {
+					limit = { geographical_region = GH_geographic_marches }
+					add = 500
+				}
+				else = { add = -9999 }
+			}
+		}
+	}
+}

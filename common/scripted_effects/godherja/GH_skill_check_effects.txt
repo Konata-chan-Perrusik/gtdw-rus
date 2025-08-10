@@ -1,0 +1,41 @@
+﻿
+#####################################################################
+# EFFECT LIST
+#####################################################################
+# !!! Remember to add all new effects with a short description here !!!
+
+
+
+
+#### Diplomacy check effects: applies effects relating to generalized 'negotations' between X characters
+# get_negotiation_prestige_reward_two_characters_effect 		- gets prestige reward for conducting successful negotiations between two characters
+
+#####################################################################
+# EFFECTS
+#####################################################################
+
+# Gets prestige reward for conducting successful negotiations between two characters. Parameters:
+#	CHARACTER_1, CHARACTER_2 - characters involved in the negotiations
+#	DIFFICULTY - can be low, medium or high
+
+get_negotiation_prestige_reward_two_characters_effect = {
+	$CHARACTER_1$ = { add_to_list = negotiation_characters }
+	$CHARACTER_2$ = { add_to_list = negotiation_characters }
+	add_prestige = prestige_reward_from_negotations_$DIFFICULTY$_value
+	$CHARACTER_1$ = { remove_from_list = negotiation_characters }
+	$CHARACTER_2$ = { remove_from_list = negotiation_characters }
+}
+
+# Gets prestige reward for conducting successful negotiations between three characters. Parameters:
+#	CHARACTER_1, CHARACTER_2, CHARACTER_3 - characters involved in the negotiations
+#	DIFFICULTY - can be low, medium or high
+
+get_negotiation_prestige_reward_three_characters_effect = {
+	$CHARACTER_1$ = { add_to_list = negotiation_characters }
+	$CHARACTER_2$ = { add_to_list = negotiation_characters }
+	$CHARACTER_3$ = { add_to_list = negotiation_characters }
+	add_prestige = prestige_reward_from_negotations_$DIFFICULTY$_value
+	$CHARACTER_1$ = { remove_from_list = negotiation_characters }
+	$CHARACTER_2$ = { remove_from_list = negotiation_characters }
+	$CHARACTER_3$ = { remove_from_list = negotiation_characters }
+}

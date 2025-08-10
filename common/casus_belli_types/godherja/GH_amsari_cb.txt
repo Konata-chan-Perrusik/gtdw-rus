@@ -1,0 +1,160 @@
+﻿dismantle_ayyar_threat_cb = {
+	icon = dissolution_war
+	group = de_jure
+	
+	allowed_for_character = {
+		scope:attacker = {
+			has_character_flag = flag_qanamsar_challenging_ayyar
+		}
+	}
+
+	allowed_against_character = {
+		NOR = {
+			scope:defender = { target_is_liege_or_above = scope:attacker }
+			scope:attacker = { target_is_liege_or_above = scope:defender }
+			scope:attacker = { has_character_flag = flag_qanamsar_challenged_ayyar } #Only once per Emperor.
+		}
+	}
+	target_titles = all
+	target_title_tier = all
+	ignore_effect = change_title_holder
+
+	white_peace_possible = no
+	on_white_peace_desc = {
+		desc = WHITE_PEACE_DISABLED
+	}
+	
+	valid_to_start = {
+		scope:target = { this = title:e_ayyar }
+	}
+
+	on_declaration = {
+		on_declared_war = yes
+	}	
+
+	on_victory_desc = {
+		desc = dismantle_ayyar_threat_cb_victory_desc
+	}
+	
+	on_victory = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		scope:defender = { save_scope_as = ayyar_ruler }
+		scope:attacker = {
+			save_scope_as = hiklahn_qanamsar
+			destroy_title = title:e_ayyar
+			add_character_flag = { #No repeats.
+				flag = flag_qanamsar_challenged_ayyar
+			}
+		}		
+		hidden_effect = {
+			title:e_ayyar = {
+				every_in_de_jure_hierarchy = {
+					limit = {
+						tier = tier_kingdom
+					}
+					set_de_jure_liege_title = scope:attacker.primary_title #Drift all the Ayyar vassal titles to de jure Asmari Hiklahn.
+				}
+			}
+		}
+		
+		# Legitimacy
+		add_legitimacy_attacker_victory_effect = yes
+		
+		# truce
+		add_truce_attacker_victory_effect = yes
+
+		hidden_effect = {
+			scope:attacker = {
+				trigger_event = gh_amsari_major_decision.0003
+			}
+			scope:defender = {
+				trigger_event = gh_amsari_major_decision.0004
+			}
+		}
+
+		# EP3: note gold gained from military assistance/join war contracts and their war contribution threshold
+		laamp_as_mercenary_payout_tooltip_effect = yes
+	}
+
+	on_defeat_desc = {
+		desc = dismantle_ayyar_threat_cb_defeat_desc
+	}
+	
+	on_defeat = {
+		scope:attacker = { show_pow_release_message_effect = yes }
+		scope:defender = { save_scope_as = ayyar_ruler }
+		scope:attacker = {
+			save_scope_as = hiklahn_qanamsar
+			add_character_flag = { #No repeats.
+				flag = flag_qanamsar_challenged_ayyar
+			}
+			pay_short_term_gold_reparations_effect = {
+				GOLD_VALUE = 10
+			}
+		}
+		
+		every_in_list = {
+			list = target_titles
+			save_temporary_scope_as = target
+		}
+		
+		setup_de_jure_cb = {
+			attacker = scope:attacker
+			defender = scope:defender
+			#attacker_prestige = -10
+			victory = no
+			title = scope:target
+		}
+		
+		# Legitimacy
+		add_legitimacy_attacker_defeat_effect = yes
+
+		# Truce
+		add_truce_attacker_defeat_effect = yes
+	
+		hidden_effect = {
+			scope:attacker = {
+				trigger_event = gh_amsari_major_decision.0005
+			}
+			scope:defender = {
+				trigger_event = gh_amsari_major_decision.0006
+			}
+		}
+		
+		scope:attacker = {
+			save_temporary_scope_as = loser
+		}
+		on_lost_aggression_war_discontent_loss = yes
+
+		# EP3: note gold gained from military assistance/join war contracts and their war contribution threshold
+		laamp_as_mercenary_payout_tooltip_effect = yes
+	}
+	
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+	
+	transfer_behavior = transfer
+	
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+	
+	war_name = "DISMANTLE_EMPIRE_WAR_SPECIFIC_NAME"
+	war_name_base = "DISMANTLE_EMPIRE_WAR_SPECIFIC_NAME_BASE"
+	cb_name = DISMANTLE_EMPIRE_SPECIFIC_NAME
+	interface_priority = 98 #Below take all and regular dejure.
+	
+	attacker_ticking_warscore = 0.01
+	defender_ticking_warscore = 0.05
+	attacker_wargoal_percentage = 0.9
+	defender_ticking_warscore_delay = { months = 24 }
+	
+	max_defender_score_from_occupation = 150
+	max_attacker_score_from_occupation = 150
+	
+	max_ai_diplo_distance_to_title = 2000
+	
+	on_invalidated_desc = msg_invalidate_war_title
+	
+	ai_score_mult = {
+	}
+}

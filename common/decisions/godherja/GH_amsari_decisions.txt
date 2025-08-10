@@ -1,0 +1,553 @@
+﻿# Form Levan Kingdom 
+gh_form_leviden_kingdom_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_levy_outcasts.dds"
+	}
+	decision_group_type = amsari
+	sort_order = 50
+
+	is_shown = {
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:flag_gh_leviden_kingdom_decision
+			}
+		}
+		culture = { has_cultural_pillar = heritage_canian }
+		highest_held_title_tier <= tier_kingdom
+		any_held_title = {
+			OR = {
+				de_jure_liege = title:d_prathatha
+				de_jure_liege = title:d_rakrundur
+				de_jure_liege = title:d_kalbafaraj_mahalleh
+				this = title:d_prathatha
+				this = title:d_rakrundur
+				this = title:d_kalbafaraj_mahalleh
+			}
+		}
+	}
+
+	is_valid = {
+		religion = religion:amsari_religion
+		completely_controls = title:d_prathatha
+		completely_controls = title:d_rakrundur
+		is_independent_ruler = yes
+		prestige_level >= 3
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		is_landed = yes
+	}
+	
+	effect = {
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:flag_gh_leviden_kingdom_decision
+		}
+
+		house = {
+			add_house_modifier = {
+				modifier = gh_leviden_kingdom_modifier
+				years = 50
+			}
+		}
+
+		#custom_tooltip = unlocks_alghurb_bay_naval_conquest
+
+		hidden_effect = {
+			title:k_levan = { set_de_jure_liege_title = title:d_rakrundur.empire }
+		}
+
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = title_change
+			add_claim_on_loss = yes
+		}
+		title:k_levan = {
+			change_title_holder = {
+				holder = root
+				change = scope:title_change
+			}
+		}
+		resolve_title_and_vassal_change = scope:title_change
+
+		add_character_modifier = gh_conqueror_alghurb_bay_modifier
+		
+		title:d_rakrundur = { set_de_jure_liege_title = title:k_levan }
+		title:d_prathatha = { set_de_jure_liege_title = title:k_levan }
+		# Additional DeJures
+		adjust_de_jure_effect = {
+			TITLE = title:d_sashravun
+			DE_JURE = title:k_levan
+		}
+		adjust_de_jure_effect = {
+			TITLE = title:d_vidhan
+			DE_JURE = title:k_levan
+		}
+		adjust_de_jure_effect = {
+			TITLE = title:d_vabhkrun
+			DE_JURE = title:k_levan
+		}	
+	}
+
+	cost = {
+		gold = {
+			value = 250
+		}
+		prestige = {
+			value = 2000
+		}
+	}
+
+	ai_check_interval = 1000
+
+	ai_potential = {
+		is_ruler = yes
+		short_term_gold >= {
+			value = major_gold_value
+			multiply = 1.5
+			round = yes
+		}
+		prestige >= {
+			value = major_prestige_gain
+			multiply = 3
+			round = yes
+		}
+	}
+
+	ai_will_do = {
+		base = 80
+	}
+}
+
+
+gh_buy_sarthian_wine_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_culture.dds"
+	}
+	desc = gh_buy_sarthian_wine_decision_desc
+	selection_tooltip = gh_buy_sarthian_wine_decision_tooltip
+	decision_group_type = amsari
+	ai_check_interval = 120
+
+	cooldown = { years = 10 }
+
+	is_shown = {
+		capital_county.title_province ?= { 
+			OR = { 
+				geographical_region = world_ws_amsari 
+				geographical_region = world_ws_ayyar
+				geographical_region = world_cs_udhaliyya
+			}
+		}
+	}
+
+	is_valid = {
+		capital_county.title_province ?= { 
+			OR = { 
+				geographical_region = world_ws_amsari 
+				geographical_region = world_ws_ayyar
+				geographical_region = world_cs_udhaliyya
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		add_character_modifier = {
+			modifier = gh_sarthian_wine_modifier
+			years = 5
+		}
+		stress_impact = {
+			base = minor_stress_impact_loss
+			drunkard = minor_stress_impact_loss
+		}
+	}
+	
+	ai_potential = {
+		short_term_gold >= medium_gold_value
+		ai_greed < medium_positive_ai_value
+	}
+
+	cost = {
+		gold = {
+			value = minor_gold_value
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+		# Plus stress.
+		## Level 1.
+		modifier = {
+			add = 25
+			stress_level = 1
+		}
+		## Level 2.
+		modifier = {
+			add = 50
+			stress_level = 2
+		}
+		## Level 3.
+		modifier = {
+			add = 75
+			stress_level >= 3
+		}
+	}
+}
+	
+gh_employ_sarthian_farmers_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/event_scenes/amsar.dds"
+	}
+	desc = gh_employ_sarthian_farmers_decision_desc
+	decision_group_type = amsari
+	sort_order = 1000
+	
+	is_shown = {
+		NOT = { government_has_flag = government_is_landless_adventurer }
+		any_sub_realm_county = {
+			culture = culture:sarthian
+		}
+	}
+
+	is_valid = {
+		NOT = { government_has_flag = government_is_landless_adventurer }
+		any_sub_realm_county = {
+			culture = culture:sarthian
+		}
+		any_sub_realm_county = {
+			NOT = { has_county_modifier = gh_sarthian_farmers_modifier }
+			any_in_de_jure_hierarchy = {
+				holder = scope:ruler
+				is_leased_out = no
+				is_capital_barony = yes
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	widget = {
+		gui = decision_view_widget_gh_bring_farmers_to_county
+		controller = create_holy_order
+		barony_valid = {
+			trigger_if = {
+				limit = { exists = this }
+				gh_employ_sarthian_farmers_barony_is_valid_trigger = yes
+			}
+			trigger_else = {
+				custom_description = {
+					text = "has_gh_barony_county_selected"
+					always = no
+				}
+			}
+		}
+	}
+
+	cost = {
+		gold = {
+			value = minor_gold_value
+		}
+	}
+	
+	cooldown = { years = 10 }
+
+	effect = {
+		scope:barony.county = {
+			save_scope_as = new_holy_order
+			add_county_modifier = {
+				modifier = gh_sarthian_farmers_modifier
+				years = 5
+			}
+			if = {
+				limit = { NOT = { holder = root } }
+				holder = {
+					add_opinion = {
+						modifier = grateful_opinion
+						target = root
+						opinion = 5
+					}
+				}
+			}
+		}		
+	}
+
+	ai_potential = {
+		short_term_gold >= {
+			value = 200
+		}
+		highest_held_title_tier > tier_barony
+	}
+	
+	ai_check_interval = 120
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+gh_amsari_migration_initiative_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_carriage_escorted_by_guards.dds"
+	}
+	desc = gh_amsari_migration_initiative_decision_desc
+	decision_group_type = amsari
+	sort_order = 1000
+	
+	is_shown = {
+		has_title = title:e_amsari
+		culture = culture:amsari
+		NAND = {
+			title:c_karamkura = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_bandar_ozbak = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_durranduf = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_kharawarki = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_dkran = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_pardula = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_bherak = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+			title:c_kirathu = { culture = { has_cultural_pillar =  heritage_zarasadari } }
+		}
+	}
+
+	is_valid = {
+		has_title = title:e_amsari
+		culture = culture:amsari
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	widget = {
+		gui = decision_view_widget_gh_bring_farmers_to_county
+		controller = create_holy_order
+		barony_valid = {
+			trigger_if = {
+				limit = { exists = this }
+				is_capital_barony = yes
+				county = { 
+					NOR = { 
+						has_county_modifier = gh_forced_settlements_modifier 
+						culture = culture:amsari
+					}
+					OR = {
+						this = title:c_karamkura 
+						this = title:c_bandar_ozbak 
+						this = title:c_durranduf 
+						this = title:c_kharawarki 
+						this = title:c_dkran 
+						this = title:c_pardula 
+						this = title:c_bherak 
+						this = title:c_kirathu 
+					}		
+				}
+			}
+			trigger_else = {
+				custom_description = {
+					text = "has_gh_barony_county_selected"
+					always = no
+				}
+			}
+		}
+	}
+
+	cost = {
+		gold = {
+			value = minor_gold_value
+		}
+		prestige = {
+			value = minor_prestige_value
+		}
+	}
+	
+	cooldown = { years = 10 }
+
+	effect = {
+		scope:barony.county = {
+			save_scope_as = new_holy_order
+			set_county_faith = root.capital_county.faith
+			set_county_culture = root.culture
+			
+			change_county_control = -20
+			add_county_modifier = {
+				modifier = gh_forced_settlements_modifier
+				years = 5
+			}
+			
+			#Give opinion to ruler if exist
+			holder = { 
+				if = {
+					limit = { 
+						NOT = { this = root }
+						culture = culture:amsari
+					}
+					add_opinion = {
+						modifier = grateful_opinion
+						target = root
+						opinion = 5
+					}
+				}
+				else_if = {
+					limit = { 
+						NOR = { 
+							this = root 
+							culture = culture:amsari
+						}
+					}
+					add_opinion = {
+						modifier = angry_opinion
+						target = root
+						opinion = -10
+					}
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		short_term_gold >= {
+			value = minor_gold_value
+		}
+	}
+	
+	ai_check_interval = 120
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+
+gh_dismantle_ayyar_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	desc = gh_dismantle_ayyar_decision_desc
+	selection_tooltip = gh_dismantle_ayyar_decision_tooltip
+	decision_group_type = amsari
+
+	ai_check_interval = 120
+
+	is_shown = {
+		exists = title:e_ayyar.holder #Must exist in the first place...
+		NOT = {
+			root = title:e_ayyar.holder #That'd be awkward...
+		}
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			culture = { has_cultural_pillar = heritage_thyssae }
+		}
+		is_ruler = yes
+		is_playable_character = yes
+		has_title = title:e_amsari
+
+		NOR = { #Once an Emperor throws the challenge, he has only one chance to dismantle the Empire.
+			has_character_flag = flag_qanamsar_challenging_ayyar #Applied below.
+			has_character_flag = flag_qanamsar_challenged_ayyar #Applied in war.
+		}
+	}
+
+	is_valid = {
+		prestige_level >= max_prestige_level
+		#Gotta have all of amsar of course
+		completely_controls_region = world_ws_amsari
+		#Also Shehhardi kingdom
+		completely_controls = title:k_tayalhun
+	}
+	
+	is_valid_showing_failures_only = {
+		is_landed = yes
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_independent_ruler = yes
+		is_at_war = no
+	}
+
+	cost = {
+		prestige = 2000
+	}
+
+	effect = {
+		custom_tooltip = gh_dismantle_ayyar_decision_effect_tooltip
+		trigger_event = {
+			id = gh_amsari_major_decision.0001
+		}
+	}
+	
+	ai_potential = {
+		has_trait = ambitious
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+gh_consult_dream_interpreter_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_comet.dds"
+	}
+	desc = gh_consult_dream_interpreter_decision_desc
+	selection_tooltip = gh_consult_dream_interpreter_decision_tooltip
+	decision_group_type = amsari
+	ai_check_interval = 120
+
+	is_shown = {
+		culture = { has_cultural_parameter = gh_visit_house_of_dreams_decision }
+	}
+
+	is_valid = {
+		OR = {
+			AND = {
+				employs_court_position = dream_interpreter_court_position
+				any_court_position_holder = {
+					type = dream_interpreter_court_position
+					is_physically_able_adult = yes
+					has_court_event_flag = no
+					is_ai = yes
+				}
+			}
+			any_held_title = {
+				tier = tier_county
+				any_county_province = {
+					has_building_or_higher = gh_house_of_dreams_01
+				}
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_landed = yes
+		is_capable_adult = yes
+		is_imprisoned = no
+	}
+
+	cost = {
+		gold = {
+			value = minor_gold_value
+		}
+	}
+	
+	cooldown = { years = 5 }
+
+	effect = {
+		custom_tooltip = gh_consult_dream_interpreter_decision_effect_tooltip
+		trigger_event = { id = gh_consult_dream_interpreter_decision.0001 }
+	}
+	
+    ai_potential = {
+		is_adult = yes
+        is_playable_character = yes
+    }
+
+	ai_will_do = {
+		base = 100
+	}
+}

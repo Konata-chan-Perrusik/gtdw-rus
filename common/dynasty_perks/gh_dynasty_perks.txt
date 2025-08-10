@@ -1,0 +1,180 @@
+﻿magic_legacy_1 = { # Magic for the Pure
+	legacy = magic_legacy_track
+
+	effect = {
+		# Effect is applied in the magic_defines file
+		custom_description_no_bullet = {
+			text = magic_legacy_1_effect
+		}
+	}
+	
+	ai_chance = {
+		value = 11
+		if = {
+			limit = {
+				AND = {
+					culture = { has_cultural_pillar = heritage_marcher }
+					can_access_magic = no
+				}
+			}
+			multiply = -10
+		}
+		if = {
+			limit = {
+				AND = {
+					culture = { has_cultural_pillar = heritage_marcher }
+					can_access_magic = yes
+				}
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				AND = {
+					NOT = {
+						culture = { has_cultural_pillar = heritage_marcher }
+					}
+					can_access_magic = yes
+				}
+			}
+			multiply = 5
+		}
+		if = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_aversarian }
+			}
+			multiply = 5
+		}
+		if = {
+			limit = {
+				can_start_new_legacy_track_trigger = no
+			}
+			multiply = 0
+		}
+	}
+}
+
+magic_legacy_2 = { # Increased Power
+	legacy = magic_legacy_track
+	
+	effect = {
+		custom_description_no_bullet = {
+			text = magic_legacy_2_effect
+		}
+	}
+}
+
+magic_legacy_3 = { # Inherent Casters
+	legacy = magic_legacy_track
+
+	character_modifier = {
+		monthly_arcana_lifestyle_xp_gain_mult = 0.1
+		# monthly_magic_lifestyle_mixed_xp_gain_mult = 0.1
+		# monthly_magic_lifestyle_dead_xp_gain_mult = 0.1
+	}
+}
+
+magic_legacy_4 = { # Architected Ancestry
+	legacy = magic_legacy_track
+
+	effect = {
+		custom_description_no_bullet = {
+			text = magic_legacy_4_effect
+		}
+	}
+}
+
+magic_legacy_5 = { # Breed out the Unpure
+	legacy = magic_legacy_track
+	
+	effect = {
+		# Effect is applied in the on action 'on_birth_child'
+		custom_description_no_bullet = {
+			text = magic_legacy_5_effect
+		}
+	}
+	
+	character_modifier = {
+		life_expectancy = 5
+	}
+}
+
+wardenite_legacy_1 = {
+	legacy = wardenite_legacy_track	
+
+	effect = {
+		custom_description_no_bullet = {
+			text = wardenite_legacy_1_trial_effect
+		}
+		custom_description_no_bullet = {
+			text = wardenite_legacy_1_patronage_effect
+		}
+	}
+	
+	can_be_picked = { 
+		faith = { has_doctrine_parameter = enables_practising_law }
+	}
+	
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				has_trait = lifestyle_jurist
+			}
+			add = 10
+		}
+	}
+}
+
+wardenite_legacy_2 = {
+	legacy = wardenite_legacy_track	
+
+	effect = {
+		custom_description_no_bullet = {
+			text = wardenite_legacy_2_non_learning_education_effect
+		}
+		custom_description_no_bullet = {
+			text = wardenite_legacy_2_learning_education_effect
+		}
+	}
+
+	character_modifier = {
+		learning = 1
+	}
+}
+
+wardenite_legacy_3 = {
+	legacy = wardenite_legacy_track	
+
+	effect = {
+		custom_description_no_bullet = {
+			text = wardenite_legacy_3_council_bonus_effect
+		}
+		custom_description_no_bullet = {
+			text = wardenite_legacy_3_council_jurist_progress_effect
+		}
+	}
+}
+wardenite_legacy_4 = {
+	legacy = wardenite_legacy_track	
+	
+	effect = {
+		custom_description_no_bullet = {
+			text = wardenite_legacy_4_council_bonus_effect
+		}
+	}
+	
+	character_modifier = {
+		monthly_county_control_growth_add = 0.2
+		religious_vassal_opinion = 10
+	}
+}
+wardenite_legacy_5 = { #Tradition of chicanery - increased chance of winning trials?
+	legacy = wardenite_legacy_track	
+	
+	effect = {
+		custom_description_no_bullet = {
+			text = wardenite_legacy_5_effect
+		}
+	}
+}

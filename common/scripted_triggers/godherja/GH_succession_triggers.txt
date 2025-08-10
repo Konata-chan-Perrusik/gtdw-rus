@@ -1,0 +1,92 @@
+﻿#Special succession types
+#If adding new types to the decision, use a trigger, otherwise they may break if the culture is split.
+special_succession_type_available_trigger = { # update this with new successions
+	OR = {
+		special_succession_witengamot_trigger = yes
+		special_succession_tanistry_trigger = yes
+	}
+}
+
+
+can_keep_amsari_succession_law_trigger = {
+	trigger_if = {
+		limit = {
+			has_realm_law = amsari_succession_law
+		}
+		can_have_amsari_succession_law_trigger = yes
+	}
+}
+
+can_have_amsari_succession_law_trigger = {
+	custom_description = {
+		text = succession_laws_must_have_hereditary_government_tooltip
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+	}
+	custom_description = {
+		text = succession_laws_must_be_amsari_tooltip
+		OR = {
+			culture = { has_cultural_pillar = heritage_zarasadari }
+			has_religion = religion:amsari_religion
+		}
+	}
+}
+
+can_keep_landed_order_succession_law_trigger = {
+	trigger_if = {
+		limit = {
+			has_realm_law = holy_order_succession_law
+		}
+		can_have_holy_order_succession_law_trigger = yes
+	}
+}
+
+can_have_landed_order_succession_law_trigger = {
+	government_has_flag = government_is_landed_order
+}
+
+can_have_military_unit_succession_law_trigger = {
+	government_has_flag = government_is_military_unit
+}
+
+can_have_magocracy_succession_law_trigger = {
+	government_has_flag = government_is_magocratic
+}
+
+can_have_theocracy_clique_succession_law_trigger = {
+	GH_is_any_theocracy_government_trigger = yes
+}
+
+can_have_magocratic_republic_succession_law_trigger = {
+	government_has_flag = government_is_magocratic_republic
+}
+
+can_have_lichdom_succession_law_trigger = {
+	government_has_flag = government_is_lichdom
+}
+
+can_have_wasteland_succession_law_trigger = {
+	government_has_flag = government_is_wasteland
+}
+
+can_have_administrative_bureaucracy_succession_law_trigger = {
+	government_has_flag = government_is_administrative_bureaucracy
+}
+
+should_have_liege_clique_appointment_succession = {
+	is_playable_character = yes
+	OR = {
+		government_has_flag = government_is_landed_order
+		government_has_flag = government_is_military_unit
+		GH_is_any_theocracy_government_trigger = yes
+	}
+	is_independent_ruler = no
+	has_same_government = liege
+}
+
+###############
+## Sjalvolki ##
+###############

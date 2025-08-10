@@ -1,0 +1,822 @@
+﻿
+get_bone_artifact_quality_effect = {
+	# Some random variance
+	if = {
+		limit = {
+			NOT = {
+				exists = scope:bonecrafter_owner
+			}
+		}
+		random_list = {
+			20 = {
+				save_scope_value_as = {
+					name = random_quality_bonus
+					value = 8
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_quality_bonus
+					value = 12
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_quality_bonus
+					value = 18
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_quality_bonus
+					value = 20
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_quality_bonus
+					value = 24
+				} 
+			}
+		}
+	}
+	else = {
+		random_list = {
+			20 = {
+				save_scope_value_as = {
+					name = random_inspired_skill_quality_bonus
+					value = 0.5
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_inspired_skill_quality_bonus
+					value = 1
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_inspired_skill_quality_bonus
+					value = 2
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_inspired_skill_quality_bonus
+					value = 2.5
+				} 
+			}
+			20 = {
+				save_scope_value_as = {
+					name = random_inspired_skill_quality_bonus
+					value = 3
+				} 
+			}
+		}
+		save_scope_value_as = {
+			name = random_quality_bonus
+			value = 0
+		}
+	}
+	# Calculate the final quality of the artifact
+	save_scope_value_as = {
+		name = quality
+		value = {
+			value = scope:random_quality_bonus
+
+			# Bonus Quality from the Court Owner's Amenities
+			if = {
+				limit = {
+					exists = court_owner
+					court_owner = {
+						has_royal_court = yes
+						amenity_level = { type = court_lodging_standards value > low_amenity_level }
+					}
+				}
+				if = {
+					limit = { court_owner = { amenity_level = { type = court_lodging_standards value >= max_amenity_level } } }
+					add = 6
+				}
+				else_if = {
+					limit = { court_owner = { amenity_level = { type = court_lodging_standards value >= very_high_amenity_level } } }
+					add = 4
+				}
+				else_if = {
+					limit = { court_owner = { amenity_level = { type = court_lodging_standards value >= high_amenity_level } } }
+					add = 3
+				}
+				else_if = {
+					limit = { court_owner = { amenity_level = { type = court_lodging_standards value >= medium_amenity_level } } }
+					add = 2
+				}
+				else = {
+					add = 0
+				}
+			}
+
+			# Bonus Quality from Bonecrafter
+			if = {
+				limit = { exists = scope:bonecrafter_owner }
+				scope:bonecrafter_owner = {
+					add = {	
+						if = {
+							limit = { bonecrafter_artifact_type_trigger = { TYPE = bone_staff } }
+							value = bone_staff_craft_average_skill_value
+						}
+						else_if = {
+							limit = { bonecrafter_artifact_type_trigger = { TYPE = bone_spear } }
+							value = bone_spear_craft_average_skill_value
+						}
+						else_if = {
+							limit = { bonecrafter_artifact_type_trigger = { TYPE = bone_dagger } }
+							value = bone_dagger_average_skill_value
+						}
+						else_if = {
+							limit = { bonecrafter_artifact_type_trigger = { TYPE = bone_regalia } }
+							value = bone_scepter_average_skill_value
+						}
+						else_if = {
+							limit = { bonecrafter_artifact_type_trigger = { TYPE = bone_crown } }
+							value = bone_crown_average_skill_value
+						}
+						#else_if = {
+						#	limit = { bonecrafter_artifact_type_trigger = { TYPE = bone_necklace } }
+						#	value = bone_amulet_average_skill_value
+						#}
+						multiply = {
+							value = quality_bonus_per_skill_level_value
+							add = scope:random_inspired_skill_quality_bonus # Replaces the random_quality_bonus when an artifact is created by a character so that skill matters more
+						}
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					is_gibbous_moon_trigger = yes
+				}
+				add = 20
+			}
+			if = {
+				limit = {
+					is_crescent_moon_trigger = yes
+				}
+				add = -30
+			}
+			if = {
+				limit = {
+					is_full_moon_trigger = yes
+				}
+				add = 50
+			}
+			if = {
+				limit = {
+					is_new_moon_trigger = yes
+				}
+				add = -80
+			}
+
+			if = {
+				limit = {
+					exists = scope:aspect_level_value
+				}
+				add = {
+					value = scope:aspect_level_value
+					multiply = 3
+				}
+			}
+
+			# Can't have negative quality
+			min = 1
+		}
+	}
+}
+
+get_bone_artifact_wealth_effect = {
+	save_scope_value_as = {
+		name = wealth
+		value = {
+			if = {
+				# If our artifact already has a quality, set base wealth equal to 1/4th quality value.
+				limit = { exists = scope:quality }
+				add = scope:quality
+				multiply = 0.25
+				round = yes
+
+			}
+			else = {
+				add = 10 # Otherwise, set base wealth value to 10.
+			}
+
+			if = {
+				limit = {
+					exists = scope:owner
+					scope:owner.highest_held_title_tier >= 0
+				}
+				add = {
+					# Add 10 wealth per character tier (up to a max of 50 wealth for emperors)
+					value = scope:owner.highest_held_title_tier
+					multiply = 10
+				}
+
+				# Add up to 25 wealth, scaling with capital's development
+				if = {
+					limit = {
+						exists = scope:owner.capital_county
+					}
+					scope:owner.capital_county = {
+						add = {
+							value = development_level
+							multiply = 0.25
+						}
+					}
+				}
+			}
+		}
+	}	
+}
+
+#Effect used to influence the artifact's quality
+change_bone_artifact_quality_effect = {
+	save_scope_as = artifact_quality_scope
+	if = {
+		limit = {
+			$AMOUNT$ > 3
+		}
+		custom_tooltip = change_bone_artifact_quality_effect_gain
+	}
+	else_if = {
+		limit = {
+			$AMOUNT$ > 0
+		}
+		custom_tooltip = change_bone_artifact_quality_effect_slight_gain
+	}
+	else_if = {
+		limit = {
+			$AMOUNT$ > -3
+		}
+		custom_tooltip = change_bone_artifact_quality_effect_slight_loss
+	}
+	else_if = {
+		limit = {
+			$AMOUNT$ <= -3
+		}
+		custom_tooltip = change_bone_artifact_quality_effect_loss
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				NOT = {
+					exists = var:artifact_quality
+				}
+			}
+			set_variable = {
+				name = artifact_quality
+				value = $AMOUNT$
+			}
+		}
+		else = {
+			change_variable = {
+				name = artifact_quality
+				add = $AMOUNT$
+			}
+		}
+	}
+}
+
+set_random_bone_type_effect = {
+	random_list = {
+		1 = {
+			set_variable = {
+				name = bone_artifact_type
+				value = flag:human_bone
+			}
+		}
+		1 = {
+			set_variable = {
+				name = bone_artifact_type
+				value = flag:monster_bone
+			}
+		}
+		1 = {
+			set_variable = {
+				name = bone_artifact_type
+				value = flag:small_animal
+			}
+		}
+		1 = {
+			set_variable = {
+				name = bone_artifact_type
+				value = flag:medium_animal
+			}
+		}
+		1 = {
+			set_variable = {
+				name = bone_artifact_type
+				value = flag:large_animal
+			}
+		}
+	}
+}
+
+create_artifact_bones_effect = {
+	# Get the character the artifact is for
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+	# Get artifact quality and wealth
+	get_artifact_quality_effect = yes
+	get_artifact_wealth_effect = yes
+	set_random_bone_type_effect = yes
+
+	hidden_effect_new_object = {
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_bone_artifact_name
+				creator = scope:owner
+				description = placeholder
+				visuals = bone
+				type = bone
+				modifier = artifact_placeholder_modifier
+				wealth = scope:wealth
+				quality = scope:quality
+				save_scope_as = newly_created_artifact
+			}
+		}
+
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = bone_type
+			set_artifact_description = artifact_bone_artifact_description
+			if = { # Add artifact modifiers
+				limit = { rarity = illustrious }
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+				add_scaled_artifact_modifier_majesty_effect = yes
+				random_list = {
+					10 = { add_scaled_artifact_modifier_devotion_effect = yes }
+					10 = { add_scaled_artifact_modifier_piety_effect = yes }
+					10 = { add_scaled_artifact_modifier_scholarship_effect = yes }
+				}
+			}
+			else_if = {
+				limit = { rarity = famed }
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+				add_scaled_artifact_modifier_majesty_effect = yes
+				random_list = {
+					10 = { add_scaled_artifact_modifier_rulership_effect = yes }
+					10 = { add_scaled_artifact_modifier_devotion_effect = yes }
+					10 = { add_scaled_artifact_modifier_piety_effect = yes }
+					10 = { add_scaled_artifact_modifier_scholarship_effect = yes }
+				}
+			}
+			else_if = {
+				limit= { rarity = masterwork }
+				add_scaled_artifact_modifier_minor_prowess_effect = yes
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+				random_list = {
+					10 = { add_scaled_artifact_modifier_rulership_effect = yes }
+					10 = { add_scaled_artifact_modifier_devotion_effect = yes }
+					10 = { add_scaled_artifact_modifier_piety_effect = yes }
+					10 = { add_scaled_artifact_modifier_scholarship_effect = yes }
+				}
+			}
+			else_if = {
+				limit= { rarity = common }
+				add_scaled_artifact_modifier_minor_prowess_effect = yes
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+				random_list = {
+					10 = { add_scaled_artifact_modifier_majesty_effect = yes }
+					10 = { add_scaled_artifact_modifier_rulership_effect = yes }
+					10 = { add_scaled_artifact_modifier_devotion_effect = yes }
+					10 = { add_scaled_artifact_modifier_piety_effect = yes }
+					10 = { add_scaled_artifact_modifier_scholarship_effect = yes }
+				}
+			}
+			remove_artifact_modifier = artifact_placeholder_modifier
+			set_variable = bone_artifact
+
+			if = {
+				limit = { rarity = common }
+				add_artifact_aspect_modifier_effect = { NAME = death VALUE = 1 }
+			}
+			else_if = {
+				limit = { rarity = masterwork }
+				add_artifact_aspect_modifier_effect = { NAME = death VALUE = 2 }
+			}
+			else_if = {
+				limit = { rarity = famed }
+				add_artifact_aspect_modifier_effect = { NAME = death VALUE = 3 }
+			}
+			else_if = {
+				limit = { rarity = illustrious }
+				add_artifact_aspect_modifier_effect = { NAME = death VALUE = 4 }
+			}
+		}
+	}
+	remove_variable = bone_artifact_type
+}
+
+create_bone_artifact_staff_effect = {
+	# Get the character the artifact is for
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+	$SMITH$ = { save_scope_as = bonecrafter_owner }
+
+	hidden_effect_new_object = {
+		set_variable = {
+			name = created_bone_artifact_type
+			value = flag:bone_staff
+		}
+		
+		get_bone_artifact_quality_effect = yes
+		get_bone_artifact_wealth_effect = yes
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_bone_staff_name
+				description = placeholder #will be re-generated
+				visuals = bone_staff
+				type = bone_staff
+				creator = scope:bonecrafter_owner
+				modifier = artifact_placeholder_modifier
+				wealth = scope:wealth
+				quality = scope:quality
+				save_scope_as = newly_created_artifact
+				history = {
+					location = scope:location
+					actor = scope:owner
+					recipient = scope:owner
+					type = created
+				}
+			}
+		}
+		set_variable = {
+			name = artifact_origin_location
+			value = scope:location
+		}
+
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = staff_characteristic
+			set_artifact_feature_group = bone_staff_type
+			set_artifact_feature_group = bone_constitution
+			set_artifact_feature_group = bone_staff_focus_characteristic
+			set_artifact_feature_group = staff_decoration
+			set_artifact_description = artifact_bone_staff_description
+
+			if = {
+				limit = {
+					OR = {
+						rarity = illustrious
+						rarity = famed
+					}
+				}
+				add_scaled_artifact_modifier_prowess_effect = yes
+				add_scaled_artifact_modifier_combat_effect = yes
+			}
+			else_if = {
+				limit = {
+					OR = {
+						rarity = common
+						rarity = masterwork
+					}
+				}
+				add_scaled_artifact_modifier_prowess_effect = yes
+			}
+			else = {
+				add_artifact_modifier = artifact_prowess_no_decorations_modifier
+			}
+	
+			# Save the quality and wealth of this artifact in case we need to 	reference it later. 
+			set_variable = {
+				name = quality
+				value = scope:quality
+			}
+			set_variable = {
+				name = wealth
+				value = scope:wealth
+			}
+		}
+	}
+	remove_variable = artifact_origin_location
+	remove_variable = created_bone_artifact_type
+}
+
+create_bone_artifact_dagger_effect = {
+	# Get the character the artifact is for
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+	$SMITH$ = { save_scope_as = bonecrafter_owner }
+
+	hidden_effect_new_object = {
+		set_variable = {
+			name = created_bone_artifact_type
+			value = flag:bone_dagger
+		}
+
+		get_bone_artifact_quality_effect = yes
+		get_bone_artifact_wealth_effect = yes
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_bone_dagger_name
+				creator = scope:bonecrafter_owner
+				description = placeholder
+				visuals = dagger
+				type = bone_dagger
+				modifier = artifact_placeholder_modifier
+				wealth = scope:wealth
+				quality = scope:quality
+				save_scope_as = newly_created_artifact
+			}
+		}
+
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = bone_dagger_type
+			set_artifact_description = artifact_bone_dagger_description
+
+			if = {
+				limit = {
+					OR = {
+						rarity = illustrious
+						rarity = famed
+					}
+				}
+				add_scaled_artifact_modifier_prowess_effect = yes
+				add_2_scaled_artifact_modifier_intrigue_effect = yes
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+			}
+			else_if = {
+				limit = {
+					OR = {
+						rarity = common
+						rarity = masterwork
+					}
+				}
+				add_scaled_artifact_modifier_prowess_effect = yes
+				add_scaled_artifact_modifier_intrigue_effect = yes
+			}
+			else = {
+				add_artifact_modifier = artifact_prowess_no_decorations_modifier
+			}
+			
+			# Save the quality and wealth of this artifact in case we need to 	reference it later. 
+			set_variable = {
+				name = quality
+				value = scope:quality
+			}
+			set_variable = {
+				name = wealth
+				value = scope:wealth
+			}
+
+			remove_artifact_modifier = artifact_placeholder_modifier
+		}
+	}
+	remove_variable = artifact_origin_location
+	remove_variable = created_bone_artifact_type
+	remove_variable = bone_artifact_type
+}
+
+create_bone_artifact_spear_effect = {
+	# Get the character the artifact is for
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+	$SMITH$ = { save_scope_as = bonecrafter_owner }
+
+	hidden_effect_new_object = {
+		set_variable = {
+			name = created_bone_artifact_type
+			value = flag:bone_spear
+		}
+
+		get_bone_artifact_quality_effect = yes
+		get_bone_artifact_wealth_effect = yes
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_bone_spear_name
+				description = placeholder #will be re-generated
+				visuals = spear
+				type = bone_spear
+				creator = scope:bonecrafter_owner
+				modifier = artifact_placeholder_modifier
+				wealth = scope:wealth
+				quality = scope:quality
+				save_scope_as = newly_created_artifact
+				history = {
+					location = scope:location
+					actor = scope:owner
+					recipient = scope:owner
+					type = created
+				}
+			}
+		}
+		set_variable = {
+			name = artifact_origin_location
+			value = scope:location
+		}
+
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = bone_spear_type
+			set_artifact_description = artifact_bone_spear_description
+
+			if = {
+				limit = {
+					OR = {
+						rarity = illustrious
+						rarity = famed
+					}
+				}
+				add_scaled_artifact_modifier_prowess_effect = yes
+				add_scaled_artifact_modifier_combat_effect = yes
+			}
+			else_if = {
+				limit = {
+					OR = {
+						rarity = common
+						rarity = masterwork
+					}
+				}
+				add_scaled_artifact_modifier_prowess_effect = yes
+			}
+			else = {
+				add_artifact_modifier = artifact_prowess_no_decorations_modifier
+			}
+	
+			# Save the quality and wealth of this artifact in case we need to 	reference it later. 
+			set_variable = {
+				name = quality
+				value = scope:quality
+			}
+			set_variable = {
+				name = wealth
+				value = scope:wealth
+			}
+		}
+	}
+	remove_variable = artifact_origin_location
+	remove_variable = created_bone_artifact_type
+}
+
+create_bone_artifact_crown_effect = {
+	# Get the character the artifact is for
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+	$SMITH$ = { save_scope_as = bonecrafter_owner }
+
+	hidden_effect_new_object = {
+		set_variable = {
+			name = created_bone_artifact_type
+			value = flag:bone_crown
+		}
+
+		get_bone_artifact_quality_effect = yes
+		get_bone_artifact_wealth_effect = yes
+		set_artifact_rarity_illustrious = yes
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_bone_crown_name
+				description = placeholder #will be re-generated
+				visuals = bone_crown
+				type = bone_crown
+				creator = scope:bonecrafter_owner
+				modifier = artifact_placeholder_modifier
+				wealth = scope:wealth
+				quality = scope:quality
+				save_scope_as = newly_created_artifact
+				history = {
+					location = scope:location
+					actor = scope:owner
+					recipient = scope:owner
+					type = created
+				}
+			}
+		}
+		set_variable = {
+			name = artifact_origin_location
+			value = scope:location
+		}
+
+			scope:newly_created_artifact = {
+				set_artifact_feature_group = bone_crown_type
+				set_artifact_description = artifact_bone_crown_description
+
+				if = {
+					limit = {
+						OR = {
+							rarity = illustrious
+							rarity = famed
+						}
+					}
+					add_2_scaled_artifact_modifier_rulership_effect = yes
+					add_scaled_artifact_modifier_majesty_effect = yes
+				}
+				else_if = {
+					limit = {
+						OR = {
+							rarity = common
+							rarity = masterwork
+						}
+					}
+					add_2_scaled_artifact_modifier_rulership_effect = yes
+					add_scaled_artifact_modifier_majesty_effect = yes
+				}
+				else = {
+					add_scaled_artifact_modifier_minor_prestige_effect = yes
+				}
+		
+				# Save the quality and wealth of this artifact in case we need to 	reference it later. 
+				set_variable = {
+					name = quality
+					value = scope:quality
+				}
+				set_variable = {
+					name = wealth
+					value = scope:wealth
+				}
+			}
+		}
+	remove_variable = artifact_origin_location
+	remove_variable = created_bone_artifact_type
+}
+
+create_bone_artifact_regalia_effect = {
+	# Get the character the artifact is for
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+	$SMITH$ = { save_scope_as = bonecrafter_owner }
+
+	hidden_effect_new_object = {
+		set_variable = {
+			name = created_bone_artifact_type
+			value = flag:bone_regalia
+		}
+
+		get_bone_artifact_quality_effect = yes
+		get_bone_artifact_wealth_effect = yes
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_bone_regalia_name
+				description = placeholder #will be re-generated
+				visuals = regalia
+				type = bone_regalia
+				creator = scope:bonecrafter_owner
+				modifier = artifact_placeholder_modifier
+				wealth = scope:wealth
+				quality = scope:quality
+				save_scope_as = newly_created_artifact
+				history = {
+					location = scope:location
+					actor = scope:owner
+					recipient = scope:owner
+					type = created
+				}
+			}
+		}
+		set_variable = {
+			name = artifact_origin_location
+			value = scope:location
+		}
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = bone_regalia_type
+			set_artifact_description = artifact_bone_regalia_description
+			if = {
+				limit = {
+					OR = {
+						rarity = illustrious
+						rarity = famed
+					}
+				}
+				add_2_scaled_artifact_modifier_majesty_effect = yes
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+			}
+			else_if = {
+				limit = {
+					OR = {
+						rarity = common
+						rarity = masterwork
+					}
+				}
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+				add_scaled_artifact_modifier_majesty_effect = yes
+			}
+			else = {
+				add_scaled_artifact_modifier_minor_prestige_effect = yes
+			}
+			add_scaled_artifact_modifier_attractiveness_effect = yes
+	
+			# Save the quality and wealth of this artifact in case we need to 	reference it later. 
+			set_variable = {
+				name = quality
+				value = scope:quality
+			}
+			set_variable = {
+				name = wealth
+				value = scope:wealth
+			}
+		}
+	}
+	remove_variable = artifact_origin_location
+	remove_variable = created_bone_artifact_type
+}

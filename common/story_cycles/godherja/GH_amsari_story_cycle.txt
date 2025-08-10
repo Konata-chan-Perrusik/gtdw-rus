@@ -1,0 +1,912 @@
+﻿story_gh_amsari_civil_war = {
+	on_setup = {}
+
+	on_owner_death = {
+		# We tell everyone that pejman is dead if you're a vassal
+		every_player = {
+			limit = { top_liege = title:e_amsari.holder }
+			trigger_event = {
+				id = gh_amsari.0001
+				days = 2
+			}
+		}
+		# We trigger the civil war, and check if it can be historical or not
+		trigger_event = {
+			id = gh_amsari.0002
+			days = { 5 9 }
+		}
+		
+		# We place the story on a global variable
+		save_scope_as = gh_amsari_story
+		set_global_variable = {
+			name = story_gh_amsari_civil_war
+			value = scope:gh_amsari_story
+		}
+		# We save the current ruling house dynasty oof the hiklahn to access it in GUI and anywhere else needed
+		story_owner = { house = { save_scope_as = gh_ruling_dynasty_house } }
+		set_global_variable = {
+			name = gh_hiklahn_ruling_dynasty_var
+			value = scope:gh_ruling_dynasty_house
+		}
+		#Just a check to make sure some things don't fire at the beginning
+		set_global_variable = {
+			name = gh_amsari_recent_civil_war
+			days = 15
+		}
+		# Used to know when the civil war started
+		set_global_variable = {
+			name = gh_acw_started_date
+			value = { value = current_year } 
+		}
+		# The ACW started a we want the ruling house members to fight
+		global_var:gh_hiklahn_ruling_dynasty_var ?= {
+			add_unity_value = {
+				value = { -35 -42 }
+				character = title:e_amsari.holder
+				desc = gh_acw_started.desc
+			}
+		}
+		set_variable = {
+			name = story_name
+			value = flag:story_gh_amsari_civil_war
+		}
+		set_variable = {
+			name = story_decision_illustration
+			value = flag:gh_acw_assassinate
+		}
+		set_variable = {
+			name = story_start_year
+			value = current_year
+		}		
+	}
+
+	on_end = {
+		debug_log = "Amsari Civil War ended on:"
+		debug_log_date = yes
+		remove_list_global_variable = {
+			name = global_story_cycle_list
+			target = root
+		}
+		# Clear any related global list when the civil war ends
+		clear_global_variable_list = involved_character_amsari_civil_war
+		# We remove the hiklahn pretender trait for pretenders
+		every_in_global_list = {
+			variable = gh_global_list_acw_pretenders
+			if = {
+				limit = { has_trait = gh_trait_amsari_pretender }
+				remove_trait = gh_trait_amsari_pretender
+			}
+		}
+		clear_global_variable_list = gh_global_list_acw_pretenders
+		# Every supporter is happy and gets their rewards
+		if = {
+			limit = {
+				any_independent_ruler =	{ has_title = title:e_amsari }
+			}
+			# Boost to house unity because they ended the civil war
+			title:e_amsari.holder = {
+				house = {
+					add_unity_value = {
+						value = 30
+						character = prev
+						desc = gh_ended_acw.desc
+					}
+				}				
+				this.var:gh_amsari_civil_war_info_story ?= {
+					if = {
+						limit = { has_variable_list = amsari_civil_war_supporter_list }
+						every_in_list = { 
+							variable = amsari_civil_war_supporter_list
+							add_prestige = major_prestige_value	
+							add_piety = medium_piety_value	
+							title:e_amsari.holder = {
+								add_opinion = {
+									target = prev
+									modifier = gh_contributed_to_acw_victory_opinion
+									opinion = 40
+								}
+							}
+							add_opinion = {
+								target = title:e_amsari.holder
+								modifier = gh_won_amsari_civil_war_opinion
+								opinion = 20
+							}
+						}
+						# Everyone gets a strong hook if they had one promised to them
+						every_in_list = { 
+							variable = gh_acw_will_get_strong_hook
+							add_hook = {
+								type = strong_support_acw_hook
+								target = title:e_amsari.holder
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = {  
+		days = { 365 495 }
+		
+		trigger = { 
+			NOT = { exists = global_var:gh_amsari_recent_civil_war } 
+			has_global_variable = story_gh_amsari_civil_war
+		}
+		triggered_effect = {
+			effect = {
+				random_list = {
+					80 = {
+						random_in_global_list = {
+							variable = involved_character_amsari_civil_war
+							limit = { 
+								is_alive = yes
+								this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+								is_independent_ruler = yes
+								is_landed = yes
+								is_ai = yes
+							}
+							weight = {
+								base = 100
+								modifier = {
+									add = 10
+									days_of_continuous_peace >= 730
+								}
+								modifier = {
+									days_of_continuous_peace >= 1095
+									add = 40
+								}
+								modifier = {
+									days_of_continuous_peace >= 1825
+									add = 100
+								}
+								modifier = {
+									this.gh_number_of_current_wars <= 2
+									factor = 0.8
+								}
+								modifier = {
+									this.gh_number_of_current_wars >= 3
+									factor = 0.4
+								}
+								modifier = {
+									this.gh_number_of_current_wars >= 6
+									factor = 0.2
+								}
+							}
+							random_list = {
+								80 = {
+									trigger = {
+										any_in_global_list = {
+											variable = involved_character_amsari_civil_war
+											this.max_military_strength <= prev.max_military_strength
+											NOT = { this = title:e_amsari.holder }
+											gh_acw_basic_declare_war_trigger = yes
+										}
+									}
+									random_in_global_list = {
+										variable = involved_character_amsari_civil_war
+										limit = { 
+											this.max_military_strength <= prev.max_military_strength
+											NOT = { this = title:e_amsari.holder }
+											gh_acw_basic_declare_war_trigger = yes
+										}
+										weight = {
+											base = 100
+											modifier = {
+												add = 10
+												days_of_continuous_peace >= 730
+											}
+											modifier = {
+												days_of_continuous_peace >= 1095
+												add = 40
+											}
+											modifier = {
+												days_of_continuous_peace >= 1825
+												add = 100
+											}
+											modifier = {
+												this.gh_number_of_current_wars <= 2
+												factor = 0.8
+											}
+											modifier = {
+												this.gh_number_of_current_wars >= 3
+												factor = 0.4
+											}
+											modifier = {
+												this.gh_number_of_current_wars >= 6
+												factor = 0.2
+											}
+										}
+										save_scope_as = defending_ruler
+									}
+									# Declare the war
+									start_war = {
+										cb = gh_acw_enforce_pretender_cb
+										target = scope:defending_ruler
+									}
+								}
+								19 = {
+									trigger = {
+										any_in_global_list = {
+											variable = involved_character_amsari_civil_war
+											is_alive = yes
+											is_independent_ruler = yes
+											is_landed = yes
+											is_ai = yes
+											any_neighboring_top_liege_realm_owner = {
+												gh_acw_basic_declare_war_trigger = yes
+												this.highest_held_title_tier < prev.highest_held_title_tier
+												this.max_military_strength <= prev.max_military_strength
+												save_temporary_scope_as = potential_defender
+												prev = {
+													can_declare_war = {
+														casus_belli = vassalization_cb
+														defender = scope:potential_defender
+													}
+												}
+											}
+										}
+									}
+									random_in_global_list = {
+										variable = involved_character_amsari_civil_war
+										limit = {
+											is_alive = yes 
+											exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting 
+											is_independent_ruler = yes
+											is_landed = yes
+											is_ai = yes
+										}
+										weight = {
+											base = 100
+											modifier = {
+												add = 10
+												days_of_continuous_peace >= 730
+											}
+											modifier = {
+												days_of_continuous_peace >= 1095
+												add = 40
+											}
+											modifier = {
+												days_of_continuous_peace >= 1825
+												add = 100
+											}
+											modifier = {
+												this.gh_number_of_current_wars <= 2
+												factor = 0.8
+											}
+											modifier = {
+												this.gh_number_of_current_wars >= 3
+												factor = 0.4
+											}
+											modifier = {
+												this.gh_number_of_current_wars >= 6
+												factor = 0.2
+											}
+										}
+										random_neighboring_top_liege_realm_owner = {
+											limit = {
+												gh_acw_basic_declare_war_trigger = yes
+												this.highest_held_title_tier < prev.highest_held_title_tier
+												this.max_military_strength <= prev.max_military_strength
+												save_temporary_scope_as = potential_defender
+												prev = {
+													can_declare_war = {
+														casus_belli = vassalization_cb
+														defender = scope:potential_defender
+													}
+												}
+											}
+											save_scope_as = defending_ruler
+										}
+										# Declare the war
+										start_war = {
+											cb = vassalization_cb
+											target = scope:defending_ruler
+										}
+									}
+								}
+								
+								# If no one is actually doing anything then there's a chance a conqueror spawn and tries to end the civil war
+								10 = {
+									trigger = { 
+										# We make sure no conqueror arrives before a certain time
+										gh_count_total_year_acw_value >= 20 
+										# And there's no conqueror if one recently spawned
+										NOT = { has_global_variable = gh_has_recent_amsari_landless_conqueror }
+									}
+									# Higher chance of the conqueror spawning as time goes on
+									modifier = {
+										add = 5
+										gh_count_total_year_acw_value >= 30 
+									}
+									modifier = {
+										add = 5
+										gh_count_total_year_acw_value >= 35 
+									}
+									modifier = {
+										add = 5
+										gh_count_total_year_acw_value >= 40
+									}
+									# Choose a random place in the region so that they can spawn
+									random_county_in_region = {
+										region = world_ws_amsari
+										# Not the player so they have a chance of actually winning
+										limit = { holder = { is_ai = yes } }
+										save_scope_as = location
+									}
+									create_character = {
+										template = gh_conqueror_acw_leader_template
+										gender_female_chance = 50
+										dynasty = none
+										location = scope:location.title_province
+										save_scope_as = amsari_conqueror
+									}
+									# Make them adventurer and supporting their own claim to the throne
+									scope:amsari_conqueror = {
+										gh_acw_create_landless_adventurer_title_effect = {
+											REASON = flag:wanderer
+											FLAVOR_CHAR = scope:amsari_conqueror
+										}
+										add_trait = conqueror
+										support_amsari_pretender_effect = {
+											SUPPORTER = scope:amsari_conqueror
+											PRETENDER = scope:amsari_conqueror
+										}
+										if = {
+											limit = {
+												exists = scope:location.kingdom.holder
+											}
+											add_pressed_claim = scope:location.kingdom
+											start_war = {
+												cb = ep3_laamp_adventurer_kingdom_invasion
+												target = scope:location.kingdom.holder
+												claimant = scope:amsari_conqueror
+												target_title = scope:location.kingdom
+												target_title = scope:location.kingdom.title_capital_county
+											}
+										}
+										else_if = {
+											limit = {
+												exists = scope:location.duchy.holder
+											}
+											add_pressed_claim = scope:location.duchy
+											start_war = {
+												cb = claim_cb
+												target = scope:location.duchy.holder
+												claimant = scope:amsari_conqueror
+												target_title = scope:location.duchy
+												target_title = scope:location.duchy.title_capital_county
+											}
+										}
+										else_if = {
+											limit = {
+												exists = scope:location.county.holder
+											}
+											add_pressed_claim = scope:location.county
+											start_war = {
+												cb = claim_cb
+												target = scope:location.county.holder
+												claimant = scope:amsari_conqueror
+												target_title = scope:location.county
+											}
+										}
+									}
+									# Set global var so there only one at a time and gets progressively shorter as time goes on
+									if = {
+										limit = { gh_count_total_year_acw_value <= 30  }
+										set_global_variable = {
+											name = gh_has_recent_amsari_landless_conqueror
+											years = 15
+										}
+									}
+									else_if = {
+										limit = { 
+											gh_count_total_year_acw_value >= 31 
+											gh_count_total_year_acw_value <= 40										
+										}
+										set_global_variable = {
+											name = gh_has_recent_amsari_landless_conqueror
+											years = 10
+										}
+									}
+									else = {
+										set_global_variable = {
+											name = gh_has_recent_amsari_landless_conqueror
+											years = 7
+										}
+									}
+								}
+								1 = {} # Just here so that it doesn't CTD because having only one option in random_list does
+							}
+						}
+					}
+					# Nothing happens, sometime life is good
+					20 = {
+						modifier = {
+							add = 20
+							gh_acw_total_amount_of_valid_rulers_value <= 3
+						}
+					} 
+				}				
+			}
+		}
+	}
+	
+	# Lets make the holder of the hiklahn actually sweat
+	effect_group = {  
+		years = 2
+		chance = 70
+		
+		trigger = {
+			OR = { 
+				title:e_amsari.holder ?= { gh_acw_trigger_war_against_hiklahn = yes }
+				title:c_tchouran.holder ?= { gh_acw_trigger_war_against_hiklahn = yes }
+			}
+			has_global_variable = story_gh_amsari_civil_war
+		}
+		triggered_effect = {
+			effect = {
+				random_list = {
+					50 = {
+						trigger = { title:e_amsari.holder ?= { gh_acw_trigger_war_against_hiklahn = yes } }
+						title:e_amsari.holder ?= { save_scope_as = defender }
+						title:e_amsari ?= { save_scope_as = defender_title }
+					}
+					50 = {
+						trigger = { title:c_tchouran.holder ?= { gh_acw_trigger_war_against_hiklahn = yes } }
+						title:c_tchouran.holder ?= { save_scope_as = defender }
+						title:c_tchouran ?= { save_scope_as = defender_title }
+					}
+				}
+				scope:defender = {
+					random_in_global_list = { # Inside defender scope so gh_acw_basic_declare_war_trigger works
+						variable = involved_character_amsari_civil_war
+						limit = { 
+							gh_acw_basic_declare_war_trigger = yes
+							this.max_military_strength >= scope:defender.max_military_strength 
+							# We don't want to force the player to declare war
+							is_ai = yes
+						}
+						save_scope_as = attacker
+						start_war = {
+							cb = gh_acw_claim_cb
+							target = scope:defender
+							claimant = scope:attacker
+							target_title = scope:defender_title
+						}
+					}
+				}
+			}
+		}
+	}
+	# Checks to see if some ruler aren't backing up any pretender, if they don't there's a chance they will start supporting someone
+	effect_group = {  
+		years = 3
+		trigger = {
+			any_independent_ruler = { 
+				gh_acw_valid_independent_ruler_in_amsar = yes
+				is_ai = yes
+			}
+			gh_acw_total_amount_of_valid_rulers_value < 5
+			has_global_variable = story_gh_amsari_civil_war
+		}		
+		triggered_effect = { 
+			effect = {
+				random_list = {
+					70 = {
+						random_independent_ruler = {
+							limit = { 
+								gh_acw_valid_independent_ruler_in_amsar = yes
+								is_ai = yes
+							}
+							gh_acw_find_other_pretender_effect = yes
+						}
+					}
+					30 = { # Nothing happens
+						modifier = {
+							add = -25
+							gh_acw_current_active_supporters_rulers_percent_value <= 50 
+						}
+						modifier = {
+							add = 15
+							gh_acw_current_active_supporters_rulers_percent_value <= 70 
+						}
+						modifier = {
+							add = 10
+							gh_acw_current_active_supporters_rulers_percent_value <= 80 
+						}
+						modifier = {
+							add = 4
+							gh_acw_current_active_supporters_rulers_percent_value <= 90 
+						}
+					}
+				}
+			} 
+		}
+	}
+	
+	# Adds children of pretenders to maintain global pretender list
+	effect_group = {  
+		years = 1
+		trigger = { 
+			has_global_variable = story_gh_amsari_civil_war
+		}
+		triggered_effect = {
+			effect = {
+				every_in_global_list = {
+					variable = gh_global_list_acw_pretenders
+					limit = { 
+						any_child = { 
+							has_trait = gh_blood_of_prophet 
+						} 
+					}
+					every_child = {
+						limit = { 
+							has_trait = gh_blood_of_prophet
+							NOT = {
+								is_target_in_global_variable_list = {
+									name = gh_global_list_acw_pretenders
+									target = this
+								}
+							}
+						}
+						save_scope_as = future_pretender
+						add_to_global_variable_list = {
+							name = gh_global_list_acw_pretenders
+							target = scope:future_pretender
+						}
+						if = {
+							limit = { NOT = { has_variable = gh_amsari_civil_war_info_story } }
+							create_story = gh_amsari_civil_war_info_story
+						}
+					}
+				}	
+			}
+		}
+	}
+	
+	# If everyone in the Hiklahn supports the same pretender and passes the same conditions of the reunite_amsar decision then the civil war should end
+	effect_group = {  
+		years = 1
+		trigger = {
+			has_global_variable = story_gh_amsari_civil_war
+			# Check if the number of people supporting a pretender is equal to the total amount of independent rulers in the region
+			gh_current_number_of_pretender_supporter_value = gh_acw_total_amount_of_valid_rulers_value
+			# We checks if none-amsari/thyssae (boooooh) controls more than the required max amount of county in the region
+			any_county_in_region = {
+				region = world_ws_amsari
+				percent <= gh_acw_target_non_amsari_counties_percent_decimal_value
+				holder.top_liege = {
+					NOR = {
+						AND = { 
+							culture = { has_cultural_pillar = heritage_zarasadari }
+							religion = religion:amsari_religion
+						}
+						AND = { 
+							culture = { has_cultural_pillar = heritage_thyssae }
+							religion = religion:amsari_religion
+						}
+					}
+				}
+			}
+		}		
+		triggered_effect = { effect = { end_story = yes } }
+	}
+}
+
+gh_amsari_civil_war_info_story = {
+	on_setup = {
+		save_scope_as = my_story
+		story_owner = {
+			# We make the story a variable so we can access it much more easily elswhere like gui
+			set_variable = {
+				name = gh_amsari_civil_war_info_story
+				value = scope:my_story
+			}
+			# Might as well takes this chance to add them to the global list of pretender if they aren't in it
+			if = {
+				limit = { has_trait = gh_blood_of_prophet }
+				add_to_global_variable_list = {
+					name = gh_global_list_acw_pretenders
+					target = this
+				}
+			}
+		}		
+	}
+
+	on_owner_death = {
+		story_owner = { save_scope_as = dead_story_owner }
+		# If in the list then remove the character on death
+		remove_list_global_variable = {
+			name = gh_global_list_acw_pretenders
+			target = scope:dead_story_owner
+		}
+		# Look for pretender heir 
+		if = {
+			limit = { 
+				exists = story_owner.player_heir
+				story_owner.player_heir ?= { 
+					OR = {
+						is_child_of = scope:dead_story_owner
+						is_grandchild_of = scope:dead_story_owner
+					}
+				}
+			}
+			story_owner.player_heir = { save_scope_as = new_story_owner }
+		}
+		# If the character is not landed it won't have a player_heir but their claim should still be carried if they have any child, so we look for one
+		else_if = {
+			limit = {
+				story_owner = {
+					any_child = {
+						age >= 14
+						is_ai = yes
+						is_alive = yes
+					}
+				}
+			}
+			story_owner = {
+				random_child = {
+					limit = {
+						age >= 14
+						is_ai = yes
+						is_alive = yes
+					}
+					save_scope_as = new_story_owner
+				}
+			}
+		}
+		# If the story owner is part of the involved character list, then removed them on death
+		if = {
+			limit = {
+				is_target_in_global_variable_list = {
+					name = involved_character_amsari_civil_war
+					target = scope:dead_story_owner
+				}
+			}
+			remove_list_global_variable = {
+				name = involved_character_amsari_civil_war
+				target = scope:dead_story_owner
+			}	
+			if = {
+				limit = { exists = scope:new_story_owner }
+				add_to_global_variable_list = {
+					name = involved_character_amsari_civil_war
+					target = scope:new_story_owner
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:new_story_owner 
+				has_variable = gh_amsari_civil_war_info_story
+			}
+			# Give story to heir
+			make_story_owner = scope:new_story_owner
+			save_scope_as = my_story
+			story_owner = {
+				set_variable = {
+					name = gh_amsari_civil_war_info_story
+					value = scope:my_story
+				}
+			}
+			# If old story_owner is a pretender then make the heir a pretender too
+			if = {
+				limit = { var:amsari_civil_war_supporting ?= scope:dead_story_owner }	
+				set_variable = {
+					name = amsari_civil_war_supporting
+					value = scope:new_story_owner
+				}
+				add_to_global_variable_list = {
+					name = gh_global_list_acw_pretenders
+					target = scope:new_story_owner
+				}
+				# Add the Active Pretender trait
+				scope:new_story_owner = {
+					if = {
+						limit = { NOT = { has_trait = gh_trait_amsari_pretender } }
+						add_trait = gh_trait_amsari_pretender
+					}
+				}
+				# Go through every supporter to apply back the effect for the new pretender, and go by max military strength so pretender goes to the strongest ally
+				ordered_in_list = {
+					variable = amsari_civil_war_supporter_list
+					order_by = max_military_strength
+					save_scope_as = acw_supporter
+					if = {
+						limit = { 
+							is_alive = yes 
+							is_landed = yes 
+						}
+						this.var:gh_amsari_civil_war_info_story ?= { remove_variable = amsari_civil_war_supporting }	
+						support_amsari_pretender_effect = {
+							SUPPORTER = this
+							PRETENDER = scope:new_story_owner
+						}
+						# Let the supporter actually decide whether they want to keep supporting the pretender
+						trigger_event = gh_amsari.0008
+					}
+					# If supporter is unlanded then remove them after a generation
+					else_if = { 
+						limit = { 
+							is_alive = yes
+							is_ai = yes
+						}
+						remove_variable = amsari_civil_war_supporting
+					}
+					# If supporter is dead for some reason and it wasn't cleaned up then remove them
+					else = { 
+						this.var:amsari_civil_war_supporting ?= {
+							# Scope to the story of the pretender
+							this.var:gh_amsari_civil_war_info_story ?= {
+								remove_list_variable = {
+									name = amsari_civil_war_supporter_list
+									target = scope:acw_supporter
+								}
+							}
+						}
+					}
+				}
+				# Let the pretender actually decide whether they want to continue this fight
+				scope:new_story_owner = { 
+					trigger_event = {
+						id = gh_amsari.0008
+						days = 1
+					}
+				} 
+			}
+			else = { 
+				# Scope to my pretender
+				this.var:amsari_civil_war_supporting ?= {
+					# Scope to the story of the pretender
+					this.var:gh_amsari_civil_war_info_story ?= {
+						# If an official supporter then the heir should be added to the list and the old one removed
+						if = {
+							limit = {
+								is_target_in_variable_list = {
+									name = amsari_civil_war_supporter_list
+									target = scope:dead_story_owner
+								}
+							}
+							remove_list_variable = {
+								name = amsari_civil_war_supporter_list
+								target = scope:dead_story_owner
+							}	
+							add_to_variable_list = {
+								name = amsari_civil_war_supporter_list
+								target = scope:new_story_owner
+							}
+						}
+						if = {
+							limit = {
+								is_target_in_variable_list = {
+									name = gh_acw_forced_acknowledgement_list
+									target = scope:dead_story_owner
+								}
+							}
+							remove_list_variable = {
+								name = gh_acw_forced_acknowledgement_list
+								target = scope:dead_story_owner
+							}	
+							add_to_variable_list = {
+								name = gh_acw_forced_acknowledgement_list
+								target = scope:new_story_owner
+							}
+						}
+						#If pretender promised a strong hook to the previous supporter then the promise goes to its heir
+						if = {
+							limit = {
+								is_target_in_variable_list = {
+									name = gh_acw_will_get_strong_hook
+									target = scope:dead_story_owner
+								}
+							}
+							remove_list_variable = {
+								name = gh_acw_will_get_strong_hook
+								target = scope:dead_story_owner
+							}	
+							add_to_variable_list = {
+								name = gh_acw_will_get_strong_hook
+								target = scope:new_story_owner
+							}
+						}
+					}
+				}
+				# Trigger event to let the supporter decide whether or not to continue supporting pretender
+				scope:new_story_owner = { 
+					trigger_event = {
+						id = gh_amsari.0007
+						days = 1
+					}
+				} 
+			}			
+		}
+		else = { end_story = yes }
+	}
+
+	on_end = {
+		story_owner = { save_scope_as = pretender }
+		if = {
+			limit = { var:amsari_civil_war_supporting ?= scope:pretender }			
+			every_in_list = { 
+				variable = amsari_civil_war_supporter_list
+				limit = { is_alive = yes }
+				# Flavor event to notify supporters that the pretender is dead
+				if = { 
+					limit = { is_ai = no }
+					trigger_event = gh_amsari.0010	
+				}
+				this.var:gh_amsari_civil_war_info_story ?= { remove_variable = amsari_civil_war_supporting }
+				# Everyone previously supporting this pretender will look for someone else to support now
+				if = {
+					limit = { scope:pretender ?= { is_alive = yes }	}
+					if = {
+						limit = {
+							has_hook_of_type = {
+								type = favor_hook
+								target = scope:pretender
+							}
+						}
+						remove_hook = {
+							type = favor_hook
+							target = scope:pretender
+						}			
+					}
+					if = {
+						limit = { has_trait = gh_trait_renounced_claim }
+						remove_list_global_variable = {
+							name = gh_global_list_acw_pretenders
+							target = scope:pretender
+						}
+					}
+					scope:pretender = {
+						remove_opinion = {
+							target = prev
+							modifier = gh_acw_pushing_claim_opinion
+						}
+						remove_character_flag ?= amsari_pretender_staying_for_claim
+						if = {
+							limit = { has_trait = gh_trait_amsari_pretender }
+							remove_trait = gh_trait_amsari_pretender
+						}
+					}
+				}				
+				if = {
+					limit = { 
+						is_ai = yes
+					}
+					gh_acw_find_other_pretender_effect = yes
+				}
+			}
+		}
+		# If the story owner is a supporter then remove them from the supporter's list and remove promise of strong hook
+		else = {
+			# Scope to my pretender
+			this.var:amsari_civil_war_supporting ?= {
+				# Scope to the story of the pretender
+				this.var:gh_amsari_civil_war_info_story ?= {
+					remove_list_variable = {
+						name = amsari_civil_war_supporter_list
+						target = scope:pretender
+					}
+					remove_list_variable = {
+						name = gh_acw_forced_acknowledgement_list
+						target = scope:pretender
+					}
+					if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = gh_acw_will_get_strong_hook
+								target = scope:pretender
+							}
+						}
+						remove_list_variable = {
+							name = gh_acw_will_get_strong_hook
+							target = scope:pretender
+						}
+					}
+				}
+			}
+		}
+	}
+}

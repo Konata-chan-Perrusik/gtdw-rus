@@ -1,0 +1,218 @@
+﻿# This is made a 'generic' story cycle instead of Cenware specific for ease of use in pre-1254 startdates
+story_cycle_migration_coalition = {
+	
+	on_setup = {
+		
+	}
+
+	on_end = {
+		remove_list_global_variable = {
+			name = global_story_cycle_list
+			target = root
+		}
+	}
+
+	on_owner_death = {
+		end_story = yes	
+	}
+
+	# War AI
+	effect_group = {
+		days = { 30 60 }
+
+		trigger = {
+			story_owner = {
+				is_at_war = no
+				is_ai = yes
+				has_title_migrant_coalition_trigger = yes
+				NOR = { 
+					has_variable = ai_cenware_recently_launched_invasion
+					has_variable = still_licking_wounds
+					has_variable = lost_war_cooldown
+					has_variable = lost_to_cois_cooldown
+				}
+			}
+		}
+
+		triggered_effect = {
+			effect = {
+				story_owner = {
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_palitake }		# Should beeline towards Oraispol
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_assocaea }		# Finish up Assocaea
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_pergicos }		# After that, mop up eastern Etepezea
+								
+					
+
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_southeastern_isles }
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_kollos }		# The Kollos archipelago is the obvious next target
+					
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_eve }
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_suncourt }
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_day }
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_morn }
+
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_kasmiene}
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_kalliados }
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_hyrea }
+					cenware_conquer_kingdom = { KINGDOM_NAME = k_kteumaxa }
+					
+					if = {
+						limit = {
+							any_vassal = { has_title = title:k_fenvir }
+						}
+						random_list = { # For a rare chance of coming back and going through Malcois on the way home
+							50 = {
+								end_the_conquest  = yes
+							}
+							50 = {
+								cenware_conquer_kingdom_with_end_conquest_chance = { KINGDOM_NAME = k_cyrocaea END_CONQUEST_CHANCE = 25 }
+								cenware_conquer_kingdom_with_end_conquest_chance = { KINGDOM_NAME = k_mytidon END_CONQUEST_CHANCE = 25 }
+								cenware_conquer_kingdom_with_end_conquest_chance = { KINGDOM_NAME = k_adgos END_CONQUEST_CHANCE = 25 }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Prison release
+	effect_group = {
+		months = 7
+
+		triggered_effect = {
+			trigger = { always = yes }
+
+			effect = {
+				story_owner = {
+					every_prisoner = {	# Cenware tends to pick up a million random prisoners along the way. Giving this for the AI so it doesn't end up with 200 people in its court
+						limit = { 
+							NOR = { 
+								prev = { has_imprisonment_reason = prev }	# If he has a legit reason to have someone in jail, keep them there
+								is_playable_character = yes	# If a prisoner is landed, assume that they're at least valuable for a ransom or war score
+							}
+						}
+						release_from_prison = yes
+					}
+				}
+			}
+		}
+	}
+
+	# In case somehow someone else ends up with Oraispol in the Imperrech
+	effect_group = {
+		months = 12
+
+		trigger = {
+			story_owner = {
+				any_vassal_or_below = {
+					has_title = title:c_oraispol
+				}
+				has_title_migrant_coalition_trigger = yes
+			}
+		}
+
+		triggered_effect = {
+			effect = {
+				story_owner = { save_scope_as = rightful_liege }
+				title:c_oraispol = { save_scope_as = rightful_capital }
+				create_title_and_vassal_change = {
+					type = granted
+					save_scope_as = change
+					add_claim_on_loss = no
+				}
+				scope:rightful_capital = {
+					change_title_holder = {
+						holder = scope:rightful_liege
+						change = scope:change
+					}
+				}
+				resolve_title_and_vassal_change = scope:change
+			}
+		}
+	}
+
+	effect_group = {
+		months = 4
+
+		trigger = {
+			story_owner = {
+				has_title_migrant_coalition_trigger = yes
+				has_title = title:c_oraispol
+				is_at_war = no
+			}
+		}
+
+		triggered_effect = {
+			effect = {
+				story_owner = { # Makes sure he controls etepezea & the final conquest in imperial isle
+					if = {
+						limit = {
+							has_game_rule = cenware_conquest_mainland_etepezea
+							has_title = title:c_oraispol
+							is_liege_or_above_of = title:k_pergicos.holder
+						}
+						end_the_conquest = yes
+					}
+					else_if = {
+						limit = {
+							has_game_rule = cenware_conquest_greater_etepezea
+							has_title = title:c_oraispol
+							is_liege_or_above_of = title:c_naupirnox.holder
+						}
+						end_the_conquest  = yes 
+					}
+
+					else_if = {
+						limit = { # Makes he controls or a migrant controls the important opakhasia locales
+							has_game_rule = cenware_conquest_opakhasia
+							OR = {
+								is_liege_or_above_of = title:c_last_light.holder
+								title:c_last_light = { has_variable = released_from_migration }
+							}
+							OR = {
+								is_liege_or_above_of = title:c_amphelea.holder
+								title:c_amphelea = { has_variable = released_from_migration }
+							}
+						}
+						end_the_conquest  = yes
+					}
+
+					else_if = { # Makes sure he controls or a migrant controls the important conquest locales across aversaria
+						limit = {
+							OR = {
+								is_liege_or_above_of = title:c_last_light.holder
+								title:c_last_light = { has_variable = released_from_migration }
+							}
+							OR = {
+								is_liege_or_above_of = title:c_asiupoli.holder
+								title:c_asiupoli = { has_variable = released_from_migration }
+							}
+							OR = {
+								is_liege_or_above_of = title:c_platares.holder
+								title:c_platares = { has_variable = released_from_migration }
+							}
+							OR = {
+								is_liege_or_above_of = title:c_chysos.holder
+								title:c_chysos = { has_variable = released_from_migration }
+							}
+						}
+						end_the_conquest  =yes
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = { # Checks to make sure he doesn't still have it active
+		months = 12
+
+		trigger = {
+			story_owner = { has_title_migrant_coalition_trigger = no }
+		}
+
+		triggered_effect = {
+			effect = { end_story = yes }
+		}
+	}
+}

@@ -1,0 +1,573 @@
+﻿# These buildings are only for showing background graphics, e.g. the walls around holdings
+
+# No Walls
+walls_00 = {
+	is_graphical_background = yes
+
+	asset = {
+		type = pdxmesh
+		name = "western_walls_00_mesh"
+	}
+	
+	is_enabled = {
+		OR = {
+			AND = {
+				is_county_capital = no
+				fort_level < 1
+			}
+			# Using the no_wall holding graphics for cities with special walls so that they don't have double walls
+			GH_level_00_wall_building_trigger = yes
+			GH_any_wasteland_holding_trigger = yes
+			# Herders shouldn't have walls
+			scope:holder = {
+				government_has_flag = government_is_herder
+			}
+		}
+	}
+}
+
+# Any city that must be sieged gets the basic walls
+walls_01_tribal = {
+	is_graphical_background = yes
+
+	asset = {
+		type = pdxmesh
+		names = {
+			"tribal_walls_01_a_mesh"
+		}
+	}
+	
+	is_enabled = {
+		OR = {
+			is_county_capital = yes
+			fort_level > 0
+		}
+		GH_level_01_wall_tribal_building_trigger = yes # disabling this level of walled graphics for holdings with special walls and other fortifications so that they always look appropriately fortified. Note: If any of these buildings are given unique 3D assets, this should be looked at again.
+		GH_fogswept_holding_trigger = no
+	}
+}
+
+# Here the Fort Level building chains take control of the visuals
+walls_01 = {
+	is_graphical_background = yes
+	asset = {
+		type = pdxmesh
+		names = {
+			"western_walls_01_a_mesh"
+			"western_walls_01_b_mesh"
+		}
+	}	
+	asset = {
+		type = pdxmesh
+		names = {
+			"mena_walls_01_a_mesh"
+			"mena_walls_01_b_mesh"
+
+		}
+		graphical_regions = {  GH_graphical_sarradon }
+	}
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_northern_lords
+		graphical_cultures = { norse_building_gfx }
+		names = {
+			"fp1_norse_walls_01_mesh"
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_northern_lords
+		graphical_cultures = { norse_building_gfx }
+		graphical_regions = { GH_graphical_sarradon }
+		names = {
+			"fp1_norse_walls_01_mena_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_fate_of_iberia
+		graphical_cultures = { iberian_building_gfx }
+		graphical_regions = { GH_graphical_shattered_coast  }
+		names = {
+			"fp2_building_iberian_wall_01_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = legacy_of_persia
+		graphical_cultures = { iranian_building_gfx }
+		graphical_regions = { GH_graphical_sarradon GH_graphical_kashirya GH_graphical_steppe }
+		names = {
+			"fp3_building_persian_walls_01_a_01_mesh" 
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = khans_of_the_steppe
+		graphical_cultures = { steppe_building_gfx }
+		graphical_regions = { GH_graphical_steppe }
+		governments = { nomad_government }
+		names = {
+			"mpo_mongol_wall_01_mesh"
+		}
+
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { celtic_building_gfx }
+		names = {
+			"celtic_wall_01_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { slavic_building_gfx }
+		names = {
+			"walls_01_slavic_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { sea_building_gfx }
+		name = "walls_01_sea_mesh"
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { kathun_building_gfx }
+		name = "chinese_walls_01_mesh"
+	}
+	
+	is_enabled = {
+		GH_level_01_wall_building_trigger = yes # Buildings organized into trigger by Lonely Knight
+		GH_level_02_wall_building_trigger = no
+		GH_any_wasteland_holding_trigger = no
+	}
+}
+
+walls_02 = {
+	is_graphical_background = yes
+
+	asset = {
+		type = pdxmesh
+		names = {
+			"western_walls_02_a_mesh"
+			"western_walls_02_a_mesh"
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		graphical_regions = {  GH_graphical_sarradon }
+		names = {
+			"mena_walls_02_a_mesh"
+			"mena_walls_02_a_mesh"
+		}
+	}
+
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_northern_lords
+		graphical_cultures = { norse_building_gfx }
+		names = {
+			"fp1_norse_walls_02_mesh"
+		}
+	}	
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_northern_lords
+		graphical_cultures = { norse_building_gfx }
+		graphical_regions = {  GH_graphical_sarradon }
+		names = {
+			"fp1_norse_walls_02_mena_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_fate_of_iberia
+		graphical_cultures = { iberian_building_gfx }
+		graphical_regions = { GH_graphical_shattered_coast }
+		names = {
+			"fp2_building_iberian_wall_02_mesh"
+		}
+	}
+
+	asset = { # Sahelian, donated by Kefir
+		type = pdxmesh
+		graphical_cultures = { ahridar_building_gfx }
+		graphical_regions = { GH_graphical_aekershaan_crater }
+		names = {
+			"african_walls_02_mesh"
+		}
+	}
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = legacy_of_persia
+		graphical_cultures = { iranian_building_gfx }
+		graphical_regions = { GH_graphical_sarradon GH_graphical_kashirya }
+		names = {
+			"fp3_building_persian_walls_02_a_01_mesh" 
+		}
+	}
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = roads_to_power
+		graphical_cultures = { byzantine_building_gfx }
+		graphical_regions = { GH_geographic_shattered_coast }
+		names = {
+			"ep3_byzantine_walls_02_mesh" 
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = khans_of_the_steppe
+		graphical_cultures = { steppe_building_gfx }
+		graphical_regions = { GH_graphical_steppe }
+		governments = { nomad_government }
+		names = {
+			"mpo_mongol_wall_02_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { celtic_building_gfx }
+		names = {
+			"celtic_wall_01_mesh"
+		}
+	}
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { slavic_building_gfx }
+		names = {
+			"walls_02_slavic_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { sea_building_gfx }
+		names = {
+			"walls_02_sea_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { kathun_building_gfx }
+		name = "chinese_walls_02_mesh"
+	}
+	
+	is_enabled = {
+		GH_level_02_wall_building_trigger = yes
+		GH_has_level_03_wall_building_trigger = no
+		GH_any_wasteland_holding_trigger = no
+	}
+}
+
+walls_03 = {
+	is_graphical_background = yes
+
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_continent GH_graphical_steppe }
+		names = {
+			"western_walls_03_a_mesh"
+			"western_walls_03_a_mesh"
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_shattered_coast }
+		names = {
+			"mediterranean_walls_03_a_mesh"
+			"mediterranean_walls_03_a_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_sarradon }
+		names = {
+			"mena_walls_03_a_mesh"
+			"mena_walls_03_a_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_kashirya GH_graphical_damota }
+		names = {
+			"india_walls_03_a_mesh"
+			"india_walls_03_a_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_fate_of_iberia
+		graphical_cultures = { iberian_building_gfx }
+		graphical_regions = { GH_graphical_shattered_coast }
+		names = {
+			"fp2_building_iberian_wall_03_mesh"
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = legacy_of_persia
+		graphical_cultures = { iranian_building_gfx }
+		graphical_regions = { GH_graphical_sarradon GH_graphical_kashirya }
+		names = {
+			"fp3_building_persian_walls_03_a_01_mesh"  
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = roads_to_power
+		graphical_cultures = { byzantine_building_gfx }
+		graphical_regions = { GH_geographic_shattered_coast }
+		names = {
+			"ep3_byzantine_walls_03_mesh" 
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = khans_of_the_steppe
+		graphical_cultures = { steppe_building_gfx }
+		graphical_regions = { GH_graphical_steppe }
+		governments = { nomad_government }
+		names = {
+			"mpo_mongol_wall_03_mesh"
+		}
+	}
+
+
+	asset = { # Sahelian, donated by Kefir
+		type = pdxmesh
+		names = {
+			"african_walls_03_mesh"
+		}
+		graphical_cultures = { ahridar_building_gfx }
+		graphical_regions = { GH_graphical_aekershaan_crater }
+	}
+
+	asset = { # Cemanahuac, donated by Sunset Invasion
+		type = pdxmesh
+		graphical_cultures = { cemanahuac_building_gfx }
+		names = {
+			"cemanahuac_wall_02_mesh"
+			"cemanahuac_wall_02_mesh"
+		}
+	}
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { celtic_building_gfx }
+		graphical_regions = { GH_graphical_continent }
+		names = {
+			"celtic_wall_02_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { slavic_building_gfx }
+		names = {
+			"walls_03_slavic_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { sea_building_gfx }
+		names = {
+			"walls_03_sea_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { kathun_building_gfx }
+		name = "chinese_walls_03_mesh"
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { katraddian_building_gfx }
+		name = "magyar_walls_03_mesh"
+	}
+	
+	is_enabled = {
+		scope:holder = {
+			GH_is_any_tribal_government_trigger = no
+		}
+		GH_has_level_03_wall_building_trigger = yes # These buildings will trigger the visual "upgrade" to this wall asset
+		GH_has_level_04_wall_building_trigger = no # Disabling this level of walled graphics for holdings with special walls and other fortifications so that they always look appropriately fortified. Note: If any of these buildings are given unique 3D assets, this should be looked at again.
+		GH_any_wasteland_holding_trigger = no
+	}
+}
+
+walls_04 = {
+	is_graphical_background = yes
+
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_continent GH_graphical_steppe }
+		names = {
+			"western_walls_04_a_mesh"
+			"western_walls_04_a_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_shattered_coast }
+		names = {
+			"mediterranean_walls_04_a_mesh"
+			"mediterranean_walls_04_a_mesh"
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_sarradon }
+		names = {
+			"mena_walls_04_a_mesh"
+			"mena_walls_04_a_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_regions = { GH_graphical_kashirya GH_graphical_damota }
+		names = {
+			"india_walls_04_a_mesh"
+			"india_walls_04_a_mesh"
+		}
+	}
+
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = the_fate_of_iberia
+		graphical_cultures = { iberian_building_gfx }
+		graphical_regions = { GH_graphical_shattered_coast }
+		names = {
+			"fp2_building_iberian_wall_04_mesh"
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = legacy_of_persia
+		graphical_cultures = { iranian_building_gfx }
+		graphical_regions = { GH_graphical_sarradon GH_graphical_kashirya }
+		names = {
+			"fp3_building_persian_walls_04_a_01_mesh" 
+		}
+	}
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = roads_to_power
+		graphical_cultures = { byzantine_building_gfx }
+		graphical_regions = { GH_geographic_shattered_coast }
+		names = {
+			"ep3_byzantine_walls_04_mesh" 
+		}
+	}
+	
+	asset = {
+		type = pdxmesh
+		requires_dlc_flag = khans_of_the_steppe
+		graphical_cultures = { steppe_building_gfx }
+		graphical_regions = { GH_graphical_steppe }
+		governments = { nomad_government }
+		names = {
+			"mpo_mongol_wall_04_mesh"
+		}
+	}
+
+	is_enabled = {
+		scope:holder = {
+			NOT = { government_has_flag = government_is_tribal }
+		}
+		OR = {
+			# These buildings will trigger the visual "upgrade" to this wall asset
+			has_building_or_higher = "curtain_walls_06"
+			has_building_or_higher = "hill_forts_06"
+			has_building_or_higher = "ramparts_06"
+			has_building_or_higher = "watchtowers_06"
+			has_building_or_higher = "theodosian_walls_01"
+			scope:holder = {
+				government_has_flag = government_is_nomadic
+				root = { fort_level >= 4 }
+			}
+		}
+	}
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { celtic_building_gfx }
+		graphical_regions = { GH_graphical_continent }
+		names = {
+			"celtic_wall_02_mesh"
+		}
+	}
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { slavic_building_gfx }
+		names = {
+			"walls_04_slavic_mesh"
+		}
+	}
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { sea_building_gfx }
+		names = {
+			"walls_04_sea_mesh"
+		}
+	}
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { kathun_building_gfx }
+		name = "chinese_walls_04_mesh"
+	}
+
+	asset = {
+		type = pdxmesh
+		graphical_cultures = { katraddian_building_gfx }
+		name = "magyar_walls_04_mesh"
+	}
+	
+	### Donated by Kefir ###
+	#Sahelian
+	asset = {
+		type = pdxmesh
+		names = {
+			"african_walls_04_mesh"
+		}
+		graphical_cultures = { ahridar_building_gfx }
+		graphical_regions = { GH_graphical_aekershaan_crater }
+	}
+	
+	is_enabled = {
+		scope:holder = {
+			GH_is_any_tribal_government_trigger = no
+		}
+		GH_has_level_05_wall_building_trigger = yes # These buildings will trigger the visual "upgrade" to this wall asset
+		GH_any_wasteland_holding_trigger = no
+	}
+}

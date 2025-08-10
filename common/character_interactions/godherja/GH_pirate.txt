@@ -1,0 +1,388 @@
+﻿
+##################
+# Challenge a your liege for the top spot as a Might Makes Right vassal
+# by Hapchazzard
+##################
+challenge_liege = {
+	interface_priority = 30
+	common_interaction = yes
+	category = interaction_category_hostile
+	
+	is_highlighted = {
+		scope:actor = {
+			OR = {
+				has_relation_rival = scope:recipient
+				has_relation_nemesis = scope:recipient
+				prowess_diff = {
+					target = scope:recipient
+					value >= 15
+				}
+				has_trait = ambitious
+			}
+		}
+	}
+	
+	popup_on_receive = yes
+	pause_on_receive = yes
+	desc = challenge_liege_interaction_desc
+	
+	can_send_despite_rejection = yes
+
+	greeting = negative
+	notification_text = CHALLENGE_LIEGE_TEXT
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		# Check to see if both characters are valid for this
+		#can_challenge_for_leadership_trigger = yes
+		# Not valid to use against oneself
+		NOT = { scope:actor = scope:recipient }
+		# The recipient must be the direct liege of the sender, and must be independent (for now, to be changed in the future when the usurpation logic is made more complex)
+		scope:recipient = {
+			is_independent_ruler = yes
+			government_has_flag = government_is_pirate
+		}
+		scope:actor = {
+			liege = scope:recipient
+			government_has_flag = government_is_pirate
+			prestige_level >= scope:recipient.prestige_level
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		# Eligibility for the fight is same as in a trial by combat
+		trial_by_combat_shown_and_not_invalid_trigger = yes
+		# The sender must be able to fight, but no such check is afforded to the recipient
+		scope:actor = {
+			can_start_single_combat_eligibility_checks_trigger = yes
+		}
+		# Scope:recipient must not be banned from single combat.
+		scope:recipient = {
+			custom_description = {
+				text = "fp1_tbc_recipient_banned_from_combat"
+				can_start_single_combat_banned_checks_trigger = no
+			}
+		}
+		scope:actor = {
+			custom_description = {
+				text = "must_have_equal_or_higher_prestige_level"
+				prestige_level >= scope:recipient.prestige_level
+			}
+		}
+		# Neither of the characters can be imprisoned.
+		scope:actor = { is_imprisoned = no }
+		scope:recipient = { is_imprisoned = no }
+	}
+
+	can_send = {
+		scope:actor = {
+			custom_description = {
+				text = "character_interactions_hostile_actions_disabled_delay"
+				NOT = { has_character_flag = flag_hostile_actions_disabled_delay }
+			}
+		}
+	}
+	
+	cooldown = { years = 5 }
+	cooldown_against_recipient = { years = 10 }
+
+	on_send = {
+		scope:actor = {
+			add_character_flag = {
+				flag = flag_hostile_actions_disabled_delay
+				days = 10
+			}
+		}
+	}
+
+	on_accept = {
+		# Start the combat
+		scope:recipient = { save_scope_as = champion }
+		scope:actor = { trigger_event = lawless_succession.0001 }
+		# Inform of the consequences.
+		show_as_tooltip = {
+			random_list = {
+				50 = {
+					show_chance = no
+					desc = fp1_tbc_winner_actor
+					fp1_tbc_death_effect = {
+						TBC_VICTOR = scope:actor
+						TBC_LOSER = scope:recipient
+					}
+					scope:actor = {
+						add_kinslayer_trait_or_nothing_effect = { VICTIM = scope:recipient }
+					}
+				}
+				50 = {
+					show_chance = no
+					desc = fp1_tbc_winner_recipient
+					fp1_tbc_death_effect = {
+						TBC_VICTOR = scope:recipient
+						TBC_LOSER = scope:actor
+					}
+					scope:recipient = {
+						add_kinslayer_trait_or_nothing_effect = { VICTIM = scope:actor }
+					}
+				}
+			}
+		}
+		# Clear up hostile actions flag.
+		if = {
+			limit = {
+				scope:actor = { has_character_flag = flag_hostile_actions_disabled_delay }
+			}
+			scope:actor = { remove_character_flag = flag_hostile_actions_disabled_delay }
+		}
+	}
+
+	on_decline = {
+		# Scope:recipient loses a ton of prestige
+		scope:recipient = { 
+			add_prestige = major_prestige_loss
+			custom_tooltip = other_vassals_may_break_away_tooltip
+			every_vassal = {
+				limit = { NOT = { this = scope:actor } }
+				trigger_event = lawless_succession.0022
+			}
+		}
+		# Scope:actor decline processing.
+		scope:actor = {
+			# Inform them of the declination and let them break away if they wish.
+			trigger_event = lawless_succession.0021
+			# Cooldown is removed.
+			hidden_effect = { remove_interaction_cooldown = challenge_to_trial_by_combat_interaction }
+			# Clear up hostile actions flag.
+			if = {
+				limit = {
+					has_character_flag = flag_hostile_actions_disabled_delay
+				}
+				remove_character_flag = flag_hostile_actions_disabled_delay
+			}
+		}
+	}
+
+	auto_accept = no
+
+	ai_accept = {
+		base = 0 # Try to make it 0 for most interactions
+
+		# Factor in fighting ability
+		modifier = {
+			add = {
+				value = scope:actor.prowess
+				multiply = -0.5
+			}
+			desc = TBC_PROWESS_ACTOR
+		}
+		modifier = {
+			add = {
+				value = scope:recipient.prowess
+				multiply = 0.5
+			}
+			desc = TBC_PROWESS_RECIPIENT
+		}
+		# Who doesn't like punching a bastard?
+		opinion_modifier = {
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = -1
+			desc = AI_OPINION_REASON
+		}
+		# Weight up for personality values.
+		ai_value_modifier = {
+			who = scope:recipient
+			ai_boldness = {
+				if = {
+					limit = {
+						scope:recipient = {
+							NOT = { ai_boldness = 0 }
+						}
+					}
+					value = 0.5
+				}
+			}
+			ai_honor = {
+				if = {
+					limit = {
+						scope:recipient = {
+							NOT = { ai_honor = 0 }
+						}
+					}
+					value = 0.5
+				}
+			}
+		}
+		### Craven hates
+		modifier = {
+			add = -20
+			has_trait = craven
+			desc = TBC_OPINION_DEATH_TRAIT_CRAVEN
+		}
+		### Brave loves.
+		modifier = {
+			add = 20
+			has_trait = brave
+			desc = LAWLESS_CONTEST_OPINION_BRAVE
+		}
+		### Vengeful loves.
+		modifier = {
+			add = 20
+			has_trait = vengeful
+			desc = LAWLESS_CONTEST_OPINION_VENGEFUL
+		}
+		### Callous likes.
+		modifier = {
+			add = 10
+			has_trait = callous
+			desc = LAWLESS_CONTEST_OPINION_CALLOUS
+		}
+		### Sadistic loves.
+		modifier = {
+			add = 20
+			has_trait = sadistic
+			desc = LAWLESS_CONTEST_OPINION_SADISTIC
+		}
+		### Ambitious will defend their position at all costs
+		modifier = {
+			add = 30
+			has_trait = ambitious
+			desc = LAWLESS_CONTEST_OPINION_AMBITIOUS
+		}
+		# Rivalry modifier.
+		modifier = {
+			desc = offer_vassalization_interaction_aibehavior_rival_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_rival = scope:actor
+					NOT = { has_relation_nemesis = scope:actor }
+				}
+			}
+			add = 50
+		}
+		# Nemesis modifier.
+		modifier = {
+			desc = offer_vassalization_interaction_aibehavior_nemesis_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_nemesis = scope:actor
+				}
+			}
+			add = 100
+		}
+	}
+
+	# AI
+	
+	ai_potential = {
+		#basic_can_challenge_for_leadership_trigger = yes
+		NOR = {
+			has_trait = craven
+			has_trait = content
+			has_trait = lazy
+		}
+		is_imprisoned = no
+		can_start_single_combat_trigger = yes
+	}
+	
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_targets = {
+		ai_recipients = scripted_relations
+	}
+	ai_targets = {
+		ai_recipients = family
+		max = 10
+	}
+	ai_targets = {
+		ai_recipients = liege
+	}
+
+	ai_frequency = 36
+
+	ai_will_do = {
+		base = -50
+		
+		# Factor for opinion.
+		modifier = {
+			add = 100
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value <= very_high_negative_opinion
+				}
+			}
+		}
+		modifier = {
+			add = 50
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value <= medium_negative_opinion
+				}
+			}
+		}
+		modifier = {
+			add = -50
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value >= medium_positive_opinion
+				}
+			}
+		}
+		modifier = {
+			add = -100
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value >= very_high_positive_opinion
+				}
+			}
+		}
+		modifier = {
+			add = 30
+			scope:actor = {
+				has_trait = ambitious
+			}
+		}
+		# Don't challenge kinslayer-counting family, unless they're a rival or nemesis.
+		modifier = {
+			scope:actor = {
+				murdering_character_is_kinslaying_in_faith_trigger = {
+					CHARACTER = scope:recipient
+					FAITH = scope:actor.faith
+				}
+			}
+			scope:recipient = {
+				NOR = {
+					has_relation_rival = scope:actor
+					has_relation_nemesis = scope:actor
+				}
+			}
+			add = -1000
+		}
+		# Don't challenge your spouse, unless they're your rival or nemesis.
+		modifier = {
+			scope:recipient = {
+				is_spouse_of = scope:actor
+				NOR = {
+					has_relation_rival = scope:actor
+					has_relation_nemesis = scope:actor
+				}
+			}
+			add = -1000
+		}
+		# Don't challenge people hopelessly out of your league unless you're really, really not seeing things clearly.
+		modifier = {
+			scope:actor = {
+				prowess_diff = {
+					target = scope:recipient
+					value <= -15
+				}
+				ai_rationality >= high_negative_ai_value
+			}
+			add = -1000
+		}
+	}
+}

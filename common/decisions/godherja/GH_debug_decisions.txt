@@ -1,0 +1,218 @@
+﻿###########
+# DECISIONS LIST
+# add_magic
+# instant_colonization_debug_toggle
+# change_to_feudal
+# add_province_modifiers
+
+##################
+# Add Magic (DEBUG)
+# by Lonely Knight
+add_magic = {
+	ai_check_interval = 0
+	desc = get_blood_desc
+	decision_group_type = debug
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	is_shown = {
+		can_access_magic = yes
+		debug_only = yes
+	}
+
+	is_valid = {
+		has_trait_rank = {
+			trait = magic_good
+			rank > 0
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { has_variable = magic_counter }
+			change_variable = {
+				name = magic_counter
+				add = 1000
+			}
+		}
+	}
+}
+
+#################
+# Instant Colonization
+# by UltimateVictory
+instant_colonization_debug_toggle = {
+	ai_check_interval = 0
+	desc = instant_colonization_debug_desc
+	decision_group_type = debug
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	is_shown = { debug_only = yes }
+	
+	is_valid = { always = yes }
+
+	effect = {
+		if = {
+			limit = { has_character_flag = instant_colony_cheat }
+			remove_character_flag = instant_colony_cheat
+		}
+		else = { add_character_flag = instant_colony_cheat }
+	}
+}
+
+change_to_feudal = {
+	ai_check_interval = 0
+	decision_group_type = debug
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	ai_potential = {
+		always = no
+	}
+	
+	is_shown = {
+		debug_only = yes
+	}
+
+	effect = {
+		change_government = feudal_government
+	}
+}
+
+add_province_modifiers = {
+	ai_check_interval = 0
+	decision_group_type = debug
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	ai_potential = {
+		always = no
+	}
+	
+	is_shown = {
+		debug_only = yes
+	}
+
+	effect = {
+		every_directly_owned_province = {
+			add_province_modifier = arcane_fallout
+		}
+	}
+}
+
+add_all_new_unit_types = {
+	ai_check_interval = 0
+	decision_group_type = debug
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	ai_potential = {
+		always = no
+	}
+	
+	is_shown = {
+		debug_only = yes
+	}
+
+	effect = {
+		spawn_army = {
+			men_at_arms = { # Magi
+				type = arcane_auxiliaries
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Flying
+				type = griffon_riders
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Construct
+				type = golem_infantry
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Adventurers
+				type = slayers
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Adventurers
+				type = adventurers
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Magical
+				type = spirit_regular
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Undead
+				type = skeleton
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+		spawn_army = {
+			men_at_arms = { # Monsters
+				type = fogbeasts
+				stacks = 1
+			}
+			location = scope:attacker.capital_province
+			name = populist_faction_event_troops
+		}
+	}
+}
+
+add_olteni_masks = {
+	ai_check_interval = 0
+	decision_group_type = debug
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	
+	is_shown = {
+		debug_only = yes
+	}
+
+	effect = {
+		hidden_effect = {
+			while = {
+				count = 100
+				save_scope_value_as = {
+					name = quality
+					value = { 1 150 }
+				}
+				save_scope_value_as = {
+					name = wealth
+					value = scope:quality
+				}
+				create_artifact_oltenic_mask_effect = {
+					OWNER = root
+					SMITH = root
+					LOCATION = root.location
+				}
+			}
+		}
+		custom_tooltip = add_olteni_masks_effect_tooltip
+	}
+}

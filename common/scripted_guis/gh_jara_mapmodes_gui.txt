@@ -1,0 +1,1091 @@
+﻿jara_trade_route_map = {
+	effect = {
+		set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:jara_trade_route_map
+			}
+			every_barony = {
+				if = {
+					limit = { 
+						OR = {
+							title_capital_county = { has_county_modifier = entrepot_modifier }
+							title_capital_county = { has_county_modifier = harbour_modifier }
+						}
+					}
+					set_color_from_title = title:d_siro_map_special_slot_holy_site				
+				}
+				else_if = {
+					limit = { 
+						title_capital_county = {  has_county_modifier = traderoute_modifier } 
+						}
+					set_color_from_title = title:d_siro_map_special_slot_empty
+				}
+				else = {
+					set_color_from_title = title:d_siro_map_base
+				}
+			}
+			remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:jara_trade_route_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+jara_fog_map = {
+	effect = {
+			set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:jara_fog_map
+			}
+			every_barony = {
+				if = {
+					limit = { 
+						title_capital_county = { has_county_modifier = bordering_fog_modifier }
+					}
+					set_color_from_title = title:d_siro_map_special_slot_holy_site				
+				}
+				else_if = {
+					limit = { title_capital_county = {  has_county_modifier = fogswept_modifier } }
+					set_color_from_title = title:d_siro_map_special_slot_holy_site_empty
+				}
+				else_if = {
+					limit = { title_capital_county = { has_county_modifier = magic_fogswept_modifier } }
+					set_color_from_title = title:d_siro_map_special_slot_holy_site_empty
+				}
+				else = {
+					set_color_from_title = title:d_siro_map_base
+				}
+			}
+			remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:jara_fog_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+jara_aversaria_map = {
+	effect = {
+		set_global_variable = {
+			name = custom_map_mode_changing
+			value = 1
+		}
+		set_global_variable = {
+			name = custom_map_mode
+			value = flag:jara_aversaria_map
+		}
+		every_barony = {
+			if = {
+				limit = { title_province = { OR = { geographical_region = world_ga_aironoi geographical_region =governate_aversarian_pirates }  } }
+				set_color_from_title = title:e_aironoi
+			}
+			else_if = {
+				limit = { title_province = { geographical_region = world_ga_central_aversaria } }
+				set_color_from_title = title:e_opakhasia
+			}
+			else_if = {
+				limit = { title_province = { geographical_region = world_ga_northern_aversaria } }
+				set_color_from_title = title:e_malcois
+			}
+			else_if = {
+				limit = { title_province = { Or = { geographical_region = world_ga_western_aversaria  geographical_region =world_ga_aversarian_isles }  } }
+				set_color_from_title = title:e_etepezea
+			}
+			else_if = {
+				limit = { title_province = { geographical_region = governate_aversarian_katraddia } }
+				set_color_from_title = title:e_eramosica
+			}
+			else_if = {
+				limit = { title_province = { geographical_region = world_ga_clanlands } }
+				set_color_from_title = title:e_cornucopia
+			}
+			else_if = {
+				limit = { title_province = { geographical_region = governate_aversarian_sarradon } }
+				set_color_from_title = title:e_sarradon
+			}
+			else = {
+				set_color_from_title = title:d_siro_map_base
+			}
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:jara_aversaria_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+marcher_terrain_map = {
+	effect = {
+		set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:marcher_terrain_map
+			}
+			every_barony = {
+				if = {
+					limit = { 
+						title_province = { has_marcher_terrain = yes }
+					}
+					set_color_from_title = title:d_siro_map_special_slot_holy_site				
+				}
+				else = {
+					set_color_from_title = title:d_siro_map_base
+				}
+			}
+			remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:marcher_terrain_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+otached_culture_map = {
+	effect = {
+		set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:otached_culture_map
+			}
+			every_barony = {
+				if = {
+					limit = { 
+						title_province = { culture = { has_cultural_tradition = tradition_otachedian_law } }
+					}
+					set_color_from_title = title:d_siro_map_special_slot_holy_site				
+				}
+				else = {
+					set_color_from_title = title:d_siro_map_base
+				}
+			}
+			remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:otached_culture_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+gh_ruler_artifact_map = {
+	effect = {
+		every_barony = {
+			if = {
+				limit = {
+					county.holder = {
+						any_character_artifact = {
+							has_variable = historical_unique_artifact
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_unique
+			}
+			else_if = {
+				limit = {
+					county.holder = {  
+						any_character_artifact = {
+							rarity = illustrious
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_illustrious
+			}
+			else_if = {
+				limit = {
+					county.holder = {
+						any_character_artifact = {
+							rarity = famed
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_rare
+			}
+			else_if = {
+				limit = {
+					county.holder = {
+						any_character_artifact = {
+							rarity = masterwork
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_masterwork
+			}
+			else_if = {
+				limit = {
+					county.holder = {
+						any_character_artifact = {
+							rarity = common
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_common
+			}
+			else = {
+				set_color_from_title = title:d_siro_map_base
+			}
+		}
+	}
+	is_shown = {
+		always = yes
+	}
+	is_valid = {
+		always = yes
+	}
+}
+
+gh_courtier_artifact_map = {
+	effect = {
+		every_barony = {
+			if = {
+				limit = {
+					county.holder = {
+						any_courtier_or_guest = {
+							any_character_artifact = {
+								has_variable = historical_unique_artifact
+							}
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_unique
+			}
+			else_if = {
+				limit = {
+					county.holder = {  
+						any_courtier_or_guest = {
+							any_character_artifact = {
+								rarity = illustrious
+							}
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_illustrious
+			}
+			else_if = {
+				limit = {
+					county.holder = {
+						any_courtier_or_guest = {
+							any_character_artifact = {
+								rarity = famed
+							}
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_rare
+			}
+			else_if = {
+				limit = {
+					county.holder = {
+						any_courtier_or_guest = {
+							any_character_artifact = {
+								rarity = masterwork
+							}
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_masterwork
+			}
+			else_if = {
+				limit = {
+					county.holder = {
+						any_courtier_or_guest = {
+							any_character_artifact = {
+								rarity = common
+							}
+						}
+					}
+				}
+				set_color_from_title = title:d_artifacts_common
+			}
+			else = {
+				set_color_from_title = title:d_siro_map_base
+			}
+		}
+	}
+	is_shown = {
+		always = yes
+	}
+	is_valid = {
+		always = yes
+	}
+}
+
+habitability_map = {
+	effect = {
+		if = {
+			limit = { NOT = { global_var:custom_map_mode = flag:habitability_map } }
+			set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:habitability_map
+			}
+			every_barony = {
+				if = {
+					limit = { title_capital_county = { county_habitability_value = 100 } }
+					set_color_from_title = title:d_habitability_scale_1
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 95 } }
+					set_color_from_title = title:d_habitability_scale_2
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 90 } }
+					set_color_from_title = title:d_habitability_scale_3
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 85 } }
+					set_color_from_title = title:d_habitability_scale_4
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 80 } }
+					set_color_from_title = title:d_habitability_scale_5
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 70 } }
+					set_color_from_title = title:d_habitability_scale_6
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 60 } }
+					set_color_from_title = title:d_habitability_scale_7
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 40 } }
+					set_color_from_title = title:d_habitability_scale_8
+				}
+				else_if = {
+					limit = { title_capital_county = { county_habitability_value > 20 } }
+					set_color_from_title = title:d_habitability_scale_9
+				}
+				else = { set_color_from_title = title:d_habitability_scale_10 }
+			}
+			remove_global_variable = custom_map_mode_changing
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		exists = global_var:custom_map_mode
+		global_var:custom_map_mode = flag:habitability_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+ambient_magic_map = {
+	effect = {
+		if = {
+			limit = { NOT = { global_var:custom_map_mode = flag:ambient_magic_map } }
+			set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:ambient_magic_map
+			}
+			every_barony = {
+				if = {
+					limit = { title_capital_county = { total_ambient_magic_value = 0 } }
+					set_color_from_title = title:d_habitability_scale_1
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 10 } }
+					set_color_from_title = title:d_habitability_scale_2
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 20 } }
+					set_color_from_title = title:d_habitability_scale_3
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 30 } }
+					set_color_from_title = title:d_habitability_scale_4
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 40 } }
+					set_color_from_title = title:d_habitability_scale_5
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 50 } }
+					set_color_from_title = title:d_habitability_scale_6
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 100 } }
+					set_color_from_title = title:d_habitability_scale_7
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 150 } }
+					set_color_from_title = title:d_habitability_scale_8
+				}
+				else_if = {
+					limit = { title_capital_county = { total_ambient_magic_value < 200 } }
+					set_color_from_title = title:d_habitability_scale_9
+				}
+				else = { set_color_from_title = title:d_habitability_scale_10 }
+			}
+			remove_global_variable = custom_map_mode_changing
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		exists = global_var:custom_map_mode
+		global_var:custom_map_mode = flag:ambient_magic_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+antimagic_map = {
+	effect = {
+		set_global_variable = {
+			name = custom_map_mode_changing
+			value = 1
+		}
+		set_global_variable = {
+			name = custom_map_mode
+			value = flag:antimagic_map
+		}
+		every_barony = {
+			if = {
+				limit = { title_capital_county = { has_county_modifier = antimagic_field } }
+				set_color_from_title = title:d_jara_winter_harsh
+			}
+			else_if = {
+				limit = { title_capital_county = { has_county_modifier = antimagic_field_2 } }
+				set_color_from_title = title:d_jara_winter_normal
+			}
+			else_if = {
+				limit = { title_capital_county = { has_county_modifier = antimagic_field_3 } }
+				set_color_from_title = title:d_jara_winter_mild
+			}
+			else_if = {
+				limit = { title_capital_county = { has_county_modifier = antimagic_field_4 } }
+				set_color_from_title = title:d_jara_winter_mildest
+			}
+			else = {
+				set_color_from_title = title:d_siro_map_base
+			}
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:antimagic_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+terrain_override_map = {
+	effect = {
+		set_global_variable = {
+			name = custom_map_mode_changing
+			value = 1
+		}
+		set_global_variable = {
+			name = custom_map_mode
+			value = flag:terrain_override_map
+		}
+		#every_barony = {
+		#	if = {
+		#		limit = { title_province = { has_variable = terrain_override } }
+		#		if = {
+		#			limit = { title_province = { var:terrain_override = flag:plains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_plains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:farmlands_terrain_override } }
+		#			set_color_from_title = title:d_terrain_farmlands
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:hills_terrain_override } }
+		#			set_color_from_title = title:d_terrain_hills
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:mountains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_mountains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:desert_terrain_override } }
+		#			set_color_from_title = title:d_terrain_desert
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:desert_mountains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_desert_mountains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:oasis_terrain_override } }
+		#			set_color_from_title = title:d_terrain_oasis
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:jungle_terrain_override } }
+		#			set_color_from_title = title:d_terrain_jungle
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:forest_terrain_override } }
+		#			set_color_from_title = title:d_terrain_forest
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:taiga_terrain_override } }
+		#			set_color_from_title = title:d_terrain_taiga
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:wetlands_terrain_override } }
+		#			set_color_from_title = title:d_terrain_wetlands
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:steppe_terrain_override } }
+		#			set_color_from_title = title:d_terrain_steppe
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:floodplains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_floodplains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:drylands_terrain_override } }
+		#			set_color_from_title = title:d_terrain_drylands
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_plains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_plains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_farmlands_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_farmlands
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_hills_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_hills
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_mountains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_mountains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_forest_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_forest
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_wetlands_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_wetlands
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:marcher_floodplains_terrain_override } }
+		#			set_color_from_title = title:d_terrain_marcher_floodplains
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:deadlands_terrain_override } }
+		#			set_color_from_title = title:d_terrain_deadlands
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:mayik_caverns_terrain_override } }
+		#			set_color_from_title = title:d_terrain_mayik_caverns
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:mayik_corridors_terrain_override } }
+		#			set_color_from_title = title:d_terrain_mayik_corridors
+		#		}
+		#		else_if = {
+		#			limit = { title_province = { var:terrain_override = flag:mayik_chamber_terrain_override } }
+		#			set_color_from_title = title:d_terrain_mayik_chamber
+		#		}
+		#	}
+		#	else = {
+		#		set_color_from_title = title:d_siro_map_base
+		#	}
+		#}
+		every_barony = {
+			limit = { title_province = { has_variable = terrain_override } }
+			if = {
+				limit = { title_province = { has_variable = terrain_override } }
+				if = {
+					limit = { title_province = { var:terrain_override = flag:plains_terrain_override } }
+					set_color_from_title = title:d_terrain_plains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:farmlands_terrain_override } }
+					set_color_from_title = title:d_terrain_farmlands
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:hills_terrain_override } }
+					set_color_from_title = title:d_terrain_hills
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:mountains_terrain_override } }
+					set_color_from_title = title:d_terrain_mountains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:desert_terrain_override } }
+					set_color_from_title = title:d_terrain_desert
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:desert_mountains_terrain_override } }
+					set_color_from_title = title:d_terrain_desert_mountains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:oasis_terrain_override } }
+					set_color_from_title = title:d_terrain_oasis
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:jungle_terrain_override } }
+					set_color_from_title = title:d_terrain_jungle
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:forest_terrain_override } }
+					set_color_from_title = title:d_terrain_forest
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:taiga_terrain_override } }
+					set_color_from_title = title:d_terrain_taiga
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:wetlands_terrain_override } }
+					set_color_from_title = title:d_terrain_wetlands
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:steppe_terrain_override } }
+					set_color_from_title = title:d_terrain_steppe
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:floodplains_terrain_override } }
+					set_color_from_title = title:d_terrain_floodplains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:drylands_terrain_override } }
+					set_color_from_title = title:d_terrain_drylands
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_plains_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_plains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_farmlands_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_farmlands
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_hills_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_hills
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_mountains_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_mountains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_forest_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_forest
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_wetlands_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_wetlands
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:marcher_floodplains_terrain_override } }
+					set_color_from_title = title:d_terrain_marcher_floodplains
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:deadlands_terrain_override } }
+					set_color_from_title = title:d_terrain_deadlands
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:mayik_caverns_terrain_override } }
+					set_color_from_title = title:d_terrain_mayik_caverns
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:mayik_corridors_terrain_override } }
+					set_color_from_title = title:d_terrain_mayik_corridors
+				}
+				else_if = {
+					limit = { title_province = { var:terrain_override = flag:mayik_chamber_terrain_override } }
+					set_color_from_title = title:d_terrain_mayik_chamber
+				}
+			}
+			else_if = {
+				limit = { title_province = { var:terrain_override = flag:desert_mountains_terrain_override } }
+				set_color_from_title = title:d_terrain_desert_mountains
+			}
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:terrain_override_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+custom_terrain_map = {
+	effect = {
+		set_global_variable = {
+			name = custom_map_mode_changing
+			value = 1
+		}
+		set_global_variable = {
+			name = custom_map_mode
+			value = flag:custom_terrain_map
+		}
+		every_barony = {
+			if = {
+				limit = { title_province = { terrain = plains } }
+				set_color_from_title = title:d_terrain_plains
+			}
+			else_if = {
+				limit = { title_province = { terrain = farmlands } }
+				set_color_from_title = title:d_terrain_farmlands
+			}
+			else_if = {
+				limit = { title_province = { terrain = hills } }
+				set_color_from_title = title:d_terrain_hills
+			}
+			else_if = {
+				limit = { title_province = { terrain = mountains } }
+				set_color_from_title = title:d_terrain_mountains
+			}
+			else_if = {
+				limit = { title_province = { terrain = desert } }
+				set_color_from_title = title:d_terrain_desert
+			}
+			else_if = {
+				limit = { title_province = { terrain = desert_mountains } }
+				set_color_from_title = title:d_terrain_desert_mountains
+			}
+			else_if = {
+				limit = { title_province = { terrain = oasis } }
+				set_color_from_title = title:d_terrain_oasis
+			}
+			else_if = {
+				limit = { title_province = { terrain = jungle } }
+				set_color_from_title = title:d_terrain_jungle
+			}
+			else_if = {
+				limit = { title_province = { terrain = forest } }
+				set_color_from_title = title:d_terrain_forest
+			}
+			else_if = {
+				limit = { title_province = { terrain = taiga } }
+				set_color_from_title = title:d_terrain_taiga
+			}
+			else_if = {
+				limit = { title_province = { terrain = wetlands } }
+				set_color_from_title = title:d_terrain_wetlands
+			}
+			else_if = {
+				limit = { title_province = { terrain = steppe } }
+				set_color_from_title = title:d_terrain_steppe
+			}
+			else_if = {
+				limit = { title_province = { terrain = floodplains } }
+				set_color_from_title = title:d_terrain_floodplains
+			}
+			else_if = {
+				limit = { title_province = { terrain = drylands } }
+				set_color_from_title = title:d_terrain_drylands
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_plains } }
+				set_color_from_title = title:d_terrain_marcher_plains
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_farmlands } }
+				set_color_from_title = title:d_terrain_marcher_farmlands
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_hills } }
+				set_color_from_title = title:d_terrain_marcher_hills
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_mountains } }
+				set_color_from_title = title:d_terrain_marcher_mountains
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_forest } }
+				set_color_from_title = title:d_terrain_marcher_forest
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_wetlands } }
+				set_color_from_title = title:d_terrain_marcher_wetlands
+			}
+			else_if = {
+				limit = { title_province = { terrain = marcher_floodplains } }
+				set_color_from_title = title:d_terrain_marcher_floodplains
+			}
+			else_if = {
+				limit = { title_province = { terrain = deadlands } }
+				set_color_from_title = title:d_terrain_deadlands
+			}
+			else_if = {
+				limit = { title_province = { terrain = mayik_caverns } }
+				set_color_from_title = title:d_terrain_mayik_caverns
+			}
+			else_if = {
+				limit = { title_province = { terrain = mayik_corridors } }
+				set_color_from_title = title:d_terrain_mayik_corridors
+			}
+			else_if = {
+				limit = { title_province = { terrain = mayik_chamber } }
+				set_color_from_title = title:d_terrain_mayik_chamber
+			}
+			else = {
+				set_color_from_title = title:d_siro_map_base
+			}
+		}
+		every_barony = {
+			limit = { title_province = { has_variable = terrain_override } }
+			if = {
+				limit = { title_province = { var:terrain_override = flag:desert_terrain_override } }
+				set_color_from_title = title:d_terrain_desert
+			}
+			else_if = {
+				limit = { title_province = { var:terrain_override = flag:desert_mountains_terrain_override } }
+				set_color_from_title = title:d_terrain_desert_mountains
+			}
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		global_var:custom_map_mode = flag:custom_terrain_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+animal_frequency_map = {
+	effect = {
+		if = {
+			limit = { NOT = { global_var:custom_map_mode = flag:animal_frequency_map } }
+			set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:animal_frequency_map
+			}
+			every_barony = {
+				if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 250 }
+					set_color_from_title = title:d_habitability_scale_1
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 200 }
+					set_color_from_title = title:d_habitability_scale_2
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 150 }
+					set_color_from_title = title:d_habitability_scale_3
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 100 }
+					set_color_from_title = title:d_habitability_scale_4
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 80 }
+					set_color_from_title = title:d_habitability_scale_5
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 60 }
+					set_color_from_title = title:d_habitability_scale_6
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 40 }
+					set_color_from_title = title:d_habitability_scale_7
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 20 }
+					set_color_from_title = title:d_habitability_scale_8
+				}
+				else_if = {
+					limit = { title_province.GH_animal_frequency_mapmode_value > 0 }
+					set_color_from_title = title:d_habitability_scale_9
+				}
+				else = { set_color_from_title = title:d_siro_map_base }
+			}
+			remove_global_variable = custom_map_mode_changing
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		exists = global_var:custom_map_mode
+		global_var:custom_map_mode = flag:animal_frequency_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+biodiversity_map = {
+	effect = {
+		if = {
+			limit = { NOT = { global_var:custom_map_mode = flag:biodiversity_map } }
+			set_global_variable = {
+				name = custom_map_mode_changing
+				value = 1
+			}
+			set_global_variable = {
+				name = custom_map_mode
+				value = flag:biodiversity_map
+			}
+			every_barony = {
+				if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 25 }
+					set_color_from_title = title:d_habitability_scale_1
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 20 }
+					set_color_from_title = title:d_habitability_scale_2
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 15 }
+					set_color_from_title = title:d_habitability_scale_3
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 10 }
+					set_color_from_title = title:d_habitability_scale_4
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 5 }
+					set_color_from_title = title:d_habitability_scale_5
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 3 }
+					set_color_from_title = title:d_habitability_scale_6
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 2 }
+					set_color_from_title = title:d_habitability_scale_7
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 1 }
+					set_color_from_title = title:d_habitability_scale_8
+				}
+				else_if = {
+					limit = { title_province.GH_biodiversity_mapmode_value > 0 }
+					set_color_from_title = title:d_habitability_scale_9
+				}
+				else = { set_color_from_title = title:d_siro_map_base }
+			}
+			remove_global_variable = custom_map_mode_changing
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+	is_shown = {
+		exists = global_var:custom_map_mode
+		global_var:custom_map_mode = flag:biodiversity_map
+	}
+	is_valid = {
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+}
+
+#holy_site_map = {
+#	effect = {
+#		if = {
+#			limit = { NOT = { global_var:custom_map_mode = flag:holy_site_map } }
+#			set_global_variable = {
+#				name = custom_map_mode_changing
+#				value = 1
+#			}
+#			set_global_variable = {
+#				name = custom_map_mode
+#				value = flag:holy_site_map
+#			}
+#			every_barony = {
+#				set_color_from_title = title:d_siro_map_base
+#			}
+#			every_religion_global = {
+#				every_faith = {
+#					every_holy_site = {
+#						set_color_from_title = title:d_siro_map_special_slot_holy_site
+#					}
+#				}
+#			}
+#			
+#			remove_global_variable = custom_map_mode_changing
+#		}
+#	}
+#	is_shown = {
+#		global_var:custom_map_mode = flag:holy_site_map
+#	}
+#	is_valid = {
+#		NOT = { exists = global_var:custom_map_mode_changing }
+#	}
+#}
+#
+
+#only_special_slot_map = {
+#	effect = {
+#		if = {
+#			limit = { NOT = { global_var:custom_map_mode = flag:only_special_slot_map } }
+#			set_global_variable = {
+#				name = custom_map_mode_changing
+#				value = 1
+#			}
+#			set_global_variable = {
+#				name = custom_map_mode
+#				value = flag:only_special_slot_map
+#			}
+#
+#			
+#
+#			every_barony = {
+#				if = {
+#					limit = {
+#						title_province = { 
+#							has_special_building_slot = yes
+#							has_special_building = no
+#						}
+#					}
+#					set_color_from_title = title:d_siro_map_special_slot_holy_site
+#				}
+#				else_if = {
+#					limit = {
+#						title_province = {
+#							has_special_building = yes
+#						}
+#					}
+#					set_color_from_title = title:d_siro_map_special_slot
+#				}
+#				else = {
+#					set_color_from_title = title:d_siro_map_base
+#				}
+#			}
+#			remove_global_variable = custom_map_mode_changing
+#		}
+#		
+#		
+#	}
+#	is_shown = {
+#		global_var:custom_map_mode = flag:only_special_slot_map
+#	}
+#	is_valid = {
+#		NOT = { exists = global_var:custom_map_mode_changing }
+#	}
+#}

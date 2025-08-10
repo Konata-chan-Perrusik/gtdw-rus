@@ -1,0 +1,880 @@
+﻿#Interactions relating to cliques
+
+force_join_clique_interaction = {
+	category = interaction_category_vassal
+	desc = force_join_clique_interaction_desc
+
+	force_notification = yes
+	greeting = positive
+	notification_text = FORCE_JOIN_CLIQUE_NOTIFICATION
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			has_variable = character_clique
+			trigger_if = {
+				limit = { scope:recipient = { has_variable = character_clique } }
+				NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:recipient } }
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			has_strong_usable_hook = scope:recipient
+			NOT = {
+				is_at_war_with = scope:recipient
+			}
+		}
+		scope:recipient = {
+			scope:actor.var:character_clique = { save_temporary_scope_as = clique_province }
+			general_clique_entry_trigger = yes
+		}
+		custom_description = {
+			text = already_forced_into_clique
+			NOT = { scope:recipient = { has_variable = forced_into_clique } }
+		}
+		trigger_if = {
+			limit = { scope:recipient = { has_variable = character_clique } }
+			scope:actor = { prestige >= scope:recipient.halved_clique_leaving_cost }
+		}
+	}
+	
+
+	on_accept = {
+		scope:actor = {
+			send_interface_message = {
+				type = event_generic_neutral
+				title = force_join_clique_interaction_notification
+				right_icon = scope:recipient
+				if = {
+					limit = {
+						scope:actor = {
+							has_strong_usable_hook = scope:recipient
+						}
+					}
+					scope:actor = {
+						use_hook = scope:recipient
+					}
+				}
+				if = {
+					limit = {
+						scope:recipient = {
+							has_variable = character_clique
+						}
+					}
+					scope:actor = {
+						add_prestige = {
+							value = scope:recipient.halved_clique_leaving_cost
+							multiply = -1
+						}
+					}
+				}
+				scope:recipient = {
+					assign_character_to_clique_effect = { CLIQUE = scope:actor.var:character_clique }
+					set_variable = { name = forced_into_clique value = scope:actor.var:character_clique years = 5 }
+					calculate_alignment_for_current_clique = yes
+				}
+			}
+		}
+	}
+
+	auto_accept = yes
+	
+	# AI
+	
+	ai_targets = {
+		ai_recipients = peer_vassals
+	}
+	ai_frequency = 12
+	
+	ai_potential = {
+		is_independent_ruler = no
+		has_variable = character_clique
+	}
+	
+	ai_will_do = {
+		base = 100
+	}
+}
+
+ask_to_appoint_clique_heir_interaction = {
+	category = interaction_category_vassal
+	desc = appoint_clique_heir_interaction_desc
+	
+	redirect = {		
+		scope:recipient = {
+			save_scope_as = secondary_recipient
+		}
+		
+		scope:actor.liege = {
+			save_scope_as = recipient
+		}
+	}
+	
+	populate_recipient_list = {
+		scope:actor = {
+			every_courtier = {
+				limit = {
+					OR = {
+						faith = scope:actor.faith
+						scope:actor = { government_has_flag = government_is_military_unit }
+					}
+				}
+				add_to_list = characters
+			}
+			every_vassal_or_below = {
+				limit = {
+					has_same_government = scope:actor
+					OR = {
+						faith = scope:actor.faith
+						government_has_flag = government_is_military_unit
+					}
+				}
+				add_to_list = characters
+			}
+		}
+	}
+	
+	force_notification = yes
+	greeting = positive
+	notification_text = APPOINT_CLIQUE_HEIR_NOTIFICATION
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:actor = {
+			should_have_liege_clique_appointment_succession = yes
+		}
+		scope:secondary_recipient = {
+			OR = { 
+				is_courtier_of = scope:actor
+				AND = {
+					is_vassal_or_below_of = scope:actor
+					has_same_government = scope:actor
+				}
+			}
+		}
+		OR = {
+			scope:actor = { government_has_flag = government_is_military_unit }
+			scope:secondary_recipient.faith = scope:actor.faith
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		always = yes
+	}
+	
+	ai_min_reply_days = 5
+	ai_max_reply_days = 10
+
+	ai_accept = {
+		base = -60
+		
+		#MAIN
+		#Heretic/Infidel modifier.
+		#Rivalry modifier.
+		#Same Dynasty modifier.
+		#Cultural/Cultural Group modifiers.
+		#Ageism modifier vs kids.
+		#Ruler Legitimacy modifier.
+
+		#OPINION SCALES
+		#Compare Opinion modifier.
+		
+		#BRIBE/HOOK MODIFIERS
+		
+		#CLIQUE SKILL MODIFIERS
+
+		# MAIN
+		modifier = { #Different faith, no pluralism.
+			desc = propose_appointed_heir_aibehavior_differentfaith_tt
+			trigger = {
+				scope:recipient = {
+					NOR = { #Of two different faiths AND the potential vassal's faith is not pluralistic.
+						faith = scope:secondary_recipient.faith
+						faith = { has_doctrine = doctrine_pluralism_pluralistic }
+					}
+				}
+			}
+			add = {
+				value = -10
+				if = {
+					limit = {
+						scope:recipient.faith = {
+							faith_hostility_level = {
+								target = scope:secondary_recipient.faith
+								value >= faith_hostile_level
+							}
+						}
+					}
+					add = -10
+				}
+				if = {
+					limit = {
+						scope:recipient.faith = {
+							faith_hostility_level = {
+								target = scope:secondary_recipient.faith
+								value >= faith_evil_level
+							}
+						}
+					}
+					add = -10
+				}
+			}
+		}
+		
+		modifier = { #Different faith, pluralism.
+			desc = propose_appointed_heir_aibehavior_differentfaith_tt
+			trigger = {
+				scope:recipient = {
+					NOT = {
+						faith = scope:secondary_recipient.faith
+					}
+					NOT = {
+						scope:secondary_recipient.faith = { has_doctrine = doctrine_pluralism_pluralistic }
+					}
+					faith = { has_doctrine = doctrine_pluralism_pluralistic }
+				}
+			}
+			add = {
+				value = -5
+				if = {
+					limit = {
+						scope:recipient.faith = {
+							faith_hostility_level = {
+								target = scope:secondary_recipient.faith
+								value >= faith_hostile_level
+							}
+						}
+					}
+					add = -5
+				}
+				if = {
+					limit = {
+						scope:recipient.faith = {
+							faith_hostility_level = {
+								target = scope:actor.faith
+								value >= faith_evil_level
+							}
+						}
+					}
+					add = -5
+				}
+			}
+		}
+		
+		modifier = { #Different faith, both have pluralism.
+			desc = propose_appointed_heir__aibehavior_differentfaith_tt
+			trigger = {
+				scope:recipient = {
+					NOT = {
+						faith = scope:secondary_recipient.faith
+					}
+					scope:secondary_recipient.faith = { has_doctrine = doctrine_pluralism_pluralistic }
+					faith = { has_doctrine = doctrine_pluralism_pluralistic }
+				}
+			}
+			add = {
+				value = -2
+				if = {
+					limit = {
+						scope:recipient.faith = {
+							faith_hostility_level = {
+								target = scope:secondary_recipient.faith
+								value >= faith_hostile_level
+							}
+						}
+					}
+					add = -2
+				}
+				if = {
+					limit = {
+						scope:recipient.faith = {
+							faith_hostility_level = {
+								target = scope:secondary_recipient.faith
+								value >= faith_evil_level
+							}
+						}
+					}
+					add = -2
+				}
+			}
+		}
+
+		# MINOR
+		modifier = { #Friend modifier.
+			desc = propose_appointed_heir__aibehavior_friend_proposer_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_friend = scope:actor
+					NOT = { has_relation_best_friend = scope:actor }
+				}
+			}
+			add = 10
+		}
+		modifier = { #Best Friend modifier.
+			desc = propose_appointed_heir__aibehavior_best_friend_proposer_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_best_friend = scope:actor
+				}
+			}
+			add = 20
+		}
+		modifier = { #Friend modifier.
+			desc = propose_appointed_heir__aibehavior_friend_proposed_heir_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_friend = scope:secondary_recipient
+					NOT = { has_relation_best_friend = scope:secondary_recipient }
+				}
+			}
+			add = 10
+		}
+		modifier = { #Best Friend modifier.
+			desc = propose_appointed_heir__aibehavior_best_friend_proposed_heir_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_best_friend = scope:secondary_recipient
+				}
+			}
+			add = 20
+		}
+		modifier = { #Rivalry modifier.
+			desc = propose_appointed_heir_aibehavior_rival_proposer_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_rival = scope:actor
+					NOT = { has_relation_nemesis = scope:actor }
+				}
+			}
+			add = -10
+		}
+		modifier = { #Nemesis modifier.
+			desc = propose_appointed_heir__aibehavior_nemesis_proposer_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_nemesis = scope:actor
+				}
+			}
+			add = -1000
+		}
+		modifier = { #Rivalry modifier.
+			desc = propose_appointed_heir_aibehavior_rival_proposed_heir_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_rival = scope:secondary_recipient
+					NOT = { has_relation_nemesis = scope:secondary_recipient }
+				}
+			}
+			add = -20
+		}
+		modifier = { #Nemesis modifier.
+			desc = propose_appointed_heir_aibehavior_nemesis_proposed_heir_tt
+			trigger = {
+				scope:recipient = {
+					has_relation_nemesis = scope:secondary_recipient
+				}
+			}
+			add = -1000
+		}
+		modifier = { #Same Dynasty modifier.
+			desc = propose_appointed_heir_aibehavior_dynasty_proposed_heir_tt
+			trigger = {
+				scope:recipient = {
+					exists = dynasty
+					dynasty = scope:secondary_recipient.dynasty
+				}
+			}
+			add = 10
+		}
+		modifier = { #Cultural modifiers.
+			add = -5
+			desc = propose_appointed_heir_aibehavior_culture_tt
+			trigger = {
+				scope:secondary_recipient = {
+					NOT = { has_same_culture_as = scope:recipient }
+				}
+			}
+		}
+		
+		modifier = { #Cultural Heritage modifiers.
+			add = -15
+			desc = propose_appointed_heir_aibehavior_culture_heritage_tt
+			trigger = {
+				scope:secondary_recipient = {
+					NOT = { culture = { has_same_culture_heritage = scope:recipient.culture } }
+				}
+			}
+		}
+		modifier = { #Language modifiers.
+			add = -15
+			desc = propose_appointed_heir_aibehavior_culture_language_tt
+			trigger = {
+				scope:secondary_recipient = {
+					NOT = { culture = { has_same_culture_language = scope:recipient.culture } }
+				}
+			}
+		}
+		modifier = { #Ageism modifier vs kids.
+			desc = propose_appointed_heir_aibehavior_child_tt
+			trigger = {
+				scope:secondary_recipient = {
+					age < 12
+				}
+				scope:recipient = {
+					age > 16
+				}
+			}
+			add = -40
+		}
+
+
+		# OPINION INFLUENCE
+		opinion_modifier = { #Compare Opinion modifier.
+			who = scope:recipient
+			opinion_target = scope:actor
+			multiplier = 0.50
+		}
+		
+		# OPINION INFLUENCE
+		opinion_modifier = { #Compare Opinion modifier.
+			who = scope:recipient
+			opinion_target = scope:secondary_recipient
+			multiplier = 0.50
+		}
+
+		# HOOK/BRIBE OPTIONS
+		modifier = {
+			add = 60
+			scope:strong_hook = yes
+			desc = clique_heir_appointment_strong_hook_reason_tt
+		}
+		modifier = {
+			add = 25
+			scope:weak_hook = yes
+			desc = clique_heir_appointment_weak_hook_reason_tt
+		}
+		modifier = {
+			add = 25
+			scope:strong_hook_offer = yes
+			desc = clique_heir_appointment_strong_hook_offer_reason_tt
+		}
+		modifier = {
+			add = 15
+			scope:weak_hook_offer = yes
+			desc = clique_heir_appointment_weak_hook_offer_reason_tt
+		}
+		modifier = {
+			add = 25
+			scope:large_bribe_offer = yes
+			desc = clique_heir_appointment_large_bribe_offer_reason_tt
+		}
+		modifier = {
+			add = 15
+			scope:normal_bribe_offer = yes
+			desc = clique_heir_appointment_normal_bribe_offer_reason_tt
+		}
+		
+		#CLIQUE SKILL MODIFIERS
+		
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.martial
+			}
+			scope:recipient = {	
+				has_variable = character_clique
+				var:character_clique = { clique_has_skill_trigger = { SKILL = martial }}
+			}
+			desc = clique_heir_appointment_values_martial_reason_tt
+		}
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.diplomacy
+			}
+			scope:recipient = {	
+				has_variable = character_clique
+				var:character_clique = { clique_has_skill_trigger = { SKILL = diplomacy }}
+			}
+			desc = clique_heir_appointment_values_diplomacy_reason_tt
+		}
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.stewardship
+			}
+			scope:recipient = {	
+				has_variable = character_clique
+				var:character_clique = { clique_has_skill_trigger = { SKILL = stewardship }}
+			}
+			desc = clique_heir_appointment_values_stewardship_reason_tt
+		}
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.intrigue
+			}
+			scope:recipient = {	
+				has_variable = character_clique
+				var:character_clique = { clique_has_skill_trigger = { SKILL = intrigue }}
+			}
+			desc = clique_heir_appointment_values_intrigue_reason_tt
+		}
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.learning
+			}
+			scope:recipient = {	
+				has_variable = character_clique
+				var:character_clique = { clique_has_skill_trigger = { SKILL = learning }}
+			}
+			desc = clique_heir_appointment_values_learning_reason_tt
+		}
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.prowess
+				if = {
+					limit = { scope:secondary_recipient.prowess > 30 }
+					add = 30
+					divide = 2
+				}
+			}
+			scope:recipient = {	
+				has_variable = character_clique
+				var:character_clique = { clique_has_skill_trigger = { SKILL = prowess }}
+			}
+			desc = clique_heir_appointment_values_prowess_reason_tt
+		}
+		modifier = {
+			add = {
+				value = scope:secondary_recipient.var:magic_prowess
+				subtract = 10
+				divide = 3
+			}
+			scope:recipient = {	has_variable = character_clique }
+			clique_has_aspect = { ASPECT = magic_based CLIQUE = scope:recipient.var:character_clique }
+			scope:secondary_recipient = { can_access_magic = yes }
+			desc = clique_heir_appointment_values_magic_reason_tt
+		}
+		modifier = {
+			add = -5
+			scope:recipient = {	has_variable = character_clique }
+			clique_has_aspect = { ASPECT = magic_based CLIQUE = scope:recipient.var:character_clique }
+			scope:secondary_recipient = { can_access_magic = no }
+			desc = clique_heir_appointment_values_magic_reason_tt
+		}
+		
+	}
+	
+	# Offer nothing
+	send_option = {
+		is_shown = {
+			always = yes
+		}
+		flag = no_hook_or_bribe
+		localization = no_hook_or_bribe_clique_appointment
+		starts_enabled = { always = yes	}
+	}
+
+	# Use Weak hook
+	send_option = {										
+		is_shown = {
+			scope:actor = {
+				has_usable_hook = scope:recipient
+				has_weak_hook = scope:recipient
+			}
+		}
+		flag = weak_hook								# If selected then scope:flag_name will be set to yes
+		localization = weak_hook_appointment				# Loc_key for option label
+
+	}
+
+	# Use Strong hook
+	send_option = {
+		is_shown = {
+			scope:actor = {
+				has_strong_usable_hook = scope:recipient
+			}
+		}
+		flag = strong_hook							# If selected then scope:flag_name will be set to yes
+		localization = strong_hook_appointment				# Loc_key for option label
+	}
+	
+	# Offer Weak hook
+	send_option = {										
+		is_shown = {
+			scope:recipient = {
+				 NOT = { has_hook = scope:actor }
+			}
+		}
+		flag = weak_hook_offer								# If selected then scope:flag_name will be set to yes
+		localization = weak_hook_appointment_offer				# Loc_key for option label				# Trigger for whether this should be on when the window opens. If not defined, defaults to off
+
+	}
+
+	# Offer Strong hook offer
+	send_option = {
+		is_shown = {
+			scope:recipient = {
+				NOT = { has_strong_hook = scope:actor }
+			}
+		}
+		flag = strong_hook_offer							# If selected then scope:flag_name will be set to yes
+		localization = strong_hook_appointment_offer				# Loc_key for option label
+	}
+	
+	# Offer bribe
+	send_option = {										
+		is_shown = {
+			always = yes
+		}
+		is_valid = {
+			scope:actor = {
+				 short_term_gold > medium_gold_value
+			}
+		}
+		flag = normal_bribe_offer								# If selected then scope:flag_name will be set to yes
+		localization = normal_bribe_appointment_offer				# Loc_key for option label				# Trigger for whether this should be on when the window opens. If not defined, defaults to off
+	
+	}
+	
+	# Offer larger bribe
+	send_option = {										
+		is_shown = {
+			always = yes
+		}
+		is_valid = {
+			scope:actor = {
+				 short_term_gold > massive_gold_value
+			}
+		}
+		flag = large_bribe_offer								# If selected then scope:flag_name will be set to yes
+		localization = large_bribe_appointment_offer				# Loc_key for option label				# Trigger for whether this should be on when the window opens. If not defined, defaults to off
+	
+	}
+	
+	send_options_exclusive = yes
+	
+
+	on_accept = {
+		scope:actor = {
+			hidden_effect = {
+				send_interface_message = {
+					type = event_generic_neutral
+					title = ask_to_appoint_clique_heir_interaction
+					right_icon = scope:secondary_recipient
+					
+					custom_tooltip = liege_appointed_clique_heir.tt
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						scope:weak_hook = yes
+						scope:strong_hook = yes
+					}
+				}
+				scope:actor = {
+					use_hook = scope:recipient
+				}
+			}
+			if = {
+				limit = {
+					scope:weak_hook_offer = yes
+				}
+				scope:recipient = {
+					add_hook = {
+						type = favor_hook
+						target = scope:actor
+					}
+				}
+			}
+			if = {
+				limit = {
+					scope:strong_hook_offer = yes
+				}
+				scope:recipient = {
+					add_hook = {
+						type = loyalty_hook
+						target = scope:actor
+					}
+				}
+			}
+			if = {
+				limit = {
+					scope:normal_bribe_offer = yes
+				}
+				scope:actor = {
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = medium_gold_value
+					}
+				}
+			}
+			if = {
+				limit = {
+					scope:large_bribe_offer = yes
+				}
+				scope:actor = {
+					pay_short_term_gold = {
+						target = scope:recipient
+						gold = massive_gold_value
+					}
+				}
+			}
+			set_variable = { name = clique_appointed_heir value = scope:secondary_recipient }
+			custom_tooltip = appoint_clique_heir.tt
+		}
+	}
+	
+	on_decline = {
+		scope:actor = {
+			hidden_effect = {
+				send_interface_message = {
+					type = event_generic_neutral
+					title = ask_to_appoint_clique_heir_interaction
+					right_icon = scope:secondary_recipient
+					
+					custom_tooltip = liege_refused_to_appoint_clique_heir.tt
+				}
+			}
+			if = {
+				limit = {
+					scope:strong_hook = yes
+				}
+				scope:actor = {
+					use_hook = scope:recipient
+					set_variable = { name = clique_appointed_heir value = scope:secondary_recipient }
+				}
+				custom_tooltip = appoint_clique_heir_forced.tt
+			}
+		}
+	}
+	
+	
+	
+	# AI
+	
+	ai_frequency = 60
+
+	ai_targets = {
+		ai_recipients = family
+	}
+	
+	ai_potential = {
+		should_have_liege_clique_appointment_succession = yes
+		NOT = { has_variable = clique_appointed_heir }
+	}
+	
+	ai_will_do = {
+		base = 0
+		
+		modifier = {
+			add = 50
+			scope:secondary_recipient = { dynasty = scope:actor.dynasty }
+		}
+		modifier = {
+			add = 50
+			is_close_family_of = scope:secondary_recipient
+		}
+		modifier = {
+			add = 30
+			has_relation_friend = scope:secondary_recipient
+		}
+		modifier = {
+			add = -1
+			scope:weak_hook = yes
+		}
+		modifier = {
+			add = -2
+			scope:strong_hook = yes
+		}
+		
+		modifier = {
+			add = -4
+			scope:weak_hook_offer = yes
+		}
+		
+		modifier = {
+			add = -20
+			scope:strong_hook_offer = yes
+		}
+		
+		modifier = {
+			add = -4
+			scope:normal_bribe_offer = yes
+		}
+		
+		modifier = {
+			add = -10
+			scope:large_bribe_offer = yes
+		}
+		
+		modifier = {
+			factor = 0
+			scope:strong_hook_offer = yes
+			exists = scope:secondary_recipient
+			NOT = {
+				is_parent_of = scope:secondary_recipient
+				exists = dynasty
+				exists = scope:secondary_recipient.dynasty
+				dynasty = scope:secondary_recipient.dynasty
+			}
+		}
+	}
+}
+
+hoodwink_interaction = { # GH URGENT: Commented out due to errors, fix up
+	category = interaction_category_hostile
+	interface_priority = 90
+	icon = icon_gold
+
+	send_name = START_SCHEME
+	ignores_pending_interaction_block = yes
+
+	is_shown = {
+		bilateral_nonsentient_diplomatic_block = yes
+		NOT = { scope:actor = scope:recipient }
+		scope:recipient = { is_adult = yes }
+		scope:actor = { is_adult = yes }
+
+		# Recipient must actually have some money to their name
+		scope:recipient = { gold >= 0 }
+		# You can't scam fogeaters
+		NOT = {
+			scope:recipient.faith = { has_doctrine = tenet_the_mistmothers_speak }
+		}
+		# You need to have access to the interaction via a clique
+		scope:actor = {
+			trigger_if = {
+				limit = { has_variable = character_clique }
+				clique_has_aspect = { CLIQUE = var:character_clique ASPECT = enables_hoodwink }
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = { NOT = { has_strong_hook = scope:actor } }
+		scope:recipient = { NOT = { has_variable = was_recently_hoodwinked } }
+	}
+
+	desc = hoodwink_interaction_desc
+
+	on_accept = {
+		scope:actor = {
+			stress_impact = {
+				honest = medium_stress_impact_gain
+				just = medium_stress_impact_gain
+			}
+		}
+		hidden_effect = {
+			scope:actor = {
+				trigger_event = philantrianist.0021
+			}
+		}
+	}
+	auto_accept = yes
+
+	# AI for hoodwinking is handled via event
+}

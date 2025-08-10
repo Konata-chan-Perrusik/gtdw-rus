@@ -1,0 +1,851 @@
+﻿fools_curse = { # Curse from the Golden Hands in the Fools Coast, only affects non-natives, small spread
+	trait = fools_curse
+	color = { 31 87 235 }
+	priority = 1
+
+	shader_data = {
+		strength = 0.7
+		edge_fade = 0.25
+		tile_multiplier = 0.01
+		texture_index = 0
+		channel = blue
+	}
+
+	name = {
+		first_valid = {
+			random_valid = {
+				desc = epidemic_fools_curse
+				desc = epidemic_ruler_curse
+				desc = epidemic_titled_ruler_curse
+				desc = epidemic_holder_curse
+				desc = epidemic_culture_curse
+				desc = epidemic_location_curse
+			}
+			desc = trait_fools_curse
+		}
+	}
+
+	on_start = { #TODO_CE1 remove debug
+		if = {
+			limit = { NOT = { has_global_variable = fools_curse_happened } }
+			set_global_variable = {
+				name = fools_curse_happened
+				value = 1
+			}
+		}
+		else = {
+			change_global_variable = {
+				name = fools_curse_happened
+				add = 1
+			}
+		}
+
+		# LEGITIMACY LOSS FROM EPIDEMIC OUTBREAK
+		epidemic_outbreak_legitimacy_effect = { PROVINCE = root.outbreak_province }
+	}
+
+	on_monthly = {
+		trigger_event = {
+			on_action = epidemic_ongoing_events
+		}
+	}
+
+	character_infection_chance = {
+		value = character_infection_chance_fools_curse_value
+	}
+
+	can_infect_character = {
+		can_contract_disease_trigger = { DISEASE = fools_curse }
+		immune_to_epidemic = { EPIDEMIC = scope:epidemic }
+	}
+
+	on_character_infected = {
+		contract_disease_notify_effect = { DISEASE = fools_curse }
+	}
+
+	infection_levels = {
+		10 = {
+			province_modifier = {
+				development_decline = -2
+				epidemic_travel_danger = 20
+				tax_mult = 0.02
+			}
+		}
+		50 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.05
+				development_decline = -3
+				county_opinion_add = -2
+				epidemic_travel_danger = 40
+				tax_mult = 0.04
+			}	
+		}
+		80 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.1
+				development_decline = -5
+				county_opinion_add = -3
+				epidemic_travel_danger = 60
+				tax_mult = 0.06
+			}
+		}
+	}
+
+	outbreak_intensities = {
+		minor = {
+			outbreak_chance = {
+				value = outbreak_chance_minor_default_value
+				multiply = outbreak_chance_minor_mult_value
+
+				#Are you in the Fools Coast?
+				if = {
+					limit = {
+						NOT = { geographical_region = GH_geographic_fools_coast }
+					}
+					multiply = 0
+				}
+				else = {
+					add = outbreak_increase_add_extra_high
+				}
+
+				if = {
+					limit = { has_variable = fools_curse_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 3 16 }
+
+			infection_duration = {
+				months = { 6 12 }
+			}
+
+			infection_progress_duration = {
+				days = { 80 100 }
+			}
+
+			infection_recovery_duration = {
+				days = { 30 60 } #stays around for a long time
+			}
+		}
+
+		major = {
+			outbreak_chance = {
+				value = outbreak_chance_major_default_value
+				multiply = outbreak_chance_major_mult_value
+
+				#Are you in the Fools Coast?
+				if = {
+					limit = {
+						NOT = { geographical_region = GH_geographic_fools_coast }
+					}
+					multiply = 0
+				}
+				else = {
+					add = outbreak_increase_add_extra_high
+				}
+
+				if = {
+					limit = { has_variable = fools_curse_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 15 48 }
+
+			infection_duration = {
+				months = { 8 16 }
+			}
+
+			infection_progress_duration = {
+				days = { 40 60 }
+			}
+
+			infection_recovery_duration = {
+				days = { 60 80 } #stays around for a long time
+			}
+		}
+
+		apocalyptic = {
+			outbreak_chance = {
+				value = outbreak_chance_apocalyptic_default_value
+				multiply = outbreak_chance_apocalyptic_mult_value
+
+				#Are you in the Fools Coast?
+				if = {
+					limit = {
+						NOT = { geographical_region = GH_geographic_fools_coast }
+					}
+					multiply = 0
+				}
+				else = {
+					add = outbreak_increase_add_extra_high
+				}
+
+				if = {
+					limit = { has_variable = fools_curse_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 120 400 }
+
+			infection_duration = {
+				months = { 30 45 }
+			}
+			
+			infection_progress_duration = {
+				days = { 15 30 }
+			}
+
+			infection_recovery_duration = {
+				days = { 80 100 }
+			}
+		}
+	}
+
+	on_province_infected = {
+		county = {
+			apply_infection_development_loss = { BASE = 7 }
+		}
+		#cant_touch_this_achievement_effect = yes
+	}
+
+	on_province_recovered = {
+		random = { #Endemism
+			chance = 10
+			set_variable = {
+				name = fools_curse_endemic_variable
+				years = 2
+			}
+		}
+		county = {
+			remove_isolated_capital_modifiers_effect = yes
+		}
+		add_to_variable_list = {
+			name = epidemic_cooldown
+			target = scope:epidemic.epidemic_type
+			years = 50 #can come back quite fast
+		}
+		set_variable = {
+			name = epidemic_cooldown_general
+			years = 15
+		}
+		# Prosperity event
+		plague_recovery_event_effect = yes
+	}
+}
+
+shade_stricken = {
+	trait = shade_stricken
+	color = { 27 15 38 }
+	priority = 4
+
+	shader_data = {
+		strength = 0.7
+		edge_fade = 0.4
+		tile_multiplier = 0.005
+		texture_index = 0
+		channel = red
+	}
+
+	name = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					outbreak_intensity = major
+				}
+				desc = epidemic_wicked_blight
+			}
+			triggered_desc = {
+				trigger = {
+					outbreak_intensity = apocalyptic
+				}
+				desc = epidemic_the_miasma
+			}
+			triggered_desc = {
+				trigger = {
+					outbreak_province.county = {
+						OR = {
+							faith = faith:lifepath
+							faith = faith:becledienism
+							faith = faith:darrallianism
+							faith = faith:arderism
+							faith = faith:saintsmarch
+							faith = faith:innerpath
+							faith = faith:coastpath
+							faith = faith:four_steps_of_salvation
+							faith = faith:conclave_of_opakhasia
+							faith = faith:conclave_of_gisredde
+							faith = faith:calystoanistism
+							faith = faith:sansia
+							faith = faith:eos
+							faith = faith:philanthrios
+							faith = faith:calysto
+							faith = faith:thysia
+							faith = faith:katharitos
+							faith = faith:dikaynos
+							faith = faith:eight
+							faith = faith:forgotten
+							faith = faith:seven_one
+							faith = faith:saintly_order
+							faith = faith:agiopolei
+							# GH_NOTE: What other faiths have saints?
+						}
+					}
+				}
+				desc = epidemic_random_saint_shadow
+			}
+			random_valid = {
+				desc = epidemic_realm_blight
+				desc = epidemic_culture_blight
+				desc = epidemic_location_blight
+				desc = epidemic_ruler_blight
+				desc = epidemic_titled_ruler_blight
+				desc = epidemic_evil_god_blight
+			}
+		}
+	}
+
+	on_start = {
+		if = {
+			limit = {
+				outbreak_intensity = apocalyptic
+			}
+
+			set_global_variable = shade_miasma_happened
+
+			set_global_variable = {
+				name = shade_miasma
+				value = root
+			}
+		}
+		else_if = {
+			limit = { NOT = { has_global_variable = blight_happened } }
+			set_global_variable = {
+				name = blight_happened
+				value = 1
+			}
+		}
+		else = {
+			change_global_variable = {
+				name = blight_happened
+				add = 1
+			}
+		}
+
+		# LEGITIMACY LOSS FROM EPIDEMIC OUTBREAK
+		epidemic_outbreak_legitimacy_effect = { PROVINCE = root.outbreak_province }
+	}
+
+	on_end = {
+		if = {
+			limit = {
+				outbreak_intensity = apocalyptic
+			}
+			remove_global_variable = shade_miasma
+		}
+	}
+
+	on_monthly = {
+		trigger_event = {
+			on_action = epidemic_ongoing_events
+		}
+	}
+
+	character_infection_chance = {
+		value = character_infection_chance_default_value
+		multiply = 0.02
+	}
+
+	can_infect_character = {
+		can_contract_disease_trigger = { DISEASE = shade_stricken }
+		immune_to_epidemic = { EPIDEMIC = scope:epidemic }
+	}
+
+	on_character_infected = {
+		contract_disease_notify_effect = { DISEASE = shade_stricken }
+	}
+
+	infection_levels = {
+		10 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.3
+				development_decline = -2
+				levy_reinforcement_rate = -0.2
+				county_opinion_add = -2
+				epidemic_travel_danger = 30
+			}	
+		}
+		50 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.4
+				development_decline = -4
+				levy_reinforcement_rate = -0.2
+				garrison_size = -0.1
+				county_opinion_add = -3
+				epidemic_travel_danger = 40
+			}	
+		}
+		80 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.5
+				development_decline = -8
+				levy_reinforcement_rate = -0.2
+				garrison_size = -0.2
+				county_opinion_add = -5
+				epidemic_travel_danger = 75
+			}
+		}
+	}
+
+	outbreak_intensities = {
+		minor = {
+			outbreak_chance = {
+				value = outbreak_chance_minor_default_value
+				multiply = outbreak_chance_minor_mult_value
+
+				#Are you in the Redlands?
+				if = {
+					limit = {
+						NOT = { geographical_region = redlands_biozone }
+					}
+					multiply = 0
+				}
+				else = {
+					add = outbreak_increase_add_extra_high
+				}
+
+				if = {
+					limit = { has_variable = shade_stricken_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 1 13 }
+
+			infection_duration = {
+				months = { 8 16 }
+			}
+
+			infection_progress_duration = {
+				days = { 80 100 }
+			}
+
+			infection_recovery_duration = {
+				days = { 30 60 } #stays around for a long time
+			}
+		}
+
+		major = {
+			outbreak_chance = {
+				value = outbreak_chance_major_default_value
+				multiply = outbreak_chance_major_mult_value
+				multiply = 0.01
+
+				#Are you in the Redlands?
+				if = {
+					limit = {
+						NOT = { geographical_region = redlands_biozone }
+					}
+					multiply = 0
+				}
+				else = {
+					add = outbreak_increase_add_extra_high
+				}
+
+				if = {
+					limit = { has_variable = shade_stricken_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 16 42 }
+
+			infection_duration = {
+				months = { 8 16 }
+			}
+
+			infection_progress_duration = {
+				days = { 40 60 }
+			}
+
+			infection_recovery_duration = {
+				days = { 60 80 } #stays around for a long time
+			}
+		}
+
+		apocalyptic = {
+			notification = {
+				global = yes
+				holder_event = ""
+				liege_event = ""
+				realm_event = ""
+			}
+			outbreak_chance = {
+				value = outbreak_chance_apocalyptic_default_value
+				multiply = outbreak_chance_apocalyptic_mult_value
+				multiply = outbreak_chance_black_plague_mult_value # used to make it rarer
+
+				#Are you in the Redlands?
+				if = {
+					limit = {
+						NOT = { geographical_region = redlands_biozone }
+					}
+					multiply = 0
+				}
+				else = {
+					add = outbreak_increase_add_extra_high
+				}
+
+				if = {
+					limit = {
+						has_global_variable = shade_miasma
+					}
+					value = 0
+				}
+				if = {
+					limit = {
+						has_global_variable = shade_miasma_happened
+						#has_game_rule = sm_frequency_once
+					}
+					value = 0
+				}
+				#if = {
+				#	limit = {
+				#		has_game_rule = sm_frequency_never
+				#	}
+				#	value = 0
+				#}
+
+				multiply = 0.0001
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 2200 4800 }
+
+			infection_duration = {
+				months = { 36 50 }
+			}
+			
+			infection_progress_duration = {
+				days = { 25 50 }
+			}
+
+			infection_recovery_duration = {
+				days = { 80 100 }
+			}
+		}
+	}
+
+	on_province_infected = {
+		county = {
+			apply_infection_development_loss = { BASE = 5 }
+		}
+
+		every_player = {
+			if = {
+				limit  = {
+					NOR = {
+						any_owned_story = {
+							story_type = story_cycle_shade_stricken
+						}
+						has_character_flag = shade_stricken_splash
+					}
+				}
+				create_story = story_cycle_shade_stricken
+				trigger_event = {
+					id = gh_health.5999
+					years = { 4 7 }
+				}
+			}
+		}
+	}
+
+	on_province_recovered = {
+		county = {
+			remove_isolated_capital_modifiers_effect = yes
+		}
+		add_to_variable_list = {
+			name = epidemic_cooldown
+			target = scope:epidemic.epidemic_type
+			years = 50
+		}
+		set_variable = {
+			name = epidemic_cooldown_general
+			years = 15 
+		}
+		# Prosperity event
+		plague_recovery_event_effect = yes
+	}
+}
+
+pellagra = {
+	trait = pellagra
+	color = { 100 23 72 }
+	priority = 4
+	shader_data = {
+		strength = 0.7
+		edge_fade = 0.5
+		tile_multiplier = 0.005
+		texture_index = 0
+		channel = green
+	}
+
+	name = {
+		first_valid = {
+			random_valid = {
+				triggered_desc = {
+					trigger = {
+						OR = {
+							outbreak_intensity = major
+							outbreak_intensity = apocalyptic
+						}
+					}
+					desc = epidemic_pellagra
+				}
+				desc = epidemic_steppe_sores
+				desc = epidemic_aironoian_burns
+				desc = epidemic_realm_sores
+				desc = epidemic_ruler_sores
+				desc = epidemic_spotted_fever
+			}
+			desc = trait_pellagra
+		}
+	}
+
+	on_start = {
+		if = {
+			limit = { NOT = { has_global_variable = pellagra_happened } }
+			set_global_variable = {
+				name = pellagra_happened
+				value = 1
+			}
+		}
+		else = {
+			change_global_variable = {
+				name = pellagra_happened
+				add = 1
+			}
+		}
+
+		# LEGITIMACY LOSS FROM OUTBREAK
+		epidemic_outbreak_legitimacy_effect = { PROVINCE = root.outbreak_province }
+	}
+
+	on_monthly = {
+		trigger_event = {
+			on_action = epidemic_ongoing_events
+		}
+	}
+
+	character_infection_chance = {
+		value = character_infection_chance_pellagra_value
+	}
+
+	can_infect_character = {
+		can_contract_disease_trigger = { DISEASE = pellagra }
+		immune_to_epidemic = { EPIDEMIC = scope:epidemic }
+	}
+
+	on_character_infected = {
+		contract_disease_notify_effect = { DISEASE = pellagra }
+	}
+
+	infection_levels = {
+		10 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.15
+				county_opinion_add = -2
+				epidemic_travel_danger = 10
+				development_decline = -1.5
+			}	
+		}
+		50 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.3
+				development_decline = -2.5
+				supply_limit_mult = -0.1
+				county_opinion_add = -3
+				epidemic_travel_danger = 20
+			}	
+		}
+		80 = {
+			province_modifier = {
+				monthly_county_control_decline_add = -0.5
+				development_decline = -4
+				supply_limit_mult = -0.2
+				county_opinion_add = -5
+				epidemic_travel_danger = 30
+			}
+		}
+	}
+
+	outbreak_intensities = {
+		minor = {
+			outbreak_chance = {
+				value = outbreak_chance_minor_default_value
+				multiply = outbreak_chance_minor_mult_value
+
+				# Are you in Corn Country?
+				if = {
+					limit = {
+						NOT = { geographical_region = GH_corn_distribution_region }
+					}
+					multiply = 0
+				}
+				
+				if = {
+					limit = { has_variable = pellagra_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 1 11 }
+
+			infection_duration = {  months = { 6 12 } }
+
+			infection_progress_duration = { days = { 60 100 } }
+
+			infection_recovery_duration = { days = { 30 60 } }
+		}
+
+		major = {
+			outbreak_chance = {
+				value = outbreak_chance_major_default_value
+				multiply = outbreak_chance_major_mult_value
+
+				# Are you in Corn Country?
+				if = {
+					limit = {
+						NOT = { geographical_region = GH_corn_distribution_region }
+					}
+					multiply = 0
+				}
+				
+				if = {
+					limit = { has_variable = pellagra_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 13 38 }
+
+			infection_duration = {  months = { 8 14 } }
+
+			infection_progress_duration = { days = { 60 100 } }
+
+			infection_recovery_duration = { days = { 30 60 } }
+		}
+
+		apocalyptic = {
+			outbreak_chance = {
+				value = outbreak_chance_apocalyptic_default_value
+				multiply = outbreak_chance_apocalyptic_mult_value
+
+				# Are you in Corn Country?
+				if = {
+					limit = {
+						NOT = { geographical_region = GH_corn_distribution_region }
+					}
+					multiply = 0
+				}
+				
+				if = {
+					limit = { has_variable = pellagra_endemic_variable }
+					add = outbreak_increase_add_high
+				}
+				else = {
+					multiply = recent_epidemics_outbreak_mult_value
+				}
+			}
+			spread_chance = {
+				value = spread_chance_epidemics_default_value
+				multiply = spread_chance_epidemics_mult_value
+			}
+			max_provinces = { 60 132 }
+
+			infection_duration = {  months = { 20 40 } }
+
+			infection_progress_duration = { days = { 15 30 } }
+
+			infection_recovery_duration = { days = { 30 60 } }
+		}
+	}
+
+	on_province_infected = {
+		county = {
+			apply_infection_development_loss = { BASE = 7 }
+		}
+		#cant_touch_this_achievement_effect = yes
+	}
+
+
+	on_province_recovered = {
+		random = { #Endemism
+			chance = 10
+			set_variable = {
+				name = pellagra_endemic_variable
+				years = 2
+			}
+		}
+		county = {
+			remove_isolated_capital_modifiers_effect = yes
+		}
+		add_to_variable_list = {
+			name = epidemic_cooldown
+			target = scope:epidemic.epidemic_type
+			years = 50 #can come back quite fast
+		}
+		set_variable = {
+			name = epidemic_cooldown_general
+			years = 15
+		}
+		# Prosperity event
+		plague_recovery_event_effect = yes
+	}
+}

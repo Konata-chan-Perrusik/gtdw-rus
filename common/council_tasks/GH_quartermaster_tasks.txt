@@ -1,0 +1,359 @@
+﻿task_manage_crew = {
+	default_task = yes
+	position = councillor_quartermaster
+	
+	task_type = task_type_general
+	task_progress = task_progress_infinite
+	
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_manage_crew.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+	effect_desc = {
+		desc = task_manage_crew_effect_desc
+		desc = {
+			desc = council_task_possible_side_effects
+			triggered_desc = {
+				trigger = {
+					stewardship > mediocre_skill_rating
+				}
+				desc = task_manage_crew_recruitment_drive
+			}
+			triggered_desc = {
+				trigger = {
+					stewardship > mediocre_skill_rating
+				}
+				desc = task_manage_crew_tall_tales_spread
+			}
+			triggered_desc = {
+				trigger = {
+					stewardship < high_skill_rating
+					any_sub_realm_county = {
+						steward_task_county_corruption_county_trigger = yes	# Intentionally reused the steward trigger since the logic is the same
+					}
+				}
+				desc = task_manage_crew_disorganized_crew
+			}
+			triggered_desc = {
+				trigger = {
+					stewardship < high_skill_rating
+					any_sub_realm_county = {
+						steward_task_county_corruption_county_trigger = yes
+					}
+				}
+				desc = task_manage_crew_mutiny
+			}
+		}
+	}
+
+	council_owner_modifier = {
+		name = task_manage_crew_modifier
+		raid_speed = 1
+		scale = quartermaster_manage_crew_raid_speed
+	}
+
+	council_owner_modifier = {
+		name = task_manage_crew_modifier
+		naval_movement_speed_mult = 1
+		scale = quartermaster_manage_crew_naval_speed
+	}
+
+	council_owner_modifier = {
+		name = task_manage_crew_modifier
+		army_maintenance_mult = -1
+		scale = quartermaster_manage_crew_army_maintenance
+	}
+	
+	on_cancel_task = {
+		scope:councillor_liege = {
+			if = {
+				limit = {
+					has_character_flag = crew_managed
+				}
+				remove_character_flag = crew_managed
+			}
+		}
+	}
+
+	on_start_task = {
+		liege = {
+			add_character_flag = { flag = crew_managed }
+			add_character_flag = {
+				flag = no_quartermaster_side_effects_first_month
+				days = 30
+			}
+		}
+	}
+	
+	on_monthly = {
+		liege = {
+			if = {
+				limit = {
+					has_character_flag = no_quartermaster_side_effects_first_month
+				}
+				remove_character_flag = no_quartermaster_side_effects_first_month
+			}
+			else = {
+				trigger_event = {
+					on_action = task_manage_crew_side_effects
+					days = { 1 30 }
+				}
+			}
+		}
+	}
+	
+	ai_will_do = {
+		value = 1	# Always a good backup
+	}
+}
+
+task_commerce_raid = {
+	default_task = no
+	position = councillor_quartermaster
+	task_type = task_type_county
+	county_target = all
+	task_progress = task_progress_infinite
+	restart_on_finish = yes
+
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_commerce_raid.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+
+	effect_desc = {
+		desc = task_commerce_raid_desc
+
+		desc = {
+			triggered_desc = {
+				trigger = {
+					exists = liege
+					liege = {
+						quartermaster_commerce_raid_income >= quartermaster_commerce_shadow_trade_cap
+					}
+				}
+				desc = task_commerce_raid_effect_desc_2
+			}
+			triggered_desc = {
+				trigger = {
+					exists = liege
+					liege = {
+						quartermaster_commerce_raid_income < quartermaster_commerce_shadow_trade_cap
+					}
+				}
+				desc = task_commerce_raid_effect_desc_1
+			}
+			#desc = task_commerce_raid_straits_income
+			desc = council_task_possible_side_effects
+			triggered_desc = {
+				trigger = {
+					stewardship > mediocre_skill_rating
+				}
+				desc = task_commerce_raid_capture_ship
+			}
+			triggered_desc = {
+				trigger = {
+					stewardship > mediocre_skill_rating
+				}
+				desc = task_commerce_raid_kidnap_captives
+			}
+			triggered_desc = {
+				trigger = {
+					stewardship < high_skill_rating
+				}
+				desc = task_commerce_raid_failed_raids
+			}
+			triggered_desc = {
+				trigger = {
+					stewardship < high_skill_rating
+				}
+				desc = task_commerce_raid_anger_ruler
+			}
+		}
+	}
+
+	potential_county = {
+		liege = {
+			is_target_in_variable_list = {
+				name = nearby_coastal_counties
+				target = scope:county
+			}
+		}
+	}
+
+	on_start_task = {
+		liege = {
+			add_character_flag = {
+				flag = no_commerce_raid_side_effects_first_month
+				days = 30
+			}
+		}
+	}
+
+	on_monthly = {
+		if = {
+			limit = { exists = liege }
+			liege = {
+				if = {
+					limit = {
+						quartermaster_commerce_raid_income >= quartermaster_commerce_shadow_trade_cap
+					}
+					add_gold = {
+						add = quartermaster_commerce_shadow_trade_cap
+					}
+				}
+				else = {
+					add_gold = {
+						add = quartermaster_commerce_raid_income
+					}
+				}
+				if = {
+					limit = {
+						has_character_flag = no_commerce_raid_side_effects_first_month
+					}
+					remove_character_flag = no_commerce_raid_side_effects_first_month
+				}
+				else = {
+					trigger_event = {
+						on_action = task_commerce_raid_side_effects
+						days = { 1 30 }
+					}
+				}
+			}
+		}
+	}
+}
+
+task_establish_shadow_port = {
+	position = councillor_quartermaster
+	
+	task_type = task_type_county
+	county_target = all
+	ai_county_target = neighbor_land
+	task_progress = task_progress_percentage
+	restart_on_finish = yes
+	
+	asset = {
+		icon = "gfx/interface/icons/council_task_types/task_establish_shadow_port.dds"
+		background = "gfx/interface/buttons/button_round_bg.dds"
+		frame = "gfx/interface/buttons/button_round_frame.dds"
+		glow = "gfx/particles/halo.dds"
+	}
+	
+	effect_desc = {
+		desc = task_establish_shadow_port_desc
+		triggered_desc = {
+			trigger = {
+				exists = scope:county
+			}
+			desc = task_establish_shadow_port_control_desc
+		}
+		desc = council_task_possible_side_effects
+		desc = possible_side_effects
+	}
+
+	progress = {
+		value = 0
+		add = {
+			value = quartermaster_establish_shadow_port_base
+			desc = QUARTERMASTER_PROGRESS_BASE
+		}
+		add = {
+			value = scope:councillor.quartermaster_establish_shadow_port_monthly_increase_base
+			desc = SCALED_COUNCILLOR_STEWARDSHIP_VALUE
+		}
+		if = { # Friend
+			limit = {
+				scope:councillor_liege = {
+					has_relation_friend = scope:councillor
+					NOT = { has_relation_best_friend = scope:councillor }
+				}
+			}
+			add = {
+				value = scope:councillor.quartermaster_establish_shadow_port_monthly_increase_friend_bonus
+				desc = COUNCILLOR_IS_YOUR_FRIEND
+			}
+		}
+		if = { # Best Friend
+			limit = {
+				scope:councillor_liege = {
+					has_relation_best_friend = scope:councillor
+				}
+			}
+			add = {
+				value = scope:councillor.quartermaster_establish_shadow_port_monthly_increase_best_friend_bonus
+				desc = COUNCILLOR_IS_YOUR_BEST_FRIEND
+			}
+		}
+		if = { # Rival
+			limit = {
+				scope:councillor_liege = {
+					has_relation_rival = scope:councillor
+					NOT = { has_relation_nemesis = scope:councillor }
+				}
+			}
+			add = {
+				value = scope:councillor.quartermaster_establish_shadow_port_monthly_increase_rival_bonus
+				desc = COUNCILLOR_IS_YOUR_RIVAL
+			}
+		}
+		if = { # Nemesis
+			limit = {
+				scope:councillor_liege = {
+					has_relation_nemesis = scope:councillor
+				}
+			}
+			add = {
+				value = scope:councillor.quartermaster_establish_shadow_port_monthly_increase_nemisis_bonus
+				desc = COUNCILLOR_IS_YOUR_NEMESIS
+			}
+		}
+		#Perk Bonuses
+		if = {
+			limit = {
+				exists = scope:councillor_liege.dynasty
+				scope:councillor_liege.dynasty = { has_dynasty_perk = erudition_legacy_5 }
+			}
+			add = {
+				value = scope:councillor.quartermaster_establish_shadow_port_dynasty_perk_bonus
+				desc = ESTABLISH_SHADOW_PORT_DYNASTY_PERK_BONUS_VALUE
+			}
+		}
+	}
+
+	potential_county = {
+		liege = {
+			is_target_in_variable_list = {
+				name = nearby_coastal_counties
+				target = scope:county
+			}
+			NOT = {
+				is_target_in_variable_list = {
+					name = shadow_ports
+					target = scope:county
+				}
+			}
+		}
+		scope:county = {
+			NOT = { county_control > 99 }
+		}
+	}
+
+	on_finish_task_county = {
+		scope:councillor_liege = {
+			trigger_event = quartermaster_task.1001
+		}
+	}
+
+	on_start_task = {
+		liege = {
+			add_character_flag = {
+				flag = no_quartermaster_side_effects_first_month
+				days = 30
+			}
+		}
+	}
+}

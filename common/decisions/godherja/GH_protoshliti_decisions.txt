@@ -1,0 +1,111 @@
+﻿###################################
+##DECISIONS LIST##
+#hire_protoshliti_warrior_decision
+#hire_protoshliti_legon_decision
+###################################
+
+##########################
+# Hire Protoshliti Warrior
+# by ScionEol
+
+hire_protoshliti_warrior_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_dueling_knights_hf.dds"
+	}
+	cooldown = { years = 10 }
+	desc = hire_protoshliti_warrior_decision_desc
+	decision_group_type = aversarian
+	selection_tooltip = hire_protoshliti_warrior_decision_tooltip
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_aversarian }
+		is_playable_character = yes
+		OR = {
+			title:c_golgembria.holder = { is_vassal_or_below_of = root }
+			realm_to_title_distance_squared = {
+				title = title:c_golgembria
+				value <= squared_distance_large
+			}
+		}
+	}
+	
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_aversarian }
+		prestige_level >= 2
+		highest_held_title_tier >= tier_duchy
+		title:b_schlewenhof = { title_province = { has_building_or_higher = 02_champion_grounds } }
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+	}
+
+	effect = {
+		trigger_event = protoshliti.0001
+		custom_tooltip = hire_protoshliti_warrior_decision_tooltip
+	}
+
+	ai_check_interval = 240
+
+	ai_potential = {
+		short_term_gold > medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 50
+	}
+}
+
+##########################
+# Hire Protoshliti Legon
+# by ScionEol
+
+hire_protoshliti_legon_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_aversaria.dds"
+	}
+	cooldown = { years = 10 }
+	desc = hire_protoshliti_legon_decision_desc
+	decision_group_type = aversarian
+	selection_tooltip = hire_protoshliti_legon_decision_tooltip
+	
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_aversarian }
+		is_playable_character = yes
+		OR = {
+			title:c_golgembria.holder = { is_vassal_or_below_of = root }
+			realm_to_title_distance_squared = {
+				title = title:c_golgembria
+				value <= squared_distance_large
+			}
+		}
+	}
+	
+	is_valid = {
+		culture = { has_cultural_pillar = heritage_aversarian }
+		prestige_level >= 4
+		highest_held_title_tier >= tier_duchy
+		title:b_schlewenhof = { title_province = { has_building = 03_champion_grounds } }
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+	}
+
+	effect = {
+		trigger_event = protoshliti.0002
+		custom_tooltip = hire_protoshliti_legon_decision_tooltip
+	}
+
+	ai_check_interval = 240
+
+	ai_potential = {
+		short_term_gold > medium_gold_value
+	}
+
+	ai_will_do = {
+		base = 50
+	}
+}

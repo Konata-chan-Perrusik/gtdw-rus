@@ -1,0 +1,236 @@
+﻿
+#########################
+# GENERAL SPELL EFFECTS #
+#########################
+
+spread_to_additional_targets_effect = {
+	# TODO
+}
+
+##################################
+# CHARACTER-LEVEL SPELL BACKFIRE #
+##################################
+
+wild_magic_backfire_negative_effect = {
+	# GH URGENT: Don't forget to update this after fixing up modifier
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_health_negative 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_diplomacy_loss_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_martial_loss_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_stewardship_loss_modifier TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_intrigue_loss_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_learning_loss_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_prowess_loss_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_tyranny_gain_mult_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_monthly_tyranny_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_stress_gain_mult_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_monthly_income_loss_mult_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_monthly_piety_loss_mult_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+	#set_stacking_modifier_to_level_if_activated_effect = { MODIFIER = magic_monthly_prestige_loss_mult_modifier 	TYPE = character LEVEL = scope:spell_being_casted.aspect_total_spell_level_value 	START_AFTER_LEVEL = 0	CAP = 10 YEARS = 2 }
+}
+
+generate_wild_magic_backfire_negative_effect = {
+	random_list = {
+		pick = 3
+		10 = { save_scope_value_as = { name = magic_health_negative value = yes } }
+		3 = { save_scope_value_as = { name = magic_diplomacy_loss_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_martial_loss_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_stewardship_loss_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_intrigue_loss_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_learning_loss_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_prowess_loss_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_stress_gain_mult_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magc_monthly_income_loss_mult_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_monthly_piety_loss_mult_modifier value = yes } }
+		3 = { save_scope_value_as = { name = magic_monthly_prestige_loss_mult_modifier value = yes } }
+		1 = { save_scope_value_as = { name = magic_tyranny_gain_mult_modifier value = yes } }
+		1 = { save_scope_value_as = { name = magic_monthly_tyranny_modifier value = yes } }
+	}
+}
+
+###################
+# UTILITY EFFECTS #
+###################
+
+dream_glimpse_reality_effect = {
+	if = {
+		limit = { NOT = { has_character_flag =  casted_glimpse_reality } }
+		custom_tooltip = glimpse_reality.tooltip
+		trigger_event = glimpse_reality.0001
+		if = {
+			limit = {
+				root = {
+					dream_aspect_skill_trigger = { VALUE = 10 }
+				}
+			}
+			if = {
+				limit = {
+					root = {
+						dream_aspect_skill_trigger = { VALUE = 20 }
+					}
+				}
+				add_character_flag = {
+					flag = casted_glimpse_reality
+					years = 1
+				}
+			}
+			else = {
+				add_character_flag = {
+					flag = casted_glimpse_reality
+					years = 2
+				}
+			}
+		}
+		else = {
+			add_character_flag = {
+				flag = casted_glimpse_reality
+				years = 3
+			}
+		}
+	}
+	else = {
+		custom_tooltip = {
+			text = glimpse_reality_limited_tt
+			add_stress = major_stress_impact_gain
+		}
+	}
+}
+
+
+defiled_nadir_setup_effect = {
+	$CASTER$ = {
+		save_scope_as = defiled_nadir_caster
+		if = { # Trying to bind oneself to multiple masks comes with severe consequences
+			limit = {
+				exists = var:defiled_nadir_bound_mask
+				NOT = { any_equipped_character_artifact = { this = scope:defiled_nadir_caster.var:defiled_nadir_bound_mask } }
+			}
+			var:defiled_nadir_bound_mask = { save_scope_as = old_defiled_nadir_bound_mask }
+			custom_tooltip = {
+				text = defiled_nadir_setup_effect_broken_bond
+				add_character_modifier = {
+					modifier = magic_defiled_nadir_broken_bond_modifier
+					years = 5
+				}
+			}
+			remove_variable = defiled_nadir_bound_mask
+		}
+		if = { # Create a new mask artifact if none is equipped
+			limit = { NOT = { any_equipped_character_artifact = { artifact_type = oltenic_mask } } }
+			save_scope_value_as = {
+				name = quality
+				value = { 50 80 }
+			}
+			save_scope_value_as = {
+				name = wealth
+				value = { 30 50 }
+			}
+			location = { save_scope_as = artifact_origin }
+			create_artifact_oltenic_mask_effect = { OWNER = scope:defiled_nadir_caster SMITH = scope:defiled_nadir_caster LOCATION = scope:artifact_origin }
+			hidden_effect_new_object = { scope:newly_created_artifact = { save_scope_as = extant_mask_artifact } }
+			set_variable = {
+				name = defiled_nadir_bound_mask
+				value = scope:extant_mask_artifact
+			}
+			create_story = defiled_nadir_progression_story
+			custom_tooltip = defiled_nadir_setup_effect_new_mask_tooltip
+			custom_tooltip = defiled_nadir_setup_effect_equip_tooltip
+			custom_tooltip = defiled_nadir_warning_tt
+		}
+		else_if = { # Bind oneself to a new mask
+			limit = {
+				any_equipped_character_artifact = {
+					artifact_type = oltenic_mask
+					NOT = {
+						is_target_in_variable_list = {
+							name = boundees
+							target = scope:defiled_nadir_caster
+						}
+					}
+				}
+			}
+			random_equipped_character_artifact = {
+				limit = { artifact_type = oltenic_mask }
+				save_scope_as = extant_mask_artifact
+				scope:defiled_nadir_caster = {
+					set_variable = {
+						name = defiled_nadir_bound_mask
+						value = prev
+					}
+				}
+			}
+			if = { # Create a story if casting on a mask that is not a target of a story already
+				limit = { scope:extant_mask_artifact = { NOT = { has_variable_list = boundees } } }
+				create_story = defiled_nadir_progression_story
+			}
+			custom_tooltip = defiled_nadir_setup_effect_extant_mask_tooltip
+			custom_tooltip = defiled_nadir_warning_tt
+		}
+		hidden_effect_new_object = { # Name update, recording, and cleanup
+			var:defiled_nadir_bound_mask = {
+				if = {
+					limit = {
+						NOT = {
+							is_target_in_variable_list = {
+								name = boundees
+								target = $CASTER$
+							}
+						}
+					}
+					add_to_variable_list = {
+						name = boundees
+						target = $CASTER$
+					}
+					var:associated_defiled_nadir_story = {
+						add_to_variable_list = {
+							name = story_boundees
+							target = $CASTER$
+						}
+					}
+				}
+				equip_artifact_to_owner_replace = yes
+				set_artifact_name = awakened_mask_name_bound
+			}
+		}
+	}
+}
+
+####################
+# ARTIFACT EFFECTS #
+####################
+
+kemsar_restoration_effect = {
+	custom_description = {
+		text = kemsar_restores_terrain
+		title:e_kemsar = { gh_set_dynamic_terrain_variant_effect = { VARIANT = default } }
+	}
+	custom_description = {
+		text = kemsar_restores_counties
+		every_county_in_region = {
+			region = kemsar_biozone
+			change_development_level = 3
+			#every_province = { remove_province_modifier = extreme_desert_modifier }
+		}
+	}
+}
+random_elementalist_upgrade_effect = {
+	$CASTER$ = {
+		if = {
+			limit = { 
+				NOT = { has_trait = gh_elementalist } 
+			}
+			random = {
+				chance = {
+					value = character_arcana_baseline_value
+				}
+				add_trait = gh_elementalist
+			}
+		}
+		else = {
+			add_trait_xp = {
+				trait = gh_elementalist
+				track = $TRACK$
+				value = spell_casting_gh_elementalist_xp
+			}
+		}
+	}
+}

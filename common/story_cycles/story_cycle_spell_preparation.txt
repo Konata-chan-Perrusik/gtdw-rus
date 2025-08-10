@@ -1,0 +1,77 @@
+﻿story_spell_preparation = {
+
+	on_setup = {
+		
+	}
+
+	effect_group = {
+		years = 1
+
+		trigger = {
+			exists = var:remaining_lifespan
+		}
+		first_valid = {
+			triggered_effect = {
+				trigger = { var:remaining_lifespan <= 1 }
+				effect = { end_story = yes }
+			}
+			triggered_effect = {
+				trigger = { var:remaining_lifespan > 1 }
+				effect = { change_variable = { name = remaining_lifespan subtract = 1 } }
+			}
+		}
+	}
+
+	on_end = {
+		if = {
+			limit = { has_variable_list = spell_component_being_prepared_list }
+			every_in_list = {
+				variable = spell_component_being_prepared_list
+				end_story = yes
+			}
+		}
+		if = {
+			limit = { story_owner = { is_alive = yes } }
+			story_owner = {
+				remove_list_variable = {
+					name = owned_hex_list
+					target = prev
+				}
+			}
+		}
+		if = {
+			limit = { has_variable_list = spell_targets }
+			every_in_list = {
+				variable = spell_targets
+				remove_list_variable = {
+					name = hex_list
+					target = prev
+				}
+			}
+		}
+		if = {
+			limit = { has_variable_list = spell_target_titles }
+			every_in_list = {
+				variable = spell_target_titles
+				remove_list_variable = {
+					name = hex_list
+					target = prev
+				}
+			}
+		}
+		if = {
+			limit = { has_variable_list = spell_target_artifacts }
+			every_in_list = {
+				variable = spell_target_artifacts
+				remove_list_variable = {
+					name = hex_list
+					target = prev
+				}
+			}
+		}
+	}
+
+	on_owner_death = {
+		end_story = yes
+	}
+}

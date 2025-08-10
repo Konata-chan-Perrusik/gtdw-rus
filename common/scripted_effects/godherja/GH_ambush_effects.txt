@@ -1,0 +1,546 @@
+﻿#Ambushes
+
+gh_create_ambush = {
+	# Fogeater Ambush
+	if = { 
+		limit = { scope:target_location.county = { has_county_modifier = fogswept_modifier } }
+		set_variable = {
+			name = ambush_culture
+			value = culture:fog_eaters
+		}
+		set_variable = {
+			name = ambush_faith
+			value = faith:fogeater
+		}
+		save_scope_value_as = {
+			name = ambush_location
+			value = flag:foglands
+		}
+		random_list = {
+			50 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:fogbeasts
+				}
+			}
+			50 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:wodes
+				}
+			}
+		}
+		debug_log = "Foglands Ambush"
+	}
+	# Lichdoms Ambush
+	else_if = { 
+		limit = { scope:target_location = { terrain = deadlands } }
+		set_variable = {
+			name = ambush_culture
+			value = culture:undead_culture
+		}
+		set_variable = {
+			name = ambush_faith
+			value = faith:rejection
+		}
+		save_scope_value_as = {
+			name = ambush_location
+			value = flag:lichdoms
+		}
+		random_list = {
+			50 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:skeleton
+				}
+			}
+			50 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:skeleton_archers
+				}
+			}
+			50 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:undead_skirmishers
+				}
+			}
+		}
+		
+		debug_log = "Lichdoms Ambush"
+	}
+	# Redlands Ambush
+	else_if = { 
+		limit = { 
+			scope:target_location = { 
+				OR = { 
+					terrain = redlands_drylands
+					terrain = redlands_desert
+					terrain = redlands_mountains
+					terrain = redlands_chasms
+				}
+			}
+			
+		}
+		set_variable = {
+			name = ambush_culture
+			value = culture:redlander
+		}
+		set_variable = {
+			name = ambush_faith
+			value = faith:redland_cults
+		}
+		
+		save_scope_value_as = {
+			name = ambush_location
+			value = flag:redlands
+		}
+		random_list = {
+			150 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:chasm_terrors
+				}
+			}
+			100 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:lesser_voidspawns
+				}
+			}
+			50 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:archonarachs
+				}
+			}
+			125 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:redland_cultists
+				}
+			}
+			75 = {
+				save_scope_value_as = {
+					name = ambush_maa
+					value = flag:voidhosts
+				}
+			}
+		}
+		set_variable = magi_ambusher
+		debug_log = "Redlands Ambush"
+	}
+	# Nattanan Ambush
+	else_if = { 
+		limit = { scope:target_location.county = { has_county_modifier = jerniems_protection_modifier } }
+		set_variable = {
+			name = ambush_culture
+			value = culture:nattanan
+		}
+		set_variable = {
+			name = ambush_faith
+			value = faith:nathanalmic 
+		}
+		save_scope_value_as = {
+			name = ambush_location
+			value = flag:nattanan_jungle
+		}
+		random_list = {
+					150 = {
+						save_scope_value_as = {
+							name = ambush_maa
+							value = flag:small_leshens
+						}
+					}
+					75 = {
+						save_scope_value_as = {
+							name = ambush_maa
+							value = flag:medium_leshens
+						}
+					}
+					25 = {
+						save_scope_value_as = {
+							name = ambush_maa
+							value = flag:large_leshens
+						}
+					}
+				}
+		set_variable = magi_ambusher
+		debug_log = "Nattanan Ambush"
+	}
+	else = { debug_log = "Not getting assigned an ambusher faith and culture" }
+	if = {
+		limit = { exists = var:magi_ambusher }
+		create_character = {
+			template = ambusher_magi_template #peasant_faction_leader_template
+			save_scope_as = ambusher
+			location = scope:target_location
+			culture = var:ambush_culture
+			faith = var:ambush_faith
+		}
+	}
+    else = {
+        create_character = {
+			template = ambusher_character_template #peasant_faction_leader_template
+			save_scope_as = ambusher
+			location = scope:target_location
+			culture = var:ambush_culture
+			faith = var:ambush_faith
+		}
+    }
+	# Set up title so that war can be declared
+	create_dynamic_title = {
+		tier = duchy
+		name = d_ambush
+	}
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	scope:new_title = {
+			set_capital_county = $TARGET$.capital_county
+			set_landless_title = yes
+			set_destroy_on_succession = yes
+			set_delete_on_destroy = yes
+			set_no_automatic_claims = yes
+			set_definitive_form = yes
+			set_can_be_named_after_dynasty = no
+			change_title_holder = {
+				holder = scope:ambusher
+				change = scope:change
+			}	
+	}
+	resolve_title_and_vassal_change = scope:change
+}
+
+
+
+##########################################################
+
+gh_spawn_ambush_army = { # TARGET
+	if = {
+		# Fogeater MAA
+		limit = { scope:target_location.county = { has_county_modifier = fogswept_modifier } }
+		random_list = {
+			50 = {
+				set_variable = {
+					name = ambush_maa
+					value = flag:fogbeasts
+				}
+			}
+			50 = {
+				set_variable = {
+					name = ambush_maa
+					value = flag:wodes
+				}
+			}
+		}
+	}	
+	scope:ambusher = {
+		hidden_effect = {add_gold = 100}
+		start_war = {
+			cb = ambush_cb
+			target = $TARGET$
+			target_title = $TARGET$.primary_title
+		}
+		if = {
+			limit = {exists = scope:target_location }
+			if = {
+				limit = { scope:ambush_maa = flag:fogbeasts }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = fogbeasts
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:wodes }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = wodes
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:skeleton }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = skeleton
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:skeleton_archers }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = skeleton_archers
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:undead_skirmishers }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = undead_skirmishers
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:chasm_terrors }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = chasm_terrors
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:lesser_voidspawns }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = lesser_voidspawns
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:archonarachs }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = archonarachs
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:redland_cultists }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = redland_cultists
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:voidhosts }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = voidhosts
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:small_leshens }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 25
+					men_at_arms = {
+						type = leshens
+						stacks = 4
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:medium_leshens }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 50
+					men_at_arms = {
+						type = leshens
+						stacks = 8
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:large_leshens }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 100
+					men_at_arms = {
+						type = leshens
+						stacks = 16
+					}
+					location = scope:target_location
+				}
+			}
+		}
+		else = {
+ 			if = {
+				limit = { scope:ambush_maa = flag:fogbeasts }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = fogbeasts
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:wodes }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = wodes
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:skeleton }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = skeleton
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:skeleton_archers }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = skeleton_archers
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:undead_skirmishers }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = undead_skirmishers
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:chasm_terrors }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = chasm_terrors
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:lesser_voidspawns }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = lesser_voidspawns
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:archonarachs }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = archonarachs
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:redland_cultists }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = redland_cultists
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:voidhosts }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = voidhosts
+						stacks = 6
+					}
+					location = scope:target_location
+				}
+			}
+			else_if = {
+				limit = { scope:ambush_maa = flag:leshens }
+				spawn_army = {
+					name = ambush_army_name
+					levies = 0
+					men_at_arms = {
+						type = leshens
+						stacks = 10
+					}
+					location = scope:target_location
+				}
+			}
+		}
+	}
+}
+
+
+
+

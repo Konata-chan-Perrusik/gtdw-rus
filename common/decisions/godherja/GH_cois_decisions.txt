@@ -1,0 +1,426 @@
+﻿##################
+##DECISIONS LIST##
+
+############################
+# COIS STORYLINE DECISIONS #
+############################
+# By Hapchazzard
+
+abolish_the_conclave_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = abolish_the_conclave_decision_desc 
+	selection_tooltip = abolish_the_conclave_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		is_independent_ruler = yes
+		OR = {
+			any_vassal_or_below = {
+				this = faith:omitilos_aagiokrata.religious_head
+			}
+			has_title = faith:omitilos_aagiokrata.religious_head_title
+			trigger_if = {
+				limit = { 
+					faith:omitilos_aagiokrata = {
+						religious_head_title = {
+							is_title_created = no
+						}
+					}
+				}
+				has_faith = faith:omitilos_aagiokrata
+			}
+		}
+		NOR = {
+			has_character_flag = already_abolished_conclave
+			has_character_flag = already_strengthened_conclave
+		}
+	}
+	is_valid = {
+		AND = {
+			custom_description = {
+				text = conclave_faction_power_below_50
+				trigger_if = {
+					limit = { any_targeting_faction = { faction_is_type = omiltos_conclave_faction } }
+					any_targeting_faction = {
+						faction_is_type = omiltos_conclave_faction
+						faction_power <= 50
+					}
+				}
+				trigger_else = {
+					always = yes
+				}
+			}
+			custom_description = {
+				text = rhesus_defeated
+				OR = {
+					faith:omitilos_aagiokrata = {
+						religious_head_title = {
+							is_title_created = no
+						}
+					}
+					faith:omitilos_aagiokrata.religious_head = { character_rhesus_trigger = no }
+				}
+			}
+		}
+	}
+	effect = {
+		add_character_flag = already_abolished_conclave
+		show_as_tooltip = {
+			custom_tooltip = abolish_the_conclave_decision_tt
+		}
+		if = {
+			limit = { 
+				faith:omitilos_aagiokrata = {
+					religious_head_title = {
+						is_title_created = yes
+					}
+				}
+			}
+			destroy_title = faith:omitilos_aagiokrata.religious_head_title
+		}
+		trigger_event = cois.0011
+	}
+	cost = {
+		piety = {
+			value = 100
+		}
+	}
+}
+
+sjalvolki_defectors_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = sjalvolki_defectors_decision_desc 
+	selection_tooltip = sjalvolki_defectors_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		character_special_migrant_coalition_alive_and_active_trigger = yes
+		has_variable = cois_defeated_cenware
+		NOT = {
+			has_variable = recently_accepted_sjalvolki
+		}
+	}
+	effect = {
+		set_variable = {
+			name = recently_accepted_sjalvolki
+			months = 6
+		}
+		show_as_tooltip = {
+			custom_tooltip = sjalvolki_defectors_decision_tt
+		}
+		show_as_tooltip = {
+			custom_tooltip = sjalvolki_defectors_decision_increases_event_troops_tt
+		}
+		show_as_tooltip = {
+			custom_tooltip = sjalvolki_defectors_decision_unpopular_tt
+		}
+		trigger_event = cois.0013
+	}
+	cost = {
+		prestige = {
+			value = 200
+		}
+	}
+}
+
+invite_legio_axiaothea_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = invite_legio_axiaothea_decision_desc 
+	selection_tooltip = invite_legio_axiaothea_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		has_variable = cois_defeated_cenware
+		character_special_migrant_coalition_alive_and_active_trigger = yes
+		NOT = {
+			has_variable = already_invited_legio_axiaothea
+		}
+		OR = {
+			character:westernimperial_aeschraes_aagiokrata_1 = { is_alive = yes }
+			has_character_flag = killed_aeschraes
+		}
+	}
+	is_valid = {
+		custom_description = {
+			text = aeschraes_killed
+			has_character_flag = killed_aeschraes
+		}
+	}
+	effect = {
+		set_variable = already_invited_legio_axiaothea
+		trigger_event = cois.0014
+		show_as_tooltip = {
+			custom_tooltip = invite_legio_axiaothea_decision_tt
+		}
+	}
+}
+
+ask_conclave_for_help_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = ask_conclave_for_help_decision_desc 
+	selection_tooltip = ask_conclave_for_help_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		character_special_migrant_coalition_alive_and_active_trigger = yes
+		has_variable = cois_defeated_cenware
+		NOR = {
+			has_character_flag = already_asked_conclave_for_help
+			has_character_flag = already_abolished_conclave
+			has_character_flag = already_strengthened_conclave
+			has_character_flag = purged_conclave
+		}
+	}
+	effect = {
+		add_character_flag = already_asked_conclave_for_help
+		show_as_tooltip = {
+			custom_tooltip = ask_conclave_for_help_decision_tt
+		}
+		show_as_tooltip = {
+			custom_tooltip = sjalvolki_defectors_decision_increases_event_troops_tt
+		}
+		show_as_tooltip = {
+			custom_tooltip = ask_conclave_for_help_decision_increases_concave_power_tt
+		}
+		show_as_tooltip = {
+			custom_tooltip = ask_conclave_for_help_decision_conclave_immune_tt
+		}
+		trigger_event = cois.0015
+	}
+	cost = {
+		prestige = {
+			value = 200
+		}
+	}
+}
+
+move_against_conclave_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = move_against_conclave_decision_desc 
+	selection_tooltip = move_against_conclave_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		faith:omitilos_aagiokrata.religious_head = character:westernimperial_omitilos_aagiokrata_1
+		any_targeting_faction = {
+			faction_is_type = omiltos_conclave_faction
+			faction_is_at_war = no
+			any_faction_member = { character_rhesus_trigger = no}
+		}
+	}
+	is_valid = {
+		custom_description = {
+			text = move_against_conclave_cooldown
+			NOT = { has_variable = moved_against_conclave }
+		}
+	}
+	effect = {
+		set_variable = {
+			name = moved_against_conclave
+			days = 180
+		}
+		trigger_event = cois.0030
+		show_as_tooltip = {
+			custom_tooltip = move_against_conclave_decision_tt
+		}
+	}
+}
+
+purge_conclave_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = no
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = purge_conclave_decision_desc 
+	selection_tooltip = purge_conclave_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		faith:omitilos_aagiokrata.religious_head = character:westernimperial_omitilos_aagiokrata_1
+		trigger_if = {
+			limit = { any_targeting_faction = { faction_is_type = omiltos_conclave_faction } }
+			any_targeting_faction = {
+				faction_is_type = omiltos_conclave_faction
+				faction_power <= 125
+			}
+		}
+		trigger_else = {
+			always = no
+		}
+	}
+	is_valid = {
+		NOT = { has_diarchy_parameter = diarchy_type_is_entrenched_regency }
+		custom_description = {
+			text = conclave_faction_power_below_100
+			trigger_if = {
+				limit = { any_targeting_faction = { faction_is_type = omiltos_conclave_faction } }
+				any_targeting_faction = {
+					faction_is_type = omiltos_conclave_faction
+					faction_power <= 100
+				}
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+	}
+	effect = {
+		show_as_tooltip = {
+			custom_tooltip = purge_conclave_decision_tt
+		}
+		trigger_event = cois.0250
+	}
+}
+
+defeat_rhesus_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = defeat_rhesus_decision_desc 
+	selection_tooltip = defeat_rhesus_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		faith:omitilos_aagiokrata.religious_head = character:westernimperial_omitilos_aagiokrata_1
+	}
+	is_valid = {
+		NOT = { has_diarchy_parameter = diarchy_type_is_entrenched_regency }
+		custom_description = {
+			text = conclave_faction_power_below_50
+			trigger_if = {
+				limit = { any_targeting_faction = { faction_is_type = omiltos_conclave_faction } }
+				any_targeting_faction = {
+					faction_is_type = omiltos_conclave_faction
+					faction_power <= 50
+				}
+			}
+			trigger_else = {
+				always = yes
+			}
+		}
+		custom_description = {
+			text = conclave_no_councillors
+			NOT = {
+				any_targeting_faction = {
+					faction_is_type = omiltos_conclave_faction
+					any_faction_member = {
+						save_temporary_scope_as = faction_member
+						character_rhesus_trigger = no
+						root = {
+							any_councillor = { this = scope:faction_member }
+						}
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		add_character_flag = rhesus_defeated
+		trigger_event = cois.0300
+		show_as_tooltip = {
+			custom_tooltip = defeat_rhesus_decision_tt
+		}
+	}
+}
+
+lessons_of_cenware_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = story
+	
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = lessons_of_cenware_decision_desc 
+	selection_tooltip = lessons_of_cenware_decision_tooltip
+	is_shown = {
+		character_cois_trigger = yes
+		has_character_flag = beat_cenware_twice_cois
+		NOR = {
+			has_character_flag = already_took_lessons_of_cenware
+			has_trait = education_martial_4
+		}
+	}
+	effect = {
+		add_character_flag = already_took_lessons_of_cenware
+		if = {
+			limit = { has_trait = education_intrigue_3 }
+			remove_trait = education_intrigue_3
+			add_trait_force_tooltip = education_martial_4
+		}
+		else_if = {
+			limit = { has_trait = education_intrigue_4 }
+			remove_trait = education_intrigue_4
+			add_trait_force_tooltip = education_martial_4
+		}
+		else = {
+			change_trait_rank = {
+				trait = education_martial
+				rank = 1
+				max = 4
+			}
+		}
+	}
+}

@@ -1,0 +1,184 @@
+﻿found_mamuramat_effect = {
+	scope:founder = {
+		#Standard effects.
+		##Hand over the Mamuramat Title.
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = title_change
+			add_claim_on_loss = no
+		}
+		$MAMURAMAT_TITLE$ = {
+			change_title_holder = {
+				holder = scope:founder
+				change = scope:title_change
+			}
+			set_coa = scope:founder.dynasty
+		}
+		resolve_title_and_vassal_change = scope:title_change
+		scope:founder = {
+			set_primary_title_to = $MAMURAMAT_TITLE$
+		}
+		##Handle High Court information updates
+		hidden_effect = {
+			$MAMURAMAT_TITLE$.var:attached_high_court = { save_scope_as = new_high_court }
+			religion = {
+				## Assign the appropriate High Court to your current faith
+				if = {	## If your branch only recognizes one Mamur, unassign the old one
+					limit = { root.faith = { has_doctrine_parameter = one_mamur_recognized } }
+					root.faith = {
+						add_recognized_high_court_faith_effect = {
+							HIGH_COURT = new_high_court
+							SOLE_RECOGNIZED = yes
+						}
+					}
+				}
+				else = {  ## Otherwise, just add them as an addition
+					root.faith = {
+						add_recognized_high_court_faith_effect = {
+							HIGH_COURT = new_high_court
+							SOLE_RECOGNIZED = no
+						}
+					}
+				}
+				## Seed some minor traditions in the newly reformed High Court
+				generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+				scope:created_legal_tradition = {
+					assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_high_court }
+				}
+				generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+				scope:created_legal_tradition = {
+					assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_high_court }
+				}
+				generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+				scope:created_legal_tradition = {
+					assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_high_court }
+				}
+				generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+				scope:created_legal_tradition = {
+					assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_high_court }
+				}
+				generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+				scope:created_legal_tradition = {
+					assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_high_court }
+				}
+				update_mamuramat_name = yes
+			}
+		}
+		root.religion = {
+			every_faith = {
+				limit = { has_doctrine = special_doctrine_singular_mamur_hostility }
+				custom_tooltip = singular_mamur_faith_becomes_hostile_tt
+			}
+		}
+
+		#Variable effects.
+		##Unreformed tribals.
+		if = {
+			limit = {
+				GH_is_any_tribal_government_trigger = yes
+				faith = { has_doctrine_parameter = unreformed }
+			}
+			#You become feudal.
+			convert_whole_realm_to_feudalism_effect = yes
+		}
+		##Everyone else
+		else = {
+			#Loyalty hooks & huge opinion boost from all agreeable vassals.
+			every_vassal = {
+				limit = {
+					is_powerful_vassal = yes
+					opinion = {
+						target = scope:founder
+						value >= 1
+					}
+				}
+				save_temporary_scope_as = current_vassal
+				scope:founder = {
+					add_hook = {
+						type = loyalty_hook
+						target = scope:current_vassal
+					}
+				}
+			}
+			#And a suitable nickname.
+			give_nickname = nick_the_great
+		}
+		
+		## If AI, immediately fill out the relevant High Court
+		if = {
+			limit = { is_ai = yes }
+			$MAMURAMAT_TITLE$.var:attached_high_court = { fill_all_high_court_seats_effect = yes }
+		}
+	}
+}
+
+give_random_jurist_if_legal = {
+	if = {
+		limit = { 
+			faith = { 
+				has_doctrine_parameter = judges_act_as_clergy 
+			} 
+		}
+		give_random_jurist_trait_random_effect = yes
+	}
+}
+
+#Lonely Note: Make this weighted based on traits / stats
+give_random_jurist_trait_effect = {
+	add_trait = lifestyle_jurist
+	add_trait_xp = {
+		trait = lifestyle_jurist
+		value = {
+			integer_range = {
+				min = small_lifestyle_random_xp_low
+				max = medium_lifestyle_random_xp_high
+			}
+		}
+	}
+}
+
+give_random_jurist_trait_random_effect = {
+	random_list = {
+		20 = {}
+		30 = {
+			add_trait = lifestyle_jurist
+		}
+		20 = {
+			add_trait = lifestyle_jurist
+			add_trait_xp = {
+				trait = lifestyle_jurist
+				value = 25
+			}
+		}
+		10 = {
+			trigger = {
+				age >= 25
+			}
+			add_trait = lifestyle_jurist
+			add_trait_xp = {
+				trait = lifestyle_jurist
+				value = 50
+			}
+		}
+		5 = {
+			trigger = {
+				age >= 35
+			}
+			add_trait = lifestyle_jurist
+			add_trait_xp = {
+				trait = lifestyle_jurist
+				value = 75
+			}
+		}
+		1 = {
+			trigger = {
+				age >= 45
+			}
+			add_trait = lifestyle_jurist
+			add_trait_xp = {
+				trait = lifestyle_jurist
+				value = 100
+			}
+		}
+	}
+}

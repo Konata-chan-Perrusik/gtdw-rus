@@ -1,0 +1,104 @@
+﻿
+kleptiakos_enforcer_character_template = {
+	age = { 20 40 }
+	faith = faith:philanthrios
+	culture = root.culture
+	gender_female_chance = root_faith_clergy_gender_female_chance
+	random_traits_list = {
+		count = 1
+		education_stewardship_2 = { weight = { base = 50 } }
+		education_stewardship_3 = { weight = { base = 20 } }
+		education_stewardship_4 = { weight = { base = 5 } }
+		education_martial_2 = { weight = { base = 20 } }
+		education_martial_3 = { weight = { base = 5 } }
+		education_martial_4 = { weight = { base = 2 } }
+	}
+	random_traits_list = {
+		count = { 1 2 }
+		greedy = { weight = { base = 10 } }
+		callous = { weight = { base = 10 } }
+		sadistic = { weight = { base = 5 } }
+		vengeful = { weight = { base = 2 } }
+		impatient = { weight = { base = 2 } }
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		lifestyle_blademaster = { weight = { base = 35 } }
+		physique_good_1 = { weight = { base = 5 } }
+		physique_good_2 = { weight = { base = 5 } }
+		strong = { weight = { base = 5 } }
+		giant = { weight = { base = 5 } }
+	}
+	random_traits = yes
+	stewardship = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	prowess = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	
+	after_creation = {
+		add_random_tiered_trait_xp_effect = {
+			TRAIT = lifestyle_blademaster
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+sarradonian_jurist_2_character_template = {
+	age = { 30 60 }
+	dynasty = none
+	faith = scope:promote_local_magistrate_county.faith
+	culture = scope:promote_local_magistrate_county.culture
+	gender_female_chance = {
+		value = 0
+		if = {
+			limit = { scope:promote_local_magistrate_county.faith = { has_doctrine = doctrine_gender_male_dominated } }
+			add = 0
+		}
+		else_if = {
+			limit = { scope:promote_local_magistrate_county.faith = { has_doctrine = doctrine_gender_female_dominated } }
+			add = 100
+		}
+		else = {
+			add = 50
+		}
+	}
+	random_traits_list = {
+		count = 1
+		education_stewardship_2 = { weight = { base = 50 } }
+		education_stewardship_3 = { weight = { base = 20 } }
+		education_stewardship_4 = { weight = { base = 5 } }
+		education_learning_2 = { weight = { base = 50 } }
+		education_learning_3 = { weight = { base = 20 } }
+		education_learning_4 = { weight = { base = 5 } }
+	}
+	random_traits = yes
+	martial = {
+		min_template_low_skill
+		max_template_low_skill
+	}
+	stewardship = {
+		min_template_high_skill
+		max_template_high_skill
+	}
+	diplomacy = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	intrigue = {
+		min_template_average_skill
+		max_template_average_skill
+	}
+	learning = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}

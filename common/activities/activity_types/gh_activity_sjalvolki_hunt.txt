@@ -1,0 +1,321 @@
+﻿#activity_sjalvolki_hunt = {
+#	color = { 0.253906 0.867188 0.105469 1 }
+#	expiration_days = 180
+#	on_spawn = {
+#		invite_character_to_activity = activity_owner
+#		accept_invitation_for_character = activity_owner
+#
+#		#Save scopes
+#		activity_owner = {
+#			if = {
+#				limit = {
+#					any_courtier_or_guest = {
+#						is_available_healthy_ai_adult = yes
+#					}
+#				}
+#				random_courtier = { #To make it more likely that the list EXISTS so that no errors are generated when checking for the size
+#					limit = {
+#						is_available_healthy_ai_adult = yes
+#					}
+#					scope:activity = {
+#						add_to_variable_list = {
+#							name = potential_hunt_participants
+#							target = prev
+#						}
+#					}
+#				}
+#				every_courtier_or_guest = {
+#					limit = {
+#						is_available_healthy_ai_adult = yes
+#						OR = {
+#							is_heir_of = scope:activity.activity_owner
+#							has_relation_rival = scope:activity.activity_owner
+#							has_relation_lover = scope:activity.activity_owner
+#							has_relation_friend = scope:activity.activity_owner
+#						}
+#						scope:activity = {
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#					scope:activity = {
+#						add_to_variable_list = {
+#							name = potential_hunt_participants
+#							target = prev
+#						}
+#					}
+#				}
+#			}
+#			if = {
+#				limit = {
+#					any_vassal = {
+#						is_available_healthy_ai_adult = yes
+#						is_of_major_interest_trigger = {
+#							CHARACTER = scope:activity.activity_owner
+#						}
+#						scope:activity = {
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#				}
+#				every_vassal = {
+#					limit = {
+#						is_available_healthy_ai_adult = yes
+#						is_of_major_interest_trigger = {
+#							CHARACTER = scope:activity.activity_owner
+#						}
+#						scope:activity = { 
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#					scope:activity = {
+#						add_to_variable_list = {
+#							name = potential_hunt_participants
+#							target = prev
+#						}
+#					}
+#				}
+#			}
+#			if = {
+#				limit = {
+#					scope:activity = {
+#						OR = {
+#							NOT = {
+#								any_in_list = {
+#									variable = potential_hunt_participants
+#									exists = this
+#								}
+#							}
+#							variable_list_size = {
+#								name = potential_hunt_participants
+#								value <= hunt_participants
+#							}
+#						}
+#					}
+#					any_vassal = {
+#						is_available_healthy_ai_adult = yes
+#						scope:activity = {
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#				}
+#				every_vassal = {
+#					limit = {
+#						is_available_healthy_ai_adult = yes
+#						is_of_minor_interest_trigger = {
+#							CHARACTER = scope:activity.activity_owner
+#						}
+#						scope:activity = {
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#					alternative_limit = {
+#						is_available_healthy_ai_adult = yes
+#						scope:activity = {
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#					scope:activity = {
+#						add_to_variable_list = {
+#							name = potential_hunt_participants
+#							target = prev
+#						}
+#					}
+#				}
+#			}
+#			if = {
+#				limit = {
+#					scope:activity = {
+#						OR = {
+#							NOT = {
+#								any_in_list = {
+#									variable = potential_hunt_participants
+#									exists = this
+#								}
+#							}
+#							variable_list_size = {
+#								name = potential_hunt_participants
+#								value <= hunt_participants
+#							}
+#						}
+#					}
+#					any_courtier = {
+#						is_available_healthy_ai_adult = yes
+#						scope:activity = {
+#							NOT = {
+#								is_target_in_variable_list = {
+#									name = potential_hunt_participants
+#									target = prev
+#								}
+#							}
+#						}
+#					}
+#				}
+#				while = {
+#					limit = {
+#						scope:activity = {
+#							variable_list_size = {
+#								name = potential_hunt_participants
+#								value <= hunt_participants
+#							}
+#						}
+#						any_courtier = {
+#							is_available_healthy_ai_adult = yes
+#							scope:activity = {
+#								NOT = {
+#									is_target_in_variable_list = {
+#										name = potential_hunt_participants
+#										target = prev
+#									}
+#								}
+#							}
+#						}
+#					}
+#					random_courtier = {
+#						limit = {
+#							is_available_healthy_ai_adult = yes
+#							scope:activity = {
+#								NOT = {
+#									is_target_in_variable_list = {
+#										name = potential_hunt_participants
+#										target = prev
+#									}
+#								}
+#							}
+#						}
+#						scope:activity = {
+#							add_to_variable_list = {
+#								name = potential_hunt_participants
+#								target = prev
+#							}
+#						}
+#					}
+#				}
+#				every_courtier = {
+#					limit = {
+#						is_available_healthy_ai_adult = yes
+#					}
+#					scope:activity = {
+#						add_to_variable_list = {
+#							name = potential_hunt_participants
+#							target = prev
+#						}
+#					}
+#				}
+#			}
+#		}
+#		scope:activity = {
+#			activity_province = {
+#				save_scope_as = sjalvolki_hunt_province
+#			}
+#		}
+#		activity_owner = {
+#			trigger_event = {
+#				id = sjalvolki_hunt.0031
+#				days = 1
+#			}
+#		}
+#	}
+#	on_complete = {
+#		activity_owner = {
+#			remove_variable = sjalvolki_hunt_outcome
+#			remove_variable = local_animal
+#			remove_character_flag = sjalvolki_hunter_1
+#			remove_character_flag = sjalvolki_hunter_2
+#			remove_character_flag = sjalvolki_hunter_3
+#			if = {
+#			limit = { has_variable = chosen_hunt_game_var }
+#				remove_variable = chosen_hunt_game_var
+#			}
+#			if = {
+#				limit = { has_variable = first_game_option_var }
+#				remove_variable = first_game_option_var
+#			}
+#			if = {
+#				limit = { has_variable = second_game_option_var }
+#				remove_variable = second_game_option_var
+#			}
+#			if = {
+#				limit = { has_variable = third_game_option_var }
+#				remove_variable = third_game_option_var
+#			}
+#			if = {
+#				limit = { has_variable = tracking_progress }
+#				remove_variable = tracking_progress
+#			}
+#			if = {
+#				limit = { has_variable = sjalvolki_hunt_ongoing }
+#				remove_variable = sjalvolki_hunt_ongoing
+#			}
+#			if = {
+#				limit = { has_variable = number_of_biozones }
+#				remove_variable = number_of_biozones
+#			}
+#			if = {
+#				limit = { has_variable = first_displayed_biozone }
+#				remove_variable = first_displayed_biozone
+#			}
+#			if = {
+#				limit = { has_variable = second_displayed_biozone }
+#				remove_variable = second_displayed_biozone
+#			}
+#			if = {
+#				limit = { has_variable = third_displayed_biozone }
+#				remove_variable = third_displayed_biozone
+#			}
+#			if = {
+#				limit = { has_variable = biozone_scroll_iterator }
+#				remove_variable = biozone_scroll_iterator
+#			}
+#			if = {
+#				limit = { has_variable = temporary_hunt_biozone_variable }
+#				remove_variable = temporary_hunt_biozone_variable
+#			}
+#			
+#			target_weight_modifier_effect = {
+#				VALUE = hunt_weight_modifier_value
+#			}
+#		}
+#		every_in_list = {
+#			variable = potential_hunt_participants
+#			limit = {
+#				is_alive = yes
+#			}
+#			target_weight_modifier_effect = {
+#				VALUE = hunt_weight_modifier_value
+#			}
+#		}
+#	}
+#	on_expire = {
+#		
+#	}
+#}

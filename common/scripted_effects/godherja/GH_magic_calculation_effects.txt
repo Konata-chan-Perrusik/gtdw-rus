@@ -1,0 +1,518 @@
+﻿global_magic_calculations = {
+	every_in_global_list = {
+		variable = magi_list
+		if = {
+			limit = { is_alive = no }
+			remove_from_magi_list = yes
+		}
+		else = {
+			if = {
+				limit = { can_access_magic = yes }
+				if = {
+					limit = {
+						exists = var:uncapped_magic_gain_activated
+						NOT = { has_stored_magic_trigger = { VALUE = character_extended_magic_baseline_value } }
+					}
+					gain_magical_power_capped_effect = { VALUE = character_magic_baseline_income_value CAP = character_extended_magic_baseline_value }
+				}
+				else_if = {
+					limit = { NOT = { has_stored_magic_trigger = { VALUE = character_magic_baseline_value } } }
+					gain_magical_power_capped_effect = { VALUE = character_magic_baseline_income_value CAP = character_magic_baseline_value }
+				}
+			}
+			reduce_spell_exposure_monthly = yes
+		}
+	}
+}
+
+start_magical_defines_table = {
+	set_variable = { name = $TABLE_NAME$_$MODE$ value = 0 }
+}
+
+end_magical_defines_table = {
+	if = {
+		limit = { NOT = { exists = var:monthly_magic_$MODE$ } }
+		set_variable = { name = monthly_magic_$MODE$ value = var:$TABLE_NAME$_$MODE$ }
+	}
+	else = {
+		change_variable = { name = monthly_magic_$MODE$ add = var:$TABLE_NAME$_$MODE$ }
+	}
+}
+
+check_trait_magic = {
+	if = {
+		limit = { has_trait = $TRAIT_NAME$ }
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_faith_magic = {
+	if = {
+		limit = { faith = { has_doctrine_parameter = $DOCTRINE_PARAMETER$ } }
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_county_modifier_magic = {
+	every_held_title = {
+		limit = { tier = tier_county }
+		if = {
+			limit = { has_county_modifier = $MODIFIER_NAME$ }
+			holder = {
+				change_variable = {
+					name = $TABLE_NAME$_$MODE$
+					add = $VALUE$
+				}
+			}
+		}
+	}
+}
+
+check_county_modifier_magic_magic_type_ranked = {
+	every_held_title = {
+		limit = { tier = tier_county }
+		if = {
+			limit = { has_county_modifier = $MODIFIER_NAME$ }
+			holder = {
+				set_variable = {
+					name = temporary_county_modifier_magic_type_ranked_value
+					value = $VALUE$
+				}
+				if = {
+					limit = { has_trait = education_$MAGIC_TYPE$_4 }
+					change_variable = {
+						name = temporary_county_modifier_magic_type_ranked_value
+						multiply = 4
+					}
+				}
+				else_if = {
+					limit = { has_trait = education_$MAGIC_TYPE$_3 }
+					change_variable = {
+						name = temporary_county_modifier_magic_type_ranked_value
+						multiply = 3
+					}
+				}
+				else_if = {
+					limit = { has_trait = education_$MAGIC_TYPE$_2 }
+					change_variable = {
+						name = temporary_county_modifier_magic_type_ranked_value
+						multiply = 2
+					}
+				}
+				else_if = {
+					limit = { has_trait = education_$MAGIC_TYPE$_1 }
+					change_variable = {
+						name = temporary_county_modifier_magic_type_ranked_value
+						multiply = 1
+					}
+				}
+				else = {
+					change_variable = {
+						name = temporary_county_modifier_magic_type_ranked_value
+						multiply = 0
+					}
+				}
+				change_variable = {
+					name = $TABLE_NAME$_$MODE$
+					add = var:temporary_county_modifier_magic_type_ranked_value
+				}
+				remove_variable = temporary_county_modifier_magic_type_ranked_value
+			}
+		}
+	}
+}
+
+check_character_modifier_magic = {
+	if = {
+		limit = { has_character_modifier = $MODIFIER_NAME$ }
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_character_modifier_magic_type_ranked = {
+	if = {
+		limit = { has_character_modifier = $MODIFIER_NAME$ }
+		set_variable = {
+			name = temporary_character_modifier_magic_type_ranked_value
+			value = $VALUE$
+		}
+		if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_4 }
+			change_variable = {
+				name = temporary_character_modifier_magic_type_ranked_value
+				multiply = 4
+			}
+		}
+		else_if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_3 }
+			change_variable = {
+				name = temporary_character_modifier_magic_type_ranked_value
+				multiply = 3
+			}
+		}
+		else_if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_2 }
+			change_variable = {
+				name = temporary_character_modifier_magic_type_ranked_value
+				multiply = 2
+			}
+		}
+		else_if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_1 }
+			change_variable = {
+				name = temporary_character_modifier_magic_type_ranked_value
+				multiply = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = temporary_character_modifier_magic_type_ranked_value
+				multiply = 0
+			}
+		}
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = var:temporary_character_modifier_magic_type_ranked_value
+		}
+		remove_variable = temporary_character_modifier_magic_type_ranked_value
+	}
+}
+
+check_artifact_modifier_magic = {
+	if = {
+		limit = {
+			any_equipped_character_artifact = {
+				has_artifact_modifier = $MODIFIER_NAME$
+			}
+		}
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_artifact_modifier_magic_type_ranked = {
+	if = {
+		limit = { 
+			any_equipped_character_artifact = {
+				has_artifact_modifier = $MODIFIER_NAME$
+			}
+		}
+		set_variable = {
+			name = temporary_artifact_modifier_magic_type_ranked_value
+			value = $VALUE$
+		}
+		if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_4 }
+			change_variable = {
+				name = temporary_artifact_modifier_magic_type_ranked_value
+				multiply = 4
+			}
+		}
+		else_if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_3 }
+			change_variable = {
+				name = temporary_artifact_modifier_magic_type_ranked_value
+				multiply = 3
+			}
+		}
+		else_if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_2 }
+			change_variable = {
+				name = temporary_artifact_modifier_magic_type_ranked_value
+				multiply = 2
+			}
+		}
+		else_if = {
+			limit = { has_trait = education_$MAGIC_TYPE$_1 }
+			change_variable = {
+				name = temporary_artifact_modifier_magic_type_ranked_value
+				multiply = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = temporary_artifact_modifier_magic_type_ranked_value
+				multiply = 0
+			}
+		}
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = var:temporary_artifact_modifier_magic_type_ranked_value
+		}
+		remove_variable = temporary_artifact_modifier_magic_type_ranked_value
+	}
+}
+
+check_building_magic = {
+	every_held_title = {
+		limit = { tier = tier_county }
+		every_county_province = {
+			if = {
+				limit = { has_building = $BUILDING_NAME$ }
+				county_controller = {
+					change_variable = {
+						name = $TABLE_NAME$_$MODE$
+						add = $VALUE$
+					}
+				}
+			}
+		}
+	}
+}
+
+check_building_magic_magic_type_ranked = {
+	every_held_title = {
+		limit = { tier = tier_county }
+		every_county_province = {
+			if = {
+				limit = { has_building = $BUILDING_NAME$ }
+				county_controller = {
+					debug_log = "SUCCESS"
+					debug_log_scopes = yes
+					set_variable = {
+						name = temporary_building_magic_type_ranked_value
+						value = $VALUE$
+					}
+					if = {
+						limit = { has_trait = education_$MAGIC_TYPE$_4 }
+						change_variable = {
+							name = temporary_building_magic_type_ranked_value
+							multiply = 4
+						}
+					}
+					else_if = {
+						limit = { has_trait = education_$MAGIC_TYPE$_3 }
+						change_variable = {
+							name = temporary_building_magic_type_ranked_value
+							multiply = 3
+						}
+					}
+					else_if = {
+						limit = { has_trait = education_$MAGIC_TYPE$_2 }
+						change_variable = {
+							name = temporary_building_magic_type_ranked_value
+							multiply = 2
+						}
+					}
+					else_if = {
+						limit = { has_trait = education_$MAGIC_TYPE$_1 }
+						change_variable = {
+							name = temporary_building_magic_type_ranked_value
+							multiply = 1
+						}
+					}
+					else = {
+						change_variable = {
+							name = temporary_building_magic_type_ranked_value
+							multiply = 0
+						}
+					}
+					change_variable = {
+						name = $TABLE_NAME$_$MODE$
+						add = var:temporary_building_magic_type_ranked_value
+					}
+					remove_variable = temporary_building_magic_type_ranked_value
+				}
+			}
+		}
+	}
+}
+
+check_lifestyle_magic = {
+	if = {
+		limit = { has_lifestyle = $LIFESTYLE_NAME$ }
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_lifestyle_focus_magic = {
+	if = {
+		limit = { has_focus = $FOCUS_NAME$ }
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_lifestyle_perk_magic = {
+	if = {
+		limit = { has_perk = $PERK_NAME$ }
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_dynasty_legacy_magic = {
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { is_lowborn = no }
+				dynasty = { has_dynasty_perk = $LEGACY_NAME$ }
+			}
+			trigger_else = { always = no }
+		}
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+check_moon_phase_magic = {
+	if = {
+		limit = {
+			title:c_oraispol = {
+				has_variable = $MOON_PHASE$
+			}
+		}
+		change_variable = {
+			name = $TABLE_NAME$_$MODE$
+			add = $VALUE$
+		}
+	}
+}
+
+#################
+# MAGIC PROWESS #
+#################
+
+calculate_magic_prowess_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			OR = {
+				NOT = { exists = var:magic_prowess_var }
+				NOT = { var:magic_prowess_var = magic_prowess_value }
+			}
+		}
+		set_variable = {
+			name = magic_prowess_var
+			value = magic_prowess_value
+		}
+		remove_all_character_modifier_instances = temporary_magic_prowess_to_combined_cast_modifier
+		add_character_modifier = temporary_magic_prowess_to_combined_cast_modifier
+	}
+	if = {
+		limit = { 
+			is_alive = yes
+			var:magic_prowess_var >= prowess
+		}
+		add_character_modifier = magic_no_prowess_loss_from_age
+	}
+	else = {
+		remove_character_modifier = magic_no_prowess_loss_from_age
+	}
+}
+
+###############
+# MISC. STUFF #
+###############
+
+add_to_magi_list = {
+	if = {
+		limit = { 
+			NOT = {
+				is_target_in_global_variable_list = {
+					name = magi_list
+					target = this
+				}
+			}
+		}
+		add_to_global_variable_list = {
+			name = magi_list
+			target = this
+		}
+	}
+}
+
+remove_from_magi_list = {
+	if = {
+		limit = { 
+			is_target_in_global_variable_list = {
+				name = magi_list
+				target = this
+			}
+		}
+		remove_list_global_variable = {	
+			name = magi_list
+			target = this
+		}
+	}
+}
+
+gain_magical_power_effect = {
+	if = {
+		limit = { NOT = { $VALUE$ = 0 } }
+		custom_description = {
+			text = gain_magical_power
+			value = $VALUE$
+			if = {
+				limit = { NOT = { has_variable = magic_counter } }
+				set_variable = {
+					name = magic_counter
+					value = $VALUE$
+				}
+			}
+			else = {
+				change_variable = {
+					name = magic_counter
+					add = $VALUE$
+				}
+			}
+		}
+	}
+}
+
+gain_magical_power_capped_effect = {
+	if = {
+		limit = { NOT = { $VALUE$ = 0 } }
+		custom_description = {
+			text = gain_magical_power
+			value = $VALUE$
+			if = {
+				limit = { NOT = { has_variable = magic_counter } }
+				set_variable = {
+					name = magic_counter
+					value = $VALUE$
+				}
+			}
+			else = {
+				change_variable = {
+					name = magic_counter
+					add = $VALUE$
+				}
+			}
+			if = {
+				limit = { var:magic_counter > $CAP$ }
+				set_variable = {
+					name = magic_counter
+					value = $CAP$
+				}
+			}
+		}
+	}
+}
+
+gain_magic_no_tt = {
+	change_variable = {
+		name = magic_counter
+		add = $MAGIC$
+	}
+}

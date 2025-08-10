@@ -1,0 +1,150 @@
+﻿first_loot_tax_collector = {
+	flag = religiously_protected
+	flag = border_conflicts_sanctioned
+	tax_factor = -0.15
+	levies_factor = -0.2
+
+	subject_modifier = {
+		army_maintenance_mult = -0.1
+		garrison_size = 0.1
+		fellow_vassal_opinion = 10
+		men_at_arms_maintenance = -0.2
+		monthly_county_control_growth_factor = 0.1
+		opinion_of_liege = 15
+	}
+
+	ai_will_do = {
+		value = default_tax_obligation_ai_will_do
+
+		# Always take at least one default tax collector slot
+		if = {
+			limit = { scope:num_slots_with_obligation = 0 }
+			add = 1000
+		}
+		else = {
+			add = 0
+		}
+	}
+}
+
+raw_deal_tax_collector = {
+	tax_factor = 0.5
+	levies_factor = 0.2
+
+	liege_modifier = {
+		domain_tax_mult = 0.01
+		development_growth_factor = -0.01
+	}
+
+	subject_modifier = {
+		domain_tax_mult = 0.1
+		development_growth_factor = -0.1
+		county_opinion_add = -10
+		monthly_county_control_growth_factor = -0.1
+		opinion_of_liege = -25
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		if = {
+			limit = {
+				scope:liege = {
+					ai_greed >= 75 # The AI has to be very greedy
+					ai_compassion <= 0 # And not kind enough to have qualms about it
+				}
+			}
+			add = 2
+		}
+	}
+}
+
+commune_tax_collector = {
+	flag = religiously_protected
+	flag = vassal_contract_cannot_revoke_titles
+	tax_factor = 0.25
+	levies_factor = -0.5
+
+	is_vassal_valid = {
+		custom_description = {
+			text = vassal_is_republican_or_single_county
+			subject = scope:vassal
+			scope:vassal = {
+				OR = {
+					has_government = republic_playable_government
+					domain_size = 1
+				}
+			}
+		}
+	}
+
+	liege_modifier = {
+		domain_tax_mult = 0.01
+		mercenary_hire_cost_mult = -0.05
+	}
+
+	subject_modifier = {
+		city_holding_build_speed = -0.2
+		city_holding_build_gold_cost = -0.2
+		mercenary_hire_cost_mult = -0.2
+		domain_limit = -1
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		add = 1
+		if = {
+			limit = {
+				scope:liege = {
+					any_vassal = {
+						has_government = republic_playable_government
+					}
+				}
+			}
+			add = 10
+		}
+	}
+}
+smuggling_tax_collector = {
+	tax_factor = -0.1
+	levies_factor = -0.1
+
+	liege_modifier = {
+		monthly_prestige = 0.1
+		naval_movement_speed_mult = 0.1
+	}
+
+	subject_modifier = {
+		development_growth_factor = 0.1
+		opinion_of_liege = 30
+		naval_movement_speed_mult = 0.1
+		coastal_advantage = 5
+		mercenary_hire_cost_mult = -0.1
+	}
+
+	is_vassal_valid = {
+		scope:vassal = {
+			any_sub_realm_county = { is_coastal_county = yes }
+		}
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		if = {
+			limit = {
+				scope:liege = {
+					ai_has_warlike_personality = yes
+					ai_zeal >= 0
+					any_vassal = {
+						count >= {
+							value = scope:num_vassal_slots
+							divide = 100
+							multiply = 90
+						}
+						faith = scope:liege.faith
+					}
+				}
+			}
+			add = 2
+		}
+	}
+}

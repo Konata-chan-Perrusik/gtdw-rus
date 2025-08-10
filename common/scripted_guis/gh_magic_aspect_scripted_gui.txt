@@ -1,0 +1,1275 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_guis/gh_magic_aspect_scripted_gui.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+magic_gui_increase_aspect_overcharge_scripted_gui = {
+	scope = story
+	
+	is_shown = {
+		exists = scope:spell_organizer
+		is_target_in_variable_list = {
+			name = spell_aspect_list
+			target = scope:aspect_being_overcharged
+		}
+		trigger_if = {
+			limit = {
+				exists = scope:spell_organizer.var:casting_through_court_magi_var
+				exists = scope:spell_organizer.cp:councillor_court_magi
+			}
+			scope:spell_organizer.cp:councillor_court_magi = { save_temporary_scope_as = caster }
+		}
+		trigger_else = {
+			scope:spell_organizer = { save_temporary_scope_as = caster }
+		}
+		OR = {
+			exists = scope:spell_organizer.var:uncapped_overcharge_var
+			AND = {
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:fire }
+					trigger_if = {
+						limit = { exists = var:fire_max }
+						fire_aspect_total_spell_level_value < var:fire_max
+					}
+					scope:spell_organizer.fire_total_overcharge_value < scope:caster.fire_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:water }
+					trigger_if = {
+						limit = { exists = var:water_max }
+						water_aspect_total_spell_level_value < var:water_max
+					}
+					scope:spell_organizer.water_total_overcharge_value < scope:caster.water_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:ice }
+					trigger_if = {
+						limit = { exists = var:ice_max }
+						ice_aspect_total_spell_level_value < var:ice_max
+					}
+					scope:spell_organizer.ice_total_overcharge_value < scope:caster.ice_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:air }
+					trigger_if = {
+						limit = { exists = var:air_max }
+						air_aspect_total_spell_level_value < var:air_max
+					}
+					scope:spell_organizer.air_total_overcharge_value < scope:caster.air_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:stone }
+					trigger_if = {
+						limit = { exists = var:stone_max }
+						stone_aspect_total_spell_level_value < var:stone_max
+					}
+					scope:spell_organizer.stone_total_overcharge_value < scope:caster.stone_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:dream }
+					trigger_if = {
+						limit = { exists = var:dream_max }
+						dream_aspect_total_spell_level_value < var:dream_max
+					}
+					scope:spell_organizer.dream_total_overcharge_value < scope:caster.dream_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:celestial }
+					trigger_if = {
+						limit = { exists = var:celestial_max }
+						celestial_aspect_total_spell_level_value < var:celestial_max
+					}
+					scope:spell_organizer.celestial_total_overcharge_value < scope:caster.celestial_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:dark }
+					trigger_if = {
+						limit = { exists = var:dark_max }
+						dark_aspect_total_spell_level_value < var:dark_max
+					}
+					scope:spell_organizer.dark_total_overcharge_value < scope:caster.dark_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:light }
+					trigger_if = {
+						limit = { exists = var:light_max }
+						light_aspect_total_spell_level_value < var:light_max
+					}
+					scope:spell_organizer.light_total_overcharge_value < scope:caster.light_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:blood }
+					trigger_if = {
+						limit = { exists = var:blood_max }
+						blood_aspect_total_spell_level_value < var:blood_max
+					}
+					scope:spell_organizer.blood_total_overcharge_value < scope:caster.blood_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:nature }
+					trigger_if = {
+						limit = { exists = var:nature_max }
+						nature_aspect_total_spell_level_value < var:nature_max
+					}
+					scope:spell_organizer.nature_total_overcharge_value < scope:caster.nature_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:ethereal }
+					trigger_if = {
+						limit = { exists = var:ethereal_max }
+						ethereal_aspect_total_spell_level_value < var:ethereal_max
+					}
+					scope:spell_organizer.ethereal_total_overcharge_value < scope:caster.ethereal_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:hymns }
+					trigger_if = {
+						limit = { exists = var:hymns_max }
+						hymns_aspect_total_spell_level_value < var:hymns_max
+					}
+					scope:spell_organizer.hymns_total_overcharge_value < scope:caster.hymns_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:death }
+					trigger_if = {
+						limit = { exists = var:death_max }
+						death_aspect_total_spell_level_value < var:death_max
+					}
+					scope:spell_organizer.death_total_overcharge_value < scope:caster.death_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:sand }
+					trigger_if = {
+						limit = { exists = var:sand_max }
+						sand_aspect_total_spell_level_value < var:sand_max
+					}
+					scope:spell_organizer.sand_total_overcharge_value < scope:caster.sand_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:metal }
+					trigger_if = {
+						limit = { exists = var:metal_max }
+						metal_aspect_total_spell_level_value < var:metal_max
+					}
+					scope:spell_organizer.metal_total_overcharge_value < scope:caster.metal_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:time }
+					trigger_if = {
+						limit = { exists = var:time_max }
+						time_aspect_total_spell_level_value < var:time_max
+					}
+					scope:spell_organizer.time_total_overcharge_value < scope:caster.time_aspect_max_overcharge_bonus_value
+				}
+				trigger_if = {
+					limit = { scope:aspect_being_overcharged = flag:dawn }
+					trigger_if = {
+						limit = { exists = var:dawn_max }
+						dawn_aspect_total_spell_level_value < var:dawn_max
+					}
+					scope:spell_organizer.dawn_total_overcharge_value < scope:caster.dawn_aspect_max_overcharge_bonus_value
+				}
+			}
+		}
+		NOT = { spell_has_tag_trigger = { NAME = flag:cantrip } }
+	}
+	
+	effect = {
+		magic_aspect_effect = { MODE = increase_overcharge }
+	}
+}
+
+magic_gui_decrease_aspect_overcharge_scripted_gui = {
+	scope = story
+	
+	is_shown = {
+		
+	}
+	
+	effect = {
+		magic_aspect_effect = { MODE = decrease_overcharge }
+	}
+}
+character_creation_increase_fire_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:fire } }
+			set_variable = {
+				name = fire
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = fire
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_fire_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:fire }
+			change_variable = {
+				name = fire
+				subtract = 1
+			}
+			if = {
+				limit = { var:fire <= 0 }
+				remove_variable = fire
+			}
+		}
+	}
+}
+
+character_window_show_fire_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			fire_aspect_spellcasting_value >= 8
+			knows_magic_school_with_fire_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_water_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:water } }
+			set_variable = {
+				name = water
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = water
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_water_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:water }
+			change_variable = {
+				name = water
+				subtract = 1
+			}
+			if = {
+				limit = { var:water <= 0 }
+				remove_variable = water
+			}
+		}
+	}
+}
+
+character_window_show_water_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			water_aspect_spellcasting_value >= 8
+			knows_magic_school_with_water_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_ice_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:ice } }
+			set_variable = {
+				name = ice
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = ice
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_ice_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:ice }
+			change_variable = {
+				name = ice
+				subtract = 1
+			}
+			if = {
+				limit = { var:ice <= 0 }
+				remove_variable = ice
+			}
+		}
+	}
+}
+
+character_window_show_ice_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			ice_aspect_spellcasting_value >= 8
+			knows_magic_school_with_ice_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_air_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:air } }
+			set_variable = {
+				name = air
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = air
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_air_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:air }
+			change_variable = {
+				name = air
+				subtract = 1
+			}
+			if = {
+				limit = { var:air <= 0 }
+				remove_variable = air
+			}
+		}
+	}
+}
+
+character_window_show_air_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			air_aspect_spellcasting_value >= 8
+			knows_magic_school_with_air_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_stone_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:stone } }
+			set_variable = {
+				name = stone
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = stone
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_stone_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:stone }
+			change_variable = {
+				name = stone
+				subtract = 1
+			}
+			if = {
+				limit = { var:stone <= 0 }
+				remove_variable = stone
+			}
+		}
+	}
+}
+
+character_window_show_stone_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			stone_aspect_spellcasting_value >= 8
+			knows_magic_school_with_stone_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_dream_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:dream } }
+			set_variable = {
+				name = dream
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = dream
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_dream_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:dream }
+			change_variable = {
+				name = dream
+				subtract = 1
+			}
+			if = {
+				limit = { var:dream <= 0 }
+				remove_variable = dream
+			}
+		}
+	}
+}
+
+character_window_show_dream_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			dream_aspect_spellcasting_value >= 8
+			knows_magic_school_with_dream_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_celestial_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:celestial } }
+			set_variable = {
+				name = celestial
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = celestial
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_celestial_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:celestial }
+			change_variable = {
+				name = celestial
+				subtract = 1
+			}
+			if = {
+				limit = { var:celestial <= 0 }
+				remove_variable = celestial
+			}
+		}
+	}
+}
+
+character_window_show_celestial_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			celestial_aspect_spellcasting_value >= 8
+			knows_magic_school_with_celestial_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_dark_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:dark } }
+			set_variable = {
+				name = dark
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = dark
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_dark_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:dark }
+			change_variable = {
+				name = dark
+				subtract = 1
+			}
+			if = {
+				limit = { var:dark <= 0 }
+				remove_variable = dark
+			}
+		}
+	}
+}
+
+character_window_show_dark_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			dark_aspect_spellcasting_value >= 8
+			knows_magic_school_with_dark_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_light_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:light } }
+			set_variable = {
+				name = light
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = light
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_light_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:light }
+			change_variable = {
+				name = light
+				subtract = 1
+			}
+			if = {
+				limit = { var:light <= 0 }
+				remove_variable = light
+			}
+		}
+	}
+}
+
+character_window_show_light_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			light_aspect_spellcasting_value >= 8
+			knows_magic_school_with_light_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_blood_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:blood } }
+			set_variable = {
+				name = blood
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = blood
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_blood_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:blood }
+			change_variable = {
+				name = blood
+				subtract = 1
+			}
+			if = {
+				limit = { var:blood <= 0 }
+				remove_variable = blood
+			}
+		}
+	}
+}
+
+character_window_show_blood_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			blood_aspect_spellcasting_value >= 8
+			knows_magic_school_with_blood_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_nature_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:nature } }
+			set_variable = {
+				name = nature
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = nature
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_nature_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:nature }
+			change_variable = {
+				name = nature
+				subtract = 1
+			}
+			if = {
+				limit = { var:nature <= 0 }
+				remove_variable = nature
+			}
+		}
+	}
+}
+
+character_window_show_nature_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			nature_aspect_spellcasting_value >= 8
+			knows_magic_school_with_nature_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_ethereal_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:ethereal } }
+			set_variable = {
+				name = ethereal
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = ethereal
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_ethereal_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:ethereal }
+			change_variable = {
+				name = ethereal
+				subtract = 1
+			}
+			if = {
+				limit = { var:ethereal <= 0 }
+				remove_variable = ethereal
+			}
+		}
+	}
+}
+
+character_window_show_ethereal_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			ethereal_aspect_spellcasting_value >= 8
+			knows_magic_school_with_ethereal_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_hymns_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:hymns } }
+			set_variable = {
+				name = hymns
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = hymns
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_hymns_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:hymns }
+			change_variable = {
+				name = hymns
+				subtract = 1
+			}
+			if = {
+				limit = { var:hymns <= 0 }
+				remove_variable = hymns
+			}
+		}
+	}
+}
+
+character_window_show_hymns_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			hymns_aspect_spellcasting_value >= 8
+			knows_magic_school_with_hymns_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_death_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:death } }
+			set_variable = {
+				name = death
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = death
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_death_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:death }
+			change_variable = {
+				name = death
+				subtract = 1
+			}
+			if = {
+				limit = { var:death <= 0 }
+				remove_variable = death
+			}
+		}
+	}
+}
+
+character_window_show_death_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			death_aspect_spellcasting_value >= 8
+			knows_magic_school_with_death_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_sand_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:sand } }
+			set_variable = {
+				name = sand
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = sand
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_sand_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:sand }
+			change_variable = {
+				name = sand
+				subtract = 1
+			}
+			if = {
+				limit = { var:sand <= 0 }
+				remove_variable = sand
+			}
+		}
+	}
+}
+
+character_window_show_sand_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			sand_aspect_spellcasting_value >= 8
+			knows_magic_school_with_sand_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_metal_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:metal } }
+			set_variable = {
+				name = metal
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = metal
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_metal_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:metal }
+			change_variable = {
+				name = metal
+				subtract = 1
+			}
+			if = {
+				limit = { var:metal <= 0 }
+				remove_variable = metal
+			}
+		}
+	}
+}
+
+character_window_show_metal_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			metal_aspect_spellcasting_value >= 8
+			knows_magic_school_with_metal_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_time_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:time } }
+			set_variable = {
+				name = time
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = time
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_time_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:time }
+			change_variable = {
+				name = time
+				subtract = 1
+			}
+			if = {
+				limit = { var:time <= 0 }
+				remove_variable = time
+			}
+		}
+	}
+}
+
+character_window_show_time_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			time_aspect_spellcasting_value >= 8
+			knows_magic_school_with_time_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+character_creation_increase_dawn_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { exists = var:dawn } }
+			set_variable = {
+				name = dawn
+				value = 1
+			}
+		}
+		else = {
+			change_variable = {
+				name = dawn
+				add = 1
+			}
+		}
+	}
+}
+
+character_creation_decrease_dawn_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = var:dawn }
+			change_variable = {
+				name = dawn
+				subtract = 1
+			}
+			if = {
+				limit = { var:dawn <= 0 }
+				remove_variable = dawn
+			}
+		}
+	}
+}
+
+character_window_show_dawn_skill_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			dawn_aspect_spellcasting_value >= 8
+			knows_magic_school_with_dawn_aspect_trigger = yes
+		}
+	}
+	
+	effect = {
+		
+	}
+}

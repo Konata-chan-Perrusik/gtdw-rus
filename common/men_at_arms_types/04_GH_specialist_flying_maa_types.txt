@@ -1,0 +1,223 @@
+﻿# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+@cultural_maa_extra_ai_score = 80 # Equivalent to having 8 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+## CULTURAL ##
+
+griffon_riders = { # Chevalien cultural unit
+	type = flying
+
+	can_recruit = {
+		culture ?= { has_innovation = innovation_griffon_riders }
+		any_held_county = {
+			any_county_province = {
+				OR = {
+					has_building_or_higher = 01_griffon_roost
+				}
+			}
+		}
+	}
+
+	damage = 220
+	toughness = 60
+	pursuit = 65
+	screen = 30
+
+	terrain_bonus = {
+		hills = { damage = 20 pursuit = 10 }
+		mountains = { damage = 50 toughness = 20 pursuit = 20 }
+		desert_mountains = { damage = 20 toughness = 5 pursuit = 10 }
+		forest = { damage = -50 pursuit = -25 }
+		taiga = { damage = -80 pursuit = -35 }
+		desert = { damage = -40 toughness = -30 pursuit = -15 }
+
+		marcher_hills = { damage = 20 pursuit = 10 }
+		marcher_mountains = { damage = 50 toughness = 20 pursuit = 20 }
+		marcher_forest = { damage = -40 pursuit = -25 }
+	}
+
+	counters = {
+		light_cavalry = 1.5
+		heavy_cavalry = 1.5
+	}
+
+	buy_cost = { gold = griffon_riders_recruitment_cost }
+	low_maintenance_cost = { gold = griffon_riders_low_maint_cost }
+	high_maintenance_cost = { gold = griffon_riders_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 25
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = griffon_riders
+}
+
+griffon_silencers = { # Chevalien cultural unit
+	type = flying
+
+	can_recruit = {
+		any_held_county = {
+			any_county_province = {
+				OR = {
+					has_building_or_higher = 01_antimagi_chapterhouse
+				}
+			}
+		}
+		culture = {
+			has_innovation = innovation_anti_magic_combat
+		}
+	}
+
+	damage = 220
+	toughness = 80
+	pursuit = 65
+	screen = 20
+
+	terrain_bonus = {
+		hills = { damage = 20 pursuit = 10 }
+		mountains = { damage = 50 toughness = 20 pursuit = 20 }
+		desert_mountains = { damage = 20 toughness = 5 pursuit = 10 }
+		forest = { damage = -50 pursuit = -25 }
+		taiga = { damage = -80 pursuit = -35 }
+		desert = { damage = -40 toughness = -30 pursuit = -15 }
+
+		marcher_hills = { damage = 20 pursuit = 10 }
+		marcher_mountains = { damage = 50 toughness = 20 pursuit = 20 }
+		marcher_forest = { damage = -40 pursuit = -25 }
+	}
+
+	counters = {
+		magi = 2
+		undead = 2
+		constructs = 1
+	}
+
+	buy_cost = { gold = griffon_silencers_recruitment_cost }
+	low_maintenance_cost = { gold = griffon_silencers_low_maint_cost }
+	high_maintenance_cost = { gold = griffon_silencers_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	max_sub_regiments = 5
+
+	stack = 25
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = griffon_riders
+}
+
+airships = { # Adabyssian cultural unit
+	type = flying
+
+	damage = 1750
+	toughness = 700
+	pursuit = 500
+	screen = 500
+
+	siege_tier = 6
+	siege_value = 0.8
+
+	terrain_bonus = {
+		wetlands = { damage = 250 pursuit = 250 }
+		plains = { damage = 250 pursuit = 250 }
+		farmlands = { damage = 250 pursuit = 250 }
+		floodplains = { damage = 250 pursuit = 250 }
+		desert = { damage = 250 pursuit = 250 }
+		steppe = { damage = 250 pursuit = 250 }
+		drylands = { damage = 250 pursuit = 250 }
+		oasis = { damage = -250 pursuit = -350 screen = -250 }
+		taiga = { damage = -250 pursuit = -350 screen = -250 }
+		forest = { damage = -250 pursuit = -400 screen = -250 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+		mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+
+		marcher_wetlands = { damage = 250 pursuit = 250 }
+		marcher_plains = { damage = 250 pursuit = 250 }
+		marcher_farmlands = { damage = 250 pursuit = 250 }
+		marcher_floodplains = { damage = 250 pursuit = 250 }
+		marcher_forest = { damage = -250 pursuit = -400 screen = -250 }
+		marcher_hills = { damage = -300 pursuit = -350 screen = -250 }
+		marcher_mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450}
+
+		deadlands = { damage = 250 pursuit = 250 }
+		mayik_caverns = { damage = -5000 toughness = -1000 pursuit = -1000 screen = -1000 }
+		mayik_corridors = { damage = -5000 toughness = -1000 pursuit = -1000 screen = -1000 }
+		mayik_chamber = { damage = -5000 toughness = -1000 pursuit = -1000 screen = -1000 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	buy_cost = { gold = airship_recruitment_cost prestige = airship_recruitment_cost_prestige }
+	low_maintenance_cost = { gold = airship_low_maint_cost }
+	high_maintenance_cost = { gold = airship_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 3
+	icon = airship
+}
+
+seraph_melacham = { # Light/Celestial special summon troops
+	type = flying
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 250
+	toughness = 60
+	pursuit = 65
+	screen = 30
+
+	terrain_bonus = {
+		steppe = { damage = 150 pursuit = 50 }
+		plains = { damage = 100 pursuit = 25 }
+		desert = { damage = 60 toughness = 30 pursuit = 15 }
+		hills = { damage = 20 pursuit = 10 }
+		mountains = { damage = 50 toughness = 20 pursuit = 20 }
+		desert_mountains = { damage = 20 toughness = 5 pursuit = 10 }
+		forest = { damage = -50 pursuit = -25 }
+		taiga = { damage = -80 pursuit = -35 }
+		marcher_hills = { damage = 20 pursuit = 10 }
+		marcher_mountains = { damage = 50 toughness = 20 pursuit = 20 }
+		marcher_forest = { damage = -40 pursuit = -25 }
+	}
+
+	counters = {
+		light_cavalry = 1.5
+		heavy_cavalry = 1.5
+		monsters = 1
+		undead = 1
+		pikemen = 1
+		magical_death = 1.5
+		magical_dark = 2
+	}
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = griffon_riders 
+} 
+

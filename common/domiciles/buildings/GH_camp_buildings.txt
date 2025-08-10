@@ -1,0 +1,57 @@
+﻿@camp_building_main_slot_construction_duration_t1 = 180
+@camp_building_main_slot_construction_duration_t2 = 210
+@camp_building_main_slot_construction_duration_t3 = 240
+@camp_building_main_slot_construction_duration_t4 = 300
+@camp_building_main_slot_construction_duration_t5 = 360
+@camp_building_main_slot_construction_duration_t6 = 420
+
+@camp_building_internal_slot_construction_duration_t1 = 180
+@camp_building_internal_slot_construction_duration_t2 = 240
+@camp_building_internal_slot_construction_duration_t3 = 300
+
+proving_grounds_mammoth_caravan = { # Mammoth Caravan
+	slot_type = internal
+	construction_time = @camp_building_internal_slot_construction_duration_t3
+	allowed_domicile_types = { camp }
+	previous_building = proving_grounds_01
+
+	cost = { gold = proving_grounds_elephantry_reserve_domicile_building_gold_cost_value }
+	refund = {
+		gold = {
+			value = proving_grounds_elephantry_reserve_domicile_building_gold_cost_value
+			multiply = camp_refund_mult_value
+			floor = yes
+		}
+	}
+
+	can_construct = {
+		culture = { has_innovation = innovation_warisnik_mammoths }
+		custom_tooltip = {
+			text = proving_grounds_mammoth_caravan.tt.ate_mammoths
+			NOT = { has_character_flag = recently_ate_mammoths }
+		}
+	}
+
+	character_modifier = {}
+
+	parameters = {
+		camp_unlocks_elephantry_captain_officer = yes
+		camp_reinforce_mammoth_regiments_anywhere = yes
+	}
+	
+	ai_value = {
+		value = camp_building_ai_base_t5
+		if = {
+			limit = { owner = { has_lifestyle = martial_lifestyle } }
+			add = camp_building_ai_lifestyle_bias_value
+		}
+		multiply = 10
+	}
+	
+	asset = {
+		icon = "gfx/interface/icons/domicile_building/domicile_building_elephantry_reserves.dds"
+		texture = "gfx/interface/window_domiciles/laamp_building_proving_grounds.dds"
+		intersectionmask_texture = "gfx/interface/window_domiciles/laamp_building_proving_grounds_mask.png"
+		soundeffect = "event:/DLC/EP3/SFX/UI/camp_buildings/ep3_ui_domicile_buildings_proving_ground"
+	}
+}

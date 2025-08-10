@@ -1,0 +1,38 @@
+﻿
+# start/reset the countdown for gisredde integration (requires holding both gisreddes for 80 years)
+on_gisreddes_title_change = {
+	effect = {
+		# if the title that changed hands was either gisredde
+		if = {
+			limit = {
+				OR = {
+					scope:title = title:c_peti_gisredde
+					scope:title = title:c_grande_gisredde
+				}
+			}
+
+			# if they now both belong to the same person, (re)set the timer
+			if = {
+				limit = {
+					scope:title = {
+						holder = {
+							has_title = title:c_peti_gisredde
+							has_title = title:c_grande_gisredde
+						}
+					}
+				}
+				title:c_grande_gisredde = {
+					if = {
+						limit = { has_variable = integrate_gisreddes_timer }
+						remove_variable = integrate_gisreddes_timer
+					}
+					set_variable = {
+						name = integrate_gisreddes_timer
+						value = flag:timer_active
+						years = 80
+					}
+				}
+			}
+		}
+	}
+}

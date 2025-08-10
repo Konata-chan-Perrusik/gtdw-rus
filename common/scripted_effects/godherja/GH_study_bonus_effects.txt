@@ -1,0 +1,231 @@
+﻿
+knowledge_entry_bonus_table_effect = {
+	$MODE$_knowledge_entry_bonus_effect = { NAME = learn_spell }
+	
+	$MODE$_knowledge_entry_bonus_effect = { NAME = diplomacy }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = intrigue }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = martial }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = prowess }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = arcana }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = learning }
+	
+	$MODE$_knowledge_entry_bonus_effect = { NAME = light }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = metal }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = blood }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = nature }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = dream }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = ethereal }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = dark }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = hymns }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = water }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = stone }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = add_trait_xp_lifestyle_physician }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = add_trait_xp_lifestyle_mystic }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = add_trait_xp_lifestyle_tourney_participant_foot }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = add_trait_xp_lifestyle_blademaster }
+	
+	$MODE$_knowledge_entry_bonus_effect = { NAME = add_character_modifier_GH_wanderlust_modifier }
+	$MODE$_knowledge_entry_bonus_effect = { NAME = sanity_loss }
+}
+
+learn_spell_knowledge_entry_effect = {
+	save_temporary_scope_as = character_to_learn_spells_scope
+	scope:knowledge_entry_scope ?= {
+		every_in_list = {
+			variable = knowledge_entry_spell_list
+			save_temporary_scope_as = spell_to_learn_scope
+			scope:character_to_learn_spells_scope = {
+				learn_spell_effect = { SPELL = scope:spell_to_learn_scope }
+			}
+		}
+	}
+}
+
+learn_magic_school_knowledge_entry_effect = {
+	save_temporary_scope_as = character_to_learn_magic_school_scope
+	scope:knowledge_entry_scope.var:knowledge_entry_magic_school ?= {
+		save_temporary_scope_as = magic_school_to_learn_scope
+		scope:character_to_learn_magic_school_scope = {
+			learn_magic_school_effect = { MAGIC_SCHOOL = scope:magic_school_to_learn_scope }
+		}
+	}
+}
+
+diplomacy_knowledge_entry_effect = {
+	add_diplomacy_skill = scope:knowledge_entry_scope.var:diplomacy_scale
+}
+
+intrigue_knowledge_entry_effect = {
+	add_intrigue_skill = scope:knowledge_entry_scope.var:intrigue_scale
+}
+
+learning_knowledge_entry_effect = {
+	add_learning_skill = scope:knowledge_entry_scope.var:learning_scale
+}
+
+martial_knowledge_entry_effect = {
+	add_martial_skill = scope:knowledge_entry_scope.var:martial_scale
+}
+
+prowess_knowledge_entry_effect = {
+	add_prowess_skill = scope:knowledge_entry_scope.var:prowess_scale
+}
+
+arcana_knowledge_entry_effect = {
+	add_arcana_skill = { VALUE = scope:knowledge_entry_scope.var:arcana_scale }
+}
+
+blood_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = blood VALUE = scope:knowledge_entry_scope.var:blood_scale }
+}
+
+nature_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = nature VALUE = scope:knowledge_entry_scope.var:nature_scale }
+}
+
+air_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = air VALUE = scope:knowledge_entry_scope.var:air_scale }
+}
+
+dream_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = dream VALUE = scope:knowledge_entry_scope.var:dream_scale }
+}
+
+ethereal_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = ethereal VALUE = scope:knowledge_entry_scope.var:ethereal_scale }
+}
+
+dark_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = dark VALUE = scope:knowledge_entry_scope.var:dark_scale }
+}
+
+metal_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = metal VALUE = scope:knowledge_entry_scope.var:metal_scale }
+}
+
+light_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = light VALUE = scope:knowledge_entry_scope.var:light_scale }
+}
+
+water_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = water VALUE = scope:knowledge_entry_scope.var:water_scale }
+}
+
+stone_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = stone VALUE = scope:knowledge_entry_scope.var:stone_scale }
+}
+hymns_knowledge_entry_effect = {
+	add_aspect_skill_effect = { ASPECT = hymns VALUE = scope:knowledge_entry_scope.var:hymns_scale }
+}
+
+
+add_trait_xp_lifestyle_physician_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = lifestyle_physician } }
+		add_trait = lifestyle_physician
+	}
+	add_trait_xp = {
+		trait = lifestyle_physician
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_physician_scale
+	}
+}
+
+add_trait_xp_lifestyle_mystic_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = lifestyle_mystic } }
+		add_trait = lifestyle_mystic
+	}
+	add_trait_xp = {
+		trait = lifestyle_mystic
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_mystic_scale
+	}
+}
+
+add_trait_xp_lifestyle_blademaster_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = lifestyle_blademaster } }
+		add_trait = lifestyle_blademaster
+	}
+	add_trait_xp = {
+		trait = lifestyle_blademaster
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_blademaster_scale
+	}
+}
+
+add_trait_xp_lifestyle_tourney_participant_foot_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = tourney_participant } }
+		add_trait = tourney_participant
+	}
+	add_trait_xp = {
+		trait = tourney_participant
+		track = foot
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_tourney_participant_foot_scale
+	}
+}
+
+add_trait_xp_lifestyle_traveler_travel_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = lifestyle_traveler } }
+		add_trait = lifestyle_traveler
+	}
+	add_trait_xp = {
+		trait = lifestyle_traveler
+		track = travel
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_traveler_travel_scale
+	}
+}
+
+add_trait_xp_lifestyle_traveler_danger_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = lifestyle_traveler } }
+		add_trait = lifestyle_traveler
+	}
+	add_trait_xp = {
+		trait = lifestyle_traveler
+		track = danger
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_traveler_danger_scale
+	}
+}
+
+add_trait_xp_lifestyle_hunter_falconer_knowledge_entry_effect = {
+	if = {
+		limit = { NOT = { has_trait = lifestyle_hunter } }
+		add_trait = lifestyle_hunter
+	}
+	add_trait_xp = {
+		trait = lifestyle_hunter
+		track = falconer
+		value = scope:knowledge_entry_scope.var:add_trait_xp_lifestyle_hunter_danger_scale
+	}
+}
+
+add_arcana_lifestyle_xp_knowledge_entry_effect = {
+	add_arcana_lifestyle_xp = scope:knowledge_entry_scope.var:add_arcana_lifestyle_xp_scale
+}
+
+add_intrigue_lifestyle_xp_knowledge_entry_effect = {
+	add_intrigue_lifestyle_xp = scope:knowledge_entry_scope.var:add_intrigue_lifestyle_xp_scale
+}
+
+add_learning_lifestyle_xp_knowledge_entry_effect = {
+	add_learning_lifestyle_xp = scope:knowledge_entry_scope.var:add_learning_lifestyle_xp_scale
+}
+
+########
+# MISC #
+########
+
+add_character_modifier_GH_wanderlust_modifier_knowledge_entry_effect = {
+	add_character_modifier = {
+		modifier = GH_wanderlust_modifier
+		years = 5
+	}
+}
+
+sanity_loss_knowledge_entry_effect = {
+	add_stress = {
+		value = major_stress_gain
+		multiply = scope:knowledge_entry_scope.var:sanity_loss_scale
+	}
+}

@@ -1,0 +1,153 @@
+﻿
+knowledge_entry_is_readable_scripted_gui = {
+	scope = artifact
+	
+	is_shown = {
+		OR = {
+			NOT = { exists = scope:knowledge_entry_scope.var:knowledge_entry_cipher_skill }
+			is_target_in_variable_list = {
+				name = deciphered_knowledge_entry_list
+				target = scope:knowledge_entry_scope
+			}
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+knowledge_entry_is_learned_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		is_target_in_variable_list = {
+			name = known_knowledge_entry_list
+			target = scope:knowledge_entry_scope
+		}
+	}
+	
+	effect = {
+		knowledge_entry_bonus_table_effect = { MODE = learn }
+	}
+}
+
+decipher_knowledge_entry_scripted_gui = {
+	scope = artifact
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		add_to_variable_list = {
+			name = deciphered_knowledge_entry_list
+			target = scope:knowledge_entry_scope
+		}
+	}
+}
+
+learn_knowledge_entry_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		NOR = {
+			is_target_in_variable_list = {
+				name = known_knowledge_entry_list
+				target = scope:knowledge_entry_scope
+			}
+			any_scheme = {
+				scheme_type = GH_study_knowledge_entry_scheme
+				var:knowledge_entry = scope:knowledge_entry_scope
+			}
+		}
+	}
+	
+	is_valid = {
+		scope:knowledge_entry_scope = { save_temporary_scope_as = knowledge_entry }
+		save_temporary_scope_as = researcher
+		trigger_if = {
+			limit = { exists = scope:required_artifact_scope.var:writing_culture }
+			knows_language_of_culture = scope:required_artifact_scope.var:writing_culture
+		}
+		custom_tooltip = {
+			text = already_studying_knowledge_tt
+			NOT = { has_variable_list = research_story_list }
+		}
+		custom_tooltip = {
+			text = relevant_skill_too_low_tt
+			knowledge_entry_success_chance_value > 0
+		}
+		custom_tooltip = {
+			text = do_not_own_this_artifact_tt
+			scope:required_artifact_scope = { artifact_owner = root }
+		}
+	}
+	
+	effect = {
+		send_interface_toast = {
+			title = "Study"
+			left_icon = root
+			
+			start_scheme = {
+				type = GH_study_knowledge_entry_scheme
+				targets_nothing = yes
+			}
+			every_scheme = {
+				limit = {
+					scheme_type = GH_study_knowledge_entry_scheme
+					NOT = { exists = var:knowledge_entry }
+				}
+				set_variable = {
+					name = knowledge_entry
+					value = scope:knowledge_entry_scope
+				}
+				set_variable = {
+					name = required_artifact
+					value = scope:required_artifact_scope
+				}
+			}
+		}
+	}
+}
+
+cancel_studying_knowledge_entry_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		has_variable_list = research_story_list
+		any_in_list = {
+			variable = research_story_list
+			var:knowledge_entry = scope:knowledge_entry_scope
+		}
+	}
+	
+	effect = {
+		every_in_list = {
+			variable = research_story_list
+			limit = { var:knowledge_entry = scope:knowledge_entry_scope }
+			save_scope_as = study_scope
+		}
+		remove_list_variable = {
+			name = research_story_list
+			target = scope:study_scope
+		}
+		scope:study_scope = { end_story = yes }
+	}
+}
+
+cancel_study_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		
+	}
+	
+	effect = {
+		remove_list_variable = {
+			name = research_story_list
+			target = scope:study_scope
+		}
+		scope:study_scope = { end_story = yes }
+	}
+}

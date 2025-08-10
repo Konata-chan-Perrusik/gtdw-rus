@@ -1,0 +1,340 @@
+﻿#########################
+### GH CHARACTER TRIGGERS
+## AreYou Triggers
+## AreYou Character Archetype Triggers
+## Character Flag Triggers
+## Character Behavior Triggers
+## Special Character Triggers
+
+#####################################
+## AreYou Specific Character Triggers
+
+character_aderi_trigger = { 							this = character:kawoch_mogowai_9 }
+character_aeschraes_trigger = { 						this = character:westernimperial_aeschraes_aagiokrata_1 }
+character_belisarios_trigger = { 						this = character:easternimperial_aironoian_aagiokrata_7 }
+character_benouet_den_va_seignon_trigger = { 			this = character:voyagen_lifepath_7 }
+character_cliement_den_va_seignon_trigger = { 			this = character:voyagen_lifepath_9 }
+character_black_sun_trigger = { 						this = character:apokiakas_aversarinas_aagiokratia_23 }
+character_cenware_trigger = { 							this = character:daukeni_sjalvolki_1 }
+character_cois_trigger = { 								this = character:westernimperial_omitilos_aagiokrata_2 }
+character_cormag_fenrus_trigger = { 					this = character:fenvir_sjalvolki_1 }
+character_dexios_trigger = { 							this = character:centralislander_aversarinas_aagiokrata_1 } # Manlet bitch
+character_giant_layer_trigger = { 						this = character:curgerski_sjalvolki_2 }
+character_gorassos_trigger = {		 					this = character:southernimperial_aversarian_gorassos_1 }
+character_harthah_trigger = {		 					this = character:tasurmad_harthahi_1 }
+character_hecaeda_trigger = {		 					this = character:easternimperial_aironoian_aagiokrata_1 }
+character_iordanes_trigger = { 							this = character:southernimperial_aversarinas_aagiokrata_30 }
+character_it_is_i_megistos_trigger = { 					this = character:southernimperial_manikos_aagiokrata_1 }
+character_legan_dethas_trigger = { 						this = character:apokiakas_militant_cliques_1 }
+character_naivarman_trigger = { 						this = character:sindaara_vidvaookeyatra_1 }
+character_rene_den_va_seignon_trigger = { 				this = character:voyagen_lifepath_8 }
+character_rhesus_trigger = { 							this = character:westernimperial_omitilos_aagiokrata_1 }
+character_sigrun_axe_in_the_hand_trigger = { 			this = character:caemansi_sjalvolki_14 }
+character_sirras_trigger = { 							this = character:scusstari_iyrossi_aagiokrata_13 }
+character_ulfirx_mad_dog_trigger = { 					this = character:vrodkin_sjalvolki_1 }
+character_narathu_trigger = { 							this = character:hokanta_vidvaookeyatra_34 }
+character_fridge_trigger = { 							this = character:easternimperial_aversarinas_aagiokrata_7 }
+character_croweye_trigger = {							this = character:daukeni_sjalvolki_19 }
+
+######################################
+## AreYou Character Archetype Triggers
+
+character_archetype_adabyss_invader_trigger = {		 	has_character_flag = adabyss_invader }
+character_archetype_fogeater_invader_trigger = {		has_character_flag = fogeater_invader }
+
+##########################
+## Character Flag Triggers
+
+GH_has_mystical_birthright_trigger = { 					has_character_flag = born_as_taltos } # Lonely Note: Replacing born_as_taltos from vanilla with this in case we want to expand on it
+
+##############################
+## Character Behavior Triggers
+
+character_behavior_wont_beg_for_mercy_trigger = {
+	OR = {
+		character_aeschraes_trigger = yes				# Aeschraes
+		character_dexios_trigger = yes					# Dexios
+		#character_it_is_i_megistos_trigger = yes		# Megistos - Lonely Note: Removed as Megistos isn't the fighting type - they're a lover
+		character_gorassos_trigger = yes				# Gorassos
+		character_hecaeda_trigger = yes					# Hecaeda
+		character_black_sun_trigger = yes				# Black Sun
+		character_cormag_fenrus_trigger = yes			# Cormag
+	}
+}
+
+character_behavior_wont_give_mercy_trigger = {
+	# This would be so out of character for these three that it's outright prohibited, even if controlled by the player. Not that Cenware would ever accept anyway.
+	OR = {
+		character_aeschraes_trigger = yes				# Aeschraes
+		character_gorassos_trigger = yes				# Gorassos
+		character_black_sun_trigger = yes				# Black Sun
+	}
+}
+
+gh_character_protection_trigger = { # Protects characters from factions
+	OR = {
+		AND = {
+			top_liege = { character_cenware_trigger = yes }
+			top_liege = { has_title_migrant_coalition_trigger = yes }
+		}
+		top_liege = { character_archetype_adabyss_invader_trigger = yes }
+		top_liege = { character_harthah_trigger = yes }
+		top_liege = { character_archetype_fogeater_invader_trigger = yes }
+	}
+}
+
+character_behavior_immune_to_factions_trigger = {
+	OR = {
+		has_character_modifier = gh_imperrech_debuff_modifier
+		character_archetype_fogeater_invader_trigger = yes
+	}
+}
+
+#############################
+## Special Character Triggers
+
+character_special_migrant_coalition_alive_and_active_trigger = { # Makes sure Cenware is still alive and leading the Imperrech
+	character:daukeni_sjalvolki_1 = { # GH TODO: Replace with a Cenware-type character flag
+		is_alive = yes
+		has_title_migrant_coalition_trigger = yes
+	}
+}
+
+####################
+## Special Regent Triggers
+
+has_special_regent_at_start_trigger = {
+	OR = {
+		character_benouet_den_va_seignon_trigger = yes
+		character_cliement_den_va_seignon_trigger = yes
+		character_cois_trigger = yes
+	}
+}
+###########
+## Unsorted
+
+is_ruin = {
+	OR = {
+		has_trait = gh_wasteland
+		has_culture = culture:wasteland
+		has_faith = faith:wasteland_faith
+	}
+}
+is_familiar = {
+	OR = {
+		has_trait = gh_griffon_trait
+	}
+}
+is_fogeater = {
+	OR = {
+		faith.religion = religion:fogeater_religion
+		culture = { has_cultural_pillar = heritage_fog_eaters }
+	}
+}
+is_redlander = {
+	OR = {
+		faith.religion = religion:redland_cults_religion
+		culture = { has_cultural_pillar = heritage_redlander }
+	}
+}
+is_undead = {
+	OR = {
+		has_faith = faith:rejection
+		has_culture = culture:lich_culture
+		has_trait = necromancy_undead_awakened
+		has_trait = necromancy_undead_lich
+		has_trait = necromancy_undead_thrall
+	}
+}
+
+is_sentient = {
+	is_ruin = no
+	is_familiar = no
+}
+is_human = { # Would this creature use most mundane mortal decisions and events? Examples to the contrary are non-sentients, Fogeaters, Redlanders, Liches, etc.
+	is_fogeater = no
+	is_redlander = no
+	is_undead = no
+	is_sentient = yes
+} 
+is_nattanan = { #Check to confirm this includes Korlacan characters too; might need to differentiate further now that they have shared heritage.
+	OR = {
+		faith.religion = religion:sepattan_religion
+		culture = { has_cultural_pillar = heritage_nattanan }
+		culture = { has_cultural_pillar = heritage_korlacan }
+	}
+}
+
+# Bilateral Blocks
+
+bilateral_nonsentient_diplomatic_block = {
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:recipient
+			scope:actor = { is_sentient = no }
+		}
+		scope:recipient = { is_sentient = no }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:secondary_recipient
+			scope:actor = { is_sentient = no }
+		}
+		scope:secondary_recipient = { is_sentient = no }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:recipient
+			scope:recipient = { is_sentient = no }
+		}
+		scope:actor = { is_sentient = no }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:secondary_recipient
+			scope:secondary_recipient = { is_sentient = no }
+		}
+		scope:actor = { is_sentient = no }
+	}
+}
+
+bilateral_fogeater_diplomatic_block = {
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:recipient
+			scope:actor = { is_fogeater = yes }
+		}
+		scope:recipient = { is_fogeater = yes }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:secondary_recipient
+			scope:actor = { is_fogeater = yes }
+		}
+		scope:secondary_recipient = { is_fogeater = yes }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:recipient
+			scope:recipient = { is_fogeater = yes }
+		}
+		scope:actor = { is_fogeater = yes }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:secondary_recipient
+			scope:secondary_recipient = { is_fogeater = yes }
+		}
+		scope:actor = { is_fogeater = yes }
+	}
+}
+
+bilateral_lichdom_diplomatic_block = {
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:recipient
+			scope:actor = { is_undead = yes }
+		}
+		scope:recipient = { is_undead = yes }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:secondary_recipient
+			scope:actor = { is_undead = yes }
+		}
+		scope:secondary_recipient = { is_undead = yes }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:recipient
+			scope:recipient = { is_undead = yes }
+		}
+		scope:actor = { is_undead = yes }
+	}
+	trigger_if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:secondary_recipient
+			scope:secondary_recipient = { is_undead = yes }
+		}
+		scope:actor = { is_undead = yes }
+	}
+}
+
+can_do_diplomacy_trigger = {
+	#NOT = { scope:recipient = scope:actor }
+	# Check that you're not a ruin
+	bilateral_nonsentient_diplomatic_block = yes
+	# Check that you're not a Fogeater
+	bilateral_fogeater_diplomatic_block = yes
+	# Check that you're not a Lich
+	bilateral_lichdom_diplomatic_block = yes
+}
+
+GH_dont_generate_family_character_trigger = {
+	OR = {
+		has_character_flag = dont_generate_family # For generated characters
+		is_sentient = no # GH TODO: Familiars should possibly be able to if old enough - need to decide in future - fogeaters should probably also generate families eventually?
+		government_has_flag = government_is_republic # Should really only be the barons that dont spawn families
+		government_has_flag = government_is_lichdom
+		GH_is_any_theocracy_government_trigger = yes
+		AND = { # After 1200
+			current_year > 1200
+			OR = {
+				AND = {
+					exists = character:westernimperial_aeschraes_aagiokrata_1
+					character_aeschraes_trigger = yes #Aeschraes killed his family
+				}
+				AND = {
+					exists = character:tasurmad_harthahi_1
+					character_harthah_trigger = yes #Harthah was never able to get over his ex wife
+				}
+			}
+		}
+		AND = { # 1254 only
+			current_year > 1253
+			current_year < 1255
+			OR = {
+				AND = {
+					exists = character:scusstari_iyrossi_aagiokrata_13
+					character_sirras_trigger = yes #Sirras has been in the legion his whole life
+				}
+				AND = {
+					exists = character:easternimperial_aironoian_aagiokrata_1
+					character_hecaeda_trigger = yes #Hecaeda doesnt have time for that shit
+				}
+				AND = {
+					exists = character:vrodkin_sjalvolki_1
+					character_ulfirx_mad_dog_trigger = yes #Ulfirx is practically a fetus
+				}
+				AND = {
+					exists = character:sindaara_vidvaookeyatra_1
+					character_naivarman_trigger = yes #Naivarman is even more of a fetus
+				}
+				AND = {
+					exists = character:hokanta_vidvaookeyatra_34
+					character_aeschraes_trigger = yes #Aeschraes killed his family
+				}
+			}
+		}
+		AND = {
+			exists = character:apokiakas_aversarinas_aagiokratia_23
+			character_black_sun_trigger = yes #Nicanoneus has a scripted family
+		}
+		AND = {
+			exists = character:southernimperial_aversarian_gorassos_1
+			character_gorassos_trigger = yes #Gorassos mostly just derives sexual satisfaction from murder and probably rape, fuck that dude
+		}
+	}
+}

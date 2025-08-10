@@ -1,0 +1,694 @@
+﻿## All start dates
+
+blood_of_the_giants = {	# Claims descent from giants; very likely not biologically possible but who knows?
+	type = heroic
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = blood_of_the_giants_legend
+		}
+		capital_province ?= { geographical_region = kalathipsomi_biozone }
+	}
+	is_valid = {
+		is_playable_character = yes
+		prestige_level >= very_high_prestige_level
+		has_trait = giant
+		prowess >= excellent_skill_level
+	}
+
+	chronicle = mythical_descent
+	chronicle_properties = {
+		beast = flag:giant
+	}
+}
+
+anesimasios = {	# Claims descent from Anesimasios, last Aautokratir of a unified Aversaria before the ICW
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = anesimasios_legend
+		}
+		exists = character:centralimperial_aversarinas_aagiokrata_45
+		character:centralimperial_aversarinas_aagiokrata_45 = { is_alive = no }
+		trigger_if = { # If Anesimasios's house is still around, only they should be able to use the seed
+			limit = { exists = character:centralimperial_aversarinas_aagiokrata_45.house.house_head }
+			house = character:centralimperial_aversarinas_aagiokrata_45.house
+		}
+		trigger_else = { # Otherwise available to all Aversarians and Aagiokratians
+			OR = {
+				culture = { has_cultural_tradition = tradition_legacy_of_aversaria }
+				religion = religion:aversarinas_aagiokrata_religion
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		trigger_if = {	# Legit descendants have loosened requirements
+			limit = { house = character:centralimperial_aversarinas_aagiokrata_45.house }
+			highest_held_title_tier >= tier_duchy
+			prestige_level >= high_prestige_level
+		}
+		trigger_else = {
+			highest_held_title_tier >= tier_kingdom
+			prestige_level >= very_high_prestige_level
+		}
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:centralimperial_aversarinas_aagiokrata_45
+		title = title:e_aversarinas_aautokrata
+	}
+}
+
+theyssia = { # Claims descent from Aautokrata Theyssia, who reigned 150 years and whose name is synonymous with Aversaria's golden age
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = theyssia_legend
+		}
+		exists = character:southernimperial_aversarinas_aagiokrata_1
+		character:southernimperial_aversarinas_aagiokrata_1 = { is_alive = no }
+		trigger_if = { # If Theyssia's house is still around, only they should be able to use the seed
+			limit = { exists = character:southernimperial_aversarinas_aagiokrata_1.house.house_head }
+			house = character:southernimperial_aversarinas_aagiokrata_1.house
+		}
+		trigger_else = { # Otherwise available to all Aversarians and Aagiokratians
+			OR = {
+				culture = { has_cultural_tradition = tradition_legacy_of_aversaria }
+				religion = religion:aversarinas_aagiokrata_religion
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		trigger_if = {	# Legit descendants have loosened requirements
+			limit = { house = character:southernimperial_aversarinas_aagiokrata_1.house }
+			highest_held_title_tier >= tier_duchy
+			prestige_level >= high_prestige_level
+		}
+		trigger_else = {
+			highest_held_title_tier >= tier_kingdom
+			prestige_level >= very_high_prestige_level
+		}
+		stewardship >= excellent_skill_level
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:southernimperial_aversarinas_aagiokrata_1
+		title = title:e_aversarinas_aautokrata
+	}
+}
+
+teyberl = { # Claims descent from the Teyberl clan of the Greulokin
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = teyberl_legend
+		}
+		exists = character:greulokin_sjalvolki_18
+		character:greulokin_sjalvolki_18 = { is_alive = no }
+		culture = {
+			OR = {
+				this = culture:greulokin
+				any_parent_culture_or_above = { this = culture:greulokin }
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		highest_held_title_tier >= tier_duchy
+		prestige_level >= very_high_prestige_level
+		culture.culture_head = this
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:greulokin_sjalvolki_18
+		title = title:k_greulokin
+	}
+}
+
+coc_melani = {
+	type = heroic
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = coc_melani_legend
+		}
+		exists = character:trustians_lifepath_25
+		character:trustians_lifepath_25 = { is_alive = no }
+		trigger_if = { # If Melani's house is still around, only they should be able to use the seed
+			limit = { exists = character:trustians_lifepath_25.house.house_head }
+			house = character:trustians_lifepath_25.house
+		}
+		trigger_else = { # Otherwise available to all Trustians
+			culture = {
+				OR = {
+					this = culture:trustians
+					any_parent_culture_or_above = { this = culture:trustians }
+				}
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		has_title = title:k_perignan
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = ancestral_glory_rival
+	chronicle_properties = {
+		ancestor = character:trustians_lifepath_25
+		title = title:k_perignan
+		rival = character:carsavisians_lifepath_30
+	}
+}
+
+coc_raven = {
+	type = heroic
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = coc_raven_legend
+		}
+		exists = character:carsavisians_lifepath_29
+		character:carsavisians_lifepath_29 = { is_alive = no }
+		trigger_if = { # If Raven's house is still around, only they should be able to use the seed
+			limit = { exists = character:carsavisians_lifepath_29.house.house_head }
+			house = character:carsavisians_lifepath_29.house
+		}
+		trigger_else = { # Otherwise available to all Carsavisians
+			culture = {
+				OR = {
+					this = culture:carsavisians
+					any_parent_culture_or_above = { this = culture:carsavisians }
+				}
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		has_title = title:k_rohr
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:carsavisians_lifepath_29
+		title = title:k_rohr
+	}
+}
+
+coc_pierre = {
+	type = heroic
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = coc_pierre_legend
+		}
+		exists = character:salisians_lifepath_12
+		character:salisians_lifepath_12 = { is_alive = no }
+		trigger_if = { # If Pierre's house is still around, only they should be able to use the seed
+			limit = { exists = character:salisians_lifepath_12.house.house_head }
+			house = character:salisians_lifepath_12.house
+		}
+		trigger_else = { # Otherwise available to all Salisians
+			culture = {
+				OR = {
+					this = culture:salisians
+					any_parent_culture_or_above = { this = culture:salisians }
+				}
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		has_title = title:k_marroux
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:salisians_lifepath_12
+		title = title:k_marroux
+	}
+}
+
+coc_gofrei = {
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = coc_gofrei_legend
+		}
+		exists = character:salisians_lifepath_13
+		character:salisians_lifepath_13 = { is_alive = no }
+		trigger_if = { # If Gofrei's house is still around, only they should be able to use the seed
+			limit = { exists = character:salisians_lifepath_13.house.house_head }
+			house = character:salisians_lifepath_13.house
+		}
+		trigger_else = { # Otherwise available to all Salisians
+			culture = {
+				OR = {
+					this = culture:salisians
+					any_parent_culture_or_above = { this = culture:salisians }
+				}
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		has_title = title:d_devex
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:salisians_lifepath_13
+		title = title:d_devex
+	}
+}
+
+valden = {
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = valden_legend
+		}
+		exists = character:voyagen_lifepath_26
+		character:voyagen_lifepath_26 = { is_alive = no }
+		capital_province ?= { geographical_region = chevalie_biozone }
+		culture = {
+			OR = {
+				has_cultural_pillar = heritage_marcher
+				any_parent_culture_or_above = { has_cultural_pillar = heritage_marcher }
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		highest_held_title_tier >= tier_kingdom
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = ancestral_glory_lich
+	chronicle_properties = {
+		ancestor = character:voyagen_lifepath_26
+		title = title:e_chevalie
+		lich = character:lich_culture_rejection_9
+	}
+}
+
+wayfather_peyton = {
+	type = holy
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = wayfather_peyton_legend
+		}
+		exists = character:carsavisians_lifepath_36
+		character:carsavisians_lifepath_36 = { is_alive = no }
+		current_date >= 1254.1.1	# Meant to be 100 years after his death; coincidentally this would put it literally just a few months after the 1254 bookmark start so we've nudged it forward a bit
+		religion = religion:lifepath_religion
+	}
+	is_valid = {
+		is_playable_character = yes
+		piety_level >= high_piety_level
+		prowess >= excellent_skill_level
+	}
+
+	chronicle = saintly_descent_lich
+	chronicle_properties = {
+		ancestor = character:carsavisians_lifepath_36
+		religion = root.religion
+		lich = character:lich_culture_rejection_13
+	}
+}
+
+high_king_marcomer = {
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = high_king_marcomer_legend
+		}
+		exists = character:etrandanexi_lifepath_1
+		character:etrandanexi_lifepath_1 = { is_alive = no }
+		capital_province ?= { geographical_region = kalathipsomi_biozone }
+		culture = {
+			OR = {
+				this = culture:etrandanexi
+				any_parent_culture_or_above = { this = culture:etrandanexi }
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		highest_held_title_tier >= tier_kingdom
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:etrandanexi_lifepath_1
+		title = title:e_the_reach
+	}
+}
+
+##Dynasty perk
+ce1_heroic_legacy_1 = {
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		dynasty = {
+			has_dynasty_perk = ce1_heroic_legacy_1
+			NOT = {
+				exists = var:dynasty_legend_used
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		OR = {
+			is_ai = no
+			# Prevent the AI from sniping the seed from the player
+			AND = {
+				is_ai = yes
+				NOT = {
+					dynasty = { any_dynasty_member = { is_ai = no } }
+				}
+			}
+		}
+	}
+	chronicle = great_deed_dynasty
+	chronicle_properties = {
+		founder = house.house_founder
+		dynasty = dynasty
+		title = primary_title
+	}
+}
+
+##Translated Dynasty Legacies to Legends
+
+aeschraes = {	# Aeschraes clearly did nothing wrong, infact, he made the ONLY moral decision, to destroy Axiothea by any means necessary
+	type = legitimizing
+	quality = mythical
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = aeschraes_legend
+		}
+		exists = character:westernimperial_aeschraes_aagiokrata_1
+		character:westernimperial_aeschraes_aagiokrata_1 = { #Only if Aeschraes retains his convictions
+			faith = faith:aeschraes_aagiokrata
+		}
+		OR = { #Available to the man himself or his family
+			this = character:westernimperial_aeschraes_aagiokrata_1
+			dynasty = character:westernimperial_aeschraes_aagiokrata_1.dynasty
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		prestige_level >= max_prestige_level
+		piety_level >= max_piety_level
+		has_title = title:e_aversarinas_aautokrata
+		legitimacy_level = 5
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:westernimperial_aeschraes_aagiokrata_1
+		title = title:e_aversarinas_aautokrata
+	}
+}
+
+cenware = {	# Sing the great deeds and triumphs of Cenware 'Witch-Breaker', so named for his raid of the formely impenetrable Mayikrata
+	type = heroic
+	quality = illustrious
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = cenware_legend
+		}
+		exists = character:daukeni_sjalvolki_1
+		trigger_if = { # If Cenware's house is still around, only they should be able to use the seed
+			limit = { exists = character:daukeni_sjalvolki_1.house.house_head }
+			house = character:daukeni_sjalvolki_1.house
+		}
+		trigger_else = { # Otherwise available to all Sjalvolki
+			OR = {
+				culture = { has_cultural_pillar = heritage_sjalvolki }
+				religion = religion:sjalvolki_religion
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		prestige_level >= high_prestige_level
+	}
+
+	chronicle = great_deed_region
+	chronicle_properties = {
+		founder = character:daukeni_sjalvolki_1
+		legend_region = geographical_region:world_greater_aversaria
+	}
+}
+
+seignon = {	# Rightful proven kings of Chevalie
+	type = legitimizing
+	quality = illustrious
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = seignon_legend
+		}
+		exists = character:voyagen_lifepath_23
+		dynasty = character:voyagen_lifepath_23.dynasty
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		prestige_level >= very_high_prestige_level
+		has_title = title:e_chevalie
+	}
+
+	chronicle = ancestral_glory_absentdad
+	chronicle_properties = {
+		ancestor = character:voyagen_lifepath_23
+		absentdad = character:voyagen_lifepath_1
+		title = title:e_chevalie
+	}
+}
+
+harthah = {	# Mighty Father of Sarradon, may Sarradon be free, and never again a heathen spill your families blood
+	type = legitimizing
+	quality = illustrious
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = harthah_legend
+		}
+		exists = character:tasurmad_harthahi_1
+		trigger_if = { # If Harthah's house is still around, only they should be able to use the seed
+			limit = { exists = character:tasurmad_harthahi_1.house.house_head }
+			house = character:tasurmad_harthahi_1.house
+		}
+		trigger_else = { # Otherwise available to all Harthahi
+			OR = {
+				faith = faith:harthahi
+			}
+		}
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		prestige_level >= very_high_prestige_level
+		AND = {
+			title:k_forgotten_saint = { is_title_created = no }
+			title:k_blind_watcher = { is_title_created = no }
+			title:k_pure_heart = { is_title_created = no }
+			title:k_saint_sansias_rose = { is_title_created = no }
+			title:k_golden_hand = { is_title_created = no }
+			title:k_bleeding_martyr = { is_title_created = no }
+			title:k_saint_calystos_key = { is_title_created = no }
+			title:k_forlorn_guardian = { is_title_created = no }
+		}
+	}
+
+	chronicle = great_deed_region
+	chronicle_properties = {
+		founder = character:tasurmad_harthahi_1
+		legend_region = geographical_region:world_sarradon
+	}
+}
+
+black_sun = { # War, war never changes
+	type = heroic
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = black_sun_legend
+		}
+		exists = character:apokiakas_aversarinas_aagiokratia_23
+		this = character:apokiakas_aversarinas_aagiokratia_23
+	}
+	is_valid = {
+		is_playable_character = yes
+		is_independent_ruler = yes
+		prestige_level >= medium_prestige_level
+	}
+
+	chronicle = sacred_birth_founder
+	chronicle_properties = {
+		reason = flag:black_sun
+		founder = character:apokiakas_aversarinas_aagiokratia_23
+	}
+}
+
+iyrossi_kings = {
+	type = legitimizing
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = iyrossi_kings_legend
+		}
+		dynasty = character:scusstari_iyrossi_1.dynasty
+	}
+	is_valid = {
+		is_landed = yes
+		is_independent_ruler = yes
+		prestige_level >= high_prestige_level
+		has_title = title:k_mytidon
+	}
+
+	chronicle = ancestral_glory
+	chronicle_properties = {
+		ancestor = character:scusstari_iyrossi_1
+		title = title:k_mytidon
+	}
+}
+
+esterax = {
+	type = legitimizing
+	quality = illustrious
+	is_shown = {
+		has_dlc_feature = legends
+		NOT = {
+			has_global_variable = esterax_legend
+		}
+		dynasty = character:easternimperial_aironoian_aagiokrata_4.dynasty
+	}
+	is_valid = {
+		is_landed = yes
+		is_independent_ruler = yes
+		prestige_level >= very_high_prestige_level
+		legitimacy_level >= 4
+		highest_held_title_tier >= tier_kingdom
+	}
+
+	chronicle = godly_descent_founder
+	chronicle_properties = {
+		god = flag:aeschraes
+		title = title:e_aversarinas_aautokrata
+		founder = character:easternimperial_aironoian_aagiokrata_4
+	}
+}
+
+#wetheel_lyne = {
+#	type = legitimizing
+#	quality = famed
+#	is_shown = {
+#		has_dlc_feature = legends
+#		NOT = {
+#			has_global_variable = wetheel_lyne_legend
+#		}
+#		OR = {
+#			culture = { has_cultural_pillar = heritage_marcher }
+#			culture = { has_cultural_pillar = heritage_konijkmener }
+#		}
+#		exists = title:k_riverlands.holder
+#	}
+#	is_valid = {
+#		prestige_level >= high_prestige_level
+#	}
+#
+#	chronicle = ancestral_glory
+#}
+
+### Generic
+
+holy_warrior = { # Generico Crusader legend
+	type = heroic
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		faith = {
+			OR = {
+				has_doctrine_parameter = great_holy_wars_active
+				has_doctrine_parameter = great_holy_wars_active_if_reformed
+			}
+		}
+		has_trait = crusader_king
+	}
+	is_valid = {
+		has_trait = crusader_king
+	}
+
+	chronicle = holy_warrior
+	chronicle_properties = {
+		ancestor = root
+		religion = root.religion
+	}
+}
+
+holy_site = { # Holy Site
+	type = holy
+	quality = famed
+	is_shown = {
+		has_dlc_feature = legends
+		is_playable_character = yes
+		faith = {
+			any_holy_site = {
+				OR = {
+					county.holder = root
+					county.holder.top_liege = root
+				}
+			}
+		}
+	}
+	is_valid = {
+		piety_level >= very_high_piety_level
+	}
+
+	chronicle = saintly_location
+	chronicle_properties = {
+		location = root.location
+		religion = root.religion
+		faith = root.faith
+	}
+}

@@ -1,0 +1,82 @@
+﻿########################
+## Worldstate Effects ##
+##  by Lonely Knight  ##
+########################
+
+## Yearly Worldstate Checks ##
+
+#worldstate_elysian_pass_on_yearly_effect = { # Yearly check on the the Elysian Pass event
+#	if = {	# If the date is 50 years after Elysia, remove the modifier Elysian Pass modifier everywhere and self-terminate the on_action
+#		limit = {
+#			find_time_from_current_date_to_worldstate_date_effect = { WORLDSTATE = elysian_pass }
+#			local_var:years_from_worldstate_elysian_pass > 50
+#		}
+#		every_county_in_region = {
+#			region = world_ga_western_aversaria
+#			if = {
+#				limit = { has_county_modifier = legacy_of_elysia }
+#				remove_county_modifier = legacy_of_elysia
+#			}
+#		}
+#	}
+#	else = { # Should be moved into an event for culture swapping Aversarian holdings
+#		every_county_in_region = {
+#			region = world_ga_western_aversaria
+#			if = {
+#				limit = {
+#					has_county_modifier = legacy_of_elysia
+#					holder.top_liege.primary_title = title:e_migrant_coalition
+#				}
+#				remove_county_modifier = legacy_of_elysia
+#			}
+#			else_if = {
+#				limit = {
+#					holder.culture = { has_cultural_pillar = heritage_aversarian }
+#					NOR = {
+#						has_county_modifier = legacy_of_elysia
+#						holder.top_liege.primary_title = title:e_migrant_coalition
+#					}
+#				}
+#				add_county_modifier = legacy_of_elysia
+#			}
+#		}
+#	}
+#}
+#
+#worldstate_imperial_civil_war_on_yearly_effect = { # Yearly check on the the Elysian Pass event
+#	if = {	# If the date is 100 years after the ICW, remove the Imperial Civil War modifier everywhere and self-terminate the on_action
+#		limit = {
+#			find_time_from_current_date_to_worldstate_date_effect = { WORLDSTATE = imperial_civil_war }
+#			local_var:years_from_worldstate_imperial_civil_war > 100
+#		}
+#		every_county_in_region = {
+#			region = world_ga_central_aversaria
+#			if = {
+#				limit = { has_county_modifier = legacy_of_icw }
+#				remove_county_modifier = legacy_of_icw
+#			}
+#		}
+#	}
+#	else = { # Should be moved into an event for culture swapping Aversarian holdings
+#		every_county_in_region = {
+#			region = world_ga_central_aversaria
+#			if = {
+#				limit = {
+#					has_county_modifier = legacy_of_icw
+#					holder.top_liege.primary_title = title:e_migrant_coalition
+#				}
+#				remove_county_modifier = legacy_of_icw
+#			}
+#			else_if = {
+#				limit = {
+#					holder.culture = { has_cultural_pillar = heritage_aversarian }
+#					NOR = {
+#						has_county_modifier = legacy_of_icw
+#						holder.top_liege.primary_title = title:e_migrant_coalition
+#					}
+#				}
+#				add_county_modifier = legacy_of_icw
+#			}
+#		}
+#	}
+#}

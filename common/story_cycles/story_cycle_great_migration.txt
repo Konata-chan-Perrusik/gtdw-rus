@@ -1,0 +1,93 @@
+﻿story_great_migration = {
+	
+	on_setup = {
+		save_scope_as = great_migration_story_scope
+		story_owner = { save_scope_as = story_owner_scope }
+		add_progressbar_script_value_effect = {
+			SCRIPT_VALUE_NAME = migration_momentum_value
+			TRACKER_COLOR = orange
+			TRACKER_ICON = icon_migration
+		}
+		add_tracked_variable_effect = {
+			VARIABLE_NAME = current_migration_size
+		}
+		add_tracked_variable_effect = {
+			VARIABLE_NAME = max_migration_size
+		}
+		if = {
+			limit = { exists = story_owner.capital_county }
+			add_great_migration_migrating_pop_in_county_effect = {
+				STORY_CYCLE_SCOPE = scope:great_migration_story_scope
+				CULTURE = scope:story_owner_scope.culture
+				FAITH = scope:story_owner_scope.faith
+				SIZE = 1
+				COUNTY = scope:story_owner_scope.capital_county
+			}
+		}
+	}
+	
+	on_end = {
+		remove_list_global_variable = {
+			name = global_story_cycle_list
+			target = root
+		}
+	}
+	
+	on_owner_death = {
+		
+	}
+	
+	# Monthly check to see if the great migration should continue
+	effect_group = {
+		days = 30
+
+		trigger = {
+			always = yes
+		}
+		
+		triggered_effect = {
+			trigger = {
+				great_migration_should_continue_trigger = no
+			}
+			effect = {
+				end_global_story_effect = yes
+			}
+		}
+	}
+	
+	# Yearly pop migration checks
+	effect_group = {
+		days = 30
+
+		trigger = {
+			always = yes
+		}
+		
+		triggered_effect = {
+			trigger = {
+				always = yes
+			}
+			effect = {
+				random_in_list = {
+					variable = migrating_development_pops_list
+					weight = {
+						base = 1
+						modifier = {
+							add = pop_movement_county_cap_value
+							always = yes
+						}
+					}
+					var:migrating_pop_culture = { debug_log_scopes = yes }
+					every_in_list = {
+						variable = transit_counties_list
+						random = {
+							chance = 30
+							partially_settle_migrating_pops_effect = { AMOUNT = 1 }
+						}
+					}
+					execute_mass_migration_of_pop_effect = yes
+				}
+			}
+		}
+	}
+}

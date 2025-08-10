@@ -1,0 +1,198 @@
+﻿#MODE accepts update and income_tooltip
+trade_strait_table_effect = {
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_imperial_strait
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_helvian_delta
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_evimos_strait
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_bay_of_swords
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_varhara_channel
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_mouth_of_tarsuria
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_the_watched_channel
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_kratemezin_rim
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_krehejad
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_the_pirate_coast
+		TRADE_CONFLUENCE_REGION_VALUE = 10000
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_teltheans_strait
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_ageotaros
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_korvion_strait
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_volos_pathway
+		TRADE_CONFLUENCE_REGION_VALUE = 800
+	}
+
+	$MODE$_trade_strait_effect = {
+		TRADE_CONFLUENCE_REGION = trade_confluence_pathos_tower
+		TRADE_CONFLUENCE_REGION_VALUE = 3000
+	}
+
+}
+
+initialize_trade_strait_effect = {
+	set_global_variable = {
+		name = $TRADE_CONFLUENCE_REGION$_value
+		value = $TRADE_CONFLUENCE_REGION_VALUE$
+	}
+	every_county_in_region = {
+		region = $TRADE_CONFLUENCE_REGION$
+		add_to_global_variable_list = {
+			name = $TRADE_CONFLUENCE_REGION$_counties
+			target = this
+		}
+		set_variable = {
+			name = strait_name
+			value = flag:$TRADE_CONFLUENCE_REGION$
+		}
+	}
+	trade_strait_table_effect = { MODE = update }
+}
+
+update_trade_strait_effect = {
+	every_in_global_list = {
+		variable = $TRADE_CONFLUENCE_REGION$_pirates
+		if = {
+			limit = {
+				has_variable = $TRADE_CONFLUENCE_REGION$_realm_count
+			}
+			remove_variable = $TRADE_CONFLUENCE_REGION$_realm_count
+		}
+		if = {
+			limit = {
+				has_variable = $TRADE_CONFLUENCE_REGION$_domain_count
+			}
+			remove_variable = $TRADE_CONFLUENCE_REGION$_domain_count
+		}
+	}
+	clear_global_variable_list = $TRADE_CONFLUENCE_REGION$_domain_count # I think this should be deleted and was supposed to be _pirates instead of _domain_count in the first place, though I'll ask Thunder later
+	clear_global_variable_list = $TRADE_CONFLUENCE_REGION$_pirates
+	set_global_variable = {
+		name = $TRADE_CONFLUENCE_REGION$_pirate_count
+		value = 0
+	}
+	every_in_global_list = {
+		variable = $TRADE_CONFLUENCE_REGION$_counties
+		limit = {
+			holder = {
+				government_has_flag = government_is_pirate
+			}
+		}
+		holder = {
+			if = {
+				limit = {
+					NOT = { has_variable = $TRADE_CONFLUENCE_REGION$_domain_count }
+				}
+				set_variable = {
+					name = $TRADE_CONFLUENCE_REGION$_domain_count
+					value = 1
+				}
+				add_to_global_variable_list = {
+					name = $TRADE_CONFLUENCE_REGION$_pirates
+					target = this
+				}
+			}
+			else = {
+				change_variable = {
+					name = $TRADE_CONFLUENCE_REGION$_domain_count
+					add = 1
+				}
+			}
+		}
+		holder.top_liege = {
+			if = {
+				limit = {
+					NOT = { has_variable = $TRADE_CONFLUENCE_REGION$_realm_count }
+				}
+				set_variable = {
+					name = $TRADE_CONFLUENCE_REGION$_realm_count
+					value = 1
+				}
+				add_to_global_variable_list = {
+					name = $TRADE_CONFLUENCE_REGION$_pirates
+					target = this
+				}
+			}
+			else = {
+				change_variable = {
+					name = $TRADE_CONFLUENCE_REGION$_realm_count
+					add = 1
+				}
+			}
+		}
+		change_global_variable = {
+			name = $TRADE_CONFLUENCE_REGION$_pirate_count
+			add = 1
+		}
+		# Error suppression
+		set_variable = tmp_$TRADE_CONFLUENCE_REGION_VALUE$
+		remove_variable = tmp_$TRADE_CONFLUENCE_REGION_VALUE$
+	}
+}
+
+income_tooltip_trade_strait_effect = {
+	if = {
+		limit = {
+			any_held_title = {
+				tier = tier_county
+				has_variable = strait_name
+				var:strait_name = flag:$TRADE_CONFLUENCE_REGION$
+			}
+		}
+		custom_tooltip = $TRADE_CONFLUENCE_REGION$_income_tt
+	}
+	if = {
+		limit = {
+			always = no
+		}
+		set_variable = tmp_$TRADE_CONFLUENCE_REGION_VALUE$
+		remove_variable = tmp_$TRADE_CONFLUENCE_REGION_VALUE$
+	}
+}

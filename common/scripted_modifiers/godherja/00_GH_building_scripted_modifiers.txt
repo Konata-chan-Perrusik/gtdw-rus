@@ -1,0 +1,57 @@
+﻿#Scripted Modifiers used for buildings
+
+ai_magi_modifier = { # GH TODO: Do this for the rest of our MAA types and add it to the building defs
+	modifier = {
+		add = stationed_maa_bonus
+		has_stationed_regiment_of_base_type = magi
+	}
+	modifier = { # If the holder has a preference for the MaA
+		add = likes_maa_value
+		scope:holder = {
+			highest_held_title_tier >= tier_county
+			OR = {
+				culture = {
+					culture_has_magi_maa = yes
+				}
+				#culture = { # GH TODO: Add our heritages
+				#	OR = {
+				#		has_cultural_pillar = heritage_baltic
+				#		has_cultural_pillar = heritage_ugro_permian
+				#		has_cultural_pillar = heritage_balto_finnic
+				#	}
+				#}
+			}
+		}
+	}
+	modifier = { # If the holder really likes the MaA type and is suited for it
+		add = really_likes_maa_value
+		scope:holder = {
+			highest_held_title_tier >= tier_county
+			max_number_maa_soldiers_of_base_type = {
+				type = magi
+				value >= 100
+			}
+		}
+	}
+	modifier = { # If the holder doesn't care for the MaA type
+		add = dislikes_maa_value
+		scope:holder = {
+			highest_held_title_tier >= tier_county
+			OR = {
+				number_maa_regiments_of_base_type = {
+					type = magi
+					value <= 0
+				}
+				#culture = { # GH TODO: Add our heritages
+				#	OR = {
+				#		has_cultural_pillar = heritage_central_germanic
+				#		has_cultural_pillar = heritage_frankish
+				#		has_cultural_pillar = heritage_iberian
+				#		has_cultural_pillar = heritage_latin
+				#		has_cultural_pillar = heritage_byzantine
+				#	}
+				#}
+			}
+		}
+	}
+}

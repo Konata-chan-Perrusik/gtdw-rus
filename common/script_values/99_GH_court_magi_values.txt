@@ -1,0 +1,94 @@
+﻿#Created by Lumi Schildkraut (KatiyaAdmiral8)
+
+#####################
+# Study Arcana
+#####################
+#get leads on artifacts, boosts
+
+#set base value
+
+#Add bonus calculations to modify base value (i.e. from perks, other modifiers)
+
+court_magi_boost_magic_power_scale = {
+	add = learning
+	if = {
+		limit = {
+			scope:councillor_liege = { has_perk = loyalty_and_respect_perk }
+		}
+		multiply = 1.25
+	}
+	divide = 10
+	if = {
+		limit = {
+			scope:councillor_liege = { has_perk = loyalty_and_respect_perk }
+		}
+		ceiling = yes
+	}
+	else = {
+		floor = yes
+	}
+	min = 1
+}
+
+### Learn on the Job modifier
+court_magi_learn_on_the_job_scale = {
+	value = 0
+	if = {
+		limit = {
+			liege = { has_perk = learn_on_the_job_perk }
+		}
+		add = character_arcana_baseline_value
+
+		multiply = {
+			add = learn_on_the_job_percentage
+			divide = 100 
+		}
+		floor = yes
+		min = 1
+	}
+}
+
+### Reliable House modifier
+court_magi_reliable_house_scale = {
+	value = 0
+	if = {
+		limit = {
+			exists = liege.dynasty
+			liege.dynasty = { has_dynasty_perk = fp2_coterie_legacy_2 }
+			house = liege.house
+		}
+		add = learning
+		multiply = {
+			add = council_reliable_house_percentage
+			divide = 100
+		}
+		floor = yes
+		min = 1
+	}
+}
+
+#####################
+# Train Battle Magi
+#####################
+#improve magic armies
+
+#set base value
+
+#Add bonus calculations to modify base value (i.e. from perks, other modifiers)
+
+
+#####################
+# Task 3 (TBD, perhaps magic type specific?)
+#####################
+#TBD, but this may be specific to magic type of the Court Magi. (i.e. "Divinate Secrets" for Mixed Magi
+
+#set base value
+
+#Add bonus calculations to modify base value (i.e. from perks, other modifiers)
+
+#num_living_magic_lifestyle_perks = {
+#	value = age
+#	divide = 3
+#	subtract = magic_lifestyle_living_perks
+#	max = 27
+#}

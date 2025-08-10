@@ -1,0 +1,100 @@
+﻿story_sjalvolki_reformation_prelude = {
+	
+	on_setup = {
+		story_owner = { save_scope_as = story_owner_scope }
+	}
+	
+	on_end = {
+		remove_list_global_variable = {
+			name = global_story_cycle_list
+			target = root
+		}
+	}
+	
+	on_owner_death = {
+	}
+	
+	# The Preacher travels around
+	effect_group = {
+		years = { 7 12 }
+
+		trigger = {
+			always = yes
+		}
+		
+		triggered_effect = {
+			trigger = {
+				always = yes
+			}
+			effect = {
+				title:c_oraispol.holder = {
+					trigger_event = {
+						id = sjalvolki_reformation.0001
+					}
+				}
+				end_story = yes
+			}
+		}
+	}
+}
+
+story_imperrech_common_cause_deterioration = {
+	
+	on_setup = { # Triggers initial event
+	}
+
+	on_end = {
+		debug_log = "Common Cause Destroyed on:"
+		debug_log_date = yes
+	}
+
+	on_owner_death = { # Should be inherited to make sure it finishes
+		# Should be inherited, so transfer to heir
+		if = {
+			limit = {
+				exists = story_owner.player_heir
+			}
+			make_story_owner = story_owner.player_heir
+		}
+		# Or destroy
+		else = {
+			end_story = yes
+		}
+	}
+
+	effect_group = {
+		years = 5
+
+		trigger = {
+			has_game_rule = rapid_common_cause
+		}
+
+		triggered_effect = {
+			effect = { scope:story_owner = { trigger_event = { id = sjalvolki_reformation.0002 } } }
+		}
+	}
+
+	effect_group = {
+		years = 10
+
+		trigger = {
+			has_game_rule = default_common_cause
+		}
+
+		triggered_effect = {
+			effect = { scope:story_owner = { trigger_event = { id = sjalvolki_reformation.0002 } } }
+		}
+	}
+
+	effect_group = {
+		years = 15
+
+		trigger = {
+			has_game_rule = leisurely_common_cause
+		}
+
+		triggered_effect = {
+			effect = { scope:story_owner = { trigger_event = { id = sjalvolki_reformation.0002 } } }
+		}
+	}
+}

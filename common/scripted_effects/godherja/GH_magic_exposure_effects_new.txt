@@ -1,0 +1,197 @@
+﻿####################
+# Exposure Effects #
+####################
+
+reduce_spell_exposure_monthly = {
+	if = {
+		limit = { NOT = { has_variable = spell_exposure } }
+		set_variable = {
+			name = spell_exposure
+			value = 0
+		}
+	}
+	if = {
+		limit = { var:spell_exposure > 0 }
+		if = {
+			limit = { var:spell_exposure > spell_exposure_monthly_loss }
+			change_variable = {
+				name = spell_exposure
+				subtract = spell_exposure_monthly_loss
+			}
+		}
+		else = {
+			set_variable = {
+				name = spell_exposure
+				value = 0
+			}
+		}
+	}
+	update_exposure_status = yes
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { has_variable = spell_exposure }
+				var:spell_exposure <= 0
+			}
+			trigger_else = { always = yes }
+			is_target_in_global_variable_list = {
+				name = non_magi_with_exposure
+				target = this
+			}
+		}
+		remove_list_global_variable = {	
+			name = non_magi_with_exposure
+			target = this
+		}
+	}
+}
+
+# NOTE: If you change the random chances here, make sure that is reflected in the spell_exposure_random_chance_sum_value script value!
+increase_exposure_spell = {
+	random_list = {
+		10 = {
+			modifier = {
+				add = {
+					value = spellcasting_value
+					multiply = 2
+				}
+			}
+			gain_exposure_effect = { VALUE = spell_exposure_low_gain }
+		}
+		60 = {
+			modifier = {
+				add = spellcasting_value
+			}
+			gain_exposure_effect = { VALUE = spell_exposure_base_gain }
+		}
+		15 = {
+			gain_exposure_effect = { VALUE = spell_exposure_high_gain }
+		}
+	}
+}
+
+gain_exposure_effect = {
+	if = {
+		limit = { NOT = { $VALUE$ = 0 } }
+		custom_description = {
+			text = gain_exposure
+			value = $VALUE$
+			if = {
+				limit = { NOT = { has_variable = spell_exposure } }
+				set_variable = {
+					name = spell_exposure
+					value = $VALUE$
+				}
+			}
+			else = {
+				change_variable = {
+					name = spell_exposure
+					add = $VALUE$
+				}
+			}
+		}
+		update_exposure_status = yes
+	}
+}
+
+update_exposure_status = {
+	if = { # Eventually you're gonna pop like a balloon
+		limit = { exposure_total_value >= 10000 }
+		death = { death_reason = death_magic_catastrophe }
+	}
+	else_if = {
+		limit = { 
+			exposure_total_value > magic_power_limit_5
+			exposure_total_value < 10000
+		}
+		set_exposure_level = { LEVEL = 5 }
+		set_global_variable = gh_achiev_notevenmyfinalform_ready
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_4 }
+		set_exposure_level = { LEVEL = 4 }
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_3 }
+		set_exposure_level = { LEVEL = 3 }
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_2 }
+		set_exposure_level = { LEVEL = 2 }
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_1 }
+		set_exposure_level = { LEVEL = 1 }
+	}
+	else = {
+		change_trait_rank = {
+			trait = magicsickness
+			rank = -5
+		}
+		GH_achiev_notevenmyfinalform_check = yes
+	}
+}
+
+set_exposure_level = {
+	if = {
+		limit = { NOT = { has_trait = gh_magicsickness_$LEVEL$ } }
+		set_trait_rank = {
+			trait = magicsickness
+			rank = $LEVEL$
+		}
+	}
+}
+
+##########################
+# Arcane Fallout Effects #
+##########################
+
+gain_arcane_fallout_effect = {
+	if = {
+		limit = { NOT = { $VALUE$ = 0 } }
+		custom_description = {
+			text = gain_arcane_fallout
+			value = $VALUE$
+			if = {
+				limit = { NOT = { has_variable = arcane_fallout } }
+				set_variable = {
+					name = arcane_fallout
+					value = $VALUE$
+				}
+			}
+			else = {
+				change_variable = {
+					name = arcane_fallout
+					add = $VALUE$
+				}
+				if = {
+					limit = { var:arcane_fallout <= 0 }
+					remove_variable = arcane_fallout
+				}
+			}
+		}
+		if = {
+			limit = {
+				exists = var:arcane_fallout
+				var:arcane_fallout >= 100
+				duchy = {
+					any_de_jure_county = {
+						percent >= 0.5
+						exists = var:arcane_fallout
+						var:arcane_fallout >= 100
+					}
+				}
+			}
+			duchy = { gh_set_dynamic_terrain_variant_effect = { VARIANT = wasteland } }
+		}
+		else_if = {
+			limit = {
+				duchy.gh_current_dynamic_terrain_variant = gh_dynamic_terrain_variant_wasteland
+			}
+			duchy = { gh_set_dynamic_terrain_variant_effect = { VARIANT = default } }
+		}
+		else = {
+			debug_log = "Failed to spawn dynamic terrain!"
+		}
+	}
+}

@@ -1,0 +1,93 @@
+﻿#@elephant_race_cooldown_time = 500
+#
+#elephant_race_decision = {
+#	desc = elephant_race_decision_desc
+#	selection_tooltip = elephant_race_decision_tooltip
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_activity.dds"
+#	}
+#	ai_check_interval = 60
+#
+#	cost = {
+#		gold = {
+#			value = standard_activity_cost
+#		}
+#	}
+#	
+#	cooldown = { days = @elephant_race_cooldown_time }
+#
+#	is_shown = {
+#		capital_province = {
+#			geographical_region = world_ga_kashirya
+#		}
+#	}
+#
+#	is_valid_showing_failures_only = {
+#		is_available_adult = yes	
+#	}
+#
+#	effect = {
+#		custom_tooltip = start_elephant_race_decision
+#		
+#		#Stress loss
+#		if = {
+#			limit = {
+#				has_trait = lazy
+#			}
+#			custom_tooltip = start_elephant_race_decision_stress_lazy #You won't lose stress because you're lazy...
+#		}
+#		else_if = {
+#			stress_impact = {
+#				base = elephant_race_stress_loss_value
+#				gluttonous = activity_stress_loss_impact
+#				gregarious = activity_stress_loss_impact
+#				gh_elephant_racer = activity_stress_loss_impact
+#				drunkard = activity_stress_loss_impact
+#				generous = activity_stress_loss_impact
+#				compassionate = activity_stress_gain_impact
+#			}
+#		}
+#		
+#		capital_province = {
+#			spawn_activity = {
+#				type = activity_elephant_race
+#				owner = root
+#			}
+#		}
+#	}
+#
+#	ai_will_do = {
+#		base = 35
+#
+#		ai_value_modifier = {
+#			ai_sociability = 1
+#			ai_energy = 1
+#			ai_compassion = -0.5
+#		}
+#
+#		modifier = {
+#			add = 10
+#			has_trait_rank = {
+#				trait = education_stewardship
+#				rank > 0
+#			}
+#		}
+#		modifier = {
+#			add = 10
+#			has_trait_rank = {
+#				trait = education_stewardship
+#				rank > 2
+#			}
+#		}
+#
+#		modifier = {
+#			add = 10
+#			has_trait = gh_elephant_racer
+#		}
+#
+#		modifier = {
+#			add = 35
+#			stress > low_stress
+#		}
+#	}
+#}

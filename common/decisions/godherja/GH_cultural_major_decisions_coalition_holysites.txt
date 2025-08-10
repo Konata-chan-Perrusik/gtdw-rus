@@ -1,0 +1,603 @@
+﻿migrate_holy_sites_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = major
+	ai_goal = yes
+	desc = migrate_holy_sites_decision_desc
+	
+	is_shown = {
+		faith = {
+			religion = {
+				OR = { # Religion can relocate its holy sites
+					gh_imperrech_migration_religion = yes
+					gh_anti_imperrech_migration_religion = yes
+					this = religion:northern_oltenic_religion
+				}
+			}
+			NOT = { # Must not have already relocated its holy sites
+				is_target_in_global_variable_list = {
+					name = faith_relocated_holy_sites
+					target = this
+				}
+			}
+		}
+	}
+	
+	is_valid = {
+		any_held_title = {
+			tier >= tier_kingdom
+			is_titular = no
+		}
+		piety_level >= 3
+	}
+
+	is_valid_showing_failures_only = { is_at_war = no }
+
+	widget = {
+		gui = "decision_view_widget_option_list_generic"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_HOLY_SITE_RELOCATION_REGION"
+		show_from_start = yes
+
+		item = { # Bay of Swords
+			value = holy_sites_bay_of_swords
+			is_shown = { religion = religion:kardawai_religion }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_bay_of_swords_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_bay_of_swords } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_bay_of_swords_desc
+			localization = custom_holysite_migration_bay_of_swords
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_bay_of_swords } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Eastern Kalathipsomi
+			value = holy_sites_eastern_kalathipsomi
+			is_shown = {
+				religion = {
+					OR = {
+						this = religion:kakarataki_religion
+						this = religion:stodherrn_religion
+						this = religion:apti_religion
+					}
+				}
+			}
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_eastern_kalathipsomi_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_eastern_kalathipsomi } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_eastern_kalathipsomi_desc
+			localization = custom_holysite_migration_eastern_kalathipsomi
+			icon = "gfx/interface/icons/terrain_types/forest.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_eastern_kalathipsomi } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Western Kalathipsomi
+			value = holy_sites_western_kalathipsomi
+			is_shown = { religion = religion:kakarataki_religion }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_western_kalathipsomi_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_western_kalathipsomi } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_western_kalathipsomi_desc
+			localization = custom_holysite_migration_western_kalathipsomi
+			icon = "gfx/interface/icons/terrain_types/taiga.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_western_kalathipsomi } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Knokidbes Valley
+			value = holy_sites_knokidbes_valley
+			is_shown = {
+				religion = {
+					OR = {
+						this = religion:stodherrn_religion
+						this = religion:gethian_religion
+					}
+				}
+			}
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_knokidbes_valley_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_knokidbes_valley } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_knokidbes_valley_desc
+			localization = custom_holysite_migration_knokidbes_valley
+			icon = "gfx/interface/icons/terrain_types/wetlands.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_knokidbes_valley } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Kepyran Basin
+			value = holy_sites_kepyran_basin
+			is_shown = { religion = religion:salacad_religion }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_kepyran_basin_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_kepyran_basin } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_kepyran_basin_desc
+			localization = custom_holysite_migration_kepyran_basin
+			icon = "gfx/interface/icons/terrain_types/taiga.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_kepyran_basin } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Etepezea
+			value = holy_sites_etepezea
+			is_shown = { religion = { gh_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_etepezea_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_etepezea } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_etepezea_desc
+			localization = custom_holysite_migration_etepezea
+			icon = "gfx/interface/icons/terrain_types/farmlands.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_etepezea } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Imperial Isle
+			value = holy_sites_imperial_isle
+			is_shown = { religion = { gh_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_imperial_isle_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_imperial_isle } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_imperial_isle_desc
+			localization = custom_holysite_migration_imperial_isle
+			icon = "gfx/interface/icons/terrain_types/coastal_sea.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_imperial_isle } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Opakhasia
+			value = holy_sites_opakhasia
+			is_shown = { religion = { gh_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_opakhasia_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_opakhasia } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_opakhasia_desc
+			localization = custom_holysite_migration_opakhasia
+			icon = "gfx/interface/icons/terrain_types/hills.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_opakhasia } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Malcois
+			value = holy_sites_malcois
+			is_shown = { religion = { gh_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_malcois_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_malcois } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_malcois_desc
+			localization = custom_holysite_migration_malcois
+			icon = "gfx/interface/icons/terrain_types/mountains.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_malcois } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Aironoi
+			value = holy_sites_aironoi
+			is_shown = { religion = { gh_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_aironoi_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_aironoi } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_aironoi_desc
+			localization = custom_holysite_migration_aironoi
+			icon = "gfx/interface/icons/terrain_types/steppe.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_aironoi } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Red Wastes
+			value = holy_sites_red_wastes
+			is_shown = { religion = religion:kardawai_religion }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_red_wastes_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_red_wastes } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_red_wastes_desc
+			localization = custom_holysite_migration_red_wastes
+			icon = "gfx/interface/icons/terrain_types/redlands_mountains.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_red_wastes } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Chevalie
+			value = holy_sites_chevalie
+			is_shown = { religion = religion:salacad_religion }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_chevalie_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_chevalie } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_chevalie_desc
+			localization = custom_holysite_migration_chevalie
+			icon = "gfx/interface/icons/terrain_types/plains.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_chevalie } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Kashirya
+			value = holy_sites_kashirya
+			is_shown = { religion = religion:northern_oltenic_religion }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_kashirya_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_kashirya } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_kashirya_desc
+			localization = custom_holysite_migration_kashirya
+			icon = "gfx/interface/icons/terrain_types/farmlands.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_kashirya } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Amaghea
+			value = holy_sites_amaghea
+			is_shown = { religion = { gh_anti_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_amaghea_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_amaghea } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_amaghea_desc
+			localization = custom_holysite_migration_amaghea
+			icon = "gfx/interface/icons/terrain_types/mountains.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_amaghea } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Western Aironoi
+			value = holy_sites_western_aironoi
+			is_shown = { religion = { gh_anti_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_western_aironoi_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_western_aironoi } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_western_aironoi_desc
+			localization = custom_holysite_migration_western_aironoi
+			icon = "gfx/interface/icons/terrain_types/farmlands.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_western_aironoi } }
+					add = 100
+				}
+			}
+		}
+
+		item = { # Kasiryat
+			value = holy_sites_kasiryat
+			is_shown = { religion = { gh_anti_imperrech_migration_religion = yes } }
+			is_valid = {
+				custom_tooltip = {
+					text = holy_sites_kasiryat_is_valid_tooltip
+					any_sub_realm_county = { title_province = { geographical_region = custom_holysite_migration_kasiryat } }
+				}
+			}
+			current_description = migrate_holy_sites_decision_kasiryat_desc
+			localization = custom_holysite_migration_kasiryat
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = { capital_county.title_province = { geographical_region = custom_holysite_migration_kasiryat } }
+					add = 100
+				}
+			}
+		}
+	}
+
+	cost = { piety = 1000 }
+
+	effect = {
+		gain_holy_legend_seed_tooltip_effect = yes
+		show_as_tooltip = { add_piety_level = 1 }
+		faith = {
+			switch = {
+				trigger = yes
+				scope:holy_sites_bay_of_swords = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = bay_of_swords FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = bay_of_swords FAITH = benkassai RELIGION = kardawai } }
+					}
+				}
+				scope:holy_sites_eastern_kalathipsomi = {
+					switch = {
+						trigger = this
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = eastern_kalathipsomi FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = eastern_kalathipsomi FAITH = akrolenaki RELIGION = kakarataki } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = eastern_kalathipsomi FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = eastern_kalathipsomi FAITH = dethedklann RELIGION = stodherrn } }
+						faith:apti = { migrate_holy_sites_decision_effect = { REGION = eastern_kalathipsomi FAITH = apti RELIGION = apti } }
+						faith:caradounars = { migrate_holy_sites_decision_effect = { REGION = eastern_kalathipsomi FAITH = caradounars RELIGION = apti } }
+					}
+				}
+				scope:holy_sites_western_kalathipsomi = {
+					switch = {
+						trigger = this
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = western_kalathipsomi FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = western_kalathipsomi FAITH = akrolenaki RELIGION = kakarataki } }
+					}
+				}
+				scope:holy_sites_knokidbes_valley = {
+					switch = {
+						trigger = this
+						faith:gethian = { migrate_holy_sites_decision_effect = { REGION = knokidbes_valley FAITH = gethian RELIGION = gethian } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = knokidbes_valley FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = knokidbes_valley FAITH = dethedklann RELIGION = stodherrn } }
+					}
+				}
+				scope:holy_sites_kepyran_basin = {
+					switch = {
+						trigger = this
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = kepyran_basin FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = kepyran_basin FAITH = segyetes RELIGION = salacad } }
+					}
+				}
+				scope:holy_sites_etepezea = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = benkassai RELIGION = kardawai } }
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = akrolenaki RELIGION = kakarataki } }
+						faith:gethian = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = gethian RELIGION = gethian } }
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = segyetes RELIGION = salacad } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = dethedklann RELIGION = stodherrn } }
+						faith:apti = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = apti RELIGION = apti } }
+						faith:caradounars = { migrate_holy_sites_decision_effect = { REGION = etepezea FAITH = caradounars RELIGION = apti } }
+					}
+				}
+				scope:holy_sites_imperial_isle = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = benkassai RELIGION = kardawai } }
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = akrolenaki RELIGION = kakarataki } }
+						faith:gethian = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = gethian RELIGION = gethian } }
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = segyetes RELIGION = salacad } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = dethedklann RELIGION = stodherrn } }
+						faith:apti = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = apti RELIGION = apti } }
+						faith:caradounars = { migrate_holy_sites_decision_effect = { REGION = imperial_isle FAITH = caradounars RELIGION = apti } }
+					}
+				}
+				scope:holy_sites_opakhasia = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = benkassai RELIGION = kardawai } }
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = akrolenaki RELIGION = kakarataki } }
+						faith:gethian = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = gethian RELIGION = gethian } }
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = segyetes RELIGION = salacad } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = dethedklann RELIGION = stodherrn } }
+						faith:apti = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = apti RELIGION = apti } }
+						faith:caradounars = { migrate_holy_sites_decision_effect = { REGION = opakhasia FAITH = caradounars RELIGION = apti } }
+					}
+				}
+				scope:holy_sites_malcois = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = benkassai RELIGION = kardawai } }
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = akrolenaki RELIGION = kakarataki } }
+						faith:gethian = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = gethian RELIGION = gethian } }
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = segyetes RELIGION = salacad } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = dethedklann RELIGION = stodherrn } }
+						faith:apti = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = apti RELIGION = apti } }
+						faith:caradounars = { migrate_holy_sites_decision_effect = { REGION = malcois FAITH = caradounars RELIGION = apti } }
+					}
+				}
+				scope:holy_sites_aironoi = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = benkassai RELIGION = kardawai } }
+						faith:kakarataki = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = kakarataki RELIGION = kakarataki } }
+						faith:akrolenaki = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = akrolenaki RELIGION = kakarataki } }
+						faith:gethian = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = gethian RELIGION = gethian } }
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = segyetes RELIGION = salacad } }
+						faith:portenchant = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = portenchant RELIGION = stodherrn } }
+						faith:dethedklann = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = dethedklann RELIGION = stodherrn } }
+						faith:apti = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = apti RELIGION = apti } }
+						faith:caradounars = { migrate_holy_sites_decision_effect = { REGION = aironoi FAITH = caradounars RELIGION = apti } }
+					}
+				}
+				scope:holy_sites_red_wastes = {
+					switch = {
+						trigger = this
+						faith:kardawai = { migrate_holy_sites_decision_effect = { REGION = red_wastes FAITH = kardawai RELIGION = kardawai } }
+						faith:benkassai = { migrate_holy_sites_decision_effect = { REGION = red_wastes FAITH = benkassai RELIGION = kardawai } }
+					}
+				}
+				scope:holy_sites_chevalie = {
+					switch = {
+						trigger = this
+						faith:salacad = { migrate_holy_sites_decision_effect = { REGION = chevalie FAITH = salacad RELIGION = salacad } }
+						faith:segyetes = { migrate_holy_sites_decision_effect = { REGION = chevalie FAITH = segyetes RELIGION = salacad } }
+					}
+				}
+				scope:holy_sites_kashirya = {
+					switch = {
+						trigger = this
+						faith:ebohephai_olten = { migrate_holy_sites_decision_effect = { REGION = kashirya FAITH = ebohephai_olten RELIGION = ebohephai } }
+					}
+				}
+				scope:holy_sites_amaghea = {
+					switch = {
+						trigger = this
+						faith:cnevobarthane = { migrate_holy_sites_decision_effect = { REGION = amaghea FAITH = cnevobarthane RELIGION = cnevobarthane } }
+						faith:nalmavast = { migrate_holy_sites_decision_effect = { REGION = amaghea FAITH = nalmavast RELIGION = nalmavast } }
+						faith:zaldrigas = { migrate_holy_sites_decision_effect = { REGION = amaghea FAITH = zaldrigas RELIGION = zaldrigas } }
+					}
+				}
+				scope:holy_sites_western_aironoi = {
+					switch = {
+						trigger = this
+						faith:cnevobarthane = { migrate_holy_sites_decision_effect = { REGION = western_aironoi FAITH = cnevobarthane RELIGION = cnevobarthane } }
+						faith:nalmavast = { migrate_holy_sites_decision_effect = { REGION = western_aironoi FAITH = nalmavast RELIGION = nalmavast } }
+						faith:zaldrigas = { migrate_holy_sites_decision_effect = { REGION = western_aironoi FAITH = zaldrigas RELIGION = zaldrigas } }
+					}
+				}
+				scope:holy_sites_kasiryat = {
+					switch = {
+						trigger = this
+						faith:cnevobarthane = { migrate_holy_sites_decision_effect = { REGION = kasiryat FAITH = cnevobarthane RELIGION = cnevobarthane } }
+						faith:nalmavast = { migrate_holy_sites_decision_effect = { REGION = kasiryat FAITH = nalmavast RELIGION = nalmavast } }
+						faith:zaldrigas = { migrate_holy_sites_decision_effect = { REGION = kasiryat FAITH = zaldrigas RELIGION = zaldrigas } }
+					}
+				}
+			}
+			if = {
+				limit = {
+					scope:holy_sites_bay_of_swords = no
+					scope:holy_sites_eastern_kalathipsomi = no
+					scope:holy_sites_western_kalathipsomi = no
+					scope:holy_sites_knokidbes_valley = no
+					scope:holy_sites_kepyran_basin = no
+					scope:holy_sites_etepezea = no
+					scope:holy_sites_imperial_isle = no
+					scope:holy_sites_opakhasia = no
+					scope:holy_sites_malcois = no
+					scope:holy_sites_aironoi = no
+					scope:holy_sites_red_wastes = no
+					scope:holy_sites_chevalie = no
+					scope:holy_sites_kashirya = no
+					scope:holy_sites_amaghea = no
+					scope:holy_sites_western_aironoi = no
+					scope:holy_sites_kasiryat = no
+
+				}
+				custom_tooltip = migrate_holy_sites_decision_fallback_tooltip
+				custom_tooltip = migrate_holy_sites_decision_deactivation_tooltip
+			}
+			add_to_global_variable_list = {
+				name = faith_relocated_holy_sites
+				target = this
+			}
+		}
+		trigger_event = gh_migration_decisions_events.0001
+		GH_landofopportunity_check = yes
+	}
+	
+	ai_potential = { highest_held_title_tier >= tier_kingdom }
+
+	ai_will_do = { base = 100 }
+}

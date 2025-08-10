@@ -1,0 +1,33 @@
+﻿on_game_start = {
+	on_actions = {
+		HT_init
+	}
+}
+
+HT_init = {
+	effect = {
+		ordered_trait = {
+			limit = {
+				NOT = { has_trait_flag = HT_hidden_trait }
+			}
+			order_by = {
+				switch = {
+					trigger = has_trait_category
+					personality = { value = 10 }
+					education = { value = 8 }
+					childhood = { value = 7 }
+					commander = { value = 6 }
+					winter_commander = { value = 5 }
+					lifestyle = { value = 4 }
+					court_type = { value = 3 }
+					fame = { value = 2 }
+					health = { value = 1 }
+				}
+			}
+			add_to_global_variable_list = {
+				name = HT_shown_traits
+				target = this
+			}
+		}
+	}
+}

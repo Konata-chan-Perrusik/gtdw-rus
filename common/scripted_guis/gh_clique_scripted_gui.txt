@@ -1,0 +1,359 @@
+﻿
+# Fetches the title from where a character's realm cliques should be pulled from
+get_clique_title_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		can_access_cliques_trigger = yes
+	}
+	
+	effect = {
+		find_clique_title_effect = yes
+	}
+}
+
+# Fetches all potential relevant cliques of a character, and places them in separate lists that get recompiled into a master list when a setting is changed
+# A clique should be 'relevant' (have the potential to be displayed in the clique GUI) in one of the following cases:
+## The character's top liege has a title that contains the clique
+## An allied character has a title that contains the clique
+## International cliques in diplomatic range (TBD)
+## Secret cliques that you have intel on (TBD)
+get_character_cliques_scripted_gui = {
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+		# Both the masterlist and any auxilliary lists are cleared out
+		if = {
+			limit = { has_variable_list = displayed_character_cliques }
+			clear_variable_list = displayed_character_cliques
+		}
+		if = {
+			limit = { has_variable_list = allied_cliques }
+			clear_variable_list = allied_cliques
+		}
+		if = {
+			limit = { has_variable = displaying_allied_cliques }
+			remove_variable = displaying_allied_cliques
+		}
+		var:clique_title.holder = {
+			every_held_title = {
+				limit = { has_variable_list = title_cliques }
+				every_in_list = {
+					variable = title_cliques
+					save_temporary_scope_as = relevant_clique_to_add
+					# Liege cliques will always be relevant, and hence do not need to be recorded in a separate list
+					root = {
+						add_to_variable_list = {
+							name = displayed_character_cliques
+							target = scope:relevant_clique_to_add
+						}
+					}
+				}
+			}
+			every_ally = {
+				every_held_title = {
+					limit = { has_variable_list = title_cliques }
+					every_in_list = {
+						variable = title_cliques
+						limit = { has_variable_list = clique_members }
+						save_temporary_scope_as = relevant_clique_to_add
+						root = {
+							add_to_variable_list = {
+								name = allied_cliques
+								target = scope:relevant_clique_to_add
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+clique_has_opposed_values_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		has_variable_list = clique_guiding_principle_opposed_traits
+	}
+	
+	effect = {
+	
+	}
+}
+
+join_clique_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		trigger_if = {
+			limit = { 
+				exists = scope:player_viewing_cliques
+			}
+			scope:player_viewing_cliques = {
+				NOT = { has_variable = character_clique }
+			}
+		}
+		trigger_else = {
+			always = yes
+		}
+		scope:player_viewing_cliques = {
+			has_variable = clique_title
+			var:clique_title = {
+				has_variable_list = title_cliques
+				any_in_list = {
+					variable = title_cliques
+					this = root
+				}
+			}
+		}
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = clique_province
+		scope:player_viewing_cliques = {
+			general_clique_entry_trigger = yes
+		}
+	}
+	
+	effect = {
+		save_temporary_scope_as = clique_to_join
+		scope:player_viewing_cliques = {
+			assign_character_to_clique_effect = { CLIQUE = scope:clique_to_join }
+			calculate_alignment_for_current_clique = yes
+		}
+	}
+}
+
+leave_clique_scripted_gui = {
+	scope = province
+	
+	is_shown = {
+		save_temporary_scope_as = clique_being_checked
+		scope:player_viewing_cliques = {
+			trigger_if = {
+				limit = { has_variable = character_clique }
+				scope:clique_being_checked = var:character_clique
+			}
+			trigger_else = { always = no }
+		}
+		scope:player_viewing_cliques = {
+			has_variable = clique_title
+			var:clique_title = {
+				has_variable_list = title_cliques
+				any_in_list = {
+					variable = title_cliques
+					this = root
+				}
+			}
+		}
+	}
+	
+	is_valid = {
+		scope:player_viewing_cliques = {
+			trigger_if = {
+				limit = { has_variable = character_clique }
+				prestige >= clique_leaving_cost
+				custom_description = {
+					text = forced_into_clique_cannot_leave
+					NOT = { has_variable = forced_into_clique }
+				}
+			}
+			trigger_else = { always = no }
+		}
+	}
+	
+	effect = {
+		scope:player_viewing_cliques = {
+			add_prestige = {
+				value = clique_leaving_cost
+				multiply = -1
+			}
+			remove_from_any_clique_effect = yes
+		}
+	}
+}
+
+clique_interaction_scripted_gui = {
+	is_shown = {
+		
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = clique_interaction_province
+		scope:player_viewing_cliques = {
+			general_clique_interaction_trigger = yes
+		}
+	}
+	
+	effect = {
+		clique_effect = { MODE = apply_interaction }
+	}
+}
+
+allied_cliques_scripted_gui = {
+	is_shown = {
+		has_variable_list = allied_cliques
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = displaying_allied_cliques } }
+			set_variable = displaying_allied_cliques
+			every_in_list = {
+				variable = allied_cliques
+				save_temporary_scope_as = allied_clique_to_transfer_to_masterlist
+				root = {
+					add_to_variable_list = {
+						name = displayed_character_cliques
+						target = scope:allied_clique_to_transfer_to_masterlist
+					}
+				}
+			}
+		}
+		else = {
+			remove_variable = displaying_allied_cliques
+			every_in_list = {
+				variable = allied_cliques
+				save_temporary_scope_as = allied_clique_to_remove_from_masterlist
+				root = {
+					remove_list_variable = {
+						name = displayed_character_cliques
+						target = scope:allied_clique_to_transfer_to_masterlist
+					}
+				}
+			}
+		}
+	}
+}
+
+clique_visibility_scripted_gui = {
+	is_shown = {
+		OR = {
+			var:clique_title = {
+				exists = this
+				has_variable_list = title_cliques
+				any_in_list = {
+					variable = title_cliques
+					this = scope:relevant_clique
+				}
+			}
+			trigger_if = {
+				limit = { has_variable = displaying_allied_cliques }
+				var:clique_title.holder = {
+					any_ally = {
+						any_held_title = {
+							has_variable_list = title_cliques
+							any_in_list = {
+								variable = title_cliques
+								this = scope:relevant_clique
+							}
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { 
+				scope:relevant_clique = {
+					has_variable_list = clique_guiding_principle_aspects
+					any_in_list = {
+						variable = clique_guiding_principle_aspects
+						this = flag:secret_society
+					}
+				}
+			}
+			is_member_of_clique_trigger = { CLIQUE = scope:relevant_clique }
+		}
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+	
+	}
+}
+
+clique_is_external_scripted_gui = {
+	is_shown = {
+		NOT = {
+			var:clique_title = {
+				exists = this
+				has_variable_list = title_cliques
+				any_in_list = {
+					variable = title_cliques
+					this = scope:relevant_clique
+				}
+			}
+		}
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+	
+	}
+}
+
+clique_is_external_or_secret_society_scripted_gui = {
+	is_shown = {
+		OR = {
+			NOT = {
+				var:clique_title = {
+					exists = this
+					has_variable_list = title_cliques
+					any_in_list = {
+						variable = title_cliques
+						this = scope:relevant_clique
+					}
+				}
+			}
+			scope:relevant_clique = {
+				trigger_if = {
+					limit = { has_variable_list = clique_guiding_principle_aspects }
+					any_in_list = {
+						variable = clique_guiding_principle_aspects
+						this = flag:secret_society
+					}
+				}
+				trigger_else = { always = no }
+			}
+		}
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+	
+	}
+}
+
+clique_has_geographic_constraint_scripted_gui = {
+	is_shown = {
+		has_variable = clique_geographic_constraint
+	}
+	
+	is_valid = {
+	
+	}
+	
+	effect = {
+	
+	}
+}

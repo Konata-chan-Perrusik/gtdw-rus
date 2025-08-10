@@ -1,0 +1,415 @@
+﻿# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+@cultural_maa_extra_ai_score = 80 # Equivalent to having 8 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+## SPECIAL ##
+
+fogbeasts = { # Summonable and a Fogeater cultural MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 550
+	toughness = 290
+	pursuit = 200
+	screen = 0
+	siege_value = 0.2
+	siege_tier = 1
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+
+		marcher_hills = { damage = -250 toughness = -90 }
+		marcher_farmlands = { damage = -250 toughness = -90 }
+		marcher_plains = { damage = -250 toughness = -90 }
+		marcher_mountains = { damage = -250 toughness = -90 }
+		marcher_forest = { damage = -250 toughness = -90 }
+		marcher_wetlands = { damage = -250 toughness = -90 }
+		marcher_floodplains = { damage = -250 toughness = -90 }
+	}
+
+	counters = {
+		archers = 1
+		monsters = 0.5
+	}
+
+	stack = 5
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+chasm_terrors = { # Redlander monster MAA
+	type = monsters
+	allowed_in_hired_troops = no
+
+	damage = 250
+	toughness = 100
+	pursuit = 200
+	screen = 0
+	siege_value = 0.2
+	siege_tier = 1
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		heavy_infantry = 2
+		heavy_cavalry = 2
+		light_cavalry = 1
+	}
+
+	stack = 30
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	
+	buy_cost = { piety = chasm_terror_recruiment_cost_piety }
+	low_maintenance_cost = { piety = chasm_terror_low_maint_cost_piety }
+	high_maintenance_cost = { piety = chasm_terror_high_maint_cost_piety }
+	#provision_cost = @provisions_cost_infantry_expensive
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+enfleshed_grotesquerie = { # Redlander monster MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 2000
+	toughness = 1000
+	pursuit = 300
+	screen = 500
+
+	siege_tier = 5
+	siege_value = 0.6
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 300 pursuit = 300 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 300 toughness = 300 }
+		redlands_chasms = { damage = 50 toughness = 1000 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+	}
+
+	stack = 1
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+lesser_voidspawns = { # Redlander summonable MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 100
+	toughness = 30
+	pursuit = 250
+	screen = 0
+	siege_value = 0.2
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		magi = 2
+	}
+
+	stack = 50
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+archonarachs = { # Redlander summonable MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 333
+	toughness = 33
+	pursuit = 33
+	screen = 33
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		heavy_cavalry = 2
+		light_cavalry = 2
+		camel_cavalry = 2
+		elephant_cavalry = 1
+		monsters = 0.5
+	}
+
+	stack = 25
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+blade_tendrils = { # Awaken Fleshmaw MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 8
+	toughness = 15
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		skirmishers = 1
+	}
+
+	stack = 500
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+marrowdrones = { # Awaken Fleshmaw MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 30
+	toughness = 40
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		heavy_infantry = 1
+		archers = 1
+	}
+
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+hungering_mouths = { # Awaken Fleshmaw MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 50
+	toughness = 100
+	pursuit = 40
+	screen = 0
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		heavy_cavalry = 1
+		light_cavalry = 1
+	}
+
+	stack = 50
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fogbeasts # GH_URGENT: Need regiment icon replacements
+}
+
+#manzasiri = { # Manzasiri MAA
+#	
+#}
+
+night_gaunts= {  ###technically flying but for now, they're just chilling as monsters###
+	type = monsters
+  	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 750
+	toughness = 200
+	pursuit = 250
+	screen = 250
+
+	siege_tier = 7
+	siege_value = 0.8
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 250 toughness = 250 }
+		redlands_mountains = { damage = 250 toughness = 250 }
+		redlands_desert = { damage = 250 toughness = 250 }
+		redlands_chasms = { damage = 250 toughness = 250 pursuit = 500 }
+		oasis = { damage = -250 pursuit = -350 screen = -250 }
+		taiga = { damage = -250 pursuit = -350 screen = -250 }
+		forest = { damage = -250 pursuit = -400 screen = -250 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+		mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450 }
+
+		marcher_wetlands = { damage = 250 pursuit = 250 }
+		marcher_plains = { damage = 250 pursuit = 250 }
+		marcher_farmlands = { damage = 250 pursuit = 250 }
+		marcher_floodplains = { damage = 250 pursuit = 250 }
+		marcher_forest = { damage = -250 pursuit = -400 screen = -250 }
+		marcher_hills = { damage = -300 pursuit = -350 screen = -250 }
+		marcher_mountains = { damage = -500 toughness = -120 pursuit = -500 screen = -450}
+
+		deadlands = { damage = 250 pursuit = 250 }
+		mayik_caverns = { damage = -5000 toughness = -1000 pursuit = -1000 screen = -1000 }
+		mayik_corridors = { damage = -5000 toughness = -1000 pursuit = -1000 screen = -1000 }
+		mayik_chamber = { damage = -5000 toughness = -1000 pursuit = -1000 screen = -1000 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		
+	}
+
+	stack = 5
+	icon = fog_spirits # GH_URGENT: Need regiment icon replacements  
+}
+
+woodland_hydra = { # Summonable Nature/Blood MAA
+	type = monsters
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 750
+	toughness = 290
+	pursuit = 200
+	screen = 150
+	siege_value = 6
+	siege_tier = 1
+
+	terrain_bonus = {
+		forest = { damage = 350 toughness = 150 }
+		wetlands = { damage = 250 toughness = 150 }
+		floodplains = { damage = 250 toughness = 150 }
+		hills = { damage = 150 toughness = 25 }
+		farmlands = { damage = 150 toughness = 25 }
+	  	plains = { damage = 50 toughness = 15 }
+		mountains = { damage = 50 toughness = 15 }
+		
+		marcher_hills = { damage = -250 toughness = -90 }
+		marcher_farmlands = { damage = -250 toughness = -90 }
+		marcher_plains = { damage = -250 toughness = -90 }
+		marcher_mountains = { damage = -250 toughness = -90 }
+		marcher_forest = { damage = -250 toughness = -90 }
+		marcher_wetlands = { damage = -250 toughness = -90 }
+		marcher_floodplains = { damage = -250 toughness = -90 }
+    }
+
+	counters = {
+		archers = 1
+		heavy_cavalry = 1
+		heavy_infantry = 1
+		pikemen = 1
+		light_cavalry = 1 
+    }
+
+	stack = 5
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = fog_spirits # GH_URGENT: Need regiment icon replacements
+}
+
+war_hounds = { # Generic monster unit
+	type = monsters
+
+	damage = 14
+	toughness = 8
+	pursuit = 20
+	screen = 8
+
+	counters = {
+		skirmishers = 1
+		pikemen = 1
+	}
+
+	buy_cost = { gold = monsters_recruitment_cost }
+	low_maintenance_cost = { gold = monsters_low_maint_cost }
+	high_maintenance_cost = { gold = monsters_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_cheap
+
+	#mercenary_fallback = yes
+	holy_order_fallback = yes
+
+	can_recruit = { culture = { culture_has_standard_maa = yes } }
+
+	stack = 100
+	ai_quality = { value = culture_ai_weight_monsters }
+	icon = war_hound # GH_URGENT: Need regiment icon replacements
+}
+
+maples_marauders = { # Unique War Hound unit for a specific char
+	type = monsters
+
+	can_recruit = { always = no }
+
+	damage = 20
+	toughness = 12
+	pursuit = 24
+	screen = 10
+
+	counters = {
+		skirmishers = 1
+		pikemen = 1
+		heavy_infantry = 1
+	}
+
+	buy_cost = { gold = monsters_recruitment_cost }
+	low_maintenance_cost = { gold = monsters_low_maint_cost }
+	high_maintenance_cost = { gold = monsters_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_cheap
+
+	max_sub_regiments = 8
+
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = war_hound
+}

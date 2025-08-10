@@ -1,0 +1,791 @@
+﻿select_spell_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = var:selected_spell
+				var:selected_spell = scope:selected_spell_scope
+			}
+			remove_variable = selected_spell
+		}
+		else = {
+			set_variable = {
+				name = selected_spell
+				value = scope:selected_spell_scope
+			}
+		}
+	}
+}
+
+deselect_spell_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		remove_variable = selected_spell
+	}
+}
+
+select_spell_component_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		set_variable = {
+			name = selected_spell_component
+			value = scope:selected_spell_component_scope
+		}
+	}
+}
+
+deselect_spell_component_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		remove_variable = selected_spell_component
+	}
+}
+
+reset_spell_preparation_story_cycle_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		start_preparing_spell_effect = { SPELL = scope:spell_to_start_preparation_for_scope }
+	}
+}
+
+spell_component_has_local_overload_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		var:spell_preparation_story_cycle ?= {
+			any_in_list = {
+				variable = spell_component_being_prepared_list
+				var:spell_component_template = scope:spell_component_being_checked
+			}
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+cancel_spell_component_preparation_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		
+	}
+	
+	effect = {
+		var:spell_preparation_story_cycle ?= {
+			remove_list_variable = { name = spell_component_being_prepared_list target = scope:selected_spell_component_scope }
+			scope:selected_spell_component_scope = { end_story = yes }
+		}
+	}
+}
+
+toggle_spell_component_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		var:spell_preparation_story_cycle ?= {
+			if = {
+				limit = { 
+					any_in_list = {
+						variable = spell_component_being_prepared_list
+						var:spell_component_template = scope:spell_component_to_be_prepared
+					}
+				}
+				every_in_list = {
+					variable = spell_component_being_prepared_list
+					limit = { var:spell_component_template = scope:spell_component_to_be_prepared }
+					save_temporary_scope_as = spell_component_to_delete
+					root = {
+						remove_list_variable = { name = spell_component_being_prepared_list target = scope:spell_component_to_delete }
+					}
+					end_story = yes
+				}
+			}
+			else = {
+				root = {
+					create_story = {
+						type = story_spell_preparation
+						save_scope_as = story_spell_component_preparation_scope
+					}
+				}
+				scope:story_spell_component_preparation_scope = {
+					set_variable = is_toggled
+					set_variable = {
+						name = spell_component_template
+						value = scope:spell_component_to_be_prepared
+					}
+				}
+				add_to_variable_list = {
+					name = spell_component_being_prepared_list
+					target = scope:story_spell_component_preparation_scope
+				}
+			}
+		}
+	}
+}
+
+set_spell_component_character_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		var:spell_preparation_story_cycle ?= {
+			if = {
+				limit = { 
+					any_in_list = {
+						variable = spell_component_being_prepared_list
+						var:spell_component_template = scope:spell_component_to_be_prepared
+					}
+				}
+				every_in_list = {
+					variable = spell_component_being_prepared_list
+					limit = { var:spell_component_template = scope:spell_component_to_be_prepared }
+					save_temporary_scope_as = spell_component_to_delete
+					prev = {
+						remove_list_variable = { name = spell_component_being_prepared_list target = scope:spell_component_to_delete }
+					}
+					end_story = yes
+				}
+			}
+			else = {
+				root = {
+					create_story = {
+						type = story_spell_preparation
+						save_scope_as = story_spell_component_preparation_scope
+					}
+				}
+				scope:story_spell_component_preparation_scope = {
+					set_variable = {
+						name = spell_component_character_selection
+						value = scope:selected_character_scope
+					}
+					set_variable = {
+						name = spell_component_template
+						value = scope:spell_component_to_be_prepared
+					}
+				}
+				add_to_variable_list = {
+					name = spell_component_being_prepared_list
+					target = scope:story_spell_component_preparation_scope
+				}
+			}
+		}
+		remove_variable = selected_spell_component
+	}
+}
+
+set_spell_component_artifact_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		var:spell_preparation_story_cycle ?= {
+			if = {
+				limit = { 
+					any_in_list = {
+						variable = spell_component_being_prepared_list
+						var:spell_component_template = scope:spell_component_to_be_prepared
+					}
+				}
+				every_in_list = {
+					variable = spell_component_being_prepared_list
+					limit = { var:spell_component_template = scope:spell_component_to_be_prepared }
+					save_temporary_scope_as = spell_component_to_delete
+					prev = {
+						remove_list_variable = { name = spell_component_being_prepared_list target = scope:spell_component_to_delete }
+					}
+					end_story = yes
+				}
+			}
+			else = {
+				root = {
+					create_story = {
+						type = story_spell_preparation
+						save_scope_as = story_spell_component_preparation_scope
+					}
+				}
+				scope:story_spell_component_preparation_scope = {
+					set_variable = {
+						name = spell_component_artifact_selection
+						value = scope:selected_artifact_scope
+					}
+					set_variable = {
+						name = spell_component_template
+						value = scope:spell_component_to_be_prepared
+					}
+				}
+				add_to_variable_list = {
+					name = spell_component_being_prepared_list
+					target = scope:story_spell_component_preparation_scope
+				}
+			}
+		}
+		remove_variable = selected_spell_component
+	}
+}
+
+set_spell_component_ingredient_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		var:spell_preparation_story_cycle ?= {
+			if = {
+				limit = { 
+					any_in_list = {
+						variable = spell_component_being_prepared_list
+						var:spell_component_template = scope:spell_component_to_be_prepared
+						exists = var:spell_component_ingredient_selection
+						NOT = { var:spell_component_ingredient_selection = scope:selected_ingredient_scope }
+					}
+				}
+				every_in_list = {
+					variable = spell_component_being_prepared_list
+					limit = { var:spell_component_template = scope:spell_component_to_be_prepared }
+					set_variable = {
+						name = spell_component_ingredient_selection
+						value = scope:selected_ingredient_scope
+					}
+				}
+			}
+			else_if = {
+				limit = { 
+					any_in_list = {
+						variable = spell_component_being_prepared_list
+						var:spell_component_template = scope:spell_component_to_be_prepared
+					}
+				}
+				every_in_list = {
+					variable = spell_component_being_prepared_list
+					limit = { var:spell_component_template = scope:spell_component_to_be_prepared }
+					save_temporary_scope_as = spell_component_to_delete
+					prev = {
+						remove_list_variable = { name = spell_component_being_prepared_list target = scope:spell_component_to_delete }
+					}
+					end_story = yes
+				}
+			}
+			else = {
+				root = {
+					create_story = {
+						type = story_spell_preparation
+						save_scope_as = story_spell_component_preparation_scope
+					}
+				}
+				scope:story_spell_component_preparation_scope = {
+					set_variable = {
+						name = spell_component_ingredient_selection
+						value = scope:selected_ingredient_scope
+					}
+					set_variable = {
+						name = spell_component_template
+						value = scope:spell_component_to_be_prepared
+					}
+				}
+				add_to_variable_list = {
+					name = spell_component_being_prepared_list
+					target = scope:story_spell_component_preparation_scope
+				}
+			}
+		}
+		remove_variable = selected_spell_component
+	}
+}
+
+runic_scroll_is_shown_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			scope:spell_component_scope ?= {
+				NOT = {
+					AND = {
+						exists = var:artifact_type
+						var:artifact_type = flag:runic_scroll
+					}
+				}
+			}
+			scope:artifact_scope ?= {
+				var:namesake_knowledge_entry ?= {
+					any_in_list = {
+						variable = knowledge_entry_spell_list
+						this = scope:spell_scope
+					}
+				}
+			}
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+spell_can_be_manually_casted_scripted_gui = {
+	scope = story
+	
+	is_shown = {
+		NOT = { spell_has_tag_trigger = { NAME = flag:cantrip } }
+	}
+	
+	effect = {
+	
+	}
+}
+
+execute_spell_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+		save_temporary_scope_as = spell_organizer
+		trigger_if = {
+			limit = {
+				exists = var:casting_through_court_magi_var
+				exists = cp:councillor_court_magi
+			}
+			cp:councillor_court_magi = { save_temporary_scope_as = caster }
+		}
+		trigger_else = {
+			save_temporary_scope_as = caster
+		}
+		exists = var:selected_spell
+		var:selected_spell = { save_temporary_scope_as = spell_being_casted }
+		can_cast_spell_trigger = { CASTER = scope:caster SPELL = scope:spell_being_casted }
+	}
+	
+	effect = {
+		save_scope_as = spell_organizer
+		if = {
+			limit = {
+				exists = var:casting_through_court_magi_var
+				exists = cp:councillor_court_magi
+			}
+			cp:councillor_court_magi = { save_scope_as = caster }
+		}
+		else = {
+			save_scope_as = caster
+		}
+		if = {
+			limit = {
+				exists = var:casting_through_court_magi_var
+				exists = var:casting_through_court_magi_give_gold_var
+			}
+			scope:spell_organizer = {
+				pay_short_term_gold = {
+					target = scope:caster
+					gold = medium_gold_value
+				}
+			}
+		}
+		if = {
+			limit = {
+				exists = var:casting_through_court_magi_var
+				exists = var:casting_through_court_magi_give_hook_var
+			}
+			scope:caster = {
+				add_hook = {
+					target = scope:spell_organizer
+					type = favor_hook
+				}
+			}
+		}
+		if = {
+			limit = { exists = var:spell_preparation_story_cycle }
+			var:spell_preparation_story_cycle = { save_scope_as = spell_preparation_story_cycle_scope }
+		}
+		if = {
+			limit = { exists = var:selected_spell }
+			var:selected_spell = { 
+				save_scope_as = selected_spell_scope	# GH TODO: Replace every call to this stupid fucking redundant scope with "spell_being_casted"
+				save_scope_as = spell_being_casted
+			}
+			set_variable = {	# For custom loc purposes
+				name = spell_being_casted_var
+				value = var:selected_spell
+				days = 1
+			}
+			show_as_tooltip = {
+				save_scope_value_as = {
+					name = always_succeed_spellcasting
+					value = yes
+				}
+				save_scope_value_as = {
+					name = effect_gui_display_mode
+					value = yes
+				}
+				execute_spell_effect = { SPELL = scope:selected_spell_scope }
+			}
+			hidden_effect = {
+				var:selected_spell ?= { determine_spellcasting_outcome_effect = yes }
+				pick_spell_location_effect = yes
+				GH_unlimitedpower_check = yes
+			}
+			if = {
+				limit = { exists = scope:always_succeed_spellcasting }
+				trigger_event = magic.0001
+			}
+			else = {
+				trigger_event = {
+					on_action = magic_backfire_events
+				}
+			}
+		}
+	}
+}
+
+cast_through_court_magi_scripted_gui = {
+	scope = character
+	
+	is_shown = { }
+	
+	effect = {
+		if = {
+			limit = { exists = var:casting_through_court_magi_var }
+			remove_variable = casting_through_court_magi_var
+		}
+		else = {
+			set_variable = casting_through_court_magi_var
+		}
+		if = {
+			limit = { 
+				exists = var:selected_spell
+			}
+			remove_variable = selected_spell
+		}
+	}
+}
+
+cast_through_court_magi_give_gold_scripted_gui = {
+	scope = character
+
+	is_shown = { }
+	effect = {
+		if = {
+			limit = { exists = var:casting_through_court_magi_give_gold_var }
+			remove_variable = casting_through_court_magi_give_gold_var
+		}
+		else = {
+			set_variable = casting_through_court_magi_give_gold_var
+		}
+	}
+}
+cast_through_court_magi_give_hook_scripted_gui = {
+	scope = character
+
+	is_shown = { }
+	effect = {
+		if = {
+			limit = { exists = var:casting_through_court_magi_give_hook_var }
+			remove_variable = casting_through_court_magi_give_hook_var
+		}
+		else = {
+			set_variable = casting_through_court_magi_give_hook_var
+		}
+	}
+}
+
+#########################
+# SPELL COMPONENT STUFF #
+#########################
+
+spell_component_is_fulfilled_scripted_gui = {
+	scope = story
+	
+	is_shown = {
+		trigger_if = {
+			limit = { exists = var:character_spell_component_input }
+			exists = var:spell_component_character_selection
+			var:spell_component_character_selection = {
+				is_alive = yes
+			}
+		}
+		trigger_if = {
+			limit = { exists = var:artifact_spell_component_input }
+			exists = var:spell_component_artifact_selection
+		}
+		trigger_if = {
+			limit = { has_variable_list = spell_component_ingredient_list }
+			exists = var:spell_component_ingredient_selection
+		}
+		trigger_if = {
+			limit = { exists = var:toggleable }
+			exists = var:is_toggled
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+character_is_valid_to_fill_spell_component_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		exists = scope:spell_component_being_checked
+		exists = scope:caster_scope
+		is_alive = yes
+		trigger_if = {
+			limit = { 
+				exists = scope:spell_component_being_checked.var:imprisoned
+				scope:spell_component_being_checked.var:imprisoned = 0
+			}
+			is_imprisoned_by = scope:caster_scope
+		}
+		trigger_else = {
+			is_imprisoned = no
+		}
+	}
+	
+	effect = {
+		
+	}
+}
+
+####################
+# TARGET SELECTION #
+####################
+
+magic_gui_province_is_selected_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		has_variable_list = spell_target_province_list
+		is_target_in_variable_list = { 
+			name = spell_target_province_list 
+			target = scope:target 
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+magic_gui_select_province_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = scope:target
+			}
+			if = {
+				limit = {
+					is_target_in_variable_list = { 
+						name = spell_target_province_list 
+						target = scope:target 
+					}
+				}
+				remove_list_variable = { name = spell_target_province_list target = scope:target }
+			}
+			else = {
+				add_to_variable_list = {
+					name = spell_target_province_list
+					target = scope:target
+				}
+			}
+		}
+	}
+}
+
+magic_gui_artifact_is_selected_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		has_variable_list = spell_targets_artifacts
+		is_target_in_variable_list = { 
+			name = spell_targets_artifacts 
+			target = scope:target 
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+magic_gui_select_artifact_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = scope:target
+			}
+			if = {
+				limit = {
+					is_target_in_variable_list = { 
+						name = spell_targets_artifacts 
+						target = scope:target 
+					}
+				}
+				remove_list_variable = { name = spell_targets_artifacts target = scope:target }
+			}
+			else = {
+				add_to_variable_list = {
+					name = spell_targets_artifacts
+					target = scope:target
+				}
+			}
+		}
+	}
+}
+
+############
+# ACTIVITY #
+############
+
+has_any_relevant_spell_for_activity_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+		OR = {
+			AND = {
+				has_variable_list = known_spell_list
+				any_in_list = {
+					variable = known_spell_list
+					OR = {
+						AND = {
+							scope:activity_type ?= flag:activity_feast
+							spell_has_tag_trigger = { NAME = flag:activation_condition_activity_feast_preparation }
+						}
+						AND = {
+							scope:activity_type ?= flag:activity_wedding
+							spell_has_tag_trigger = { NAME = flag:activation_condition_activity_wedding_preparation }
+						}
+					}
+				}
+			}
+			AND = {
+				exists = cp:councillor_court_magi
+				cp:councillor_court_magi = {
+					has_variable_list = known_spell_list
+					any_in_list = {
+						variable = known_spell_list
+						OR = {
+							AND = {
+								scope:activity_type ?= flag:activity_feast
+								spell_has_tag_trigger = { NAME = flag:activation_condition_activity_feast_preparation }
+							}
+							AND = {
+								scope:activity_type ?= flag:activity_wedding
+								spell_has_tag_trigger = { NAME = flag:activation_condition_activity_wedding_preparation }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+spell_is_relevant_for_activity_scripted_gui = {
+	scope = story
+	
+	is_shown = {
+		OR = {
+			AND = {
+				scope:activity_type ?= flag:activity_feast
+				spell_has_tag_trigger = { NAME = flag:activation_condition_activity_feast_preparation }
+			}
+			AND = {
+				scope:activity_type ?= flag:activity_wedding
+				spell_has_tag_trigger = { NAME = flag:activation_condition_activity_wedding_preparation }
+			}
+		}
+	}
+	
+	effect = {
+	
+	}
+}
+
+########
+# MISC #
+########
+
+activate_uncapped_magic_gain_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	effect = {
+		if = {
+			limit = { 
+				exists = var:uncapped_magic_gain_activated
+			}
+			remove_variable = uncapped_magic_gain_activated
+			if = {
+				limit = { 
+					exists = var:magic_counter
+					var:magic_counter >= character_magic_baseline_value
+				}
+				set_variable = {
+					name = magic_counter
+					value = character_magic_baseline_value
+				}
+			}
+		}
+		else = {
+			set_variable = uncapped_magic_gain_activated
+		}
+	}
+}

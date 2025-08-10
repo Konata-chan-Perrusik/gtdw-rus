@@ -1,0 +1,1378 @@
+﻿#####################################################
+################ MAGICAL MAA TYPES ##################
+#####################################################
+# For MAA that are based entirely around magic,		#
+# such as elementals and spirits.					#
+#													#
+# These should serve some sort of unique function	#
+# or exist for a ritual - make them interesting!	#
+#####################################################
+
+# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+@cultural_maa_extra_ai_score = 80 # Equivalent to having 8 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+## SPECIAL ##
+
+# list of types of magical units
+# magical_fire
+# magical_ice
+# magical_water
+# magical_air
+# magical_stone
+# magical_dark
+# magical_dream
+# magical_light
+# magical_nature
+# magical_celestial
+# magical_metal
+# magical_sand
+# magical_ethereal
+# magical_death
+# magical_blood
+# magical_hymn
+# #magical_dawn
+
+
+fog_spirits = { # Fogeater cultural unit type and also summonable
+	type = magical_ethereal
+
+	can_recruit = { always = no }
+
+	damage = 23
+	toughness = 47
+	pursuit = 15
+	screen = 0
+
+	terrain_bonus = {
+		marcher_hills = { damage = -20 toughness = -40 pursuit = -100 }
+		marcher_farmlands = { damage = -20 toughness = -40 pursuit = -100 }
+		marcher_plains = { damage = -20 toughness = -40 pursuit = -100 }
+		marcher_mountains = { damage = -20 toughness = -40 pursuit = -100 }
+		marcher_forest = { damage = -20 toughness = -40 pursuit = -100 }
+		marcher_wetlands = { damage = -20 toughness = -40 pursuit = -100 }
+		marcher_floodplains = { damage = -20 toughness = -40 pursuit = -100 }
+		antimagic_terrain = { damage = -20 toughness = -40 pursuit = -100 }
+	}
+
+	stack = 75
+	icon = fog_spirits
+}
+
+leshens = { # Nature summoning SPECIAL elemental MAA
+	type = magical_nature
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 750
+	toughness = 500
+	pursuit = 150
+	screen = 250
+	siege_tier = 5
+	siege_value = 0.6
+
+	winter_bonus = {
+		normal_winter = { damage = -75 toughness = -75 screen = -75 pursuit = -75 }
+		harsh_winter = { damage = -150 toughness = -150 screen = -150	pursuit = -150 }
+	}
+
+	terrain_bonus = {
+		marcher_hills = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -750 toughness = -350 pursuit = -200 screen = -150 }
+		forest = { damage = 350 pursuit = 300 screen = 300}
+		jungle = { damage = 300 toughness = 300 screen = 350}
+		floodplains = { damage = 150 toughness = 100 }
+		wetlands = { damage = 100 pursuit = 100 }
+		farmlands = { damage = 200 pursuit = 250 }
+		desert = { damage = -700 pursuit = -250 }
+		steppe = { damage = -600 pursuit = -150 }
+		drylands = { damage = -700 pursuit = -50 }
+		oasis = { damage = -25 pursuit = -35 screen = -25 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -700 toughness = -120 }
+		mountains = { damage = -600 toughness = -120 }
+		taiga = { damage = -550 toughness = -400 pursuit = -150 screen = -250 }
+		redlands_drylands = { damage = -700 toughness = -500 pursuit = -150 screen = -250 }
+		redlands_mountains = { damage = -700 toughness = -500 pursuit = -150 screen = -250 }
+		redlands_desert = { damage = -700 toughness = -500 pursuit = -150 screen = -250 }
+		redlands_chasms = { damage = -700 toughness = -500 pursuit = -150 screen = -250 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 0.5
+		elephant_cavalry = 0.5
+		light_cavalry = 1
+		archer_cavalry = 1
+		camel_cavalry = 1
+		magical_water = 1
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+water_elementals = {
+	type = magical_water
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 500
+	toughness = 350
+	pursuit = 200
+	screen = 150
+	siege_tier = 5
+	siege_value = 0.6
+
+	winter_bonus = {
+		normal_winter = { damage = -75 toughness = -75 screen = -75 pursuit = -75}
+		harsh_winter = { damage = -150 toughness = -150 screen = -150	pursuit = -150 }
+	}
+	terrain_bonus = {
+		marcher_hills = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -500 toughness = -350 pursuit = -200 screen = -150 }
+		forest = { damage = 50 pursuit = 100 screen = 100}
+		jungle = { damage = 100 toughness = 100 screen = 150}
+		floodplains = { damage = 250 toughness = 250 }
+		wetlands = { damage = 250 pursuit = 250 }
+		archipelagic = { damage = 300 pursuit = 300 toughness = 200 }
+		plains = { damage = 250 pursuit = 250 }
+		farmlands = { damage = 250 toughness = 50 }
+		desert = { damage = -500 pursuit = -250 }
+		steppe = { damage = -250 pursuit = -150 }
+		drylands = { damage = -400 pursuit = -200 }
+		oasis = { damage = 150 toughness = -50 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -500 toughness = -350 }
+		mountains = { damage = -200 toughness = -120 }
+		taiga = { damage = 250 toughness = 250 }
+		redlands_drylands = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		redlands_mountains = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		redlands_desert = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		redlands_chasms = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+	}
+
+	counters = {
+		magical_ice = 1.5
+		magical_fire = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 0.5
+		elephant_cavalry = 0.5
+		light_cavalry = 1
+		archer_cavalry = 1
+		camel_cavalry = 1
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+air_elementals = {
+	type = magical_air
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 350
+	toughness = 200
+	pursuit = 400
+	screen = 250
+	siege_tier = 2
+	siege_value = 0.2 # Weak against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -350 toughness = -200 pursuit = -200 screen = -150 }
+		forest = { damage = 100 pursuit = -50 }
+		jungle = { damage = 150 pursuit = -100 }
+		floodplains = { damage = 200 pursuit = 150 } # Flat, open areas hinder movement slightly
+		wetlands = { damage = 50 pursuit = -50 } # Movement impeded by water
+		plains = { damage = 200 pursuit = 250 } # Open areas benefit movement
+		farmlands = { damage = 175 pursuit = 225 } # Similar to plains but slightly less effective
+		desert = { damage = 225 pursuit = 275 } # Wind currents provide some advantage
+		steppe = { damage = 200 pursuit = 250 } # Open grasslands benefit movement
+		drylands = { damage = 215 pursuit = 265 } # Arid lands offer some maneuverability advantage
+		oasis = { damage = 150 pursuit = 200 } # Limited movement benefit from small water source
+		hills = { damage = 100 pursuit = 150 } # Movement hindered by elevation
+		desert_mountains = { damage = -150 pursuit = -400 } # Strong winds struggle in high mountains
+		mountains = { damage = -150 pursuit = -400 } # Difficult to maneuver in high mountains, struggles in thin air
+		redlands_drylands = { damage = -300 toughness = -100 pursuit = -150 screen = -150 }
+		redlands_mountains = { damage = -300 toughness = -100 pursuit = -150 screen = -150 }
+		redlands_desert = { damage = -300 toughness = -100 pursuit = -150 screen = -150 }
+		redlands_chasms = { damage = -300 toughness = -100 pursuit = -150 screen = -150 }
+	}
+
+	counters = {
+		flying = 1.5
+		archers = 1
+		pikemen = 0.5
+		heavy_infantry = 0.5
+		heavy_cavalry = 0.5
+		undead = 0.5
+		magical_dream = 1.5
+		magical_sand = 1
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+stone_elementals = {
+	type = magical_stone
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 400
+	toughness = 500
+	pursuit = 150
+	screen = 200
+	siege_tier = 5
+	siege_value = 0.8
+
+	terrain_bonus = {
+		marcher_hills = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -400 toughness = -350 pursuit = -200 screen = -150 }
+		forest = { damage = -100 toughness = 100 }
+		jungle = { damage = -150 toughness = 150 }
+		floodplains = { damage = -200 toughness = -400 }
+		wetlands = { damage = -300 toughness = -400 }
+		plains = { damage = 300 toughness = 400 }
+		farmlands = { damage = 250 toughness = -350 }
+		desert = { damage = 350 toughness = 450 }
+		steppe = { damage = 300 toughness = -400 }
+		drylands = { damage = -100 toughness = -150 }
+		oasis = { damage = -200 toughness = -100 }
+		hills = { damage = 350 toughness = 250 }
+		desert_mountains = { damage = 400 toughness = 300 }
+		mountains = { damage = 375 toughness = 575 }
+		taiga = { damage = -200 toughness = -300 }
+	}
+
+	counters = {
+		archers = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+		magical_fire = 1.5
+		magical_air = 1
+	}
+
+	stack = 5
+	icon = fog_spirits 
+}
+
+fire_elementals = {
+	type = magical_fire
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 450
+	toughness = 250
+	pursuit = 300
+	screen = 100
+	siege_tier = 5
+	siege_value = 0.6 
+
+	terrain_bonus = {
+	marcher_hills = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	marcher_farmlands = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	marcher_plains = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	marcher_mountains = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	marcher_forest = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	marcher_wetlands = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	marcher_floodplains = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	antimagic_terrain = { damage = -450 toughness = -350 pursuit = -200 screen = -150 }
+	forest = { damage = 200 toughness = 150 pursuit = -100 }
+	jungle = { damage = 275 toughness = 200 pursuit = -150 }
+	floodplains = { damage = -350 toughness = -200 }
+	wetlands = { damage = -400 toughness = -225 }
+	plains = { damage = 250 pursuit = 175 }
+	farmlands = { damage = 225 pursuit = 150 }
+	desert = { damage = 400 toughness = 250 }
+	steppe = { damage = 250 pursuit = 175 }
+	drylands = { damage = 200 toughness = 150 }
+	oasis = { damage = -400 toughness = -200 }
+	hills = { damage = 200 toughness = 125 }
+	desert_mountains = { damage = 225 toughness = -100 }
+	mountains = { damage = -175 toughness = -150 }
+	taiga = { damage = -300 toughness = -150 }
+	}
+
+	counters = {
+		archers = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5 
+		magical_stone = 1.5
+		magical_nature = 1
+		magical_ice = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+ice_elementals = {
+	type = magical_ice
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 300
+	toughness = 400
+	pursuit = 100
+	screen = 150
+	siege_tier = 5
+	siege_value = 0.5
+
+	winter_bonus = {
+		normal_winter = { damage = 250 toughness = 250 screen = 250 pursuit = 250}
+		harsh_winter = { damage = 500 toughness = 500 screen = 500	pursuit = 500 }
+	}
+
+	terrain_bonus = {
+		marcher_hills = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		marcher_farmlands = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		marcher_plains = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		marcher_mountains = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		marcher_forest = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		marcher_wetlands = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		marcher_floodplains = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		antimagic_terrain = { damage = -300 toughness = -350 pursuit = -100 screen = -150 }
+		forest = { damage = 50 toughness = 50 }
+		jungle = { damage = -250 toughness = -250 }
+		floodplains = { damage = -150 toughness = -125 }
+		wetlands = { damage = -100 toughness = -150 }
+		plains = { damage = 50 toughness = 50 }
+		farmlands = { damage = 50 toughness = 50 }
+		desert = { damage = -275 toughness = -400 }
+		steppe = { damage = 150 toughness = 250 }
+		drylands = { damage = -275 toughness = -400 }
+		oasis = { damage = -275 toughness = -400 }
+		hills = { damage = 75 toughness = 25 }
+		desert_mountains = { damage = -298 toughness = -400 }
+		mountains = { damage = 200 toughness = 350 }
+		taiga = { damage = 200 toughness = 100 }
+		redlands_drylands = { damage = -300 toughness = -400 pursuit = -100 screen = -150 }
+		redlands_mountains = { damage = -300 toughness = -400 pursuit = -100 screen = -150 }
+		redlands_desert = { damage = -300 toughness = -400 pursuit = -100 screen = -150 }
+		redlands_chasms = { damage = -300 toughness = -400 pursuit = -100 screen = -150 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+		magical_water = 1.5
+		magical_metal = 1
+	}
+
+	stack = 5
+	icon = fog_spirits # Replace with appropriate icon name
+}
+
+nature_elementals = {
+	type = magical_nature
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 400
+	toughness = 300
+	pursuit = 250
+	screen = 200
+	siege_tier = 7
+	siege_value = 2
+
+	terrain_bonus = {
+		marcher_hills = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		forest = { damage = 350 toughness = 350 pursuit = 200 }
+		jungle = { damage = 500 toughness = 400 pursuit = 150 }
+		floodplains = { damage = 150 toughness = 250 }
+		wetlands = { damage = 200 toughness = 150 }
+		plains = { damage = 100 pursuit = 100 }
+		farmlands = { damage = 150 pursuit = 75 }
+		desert = { damage = -350 toughness = -275 }
+		steppe = { damage = 50 pursuit = 75 }
+		drylands = { damage = -200 toughness = -200 }
+		oasis = { damage = 175 toughness = 75 }
+		hills = { damage = 175 toughness = 125 }
+		desert_mountains = { damage = -350 toughness = -150 }
+		mountains = { damage = -350 toughness = -100 }
+		taiga = { damage = 225 toughness = 175 pursuit = -100 }
+		redlands_drylands = { damage = -400 toughness = -300 pursuit = -150 screen = -150 }
+		redlands_mountains = { damage = -400 toughness = -300 pursuit = -150 screen = -150 }
+		redlands_desert = { damage = -400 toughness = -300 pursuit = -150 screen = -150 }
+		redlands_chasms = { damage = -400 toughness = -300 pursuit = -150 screen = -150 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+		magical_water = 2
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+metal_elementals = {
+	type = magical_metal
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 425
+	toughness = 450
+	pursuit = 350
+	screen = 300
+	siege_tier = 5
+	siege_value = 1.0 # Strong against structures
+
+	winter_bonus = {
+		normal_winter = { damage = -75 toughness = -75 screen = -75 pursuit = -75}
+		harsh_winter = { damage = -150 toughness = -150 screen = -150	pursuit = -150 }
+	}
+
+	terrain_bonus = {
+		marcher_hills = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -425 toughness = -350 pursuit = -200 screen = -150 }
+		forest = { damage = 125 toughness = -50 }
+		jungle = { damage = 75 toughness = -50 }
+		floodplains = { damage = -150 toughness = -100 }
+		wetlands = { damage = -200 toughness = -175 }
+		plains = { damage = 175 pursuit = 150 }
+		farmlands = { damage = 150 pursuit = 125 }
+		desert = { damage = 250 toughness = 150 }
+		steppe = { damage = 175 pursuit = 150 }
+		drylands = { damage = 50 toughness = 50 }
+		oasis = { damage = 150 toughness = 50 }
+		hills = { damage = 125 toughness = 50 }
+		desert_mountains = { damage = 200 toughness = 200 }
+		mountains = { damage = 50 toughness = -25 }
+		taiga = { damage = -125 toughness = -150 }
+	}
+
+	counters = {
+		pikemen = 1
+		undead = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits	## Replace with appropriate icon name
+}
+
+sand_elementals = {
+	type = magical_sand
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 375
+	toughness = 300
+	pursuit = 350
+	screen = 150
+	siege_tier = 3
+	siege_value = 0.5
+
+	terrain_bonus = {
+		marcher_hills = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -375 toughness = -300 pursuit = -200 screen = -150 }
+		forest = { damage = -250 toughness = -200 pursuit = -250 }
+		jungle = { damage = -350 toughness = -150 pursuit = -250 }
+		floodplains = { damage = -350 toughness = -150 }
+		wetlands = { damage = -350 toughness = -250 }
+		plains = { damage = 125 toughness = 125 }
+		farmlands = { damage = 175 toughness = 275 }
+		desert = { damage = 500 toughness = 500 pursuit = 500 }
+		steppe = { damage = 150 toughness = 150 }
+		drylands = { damage = 275 toughness = 175 }
+		oasis = { damage = 350 toughness = 150 }
+		hills = { damage = 150 toughness = -150 }
+		desert_mountains = { damage = 250 toughness = 150 }
+		mountains = { damage = -250 toughness = -200 }
+		taiga = { damage = -250 toughness = -300 pursuit = -250 }
+	}
+
+	counters = {
+		magical_water = 1
+		archers = 1
+		heavy_cavalry = 1
+		heavy_infantry = 1
+		archer_cavalry = 1 # Bonus against water elementals and similar units
+		pikemen = 1
+		undead = 1
+	}
+
+	stack = 5
+	icon = fog_spirits # Replace with appropriate icon name
+}
+
+light_elementals = {
+	type = magical_light
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+	
+	damage = 300
+	toughness = 150
+	pursuit = 450
+	screen = 200
+	siege_tier = 1
+	siege_value = 0.1	## Weak against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -300 toughness = -150 pursuit = -200 screen = -150 }
+		forest = { damage = -50 toughness = -300 }
+		jungle = { damage = -100 toughness = -350 }
+		floodplains = { damage = -75 toughness = -250 }
+		wetlands = { damage = 0 toughness = -200 }
+		plains = { damage = 200 pursuit = 250 }
+		farmlands = { damage = 300 pursuit = 150 }
+		desert = { damage = 550 toughness = 250 }
+		steppe = { damage = 200 pursuit = -250 }
+		drylands = { damage = -150 toughness = 150 }
+		oasis = { damage = 250 toughness = -250 }
+		hills = { damage = -50 toughness = -300 }
+		desert_mountains = { damage = -100 toughness = -350 }
+		mountains = { damage = -150 toughness = -400 }
+		taiga = { damage = 100 toughness = 350 }
+		redlands_drylands = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		redlands_mountains = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		redlands_desert = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		redlands_chasms = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+	}
+
+	counters = {
+		magical_dark = 1.5
+		magical_death = 0.5
+		undead = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+blood_elementals = {
+	type = magical_blood
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 400
+	toughness = 250
+	pursuit = 200
+	screen = 100
+	siege_tier = 4
+	siege_value = 0.3 # Less effective against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		marcher_farmlands = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		marcher_plains = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		marcher_mountains = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		marcher_forest = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		marcher_wetlands = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		marcher_floodplains = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		antimagic_terrain = { damage = -400 toughness = -250 pursuit = -200 screen = -100 }
+		forest = { damage = 200 toughness = -50 }
+		jungle = { damage = 250 toughness = -100 }
+		floodplains = { damage = 175 toughness = 25 }
+		wetlands = { damage = 225 toughness = 75 }
+		plains = { damage = 200 pursuit = 50 }
+		farmlands = { damage = 175 pursuit = 25 }
+		desert = { damage = 100 toughness = -50 }
+		steppe = { damage = 150 toughness = 25 }
+		drylands = { damage = 50 toughness = -75 }
+		oasis = { damage = 250 toughness = 25 }
+		hills = { damage = 200 toughness = -25 }
+		desert_mountains = { damage = 100 toughness = -100 }
+		mountains = { damage = 50 toughness = -125 }
+		taiga = { damage = 150 toughness = -25 }
+	}
+	counters = {
+		magical_death = 1.5
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+death_elementals = {
+	type = magical_death
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 350
+	toughness = 400
+	pursuit = 150
+	screen = 150
+	siege_tier = 5
+	siege_value = 0.5 # Moderately effective against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_farmlands = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_plains = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_mountains = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_forest = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_wetlands = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_floodplains = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		antimagic_terrain = { damage = -350 toughness = -350 pursuit = -150 screen = -150 }
+		forest = { damage = -100 toughness = 250 }
+		jungle = { damage = -50 toughness = 300 }
+		floodplains = { damage = 125 toughness = 225 }
+		wetlands = { damage = 175 toughness = 200 }
+		plains = { damage = 150 pursuit = -100 }
+		farmlands = { damage = 125 pursuit = -125 }
+		desert = { damage = 200 toughness = 150 }
+		steppe = { damage = 175 toughness = 200 }
+		drylands = { damage = 225 toughness = 175 }
+		oasis = { damage = 150 toughness = 225 }
+		hills = { damage = 125 toughness = 250 }
+		desert_mountains = { damage = 200 toughness = 300 }
+		mountains = { damage = 175 toughness = 325 }
+		taiga = { damage = -100 toughness = 275 }
+		redlands_drylands = { damage = 150 toughness = 25 }
+		redlands_mountains = { damage = 50 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		magical_blood = 1.5
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+dark_elementals = { # Shadeling
+	type = magical_dark
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 375
+	toughness = 350
+	pursuit = 250
+	screen = 100
+	siege_tier = 4
+	siege_value = 0.5 # Moderately effective against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		marcher_farmlands = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		marcher_plains = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		marcher_mountains = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		marcher_forest = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		marcher_wetlands = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		marcher_floodplains = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		antimagic_terrain = { damage = -350 toughness = -350 pursuit = -150 screen = -100 }
+		forest = { damage = 225 toughness = 200 }
+		jungle = { damage = 275 toughness = 250 }
+		floodplains = { damage = 150 toughness = 125 }
+		wetlands = { damage = 200 toughness = 175 }
+		plains = { damage = 175 pursuit = 100 }
+		farmlands = { damage = 150 pursuit = 75 }
+		desert = { damage = -200 toughness = -200 pursuit = 175 }
+		steppe = { damage = 175 pursuit = 125 }
+		drylands = { damage = -225 toughness = 150 }
+		oasis = { damage = -125 toughness = 100 }
+		hills = { damage = 200 toughness = 175 }
+		desert_mountains = { damage = 225 toughness = 200 }
+		mountains = { damage = 250 toughness = 225 }
+		taiga = { damage = 200 toughness = 200 }
+		redlands_drylands = { damage = 150 toughness = 25 }
+		redlands_mountains = { damage = 150 toughness = 25 }
+		redlands_desert = { damage = 50 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		magical_light = 1.5
+		magical_air = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+ethereal_elementals = {
+	type = magical_ethereal
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 350
+	toughness = 350
+	pursuit = 500
+	screen = 250
+	siege_tier = 1
+	siege_value = 0.0 # Weak against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		marcher_farmlands = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		marcher_plains = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		marcher_mountains = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		marcher_forest = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		marcher_wetlands = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		marcher_floodplains = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		antimagic_terrain = { damage = -350 toughness = -350 pursuit = -500 screen = -150 }
+		forest = { damage = 150 pursuit = -100 }
+		jungle = { damage = -200 pursuit = -450 }
+		floodplains = { damage = 50 pursuit = 100 }
+		wetlands = { damage = 250 pursuit = 250 }
+		plains = { damage = 100 pursuit = 250 }
+		farmlands = { damage = 75 pursuit = 225 }
+		desert = { damage = 150 pursuit = 200 }
+		steppe = { damage = 100 pursuit = 200 }
+		drylands = { damage = 125 pursuit = -75 }
+		oasis = { damage = 100 pursuit = 300 }
+		hills = { damage = 0 pursuit = 250 }
+		desert_mountains = { damage = -50 pursuit = 150 }
+		mountains = { damage = -100 pursuit = -350 }
+		taiga = { damage = -100 pursuit = -250 }
+		redlands_drylands = { damage = 150 toughness = 25 }
+		redlands_mountains = { damage = 150 toughness = 25 }
+		redlands_desert = { damage = 150 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		magical_celestial = 2
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 4
+	icon = fog_spirits
+}
+
+celestial_elementals = {
+	type = magical_celestial
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 450
+	toughness = 400
+	pursuit = 300
+	screen = 200
+	siege_tier = 5 # Highly effective against structures
+	siege_value = 1.5
+	
+	terrain_bonus = {
+		marcher_hills = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_farmlands = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_plains = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_mountains = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_forest = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_wetlands = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_floodplains = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		antimagic_terrain = { damage = -450 toughness = -350 pursuit = -150 screen = -150 }
+		forest = { damage = -175 toughness = -125 }
+		jungle = { damage = -150 toughness = -100 }
+		floodplains = { damage = 225 toughness = 175 }
+		wetlands = { damage = 250 toughness = 200 }
+		plains = { damage = 350 pursuit = 175 }
+		farmlands = { damage = 325 pursuit = 150 }
+		desert = { damage = 225 toughness = 175 }
+		steppe = { damage = 225 pursuit = 175 }
+		drylands = { damage = 210 toughness = 160 }
+		oasis = { damage = 50 toughness = -50 }
+		hills = { damage = 75 toughness = -100 }
+		desert_mountains = { damage = 150 toughness = 125 }
+		mountains = { damage = -300 toughness = -300 }
+		taiga = { damage = -150 toughness = -100 }
+		redlands_drylands = { damage = 150 toughness = 25 }
+		redlands_mountains = { damage = 150 toughness = 25 }
+		redlands_desert = { damage = 150 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		undead = 1
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits # Replace with appropriate icon name
+}
+
+lightning_elementals = {
+	type = magical_air # Night change this around--currently they are fire/light based
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 250
+	toughness = 300
+	pursuit = 900
+	screen = 200
+	siege_tier = 5 # Highly effective against structures
+	
+	terrain_bonus = {
+		marcher_hills = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_farmlands = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_plains = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_mountains = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_forest = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_wetlands = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_floodplains = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		antimagic_terrain = { damage = -250 toughness = -350 pursuit = -150 screen = -150 }
+		plains = { damage = 200 pursuit = 150 }
+		mountains = { damage = 250 toughness = 150 }
+		wetlands = { damage = 225 toughness = 100 }
+		desert = { damage = 150 toughness = 175 pursuit = 200 }
+		forest = { damage = 175 toughness = -125 pursuit = -150 }
+		jungle = { damage = 250 toughness = -100 pursuit = -150 }
+		floodplains = { damage = 325 toughness = 175 }
+		farmlands = { damage = 125 pursuit = 150 }
+		steppe = { damage = 225 pursuit = 175 }
+		drylands = { damage = 210 toughness = 160 }
+		oasis = { damage = 50 toughness = -50 }
+		hills = { damage = 75 toughness = -100 }
+		desert_mountains = { damage = 150 toughness = 125 }
+		taiga = { damage = -150 toughness = -100 }
+		redlands_drylands = { damage = 150 toughness = 25 }
+		redlands_mountains = { damage = 150 toughness = 25 }
+		redlands_desert = { damage = 150 toughness = 25 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		#undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 1
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		undead = 2
+		#construct = 0.5
+		flying = 1.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+quicksilver_elementals = { # Metal + Water
+	type = magical_metal
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 450
+	toughness = 300
+	pursuit = 250
+	screen = 200
+
+	siege_tier = 5
+	siege_value = 0.6
+
+	winter_bonus = {
+		normal_winter = { damage = -75 toughness = -75 screen = -75 pursuit = -75}
+		harsh_winter = { damage = -150 toughness = -150 screen = -150 pursuit = -150 }
+	}
+
+	terrain_bonus = {
+		marcher_hills = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		marcher_farmlands = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		marcher_plains = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		marcher_mountains = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		marcher_forest = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		marcher_wetlands = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		marcher_floodplains = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		antimagic_terrain = { damage = -450 toughness = -300 pursuit = -150 screen = -150 }
+		forest = { damage = 50 pursuit = 150 screen = 150}
+		jungle = { damage = 100 toughness = 100 screen = 200}
+		floodplains = { damage = 250 toughness = 250 }
+		wetlands = { damage = 250 pursuit = 250 }
+		plains = { damage = 250 pursuit = 250 }
+		farmlands = { damage = 250 toughness = 50 }
+		desert = { damage = -250 pursuit = -250 }
+		steppe = { damage = -150 pursuit = -150 }
+		drylands = { damage = -50 pursuit = -50 }
+		oasis = { damage = 150 toughness = -50 }
+		hills = { damage = -300 pursuit = -350 screen = -250 }
+		desert_mountains = { damage = -250 toughness = -120 }
+		mountains = { damage = -200 toughness = -120 }
+		taiga = { damage = 250 toughness = 250 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		archers = 1.2
+		heavy_cavalry = 1.5
+		undead = 0.5
+		elephant_cavalry = 0.5
+		light_cavalry = 1.5
+		archer_cavalry = 1.5
+		camel_cavalry = 1
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+
+dream_elementals = {
+	type = magical_dream
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+	
+	damage = 300
+	toughness = 150
+	pursuit = 450
+	screen = 200
+	siege_tier = 1
+	siege_value = 0.1 # Weak against structures
+
+	terrain_bonus = {
+		marcher_hills = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		marcher_farmlands = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		marcher_plains = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		marcher_mountains = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		marcher_forest = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		marcher_wetlands = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		marcher_floodplains = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		antimagic_terrain = { damage = -300 toughness = -150 pursuit = -150 screen = -150 }
+		forest = { damage = -50 toughness = -300 }
+		jungle = { damage = -100 toughness = -350 }
+		floodplains = { damage = -75 toughness = -250 }
+		wetlands = { damage = 100 toughness = -200 }
+		plains = { damage = 200 pursuit = 250 }
+		farmlands = { damage = 300 pursuit = 150 }
+		desert = { damage = 550 toughness = 250 }
+		steppe = { damage = 200 pursuit = -250 }
+		drylands = { damage = -150 toughness = 150 }
+		oasis = { damage = 450 toughness = -250 }
+		hills = { damage = -50 toughness = -300 }
+		desert_mountains = { damage = -100 toughness = -350 }
+		mountains = { damage = -150 toughness = -400 }
+		taiga = { damage = 100 toughness = 350 }
+	}
+	
+	counters = {
+		magical_air = 1.5
+		undead = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+	
+	stack = 5
+	icon = fog_spirits
+}
+
+desert_mirage_elementals = {
+	type = magical_sand
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 500
+	toughness = 400
+	pursuit = 400
+	screen = 300
+	siege_tier = 4
+	siege_value = 0.5
+
+	terrain_bonus = {
+		marcher_hills = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_farmlands = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_plains = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_mountains = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_forest = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_wetlands = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		marcher_floodplains = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		antimagic_terrain = { damage = -500 toughness = -350 pursuit = -150 screen = -150 }
+		wetlands = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		floodplains = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		archipelagic = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		taiga = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		farmlands = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		plains = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		desert = { damage = 450 pursuit = 350 screen = 350 }
+		desert_mountains = { damage = 100 pursuit = 100 screen = 100 }
+		oasis = { damage = 200 toughness = 150 screen = 150 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 0.5
+		undead = 0.5
+		light_cavalry = 1.5
+		archer_cavalry = 1.5
+		camel_cavalry = 1.5
+		magical_water = 1
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+dune_reaper_elementals = {
+	type = magical_sand
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 650
+	toughness = 600
+	pursuit = 450
+	screen = 300
+
+	siege_tier = 6
+	siege_value = 0.5
+
+	winter_bonus = {
+		normal_winter = { damage = -50 toughness = -50 screen = -50 pursuit = -50}
+		harsh_winter = { damage = -100 toughness = -100 screen = -100 pursuit = -100 }
+	}
+
+	terrain_bonus = {
+		marcher_hills = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		marcher_farmlands = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		marcher_plains = { damage = -6500 toughness = -600 pursuit = -450 screen = -300 }
+		marcher_mountains = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		marcher_forest = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		marcher_wetlands = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		marcher_floodplains = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		antimagic_terrain = { damage = -650 toughness = -600 pursuit = -450 screen = -300 }
+		wetlands = { damage = -590 toughness = -590 pursuit = -390 screen = -290 }
+		floodplains = { damage = -590 toughness = -590 pursuit = -390 screen = -290 }
+		archipelagic = { damage = -590 toughness = -590 pursuit = -390 screen = -290 }
+		taiga = { damage = -590 toughness = -590 pursuit = -390 screen = -290 }
+		farmlands = { damage = -590 toughness = -590 pursuit = -390 screen = -290 }
+		plains = { damage = -490 toughness = -390 pursuit = -390 screen = -290 }
+		desert = { damage = 400 toughness = 400 pursuit = 200 }
+		drylands = { damage = 150 toughness = 150 pursuit = 100 }
+		oasis = { damage = 100 toughness = 50 pursuit = 50 }
+		forest = { damage = -150 pursuit = -150 }
+		jungle = { damage = -200 toughness = -200 }
+		plains = { damage = 50 pursuit = 50 }
+		hills = { damage = 50 toughness = 50 }
+		steppe = { damage = 100 pursuit = 100 }
+		mountains = { damage = -100 toughness = -100 }
+	}
+	counters = {
+		magical_air = 1.5
+		undead = 1
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		flying = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+ }
+
+mountain_spirit_elementals = {
+	type = magical_stone
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 600
+	toughness = 600
+	pursuit = 200
+	screen = 250
+	siege_tier = 5
+	siege_value = 0.6
+
+	terrain_bonus = {
+		farmlands = { damage = 100 toughness = 100 }
+		hills = { damage = 150 toughness = 150 }
+		mountains = { damage = 450 toughness = 250 }
+		desert_mountains = { damage = 250 toughness = 150 }
+		steppe = { damage = 100 toughness = 100 }
+		drylands = { damage = 50 toughness = 50 }
+	}
+
+	counters = {
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+		magical_dark = 1
+		magical_water = 1
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+vine_elementals = {
+	type = magical_nature
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 500
+	toughness = 600
+	pursuit = 150
+	screen = 300
+	siege_tier = 7
+	siege_value = 2
+
+	winter_bonus = {
+		normal_winter = { damage = -50 toughness = -50 screen = -50 pursuit = -50}
+		harsh_winter = { damage = -100 toughness = -100 screen = -100	pursuit = -100 }
+	}
+	terrain_bonus = {
+		marcher_hills = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_farmlands = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_plains = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_mountains = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_forest = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_wetlands = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		marcher_floodplains = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		antimagic_terrain = { damage = -400 toughness = -300 pursuit = -200 screen = -150 }
+		forest = { damage = 250 pursuit = 100 }
+		jungle = { damage = 550 toughness = 650 screen = 350}
+		floodplains = { damage = 600 toughness = 700 screen = 350}
+		wetlands = { damage = 600 toughness = 750 pursuit = 250 screen = 400 }
+		archipelagic = { damage = 600 toughness = 700 screen = 350}
+		plains = { damage = 150 pursuit = 150 }
+		farmlands = { damage = 200 pursuit = 100 }
+		desert = { damage = -300 toughness = -250 }
+		steppe = { damage = 100 pursuit = 100 }
+		drylands = { damage = -150 toughness = -150 }
+		oasis = { damage = 200 toughness = 150 }
+		hills = { damage = 150 toughness = 100 }
+		desert_mountains = { damage = -300 toughness = -100 }
+		mountains = { damage = -300 toughness = -100 }
+		taiga = { damage = 250 toughness = 200 pursuit = -100 }
+		redlands_drylands = { damage = -350 toughness = -250 pursuit = -100 screen = -100 }
+		redlands_mountains = { damage = -350 toughness = -250 pursuit = -100 screen = -100 }
+		redlands_desert = { damage = -350 toughness = -250 pursuit = -100 screen = -100 }
+		redlands_chasms = { damage = -350 toughness = -250 pursuit = -100 screen = -100 }
+	}
+
+	counters = {
+		magical_ice = 1
+		magical_fire = 0.5
+		pikemen = 1
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		undead = 1
+		elephant_cavalry = 1
+		light_cavalry = 0.5
+		archer_cavalry = 0.5
+		camel_cavalry = 0.5
+	}
+
+	stack = 5
+	icon = fog_spirits
+}
+
+time_elementals = { # GH TODO: Is currently here just so magical_time is considered a valid unit type, gussy it up plz
+	type = magical_time
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 1
+	toughness = 1
+	pursuit = 1
+	screen = 1
+	siege_tier = 1
+	siege_value = 1
+
+	stack = 1
+	icon = fog_spirits
+}
+
+elemental_choir = { # GH TODO: Is currently here just so magical_time is considered a valid unit type, gussy it up plz
+	type = magical_hymns
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 1
+	toughness = 1
+	pursuit = 1
+	screen = 1
+	siege_tier = 1
+	siege_value = 1
+
+	stack = 1
+	icon = fog_spirits
+}
+
+epochal_riders = { # GH TODO: Is currently here just so magical_time is considered a valid unit type, gussy it up plz
+	type = magical_dawn
+	can_recruit = { always = no }
+	allowed_in_hired_troops = no
+
+	damage = 1
+	toughness = 1
+	pursuit = 1
+	screen = 1
+	siege_tier = 1
+	siege_value = 1
+
+	stack = 1
+	icon = fog_spirits
+}

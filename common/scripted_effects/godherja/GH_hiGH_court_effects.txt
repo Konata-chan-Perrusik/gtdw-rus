@@ -1,0 +1,712 @@
+﻿######################
+# HIGH COURT EFFECTS #
+######################
+
+initialize_wardenite_high_courts_effect = {
+	religion:wardenism_religion = {
+		# High Court initialization
+		create_high_court_effect = { HIGH_COURT_SCOPE_NAME = western_high_court MAMURAMAT_TITLE = e_western_mamuramat }
+		create_high_court_effect = { HIGH_COURT_SCOPE_NAME = central_high_court MAMURAMAT_TITLE = e_central_mamuramat }
+		create_high_court_effect = { HIGH_COURT_SCOPE_NAME = eastern_high_court MAMURAMAT_TITLE = e_eastern_mamuramat }
+		create_high_court_effect = { HIGH_COURT_SCOPE_NAME = far_eastern_high_court MAMURAMAT_TITLE = e_far_eastern_mamuramat }
+		create_high_court_no_title_effect = { HIGH_COURT_SCOPE_NAME = idealist_high_court }
+		
+		scope:western_high_court = {
+			add_several_high_court_seats_effect = { NUMBER = 10 }
+		}
+		scope:eastern_high_court = {
+			add_several_high_court_seats_effect = { NUMBER = 10 }
+		}
+		scope:far_eastern_high_court = {
+			add_several_high_court_seats_effect = { NUMBER = 10 }
+		}
+		
+		# Legal Tradition initialization
+		initialize_legal_traditions_effect = yes
+		
+		# High Court assignment
+		## Mainline branch
+		add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+			DOCTRINE_PARAMETER = one_mamur_recognized
+			HIGH_COURT = central_high_court
+			SOLE_RECOGNIZED = yes
+		}
+		scope:central_high_court = {
+			add_several_high_court_seats_effect = { NUMBER = 10 }
+			fill_all_high_court_seats_effect = yes
+			set_variable = {
+				name = high_court_mamurial_authority
+				value = 78
+			}
+		}
+		
+		## Idealist branch
+		add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+			DOCTRINE_PARAMETER = no_mamurs_recognized
+			HIGH_COURT = idealist_high_court
+			SOLE_RECOGNIZED = yes 
+		}
+		scope:idealist_high_court = {
+			add_several_high_court_seats_effect = { NUMBER = 10 }
+			fill_all_high_court_seats_effect = yes
+		}
+		
+		## Traditionalist branch
+		add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+			DOCTRINE_PARAMETER = four_traditional_mamurs_recognized
+			HIGH_COURT = western_high_court
+			SOLE_RECOGNIZED = no
+		}
+		add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+			DOCTRINE_PARAMETER = four_traditional_mamurs_recognized
+			HIGH_COURT = central_high_court
+			SOLE_RECOGNIZED = no
+		}
+		add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+			DOCTRINE_PARAMETER = four_traditional_mamurs_recognized
+			HIGH_COURT = eastern_high_court
+			SOLE_RECOGNIZED = no
+		}
+		add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+			DOCTRINE_PARAMETER = four_traditional_mamurs_recognized
+			HIGH_COURT = far_eastern_high_court
+			SOLE_RECOGNIZED = no
+		}
+		
+		every_in_global_list = {
+			variable = global_high_court_list
+			apply_high_court_legitimacy_doctrine_effect = yes
+			apply_high_court_legitimacy_mamur_modifier_effect = yes
+		}
+	}
+}
+
+add_mamuramat_title = {
+	if = {
+		limit = {
+			exists = title:$TITLE$
+			NOT = {
+				is_target_in_variable_list = {
+					name = mamuramat_list
+					target = title:$TITLE$
+				}
+			}
+		}
+		title:$TITLE$ = {
+			set_variable = {
+				name = mamuramat_title_name
+				value = flag:$TITLE$_shorthand_name
+			}
+		}
+		add_to_variable_list = {
+			name = mamuramat_list
+			target = title:$TITLE$
+		}
+		update_mamuramat_name = yes
+	}
+}
+
+update_mamuramat_name = {
+	if = {
+		limit = {
+			any_in_list = {
+				variable = mamuramat_list
+				is_title_created = yes
+				count >= 2
+			}
+			any_in_list = {
+				variable = mamuramat_list
+				has_variable = sole_mamuramat
+			}
+		}
+		every_in_list = {
+			variable = mamuramat_list
+			limit = { has_variable = sole_mamuramat }
+			remove_variable = sole_mamuramat
+			reset_title_name = yes
+		}
+	}
+	else_if = {
+		limit = {
+			any_in_list = {
+				variable = mamuramat_list
+				is_title_created = yes
+			}
+			NOR = {
+				any_in_list = {
+					variable = mamuramat_list
+					is_title_created = yes
+					count > 1
+				}
+				any_in_list = {
+					variable = mamuramat_list
+					has_variable = sole_mamuramat
+				}
+			}
+		}
+		random_in_list = {
+			variable = mamuramat_list
+			limit = { is_title_created = yes }
+			set_variable = sole_mamuramat
+			set_title_name = MAMURAMAT_UNIFIED_NAME
+		}
+	}
+}
+
+######################
+# HIGH COURT EFFECTS #
+######################
+
+# Creates a High Court with the assigned scope
+create_high_court_effect = {
+	random_living_character = {
+		create_story = {
+			type = story_cycle_high_court
+			save_scope_as = $HIGH_COURT_SCOPE_NAME$
+		}
+	}
+	add_to_global_variable_list = {
+		name = global_high_court_list
+		target = scope:$HIGH_COURT_SCOPE_NAME$
+	}
+	# Check if the $MAMURAMAT_TITLE$ exists. If it does, make it the attached Mamuramat of the High Court
+	if = {
+		limit = { exists = title:$MAMURAMAT_TITLE$ }
+		add_mamuramat_title = { TITLE = $MAMURAMAT_TITLE$ }
+		scope:$HIGH_COURT_SCOPE_NAME$ = {
+			set_variable = {
+				name = high_court_name
+				value = flag:$HIGH_COURT_SCOPE_NAME$
+			}
+			set_variable = {
+				name = high_court_mamuramat
+				value = title:$MAMURAMAT_TITLE$
+			}
+		}
+		title:$MAMURAMAT_TITLE$ = {
+			set_variable = {
+				name = attached_high_court
+				value = scope:$HIGH_COURT_SCOPE_NAME$
+			}
+		}
+		# Commented out until we jank a way to circumvent a hardcoded religious head title limitation
+		#set_variable = {
+		#	name = recognised_mamuramat
+		#	value = $TITLE_TARGET$
+		#}
+		#set_religious_head_title = $TITLE_TARGET$
+	}
+}
+
+# Creates a High Court with the assigned scope, without needing a title to be specified
+create_high_court_no_title_effect = {
+	random_living_character = {
+		create_story = {
+			type = story_cycle_high_court
+			save_scope_as = $HIGH_COURT_SCOPE_NAME$
+		}
+	}
+	add_to_global_variable_list = {
+		name = global_high_court_list
+		target = scope:$HIGH_COURT_SCOPE_NAME$
+	}
+}
+
+# Sets a faith's sole recognized High Court, along with an attached mamuramat title
+# If the $HIGH_COURT$ does not exist, create it
+add_recognized_high_court_faith_effect = {
+	# Check if the High Court in question should be the only one recognized
+	if = {
+		limit = { 
+			always = $SOLE_RECOGNIZED$
+		}
+		if = {
+			limit = { has_variable_list = recognized_high_court_list }
+			unassign_all_recognized_high_courts_effect = yes
+		}
+		if = {
+			limit = { exists = scope:$HIGH_COURT$.var:high_court_mamuramat }
+			set_religious_head_title = scope:$HIGH_COURT$.var:high_court_mamuramat
+		}
+	}
+	# Check if the $HIGH_COURT$ scope exists
+	if = {
+		limit = { exists = scope:$HIGH_COURT$ }
+		scope:$HIGH_COURT$ = {
+			add_to_variable_list = {
+				name = faiths_recognizing_high_court
+				target = prev
+			}
+		}
+		if = {
+			limit = { exists = scope:$HIGH_COURT$.var:high_court_mamuramat }
+			set_variable = recognizes_at_least_one_mamur
+			# If no other Mamuramat title has been set as recognized so far, remember this one as the sole one for convenience' sake in the GUI
+			if = {
+				limit = { NOT = { has_variable = sole_mamur_recognized } }
+				set_variable = {
+					name = sole_mamur_recognized
+					value = scope:$HIGH_COURT$.var:high_court_mamuramat
+				}
+				if = {
+					limit = { 
+						exists = scope:$HIGH_COURT$.var:high_court_mamuramat
+						exists = scope:$HIGH_COURT$.var:high_court_mamuramat.holder
+						scope:$HIGH_COURT$.var:high_court_mamuramat.holder = { has_faith = prev }
+					}
+					add_doctrine = special_doctrine_singular_mamur_hostility
+				}
+			}
+			else = {	# Otherwise, this means that multiple mamurs are recognized, and we should remove the previously sole recognized one
+				remove_variable = sole_mamur_recognized
+				if = {
+					limit = { has_doctrine = special_doctrine_singular_mamur_hostility }
+					remove_doctrine = special_doctrine_singular_mamur_hostility
+				}
+			}
+		}
+		if = {	# If no other High Court has been declared before this, memorize it as the sole recognized one
+			limit = {
+				NOT = { has_variable_list = recognized_high_court_list }
+			}
+			set_variable = {
+				name = sole_high_court_recognized
+				value = scope:$HIGH_COURT$
+			}
+		}
+		else_if = {
+			limit = { has_variable = sole_high_court_recognized }
+			remove_variable = sole_high_court_recognized
+		}
+		add_to_variable_list = {
+			name = recognized_high_court_list
+			target = scope:$HIGH_COURT$
+		}
+	}
+}
+
+add_recognized_high_court_to_faith_by_doctrine_parameter_effect = {
+	every_faith = {
+		limit = {
+			has_doctrine_parameter = $DOCTRINE_PARAMETER$
+		}
+		add_recognized_high_court_faith_effect = {
+			HIGH_COURT = $HIGH_COURT$
+			SOLE_RECOGNIZED = $SOLE_RECOGNIZED$ 
+		}
+	}
+}
+
+# Unassigns all recognized High Courts from a faith
+unassign_all_recognized_high_courts_effect = {
+	if = {
+		limit = { has_variable = sole_mamur_recognized }
+		remove_variable = sole_mamur_recognized
+	}
+	if = {
+		limit = { has_variable = sole_high_court_recognized }
+		remove_variable = sole_high_court_recognized
+	}
+	if = {
+		limit = { has_variable = recognizes_at_least_one_mamur }
+		remove_variable = recognizes_at_least_one_mamur
+	}
+	clear_variable_list = recognized_high_court_list
+}
+
+# Adds a new seat in the high court. Scope is the mamuramat title to which the High Court is attached
+add_high_court_seat_effect = {
+	random_living_character = {
+		create_story = {
+			type = story_cycle_high_court
+			save_temporary_scope_as = high_court_seat
+		}
+	}
+	save_temporary_scope_as = high_court
+	scope:high_court_seat = {
+		set_variable = {
+			name = high_court
+			value = scope:high_court
+		}
+	}
+	add_to_variable_list = {
+		name = high_court_seat_list
+		target = scope:high_court_seat
+	}
+}
+
+# Adds the specified number of high court seats. Scope is the mamuramat title to which the High Court is attached.
+add_several_high_court_seats_effect = {
+	set_variable = {
+		name = iterator
+		value = 1
+	}
+	while = {
+		limit = {
+			exists = var:iterator
+			var:iterator <= $NUMBER$
+		}
+		add_high_court_seat_effect = yes
+		change_variable = {
+			name = iterator
+			add = 1
+		}
+	}
+	remove_variable = iterator
+}
+
+# Fills an empty High Court seat with a randomly generated character, if any empty seats exist
+fill_high_court_seat_effect = {
+	save_temporary_scope_as = high_court_scope
+	if = {
+		limit = {
+			any_in_list = {
+				variable = high_court_seat_list
+				high_court_seat_is_vacant_trigger = yes
+			}
+		}
+		random_in_list = {
+			variable = high_court_seat_list
+			limit = {
+				high_court_seat_is_vacant_trigger = yes
+			}
+			save_temporary_scope_as = high_court_seat
+			if = {
+				limit = {
+					exists = scope:high_judge_template_character
+				}
+				scope:high_judge_template_character = {
+					save_scope_as = judge_template_character
+				}
+				create_character = {
+					employer = scope:high_court_scope.var:high_court_mamuramat.holder
+					template = standard_high_court_judge_character_template
+					save_temporary_scope_as = high_court_judge
+				}
+			}
+			else_if = {
+				limit = { 
+					exists = scope:high_court_scope.var:high_court_mamuramat
+					exists = scope:high_court_scope.var:high_court_mamuramat.holder
+				}
+				scope:high_court_scope.var:high_court_mamuramat.holder = {
+					save_scope_as = judge_template_character
+				}
+				create_character = {
+					employer = scope:high_court_scope.var:high_court_mamuramat.holder
+					template = standard_high_court_judge_character_template
+					save_temporary_scope_as = high_court_judge
+				}
+			}
+			else = {
+				random_county = {
+					limit = { 
+						save_temporary_scope_as = temporary_county_scope
+						scope:high_court_scope = {
+							has_variable_list = faiths_recognizing_high_court
+							is_target_in_variable_list = {
+								name = faiths_recognizing_high_court
+								target = scope:temporary_county_scope.faith
+							}
+						}
+					}
+					save_temporary_scope_as = origin_county
+				}
+				if = {
+					limit = { exists = scope:origin_county }
+					create_character = {
+						location = scope:origin_county.title_province
+						template = standard_provincial_high_court_judge_character_template
+						save_temporary_scope_as = high_court_judge
+					}
+				}
+			}
+			if = {
+				limit = { exists = scope:high_court_judge }
+				scope:high_court_judge = {
+					set_variable = {
+						name = high_court_seat
+						value = scope:high_court_seat
+					}
+					assign_character_legal_tradition_effect = yes
+				}
+				set_variable = {
+					name = seat_occupant
+					value = scope:high_court_judge
+				}
+			}
+		}
+	}
+}
+
+# Fills all empty High Court seat with a randomly generated character, if any empty seats exist
+fill_all_high_court_seats_effect = {
+	if = {
+		limit = {
+			any_in_list = {
+				variable = high_court_seat_list
+				high_court_seat_is_vacant_trigger = yes
+			}
+		}
+		every_in_list = {
+			variable = high_court_seat_list
+			if = {
+				limit = {
+					prev = { high_court_seat_is_vacant_trigger = yes} 
+				}
+				prev = { fill_high_court_seat_effect = yes }
+			}
+		}
+	}
+}
+
+# Fills an empty High Court seat with a specified character, if any empty seats exist
+fill_high_court_seat_with_character_effect = {
+	if = {
+		limit = {
+			any_in_list = {
+				variable = high_court_seat_list
+				OR = {	# A seat is considered empty if it was either never assigned an occupant in the first place, or the "current" one is dead
+					NOT = { has_variable = seat_occupant }
+					var:seat_occupant = { is_alive = no }
+				}
+			}
+		}
+		random_in_list = {
+			variable = high_court_seat_list
+			limit = {
+				OR = {
+					NOT = { has_variable = seat_occupant }
+					var:seat_occupant = { is_alive = no }
+				}
+			}
+			set_variable = {
+				name = seat_occupant
+				value = $JUDGE$
+			}
+			save_temporary_scope_as = high_court_seat
+			$JUDGE$ = {
+				set_variable = {
+					name = high_court_seat
+					value = scope:high_court_seat
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = $JUDGE$.var:corruption
+				$JUDGE$.var:corruption > 0
+			}
+			save_scope_value_as = {
+				name = legitimacy_loss_from_corruption
+				value = {
+					value = $JUDGE$.var:corruption
+					divide = -10
+				}
+			}
+			add_high_court_legitimacy_effect = { VALUE = scope:legitimacy_loss_from_corruption }
+		}
+	}
+}
+
+remove_high_court_legitimacy_doctrines_effect = {
+	if = {
+		limit = { has_doctrine = wardenite_high_court_legitimacy_very_high_doctrine }
+		remove_doctrine = wardenite_high_court_legitimacy_very_high_doctrine
+	}
+	if = {
+		limit = { has_doctrine = wardenite_high_court_legitimacy_high_doctrine }
+		remove_doctrine = wardenite_high_court_legitimacy_high_doctrine
+	}
+	if = {
+		limit = { has_doctrine = wardenite_high_court_legitimacy_neutral_doctrine }
+		remove_doctrine = wardenite_high_court_legitimacy_neutral_doctrine
+	}
+	if = {
+		limit = { has_doctrine = wardenite_high_court_legitimacy_low_doctrine }
+		remove_doctrine = wardenite_high_court_legitimacy_low_doctrine
+	}
+	if = {
+		limit = { has_doctrine = wardenite_high_court_legitimacy_very_low_doctrine }
+		remove_doctrine = wardenite_high_court_legitimacy_very_low_doctrine
+	}
+}
+
+apply_high_court_legitimacy_doctrine_effect = {
+	if = {
+		limit = { 
+			var:high_court_legitimacy >= 80
+		}
+		every_in_list = {
+			variable = faiths_recognizing_high_court
+			limit = { NOT = { has_doctrine = wardenite_high_court_legitimacy_very_high_doctrine } }
+			this = {
+				remove_high_court_legitimacy_doctrines_effect = yes
+			}
+			add_doctrine = wardenite_high_court_legitimacy_very_high_doctrine
+		}
+	}
+	else_if = {
+		limit = { 
+			var:high_court_legitimacy >= 60
+		}
+		every_in_list = {
+			variable = faiths_recognizing_high_court
+			limit = { NOT = { has_doctrine = wardenite_high_court_legitimacy_high_doctrine } }
+			this = {
+				remove_high_court_legitimacy_doctrines_effect = yes
+			}
+			add_doctrine = wardenite_high_court_legitimacy_high_doctrine
+		}
+	}
+	else_if = {
+		limit = { 
+			var:high_court_legitimacy >= 40
+		}
+		every_in_list = {
+			variable = faiths_recognizing_high_court
+			limit = { NOT = { has_doctrine = wardenite_high_court_legitimacy_neutral_doctrine } }
+			this = {
+				remove_high_court_legitimacy_doctrines_effect = yes
+			}
+			add_doctrine = wardenite_high_court_legitimacy_neutral_doctrine
+		}
+	}
+	else_if = {
+		limit = { 
+			var:high_court_legitimacy >= 20
+		}
+		every_in_list = {
+			variable = faiths_recognizing_high_court
+			limit = { NOT = { has_doctrine = wardenite_high_court_legitimacy_low_doctrine } }
+			this = {
+				remove_high_court_legitimacy_doctrines_effect = yes
+			}
+			add_doctrine = wardenite_high_court_legitimacy_low_doctrine
+		}
+	}
+	else = {
+		every_in_list = {
+			variable = faiths_recognizing_high_court
+			limit = { NOT = { has_doctrine = wardenite_high_court_legitimacy_very_low_doctrine } }
+			this = {
+				remove_high_court_legitimacy_doctrines_effect = yes
+			}
+			add_doctrine = wardenite_high_court_legitimacy_very_low_doctrine
+		}
+	}
+}
+
+remove_mamuramat_legitimacy_modifiers_effect = {
+	remove_character_modifier = high_court_legitimacy_very_high_mamur_modifier
+	remove_character_modifier = high_court_legitimacy_high_mamur_modifier
+	remove_character_modifier = high_court_legitimacy_low_mamur_modifier
+	remove_character_modifier = high_court_legitimacy_very_low_mamur_modifier
+}
+
+apply_high_court_legitimacy_mamur_modifier_effect = {
+	if = {
+		limit = { 
+			exists = var:high_court_mamuramat
+			exists = var:high_court_mamuramat.holder
+		}
+		if = {
+			limit = { 
+				var:high_court_legitimacy >= 80
+			}
+			if = {
+				limit = {
+					NOT = { var:high_court_mamuramat.holder = { has_character_modifier = high_court_legitimacy_very_high_mamur_modifier } }
+				}
+				var:high_court_mamuramat.holder = {
+					remove_mamuramat_legitimacy_modifiers_effect = yes
+					add_character_modifier = high_court_legitimacy_very_high_mamur_modifier 
+				}
+			}
+		}
+		else_if = {
+			limit = { 
+				var:high_court_legitimacy >= 60
+			}
+			if = {
+				limit = {
+					NOT = { var:high_court_mamuramat.holder = { has_character_modifier = high_court_legitimacy_high_mamur_modifier } }
+				}
+				var:high_court_mamuramat.holder = {
+					remove_mamuramat_legitimacy_modifiers_effect = yes
+					add_character_modifier = high_court_legitimacy_high_mamur_modifier 
+				}
+			}
+		}
+		else_if = {
+			limit = { 
+				var:high_court_legitimacy >= 40
+			}
+			var:high_court_mamuramat.holder = { remove_mamuramat_legitimacy_modifiers_effect = yes }
+		}
+		else_if = {
+			limit = { 
+				var:high_court_legitimacy >= 20
+			}
+			if = {
+				limit = {
+					NOT = { var:high_court_mamuramat.holder = { has_character_modifier = high_court_legitimacy_low_mamur_modifier } }
+				}
+				var:high_court_mamuramat.holder = {
+					remove_mamuramat_legitimacy_modifiers_effect = yes
+					add_character_modifier = high_court_legitimacy_low_mamur_modifier 
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { var:high_court_mamuramat.holder = { has_character_modifier = high_court_legitimacy_very_low_mamur_modifier } }
+			}
+			var:high_court_mamuramat.holder = {
+				remove_mamuramat_legitimacy_modifiers_effect = yes
+				add_character_modifier = high_court_legitimacy_very_low_mamur_modifier 
+			}
+		}
+	}
+}
+
+add_high_court_legitimacy_effect = {
+	custom_description = {
+		text = gain_high_court_legitimacy
+		subject = this
+		value = $VALUE$
+		
+		change_variable = {
+			name = high_court_legitimacy
+			add = $VALUE$
+		}
+		if = {
+			limit = {
+				var:high_court_legitimacy > 100
+			}
+			set_variable = {
+				name = high_court_legitimacy
+				value = 100
+			}
+		}
+		if = {
+			limit = {
+				var:high_court_legitimacy < 0
+			}
+			set_variable = {
+				name = high_court_legitimacy
+				value = 0
+			}
+		}
+	}
+}
+
+display_mamurial_authority_privileges_effect = {
+	if = {
+		limit = { var:high_court_mamurial_authority >= $VALUE$ }
+		custom_tooltip = $PRIVILEGE$_desc
+	}
+	else = {
+		custom_tooltip = $PRIVILEGE$_negative_desc
+	}
+}

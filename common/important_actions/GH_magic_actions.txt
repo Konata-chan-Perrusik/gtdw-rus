@@ -1,0 +1,58 @@
+﻿report_aervalr_shard = {
+	type = alert
+	check_create_action = {
+		if = {
+			limit = {
+				has_variable = recent_aervalr_shard
+			}
+			var:recent_aervalr_shard = {
+				save_scope_as = recent_aervalr_shard_county
+			}
+			try_create_important_action = {
+				important_action_type = report_aervalr_shard
+				actor = root
+			}
+		}
+	}
+	effect = {
+		pan_camera_to_title = scope:recent_aervalr_shard_county
+	}
+}
+
+report_gedeora = {
+	type = alert
+	check_create_action = {
+		if = {
+			limit = {
+				has_global_variable = recent_gedeora
+			}
+			global_var:recent_gedeora = {
+				save_scope_as = recent_gedeora_county
+			}
+			try_create_important_action = {
+				important_action_type = report_gedeora
+				actor = root
+			}
+		}
+	}
+	effect = {
+		pan_camera_to_title = scope:recent_gedeora_county
+	}
+}
+
+report_potent_magi = {
+	type = alert
+	check_create_action = {
+		if = {
+			limit = { has_global_variable = recent_potent_magi }
+			global_var:recent_potent_magi = { save_scope_as = potent_magi }
+			try_create_important_action = {
+				important_action_type = report_potent_magi
+				actor = root
+			}
+		}
+	}
+	effect = {
+		scope:potent_magi = { open_view_data = { view = character } }
+	}
+}

@@ -1,0 +1,127 @@
+﻿reactive_advice_magic = {
+	chain = reactive_advice
+	delay = 0
+	start_automatically = no
+
+	reactive_advice_magic_intro = {
+		text = "reactive_advice_magic_intro_desc"
+		
+		animation = center
+		header_info = "lesson_step_1_of_5"
+		highlight_widget = "character_window"
+		highlight_widget = "tutorial_highlight_bottom_left_portrait_button"
+		highlight_widget = "magic"
+		highlight_widget = "magic_button"
+
+		#trigger = {
+		#	can_access_magic = yes
+		#}
+
+		gui_transition = {
+			button_id = "skip"
+			button_text = "tutorial_lesson_button_skip"
+			target = lesson_finish # ends current lesson chain
+		}
+
+		trigger_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_magic_basics
+			trigger = {
+				custom_description = {
+					text = "lesson_basics_characters_click_on_character"
+					is_widgetid_open = character_window
+				}
+			}
+		}
+	}
+
+	reactive_advice_magic_basics = {
+		text = "reactive_advice_magic_basics_desc"
+		
+		header_info = "lesson_step_2_of_5"
+		highlight_widget = "magic"
+		highlight_widget = "magic_button"
+		highlight_widget = "magic_school"
+
+
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_magic_intro
+		}
+
+		trigger_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_magic_casting
+			trigger = {
+				custom_description = {
+					text = "reactive_advice_magic_click_on_magic"
+					is_widgetid_open = window_magic
+				}
+			}
+		}
+	}
+
+	reactive_advice_magic_casting = {
+		text = "reactive_advice_magic_casting_desc"
+		header_info = "lesson_step_3_of_5"
+			
+		highlight_widget = "magic"
+		highlight_widget = "magic_button"
+		
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_magic_basics
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_magic_overwhelmation
+		}
+	}
+
+	reactive_advice_magic_overwhelmation = {
+		text = "reactive_advice_magic_overwhelmation_desc"
+		header_info = "lesson_step_4_of_5"
+			
+		highlight_widget = "magic"
+		highlight_widget = "magic_button"
+
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_magic_casting
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_next"
+			target = reactive_advice_magic_exposure
+		}
+	}
+
+	reactive_advice_magic_exposure = {
+		text = "reactive_advice_magic_exposure_desc"
+		header_info = "lesson_step_5_of_5"
+			
+		highlight_widget = "magic"
+		highlight_widget = "magic_button"
+		highlight_widget = "character_window"
+
+		gui_transition = {
+			button_id = "back"
+			button_text = "tutorial_lesson_button_back"
+			target = reactive_advice_magic_overwhelmation
+		}
+
+		gui_transition = {
+			button_id = "next"
+			button_text = "tutorial_lesson_button_complete"
+			target = lesson_finish
+		}
+	}
+}

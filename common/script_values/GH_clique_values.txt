@@ -1,0 +1,899 @@
+﻿clique_aligned_trait_weight = 50
+clique_opposed_trait_weight = 25
+standard_clique_trait_alignment_value = 20
+standard_clique_opposed_trait_alignment_value = 10
+
+character_influence_total = {
+	value = 0
+	if = {
+		limit = { has_variable = character_clique }
+		add = character_powerbase_total
+		add = character_clique_internal_influence_total
+		multiply = clique_character_influence_multiplier
+	}
+}
+
+clique_character_influence_multiplier = {
+	value = 1
+	add = clique_influence_multiplier
+}
+
+clique_influence_multiplier = {
+	value = 1
+	if = {
+		limit = { has_variable = character_clique }
+		var:character_clique = {
+			multiply = {
+				value = clique_power_percentage
+				multiply = 0.01
+			}
+		}
+	}
+}
+
+character_clique_power_percentage = {
+	value = 0
+	if = {
+		limit = { has_variable = character_clique }
+		var:character_clique = {
+			add = clique_power_percentage
+		}
+	}
+}
+
+#############################
+# INTERNAL CLIQUE INFLUENCE #
+#############################
+
+character_clique_internal_influence_total = {
+	value = 0
+	if = {
+		limit = { has_variable = clique_trait_alignment }
+		add = var:clique_trait_alignment
+	}
+	add = clique_skill_alignment
+}
+
+clique_skill_alignment = {
+	value = 0
+	if = {
+		limit = { has_variable = character_clique }
+		if = {
+			limit = {
+				var:character_clique = {
+					any_in_list = {
+						variable = clique_guiding_principle_skills
+						this = flag:diplomacy
+					}
+				}
+			}
+			add = diplomacy
+		}
+		if = {
+			limit = {
+				var:character_clique = {
+					any_in_list = {
+						variable = clique_guiding_principle_skills
+						this = flag:intrigue
+					}
+				}
+			}
+			add = intrigue
+		}
+		if = {
+			limit = {
+				var:character_clique = {
+					any_in_list = {
+						variable = clique_guiding_principle_skills
+						this = flag:martial
+					}
+				}
+			}
+			add = martial
+		}
+		if = {
+			limit = {
+				var:character_clique = {
+					any_in_list = {
+						variable = clique_guiding_principle_skills
+						this = flag:stewardship
+					}
+				}
+			}
+			add = stewardship
+		}
+		if = {
+			limit = {
+				var:character_clique = {
+					any_in_list = {
+						variable = clique_guiding_principle_skills
+						this = flag:learning
+					}
+				}
+			}
+			add = learning
+		}
+		if = {
+			limit = {
+				var:character_clique = {
+					any_in_list = {
+						variable = clique_guiding_principle_skills
+						this = flag:prowess
+					}
+				}
+			}
+			add = prowess
+		}
+	}
+}
+
+attracts_knights_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { is_knight = yes }
+		add = {
+			value = prowess
+			multiply = 0.5
+		}
+	}
+}
+
+attracts_feudal_clique_alignment_value = 0
+
+attracts_republic_clique_alignment_value = 0
+
+urbanite_clique_alignment_value = 0
+
+attracts_powerful_vassals_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { is_powerful_vassal = yes }
+		add = 20
+	}
+}
+
+magic_based_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = {
+			can_access_magic = yes
+			has_variable = magic_prowess
+		}
+		add = var:magic_prowess
+	}
+}
+
+renown_based_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { exists = dynasty }
+		add = dynasty.dynasty_prestige_level
+		subtract = 1
+		multiply = 5
+		min = 0
+	}
+}
+
+prestige_based_clique_alignment_value = {
+	value = prestige_level
+	subtract = 1
+	multiply = 8
+	min = 0
+}
+
+piety_based_clique_alignment_value = {
+	value = piety_level
+	subtract = 1
+	multiply = 8
+	min = 0
+}
+
+gold_based_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { gold > 0 }
+		add = gold
+		multiply = 0.01
+	}
+}
+
+enables_raiding_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { has_trait = greedy }
+		add = 15
+	}
+	if = {
+		limit = { has_trait = sadistic }
+		add = 15
+	}
+}
+
+enables_hoodwink_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { has_trait = greedy }
+		add = 15
+	}
+	if = {
+		limit = { has_trait = deceitful }
+		add = 15
+	}
+}
+
+secret_society_clique_alignment_value = {
+	value = 0
+	if = {
+		limit = { has_trait = ambitious }
+		add = 15
+	}
+	if = {
+		limit = { has_trait = deceitful }
+		add = 15
+	}
+}
+
+#############
+# POWERBASE #
+#############
+
+# Raw powerbase for a character, based on holdings and money
+character_powerbase_base = {
+	value = 1
+	add = character_powerbase_holdings
+	add = character_powerbase_gold
+}
+
+character_powerbase_holdings = {
+	value = 0
+	if = {
+		limit = { is_councillor = yes }
+		if = {
+			limit = { liege = { highest_held_title_tier = tier_duchy } }
+			add = 10
+		}
+		else_if = {
+			limit = { liege = { highest_held_title_tier = tier_kingdom } }
+			add = 15
+		}
+		else_if = {
+			limit = { liege = { highest_held_title_tier = tier_empire } }
+			add = 20
+		}
+		else = {
+			add = 5
+		}
+	}
+	if = {
+		limit = { highest_held_title_tier = tier_barony }
+		add = 5
+	}
+	if = {
+		limit = { highest_held_title_tier = tier_county }
+		add = 10
+	}
+	if = {
+		limit = { highest_held_title_tier = tier_duchy }
+		add = 20
+	}
+	if = {
+		limit = { highest_held_title_tier = tier_kingdom }
+		add = 30
+	}
+	if = {
+		limit = { highest_held_title_tier = tier_empire }
+		add = 40
+	}
+	every_held_title = {
+		if = {
+			limit = { tier = tier_county }
+			add = 2.5
+		}
+		if = {
+			limit = { tier = tier_duchy }
+			add = 5
+		}
+		if = {
+			limit = { tier = tier_kingdom }
+			add = 10
+		}
+		if = {
+			limit = { tier = tier_empire }
+			add = 20
+		}
+	}
+}
+
+character_powerbase_gold = {
+	value = 0
+	if = {
+		limit = { gold > 0 }
+		add = gold
+		multiply = 0.01
+	}
+}
+
+character_powerbase_intrigue_factor = {
+	value = 0
+	add = intrigue
+	multiply = 0.02
+}
+
+character_powerbase_intrigue_factor_percentage = {
+	value = character_powerbase_intrigue_factor
+	multiply = 100
+}
+
+character_powerbase_diplomacy_factor = {
+	value = 0
+	add = diplomacy
+	multiply = 0.02
+}
+
+character_powerbase_diplomacy_factor_percentage = {
+	value = character_powerbase_diplomacy_factor
+	multiply = 100
+}
+
+character_powerbase_total = {
+	value = character_powerbase_base
+	multiply = {
+		value = 1
+		add = character_powerbase_intrigue_factor
+	}
+	multiply = {
+		value = 1
+		add = character_powerbase_diplomacy_factor
+	}
+	if = {
+		limit = {
+			has_realm_law = clique_authority_0
+			exists = top_liege # At the lowest authority, other clique members are more influential than the liege in the elections
+		}
+		multiply = 1.25
+	}
+	else_if = {
+		limit = {
+			has_realm_law = clique_authority_0
+			NOT = { exists = top_liege }
+		}
+		multiply = 0.8
+	}
+	else_if = {
+		limit = {
+			has_realm_law = clique_authority_2 # We skip 1 because it doesnt change
+			exists = top_liege
+		}
+		multiply = 0.8
+	}
+	else_if = {
+		limit = {
+			has_realm_law = clique_authority_3
+			NOT = { exists = top_liege }
+		}
+		multiply = 1.25
+	}
+	else_if = {
+		limit = {
+			has_realm_law = clique_authority_3
+			exists = top_liege
+		}
+		multiply = 0.6
+	}
+	else = {
+		multiply = 1
+	}
+
+}
+
+clique_total_power = {
+	value = 0
+	if = {
+		limit = { has_variable_list = clique_members }
+		every_in_list = {
+			variable = clique_members
+			add = character_powerbase_total
+		}
+	}
+	if = {
+		limit = {
+			any_in_list = {
+				variable = clique_members
+				AND = {
+					NOT = { exists = liege }
+					has_realm_law = clique_authority_0
+				}
+			}
+		}
+		multiply = 0.8
+	}
+	if = {
+		limit = {
+			any_in_list = {
+				variable = clique_members
+				AND = {
+					NOT = { exists = liege }
+					has_realm_law = clique_authority_2
+				}
+			}
+		}
+		multiply = 1.1
+	}
+	if = {
+		limit = {
+			any_in_list = {
+				variable = clique_members
+				AND = {
+					NOT = { exists = liege }
+					has_realm_law = clique_authority_3
+				}
+			}
+		}
+		multiply = 1.2
+	}
+}
+
+title_clique_power_sum = {
+	value = 1
+	every_in_list = {
+		variable = title_cliques
+		limit = {
+			trigger_if = {
+				limit = { has_variable_list = clique_guiding_principle_aspects }
+				NOT = {
+					any_in_list = {
+						variable = clique_guiding_principle_aspects
+						this = flag:secret_society
+					}
+				}
+			}
+		}
+		add = clique_total_power
+	}
+}
+
+clique_power_percentage = {
+	value = clique_total_power
+	var:latched_to_title = {
+		divide = title_clique_power_sum
+		multiply = 100
+	}
+	max = 100
+}
+
+################
+# AI WEIGHTING #
+################
+
+clique_ai_weight_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:clique_being_checked }
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_boldness_weighted } }
+			add = {
+				value = ai_boldness
+				multiply = scope:clique_being_checked.var:ai_boldness_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_compassion_weighted } }
+			add = {
+				value = ai_compassion
+				multiply = scope:clique_being_checked.var:ai_compassion_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_energy_weighted } }
+			add = {
+				value = ai_energy
+				multiply = scope:clique_being_checked.var:ai_energy_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_greed_weighted } }
+			add = {
+				value = ai_greed
+				multiply = scope:clique_being_checked.var:ai_greed_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_honor_weighted } }
+			add = {
+				value = ai_honor
+				multiply = scope:clique_being_checked.var:ai_honor_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_rationality_weighted } }
+			add = {
+				value = ai_rationality
+				multiply = scope:clique_being_checked.var:ai_rationality_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_sociability_weighted } }
+			add = {
+				value = ai_sociability
+				multiply = scope:clique_being_checked.var:ai_sociability_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_vengefulness_weighted } }
+			add = {
+				value = ai_vengefulness
+				multiply = scope:clique_being_checked.var:ai_vengefulness_weighted
+			}
+		}
+		if = {
+			limit = { scope:clique_being_checked = { has_variable = ai_zeal_weighted } }
+			add = {
+				value = ai_zeal
+				multiply = scope:clique_being_checked.var:ai_zeal_weighted
+			}
+		}
+	}
+}
+
+clique_ai_aspect_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:clique_being_checked }
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = attracts_powerful_vassals }
+				is_powerful_vassal = yes
+			}
+			if = {
+				limit = {
+					liege = { highest_held_title_tier = tier_duchy }
+				}
+				add = 10
+			}
+			else_if = {
+				limit = {
+					liege = { highest_held_title_tier = tier_kingdom }
+				}
+				add = 25
+			}
+			else_if = {
+				limit = {
+					liege = { highest_held_title_tier = tier_empire }
+				}
+				add = 50
+			}
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = attracts_knights }
+				is_knight = yes
+			}
+			add = 25
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = magic_based }
+				can_access_magic = yes
+				has_variable = magic_prowess
+			}
+			add = var:magic_prowess
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = attracts_feudal }
+				trigger_if = {
+					limit = { is_playable_character = yes }
+					government_has_flag = government_is_feudal
+				}
+				trigger_else_if = {
+					limit = { exists = liege }
+					liege = {
+						government_has_flag = government_is_feudal
+					}
+				}
+				trigger_else = { always = no }
+			}
+			add = 30
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = attracts_republic }
+				trigger_if = {
+					limit = { is_playable_character = yes }
+					GH_is_any_republic_government_trigger = yes
+				}
+				trigger_else_if = {
+					limit = { exists = liege }
+					liege = {
+						government_has_flag = government_is_republic_playable
+					}
+				}
+				trigger_else = { always = no }
+			}
+			add = 30
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = attracts_theocracy }
+				trigger_if = {
+					limit = { is_playable_character = yes }
+					OR = {
+						government_has_flag = government_is_theocracy
+						government_has_flag = government_is_holy_order
+					}
+				}
+				trigger_else_if = {
+					limit = { exists = liege }
+					liege = {
+						OR = {
+							government_has_flag = government_is_theocracy
+							government_has_flag = government_is_holy_order
+						}
+					}
+				}
+				trigger_else = { always = no }
+			}
+			add = 30
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = renown_based }
+				is_lowborn = no
+			}
+			dynasty = {
+				add = {
+					value = dynasty_prestige_level
+					subtract = 1
+					multiply = 10
+				}
+			}
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = prestige_based }
+			}
+			add = {
+				value = prestige_level
+				subtract = 1
+				multiply = 15
+			}
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = piety_based }
+			}
+			add = {
+				value = piety_level
+				subtract = 1
+				multiply = 15
+			}
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { CLIQUE = scope:clique_being_checked ASPECT = gold_based }
+			}
+			add = {
+				value = gold
+				multiply = 0.05
+			}
+		}
+	}
+}
+
+clique_ai_leader_opinion_value = {
+	value = 0
+	if = {
+		limit = { 
+			trigger_if = {
+				limit = { exists = scope:clique_being_checked }
+				scope:clique_being_checked = { has_variable = clique_leader }
+			}
+			trigger_else = { always = no }
+		}
+		if = {
+			limit = {
+				OR = {
+					scope:clique_being_checked.var:clique_leader = { this = prev }
+					opinion = {
+						target = scope:clique_being_checked.var:clique_leader
+						value >= very_high_positive_opinion
+					}
+				}
+			}
+			add = 80
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= high_positive_opinion
+				}
+			}
+			add = 60
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= medium_positive_opinion
+				}
+			}
+			add = 40
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= low_positive_opinion
+				}
+			}
+			add = 20
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= neutral_opinion
+				}
+			}
+			add = 0
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= low_negative_opinion
+				}
+			}
+			add = -20
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= medium_negative_opinion
+				}
+			}
+			add = -40
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= high_negative_opinion
+				}
+			}
+			add = -60
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = scope:clique_being_checked.var:clique_leader
+					value >= very_high_negative_opinion
+				}
+			}
+			add = -80
+		}
+		else = { add = -100 }
+	}
+	multiply = 0.5
+}
+
+#######################
+# CLIQUE LEAVING COST #
+#######################
+
+clique_leaving_cost = {
+	value = 0
+	# Base is determined from raw powerbase, so high intrigue/diplomacy characters aren't penalized
+	add = character_powerbase_base
+	multiply = 20
+	# Reduced by intrigue, so high intrigue characters have an easier time turning cloak
+	multiply = {
+		value = 100
+		subtract = intrigue
+		multiply = 0.01
+	}
+}
+
+halved_clique_leaving_cost = {
+	value = clique_leaving_cost
+	multiply = 0.5
+}
+
+##################################
+# PRESUMED HEIR DESIGNATION COST #
+##################################
+
+presumed_heir_change_cost = {
+	value = 0
+	if = {
+		limit = {
+			primary_title = {
+				has_variable = presumed_heir
+			}
+		}
+		primary_title = {
+			var:presumed_heir = {
+				add = character_influence_total
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:recipient }
+		subtract = scope:recipient.character_influence_total
+	}
+	multiply = 20
+	min = 0
+}
+
+##################################
+# APPOINT LIEGE CLIQUE COST      #
+##################################
+
+give_titles_to_different_clique_cost_multiplier = {
+	value = 1
+	subtract = clique_influence_multiplier
+	min = 0.25
+}
+
+give_titles_to_different_clique_cost = {
+	every_in_list = {
+		list = target_titles
+		if = {
+			limit = { tier = tier_county }
+			subtract = 200
+		}
+		else_if = {
+			limit = { tier = tier_duchy }
+			subtract = 500
+		}
+		else_if = {
+			limit = { tier = tier_kingdom }
+			subtract = 1000
+		}
+	}
+	multiply = give_titles_to_different_clique_cost_multiplier
+}
+
+##########################################
+# VALUES FOR CLIQUE CHARACTER GENERATION #
+##########################################
+
+clique_character_gender_value = {
+	value = 50
+	if = {
+		limit = {
+			root = {
+				OR = {
+					government_has_flag = government_is_landed_order
+					government_has_flag = government_is_theocracy
+				}
+			}
+			root.faith = { has_doctrine = doctrine_clerical_gender_female_only }
+		}
+		add = 50
+	}
+	else_if = {
+		limit = {
+			root = {
+				OR = {
+					government_has_flag = government_is_landed_order
+					government_has_flag = government_is_theocracy
+				}
+			}
+			root.faith = { has_doctrine = doctrine_clerical_gender_male_only }
+		}
+		subtract = 50
+	}
+	else_if = {
+		limit = { root.faith = { has_doctrine = doctrine_gender_female_dominated } }
+		add = 45
+	}
+	else_if = {
+		limit = { root.faith = { has_doctrine = doctrine_gender_male_dominated } }
+		subtract = 45
+	}
+}
+		
+		

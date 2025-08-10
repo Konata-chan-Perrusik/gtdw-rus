@@ -1,0 +1,107 @@
+﻿
+konijkmener_merchant_template = { # GH TODO: Possibly just merge these into the vanilla ones
+	age = { 25 70 }
+	gender_female_chance = 50
+	dynasty = none
+	faith = faith:lifepath
+	culture = culture:konijkmener
+	trait = deceitful
+	random_traits_list = {
+		count = 1
+		education_stewardship_2 = { weight = { base = 50 } }
+		education_stewardship_3 = { weight = { base = 20 } }
+		education_stewardship_4 = { weight = { base = 5 } }
+		education_diplomacy_2	= { weight = { base = 50 } }
+		education_diplomacy_3	= { weight = { base = 20 } }
+		education_diplomacy_4	= { weight = { base = 5 } }
+		education_intrigue_2	= { weight = { base = 20 } }
+		education_intrigue_3	= { weight = { base = 5 } }
+	}
+	random_traits_list = {
+		count = 2
+		arbitrary = {}
+		ambitious = {}
+		gregarious = {}
+		impatient = {}
+		callous = {}
+		stubborn = {}
+		greedy = {}
+	}
+	random_traits = no
+	martial = {
+		min_template_low_skill
+		max_template_low_skill
+	}
+	stewardship = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	diplomacy = {
+		min_template_high_skill
+		max_template_high_skill
+	}
+	intrigue = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	learning = {
+		min_template_low_skill
+		max_template_low_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+menagerie_merchant_template = {
+	age = { 25 70 }
+	dynasty = none
+	faith = scope:origin_county.faith
+	culture = scope:origin_county.culture
+	gender_female_chance = {
+		if = {
+			limit = { scope:origin_county.faith = { has_doctrine = doctrine_gender_male_dominated } }
+			add = 0
+		}
+		else_if = {
+			limit = { scope:origin_county.faith = { has_doctrine = doctrine_gender_female_dominated } }
+			add = 100
+		}
+		else = {
+			add = 50
+		}
+	}
+	random_traits_list = {
+		count = 1
+		education_stewardship_2 = { weight = { base = 50 } }
+		education_stewardship_3 = { weight = { base = 20 } }
+		education_stewardship_4 = { weight = { base = 5 } }
+		education_diplomacy_2	= { weight = { base = 50 } }
+		education_diplomacy_3	= { weight = { base = 20 } }
+		education_diplomacy_4	= { weight = { base = 5 } }
+	}
+	random_traits = yes
+	martial = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	stewardship = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	diplomacy = {
+		min_template_high_skill
+		max_template_high_skill
+	}
+	intrigue = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	learning = {
+		min_template_low_skill
+		max_template_low_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}

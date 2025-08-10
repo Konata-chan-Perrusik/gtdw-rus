@@ -1,0 +1,156 @@
+﻿sear_interaction = { ## GH ADDITION: Sarminian head searing
+	interface_priority = 30
+	icon = sear_interaction
+
+	category = interaction_category_prison
+
+	desc = sear_interaction_desc
+
+	is_shown = {
+		can_do_diplomacy_trigger = yes
+		scope:recipient = { is_imprisoned_by = scope:actor }
+		scope:actor = {
+			is_adult = yes
+			culture = { has_cultural_parameter = can_sear_prisoners }
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			is_adult = yes
+			is_male = no
+			custom_tooltip = {
+				text = has_already_been_seared
+				NOT = { has_character_modifier = seared_outcast_modifier }
+			}
+		}
+		trigger_if = { # Searing must have cultural significance to the recipient
+			limit = { scope:recipient = { NOT = { has_trait = lifestyle_gh_steppe_queen } } }
+			custom_tooltip = {
+				text = culture_does_not_use_steppe_queen_mechanics
+				scope:recipient = { culture = { has_cultural_parameter = steppe_queens_revered } }
+			}
+		}
+		scope:recipient = {
+			custom_description = {
+				text = "currently_being_tortured"
+				NOT = { has_character_flag = is_being_tortured }
+			}
+		}
+		cannot_release_former_regent_whilst_old_regent_holds_power_trigger = {
+			PRISONER = scope:recipient
+			REGENT = scope:recipient.var:imprisoned_by_diarch
+		}
+	}
+
+	is_highlighted = {
+		OR = {
+			scope:actor = { has_trait = sadistic }
+			scope:actor = { has_relation_rival = scope:recipient }
+			scope:recipient = { any_claim = { holder = scope:actor } }
+		}
+	}
+
+	on_accept = {
+		scope:recipient = {
+			add_character_flag = {
+				flag = is_being_tortured
+				months = 6 # Players in MP can keep the event window open...
+			}
+		}
+		sear_interaction_actor_effect = yes
+		show_as_tooltip = {
+			scope:recipient = {
+				if = {
+					limit = { is_playable_character = yes }
+					scope:actor = {
+						if = {
+							limit = { NOT = { has_banish_reason = scope:recipient } }
+							add_tyranny = revoke_title_tyranny_gain
+						}
+					}
+				}
+				add_prestige_level = -1
+				if = {
+					limit = { has_trait = lifestyle_gh_steppe_queen }
+					remove_trait = lifestyle_gh_steppe_queen
+				}
+				add_character_modifier = {
+					modifier = seared_outcast_modifier
+					years = 10
+				}
+				custom_tooltip = searing_claim_loss_tooltip
+			}
+		}
+
+		show_as_tooltip = { # Looks better here
+			scope:recipient = {
+				banish = yes
+				release_from_prison = yes
+			}
+		}
+
+		scope:actor = {
+			trigger_event = {
+				id = gh_sarminian_events.0005
+				days = 1
+			}
+		}
+
+		add_clan_unity_interaction_effect = { # If we're a clan this interaction affects unity
+			CHARACTER = scope:actor
+			TARGET = scope:recipient
+			VALUE = medium_unity_loss
+			DESC = clan_unity_searing.desc
+			REVERSE_NON_HOUSE_TARGET = no
+		}
+	}
+
+	auto_accept = yes
+
+	ai_targets = {
+		ai_recipients = prisoners
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = -20
+
+		modifier = {
+			has_trait = sadistic
+			add = 20
+		}
+		ai_value_modifier = {
+			ai_compassion = tiny_chance_impact_negative_ai_value #Adds +50 for highly uncompassionate characters, -50 for highly compassionate characters
+		}
+		opinion_modifier = {
+			opinion_target = scope:recipient
+			multiplier = -0.25
+		}
+		#Scope:target has caused internal strife in the realm
+		character_hates_scope_due_to_strife_modifier = { TARGET = scope:recipient }
+		modifier = { # Family Feud
+			exists = scope:actor.house
+			exists = scope:recipient.house
+			scope:actor = {
+				house.house_head = {
+					any_owned_story = {
+						story_type = story_cycle_house_feud
+						has_variable = house_feud_house
+						var:house_feud_house = scope:recipient.house
+					}
+				}
+				has_opinion_modifier = {
+					modifier = house_feud_opinion
+					target = scope:recipient.house.house_head
+				}
+			}
+			add = 30
+		}
+	}
+
+	ai_frequency = 36
+}

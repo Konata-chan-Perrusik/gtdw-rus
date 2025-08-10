@@ -1,0 +1,231 @@
+﻿
+# Makes calculations in advance for the partition of a target's demesne. More efficient than said calculations being performed directly in the options
+prepare_demesne_for_partition_effect = {
+	every_held_title = {
+		limit = { tier = tier_kingdom }
+		add_to_list = target_kingdoms
+	}
+	every_held_title = {
+		limit = { tier = tier_duchy }
+		add_to_list = target_duchies
+		if = {
+			limit = { 
+				any_in_de_jure_hierarchy = {
+					tier = tier_county
+					NOT = { holder = $TARGET$ }
+					holder.top_liege = root
+				} 
+			}
+			random_in_de_jure_hierarchy = {
+				limit = {
+					tier = tier_county
+					NOT = { holder = $TARGET$ }
+					holder.top_liege = root
+				}
+				holder = { save_temporary_scope_as = new_title_owner }
+			}
+			set_variable = {
+				name = new_title_owner
+				value = scope:new_title_owner
+				days = 1
+			}
+		}
+		else = {
+			set_variable = {
+				name = title_to_be_destroyed
+				days = 1
+			}
+		}
+	}
+	every_held_title = {
+		limit = { tier = tier_county }
+		add_to_list = target_counties
+		if = {
+			limit = {
+				duchy = {
+					is_title_created = yes
+					NOT = { holder = $TARGET$ }
+					holder.top_liege = root
+				}
+			}
+			set_variable = {
+				name = new_title_owner
+				value = duchy.holder
+				days = 1
+			}
+		}
+		else_if = {
+			limit = {
+				duchy = {
+					has_variable = new_title_owner
+				}
+			}
+			duchy = {
+				var:new_title_owner = {
+					save_temporary_scope_as = new_title_owner
+				}
+			}
+			set_variable = {
+				name = new_title_owner
+				value = scope:new_title_owner
+				days = 1
+			}
+		}
+		else_if = {
+			limit = {
+				duchy = {
+					any_in_de_jure_hierarchy = {
+						tier = tier_county
+						NOT = { holder = $TARGET$ }
+						holder.top_liege = root
+					}
+				}
+			}
+			duchy = {
+				random_in_de_jure_hierarchy = {
+					limit = {
+						tier = tier_county
+						NOT = { holder = $TARGET$ }
+						holder.top_liege = root
+					}
+					holder = { save_temporary_scope_as = new_title_owner }
+				}
+			}
+			set_variable = {
+				name = new_title_owner
+				value = scope:new_title_owner
+				days = 1
+			}
+		}
+		else = {
+			create_character = {
+				employer = root
+				gender_female_chance = 50
+				culture = root.culture
+				faith = root.faith
+				random_traits = yes
+				age = { 20 50 }
+				
+				save_scope_as = generated_title_recipient
+			}
+			set_variable = {
+				name = new_title_owner
+				value = scope:generated_title_recipient
+				days = 1
+			}
+		}
+	}
+}
+
+# Has the character demoted in rank, usually as a result of a punishment. Should not be used for county-tier characters or emperors
+demote_in_rank_effect = {
+	if = {
+		limit = { $TARGET$ = { highest_held_title_tier >= tier_kingdom } }
+		every_in_list = {
+			list = target_kingdoms
+			root = {
+				destroy_title = prev
+			}
+		}
+	}
+	else = {
+		every_in_list = {
+			list = target_duchies
+			if = {
+				limit = { has_variable = title_to_be_destroyed }
+				root = {
+					destroy_title = prev
+				}
+			}
+			else = {
+				var:new_title_owner = {
+					get_title = prev
+				}
+			}
+		}
+	}
+}
+
+# Completely carves up the demesne of a character among the other vassals of their liege. Used for attainders. Must be prepared for via the prepare_demesne_for_partition_effect first
+partition_demesne_among_other_vassals_effect = {
+	every_in_list = {
+		list = target_kingdoms
+		root = {
+			destroy_title = prev
+		}
+	}
+	every_in_list = {
+		list = target_duchies
+		if = {
+			limit = { has_variable = title_to_be_destroyed }
+			root = {
+				destroy_title = prev
+			}
+		}
+		else = {
+			var:new_title_owner = {
+				get_title = prev
+			}
+		}
+	}
+	every_in_list = {
+		list = target_counties
+		var:new_title_owner = {
+			get_title = prev
+		}
+	}
+	$TARGET$ = {
+		pay_short_term_gold = {
+			target = root
+			gold = $TARGET$.gold
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { NOT = { is_lowborn = yes } }
+					dynasty = {
+						NOT = {
+							any_dynasty_member = {
+								NOT = { this = $TARGET$ }
+								is_playable_character = yes
+							}
+						}
+						dynasty_prestige >= 750
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+			dynasty = { add_dynasty_prestige = massive_dynasty_prestige_loss }
+		}
+	}
+	random_list = {
+		1 = {
+			imprison = {
+				target = $TARGET$
+				type = dungeon
+			}
+			modifier = {
+                   add = {
+                       value = intrigue
+                       multiply = 1
+                   }
+			}
+		}
+		1 = {
+			custom_tooltip = flees_abroad_tt
+			modifier = {
+                   add = {
+                       value = $TARGET$.intrigue
+                       multiply = 1
+                   }
+			}
+			hidden_effect = {
+				$TARGET$ = {
+					banish = yes
+				}
+			}
+		}
+	}
+}

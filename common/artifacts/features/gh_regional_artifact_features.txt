@@ -1,0 +1,2233 @@
+﻿
+####################################################
+#Goblet Features             					   #
+####################################################
+	
+# goblet_characteristic
+	
+	goblet_characteristic_large = {
+		group = goblet_characteristic
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 50 }
+		}
+		weight = {
+			value = 4
+			# Opakhasians like making big, gaudy monstrosities
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+			# Saw periods of popularity in the late 4th-early 6th centuries and most of the 12th century
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:goblet_age }
+						OR = {
+							AND = {
+								scope:owner.var:goblet_age >= 351
+								scope:owner.var:goblet_age <= 550
+							}
+							AND = {
+								scope:owner.var:goblet_age >= 1090
+								scope:owner.var:goblet_age <= 1200
+							}
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+		}
+	}
+	
+	goblet_characteristic_huge = {
+		group = goblet_characteristic
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+		}
+		weight = {
+			value = 1
+			# Opakhasians like making big, gaudy monstrosities
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+			# Saw periods of popularity in the late 4th-early 6th centuries and most of the 12th century
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:goblet_age }
+						OR = {
+							AND = {
+								scope:owner.var:goblet_age >= 351
+								scope:owner.var:goblet_age <= 550
+							}
+							AND = {
+								scope:owner.var:goblet_age >= 1090
+								scope:owner.var:goblet_age <= 1200
+							}
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+		}
+	}
+
+	goblet_characteristic_wide_topped = {
+		group = goblet_characteristic
+		weight = {
+			value = 1
+			# A staple of the Etepezean style, not particularly common elsewhere
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+					}
+					trigger_else = { always = no }
+				}
+				add = 3
+			}
+		}
+	}
+	
+	goblet_characteristic_narrow = {
+		group = goblet_characteristic
+		trigger = {
+			OR = {
+				trigger_if = {
+					limit = { exists = scope:owner.var:goblet_age }
+					scope:owner.var:goblet_age >= 851
+					scope:owner.var:goblet_age <= 1010
+				}
+				trigger_else = { always = no }
+				trigger_if = {
+					limit = { exists = scope:owner.var:artifact_origin_location }
+					scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = 4
+	}
+	
+	goblet_characteristic_elaborate_stem = {
+		group = goblet_characteristic
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 999 }
+		}
+		weight = {
+			value = 1
+			# Opakhasians like making big, gaudy monstrosities
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+		}
+	}
+	
+	goblet_characteristic_unremarkable = {
+		group = goblet_characteristic
+		weight = 1
+	}
+	
+# goblet_decoration
+
+	goblet_decoration_magical_runes = {
+		group = goblet_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+		}
+		weight = {
+			value = 1
+			# Opakhasians and Aironoians prefer runes to geometric shapes
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						OR = {
+							scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+		}
+	}
+	
+	goblet_decoration_magical_geometric_shapes = {
+		group = goblet_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+		}
+		weight = {
+			value = 1
+			# Etepezeans, Kalathipsomites, Malcoisiacs and Katraddians prefer geometric shapes to runes
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						OR = {
+							scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = world_ga_foglands }
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+		}
+	}
+	
+	goblet_decoration_the_purest = {
+		group = goblet_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+		}
+		weight = 1
+	}
+	
+	goblet_decoration_the_sea_tower = {
+		group = goblet_decoration
+		# Endemic to Etepezea and fairly popular there
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 999 }
+			trigger_if = {
+				limit = { exists = scope:owner.var:artifact_origin_location }
+				scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+			}
+			trigger_else = { always = no }
+		}
+		weight = 4
+	}
+	
+	goblet_decoration_mountain_sun_iconography = {
+		group = goblet_decoration
+		# Endemic to Opakhasia and fairly popular there
+		trigger = {
+			trigger_if = {
+				limit = { exists = scope:owner.var:artifact_origin_location }
+				scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+			}
+			trigger_else = { always = no }
+		}
+		weight = 3
+	}
+	
+	goblet_decoration_cups = {
+		group = goblet_decoration
+		weight = 2
+	}
+	
+	goblet_decoration_moons = {
+		group = goblet_decoration
+		weight = {
+			value = 1
+			# Much more common in Aironoi
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+					}
+					trigger_else = { always = no }
+				}
+				add = 3
+			}
+		}
+	}
+	
+	goblet_decoration_dragons = {
+		group = goblet_decoration
+		weight = {
+			value = 1
+			# Much more common in Etepezea and Opakhasia
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						OR = {
+							scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 3
+			}
+		}
+	}
+	
+	goblet_decoration_battle = {
+		group = goblet_decoration
+		weight = {
+			value = 1
+			# Much more common in Malcois and Katraddia
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						OR = {
+							scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = world_ga_foglands }
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 1
+			}
+		}
+	}
+	
+	goblet_decoration_blood_drops = {
+		group = goblet_decoration
+		weight = 2
+	}
+	
+	goblet_decoration_flowers = {
+		group = goblet_decoration
+		weight = {
+			value = 1
+			# Much more common in Kalathipsomi
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+					}
+					trigger_else = { always = no }
+				}
+				add = 2
+			}
+		}
+	}
+	
+	goblet_decoration_rivers = {
+		group = goblet_decoration
+		# Endemic to Kalathipsomi
+		trigger = {
+			trigger_if = {
+				limit = { exists = scope:owner.var:artifact_origin_location }
+				scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+			}
+			trigger_else = { always = no }
+		}
+		weight = 2
+	}
+	
+	goblet_decoration_lions = {
+		group = goblet_decoration
+		# Endemic to Malcois
+		trigger = {
+			trigger_if = {
+				limit = { exists = scope:owner.var:artifact_origin_location }
+				scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+			}
+			trigger_else = { always = no }
+		}
+		weight = 2
+	}
+	
+	goblet_decoration_chimerae = {
+		group = goblet_decoration
+		# Endemic to Malcois
+		trigger = {
+			trigger_if = {
+				limit = { exists = scope:owner.var:artifact_origin_location }
+				scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+			}
+			trigger_else = { always = no }
+		}
+		weight = 2
+	}
+	
+	goblet_decoration_mayikprolollan = {
+		group = goblet_decoration
+		trigger = {
+			# The Mayikprolollan only really came into its current shape after the Chaos of the Seventh Century
+			OR = {
+				trigger_if = {
+					limit = { exists = scope:owner.var:goblet_age }
+					scope:owner.var:goblet_age >= 850
+					scope:owner.var:goblet_age <= 1200
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = {
+			value = 1
+			# More common in Kalathipsomi due to geographical proximity
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+					}
+					trigger_else = { always = no }
+				}
+				add = 1
+			}
+		}
+	}
+	
+	goblet_decoration_heraldry = {
+		group = goblet_decoration
+		weight = {
+			value = 1
+			# Much more common in Kalathipsomi and Opakhasia
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						OR = {
+							scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 3
+			}
+		}
+	}
+	
+	goblet_decoration_undecorated = {
+		group = goblet_decoration
+		weight = {
+			value = 2
+			# Much more common in Malcois and Katraddia
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { exists = scope:owner.var:artifact_origin_location }
+						OR = {
+							scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+							scope:owner.var:artifact_origin_location = { geographical_region = world_ga_foglands }
+						}
+					}
+					trigger_else = { always = no }
+				}
+				add = 5
+			}
+		}
+	}
+
+	#############
+	# Glassware #
+	#############
+	
+	generic_material_glassware_glass = {
+		group = generic_material_glassware
+		weight = 5
+	}
+	
+	generic_material_glassware_tarshaf_glass = {
+		group = generic_material_glassware
+		trigger = { 
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 40 MAX = 999 }
+			trigger_if = {
+				limit = { exists = scope:location }
+				scope:location = { culture_has_sarradonian_heritage_pillar_trigger = yes }
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+		weight = 1
+	}
+
+	####################################################
+	#vessel Features, paint styles etc.                  #
+	####################################################
+
+	# Types
+	
+	vessel_type_amphora = {
+		group = vessel_type
+		weight = 4
+	}
+	
+	vessel_type_column_krater = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_calyx_krater = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_volute_krater = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_bell_krater = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_pelike = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_hydria = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_stamnos = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_pyxis = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_dinos = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_kylix = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_kantharos = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_oenochoe = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_loutrophoros = {
+		group = vessel_type
+		weight = 1
+	}
+	
+	vessel_type_lekythos = {
+		group = vessel_type
+		weight = 1
+	}
+	
+# vessel_decoration
+
+	# GH URGENT: Convert to regular decoration patterns
+	#vessel_decoration_magical_runes = {
+	#	group = vessel_decoration
+	#	trigger = {
+	#		artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+	#	}
+	#	weight = {
+	#		value = 1
+	#		# Opakhasians and Aironoians prefer runes to geometric shapes
+	#		if = {
+	#			limit = {
+	#				trigger_if = {
+	#					limit = { exists = scope:owner.var:artifact_origin_location }
+	#					OR = {
+	#						scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+	#						scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+	#					}
+	#				}
+	#				trigger_else = { always = no }
+	#			}
+	#			add = 2
+	#		}
+	#	}
+	#}
+	#
+	#vessel_decoration_magical_geometric_shapes = {
+	#	group = vessel_decoration
+	#	trigger = {
+	#		artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+	#	}
+	#	weight = {
+	#		value = 1
+	#		# Etepezeans, Kalathipsomites, Malcoisiacs and Katraddians prefer geometric shapes to runes
+	#		if = {
+	#			limit = {
+	#				trigger_if = {
+	#					limit = { exists = scope:owner.var:artifact_origin_location }
+	#					OR = {
+	#						scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+	#						scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+	#						scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+	#						scope:owner.var:artifact_origin_location = { geographical_region = world_ga_foglands }
+	#					}
+	#				}
+	#				trigger_else = { always = no }
+	#			}
+	#			add = 2
+	#		}
+	#	}
+	#}
+	#
+	#vessel_decoration_the_sea_tower = {
+	#	group = vessel_decoration
+	#	# Endemic to Etepezea and fairly popular there
+	#	trigger = {
+	#		artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 999 }
+	#		trigger_if = {
+	#			limit = { exists = scope:owner.var:artifact_origin_location }
+	#			scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+	#		}
+	#		trigger_else = { always = no }
+	#	}
+	#	weight = 4
+	#}
+	#
+	#vessel_decoration_mountain_sun_iconography = {
+	#	group = vessel_decoration
+	#	# Endemic to Opakhasia and fairly popular there
+	#	trigger = {
+	#		trigger_if = {
+	#			limit = { exists = scope:owner.var:artifact_origin_location }
+	#			scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+	#		}
+	#		trigger_else = { always = no }
+	#	}
+	#	weight = 3
+	#}
+	#
+	#vessel_decoration_cups = {
+	#	group = vessel_decoration
+	#	weight = 2
+	#}
+	#
+	#vessel_decoration_moons = {
+	#	group = vessel_decoration
+	#	weight = {
+	#		value = 1
+	#		# Much more common in Aironoi
+	#		if = {
+	#			limit = {
+	#				trigger_if = {
+	#					limit = { exists = scope:owner.var:artifact_origin_location }
+	#					scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+	#				}
+	#				trigger_else = { always = no }
+	#			}
+	#			add = 3
+	#		}
+	#	}
+	#}
+
+# casket_decoration
+
+	casket_decoration_harvest = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_swords = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_coins = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_knowledge = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_crows = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_nullification = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_gisredde = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_champion_of_chevalie = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 300 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_romantic = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_high_king = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_weathered = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 150 }
+			OR = {
+				trigger_if = {
+					limit = { exists = scope:owner.var:casket_age }
+					scope:owner.var:casket_age >= 300
+					scope:owner.var:casket_age <= 600
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+
+	casket_decoration_antimagi = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_griffons = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_konijk = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_decoration_chevalie = {
+		group = casket_decoration
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	# casket_material
+
+	casket_material_wood = {
+		group = casket_material
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80 } }
+		weight = 1
+	}
+
+	casket_material_bronze = {
+		group = casket_material
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 100 } }
+		weight = 2
+	}
+
+	casket_material_ebony = {
+		group = casket_material
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } }
+		weight = 3
+	}
+	
+	casket_material_terracotta = {
+		group = casket_material
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 80 } }
+		weight = 1
+	}
+
+	casket_material_ivory = {
+		group = casket_material
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } }
+		weight = 3
+	}
+
+	casket_characteristic_large = {
+		group = casket_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } }
+		weight = 1
+	}
+	
+	casket_characteristic_huge = {
+		group = casket_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } }
+		weight = 1
+	}
+
+	casket_characteristic_small = {
+		group = casket_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 80 } }
+		weight = 1
+	}
+
+	casket_characteristic_detailed = {
+		group = casket_characteristic
+		weight = 1
+	}
+
+	casket_characteristic_unremarkable = {
+		group = casket_characteristic
+				trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80 } }
+		weight = 1
+	}
+
+	casket_characteristic_tiny = {
+		group = casket_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 50 } }
+		weight = 1
+	}	
+
+	casket_branded_stamped = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_branded = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_marked = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_scribbled = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_adorned = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_sealed = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_engraved = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_gilded = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+	casket_branded_inlaid = {
+	    group = casket_branded
+	    trigger = {
+	        artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+	    }
+	    weight = 1
+	}
+
+	#casket_name
+
+	casket_name_one = {
+		group = casket_name
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_name_two = {
+		group = casket_name
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_name_three = {
+		group = casket_name
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+	casket_name_four = {
+		group = casket_name
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 }
+		}
+		weight = 1
+	}
+
+
+#############################
+# Votive Figure Features 	#
+#############################
+
+	votive_characteristic_crude = {
+        group = votive_characteristic
+        weight = 1
+    }
+ 	votive_characteristic_plain = {
+        group = votive_characteristic
+        weight = 1
+    }
+ 	votive_characteristic_elegant = {
+        group = votive_characteristic
+        weight = 1
+    }
+ 	votive_characteristic_detailed = {
+        group = votive_characteristic
+        weight = 1
+    }
+	votive_characteristic_tiny = {
+	    group = votive_characteristic
+	    weight = 1
+	}
+	votive_characteristic_small = {
+	    group = votive_characteristic
+	    weight = 1
+	}
+	votive_characteristic_large = {
+	    group = votive_characteristic
+	    weight = 1
+	}
+	votive_characteristic_damaged = {
+	    group = votive_characteristic
+	    weight = 1
+	}
+	 votive_characteristic_painted = {
+	    group = votive_characteristic
+	    weight = 1
+	}
+
+	votive_material_wood = {
+	    group = votive_material
+    	trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80 	} }
+	    weight = 1
+	}
+	votive_material_ivory = {
+	    group = votive_material
+        trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX 	= 999 } }
+	        weight = 2
+	}
+	votive_material_marble = {
+	    group = votive_material
+        trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX 	= 80 } }
+	        weight = 1
+	    }
+	votive_material_stone = {
+	    group = votive_material
+  		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80 	} }
+		weight = 1
+	}
+	votive_material_bronze = {
+	    group = votive_material
+  		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 	100 } }
+	    weight = 2
+	}
+	 votive_material_gold = {
+	    group = votive_material
+        trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX 	= 999 } }
+	    weight = 2
+	}
+	
+	 votive_carving_axiaothea = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    	    	limit = { exists = scope:owner.var:votive_age }
+	    	    	scope:owner.var:votive_age >= 1181
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_anesimasios = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    	    	limit = { exists = scope:owner.var:votive_age }
+	    	    	scope:owner.var:votive_age >= 1181
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_crios = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:votive_age }
+			        scope:owner.var:votive_age >= 1179
+			        scope:owner.var:votive_age <= 1186
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+	    weight = 2
+	 }
+	 votive_carving_theodian = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1177
+	    		    scope:owner.var:votive_age <= 1179
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_aeolus = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1175
+	    		    scope:owner.var:votive_age <= 1177
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_thresatos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1172
+	    		    scope:owner.var:votive_age <= 1174
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_ischenios = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1180
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_maeonias = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1117
+	    		    scope:owner.var:votive_age <= 1121
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_biton = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1099
+	    		    scope:owner.var:votive_age <= 1130
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_phancis = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1025
+	    		    scope:owner.var:votive_age <= 1100
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_exaduis = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1001
+	    		    scope:owner.var:votive_age <= 1026
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_isocrates = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 987
+	    		    scope:owner.var:votive_age <= 1000
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_alcandrea = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 954
+	    		    scope:owner.var:votive_age <= 986
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_clytomedes = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 952
+	    		    scope:owner.var:votive_age <= 954
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_oliatos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+		    	trigger_if = {
+		    	    limit = { exists = scope:owner.var:votive_age }
+		    	    scope:owner.var:votive_age >= 949
+		    	    scope:owner.var:votive_age <= 952
+		    	}
+		    	trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_nothyx = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 901
+	    		    scope:owner.var:votive_age <= 970
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_dikaynos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_sansia = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_thysia = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_katharitos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_eos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_philantros = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_calystos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 1120
+	    		    scope:owner.var:votive_age <= 1230
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 2
+	 }
+	 votive_carving_pathos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 348
+	    		    scope:owner.var:votive_age <= 700
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+	 votive_carving_maklea = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 243
+	    		    scope:owner.var:votive_age <= 348 
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+	 votive_carving_akalionixos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 210
+	    		    scope:owner.var:votive_age <= 243
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+	 votive_carving_aessocianix = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 188
+	    		    scope:owner.var:votive_age <= 210
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+	 votive_carving_aexionarax = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 170
+	    		    scope:owner.var:votive_age <= 188
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+	 votive_carving_dhacixen = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 150
+	    		    scope:owner.var:votive_age <= 170
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+
+	 votive_carving_mythix = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 899
+	    		    scope:owner.var:votive_age <= 910
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+
+	 votive_carving_theyssia = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 765
+	    		    scope:owner.var:votive_age <= 1000
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+
+	 votive_carving_eramos = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 760
+	    		    scope:owner.var:votive_age <= 800
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+
+	 votive_carving_aeliadias = {
+	    group = votive_carving
+	    trigger = {
+	    	OR = {
+	    		trigger_if = {
+	    		    limit = { exists = scope:owner.var:votive_age }
+	    		    scope:owner.var:votive_age >= 442
+	    		    scope:owner.var:votive_age <= 760
+	    		}
+	    		trigger_else = { always = no }
+	    	}
+	    }
+	    weight = 1
+	 }
+
+
+	# Stone Tablets
+
+	tablet_characteristic_large = {
+	  group = tablet_characteristic
+	  weight = 1
+	}  
+	tablet_characteristic_huge = {
+	  group = tablet_characteristic
+	  weight = 1
+	}  
+	tablet_characteristic_small = {
+	  group = tablet_characteristic
+	  weight = 1
+	}  
+	tablet_characteristic_tiny = {
+	  group = tablet_characteristic
+	  weight = 1
+	}  
+	tablet_characteristic_detailed = {
+	  group = tablet_characteristic
+	  weight = 1
+	}  
+	tablet_characteristic_unremarkable = {
+	  group = tablet_characteristic
+	  weight = 1
+	}  
+
+	tablet_engraving_inelligible = {
+		group = tablet_engraving
+		trigger = {
+			artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 10 }
+			NOT = { has_variable = writing_culture }
+		}
+		weight = 2
+	}
+	tablet_engraving_undecipherable = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+				    limit = { exists = scope:owner.var:tablet_age }
+				    scope:owner.var:tablet_age >= 15
+				    scope:owner.var:tablet_age <= 35
+				}
+				trigger_else = { always = no }
+			}
+			NOT = { has_variable = writing_culture }
+		}
+		weight = 2
+	}
+	tablet_engraving_ritual = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+		   			limit = { exists = scope:owner.var:tablet_age }
+		   			scope:owner.var:tablet_age >= 14
+		   			scope:owner.var:tablet_age <= 30
+				}
+				trigger_else = { always  = no }
+			}
+		}
+		weight = 2
+	}
+	tablet_engraving_bill = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+				    limit = { exists = scope:owner.var:tablet_age }
+				    scope:owner.var:tablet_age >= 20
+				    scope:owner.var:tablet_age <= 30
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = 2
+	}
+	tablet_engraving_law = {
+		group = tablet_engraving
+		trigger = {
+	  		OR = {
+	  			trigger_if = {
+		  		    limit = { exists = scope:owner.var:tablet_age }
+		  		    scope:owner.var:tablet_age >= 20
+		  		    scope:owner.var:tablet_age <= 30
+	  			}
+	  			trigger_else = { always = no }
+	  		}
+		}
+	 	weight = 2
+	}
+	tablet_engraving_kemsar = {
+		group = tablet_engraving
+		trigger = {
+	  		OR = {
+	  			trigger_if = {
+	  		    	limit = { exists = scope:owner.var:tablet_age }
+	  		    	scope:owner.var:tablet_age >= 15
+	  		    	scope:owner.var:tablet_age <= 30
+	  			}
+	  			trigger_else = { always = no }
+	  		}
+	  	}
+	 	weight = 2
+	}
+	tablet_engraving_ruler = {
+		group = tablet_engraving
+		trigger = {
+		 	OR = {
+		 		trigger_if = {
+		 		    limit = { exists = scope:owner.var:tablet_age }
+		 		    scope:owner.var:tablet_age >= 14
+		 		    scope:owner.var:tablet_age <= 19
+		 		}
+		 		trigger_else = { always = no }
+		 	}
+		 }
+		weight = 2
+	}
+	tablet_engraving_magi = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+				    limit = { exists = scope:owner.var:tablet_age }
+				    scope:owner.var:tablet_age >= 12
+				    scope:owner.var:tablet_age <= 30
+				}
+				trigger_else = { always = yes }
+			}
+		}
+		weight = 2
+	}
+	tablet_engraving_conqueror = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+				    limit = { exists = scope:owner.var:tablet_age }
+				    scope:owner.var:tablet_age >= 14
+				    scope:owner.var:tablet_age <= 16
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = 2
+	}
+	tablet_engraving_ancient = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+				    limit = { exists = scope:owner.var:tablet_age }
+				    scope:owner.var:tablet_age >= 25
+				    scope:owner.var:tablet_age <= 35
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = 2
+	}
+	tablet_engraving_river = {
+		group = tablet_engraving
+		trigger = {
+			OR = {
+				trigger_if = {
+				    limit = { exists = scope:owner.var:tablet_age }
+				    scope:owner.var:tablet_age >= 20
+				    scope:owner.var:tablet_age <= 30
+				}
+				trigger_else = { always = no }
+			}
+		}
+		weight = 2
+	}
+
+	tablet_condition_mint = {
+	  group = tablet_condition
+	  trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } }
+	  weight = 1
+	}
+	tablet_condition_degraded = {
+	   group = tablet_condition
+	trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX =    100 } }
+	  weight = 2
+	}
+	tablet_condition_cracked = {
+	  group = tablet_condition
+	  trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX =    100 } }
+	  weight = 2
+	}
+	tablet_condition_crumbling = {
+	  group = tablet_condition
+	  trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80  } }
+	  weight = 3
+	}
+	tablet_condition_broken = {
+	  group = tablet_condition
+	  trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80  } }
+	  weight = 1
+	}
+	tablet_condition_missing = {
+	  group = tablet_condition
+	  trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 80  } }
+	  weight = 1
+	}
+
+#####################################
+# Sacrifical Dagger Decorations 	#
+#####################################
+
+    sacrifical_decoration_magical_runes = {
+        group = sacrifical_decoration
+        trigger = {
+            artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+        }
+        weight = {
+            value = 1
+            # Opakhasians and Aironoians prefer runes to geometric shapes
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        OR = {
+                            scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+                        }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 2
+            }
+        }
+    }
+    
+    sacrifical_decoration_magical_geometric_shapes = {
+        group = sacrifical_decoration
+        trigger = {
+            artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 999 }
+        }
+        weight = {
+            value = 1
+            # Etepezeans, Kalathipsomites, Malcoisiacs and Katraddians prefer geometric shapes to runes
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        OR = {
+                            scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = world_ga_foglands }
+                        }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 2
+            }
+        }
+    }
+    
+    sacrifical_decoration_the_purest = {
+        group = sacrifical_decoration
+        trigger = {
+            artifact_value_trigger = { VALUE = scope:wealth MIN = 20 MAX = 999 }
+        }
+        weight = 1
+    }
+    
+    sacrifical_decoration_the_sea_tower = {
+        group = sacrifical_decoration
+        # Endemic to Etepezea and fairly popular there
+        trigger = {
+            artifact_value_trigger = { VALUE = scope:wealth MIN = 10 MAX = 999 }
+            trigger_if = {
+                limit = { exists = scope:owner.var:artifact_origin_location }
+                scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+            }
+            trigger_else = { always = no }
+        }
+        weight = 4
+    }
+    
+    sacrifical_decoration_mountain_sun_iconography = {
+        group = sacrifical_decoration
+        # Endemic to Opakhasia and fairly popular there
+        trigger = {
+            trigger_if = {
+                limit = { exists = scope:owner.var:artifact_origin_location }
+                scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+            }
+            trigger_else = { always = no }
+        }
+        weight = 3
+    }
+    
+    sacrifical_decoration_cups = {
+        group = sacrifical_decoration
+        weight = 2
+    }
+    
+    sacrifical_decoration_moons = {
+        group = sacrifical_decoration
+        weight = {
+            value = 1
+            # Much more common in Aironoi
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        scope:owner.var:artifact_origin_location = { geographical_region = world_ga_aironoi }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 3
+            }
+        }
+    }
+    
+    sacrifical_decoration_dragons = {
+        group = sacrifical_decoration
+        weight = {
+            value = 1
+            # Much more common in Etepezea and Opakhasia
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        OR = {
+                            scope:owner.var:artifact_origin_location = { geographical_region = etepezea_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+                        }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 3
+            }
+        }
+    }
+    
+    sacrifical_decoration_battle = {
+        group = sacrifical_decoration
+        weight = {
+            value = 1
+            # Much more common in Malcois and Katraddia
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        OR = {
+                            scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = world_ga_foglands }
+                        }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 1
+            }
+        }
+    }
+    
+    sacrifical_decoration_blood_drops = {
+        group = sacrifical_decoration
+        weight = 2
+    }
+    
+    sacrifical_decoration_flowers = {
+        group = sacrifical_decoration
+        weight = {
+            value = 1
+            # Much more common in Kalathipsomi
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 2
+            }
+        }
+    }
+    
+    sacrifical_decoration_rivers = {
+        group = sacrifical_decoration
+        # Endemic to Kalathipsomi
+        trigger = {
+            trigger_if = {
+                limit = { exists = scope:owner.var:artifact_origin_location }
+                scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+            }
+            trigger_else = { always = no }
+        }
+        weight = 2
+    }
+    
+    sacrifical_decoration_lions = {
+        group = sacrifical_decoration
+        # Endemic to Malcois
+        trigger = {
+            trigger_if = {
+                limit = { exists = scope:owner.var:artifact_origin_location }
+                scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+            }
+            trigger_else = { always = no }
+        }
+        weight = 2
+    }
+    
+    sacrifical_decoration_chimerae = {
+        group = sacrifical_decoration
+        # Endemic to Malcois
+        trigger = {
+            trigger_if = {
+                limit = { exists = scope:owner.var:artifact_origin_location }
+                scope:owner.var:artifact_origin_location = { geographical_region = malcois_biozone }
+            }
+            trigger_else = { always = no }
+        }
+        weight = 2
+    }
+    
+    sacrifical_decoration_mayikprolollan = {
+        group = sacrifical_decoration
+        trigger = {
+            # The Mayikprolollan only really came into its current shape after the Chaos of the Seventh Century
+            OR = {
+                trigger_if = {
+                    limit = { exists = scope:owner.var:sacrifical_age }
+                    scope:owner.var:sacrifical_age >= 850
+                    scope:owner.var:sacrifical_age <= 1200
+                }
+                trigger_else = { always = no }
+            }
+        }
+        weight = {
+            value = 1
+            # More common in Kalathipsomi due to geographical proximity
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 1
+            }
+        }
+    }
+    
+    sacrifical_decoration_heraldry = {
+        group = sacrifical_decoration
+        weight = {
+            value = 1
+            # Much more common in Kalathipsomi and Opakhasia
+            if = {
+                limit = {
+                    trigger_if = {
+                        limit = { exists = scope:owner.var:artifact_origin_location }
+                        OR = {
+                            scope:owner.var:artifact_origin_location = { geographical_region = kalathipsomi_biozone }
+                            scope:owner.var:artifact_origin_location = { geographical_region = opakhasia_biozone }
+                        }
+                    }
+                    trigger_else = { always = no }
+                }
+                add = 3
+            }
+        }
+    }
+
+#############################
+# Commemorative Coins 		#
+#############################
+
+
+# coin_issue
+	coin_issue_karthraddi = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 900
+			        scope:owner.var:coin_age <= 1000
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_jan = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 300
+			        scope:owner.var:coin_age <= 1200
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_printed = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 800
+			        scope:owner.var:coin_age <= 1254
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_hero = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 1011
+			        scope:owner.var:coin_age <= 1254
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 489
+			        scope:owner.var:coin_age <= 1100
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism2 = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 699
+			        scope:owner.var:coin_age <= 1150
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism3 = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 704
+			        scope:owner.var:coin_age <= 1200
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism4 = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 809
+			        scope:owner.var:coin_age <= 1250
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism5 = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 907
+			        scope:owner.var:coin_age <= 1250
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism6 = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 1049
+			        scope:owner.var:coin_age <= 1250
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+	coin_issue_schism7 = {
+		group = coin_issue 
+		trigger = {
+			OR = {
+			    trigger_if = {
+			        limit = { exists = scope:owner.var:coin_age }
+			        scope:owner.var:coin_age >= 1050
+			        scope:owner.var:coin_age <= 1250
+			    }
+			    trigger_else = { always = no }
+			}
+		}
+		weight = 1
+	}
+
+	coin_decoration_plain = {
+		group = coin_decoration
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 40 } } 
+		weight = 1
+	}
+	coin_decoration_flora = {
+		group = coin_decoration
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 100 } } 
+		weight = 1
+	}
+	coin_decoration_fauna = {
+		group = coin_decoration
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 30 MAX = 100 } } 
+		weight = 1
+	}
+	coin_decoration_calligraphy = {
+		group = coin_decoration
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } } 
+		weight = 1
+	}
+	coin_decoration_poor = {
+		group = coin_decoration
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 40 } } 
+		weight = 1
+	}
+	coin_decoration_sided = {
+		group = coin_decoration
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 999 } } 
+		weight = 1
+	}
+	coin_characteristic_large = {
+		group = coin_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } } 
+		weight = 1
+	}
+	coin_characteristic_small = {
+		group = coin_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 50 } } 
+		weight = 1
+	}
+	coin_characteristic_detailed = {
+		group = coin_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 70 MAX = 999 } } 
+		weight = 1
+	}
+	coin1_characteristic_unremarkable = {
+		group = coin_characteristic
+		trigger = { artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 40 } } 
+		weight = 1
+	}
+
+#################################################################
+# Thumb Ring Features - Decorations, Centerpieces, Adornments	#
+#################################################################
+
+# thumb_ring_decoration
+	thumb_ring_decoration_adornment = {
+		group = thumb_ring_decoration
+		trigger = {	artifact_value_trigger = { VALUE = scope:wealth MIN = 0 MAX = 50 } }
+		weight = 20
+	}
+	thumb_ring_decoration_centerpiece = {
+		group = thumb_ring_decoration
+		trigger = {	artifact_value_trigger = { VALUE = scope:wealth MIN = 25 MAX = 75 } }	
+		weight = 40
+	}
+	thumb_ring_decoration_centerpiece_and_adornment = {
+		group = thumb_ring_decoration
+		trigger = {	artifact_value_trigger = { VALUE = scope:wealth MIN = 50 MAX = 999 } }
+		weight = 60
+	}
+
+# thumb_ring_centerpiece
+	thumb_ring_centerpiece_cabochon = {
+		group = thumb_ring_centerpiece
+		weight = 33
+	}
+	thumb_ring_centerpiece_signet = {
+		group = thumb_ring_centerpiece
+		trigger = {
+			exists = scope:owner.house
+			# Don't award own sigil in tournaments
+			NAND = {
+				scope:owner.involved_activity.activity_host ?= scope:owner
+				scope:owner.involved_activity ?= { has_activity_type = activity_tournament }
+			}
+		}
+		weight = 33
+	}
+	thumb_ring_centerpiece_religious = {
+		group = thumb_ring_centerpiece
+		weight = 33
+	}
+
+# thumb_ring_adornment
+	thumb_ring_adornment_filigree = {
+		group = thumb_ring_adornment
+		weight = 33
+	}
+	thumb_ring_adornment_motto = {
+		group = thumb_ring_adornment
+		trigger = { exists = scope:owner.house }
+		weight = 33
+	}
+	thumb_ring_adornment_religious = {
+		group = thumb_ring_adornment
+		weight = 33
+	}
+	thumb_ring_adornment_gems = {
+		group = thumb_ring_adornment
+		weight = 33
+	}
+	thumb_ring_adornment_runes = {
+		group = thumb_ring_adornment	
+		weight = 33
+	}

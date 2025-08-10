@@ -1,0 +1,71 @@
+﻿gh_hide_character_age_scripted_gui = {
+	scope = character
+	is_shown = {
+		OR = { 
+			AND = {
+				is_undead = yes
+				age >= 200
+			}
+			this = character:dailennir_kathanouxiac_1
+			this = character:dailennir_kathanouxiac_20
+			this = character:erridai_forgotten_1
+			this = character:unsorted_48
+			this = character:unsorted_49
+			this = character:ardothanes_mothers_and_fathers_3
+			this = character:nathanalmic_nattanan_29
+			this = character:nathanalmic_nattanan_30
+			this = character:nathanalmic_nattanan_5
+			this = character:nathanalmic_nattanan_6
+			this = character:korlenalmic_korlacan_5
+			culture = culture:fey_culture
+		}
+	}
+}
+
+gh_hide_character_sex_scripted_gui = {
+	scope = character
+	is_shown = {
+		OR = { 
+			this = character:erridai_forgotten_1
+			this = character:unsorted_48
+
+		} 
+	}
+}
+
+gh_show_undeath_health_icon_scripted_gui = {
+	scope = character
+	is_shown = {
+		is_undead = yes
+	}
+}
+
+has_tax_collector_vassals = { # SGUI for showing the Tax Collector sidebar button to people with Tax Slots or who have vassals with Tax Slots
+	is_shown = {
+		any_vassal = {
+			government_has_flag = has_tax_slots
+		}
+	}
+}
+
+maa_uses_healthbar = {
+	is_shown = {
+		scope:healthbar_maa = {
+			is_maa_type = undead_worldeater
+		}
+	}
+}
+
+
+#FOR FIXING COUNTY WINDOWS FOR COUNTIES WITHOUT THESE DE JURE LIEGES
+gh_has_de_jure_kingdom = {
+	scope = title
+
+	is_shown = { NOT = { exists = kingdom } }
+}
+
+gh_has_de_jure_empire = {
+	scope = title
+
+	is_shown = { NOT = { exists = empire } }
+}

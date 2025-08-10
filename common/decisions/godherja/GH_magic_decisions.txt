@@ -1,0 +1,115 @@
+﻿##################
+##DECISIONS LIST##
+# hire_court_magi_decision
+# request_heir_from_the_pit_decision
+# bonefinding_decision
+# craft_bone_artifact_decision
+##################
+
+##################
+# Search for Court Magi
+# by Lonely Knight
+hire_court_magi_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	
+	sort_order = 81
+	decision_group_type = courtier
+
+	desc = hire_court_magi_decision_desc
+	selection_tooltip = hire_court_magi_decision_tooltip
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_ruler = yes
+		can_have_court_magi_trigger = yes
+	}
+
+	cooldown = { days = 365 }
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		any_councillor = { has_council_position = councillor_chancellor }
+	}
+	
+	effect = {
+		if = {
+			limit = {
+				faith = { has_doctrine_parameter = magic_illegal }
+			}
+			add_piety = massive_piety_loss
+		}
+		else_if = {
+			limit = {
+				faith = { has_doctrine_parameter = magic_shunned }
+			}
+			add_piety = major_piety_loss
+		}
+		
+		trigger_event = magic.0101
+		custom_tooltip = hire_court_magi_decision_tooltip
+
+	}
+	
+	ai_potential = {
+		highest_held_title_tier > tier_barony
+		is_playable_character = yes
+		gold > low_skill_court_magi_cost
+		is_at_war = no
+		NOT = {
+			exists = cp:councillor_court_magi
+		}
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+request_heir_from_the_pit_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	
+	sort_order = 81
+	decision_group_type = courtier
+
+	desc = request_heir_from_the_pit_decision_desc
+	selection_tooltip = request_heir_from_the_pit_decision_tooltip
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_ruler = yes
+		is_redlander = yes
+	}
+
+	cooldown = { years = 10 }
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+	}
+
+	cost = {
+		piety = 1000
+	}
+	
+	effect = {
+		trigger_event = gh_redlander_events.0001
+		custom_tooltip = request_heir_from_the_pit_decision_tooltip
+		custom_tooltip = request_heir_from_the_pit_decision_quality_tooltip
+	}
+	
+	ai_potential = {
+		highest_held_title_tier > tier_barony
+		is_playable_character = yes
+		NOT = { exists = player_heir }
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

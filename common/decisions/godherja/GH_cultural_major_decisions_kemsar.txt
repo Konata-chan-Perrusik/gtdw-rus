@@ -1,0 +1,67 @@
+﻿#Become a warlord decision
+become_king_of_the_sands_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = kemsari
+	desc =  become_king_of_the_sands_decision_desc
+
+	ai_check_interval = 0
+
+	is_shown = {
+		highest_held_title_tier >= tier_duchy
+		is_playable_character = yes
+		culture = { has_cultural_pillar = heritage_kemsari }
+		NOT = { has_trait = gh_kemsari_warlord }
+		NOT = { exists = title:e_kemsar.holder }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:become_king_of_the_sands_decision
+			}
+		}
+	}
+
+	is_valid = {
+		religion = religion:kemsar_religion
+		martial >= 13
+		has_trait = ambitious
+		prestige_level >= 5
+		highest_held_title_tier = tier_kingdom
+		GH_is_any_tribal_government_trigger = yes
+		capital_province = {
+			geographical_region = world_ws_kamsaria
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_adult = yes
+		is_available = yes
+		is_independent_ruler = yes
+	}
+
+	effect = {
+		show_as_tooltip = {
+			add_trait = gh_kemsari_warlord
+			add_pressed_claim = title:e_amsari
+		}
+		trigger_event = kemsar.0001 #I became a Declared Taessor
+	}
+
+	cost = {
+		gold = {
+			value = massive_gold_value
+		}
+		prestige = {
+			value = major_prestige_value
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 200
+	}
+}

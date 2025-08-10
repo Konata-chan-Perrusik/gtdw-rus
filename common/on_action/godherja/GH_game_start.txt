@@ -1,0 +1,497 @@
+﻿GH_on_game_start = {
+	effect = {
+		set_global_variable = {
+			name = custom_map_mode
+			value = flag:none
+		}
+		if = {
+			limit = { game_start_date = 1254.1.1 }
+			set_global_variable = {
+				name = redlands_crisis
+				value = yes
+			}
+		}
+
+		#character_info_setup_effect = yes
+		initialize_unprunable_characters_effect = yes
+
+	## Global Effects ##
+		initialize_historical_terrain_variant_effect = yes
+		initialize_moon_phase_information_effect = yes
+		#initialize_global_hunting_information = yes # Leaving this effect commented for now, it works but feels like a heavy performance hog when activated
+		initialize_historical_development_effect = yes
+		initialize_historical_buildings_effect = yes
+		initialize_historical_building_construction_dates_effect = yes
+		initialize_traditional_borders = yes
+		initialize_influx_cultures_kalathipsomi = yes
+		initialize_metropoli_effect = yes
+		setup_title_drift = yes
+		trade_strait_table_effect = { MODE = initialize }
+		initialize_lodge_power_effect = yes
+		initialize_historical_information = yes
+
+		# Any starting effect to add a province modifier should go through here
+		set_province_features = yes
+
+		initialize_fog_paramaters = yes
+		gh_on_start_every_county_effect = yes
+		gh_on_start_special_county_effect = yes
+
+		initialize_starting_judges_effect = yes
+		intialize_lifepath_relevance_variable = yes
+		initialize_valid_lifepaths_for_faiths = yes
+		initialize_wardenite_high_courts_effect = yes
+
+		initialize_all_study_chains_effect = yes
+
+		gh_on_start_variables_effect = yes
+
+		gh_on_start_titles_effect = yes
+		gh_on_start_every_character_effect = yes
+		gh_worldstate_initialization_effect = yes
+
+		every_ruler = {
+			limit = {
+				OR = {
+					has_trait = setup_flag_opening_event
+					has_trait = setup_flag_story_content
+				}
+			}
+			save_scope_as = lore_char
+			title:c_oraispol = {
+				add_to_variable_list = {
+					name = lore_character_list
+					target = scope:lore_char
+				}
+			}
+		}
+
+		initialize_global_ingredient_list_effect = yes
+		initialize_preset_magic_schools_effect = yes
+		initialize_preset_spells_effect = yes
+		initialize_preset_magic_school_spells_effect = yes
+		initialize_province_specializations_game_start_effect = yes
+		initialize_global_knowledge_entries_effect = yes
+		initialize_preset_cultural_frame_effect = yes
+
+		every_kingdom = {
+			limit = {
+				is_title_created = yes
+				is_agionist_holy_order_trigger = yes
+			}
+			holder = {
+				create_alliance_with_title_or_synonym = { TITLE = title:k_saint_sansias_rose   }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_forlorn_guardian     }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_golden_hand          }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_saint_calystos_key   }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_bleeding_martyr      }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_pure_heart           }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_blind_watcher        }
+				create_alliance_with_title_or_synonym = { TITLE = title:k_forgotten_saint      }
+			}
+		}
+
+		title:k_heartwood = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 8
+				}
+			}
+		}
+		title:k_everrain = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 7
+				}
+			}
+		}
+		title:k_redwald = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 7
+				}
+			}
+		}
+		title:k_westhold = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 6
+				}
+			}
+		}
+		title:k_cornucopia = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 5
+				}
+			}
+		}
+		title:k_pearlcoast = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 5
+				}
+			}
+		}
+		title:k_kallios = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 3
+				}
+			}
+		}
+		title:k_helenai = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_county }
+				set_time_in_migration = {
+					VALUE = 2
+				}
+			}
+		}
+
+		gh_bordering_fog_dynamic_effect = yes
+		gh_wasteland_and_ruin_check_effect = yes
+		gh_on_start_holy_sites_effect = yes
+		gh_on_start_faith_and_religion_effect = yes
+
+		## Republic Setup ##
+		every_independent_ruler = {
+			limit = {
+				OR ={
+					government_has_flag = government_is_administrative_republic
+					government_has_flag = government_is_judicial_republic
+				}
+				government_allows = administrative
+				government_has_flag = government_has_powerful_families
+			}
+			if = {
+				limit = {
+					highest_held_title_tier >= tier_duchy
+					government_has_flag = government_is_administrative_republic
+				}
+				trigger_event = {
+					id = gh_realm_maintenance.0036
+					days = { 2 5 }
+				}
+			}
+			save_scope_as = ruler
+			every_vassal = { # Makes sure all the vassals have NFs if not defined in history
+				if = {
+					limit = {
+						highest_held_title_tier >= tier_county
+						is_lowborn = no
+						is_house_head = yes
+						NOT = { capital_province = { has_holding_type = church_holding } }
+						government_has_flag = government_has_powerful_families
+						government_allows = administrative
+						OR = {
+							is_married = no
+							AND = {
+								is_married = yes
+								is_female = yes
+								matrilinear_marriage = yes
+							}
+							AND = {
+								is_married = yes
+								is_female = no
+								matrilinear_marriage = no
+							}
+						}
+						NOR = {
+							any_held_title = { is_noble_family_title = yes }
+							house = {
+								any_house_member = {
+									any_held_title = { is_noble_family_title = yes }
+								}
+							}
+						}
+					}
+					create_noble_family_effect = yes
+					domicile ?= { set_up_domicile_estate_effect = yes }
+				}
+			}
+		}
+	}
+
+	on_actions = {
+		on_monthly
+		vampire_start_check_pulse
+		#on_yearly_marcher
+		on_yearly_amsari_blood_check
+		dergi_yearly
+		#clique_government_pulse
+	}
+}
+
+
+initialize_magi_on_action = {
+	effect = {
+	}
+}
+
+GH_on_game_start_after_lobby = {
+	effect = {
+		## Setup Game Rules ##
+		#gh_on_start_game_rules_effect = yes
+
+		## Setup Cliques ##
+		gh_on_start_cliques_effect = yes
+
+		## Setup Cultures ##
+		gh_on_start_after_lobby_culture_effect = yes
+
+		## Setup Characters ##
+		gh_on_start_character_effect = yes
+
+		## Setup History ##
+		#gh_on_start_after_lobby_history_effect = yes
+	
+		### GAME RULE: SPECIAL - HAMMARTS WILD RIDE
+		if = {
+			limit = { has_game_rule = hammarts_wild_ride_enabled }
+			game_rule_special_hammarts_wild_ride_effect = yes
+		}
+		### GAME RULE: DESTROY IMPERRECH
+		if = {
+			limit = { has_game_rule = imperrech_destroyed }
+			game_rule_destroy_migrant_coalition_effect = yes
+		}
+		### GAME RULE: OPENING EVENTS
+		if = {
+			limit = { has_game_rule = opening_events_enabled }
+			game_rule_opening_event_effect = yes
+		}
+
+		## Setup Electoral Laws ##
+		gh_on_start_electoral_laws_effect = yes
+
+		every_living_character = {
+			clear_special_flags_effect = yes
+			
+			if = { # Initialize Magi
+				limit = { can_access_magic_including_children = yes }
+
+				give_mixed_magi_riftsight_effect = yes
+				add_to_magi_list = yes
+			}
+
+			if = {
+				limit = { is_ruler = yes }
+
+				if = { # Initialize Liches
+					limit = { has_trait = necromancy_undead_lich }
+
+					lichify_traits_effect = yes
+					set_liches_court = yes
+					learn_random_culture_magic_school_effect = {
+						MIN_SPELLS = generated_character_min_spells_default_value
+						MAX_SPELLS = generated_character_max_spells_default_value
+						MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+					}
+				}
+				if = { # Initialize Pirates
+					limit = { government_has_flag = government_is_pirate }
+					trigger_event = { id = gh_pirate.0020 }
+				}
+				if = { # Aversarian mercenary leaders are likely to be rogue (or otherwise former) legons after Frokbrokna - GH TODO: Make a more generic timeline system
+					limit = {
+						game_start_date >= 1200.1.1 
+						GH_is_any_mercenary_government_trigger = yes
+						culture = { has_cultural_pillar = heritage_aversarian }
+					}
+					random_list = {
+						1 = { add_trait = gh_arch_legon }
+						6 = { add_trait = gh_legon }
+						10 = { }
+					}
+				}
+			}
+
+			# Sets Arcana for everyone
+			if = {
+				limit = { 
+					NOR = {
+						has_variable = arcana_character_random_baseline 
+						has_variable = arcana
+					} 
+				}
+				set_variable = {
+					name = arcana_character_random_baseline
+					value = { minimum_starting_arcana maximum_starting_arcana }
+				}
+			}
+			# God will curse me for my sins, set for education purposes
+			set_variable = {
+				name = arcana_character_counter
+				value = character_arcana_baseline_value
+			}
+		}
+
+		every_in_global_list = { # Finish Magi initialization
+			variable = magi_list
+			limit = { is_alive = yes }
+			calculate_magic_prowess_effect = yes
+			set_variable = {
+				name = magic_counter
+				value = character_magic_baseline_value
+			}
+		}
+
+		every_county_in_region = { # Give Cyrat its modifiers
+			region = cyrat_biozone 
+			add_county_modifier = cyrat_hell_modifier
+		}
+
+		every_county_in_region = { # Gives Fool Coast its modifiers
+			region = fools_coast_biozone
+			add_county_modifier = fools_curse_modifier
+		}
+
+		every_county_in_region = { # Astilik Terraforming
+			region = custom_astilik_empire_direct_control
+			every_county_province = {
+				limit = { enhance_farmland_valid_province_trigger = yes }
+				random = {
+					chance = 33
+					add_province_modifier = enhanced_farmland_modifier
+				}
+			}
+		}
+
+		## 1254 Bookmark specific
+		every_county_in_region = { ## Applies Legacy of Elysia 
+			region = world_ga_western_aversaria
+			limit = { culture = { has_cultural_pillar = heritage_aversarian } }
+			add_county_modifier = {
+				modifier = legacy_of_elysia 
+				years = 50
+			}
+		}
+		every_county_in_region = { ## Applies Legacy of Ash War
+			region = world_ga_mountainheights
+			limit = { culture = { has_cultural_pillar = heritage_aversarian } }
+			add_county_modifier = {
+				modifier = aftermath_of_the_ash_war 
+				years = 10
+			}
+		}
+		every_county_in_region = { ## Applies Redland Collapse modifiers
+			region = redlands_biozone
+			limit = { NOT = { culture = { has_cultural_pillar = heritage_redlander } } }
+			add_county_modifier = {
+				modifier = mainland_refugees_modifier
+				years = 20
+			}
+			add_county_modifier = {
+				modifier = collapsed_administration_modifier
+				years = 20
+			}
+		}
+		every_county_in_region = { ## Applies Legacy of ICW
+			region = world_ga_central_aversaria
+			limit = { culture = { has_cultural_pillar = heritage_aversarian } }
+			add_county_modifier = {
+				modifier = legacy_of_icw 
+				years = 32
+			}
+		}
+		every_county_in_region = { ## Applies Ruined by Ulfirx 
+			region = world_ga_aversarian_isles
+			limit = { culture = { has_cultural_pillar = heritage_aversarian } }
+			add_county_modifier = {
+				modifier = ruined_by_ulfirx
+				years = 30
+			}
+		}
+
+		## Sarradonian Desert Modifiers
+		every_county_in_region = {
+			region = GH_geographic_sarradonian_desert
+			every_county_province = { apply_saharan_provisions_debuff_effect = yes }
+		}
+		every_county_in_region = {
+			region = GH_geographic_kemsar
+			every_county_province = { apply_saharan_provisions_debuff_effect = yes }
+		}
+
+
+		every_ruler = {
+			limit = {
+				highest_held_title_tier >= tier_duchy
+				is_playable_character = yes
+				can_have_court_magi_trigger = yes
+			}
+			if = { # This makes sure Court Magi are landed rulers where it makes sense
+				limit = {
+					exists = cp:councillor_court_magi
+					cp:councillor_court_magi = {
+						is_ruler = no
+					}
+					faith = { has_doctrine = doctrine_clerical_succession_spiritual_fixed_appointment }
+					any_vassal = {
+						is_physically_able_adult = yes
+						is_councillor = no
+						government_has_flag = government_is_theocracy
+						can_be_court_magi_trigger = { COURT_OWNER = liege }
+						faith = liege.faith
+					}
+				}
+				random_vassal = {
+					limit = {
+						is_physically_able_adult = yes
+						is_councillor = no
+						government_has_flag = government_is_theocracy
+						can_be_court_magi_trigger = { COURT_OWNER = liege }
+						faith = liege.faith
+					}
+					weight = {
+						base = 1
+						magi_value_modifier = yes
+						modifier = { add = primary_title.tier }
+						modifier = { add = character_arcana_baseline_value }
+					}
+					liege = {
+						assign_councillor_type = {
+							type = councillor_court_magi
+							remove_existing_councillor = yes
+							target = prev
+						}
+					}
+				}
+			}
+		}
+
+		## LAAMP FOLLOWERS
+		character:erimatos_aversarinas_aagiokrata_8 = { set_employer = character:erimatos_aversarinas_aagiokrata_3 } # Heraklios
+		character:ardothanes_aversarinas_aagiokrata_3 = { set_employer = character:ardothanes_mothers_and_fathers_2 } # Moruen Katronas
+		
+		#character:konijkmener_lifepath_81 = { set_employer = character:voyagen_lifepath_8 } # Rene already there both
+		#character:voyagen_lifepath_84 = { set_employer = character:voyagen_lifepath_8 } # Rene
+	}
+
+	events = {
+		fogeater_invasion.0001 # Fogeater Invasion setup
+		adabyss_event.9000 # Adabyss Invasion setup
+		arch_lich_invasion.0001 # Arch Lich Invasion setup
+	}
+	
+	on_actions = {
+		#initialize_magi_on_action
+		on_yearly_legacy_of_elysia_check
+		on_yearly_mainland_refugees_check
+		on_yearly_legacy_of_icw_check
+		on_yearly_malcoisiac_anarchy_check
+		on_yearly_ruined_by_ulfirx_check
+		on_yearly_sarradon_horn_tidal_check
+		on_yearly_aftermath_of_the_ash_war_check
+		delay = { years = 46 }
+		dissolve_aversarian_titles_action
+	}
+}

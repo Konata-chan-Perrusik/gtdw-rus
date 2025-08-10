@@ -1,0 +1,153 @@
+﻿
+story_cycle_harthah = {
+
+	on_setup = {
+		add_to_variable_list = {
+			name = target_religions
+			target = religion:agionism_religion
+		}
+		story_owner = {
+			ai_conquer_kingdom_effect = { 
+				KINGDOM_NAME = k_thaliteia
+				TARGET_LIST_SCOPE = root
+				CASUS_BELLI = sarradon_reconquest_war
+			}
+			ai_conquer_kingdom_effect = { 
+				KINGDOM_NAME = k_tifrennesh
+				TARGET_LIST_SCOPE = root
+				CASUS_BELLI = sarradon_reconquest_war
+			}
+			ai_conquer_kingdom_effect = { 
+				KINGDOM_NAME = k_sorros_mar
+				TARGET_LIST_SCOPE = root
+				CASUS_BELLI = sarradon_reconquest_war
+			}
+			ai_conquer_kingdom_effect = { 
+				KINGDOM_NAME = k_isle_of_visions
+				TARGET_LIST_SCOPE = root
+				CASUS_BELLI = sarradon_reconquest_war
+			}
+			ai_conquer_kingdom_effect = { 
+				KINGDOM_NAME = k_emporia
+				TARGET_LIST_SCOPE = root
+				CASUS_BELLI = sarradon_reconquest_war
+			}
+			ai_conquer_kingdom_effect = { 
+				KINGDOM_NAME = k_mukhtab
+				TARGET_LIST_SCOPE = root
+				CASUS_BELLI = sarradon_reconquest_war
+			}
+		}
+	}
+
+	on_end = {
+	
+	}
+
+	on_owner_death = {
+		end_story = yes
+	}
+	
+	# War AI
+	effect_group = {
+		months = 6
+	
+		trigger = {
+			story_owner = {
+				is_at_war = no
+				is_ai = yes
+			}
+		}
+	
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					story_owner = {
+						has_title = title:k_eastern_frontier
+					}
+				}
+				effect = {
+					story_owner = {
+						#ai_conquer_kingdom_effect = { 
+						#	KINGDOM_NAME = k_mohrtag_al_badi
+						#	TARGET_LIST_SCOPE = root
+						#	CASUS_BELLI = sarradon_reconquest_war
+						#}
+						ai_conquer_kingdom_effect = { 
+							KINGDOM_NAME = k_tifrennesh
+							TARGET_LIST_SCOPE = root
+							CASUS_BELLI = sarradon_reconquest_war
+						}
+						#ai_conquer_kingdom_effect = { 
+						#	KINGDOM_NAME = k_dhami
+						#	TARGET_LIST_SCOPE = root
+						#	CASUS_BELLI = sarradon_reconquest_war
+						#}
+						ai_conquer_kingdom_effect = { 
+							KINGDOM_NAME = k_isle_of_visions
+							TARGET_LIST_SCOPE = root
+							CASUS_BELLI = sarradon_reconquest_war
+						}
+						ai_conquer_kingdom_effect = { 
+							KINGDOM_NAME = k_emporia
+							TARGET_LIST_SCOPE = root
+							CASUS_BELLI = sarradon_reconquest_war
+						}
+						ai_conquer_kingdom_effect = { 
+							KINGDOM_NAME = k_mukhtab
+							TARGET_LIST_SCOPE = root
+							CASUS_BELLI = sarradon_reconquest_war
+						}
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = {  
+					NOT = { 
+						story_owner = {
+							has_title = title:k_eastern_frontier
+						}
+					}
+				}
+				effect = {
+					end_story = yes
+				}
+			}
+		}
+	}
+	effect_group = { #Keep the troops flowing
+		years = 2
+		triggered_effect = {
+			trigger = {
+				story_owner = {
+					has_title = title:k_eastern_frontier
+				}
+			}
+			effect = {
+				story_owner = {
+					spawn_army = {
+						name = sarradon_reconquest_troops
+						uses_supply = yes
+						inheritable = no
+						location = province:3318
+						levies = {
+							value = 1000
+						}
+						men_at_arms = {
+							type = camel_rider
+							stacks = 5
+						}
+						men_at_arms = {
+							type = mangonel
+							stacks = 5
+						}
+						men_at_arms = {
+							type = light_footmen
+							stacks = 5
+						}
+					}
+				}
+			}
+		}
+	}
+}

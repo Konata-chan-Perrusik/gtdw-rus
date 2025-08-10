@@ -1,0 +1,218 @@
+﻿#Triggers to control Coat of Arms weighting
+
+coa_african_trigger = {
+	OR = {
+		coa_african_culture_trigger = yes
+		coa_african_religion_trigger = yes
+	}
+}
+
+coa_african_culture_trigger = {
+	scope:culture = {
+		OR = {
+			has_coa_gfx = central_african_group_coa_gfx
+			has_coa_gfx = east_african_coa_gfx
+			has_coa_gfx = west_african_group_coa_gfx
+		}
+	}
+}
+
+coa_african_religion_trigger = {
+	always = no
+}
+
+coa_bishopric_trigger = {
+	always = no
+}
+
+coa_breton_trigger = {
+	scope:culture = { has_coa_gfx = breton_coa_gfx }
+}
+
+coa_byzantine_trigger = {
+	scope:culture = { has_coa_gfx = byzantine_group_coa_gfx }
+}
+
+coa_castilian_trigger = {
+	scope:culture = { has_coa_gfx = castilian_coa_gfx }
+}
+
+coa_coptic_trigger = {
+	always = no
+}
+
+coa_cross_trigger = {
+	always = no
+}
+
+coa_england_switches_to_france_coa_trigger = {
+	always = no
+}
+coa_switch_to_norman_trigger = {
+	always = no
+}
+
+coa_switch_to_norse_trigger = {
+	always = no
+}
+
+coa_feudal_trigger = { # GH TODO: Should we have this without a faith specified? (Christian in vanilla)
+	government_has_flag = government_is_feudal
+}
+
+coa_french_trigger = {
+	scope:culture = { has_coa_gfx = french_coa_gfx }
+}
+
+coa_irish_trigger = {
+	scope:culture = { has_coa_gfx = irish_coa_gfx }
+}
+
+
+coa_indian_culture_trigger = {
+	OR = {
+		scope:culture = { has_coa_gfx = burman_group_coa_gfx }
+		scope:culture = { has_coa_gfx = dravidian_group_coa_gfx }
+		scope:culture = { has_coa_gfx = indo_aryan_group_coa_gfx }
+		scope:culture = { has_coa_gfx = tibetan_group_coa_gfx }
+	}
+}
+coa_indian_region_trigger = { # GH TODO: Should we reuse this?
+	always = no
+}
+coa_indian_religion_trigger = { # GH TODO: Likewise
+	always = no
+}
+coa_indian_trigger = {
+	OR = {
+		coa_indian_culture_trigger = yes
+		coa_indian_region_trigger = yes
+		coa_indian_religion_trigger = yes
+	}
+}
+
+coa_jewish_trigger = {
+	always = no
+}
+coa_leonese_trigger = {
+	scope:culture = { has_coa_gfx = leonese_coa_gfx }
+}
+
+coa_manx_trigger = {
+	always = no
+}
+
+coa_mena_trigger = { # GH TODO: Should we OR in the Sarradonian religious family? (Vanilla has Islam OR'd)
+	scope:culture = {
+		OR = {
+			has_coa_gfx = arabic_group_coa_gfx
+			has_coa_gfx = berber_group_coa_gfx
+		}
+	}
+}
+
+coa_suomenusko_trigger = {
+	scope:culture = {
+		OR = {
+			has_coa_gfx = balto_finnic_group_coa_gfx
+			has_coa_gfx = ugro_permian_group_coa_gfx
+			has_coa_gfx = volga_finnic_group_coa_gfx
+		}
+	}
+}
+
+coa_polish_trigger = {
+	scope:culture = { has_coa_gfx = polish_coa_gfx }
+}
+
+coa_scottish_trigger = {
+	scope:culture = { has_coa_gfx = scottish_coa_gfx }
+}
+
+coa_theocratic_trigger = {
+	exists = root
+	OR = {
+		GH_is_any_theocracy_government_trigger = yes
+		AND = {
+			exists = liege
+			liege = {
+				any_sub_realm_barony = {
+					lessee = ROOT
+					title_province = {
+						has_holding_type = church_holding
+					}
+				}
+			}
+		}
+	}
+}
+
+coa_welsh_trigger = {
+	scope:culture = { has_coa_gfx = welsh_coa_gfx }
+}
+
+coa_tamga_trigger = {
+	scope:culture = { has_coa_gfx = steppe_coa_gfx }
+}
+
+coa_scandinavian_trigger = {
+	OR = {
+		scope:culture = { has_coa_gfx = swedish_coa_gfx }
+		scope:culture = { has_coa_gfx = norwegian_coa_gfx }
+		scope:culture = { has_coa_gfx = danish_coa_gfx }
+	}
+}
+
+coa_norse_trigger = {
+	scope:culture = { has_coa_gfx = norse_coa_gfx }
+}
+
+coa_germanic_trigger = {
+	scope:culture = { has_coa_gfx = german_group_coa_gfx }
+}
+
+coa_iberian_trigger = {
+	scope:culture = { has_coa_gfx = iberian_group_coa_gfx }
+}
+
+coa_iranian_trigger = {
+	scope:culture = { has_coa_gfx = iranian_group_coa_gfx }
+}
+
+## GH ADDITIONS ##
+
+coa_switch_to_krehejad_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_agadari }
+}
+
+coa_switch_to_sarradon_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_sarradonian }
+}
+
+coa_switch_to_redland_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_redlander }
+}
+
+coa_switch_to_aversaria_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_aversarian }
+}
+
+coa_switch_to_sjalvolki_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_sjalvolki }
+}
+
+coa_switch_to_oltenic_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_vhanavid }
+}
+
+coa_switch_to_ixs_trigger = {
+	holder.culture = { has_cultural_tradition = tradition_a_polis_in_time }
+}
+
+coa_switch_to_marcher_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_marcher}
+}
+
+coa_switch_to_amsari_trigger = {
+	holder.culture = { has_cultural_pillar = heritage_zarasadari}
+}

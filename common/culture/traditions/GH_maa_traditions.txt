@@ -1,0 +1,1444 @@
+﻿tradition_scarred_warriors_of_forest = {
+	category = combat
+	layers = {
+		0 = martial
+		1 = western
+		4 = forest.dds
+	}
+
+	#tanumarei combat tradition
+	is_shown = {
+		any_parent_culture_or_above = {
+ 		 this = culture:tanumarei
+		}  
+	}
+
+	can_pick = {
+		any_parent_culture_or_above = {
+ 		 this = culture:tanumarei
+		}
+	}
+
+	parameters = {
+		unlock_maa_jaanvarkis = yes
+		more_frequent_hunts = yes
+		hunting_traits_more_valued = yes
+		hunting_traits_more_common = yes
+		always_unlock_legendary_hunting_lodge = yes
+		forest_fighter_trait_more_common = yes
+		forest_trait_bonuses = yes
+		can_recruit_forest_specialist = yes
+		wounds_and_scars_give_bonuses = yes
+		guardians_can_transfer_commander_traits = yes
+		knights_slightly_more_prone_to_injury = yes
+	}
+	province_modifier = {
+		forest_levy_size = 0.1
+		marcher_forest_levy_size = 0.1
+		taiga_levy_size = 0.1
+		forest_supply_limit_mult = 0.25
+		marcher_forest_supply_limit_mult = 0.25
+		taiga_supply_limit_mult = 0.25
+		jungle_levy_size = 0.1
+		jungle_supply_limit_mult = 0.25
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+				if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = {
+								OR = {
+									GH_any_forest_terrain_trigger = yes
+									GH_any_taiga_terrain_trigger = yes
+									GH_any_jungle_terrain_trigger = yes
+								}
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = forest_percentage_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = { value = 100 }
+}
+
+tradition_lords_of_aironoi = {
+	category = regional
+
+	layers = {
+		0 = intrigue
+		1 = mena
+		4 = dismounted_warrior.dds
+	}
+
+	is_shown = {
+		any_parent_culture = {
+			has_cultural_tradition = tradition_lords_of_aironoi
+		}
+	}
+
+	can_pick = {
+		custom_description = {
+			text = culture_in_steppe_desc
+			always = no
+			any_culture_county = {
+				percent >= 0.7
+				any_county_province = {
+					geographical_region = world_ga_aironoi
+				}
+			}
+		}
+	}
+
+	parameters = {
+		unlock_maa_oltenic_horse_archers = yes
+		unlock_maa_oltenic_spearmen = yes
+		unlock_maa_oltenic_light_horsemen = yes
+		can_recruit_open_specialist = yes
+		lords_of_aironoi_colonization_bonus = yes
+		#hosts_chariot_races = yes # GH_EP3_TODO: Needed this somewhere, is this good here? Better somewhere else? ## Commented out for now, chariot races need to be relocced from byzantine version, pre-oltenic nomads will use them
+	}
+
+	character_modifier = {
+		herd_conversion = 0.02
+		steppe_fertility_growth_mult = low_culture_county_fertility_value_mult
+		steppe_cancel_negative_supply = yes
+		steppe_travel_danger = steppe_high_danger_reduction
+		movement_speed = 0.15
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_communal_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+	}
+}
+
+tradition_kolrgii_tamers = { # Separate tradition for Olteni from Kolrgii to unlock unique units but without Aironoi-flavor, potential future change needed
+	category = regional
+
+	layers = {
+		0 = diplo
+		1 = indian
+		4 = dismounted_warrior.dds
+	}
+
+	is_shown = {
+		any_parent_culture = {
+			has_cultural_tradition = tradition_kolrgii_tamers
+		}
+	}
+
+	can_pick = {
+		any_parent_culture = {
+			has_cultural_tradition = tradition_kolrgii_tamers
+		}
+	}
+
+	parameters = {
+		unlock_maa_oltenic_horse_archers = yes
+		unlock_maa_oltenic_spearmen = yes
+		unlock_maa_oltenic_light_horsemen = yes
+		can_recruit_open_specialist = yes
+		unlock_horse_pastures_building = yes
+		steppe_hunt_success_chance = yes
+		unlock_voluntary_laampdom = yes
+	}
+
+	character_modifier = {
+		light_cavalry_damage_mult = 0.1
+		light_cavalry_screen_mult = 0.1
+		steppe_cancel_negative_supply = yes
+		steppe_travel_danger = steppe_high_danger_reduction
+		supply_duration = 1
+		movement_speed = 0.1
+		character_travel_speed_mult = 0.1
+		character_travel_safety_mult = 0.1
+		movement_speed_land_raiding = 0.3
+		hostile_county_attrition_raiding = -0.5
+		provisions_use_mult = -0.25
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_communal_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+	}
+}
+
+tradition_dayarkan_warrior_queens = {
+	category = regional
+
+	layers = {
+		0 = intrigue
+		1 = mediterranean
+		4 = crown.dds
+	}
+
+	is_shown = {
+		NOT = { has_game_rule = inversed_gender_equality }
+		any_parent_culture_or_above = {
+			OR = {
+				this = culture:dayarka
+			}
+		}
+	}
+	can_pick = {
+		any_parent_culture_or_above = {
+			OR = {
+				this = culture:dayarka
+			}
+		}
+	}
+
+	parameters = {
+		gender_equal_inheritance = yes
+		female_only_inheritance = yes
+		female_preference_inheritance = yes
+		prowess_from_martial_education = yes
+		unlock_maa_thorn_maidens = yes
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOT = {
+						culture_pillar:ethos_egalitarian = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_egalitarian_desc
+				}
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							scope:character = {
+								is_ai = no
+							}
+						}
+						NAND = {
+							any_ruler = {
+								count >= 3
+								culture = prev
+								primary_title.tier > tier_barony
+								is_male = yes
+							}
+							any_ruler = {
+								count >= 3
+								culture = prev
+								primary_title.tier > tier_barony
+								is_female = yes
+							}
+						}
+					}
+					trigger_else = {
+						always = yes
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = three_gender_rulers_desc
+				}
+			}
+
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = { value = 100 }
+}
+
+tradition_flame_children = {
+	category = regional
+
+	layers = {
+		0 = learning
+		1 = indian
+		4 = speech.dds
+	}
+	
+	#Charchacs get this instead of zealous traditions
+	is_shown = {
+		any_parent_culture_or_above = {
+ 		 this = culture:charchac
+		}
+		NOR = { #Replaces Zealous traditions
+			has_cultural_tradition = tradition_zealous_people
+			has_cultural_tradition = tradition_faith_bound
+		}
+	}
+	can_pick = {
+		any_parent_culture_or_above = {
+ 		 this = culture:charchac
+		}
+		NOR = { #Replaces Zealous traditions, as well as Eye for an Eye and Warrior Monks
+			has_cultural_tradition = tradition_zealous_people
+			has_cultural_tradition = tradition_faith_bound
+			has_cultural_tradition = tradition_warrior_monks
+			has_cultural_tradition = tradition_eye_for_an_eye
+		}
+	}
+	
+	parameters = {
+		unlock_maa_tsanruti = yes
+		same_faith_inheritance_only = yes
+		zealous_trait_more_common = yes
+		vengeful_trait_more_common = yes
+		vengeful_positive_forgiving_negative = yes
+		harder_to_convert_character_faith = yes
+		harder_to_convert_county_faith = yes
+		prowess_from_religious_traits = yes
+		house_hostility_more_common = yes
+		vassals_more_likely_to_refuse_demands = yes
+	}
+	character_modifier = {
+		opinion_of_different_faith = -15
+		ai_zeal = 25
+		prowess_per_piety_level = 1
+		same_culture_opinion = 5
+		opinion_of_liege = -10
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_spiritual = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_spiritual_or_communal_desc
+				}
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							scope:character = {
+								is_ai = no
+							}
+						}
+						NOT = {
+							any_ruler = {
+								count >= 5
+								culture = prev
+								primary_title.tier >= tier_county
+								has_trait = zealous
+							}
+						}
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = rulers_with_zealous_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = {
+		value = 0
+		if = {
+			limit = {
+				scope:character = {
+					has_trait = zealous
+				}
+			}
+			add = 100
+		}
+	}
+}
+
+tradition_kaegan_wind = {
+	category = regional
+
+	layers = {
+		0 = martial
+		1 = mena
+		4 = horses.dds
+	}
+	
+	#For Mahratians, replaces horse archers
+	is_shown = {
+		any_parent_culture_or_above = {
+ 		 this = culture:mahratian
+		}
+	}
+	can_pick = {
+		any_parent_culture_or_above = {
+ 		 this = culture:mahratian
+		}
+		NOR = { #Replaces horse lord traditions
+			has_cultural_tradition = tradition_horse_lords
+			has_cultural_tradition = tradition_horse_breeder
+		}
+	}
+	
+	parameters = {
+		unlock_maa_tskherosan = yes
+		can_recruit_open_specialist = yes
+	}
+
+	character_modifier = {
+		light_cavalry_damage_mult = 0.1
+		light_cavalry_screen_mult = 0.1
+		steppe_cancel_negative_supply = yes
+		supply_duration = 1
+		movement_speed = 0.1
+		character_travel_speed_mult = 0.1
+		character_travel_safety_mult = 0.1
+		light_cavalry_maintenance_mult = -0.1
+		light_cavalry_recruitment_cost_mult = -0.2
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_communal_desc
+				}
+			}
+			if = {
+				limit = {
+					scope:character = {
+						NOR = { # Culture Head need to have a 8 sized regiment of either Light/Heavy/Archer Cavalry
+							number_maa_soldiers_of_base_type = {
+								type = light_cavalry
+								value >= 800
+							}
+							number_maa_soldiers_of_base_type = {
+								type = heavy_cavalry
+								value >= 400
+							}
+							number_maa_soldiers_of_base_type = {
+								type = archer_cavalry
+								value >= 800
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = culture_head_cavalry_desc
+				}
+			}
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = { # Reduce chance slightly if the culture has access to other "cavalry" types
+				OR = {
+					#has_innovation = innovation_saraddonian_camels
+					#has_innovation = innovation_saraddonian_elephantry
+					has_innovation = innovation_war_camels
+					has_innovation = innovation_elephantry
+				}
+			}
+			multiply = 0.8
+		}
+	}
+}
+
+tradition_armazli_sanctuaries = {
+	category = regional
+
+	layers = {
+		0 = steward
+		1 = mena
+		4 = temple.dds
+	}
+	
+	#For Aygaens, replaces monastic ways
+	is_shown = {
+		any_parent_culture_or_above = {
+ 		 this = culture:aygaen
+		}
+	}
+	can_pick = {
+		any_parent_culture_or_above = {
+ 		 this = culture:aygaen
+		}
+		scope:character = {
+			faith = {
+				has_doctrine_parameter = take_vows_active
+			}
+		}
+		NOR = { #Replaces monastic traditions
+			has_cultural_tradition = tradition_monastic_communities
+			has_cultural_tradition = tradition_mountain_homes
+		}
+	}
+	
+	parameters = {
+		unlock_maa_sahkmavali = yes
+		devoted_trait_bonuses = yes
+		monastic_expectations = yes
+		armazli_sanctuaries_colonization_bonus = yes
+	}
+	county_modifier = {
+		mountains_development_growth_factor = 0.25
+		marcher_mountains_development_growth_factor = 0.25
+	}
+	province_modifier = {
+		mountains_construction_gold_cost = -0.15
+		marcher_mountains_construction_gold_cost = -0.15
+		mountains_holding_construction_gold_cost = -0.15
+		marcher_mountains_holding_construction_gold_cost = -0.15
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			# Ethos requirement.
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_spiritual = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_spiritual_or_communal_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = { scope:character.piety_level >= high_piety_level }
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = lacks_high_piety_level_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = { GH_any_mountains_terrain_trigger = yes }
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = mountain_percentage_desc
+				}
+			}
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 50
+	}
+}
+
+tradition_eagle_court = {
+	category = regional
+
+	layers = {
+		0 = diplo
+		1 = mena
+		4 = quill.dds
+	}
+	
+	#For Draneti, replaces courtly traditions
+	is_shown = {
+		any_parent_culture_or_above = {
+ 		 this = culture:draneti
+		}
+	}
+	can_pick = {
+		any_parent_culture_or_above = {
+ 		 this = culture:draneti
+		}
+		scope:character = {
+			faith = {
+				has_doctrine_parameter = take_vows_active
+			}
+		}
+		NOR = { #Replaces courtly traditions
+			has_cultural_tradition = tradition_merciful_blindings
+			has_cultural_tradition = tradition_welcoming
+			has_cultural_tradition = tradition_forbearing
+		}
+	}
+	
+	parameters = {
+		unlock_maa_mezilachitnen = yes
+		diplomacy_education_better_outcomes = yes
+		patient_trait_more_common = yes
+		calm_trait_more_common = yes
+		can_blind_prisoners = yes
+		merciful_blinding = yes
+		cultrad_unlocks_t2_countermeasures = yes
+		palace_politics_trait_bonuses = yes
+		palace_politics_trait_maluses = yes
+	}
+
+	character_modifier = {
+		monthly_court_grandeur_change_mult = 0.15
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_spiritual = { is_in_list = traits }
+						culture_pillar:ethos_courtly = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_spiritual_or_courtly_desc
+				}
+			}
+			if = {
+				limit = {
+					scope:character = {
+						NOT = {
+							any_prisoner = {
+								scope:character = {
+									OR = {
+										has_banish_reason = prev
+										has_execute_reason = prev
+									}
+								}
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = no_prisoner_with_harsh_reason_desc
+				}
+			}
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = { # Reduce chance of picking this if the culture has another use of prisoners already
+				any_in_list = { list = traits this = flag:tradition_talent_acquisition }
+			}
+			multiply = 0.5
+		}
+	}
+}
+
+tradition_axe_master = {
+	category = regional
+
+	layers = {
+		0 = diplo
+		1 = mediterranean
+		4 = fight.dds
+	}
+	
+	is_shown = {
+		any_parent_culture_or_above = { this = culture:arashan }
+	}
+
+	can_pick = {
+		any_parent_culture_or_above = { this = culture:arashan }
+	}
+	
+	parameters = {
+		enable_axe_house_building = yes
+		has_access_to_trials_by_combat = yes
+		blademaster_traits_more_common = yes
+		blademaster_traits_give_diplomacy = yes
+		unlock_maa_kanpahuri = yes
+	}
+
+	character_modifier = {
+		knight_effectiveness_mult = 0.1
+		accolade_glory_gain_mult = 0.2
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_stoic_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = {
+								AND = {
+									GH_any_hills_terrain_trigger = yes
+									GH_any_mountains_terrain_trigger = yes
+								}
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = mountain_and_hills_percentage_desc
+				}
+			}
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = { NOT = { culture_pillar:ethos_courtly = { is_in_list = traits } } }
+			add = -50
+		}
+	}
+}
+
+tradition_falcon_veneration = {
+	category = realm
+
+	layers = {
+		0 = steward
+		1 = mediterranean
+		4 = hunter.dds
+	}
+	
+	is_shown = {
+		# DLC check.
+		has_dlc_feature = tours_and_tournaments
+		has_cultural_pillar = heritage_sarminian
+	}
+	can_pick = {
+		culture_not_pacifistic_trigger = yes
+		# Shouldn't be combined with the following traditions:
+		custom_tooltip = {
+			text = cannot_have_tradition_vegetarianism
+			NOT = { culture_tradition:tradition_vegetarianism = { is_in_list = traits } }
+		}
+		custom_tooltip = {
+			text = cannot_have_tradition_ep2_avid_falconers
+			NOT = { culture_tradition:tradition_ep2_avid_falconers = { is_in_list = traits } }
+		}
+		custom_description = {
+			text = culture_in_mountains_desc
+			any_culture_county = {
+				any_county_province = {
+					OR = {
+						GH_any_hills_terrain_trigger = yes
+						GH_any_mountains_terrain_trigger = yes
+					}
+				}
+			}
+		}
+	}
+	
+	parameters = {
+		more_frequent_hunts = yes
+		hunting_traits_more_pious = yes
+		falconer_traits_more_common = yes
+		open_terrain_trait_bonuses = yes
+		enable_falcon_roost_building = yes
+		unlock_maa_cloud_riders = yes
+	}
+
+	character_modifier = {
+		maa_pursuit_mult = 0.15
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_courtly = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_stoic_or_courtly_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = {
+								OR = {
+									GH_any_hills_terrain_trigger = yes
+									GH_any_mountains_terrain_trigger = yes
+								}
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = mountain_and_hills_percentage_desc
+				}
+			}
+
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = { exists = culture_head }
+			culture_head = {
+				if = {
+					limit = { has_trait = zealous }
+					add = 50
+				}
+				if = {
+					limit = {  has_trait = cynical }
+					add = -50
+				}
+			}
+		}
+	}
+}
+
+tradition_tenacious_herdmasters = {
+	category = societal
+
+	layers = {
+		0 = martial
+		1 = western
+		4 = runestone.dds
+	}
+
+	is_shown = {
+		any_parent_culture_or_above = { this = culture:izikalek }
+	}
+	
+	can_pick = {
+		NOT = { has_cultural_tradition = tradition_pastoralists }
+	}
+	
+	parameters = {
+		herdmasters_buildings_bonuses = yes
+		enable_herdstone_building = yes
+		unlock_maa_leki_herdmasters = yes
+	}
+	character_modifier = {
+		hard_casualty_modifier = -0.1
+		development_growth_factor = -0.1
+	}
+	province_modifier = {
+		stationed_maa_screen_mult = 0.2
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bureaucratic = { is_in_list = traits }
+						culture_pillar:ethos_courtly = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bureaucratic_or_courtly_desc
+				}
+			}
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+	}
+}
+
+tradition_azakna_zagsa = {
+	category = regional
+	
+	layers = {
+		0 = martial
+		1 = western
+		4 = soldiers2.dds
+	}
+
+	is_shown = { GH_azakna_zagsa_tradition_trigger = yes }
+	can_pick = {
+		custom_description = {
+			text = culture_not_egalitarian
+			NOT = {
+				culture_pillar:ethos_egalitarian = { is_in_list = traits }
+			}
+		}
+	}
+	
+	parameters = {
+		martial_education_more_valued = yes
+		unlock_maa_death_seekers = yes
+		blademaster_trait_bonuses = yes
+		craven_and_content_traits_looked_down_upon = yes
+	}
+	province_modifier = {
+	}
+	character_modifier = {
+		knight_effectiveness_mult = 0.1
+		accolade_glory_gain_mult = 0.1
+	}
+	
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_stoic_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						scope:character = {
+							any_knight = {
+								count >= 6
+								prowess >= 12
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = knights_with_prowess_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = {
+		value = 400
+	}
+}
+
+tradition_kedari_marked = {
+	category = societal
+
+	layers = {
+		0 = magic
+		1 = indian
+		4 = jungle.dds
+	}
+
+	is_shown = {
+		any_parent_culture_or_above = { this = culture:kedari }
+	}
+	
+	can_pick = {
+		culture_not_pacifistic_trigger = yes
+		any_parent_culture_or_above = {
+ 			this = culture:kedari
+		}
+	}
+
+	parameters = {
+		mountain_trait_bonuses = yes
+		culture_can_raid_over_land_even_if_feudal = yes
+		members_have_tattoos = yes
+		magocracy_government_enabled = yes
+		dark_arcana_5_spellcasting_add = yes
+		culture_characters_more_magically_potent = yes
+		better_and_cheaper_magi_recruitment = yes
+		expensive_convert_to_local_culture = yes
+		harder_to_hybridize = yes
+		unlock_maa_markwardens = yes
+	}
+
+	character_modifier = {
+		mountains_travel_danger = mountains_medium_danger_reduction
+		desert_mountains_travel_danger = desert_mountains_medium_danger_reduction
+		hills_travel_danger = hills_low_danger_reduction
+	}
+
+	province_modifier = {
+		mountains_levy_size = 0.1
+		desert_mountains_levy_size = 0.1
+		mountains_supply_limit_mult = 0.25
+		desert_mountains_supply_limit_mult = 0.25
+		marcher_mountains_levy_size = 0.1
+		marcher_mountains_supply_limit_mult = 0.25
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_stoic_or_communal_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = { GH_any_mountains_terrain_trigger = yes }
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = mountain_percentage_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = {
+				NOT = {
+					scope:character = {
+						any_sub_realm_county = {
+							percent >= 0.2
+							culture = scope:character.culture
+							any_county_province = { GH_any_mountains_terrain_trigger = yes }
+						}
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}
+
+tradition_inscribed_triumphs = {
+	category = societal
+
+	layers = {
+		0 = martial
+		1 = indian
+		4 = viking.dds
+	}
+
+	is_shown = {
+		any_parent_culture_or_above = { this = culture:arolyan }
+	}
+	
+	can_pick = {
+		any_parent_culture_or_above = {
+ 			this = culture:arolyan
+		}
+	}
+
+	parameters = {
+		members_have_tattoos = yes
+		unlock_maa_sidharakyan = yes
+		strong_traits_more_valued = yes
+		strong_traits_more_common = yes
+		trade_ports_stationed_maa_bonus = yes
+		trade_ports_enabled_for_tribals = yes
+		unlock_voluntary_laampdom = yes
+		more_likely_to_be_laamps = yes
+	}
+
+	character_modifier = {
+		sea_travel_danger = medium_sea_danger_reduction
+		coastal_sea_travel_danger = medium_sea_danger_reduction
+		taiga_provisions_use_mult = -0.1
+		forest_provisions_use_mult = -0.1
+		coastal_advantage = 1
+		naval_movement_speed_mult = 0.05
+		embarkation_cost_mult = -0.05
+	}
+
+	cost = {
+		prestige = {
+			# Base cost.
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			# Ethos requirement.
+			if = {
+				limit = {
+					culture_pillar:ethos_bellicose = { is_in_list = traits }
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = culture_not_bellicose
+				}
+			}
+			# Gotta be a heavily coastal culture not to get a surcharge.
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = {
+								is_coastal = yes
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = coastal_percentage_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = {
+				NOT = {
+					scope:character = {
+						any_sub_realm_county = {
+							percent >= 0.3
+							any_county_province = {
+								is_coastal = yes
+							}
+						}
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}
+
+tradition_branded_battlemasters = {
+	category = societal
+
+	layers = {
+		0 = martial
+		1 = indian
+		4 = pragmatic_creed.dds
+	}
+
+	is_shown = {
+		any_parent_culture_or_above = { this = culture:parakh }
+	}
+	
+	can_pick = {
+		any_parent_culture_or_above = {
+ 			this = culture:parakh
+		}
+	}
+
+	parameters = {
+		members_have_tattoos = yes
+		unlock_maa_dhageray = yes
+		unlock_garuda_warrior_title = yes
+		martial_education_more_valued = yes
+		prowess_traits_more_valued = yes
+		craven_and_content_traits_looked_down_upon = yes
+		loyal_trait_more_valued = yes
+	}
+
+	character_modifier = {
+		accolade_glory_gain_mult = 0.1
+		enemy_terrain_advantage = -0.2
+		skirmishers_damage_add = 3
+		skirmishers_toughness_add = 5
+		skirmishers_maintenance_mult = -0.1	
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_stoic_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						scope:character = {
+							any_knight = {
+								count >= 6
+								prowess >= 12
+							}
+						}
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = knights_with_prowess_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = {
+		value = 400
+	}
+}
+
+tradition_frontier_warriors = {
+	category = regional
+
+	layers = {
+		0 = martial
+		1 = western
+		4 = fierce_independence.dds
+	}
+	
+	is_shown = {
+		any_parent_culture_or_above = { this = culture:talareg }
+	}
+
+	can_pick = {
+		any_parent_culture_or_above = {
+ 			this = culture:talareg
+		}
+	}
+	
+	parameters = {
+		unlock_maa_bluescars = yes
+		faith_warrior_traits_more_valued = yes
+		culture_can_raid_over_land_even_if_feudal = yes
+		strong_traits_more_valued = yes
+		members_have_tattoos = yes
+	}
+	province_modifier = {
+		hostile_raid_time = 0.5
+	}
+	character_modifier = {
+		mercenary_hire_cost_mult = -0.10
+		movement_speed = 0.05
+	}
+	
+	cost = {
+		prestige = {
+			# Base cost.
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			# Ethos requirement.
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_or_stoic_desc
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_culture_county = {
+							percent >= 0.3
+							any_county_province = {
+								OR = {
+									terrain = taiga
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	ai_will_do = { 
+		value = 100
+		if = {
+			limit = {
+				NOT = {
+					scope:character = {
+						any_sub_realm_county = {
+							percent >= 0.3
+							any_county_province = {
+								terrain = taiga 
+							}
+						}
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}

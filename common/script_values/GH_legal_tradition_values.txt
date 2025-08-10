@@ -1,0 +1,1256 @@
+﻿
+judicial_power_value = {
+	value = learning
+	if = {
+		limit = { has_trait = just }
+		add = 5
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_5 }
+		add = 5
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_10 }
+		add = 10
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_15 }
+		add = 15
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_20 }
+		add = 20
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_25 }
+		add = 25
+	}
+	add = judicial_power_from_legal_tradition_value
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_factor_10 }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_factor_25 }
+		multiply = 1.25
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_factor_50 }
+		multiply = 1.5
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_factor_100 }
+		multiply = 2
+	}
+	if = {
+		limit = { has_trait_with_flag = character_judicial_power_factor_200 }
+		multiply = 3
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = minor_legal_tradition }
+		}
+		multiply = 0.5
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = radicalism_gives_judicial_power }
+			has_variable = radicalism
+		}
+		add = {
+			value = var:radicalism
+			multiply = 0.2
+			max = 20
+		}
+	}
+	if = {
+		limit = {
+			exists = dynasty
+			dynasty = { has_dynasty_perk = wardenite_legacy_4 }
+		}
+		multiply = 1.2
+	}
+}
+
+judicial_power_gui_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:judicial_power_character }
+		add = scope:judicial_power_character.judicial_power_value
+	}
+}
+
+judicial_power_from_legal_tradition_value = {
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = each_virtue_increases_judicial_power }
+		}
+		add = {
+			value = num_virtuous_traits
+			multiply = 5
+		}
+	}
+	if = {
+		limit = {
+			has_trait = cynical
+			legal_tradition_has_flag_trigger = { FLAG = cynical_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = zealous
+			legal_tradition_has_flag_trigger = { FLAG = zealous_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = calm
+			legal_tradition_has_flag_trigger = { FLAG = calm_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = wrathful
+			legal_tradition_has_flag_trigger = { FLAG = wrathful_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = diligent
+			legal_tradition_has_flag_trigger = { FLAG = diligent_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = greedy
+			legal_tradition_has_flag_trigger = { FLAG = greedy_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = forgiving
+			legal_tradition_has_flag_trigger = { FLAG = forgiving_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = vengeful
+			legal_tradition_has_flag_trigger = { FLAG = vengeful_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = compassionate
+			legal_tradition_has_flag_trigger = { FLAG = compassionate_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = sadistic
+			legal_tradition_has_flag_trigger = { FLAG = sadistic_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = humble
+			legal_tradition_has_flag_trigger = { FLAG = humble_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = arrogant
+			legal_tradition_has_flag_trigger = { FLAG = arrogant_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = content
+			legal_tradition_has_flag_trigger = { FLAG = content_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = ambitious
+			legal_tradition_has_flag_trigger = { FLAG = ambitious_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = patient
+			legal_tradition_has_flag_trigger = { FLAG = patient_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = impatient
+			legal_tradition_has_flag_trigger = { FLAG = impatient_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = lifestyle_mystic
+			legal_tradition_has_flag_trigger = { FLAG = mystic_gives_judicial_power }
+		}
+		add = 5
+		if = {
+			limit = { has_trait_xp = { trait = lifestyle_mystic value >= 50 } }
+			add = 5
+		}
+		if = {
+			limit = { has_trait_xp = { trait = lifestyle_mystic value >= 100 } }
+			add = 10
+		}
+	}
+	if = {
+		limit = {
+			has_trait = avaricious
+			legal_tradition_has_flag_trigger = { FLAG = avaricious_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = overseer
+			legal_tradition_has_flag_trigger = { FLAG = overseer_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = scholar
+			legal_tradition_has_flag_trigger = { FLAG = scholar_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			has_trait = theologian
+			legal_tradition_has_flag_trigger = { FLAG = theologian_gives_judicial_power }
+		}
+		add = 5
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = learning_gives_double_judicial_power }
+		}
+		add = learning
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = diplomacy_gives_judicial_power }
+		}
+		add = diplomacy
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = intrigue_gives_judicial_power }
+		}
+		add = intrigue
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = stewardship_gives_judicial_power }
+		}
+		add = stewardship
+	}
+	if = {
+		limit = {
+			legal_tradition_has_flag_trigger = { FLAG = martial_gives_judicial_power }
+		}
+		add = martial
+	}
+}
+
+legal_tradition_character_alignment_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:character_being_checked }
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = each_virtue_increases_judicial_power }
+			}
+			scope:character_being_checked = {
+				add = {
+					value = num_virtuous_traits
+					multiply = 5
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = cynical }
+				legal_tradition_has_flag_trigger = { FLAG = cynical_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = zealous }
+				legal_tradition_has_flag_trigger = { FLAG = zealous_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = calm }
+				legal_tradition_has_flag_trigger = { FLAG = calm_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = wrathful }
+				legal_tradition_has_flag_trigger = { FLAG = wrathful_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = diligent }
+				legal_tradition_has_flag_trigger = { FLAG = diligent_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = greedy }
+				legal_tradition_has_flag_trigger = { FLAG = greedy_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = forgiving }
+				legal_tradition_has_flag_trigger = { FLAG = forgiving_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = vengeful }
+				legal_tradition_has_flag_trigger = { FLAG = vengeful_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = compassionate }
+				legal_tradition_has_flag_trigger = { FLAG = compassionate_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = sadistic }
+				legal_tradition_has_flag_trigger = { FLAG = sadistic_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = humble }
+				legal_tradition_has_flag_trigger = { FLAG = humble_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = arrogant }
+				legal_tradition_has_flag_trigger = { FLAG = arrogant_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = content }
+				legal_tradition_has_flag_trigger = { FLAG = content_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = ambitious }
+				legal_tradition_has_flag_trigger = { FLAG = ambitious_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = patient }
+				legal_tradition_has_flag_trigger = { FLAG = patient_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = impatient }
+				legal_tradition_has_flag_trigger = { FLAG = impatient_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = lifestyle_mystic }
+				legal_tradition_has_flag_trigger = { FLAG = mystic_gives_judicial_power }
+			}
+			add = 5
+			if = {
+				limit = {
+					scope:character_being_checked = {
+						has_trait_xp = { trait = lifestyle_mystic value >= 50 } 
+					}
+				}
+				add = 5
+			}
+			if = {
+				limit = {
+					scope:character_being_checked = {
+						has_trait_xp = { trait = lifestyle_mystic value >= 100 }
+					}
+				}
+				add = 10
+			}
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = avaricious }
+				legal_tradition_has_flag_trigger = { FLAG = avaricious_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = overseer }
+				legal_tradition_has_flag_trigger = { FLAG = overseer_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = scholar }
+				legal_tradition_has_flag_trigger = { FLAG = scholar_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				scope:character_being_checked = { has_trait = theologian }
+				legal_tradition_has_flag_trigger = { FLAG = theologian_gives_judicial_power }
+			}
+			add = 5
+		}
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = learning_gives_double_judicial_power }
+			}
+			add = scope:character_being_checked.learning
+		}
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = diplomacy_gives_judicial_power }
+			}
+			add = scope:character_being_checked.diplomacy
+		}
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = intrigue_gives_judicial_power }
+			}
+			add = scope:character_being_checked.intrigue
+		}
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = stewardship_gives_judicial_power }
+			}
+			add = scope:character_being_checked.stewardship
+		}
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = martial_gives_judicial_power }
+			}
+			add = scope:character_being_checked.martial
+		}
+		if = {
+			limit = {
+				legal_tradition_has_flag_trigger = { FLAG = minor_legal_tradition }
+			}
+			multiply = 0.2
+		}
+	}
+}
+
+# Amount of progress points required to progress to the next legal tradition level
+legal_tradition_next_level_progress_requirement_value = {
+	value = 1000	# Base level
+	if = {
+		limit = { has_variable = legal_tradition_level }
+		if = {
+			limit = { var:legal_tradition_level = 0 }
+			multiply = 2
+		}
+		else_if = {
+			limit = { var:legal_tradition_level = 1 }
+			multiply = 1
+		}
+		else_if = {
+			limit = { var:legal_tradition_level = 2 }
+			multiply = 2.5
+		}
+		else_if = {
+			limit = { var:legal_tradition_level = 3 }
+			multiply = 5
+		}
+		else_if = {
+			limit = { var:legal_tradition_level = 4 }
+			multiply = 10
+		}
+	}
+}
+
+# Utility script value that divides the percentile value of your patronage investment into a 0-1 value
+legal_tradition_patronage_investment_amount_decimal_value = {
+	value = 0
+	if = {
+		limit = { has_variable = character_legal_tradition_patronage_level }
+		add = var:character_legal_tradition_patronage_level
+		divide = 100
+	}
+}
+
+legal_tradition_patronage_investment_amount_inverted_decimal_value = {
+	value = 1
+	subtract = legal_tradition_patronage_investment_amount_decimal_value
+}
+
+# Amount of progress gained by a character's patronage
+legal_tradition_patronage_investment_character_total_value = {
+	value = monthly_character_income
+	multiply = legal_tradition_patronage_investment_amount_decimal_value
+	divide = legal_tradition_patronage_investment_amount_inverted_decimal_value
+}
+
+# Projected patronage cost increase
+legal_tradition_projected_patronage_increase_cost_value = {
+	value = monthly_character_income
+	multiply = {
+		value = 0
+		if = {
+			limit = { has_variable = character_legal_tradition_patronage_level }
+			add = var:character_legal_tradition_patronage_level
+		}
+		add = 10
+		divide = 100
+	}
+}
+
+# Amount of progress gained monthly, total
+legal_tradition_monthly_progress_value = {
+	value = 0
+	if = {
+		limit = { has_variable_list = legal_tradition_patrons }
+		every_in_list = {
+			variable = legal_tradition_patrons
+			add = legal_tradition_patronage_investment_character_total_value
+		}
+	}
+}
+
+interaction_judicial_power_difference_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:actor }
+		add = scope:actor.judicial_power_value
+	}
+	if = {
+		limit = { exists = scope:recipient }
+		subtract = scope:recipient.judicial_power_value
+	}
+}
+
+five_year_jurist_progress_value = {
+	value = learning
+}
+
+########################
+# CRIMINAL CASE VALUES #
+########################
+
+criminal_case_guilty_difficulty_factor_value = {
+	value = 1
+	if = {
+		limit = { exists = var:evidence_level }
+		if = {
+			limit = { var:evidence_level < 60 }
+			add = 1
+		}
+		if = {
+			limit = { var:evidence_level < 40 }
+			add = 1
+		}
+		if = {
+			limit = { var:evidence_level < 20 }
+			add = 2
+		}
+	}
+}
+
+criminal_case_acquittal_difficulty_factor_value = {
+	value = 1
+	if = {
+		limit = { exists = var:evidence_level }
+		if = {
+			limit = { var:evidence_level > 40 }
+			add = 1
+		}
+		if = {
+			limit = { var:evidence_level > 60 }
+			add = 1
+		}
+		if = {
+			limit = { var:evidence_level > 80 }
+			add = 2
+		}
+	}
+}
+
+######################
+# INTERACTION VALUES #
+######################
+
+censure_cost_value = {
+	value = major_piety_value
+	if = {
+		limit = { exists = scope:recipient }
+		scope:recipient = {
+			multiply = {
+				value = 1
+				subtract = {
+					value = num_sinful_traits
+					multiply = 0.2
+				}
+			}
+			if = {
+				limit = {  
+					has_variable = radicalism
+					var:radicalism > 50
+				}
+				multiply = {
+					value = 1
+					subtract = {
+						value = var:radicalism
+						multiply = 0.01
+						max = 0.8
+					}
+				}
+			}
+			if = {
+				limit = {  
+					has_variable = corruption
+					var:corruption > 50
+				}
+				multiply = {
+					value = 1
+					subtract = {
+						value = var:corruption
+						multiply = 0.01
+						max = 0.8
+					}
+				}
+			}
+		}
+	}
+	min = miniscule_piety_value
+}
+
+#####################
+# HIGH COURT VALUES #
+#####################
+
+average_high_court_judicial_power_value = {
+	value = 0
+	add = high_court_total_judicial_power_value
+	if = {
+		limit = { high_court_size_value > 0 }
+		divide = high_court_size_value
+	}
+}
+
+high_court_total_judicial_power_value = {
+	value = 0
+	every_in_list = {
+		variable = high_court_seat_list
+		limit = {
+			has_variable = seat_occupant
+			var:seat_occupant = { is_alive = yes }
+		}
+		add = var:seat_occupant.judicial_power_value
+	}
+}
+
+corruption_value = {
+	value = 0
+	if = {
+		limit = { has_variable = corruption }
+		add = var:corruption
+	}
+}
+
+average_high_court_corruption_value = {
+	value = 0
+	add = high_court_total_corruption_value
+	if = {
+		limit = { high_court_size_value > 0 }
+		divide = high_court_size_value
+	}
+}
+
+high_court_total_corruption_value = {
+	value = 0
+	every_in_list = {
+		variable = high_court_seat_list
+		limit = {
+			has_variable = seat_occupant
+			var:seat_occupant = { 
+				is_alive = yes
+				has_variable = corruption
+			}
+		}
+		add = var:seat_occupant.var:corruption
+	}
+}
+
+radicalism_value = {
+	value = 0
+	if = {
+		limit = { has_variable = radicalism }
+		add = var:radicalism
+	}
+}
+
+high_court_size_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable_list = high_court_seat_list
+		}
+		every_in_list = {
+			variable = high_court_seat_list
+			limit = {  
+				has_variable = seat_occupant
+				var:seat_occupant = { is_alive = yes }
+			}
+			add = 1
+		}
+	}
+	min = 1
+}
+
+legal_tradition_high_court_control_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:high_court_scope }
+		scope:high_court_scope = {
+			every_in_list = {
+				variable = high_court_seat_list
+				limit = {
+					has_variable = seat_occupant
+					var:seat_occupant.var:character_legal_tradition = root
+				}
+				add = 1
+			}
+		}
+	}
+	multiply = 100
+	divide = scope:high_court_scope.high_court_size_value
+}
+
+high_court_loyalty_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable_list = high_court_seat_list
+		}
+		every_in_list = {
+			variable = high_court_seat_list
+			limit = {  
+				has_variable = seat_occupant
+				var:seat_occupant = { is_alive = yes }
+			}
+			add = var:seat_occupant.high_court_seat_occupant_loyalty_value
+		}
+		divide = high_court_size_value
+	}
+	max = 100
+	min = 0
+}
+
+high_court_seat_occupant_loyalty_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = high_court_seat
+			var:high_court_seat.var:high_court = { 
+				has_variable = high_court_mamuramat
+				exists = var:high_court_mamuramat.holder
+			}
+		}
+		if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= 80
+				}
+			}
+			add = 100
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= 60
+				}
+			}
+			add = 90
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= 40
+				}
+			}
+			add = 75
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= 20
+				}
+			}
+			add = 60
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= -20
+				}
+			}
+			add = 50
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= -40
+				}
+			}
+			add = 40
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= -60
+				}
+			}
+			add = 25
+		}
+		else_if = {
+			limit = {
+				opinion = {
+					target = var:high_court_seat.var:high_court.var:high_court_mamuramat.holder
+					value >= -80
+				}
+			}
+			add = 10
+		}
+		if = {
+			limit = {
+				save_temporary_scope_as = high_court_judge
+				var:high_court_seat.var:high_court.var:high_court_mamuramat.holder = {
+					has_weak_hook = scope:high_court_judge
+				}
+			}
+			add = 20
+		}
+		if = {
+			limit = {
+				save_temporary_scope_as = high_court_judge
+				var:high_court_seat.var:high_court.var:high_court_mamuramat.holder = {
+					has_strong_hook = scope:high_court_judge
+				}
+			}
+			add = 50
+		}
+		if = {
+			limit = { has_trait = ambitious }
+			subtract = 20
+		}
+		if = {
+			limit = { has_trait = content }
+			add = 20
+		}
+		if = {
+			limit = { has_trait = deceitful }
+			subtract = 20
+		}
+		if = {
+			limit = { has_trait = honest }
+			add = 20
+		}
+	}
+	max = 100
+	min = 0
+}
+
+high_court_legitimacy_value = {
+	value = 0
+	if = {
+		limit = { has_variable = high_court_legitimacy }
+		add = var:high_court_legitimacy
+	}
+}
+
+high_court_legitimacy_gui_capped_value = {
+	value = high_court_legitimacy_value
+	max = 50
+}
+
+monthly_high_court_legitimacy_change_value = {
+	value = 0
+	add = monthly_high_court_legitimacy_change_judicial_power_value
+	add = monthly_high_court_legitimacy_change_focus_value
+	subtract = monthly_high_court_legitimacy_change_corruption_value
+	subtract = monthly_high_court_legitimacy_change_decay_value
+}
+
+monthly_high_court_legitimacy_change_judicial_power_value = {
+	value = average_high_court_judicial_power_value
+	divide = 1000
+}
+
+monthly_high_court_legitimacy_change_focus_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = high_court_focus
+			var:high_court_focus = flag:bolster_legitimacy
+		}
+		add = monthly_high_court_legitimacy_change_bolster_legitimacy_focus_value
+	}
+}
+
+monthly_high_court_legitimacy_change_bolster_legitimacy_focus_value = {
+	value = 0
+	add = monthly_high_court_legitimacy_change_judicial_power_value
+	multiply = high_court_loyalty_efficiency_value
+}
+
+monthly_high_court_legitimacy_change_corruption_value = {
+	value = average_high_court_corruption_value
+	divide = 250
+}
+
+monthly_high_court_legitimacy_change_decay_value = {
+	value = 0
+	if = {
+		limit = { has_variable = high_court_legitimacy }
+		add = {
+			value = var:high_court_legitimacy
+			subtract = 50
+			divide = 250
+		}
+	}
+}
+
+high_court_mamurial_authority_value = {
+	value = 0
+	if = {
+		limit = { has_variable = high_court_mamurial_authority }
+		add = var:high_court_mamurial_authority
+	}
+}
+
+monthly_high_court_mamurial_authority_change_value = {
+	value = 0
+	add = monthly_high_court_mamurial_authority_change_from_loyalty_value
+}
+
+monthly_high_court_mamurial_authority_change_from_loyalty_value = {
+	value = 0
+	add = high_court_loyalty_value
+	subtract = 50
+	divide = 500
+}
+
+high_court_loyalty_efficiency_value = {
+	value = 0
+	add = high_court_loyalty_value
+	divide = 100
+}
+
+###############
+# MISC VALUES #
+###############
+
+minor_justify_claim_piety_value = {
+	value = minor_buy_claim_piety_value
+	multiply = 0.5
+}
+medium_justify_claim_piety_value = {
+	value = medium_buy_claim_piety_value
+	multiply = 0.5
+}
+major_justify_claim_piety_value = {
+	value = major_buy_claim_piety_value
+	multiply = 0.5
+}
+massive_justify_claim_piety_value = {
+	value = massive_buy_claim_piety_value
+	multiply = 0.5
+}
+
+piety_from_minor_legal_debate_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:opponent }
+		scope:opponent = {
+			add = {
+				value = judicial_power_value
+				multiply = 2.5
+			}
+		}
+	}
+	min = minor_piety_value
+}
+
+piety_from_major_legal_debate_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:opponent }
+		scope:opponent = {
+			add = {
+				value = judicial_power_value
+				multiply = 5
+			}
+		}
+	}
+	min = medium_piety_value
+}
+
+jurist_progress_from_minor_legal_debate_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:opponent }
+		scope:opponent = {
+			add = {
+				value = judicial_power_value
+				multiply = 2.5
+			}
+		}
+	}
+	min = minor_trait_xp
+	if = {
+		limit = {
+			has_variable = judicial_approach
+			var:judicial_approach = flag:innovation_approach
+		}
+		multiply = 2
+	}
+}
+
+jurist_progress_from_major_legal_debate_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:opponent }
+		scope:opponent = {
+			add = {
+				value = judicial_power_value
+				multiply = 5
+			}
+		}
+	}
+	min = medium_trait_xp
+	if = {
+		limit = {
+			has_variable = judicial_approach
+			var:judicial_approach = flag:innovation_approach
+		}
+		multiply = 2
+	}
+}
+
+jurist_progress_from_epic_legal_debate_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:opponent }
+		scope:opponent = {
+			add = {
+				value = judicial_power_value
+				multiply = 7.5
+			}
+		}
+	}
+	min = major_trait_xp
+	if = {
+		limit = {
+			has_variable = judicial_approach
+			var:judicial_approach = flag:innovation_approach
+		}
+		multiply = 2
+	}
+}
+
+judicial_power_double_value = {
+	value = judicial_power_value
+	multiply = 2
+}
+
+corruption_from_traits_value = {
+	value = 0
+	if = {
+		limit = { has_trait = arbitrary }
+		add = 30
+	}
+	if = {
+		limit = { has_trait = deceitful }
+		add = 30
+	}
+	if = {
+		limit = { has_trait = sadistic }
+		add = 30
+	}
+	if = {
+		limit = { has_trait = greedy }
+		add = 20
+	}
+	if = {
+		limit = { has_trait = callous }
+		add = 20
+	}
+	if = {
+		limit = { has_trait = greedy }
+		add = 10
+	}
+}
+
+wardenite_legacy_3_bonus_value = {
+	value = 0
+	if = {
+		limit = {
+			has_trait = lifestyle_jurist
+			has_trait_xp = {
+				trait = lifestyle_jurist
+				value >= 100
+			}
+		}
+		add = 0.5
+	}
+	else_if = {
+		limit = {
+			has_trait = lifestyle_jurist
+			has_trait_xp = {
+				trait = lifestyle_jurist
+				value >= 75
+			}
+		}
+		add = 0.4
+	}
+	else_if = {
+		limit = {
+			has_trait = lifestyle_jurist
+			has_trait_xp = {
+				trait = lifestyle_jurist
+				value >= 50
+			}
+		}
+		add = 0.3
+	}
+	else_if = {
+		limit = {
+			has_trait = lifestyle_jurist
+			has_trait_xp = {
+				trait = lifestyle_jurist
+				value >= 25
+			}
+		}
+		add = 0.2
+	}
+	else_if = {
+		limit = { has_trait = lifestyle_jurist }
+		add = 0.1
+	}
+}
+
+origin_county_faith_dominant_gender_adjusted_female_chance = {
+	if = {
+		limit = { scope:origin_county.faith = { has_doctrine = doctrine_gender_male_dominated } }
+		add = 20
+	}
+	else_if = {
+		limit = { scope:origin_county.faith = { has_doctrine = doctrine_gender_female_dominated } }
+		add = 80
+	}
+	else = {
+		add = 50
+	}
+}
+
+judge_template_character_faith_dominant_gender_adjusted_female_chance = {
+	if = {
+		limit = { scope:judge_template_character.faith = { has_doctrine = doctrine_gender_male_dominated } }
+		add = 20
+	}
+	else_if = {
+		limit = { scope:judge_template_character.faith = { has_doctrine = doctrine_gender_female_dominated } }
+		add = 80
+	}
+	else = {
+		add = 50
+	}
+}
+
+tusuffna_dispute_county_faith_dominant_gender_adjusted_female_chance = {
+	if = {
+		limit = { scope:tusuffna_dispute_county.faith = { has_doctrine = doctrine_gender_male_dominated } }
+		add = 20
+	}
+	else_if = {
+		limit = { scope:tusuffna_dispute_county.faith = { has_doctrine = doctrine_gender_female_dominated } }
+		add = 80
+	}
+	else = {
+		add = 50
+	}
+}
+
+judge_employer_faith_dominant_gender_adjusted_female_chance = {
+	if = {
+		limit = { scope:judge_employer.faith = { has_doctrine = doctrine_gender_male_dominated } }
+		add = 20
+	}
+	else_if = {
+		limit = { scope:judge_employer.faith = { has_doctrine = doctrine_gender_female_dominated } }
+		add = 80
+	}
+	else = {
+		add = 50
+	}
+}

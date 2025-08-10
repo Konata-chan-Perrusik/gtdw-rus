@@ -1,0 +1,314 @@
+﻿burgher_tax_collector = { 
+	flag = vassal_contract_cannot_revoke_titles
+	flag = republican_burghers
+	tax_factor = 0.25
+	levies_factor = -0.2
+
+	liege_modifier = {
+		domain_tax_mult = 0.01
+		mercenary_hire_cost_mult = -0.03
+	}
+
+	subject_modifier = {
+		city_holding_build_speed = -0.2
+		city_holding_build_gold_cost = -0.2
+		mercenary_hire_cost_mult = -0.2
+		barons_and_minor_landholders_tax_contribution_mult = -0.1
+		parochial_tax_contribution_mult = 0.2
+		monthly_influence_mult = 0.1
+	}
+
+	ai_will_do = {
+		value = default_tax_obligation_ai_will_do
+
+		# Always take at least one default tax collector slot
+		if = {
+			limit = { scope:num_slots_with_obligation = 0 }
+			add = 1000
+		}
+		else = {
+			add = 0
+		}
+	}
+}
+
+plantation_tax_collector = {
+	flag = republican_plantations
+	liege_modifier = {
+		domain_tax_mult = 0.02
+	}
+
+	subject_modifier = {
+		domain_tax_mult = 0.1
+		farmlands_holding_construction_gold_cost = -0.2
+		farmlands_construction_gold_cost = -0.2
+		farmlands_tax_mult = 0.2
+		floodplains_holding_construction_gold_cost = -0.2
+		floodplains_construction_gold_cost = -0.2
+		floodplains_tax_mult = 0.2
+		oasis_holding_construction_gold_cost = -0.2
+		oasis_construction_gold_cost = -0.2
+		oasis_tax_mult = 0.2
+		marcher_farmlands_holding_construction_gold_cost = -0.2
+		marcher_farmlands_construction_gold_cost = -0.2
+		marcher_farmlands_tax_mult = 0.2
+		marcher_floodplains_holding_construction_gold_cost = -0.2
+		marcher_floodplains_construction_gold_cost = -0.2
+		marcher_floodplains_tax_mult = 0.2
+		levy_size = -0.1
+		monthly_county_control_growth_factor = -0.2
+		monthly_influence_mult = -0.1
+	}
+
+	is_vassal_valid = {
+		custom_description = {
+			text = vassal_has_farmland_or_floodplains
+			subject = scope:vassal
+			scope:vassal = {
+				any_sub_realm_barony = {
+					percent >= 0.4
+					title_province = {
+						OR = {
+							terrain = farmlands
+							terrain = floodplains
+							terrain = oasis
+							terrain = marcher_farmlands
+							terrain = marcher_floodplains
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		add = 1
+		
+		if = {
+			limit = {
+				scope:liege = {
+					any_vassal = {
+						any_sub_realm_barony = {
+							percent >= 0.4
+							title_province = {
+								OR = {
+									terrain = farmlands
+									terrain = floodplains
+									terrain = oasis
+									terrain = marcher_farmlands
+									terrain = marcher_floodplains
+								}
+							}
+						}
+					}
+				}
+			}
+			add = 10
+		}
+	}
+}
+
+mining_tax_collector = {
+	flag = republican_miners
+	liege_modifier = {
+		domain_tax_mult = 0.02
+	}
+
+	subject_modifier = {
+		domain_tax_mult = 0.1
+		mountains_tax_mult = 0.2
+		desert_mountains_tax_mult = 0.2
+		hills_tax_mult = 0.1
+		forest_tax_mult = 0.1
+		jungle_tax_mult = 0.2
+		taiga_tax_mult = 0.2
+		marcher_mountains_tax_mult = 0.2
+		marcher_hills_tax_mult = 0.1
+		marcher_forest_tax_mult = 0.1
+		levy_size = -0.1
+		monthly_county_control_growth_factor = -0.2
+		monthly_influence_mult = -0.1
+	}
+
+	is_vassal_valid = {
+		custom_description = {
+			text = vassal_has_material_rich_land
+			subject = scope:vassal
+			scope:vassal = {
+				any_sub_realm_barony = {
+					percent >= 0.4
+					title_province = {
+						OR = {
+							terrain = mountains
+							terrain = desert_mountains
+							terrain = hills
+							terrain = forest
+							terrain = jungle
+							terrain = taiga
+							terrain = marcher_mountains
+							terrain = marcher_hills
+							terrain = marcher_forest
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		add = 1
+		
+		if = {
+			limit = {
+				scope:liege = {
+					any_vassal = {
+						any_sub_realm_barony = {
+							percent >= 0.4
+							title_province = {
+								OR = {
+									terrain = mountains
+									terrain = desert_mountains
+									terrain = hills
+									terrain = forest
+									terrain = jungle
+									terrain = taiga
+									terrain = marcher_mountains
+									terrain = marcher_hills
+									terrain = marcher_forest
+								}
+							}
+						}
+					}
+				}
+			}
+			add = 10
+		}
+	}
+}
+
+autonomy_special_rights_tax_collector = {
+	flag = vassal_contract_cannot_revoke_titles
+	flag = religiously_protected
+	flag = republican_communes
+
+	tax_factor = 0.5
+	levies_factor = -0.7
+
+	subject_modifier = {
+		build_speed = -0.2
+		build_gold_cost = -0.2
+		mercenary_hire_cost_mult = -0.2
+		domain_limit = -1
+		barons_and_minor_landholders_tax_contribution_mult = -0.1
+		parochial_tax_contribution_mult = 0.2
+		opinion_of_liege = 15
+		monthly_influence_mult = 0.2
+	}
+
+	is_vassal_valid = {
+		custom_description = {
+			text = vassal_has_the_wrong_religion
+			subject = scope:vassal
+			NOT = { scope:vassal.religion = scope:liege.religion }
+		}
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		add = 1
+		
+		if = {
+			limit = {
+				scope:liege = {
+					any_vassal = {
+						percent >= 0.25
+						NOT = { religion = scope:liege.religion }
+					}
+				}
+			}
+			add = 5
+		}
+	}
+}
+
+march_special_rights_tax_collector = {
+	flag = vassal_contract_cannot_revoke_titles
+	flag = border_conflicts_sanctioned
+	flag = republican_marches
+	tax_factor = -0.5
+	liege_modifier = {
+		monthly_prestige_gain_mult = 0.05
+	}
+
+	subject_modifier = {
+		levy_size = 0.2
+		army_maintenance_mult = -0.2
+		garrison_size = 0.2
+		levy_reinforcement_rate = 0.2
+		controlled_province_advantage = 5
+		glory_hound_opinion = 10
+		monthly_influence_mult = 0.1
+	}
+
+	is_valid = {
+		scope:liege.culture = {
+			has_innovation = innovation_bannus
+		}
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		add = 2
+	}
+}
+
+privateer_special_rights_tax_collector = {
+	flag = vassal_contract_cannot_revoke_titles
+	flag = border_conflicts_sanctioned
+	flag = republican_privateers
+	tax_factor = -0.25
+	levies_factor = -0.1
+	liege_modifier = {
+		monthly_prestige_gain_mult = -0.05
+		domain_tax_mult = 0.1
+		monthly_war_income_mult = 0.05
+	}
+	subject_modifier = {
+		opinion_of_liege = 15
+		domain_tax_mult = 0.1
+		monthly_war_income_mult = 0.1
+		development_growth_factor = -0.1
+		owned_hostile_scheme_success_chance_add = 10
+	}
+	is_vassal_valid = {
+		scope:vassal = {
+			OR = {
+				government_has_flag = government_is_pirate
+				has_trait = avaricious
+				has_trait = reaver
+			}
+		}
+	}
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+		if = {
+			limit = {
+				scope:num_slots_with_obligation = 0
+
+				scope:liege = {
+					any_vassal = {
+						count >= tax_obligation_half_of_slot
+						OR = {
+							government_has_flag = government_is_pirate
+							has_trait = avaricious
+							has_trait = reaver
+						}
+					}
+				}
+			}
+			add = 5
+		}
+	}
+}

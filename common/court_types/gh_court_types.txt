@@ -1,0 +1,133 @@
+﻿court_magic = {
+	background = "gfx/interface/icons/culture_pillars/ethos_spiritual.dds"
+
+	is_shown = {
+		NOT = { faith = { has_doctrine = doctrine_magic_crime } }
+		GH_is_any_tribal_government_trigger = no
+		GH_gov_is_tribal_clan_trigger = no
+		OR = {
+			AND = {
+				OR = { 
+					government_has_flag = government_is_feudal 
+					government_has_flag = government_is_republic_playable
+					government_has_flag = government_is_clan
+					government_has_flag = government_is_administrative_republic
+					government_has_flag = government_is_judicial_republic
+					government_has_flag = government_is_continental_clan
+					government_has_flag = government_is_landed_order
+					government_has_flag = government_is_military_unit
+					government_has_flag = government_is_pirate
+				}
+			}
+			government_has_flag = government_is_magocratic
+			government_has_flag = government_is_magocratic_republic
+			has_any_major_aversarian_title_trigger = yes
+		}
+	}
+	is_valid = {
+		GH_is_any_tribal_government_trigger = no
+		GH_gov_is_tribal_clan_trigger = no
+		OR = {
+			AND = {
+				OR = { 
+					government_has_flag = government_is_feudal 
+					government_has_flag = government_is_republic_playable
+					government_has_flag = government_is_administrative_republic
+					government_has_flag = government_is_judicial_republic
+					government_has_flag = government_is_clan
+					government_has_flag = government_is_continental_clan
+					government_has_flag = government_is_landed_order
+					government_has_flag = government_is_military_unit
+					government_has_flag = government_is_pirate
+				}
+				OR = {
+					culture = { has_cultural_tradition = tradition_legacy_of_aversaria }
+					culture = { has_cultural_tradition = tradition_legacy_of_aversaria_lesser }
+					culture = { has_cultural_tradition = tradition_blood_magi }
+					culture = { has_cultural_tradition = tradition_world_tree }
+					#culture = { has_cultural_tradition = tradition_retained_magi }
+					culture = { has_cultural_tradition = tradition_lich_culture }
+				}
+			}
+			government_has_flag = government_is_magocratic
+			government_has_flag = government_is_magocratic_republic
+			has_any_major_aversarian_title_trigger = yes
+		}
+		NOT = { faith = { has_doctrine = doctrine_magic_crime } }
+	}
+
+	cost = {
+		prestige = {
+			add = 700
+		}
+	}
+
+	level_perk = {
+		court_grandeur = 1
+		owner_modifier = {
+			magi_max_size_add = 1
+		}
+	}
+	level_perk = {
+		court_grandeur = 4
+		owner_modifier = {
+
+		}
+
+		owner_modifier_description = cheaper_court_magi_desc
+	}
+
+	level_perk = {
+		court_grandeur = 7
+		owner_modifier = {
+			monthly_arcana_lifestyle_xp_gain_mult = 0.1
+			# monthly_magic_lifestyle_dead_xp_gain_mult = 0.02
+			# monthly_magic_lifestyle_mixed_xp_gain_mult = 0.02
+		}
+	}
+
+	level_perk = {
+		court_grandeur = 10
+
+		owner_modifier = {}
+
+		owner_modifier_description = better_spell_success_chance_desc
+	}
+
+	ai_will_do = { # GH TODO: Factor in magical power?
+		value = 0
+		add = {
+			if = {
+				limit = {
+					OR = {
+						government_has_flag = government_is_magocratic
+						government_has_flag = government_is_magocratic_republic
+					}
+				}
+				add = 25
+			}
+			if = {
+				limit = { has_any_major_aversarian_title_trigger = yes }
+				add = 25
+			}
+			if = {
+				limit = { faith = { has_doctrine = doctrine_magic_shunned } }
+				add = -25
+			}
+			if = {
+				limit = { faith = { has_doctrine = doctrine_magic_honored } }
+				add = 25
+			}
+			if = {
+				limit = { faith = { has_doctrine = doctrine_magic_supremacy } }
+				add = 50
+			}
+			if = {
+				limit = {
+					has_education_magic_trigger = yes
+				}
+				add = 50
+			}
+		}
+	}
+}

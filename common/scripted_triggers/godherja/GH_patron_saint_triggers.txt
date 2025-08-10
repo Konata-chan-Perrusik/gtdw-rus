@@ -1,0 +1,228 @@
+﻿###########################
+## Patron Saint Triggers ##
+###########################
+
+general_patron_saint_requirement_trigger = {
+	patron_saint_requirement_trigger = { NAME = generic_patron_saint LEVEL = $LEVEL$ }
+}
+
+patron_saint_requirement_trigger = {
+	trigger_if = {
+		limit = {
+			trigger_if = {
+				limit = { scope:relevant_patron_saint = { has_variable = patron_saint_requirements } }
+				scope:relevant_patron_saint.var:patron_saint_requirements = flag:$NAME$
+			}
+			trigger_else = { always = no }
+		}
+		$NAME$_level_$LEVEL$_requirements_trigger = yes
+	}
+}
+
+faith_has_patron_saint = {
+	custom_description = {
+		text = "faith_has_patron_saint_desc"
+		$FAITH$ = {
+			has_variable_list = patron_saint_list
+			any_in_list = {
+				variable = patron_saint_list
+				this = $PATRON_SAINT$
+			}
+		}
+	}
+}
+
+patron_saint_has_trait_trigger = { # the scope that is checked needs to be the patron saint province
+	any_in_list = {
+		variable = patron_saint_traits
+		this = flag:$TRAIT$
+	}
+}
+
+has_patron_saint_trait_trigger = {
+	$PATRON_SAINT$ = { patron_saint_has_trait_trigger = { TRAIT = $TRAIT$ } }
+	has_trait = $TRAIT$
+}
+
+patron_saint_has_opposed_trait_trigger = { # the scope that is checked needs to be the patron saint province
+	any_in_list = {
+		variable = patron_saint_opposed_traits
+		this = flag:$TRAIT$
+	}
+}
+
+has_patron_saint_opposed_trait_trigger = {
+	$PATRON_SAINT$ = { patron_saint_has_opposed_trait_trigger = { TRAIT = $TRAIT$ } }
+	has_trait = $TRAIT$
+}
+
+has_patron_saint_trait_or_opposed_trait_trigger = {
+	has_trait = $TRAIT$
+	$PATRON_SAINT$ = {
+		has_variable = patron_saint_$TRAIT$_affinity_value
+	}
+}
+
+patron_saint_has_holy_site = {
+	$PATRON_SAINT$ = {
+		any_in_list = {
+			variable = patron_saint_holy_sites
+			this = $HOLY_SITE$
+		}
+	}
+}
+
+any_character_patron_saint_has_holy_site_trigger = {
+	any_in_list = {
+		variable = character_patron_saint_list
+		has_variable_list = patron_saint_holy_sites_list
+		is_target_in_variable_list = {
+			name = patron_saint_holy_sites_list
+			target = $HOLY_SITE$
+		}
+	}
+}
+
+patron_saint_has_aspect_trigger = { # the scope that is checked needs to be the patron saint province
+	$PATRON_SAINT$ = {
+		any_in_list = {
+			variable = patron_saint_aspects
+			this = flag:$ASPECT$
+		}
+	}
+}
+
+any_character_patron_saint_has_aspect_trigger = {
+	any_in_list = {
+		variable = character_patron_saint_list
+		is_target_in_variable_list = {
+			name = patron_saint_aspects
+			target = flag:$ASPECT$
+		}
+	}
+}
+
+#######################
+# Triggers for faiths #
+#######################
+
+should_have_patron_saints_trigger = {
+	has_doctrine_parameter = patron_saints_enabled
+}
+
+faith_has_patron_saints = {
+	has_variable_list = patron_saint_list
+}
+
+
+############################
+# Triggers relevant for AI #
+############################
+
+gh_year_divisable_by_5_trigger = {
+	gh_year_divided_by_5_remainder_value = 0
+}
+
+gh_year_divisable_by_15_trigger = {
+	gh_year_divided_by_15_remainder_value = 0
+}
+
+
+###########################
+# Triggers for Characters #
+###########################
+
+character_has_any_patron_saint = {
+	has_variable_list = character_patron_saint_list
+}
+
+character_has_maximum_pilgrimage_saint_affinity = {
+	has_variable = patron_saint_pilgrimage_affinity
+}
+
+must_have_saint_affinity_trigger = {
+	custom_description = {
+		text = "patron_saint_affinity_must_be_$VALUE$"
+		patron_saint_affinity_total_value > $VALUE$
+	}
+}
+
+character_has_visited_patron_saint_holy_site = {
+	has_variable_list = patron_saint_visited_holy_sites_list
+	is_target_in_variable_list = {
+		name = patron_saint_visited_holy_sites_list
+		target = $HOLY_SITE$
+	}
+}
+
+character_has_patron_saint = {
+	has_variable_list = character_patron_saint_list
+	is_target_in_variable_list = {
+		name = character_patron_saint_list
+		target = $PATRON_SAINT$
+	}
+}
+
+character_has_patron_saint_level = {
+	has_variable_list = character_patron_saint_level_$LEVEL$_list
+	is_target_in_variable_list = {
+		name = character_patron_saint_level_$LEVEL$_list
+		target = $PATRON_SAINT$
+	}
+}
+
+character_can_have_more_patron_saints = {
+	custom_description = {
+		text = "character_cannot_take_more_patron_saints_desc"
+		character_can_have_more_patron_saints_raw = yes
+	}
+}
+
+character_can_have_more_patron_saints_raw = {
+	patron_saint_max_saint_number_value > patron_saint_character_saint_number_value
+}
+
+character_can_have_more_patron_saint_levels = {
+	custom_description = {
+		text = "character_cannot_take_more_patron_saint_levels_desc"
+		patron_saint_max_total_saint_level_value > patron_saint_character_total_saint_level_value
+	}
+}
+
+character_can_take_relevant_patron_saint_level = { # must have a scope:relevant_patron_saint set - checks if character has enough total saint levels left to take a level in this Saint
+	custom_description = {
+		text = "character_cannot_take_more_patron_saint_levels_desc"
+		patron_saint_levels_left_for_this_saint_value >= $LEVEL$
+	}
+}
+
+character_can_have_patron_saint_level = {
+	custom_description = {
+		text = "faith_does_not_permit_this_patron_saint_level_desc"
+		patron_saint_max_individual_saint_level_value >= $LEVEL$
+	}
+}
+
+ai_should_have_secondary_patron = {
+	patron_saint_max_saint_number_value > 0
+}
+
+##################################
+# Specific Patron Saint Triggers #
+##################################
+
+generic_patron_saint_level_2_requirements_trigger = {
+	must_have_saint_affinity_trigger = { VALUE = 30 }
+}
+
+generic_patron_saint_level_3_requirements_trigger = {
+	must_have_saint_affinity_trigger = { VALUE = 65 }
+}
+
+generic_patron_saint_level_4_requirements_trigger = {
+	must_have_saint_affinity_trigger = { VALUE = 100 }
+}
+
+generic_patron_saint_level_5_requirements_trigger = {
+	must_have_saint_affinity_trigger = { VALUE = 140 }
+}

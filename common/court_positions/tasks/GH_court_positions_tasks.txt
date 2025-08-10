@@ -1,0 +1,449 @@
+﻿court_adventurer_protect_province = {
+	court_position_types = { court_adventurer_court_position }
+
+	# Monthly cost for the task
+	cost = {
+		round = no
+		gold = {
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	employee_modifier = {
+		monthly_prestige = minor_court_position_task_prestige_salary
+	}
+
+	scaling_employer_modifiers = {
+		terrible = {
+		 	epidemic_resistance = 3
+		}
+		poor = {
+		 	epidemic_resistance = 6
+		}
+		average = {
+		 	epidemic_resistance = 10
+		}
+		good = {
+		 	epidemic_resistance = 15
+		}
+		excellent = {
+		 	epidemic_resistance = 20
+		}
+	}
+
+	is_shown = {  }
+	is_valid_showing_failures_only = { }
+
+	on_start = { }
+	on_end = { }
+
+	ai_will_do = {
+		value = 30
+		if = {
+			limit = {
+				any_sub_realm_county = {
+					any_county_province = {
+						any_province_epidemic = {
+							count >= 1
+						}
+					}
+				}
+				NOT = { has_trait = avaricious }
+			}
+			multiply = 1.5
+		}
+		if = {
+			limit = {
+				any_sub_realm_county = {
+					any_county_province = {
+						any_province_epidemic = {
+							count >= 1
+							outbreak_intensity >= major
+						}
+					}
+				}
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				capital_county ?= {
+					any_county_province = {
+						any_province_epidemic = {
+							count >= 1
+						}
+					}
+				}
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				monthly_character_income < monthly_court_position_task_cost_double
+				NOT = {
+					capital_county ?= {
+						any_county_province = {
+							any_province_epidemic = {
+								count >= 1
+								outbreak_intensity >= major
+							}
+						}
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}
+
+court_adventurer_adventure = {
+	court_position_types = { court_adventurer_court_position }
+
+	# Monthly cost for the task
+	cost = {
+		round = no
+		gold = {
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	employee_modifier = {
+		monthly_prestige = minor_court_position_task_prestige_salary
+	}
+
+	scaling_employer_modifiers = {
+		terrible = {
+		 	monthly_lifestyle_xp_gain_mult = 0.02
+		}
+		poor = {
+		 	monthly_lifestyle_xp_gain_mult = 0.04
+		}
+		average = {
+		 	monthly_lifestyle_xp_gain_mult = 0.06
+		}
+		good = {
+		 	monthly_lifestyle_xp_gain_mult = 0.08
+		}
+		excellent = {
+		 	monthly_lifestyle_xp_gain_mult = 0.1
+		}
+	}
+
+	is_shown = {  }
+	is_valid_showing_failures_only = { }
+
+	on_start = { }
+	on_end = { }
+
+	ai_will_do = {
+		value = 30
+		if = {
+			limit = {
+				OR = {
+					has_trait = sickly
+					has_trait = paranoid
+					AND = {
+						has_any_disease_trigger = yes
+						has_serious_disease_trigger = no
+					}
+				}
+			}
+			multiply = 1.5
+		}
+		if = {
+			limit = {
+				has_serious_disease_trigger = yes
+			}
+			multiply = 2.5
+		}
+		if = {
+			limit = {
+				monthly_character_income < monthly_court_position_task_cost_double
+			}
+			multiply = 0
+		}
+	}
+}
+
+court_adventurer_perform_heroics = {
+	court_position_types = { court_adventurer_court_position }
+
+	# Monthly cost for the task
+	cost = {
+		round = no
+		gold = {
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	employee_modifier = {
+		monthly_prestige = minor_court_position_task_prestige_salary
+	}
+
+	scaling_employer_modifiers = {
+		terrible = {
+		 	monthly_prestige_gain_mult = -0.01
+			county_opinion_add = 2
+		}
+		poor = {
+		 	monthly_prestige_gain_mult = 0.01
+			county_opinion_add = 4
+		}
+		average = {
+		 	monthly_prestige_gain_mult = 0.02
+			county_opinion_add = 8
+		}
+		good = {
+		 	monthly_prestige_gain_mult = 0.03
+			county_opinion_add = 12
+		}
+		excellent = {
+		 	monthly_prestige_gain_mult = 0.04
+			county_opinion_add = 18
+		}
+	}
+
+	is_shown = {  }
+	is_valid_showing_failures_only = { }
+
+	on_start = { }
+	on_end = { }
+
+	ai_will_do = {
+		value = 30
+		if = {
+			limit = {
+				num_virtuous_traits >= 2
+			}
+			multiply = 1.5
+		}
+		if = {
+			limit = {
+				has_trait = zealous
+				has_trait = excommunicated
+			}
+			multiply = 2
+		}
+		if = {
+			limit = {
+				has_trait = cynical
+			}
+			multiply = 0.25
+		}
+		if = {
+			limit = {
+				monthly_character_income < monthly_court_position_task_cost_double
+			}
+			multiply = 0
+		}
+	}
+}
+
+colonial_administrator_attend_colonial_affairs = {
+	court_position_types = { colonial_administrator_court_position }
+
+	cost = { # Monthly cost for the task
+		round = no
+		gold = {
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	employee_modifier = {
+		monthly_prestige = minor_court_position_task_prestige_salary
+	}
+
+	is_shown = { }
+
+	is_valid_showing_failures_only = { }
+
+	on_start = {
+		custom_tooltip = colonial_administrator_attend_colonial_affairs_tt
+		add_character_flag = colonial_administrator_attend_colonial_affairs_flag
+		if = {
+			limit = { has_character_flag = colonial_administrator_sustainable_development_flag }
+			remove_character_flag = colonial_administrator_sustainable_development_flag
+		}
+	}
+
+	on_end = {
+		if = {
+			limit = { has_character_flag = colonial_administrator_attend_colonial_affairs_flag }
+			remove_character_flag = colonial_administrator_attend_colonial_affairs_flag
+		}
+	}
+
+	ai_will_do = {
+		value = 30
+		if = {
+			limit = { any_owned_story = { story_type = story_cycle_colonization } }
+			multiply = 1.5
+		}
+		if = {
+			limit = { has_trait = impatient }
+			multiply = 1.5
+		}
+		if = {
+			limit = { has_trait = patient }
+			multiply = 0.5
+		}
+		if = {
+			limit = { has_trait = calm }
+			multiply = 0.5
+		}
+	}
+}
+
+colonial_administrator_sustainable_development = {
+	court_position_types = { colonial_administrator_court_position }
+
+	cost = { # Monthly cost for the task
+		round = no
+		gold = {
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	employee_modifier = {
+		monthly_prestige = minor_court_position_task_prestige_salary
+	}
+
+	is_shown = { }
+
+	is_valid_showing_failures_only = { }
+
+	on_start = {
+		custom_tooltip = colonial_administrator_sustainable_development_tt
+		add_character_flag = colonial_administrator_sustainable_development_flag
+		if = {
+			limit = { has_character_flag = colonial_administrator_attend_colonial_affairs_flag }
+			remove_character_flag = colonial_administrator_attend_colonial_affairs_flag
+		}
+	}
+
+	on_end = {
+		if = {
+			limit = { has_character_flag = colonial_administrator_sustainable_development_flag }
+			remove_character_flag = colonial_administrator_sustainable_development_flag
+		}
+	}
+
+	ai_will_do = {
+		value = 30
+		if = {
+			limit = { any_owned_story = { story_type = story_cycle_colonization } }
+			multiply = 1.5
+		}
+		if = {
+			limit = { has_trait = impatient }
+			multiply = 0.5
+		}
+		if = {
+			limit = { has_trait = patient }
+			multiply = 1.5
+		}
+		if = {
+			limit = { has_trait = diligent }
+			multiply = 2
+		}
+	}
+}
+
+colonial_administrator_riches_of_the_frontier = {
+	court_position_types = { colonial_administrator_court_position }
+
+	cost = { # Monthly cost for the task
+		round = no
+		gold = {
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	employee_modifier = {
+		monthly_prestige = minor_court_position_task_prestige_salary
+	}
+
+	scaling_employer_modifiers = {
+		terrible = {
+			monthly_prestige_gain_mult = 0.05
+			court_grandeur_baseline_add = 1
+		}
+		poor = {
+			monthly_prestige_gain_mult = 0.05
+			court_grandeur_baseline_add = 2
+		}
+		average = {
+			monthly_prestige_gain_mult = 0.10
+			court_grandeur_baseline_add = 3
+		}
+		good = {
+			monthly_prestige_gain_mult = 0.15
+			court_grandeur_baseline_add = 4
+		}
+		excellent = {
+			monthly_prestige_gain_mult = 0.20
+			court_grandeur_baseline_add = 5
+		}
+	}
+
+	is_shown = { }
+
+	is_valid_showing_failures_only = { }
+
+	on_start = {
+		if = {
+			limit = { has_character_flag = colonial_administrator_attend_colonial_affairs_flag }
+			remove_character_flag = colonial_administrator_attend_colonial_affairs_flag
+		}
+		if = {
+			limit = { has_character_flag = colonial_administrator_sustainable_development_flag }
+			remove_character_flag = colonial_administrator_sustainable_development_flag
+		}
+	}
+
+	on_end = { }
+
+	ai_will_do = {
+		value = 30
+		if = {
+			limit = { NOT = { any_owned_story = { story_type = story_cycle_colonization } } }
+			multiply = 1.5
+		}
+		if = {
+			limit = { has_trait = greedy }
+			multiply = 2
+		}
+		if = {
+			limit = { has_trait = avaricious }
+			multiply = 2
+		}
+		if = {
+			limit = { has_trait = content }
+			multiply = 0.5
+		}
+	}
+}

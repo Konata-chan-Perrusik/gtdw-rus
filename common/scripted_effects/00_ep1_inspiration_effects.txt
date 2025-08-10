@@ -1,0 +1,4988 @@
+﻿
+fund_inspiration_effect = {
+	scope:recipient = {
+		if = {
+			limit = {
+				NOT = { is_courtier_of = scope:actor }
+			}
+			if = {
+				limit = {
+					any_traveling_family_member = {
+						can_any_traveling_family_members_travel_trigger = yes
+					}
+				}
+				every_traveling_family_member = {
+					custom = fund_inspiration_interaction_reqruit_family_tooltip
+					limit = {
+						can_any_traveling_family_members_travel_trigger = yes
+					}
+					scope:actor = {
+						add_courtier = prev
+					}
+				}
+			}
+			scope:actor = {
+				add_courtier = scope:recipient
+			}
+		}
+		add_opinion = {
+			target = scope:actor
+			modifier = grateful_opinion
+			opinion = 40
+		}
+	}
+	scope:actor = {
+		sponsor_inspiration = scope:recipient.inspiration
+	}
+	# GH CHANGE: Removed vanilla achievement stuff
+}
+
+grant_inspiration_reward_effect = {
+	add_gold = {
+		value = root.inspiration_gold_invested
+		multiply = 0.25
+	}
+	add_prestige_level = 1
+	add_prestige = {
+		value = root.inspiration_gold_invested
+		multiply = 0.75
+	}
+}
+
+set_alchemy_inspiration_type_effect = {
+	save_temporary_scope_value_as = {
+		name = allow_no_type_option
+		value = $NO_TYPE$
+	}
+	hidden_effect = {
+		$BASE_SCOPE$ = {
+			#The type has been decided in events, when the character got inspired, or now. Let's save it! (might still leave it up to the sponsor if allow_no_type_option = yes!)
+			if = {
+				limit = {
+					NOT = { exists = var:artifact_alchemy_type }
+				}
+				random_list = { #What do they want to do?
+					5 = { #Elixirs
+						modifier = {
+							add = 5
+							has_trait = arrogant
+						}
+						set_variable = {
+							name = artifact_alchemy_type
+							value = flag:alchemy_type_elixirs
+						}
+					}
+					10 = { #Metals
+						set_variable = {
+							name = artifact_alchemy_type
+							value = flag:alchemy_type_metals
+						}
+					}
+					10 = { #Panacea: a cure-all for all disease
+						modifier = {
+							add = 10
+							has_trait = lifestyle_physician
+						}
+						set_variable = {
+							name = artifact_alchemy_type
+							value = flag:alchemy_type_panacea
+						}
+					}
+					5 = { #Immortality
+						modifier = {
+							add = 5
+							has_trait = arrogant
+						}
+						set_variable = {
+							name = artifact_alchemy_type
+							value = flag:alchemy_type_immortality
+						}
+					}
+					50 = { #They don't care and you can decide!
+						trigger = {
+							scope:allow_no_type_option = yes
+						}
+						modifier = {
+							add = 30
+							has_personality_submissive_trigger = yes
+						}
+						ai_value_modifier = {
+							ai_boldness = -0.25
+							ai_energy = -0.25
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+################
+# Adventurer Inspiration effects
+################
+# The Adventurer Inspiration is a bit special since it can result in many different types of artifacts, so we handle the generation here
+
+# Where is the adventurer going?
+set_adventure_location_effect = {
+	save_temporary_scope_value_as = {
+		name = allow_no_destination_option
+		value = $NO_DESTINATION$
+	}
+	hidden_effect = { #If they haven't specified where they're going we decide it here (might still leave it up to the sponsor if allow_no_destination_option = yes!)
+		$BASE_SCOPE$ = {
+			if = {
+				limit = {
+					NOT = { exists = var:adventure_destination }
+				}
+				random_list = {
+					10 = {
+						# Sarradon
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								location = {
+									NOT = { geographical_region = world_sarradon }
+								}
+								adventurer_potential_destination_distance_check = {
+									REGION = world_sarradon
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:sarradon
+						}
+					}
+					10 = {
+						# West Sarradon
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_western_sarradon
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:sarradon_west
+						}
+					}
+					5 = {
+						# Kemsar
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_ws_kamsaria
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:kemsar
+						}
+					}
+					10 = {
+						# Central Sarradon
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_central_sarradon
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:sarradon_central
+						}
+					}
+					3 = {
+						# Sirwali
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = sirwali_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:sirwali
+						}
+					}
+					10 = {
+						# Crater
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = crater_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:crater
+						}
+					}
+					3 = {
+						# Cyrat
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = cyrat_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:cyrat
+						}
+					}
+					5 = {
+						# Damota
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = damota_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:damota
+						}
+					}
+					10 = {
+						# Greater Aversaria
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								location = { 
+									NOT = { geographical_region = world_greater_aversaria }
+								}
+								adventurer_potential_destination_distance_check = {
+									REGION = world_greater_aversaria
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:greater_aversaria
+						}
+					}
+					1 = {
+						# The Lichdoms
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = lichdoms_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:lichdoms
+						}
+					}
+					5 = {
+						# Marches
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = chevalie_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:chevalie
+						}
+					}
+					10 = {
+						# Kalathipsomi
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = kalathipsomi_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:kalathipsomi
+						}
+					}
+					1 = {
+						# The Mayikprolollan
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = mayikprolollan_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:mayikprolollan
+						}
+					}
+					10 = {
+						# Etepezea
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = etepezea_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:etepezea
+						}
+					}
+					10 = {
+						# Malcois
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = malcois_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:malcois
+						}
+					}
+					10 = {
+						# Opakhasia
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = opakhasia_biozone
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:opakhasia
+						}
+					}
+					15 = {
+						# Aironoi
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_ga_aironoi
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:aironoi
+						}
+					}
+					1 = {
+						# Redlands
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = GH_geographic_redlands_mainland
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:redlands
+						}
+					}
+					5 = {
+						# Foglands
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_ga_foglands
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:foglands
+						}
+					}
+					15 = {
+						# Kashirya
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_ga_kashirya
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:kashirya
+						}
+					}
+					10 = {
+						# Dahangon
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = GH_geographic_dahangon
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:dahangon
+						}
+					}
+					10 = {
+						# Pirate Coast
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = world_ga_pirate_coast
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:pirate_coast
+						}
+					}
+					5 = {
+						# Lonely Light
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = GH_geographic_lonely_light
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:lonely_light
+						}
+					}
+					5 = {
+						# The Isles
+						trigger = {
+							trigger_if = {
+								limit = { exists = location }
+								adventurer_potential_destination_distance_check = {
+									REGION = GH_geographic_isles
+								}
+							}
+						}
+						set_variable = {
+							name = adventure_destination
+							value = flag:the_isles
+						}
+					}
+					85 = { #Very skilled adventurers are often going to let you decide!
+						trigger = {
+							scope:allow_no_destination_option = yes
+						}
+						modifier = {
+							add = 40
+							has_personality_submissive_trigger = yes
+						}
+						ai_value_modifier = {
+							ai_boldness = -0.25
+							ai_energy = -0.25
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+get_adventure_inspiration_start_location = {
+	$ADVENTURER$ = { save_scope_as = adventurer }
+	scope:adventurer = {
+		if = {
+			limit = { exists = var:adventure_destination }
+			switch = {
+				trigger = var:adventure_destination
+				flag:greater_aversaria = {
+					random_county_in_region = {
+						region = world_greater_aversaria
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:chevalie = {
+					random_county_in_region = {
+						region = GH_geographic_marches
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:kalathipsomi = {
+					random_county_in_region = {
+						region = kalathipsomi_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:mayikprolollan = {
+					random_county_in_region = {
+						region = GH_geographic_mayikprolollan
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:etepezea = {
+					random_county_in_region = {
+						region = etepezea_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:malcois = {
+					random_county_in_region = {
+						region = malcois_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:opakhasia = {
+					random_county_in_region = {
+						region = opakhasia_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:aironoi = {
+					random_county_in_region = {
+						region = world_ga_aironoi
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:foglands = {
+					random_county_in_region = {
+						region = foglands_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:kashirya = {
+					random_county_in_region = {
+						region = world_kashirya
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:pirate_coast = {
+					random_county_in_region = {
+						region = world_ga_pirate_coast
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:dahangon = {
+					random_county_in_region = {
+						region = GH_geographic_dahangon
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:lichdoms = {
+					random_county_in_region = {
+						region = lichdoms_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:redlands = {
+					random_county_in_region = {
+						region = redlands_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:sarradon_west = {
+					random_county_in_region = {
+						region = world_western_sarradon
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:sarradon_central = {
+					random_county_in_region = {
+						region = world_central_sarradon
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:sirwali = {
+					random_county_in_region = {
+						region = sirwali_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:crater = {
+					random_county_in_region = {
+						region = crater_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:cyrat = {
+					random_county_in_region = {
+						region = cyrat_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:damota = {
+					random_county_in_region = {
+						region = damota_biozone
+						title_province = { save_scope_as = location }
+					}
+				}
+
+				flag:the_isles = {
+					random_county_in_region = {
+						region = divergence_island_regions
+						title_province = { save_scope_as = location }
+					}
+				}
+			}
+		}
+	}
+}
+
+inspiration_adventure_create_artifact_effect = {
+	$OWNER$ = { save_scope_as = owner } #Will always exist!
+	$CREATOR$ = { save_scope_as = adventurer } #Will always exist in an adventure inspiration!
+
+	#If you've somehow managed to not set a destination by now we generate one here
+	if = {
+		limit = {
+			NOT = { exists = scope:adventurer.var:adventure_destination }
+		}
+		set_adventure_location_effect = {
+			BASE_SCOPE = scope:adventurer
+			NO_DESTINATION = no
+		}
+		get_adventure_inspiration_start_location = { ADVENTURER = scope:adventurer }
+	}
+	else = {
+		#To save the location and make sure materials can access it
+		scope:adventurer.location = { save_scope_as = location } # To save the location scope based on the destination
+	}
+
+	#Creating the artifact based on the previous choice and outcome
+	scope:adventurer = {
+		hidden_effect = {
+			if = {
+				limit = { exists = scope:location }
+				scope:location = { add_to_list = artifact_material_sources } #Used for artifact creation
+			}
+			create_character = {
+				location = root.location
+				template = local_artisan_template
+				culture = scope:location.culture
+				faith = scope:location.faith
+				gender = scope:adventurer
+				dynasty = none
+				save_scope_as = artifact_origin #Fictional maker of artifact
+			}
+
+			random_list = {
+				15 = {
+					trigger = { #Epic Artifact
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					modifier = {
+						scope:adventurer.adventure_inspiration_average_skill_value <= low_inspiration_skill
+						add = -10
+					}
+					modifier = {
+						scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+						add = 25
+					}
+					root = {
+						random_list = {
+							10 = { #Chance of Relic
+								modifier = {
+									scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+									add = -5 #More likely to find something better.
+								}
+								modifier = {
+									scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+									add = -4 #High inspiration skill adventurers will only find relics if there is nothing else to find.
+								}
+								random_list = { #This is a list inside an item in the other list because we need _one_ chance for relic and the relic types must be able to have overlapping triggers. 
+									100 = { #Wardenite
+										trigger = {
+											scope:location ?= {
+												OR = {
+													faith.religion = religion:wardenism_religion
+													geographical_region = world_eastern_sarradon
+													geographical_region = world_es_hajjan_mountains
+													geographical_region = world_cs_usfeh
+													geographical_region = world_cs_udhaliyya
+												}
+											}
+										}
+										modifier = {
+											NOT = { scope:location.religion = religion:wardenism_religion }
+											add = -75
+										}
+										create_artifact_pedestal_wardenite_relic_effect_hist = { OWNER = root }
+									}
+									100 = { #Amsari
+										trigger = {
+											scope:location ?= {
+												OR = {
+													faith.religion = religion:amsari_religion
+													geographical_region = world_ws_amsari
+													geographical_region = world_ws_kamsaria
+												}
+											}
+										}
+										modifier = {
+											NOT = { scope:location.religion = religion:amsari_religion }
+											add = -75
+										}
+										create_artifact_pedestal_amsari_relic_effect_hist = { OWNER = root }
+									}
+									100 = { #Aversarian 
+										trigger = {
+											scope:location ?= {
+												OR = {
+													faith.religion = religion:aversarinas_aagiokrata_religion
+													geographical_region = world_greater_aversaria
+												}
+											}
+										}
+										modifier = {
+											NOT = { scope:location.religion = religion:aversarinas_aagiokrata_religion }
+											add = -75
+										}
+										create_artifact_votive_figure_effect = {
+											OWNER = root
+											LOCATION = scope:root.location
+										}
+									}
+									1 = { #Fallback Relic
+										create_artifact_pedestal_branch_relic_general_effect = {
+											OWNER = root
+											RELIGION = scope:location.religion
+										}
+									}
+								}
+							}
+							10 = { #Spear of Rehdyia Uddayir
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = rehdyia_uddayir_spear
+										}
+									}
+									scope:location ?= {
+										OR = {
+											geographical_region = world_eastern_sarradon
+											geographical_region = world_es_hajjan_mountains
+											geographical_region = world_cs_usfeh
+											geographical_region = world_cs_udhaliyya
+										}
+									}
+								}
+								create_artifact_rehdyia_uddayir_spear_effect = { OWNER = ROOT }
+							}
+							2 = { #Burial Mask of Ankepy IX
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = burial_mask_of_ankepy_ix
+										}
+									}
+									scope:location ?= {
+										geographical_region = world_ws_kamsaria
+									}
+								}
+								create_artifact_sculpture_mask_of_ankepy_ix_effect = { OWNER = root }
+							}
+							5 = { #Spear of Eshwo
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = spear_of_eshwo
+										}
+									}
+									scope:location ?= {
+										geographical_region = world_es_damota
+									}
+								}
+								create_artifact_spear_of_eshwo_effect = { OWNER = root }
+							}
+							10 = { # Skull of Kayoba
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = skull_of_kayoba
+											}
+									}
+									scope:location ?= {
+										geographical_region = world_es_damota
+									}
+								}
+								create_artifact_skull_of_kayoba_effect = { OWNER = root }
+							}
+							15 = { # Olani Seal
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = olani_seal
+										}
+									}
+									scope:location ?= {
+										geographical_region = world_es_damota
+									}
+								}
+								create_artifact_olani_seal_effect = { OWNER = root }
+							}
+							15 = { #Zalreb Seal
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = zalreb_seal
+										}
+									}
+									scope:location ?= {
+										geographical_region = world_es_damota
+									}
+								}
+								create_artifact_zalreb_seal_effect = { OWNER = root }
+							}
+							10 = {
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 5
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = mesir_seal
+										}
+									}
+									scope:location ?= {
+										geographical_region = world_es_damota
+									}
+								}
+								create_artifact_mesir_seal_effect = { OWNER = root }
+							}
+							1 = {
+								modifier = {
+									OR = {
+										scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+										AND = {
+											exists = scope:inspiration_owner.var:artifact_quality
+											scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+										}
+									}
+									add = 1
+								}
+								trigger = {
+									NOT = {
+										any_artifact = {
+											has_variable = crimsonseal
+										}
+									}
+									scope:location ?= {
+										geographical_region = world_sarradon
+									}
+								}
+								create_artifact_crimsonseal_effect = { OWNER = root }
+							}
+							3 = {	# Aelfir weapon
+								create_artifact_aelfir_weapon_effect = {
+									OWNER = scope:owner
+									CREATOR = scope:adventurer
+									SET_WEAPON_TYPE = flag:no
+								}
+							}
+						}
+					}
+				}
+				15 = { #Chance of Relic
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { #A Weapon
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = { 
+						create_artifact_weapon_effect = {
+							OWNER = scope:artifact_origin
+							CREATOR = scope:artifact_origin
+							SET_WEAPON_TYPE = flag:no
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = { #A book
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+								var:adventure_type = flag:magic_lore_quest
+							}
+						}
+					}
+					scope:owner = {
+						create_adventure_reward_book_effect = {
+							OWNER = scope:owner
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = book_artifact
+						value = yes
+					}
+				}
+
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = { #An armor
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_armor_effect = {
+							OWNER = scope:artifact_origin
+							CREATOR = scope:artifact_origin
+							SET_ARMOR_TYPE = flag:no
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = armor_artifact
+						value = yes
+					}
+				}
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = { # Necklace
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = { 
+						create_artifact_necklace_effect = {
+							OWNER = scope:artifact_origin
+							SMITH = scope:artifact_origin
+						}
+					}
+					scope:newly_created_artifact = { save_scope_as = necklace }
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = necklace_artifact
+						value = yes
+					}
+				}
+
+				15 = { # Archery Thumb Ring
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = {
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+							}
+							scope:location ?= { geographical_region = world_ga_aironoi }
+						}
+					}
+					scope:owner = { 
+						create_artifact_thumb_ring_effect = {
+							OWNER = scope:artifact_origin
+							SMITH = scope:artifact_origin
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = thumb_ring
+						value = yes
+					}
+				}
+
+				15 = { # Oltenic Mask
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = {
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+							}
+							scope:location ?= { geographical_region = world_ga_aironoi }
+						}
+					}
+					scope:owner = { 
+						create_artifact_oltenic_mask_effect = {
+							OWNER = scope:artifact_origin
+							SMITH = scope:artifact_origin
+							LOCATION = scope:artifact_origin.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = oltenic_mask
+						value = yes
+					}
+				}
+
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = {
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+								var:adventure_type = flag:epic_quest
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_regalia_effect = {
+							OWNER = scope:artifact_origin
+							SMITH = scope:artifact_origin
+						}
+					}
+					scope:owner = { 
+						save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+							name = regalia_artifact
+							value = yes
+						}
+					}
+				}
+
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { #Skull
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:skull_or_hide
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_wall_skull_effect = {
+							OWNER = scope:owner
+							HUNTER = scope:inspiration_owner
+							LEGENDARY = no
+							ANIMAL = flag:none
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+#				10 = { # GH URGENT: Hide creation effects were missing so removed them, reimplement
+#					modifier = {
+#						OR = {
+#							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+#							AND = {
+#								exists = scope:inspiration_owner.var:artifact_quality
+#								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+#							}
+#						}
+#						add = -5
+#					}
+#					trigger = { #Hide - big
+#						trigger_if = {
+#							limit = { exists = var:adventure_type }
+#							OR = {
+#								var:adventure_type = flag:skull_or_hide
+#								var:adventure_type = flag:free_reign
+#							}
+#						}
+#					}
+#					scope:owner = {
+#						create_artifact_animal_hide_big_effect = {
+#							OWNER = scope:owner
+#							HUNTER = scope:inspiration_owner
+#						}
+#					}
+#					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+#						name = hide_big
+#						value = yes
+#					}
+#				}
+#				10 = {
+#					modifier = {
+#						OR = {
+#							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+#							AND = {
+#								exists = scope:inspiration_owner.var:artifact_quality
+#								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+#							}
+#						}
+#						add = -5
+#					}
+#					trigger = { #Hide - medium (lagom)
+#						trigger_if = {
+#							limit = { exists = var:adventure_type }
+#							OR = {
+#								var:adventure_type = flag:skull_or_hide
+#								var:adventure_type = flag:free_reign
+#							}
+#						}
+#					}
+#					scope:owner = {
+#						create_artifact_animal_hide_medium_effect = {
+#							OWNER = scope:owner
+#							HUNTER = scope:inspiration_owner
+#						}
+#					}
+#					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+#						name = hide_medium
+#						value = yes
+#					}
+#				}
+#				10 = {
+#					modifier = {
+#						OR = {
+#							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+#							AND = {
+#								exists = scope:inspiration_owner.var:artifact_quality
+#								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+#							}
+#						}
+#						add = -5
+#					}
+#					trigger = { #Hide - small
+#						trigger_if = {
+#							limit = { exists = var:adventure_type }
+#							OR = {
+#								var:adventure_type = flag:skull_or_hide
+#								var:adventure_type = flag:free_reign
+#							}
+#						}
+#					}
+#					scope:owner = {
+#						create_artifact_animal_hide_small_effect = {
+#							OWNER = scope:owner
+#							HUNTER = scope:inspiration_owner
+#						}
+#					}
+#					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+#						name = hide_small
+#						value = yes
+#					}
+#				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { #Trinket, box small
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_box_small_effect = {
+							OWNER = scope:owner
+							CARPENTER = scope:inspiration_owner
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = box
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { #Trinket, goblet
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_goblet_effect = {
+							OWNER = scope:owner
+							SMITH = scope:inspiration_owner
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = goblet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = { #Tapestry
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:tapestry_or_fabric
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_tapestry_effect = {
+							OWNER = scope:owner
+							WEAVER = scope:inspiration_owner
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = tapestry
+						value = yes
+					}
+				}
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						trigger_if = {
+							limit = {
+								AND = {
+									exists = var:adventure_type
+									scope:inspiration_owner = {
+										location = { geographical_region = world_greater_aversaria }
+									}
+								}
+								OR = {
+									var:adventure_type = flag:trinket
+									var:adventure_type = flag:epic_quest
+									var:adventure_type = flag:free_reign
+								}
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_marcher_casket_effect = {
+							OWNER = root
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = {
+						name = casket
+						value = yes
+					}
+				}
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						trigger_if = {
+							limit = {
+								AND = {
+									exists = var:adventure_type
+									scope:inspiration_owner = {
+										location = {
+											OR = {
+												culture_has_porcelain_pottery_trigger = yes
+												geographical_region = world_greater_aversaria	# Even if Aversarian cultures dies out, there should still be the odd old pottery floating around
+												geographical_region = world_ga_kashirya		# Kashirya does not have a particularly noteworthy pottery tradition; however, it's a place where Kathuni porcelain often ends up via trade
+												geographical_region = GH_geographic_dahangon # Same goes for Dahangon
+											}
+										}
+									}
+								}
+								OR = {
+									var:adventure_type = flag:trinket
+									var:adventure_type = flag:epic_quest
+									var:adventure_type = flag:free_reign
+								}
+							}
+						}
+					}
+					if = {
+						limit = { 
+							scope:inspiration_owner.location.culture = {
+								culture_has_porcelain_pottery_trigger = yes
+							}
+						}
+						scope:inspiration_owner.location.culture = { save_scope_as = override_culture }
+					}
+					else_if = {
+						limit = { scope:inspiration_owner.location = { geographical_region = opakhasia_biozone } }
+						culture:southernimperial = { save_scope_as = override_culture }
+					}
+					else_if = {
+						limit = { scope:inspiration_owner.location = { geographical_region = kalathipsomi_biozone } }
+						culture:northernimperial = { save_scope_as = override_culture }
+					}
+					else_if = {
+						limit = { scope:inspiration_owner.location = { geographical_region = malcois_biozone } }
+						culture:centralimperial = { save_scope_as = override_culture }
+					}
+					else_if = {
+						limit = { scope:inspiration_owner.location = { geographical_region = world_ga_aironoi } }
+						culture:easternimperial = { save_scope_as = override_culture }
+					}
+					else_if = {
+						limit = { scope:inspiration_owner.location = { geographical_region = world_greater_aversaria } }
+						culture:westernimperial = { save_scope_as = override_culture }
+					}
+					else = {
+						culture:kathunian = { save_scope_as = override_culture }
+					}
+					scope:owner = {
+						create_artifact_vessel_earthware_effect = {
+							OWNER = root
+							POTTER = scope:inspiration_owner
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = {
+						name = earthware
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						trigger_if = {
+							limit = {
+								AND = {
+									exists = var:adventure_type
+									scope:inspiration_owner = {
+										location = {
+											OR = {
+												has_sarradonian_heritage_pillar_trigger = yes	# Sarradon is famed for its glassware
+												geographical_region = world_sarradon
+											}
+										}
+									}
+								}
+								OR = {
+									var:adventure_type = flag:trinket
+									var:adventure_type = flag:epic_quest
+									var:adventure_type = flag:free_reign
+								}
+							}
+						}
+					}
+					if = {
+						limit = { 
+							scope:inspiration_owner.location.culture = { has_sarradonian_heritage_pillar_trigger = yes }
+						}
+						scope:inspiration_owner.location.culture = { save_scope_as = override_culture }
+					}
+					else = {
+						random_culture_global = {
+							limit = { has_sarradonian_heritage_pillar_trigger = yes }
+							save_scope_as = override_culture
+						}
+					}
+					scope:owner = {
+						create_artifact_vessel_glassware_effect = {
+							OWNER = root
+							POTTER = scope:inspiration_owner
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = {
+						name = glassware
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						trigger_if = {
+							limit = {
+								AND = {
+									exists = var:adventure_type
+									scope:inspiration_owner = {
+										location = { geographical_region = world_sarradon }
+									}
+								}
+								OR = {
+									var:adventure_type = flag:trinket
+									var:adventure_type = flag:free_reign
+								}
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_stone_tablet_effect = {
+							OWNER = scope:owner
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = {
+						name = tablet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						trigger_if = {
+							limit = {
+								AND = {
+									exists = var:adventure_type
+									scope:inspiration_owner = {
+										location = { geographical_region = world_greater_aversaria }
+									}
+								}
+								OR = {
+									var:adventure_type = flag:trinket
+									var:adventure_type = flag:epic_quest
+									var:adventure_type = flag:free_reign
+								}
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_votive_figure_effect = {
+							OWNER = scope:owner
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = {
+						name = votive
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						trigger_if = {
+							limit = {
+								AND = {
+									exists = var:adventure_type
+									scope:inspiration_owner = {
+										location = { geographical_region = world_ga_marcher_kingdoms }
+									}
+								}
+								OR = {
+									var:adventure_type = flag:trinket
+									var:adventure_type = flag:free_reign
+								}
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_commemorative_coin_effect = {
+							OWNER = scope:owner
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = {
+						name = coin
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = { #Staff
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:staff_quest
+						}
+					}
+					scope:owner = {
+						create_artifact_staff_effect = {
+							OWNER = scope:owner 
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				10 = { #Chance of Relic
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { #A Weapon
+						NOT = {
+							any_artifact = {
+								has_variable = peytons_bonecracker
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = { 
+						create_artifact_peytons_bonecracker_effect = {
+							OWNER = scope:owner
+							#CREATOR = scope:artifact_origin
+							#SET_WEAPON_TYPE = flag:no
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				3 = { #Chance of Relic
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { #A Weapon
+						NOT = {
+							any_artifact = {
+								has_variable = sword_of_eos
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_sarradon }
+							}
+						}
+					}
+					scope:owner = { 
+						create_artifact_sword_of_eos_effect = {
+							OWNER = scope:owner
+							#CREATOR = scope:artifact_origin
+							#SET_WEAPON_TYPE = flag:no
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = marias_blade
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_marias_blade_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOT = {
+							any_artifact = {
+								has_variable = theyvns_breastplate
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_theyvns_breastplate_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = pedestal
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = blackhorn
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_blackhorn_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = pedestal
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = aversarian_crown_base
+							}
+							any_artifact = {
+								has_variable = aversarian_crown
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aversarian_crown_base_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					add_to_global_variable_list = { name = aversarian_broken_crown_pieces target = scope:aversarian_crown_1 }
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = aversarian_crown_jewels
+							}
+							any_artifact = {
+								has_variable = aversarian_crown
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aversarian_crown_jewels_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					add_to_global_variable_list = { name = aversarian_broken_crown_pieces target = scope:aversarian_crown_2 }
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = aversarian_crown_dragonveil
+							}
+							any_artifact = {
+								has_variable = aversarian_crown
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aversarian_crown_dragonveil_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					add_to_global_variable_list = { name = aversarian_broken_crown_pieces target = scope:aversarian_crown_3 }
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = aversarian_crown_chain
+							}
+							any_artifact = {
+								has_variable = aversarian_crown
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aversarian_crown_chain_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					add_to_global_variable_list = { name = aversarian_broken_crown_pieces target = scope:aversarian_crown_4 }
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = aversarian_crown_diamond
+							}
+							any_artifact = {
+								has_variable = aversarian_crown
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aversarian_crown_diamond_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					add_to_global_variable_list = { name = aversarian_broken_crown_pieces target = scope:aversarian_crown_5 }
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1251.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = gh_helmet_black_sun
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_gh_helmet_black_sun_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1251.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = gh_armor_black_sun
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_gh_armor_black_sun_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = armor_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = gh_helmet_skull_helmet
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_gh_helmet_skull_helmet_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = skull_axiaothea
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_skull_of_axiaothea_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = skullofpridni
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_skullofpridni_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = skullofduvaken
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_skullofduvaken_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = skull_delenel
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_skull_delenel_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = spear_thaxaon
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_spear_thaxaon_spear_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = glass_sword
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_glass_sword_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = bane_star_ring
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_bane_star_ring_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = regalia
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = acolytes_confidant
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_acolytes_confidant_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = regalia
+						value = yes
+					}
+				}
+				3 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = sun_piercer
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_sun_piercer_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = adekaday
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = GH_geographic_dahangon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_adekaday_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				3 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = kenaranek
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = GH_geographic_dahangon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_kenaranek_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = kedatals_talon
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = GH_geographic_dahangon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_kedatals_talon_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = myrnish_map
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_ga_aversarian_homelands }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_myrnish_map_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = book_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = wave_breaker
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = GH_geographic_dahangon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_wave_breaker_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = thunderhoofs_roar
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = GH_geographic_dahangon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_thunderhoofs_roar_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = fireclaw
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = GH_geographic_dahangon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_fireclaw_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}				
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = atracorde
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_atracorde_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				3 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = jajak_mask
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_jajak_mask_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = dagun_mask
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_dagun_mask_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = { # Skymother's Tear
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						AND = { # Elysian Pass
+							current_date > 1252.2.3
+							NOT = { any_artifact = { has_variable = skymothers_tear } }
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_skymothers_tear_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = thumb_ring
+						value = yes
+					}
+				}
+				10 = { # Consopite Effigy
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level # Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = { # Looted during Cenware's raid on Mayik
+							current_date > 1244.1.1
+							NOT = { any_artifact = { has_variable = consopite_effigy } }
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_consopite_effigy_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { # We save the type here for tooltips in fund_inspiration.1051
+						name = effigy
+						value = yes
+					}
+				}
+				10 = { # Achromatic Mirror
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level # Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = { # Looted during Cenware's raid on Mayik
+							current_date > 1244.1.1
+							NOT = { any_artifact = { has_variable = achromatic_mirror } }
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_achromatic_mirror_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { # We save the type here for tooltips in fund_inspiration.1051
+						name = mirror
+						value = yes
+					}
+				}
+				10 = { # Vorpal Blade
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level # Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						current_date > 600.1.1
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_vorpal_blade_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { # We save the type here for tooltips in fund_inspiration.1051
+						name = useless_sword
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1231.4.6
+							NOT = {
+								any_artifact = {
+									has_variable = talavara
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_ga_kashirya }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_talavara_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon_artifact
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = broken_crown_1
+							}
+							any_artifact = {
+								has_variable = crown_of_chevalie
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_broken_crown_effect_1 = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = broken_crown_2
+							}
+							any_artifact = {
+								has_variable = crown_of_chevalie
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_broken_crown_effect_2 = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = broken_crown_3
+							}
+							any_artifact = {
+								has_variable = crown_of_chevalie
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_broken_crown_effect_3 = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						NOR = {
+							any_artifact = {
+								has_variable = broken_crown_4
+							}
+							any_artifact = {
+								has_variable = crown_of_chevalie
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = chevalie_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_broken_crown_effect_4 = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1253.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = necklace_of_the_baarilka
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = damota_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_necklace_of_the_baarilka_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = necklace
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1253.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = belar_seal
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = damota_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_belar_seal_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = ring
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = lichdoms_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_crown_of_prawladsyl_artifact_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = malcois_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_crown_of_iyrossi_artifact_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = helmet
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						AND = {
+							current_date > 1245.1.1
+							NOT = {
+								any_artifact = {
+									has_variable = staff_of_the_high_seer
+								}
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:staff_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_staff_of_the_high_seer_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				# Kalathipsomi Artifacts
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						current_date > 642.1.31
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					random_list = {
+						1 = {
+							scope:owner = {
+								create_artifact_fidhasil_cabinet_effect = {
+									OWNER = scope:owner 
+									#LOCATION = scope:inspiration_owner.location
+								}
+							}
+						}
+						1 = {
+							scope:owner = {
+								create_artifact_fidhasil_table_effect = {
+									OWNER = scope:owner 
+									#LOCATION = scope:inspiration_owner.location
+								}
+							}
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = cupboard
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = tarthailar_sceptre
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_tarthailar_sceptre_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = regalia
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = honey_orb
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_honey_orb_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = beekeepers_wand
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_beekeepers_wand_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = maethroxian_water_mirror
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_maethroxian_water_mirror_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = cupboard
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_fur_tuft_old_cubozoid = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_cloak_wilderking_shedding_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				3 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = 5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = wilderking_cloak_true
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_cloak_wilderking_true_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				3 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = 5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = spear_malkhandor
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_spear_malkhandor_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = rose_of_themetea
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_rose_of_themetea_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = fairyqueen_lantern
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_fairyqueen_lantern_extinguished_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = aedean_amulet
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aedean_amulet_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = necklace
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = sword_pathos
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_sword_pathos_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = sword_marcomer
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_sword_marcomer_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = sword_mornegeu
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_sword_mornegeu_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = weapon
+						value = yes
+					}
+				}
+				10 = {
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = greyfen_codex
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_greyfen_codex_book_effect = {
+							OWNER = scope:owner 
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				3 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = 5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = wizard_king_staff
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kalathipsomi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_wizard_king_staff_effect = {
+							OWNER = root 
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = staffofkatharitos
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:staff_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = kharadamat_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_staffofkatharitos_staff_effect = {
+							OWNER = scope:owner 
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				2 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = aersanonstaff1
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:staff_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aersanonstaff1_staff_effect = {
+							OWNER = root 
+							LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				2 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = aersanonstaff2
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:staff_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_sarradon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_aersanonstaff2_staff_effect = {
+							OWNER = root 
+							LOCATION = scope:inspiration_owner.location
+							
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = staff
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = fell_charm
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_fell_charm_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = necklace
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = panicked_eye_amulet
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_panicked_eye_amulet_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = necklace
+						value = yes
+					}
+				}
+				1 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = lich_king_ring
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = lichdoms_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_ring_lich_king_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = ring
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = ring_waysaint
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:epic_quest
+								var:adventure_type = flag:free_reign
+							}
+							scope:inspiration_owner = {
+								OR = {
+									location = { geographical_region = chevalie_biozone }
+									location = { geographical_region = lichdoms_biozone }
+									location = { geographical_region = kalathipsomi_biozone }
+								}
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_ring_waysaint_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = ring
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								OR = {
+									location = { geographical_region = chevalie_biozone }
+									location = { geographical_region = world_eastern_sarradon }
+									location = { geographical_region = world_es_hajjan_mountains }
+									location = { geographical_region = world_cs_usfeh }
+									location = { geographical_region = world_cs_udhaliyya }
+								}
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_fire_arbalest_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = fire_arbalest
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = greed_necklace
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_greed_necklace_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = necklace
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = talking_skull
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_talking_skull_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_whispering_skull_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_ancient_skull_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_greater_aversaria }
+							}
+						}
+					}
+					scope:owner = {
+						#create_artifact_dragonskull_effect = {
+						#	OWNER = scope:owner
+						#	#LOCATION = scope:inspiration_owner.location
+						#}
+						create_artifact_wall_skull_effect = {
+							OWNER = scope:owner
+							HUNTER = scope:adventurer
+							LEGENDARY = yes
+							ANIMAL = flag:dragon
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = skull
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = world_sarradon }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_boneoftheworldeater_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = bone
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_kartharaddiman_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = automata
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_kartharaddi_musicautomata_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = automata
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_kartharaddi_dancingautomata_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = automata
+						value = yes
+					}
+				}
+
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_kartharaddi_deadlydancingautomata_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = automata
+						value = yes
+					}
+				}
+
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_automaticgemlion_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = automata
+						value = yes
+					}
+				}
+				1 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= high_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = 5
+					}
+					trigger = {
+						NOT = {
+							any_artifact = {
+								has_variable = sword_of_soter
+							}
+						}
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = western_aironoi_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_sword_of_soter_effect = {
+							OWNER = scope:owner 
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = epic
+						value = yes
+					}
+				}
+				5 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > high_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -5
+					}
+					trigger = { 
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							var:adventure_type = flag:epic_quest
+							scope:inspiration_owner = {
+								location = { geographical_region = foglands_biozone }
+							}
+						}
+					}
+					scope:owner = {
+						create_artifact_brokenavianautomata_effect = {
+							OWNER = scope:owner
+							#LOCATION = scope:inspiration_owner.location
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = automata
+						value = yes
+					}
+				}
+				10 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+					trigger = { #Persian Drinking Vessel (goblet)
+						has_fp3_dlc_trigger = yes
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:trinket
+								var:adventure_type = flag:free_reign
+							}
+						}
+						scope:location = { geographical_region = GH_geographic_khenemhat }
+					}
+					scope:owner = {
+						create_artifact_persian_drinking_vessel_effect = {
+							OWNER = scope:owner
+							SMITH = scope:inspiration_owner
+						}
+					}
+					save_scope_value_as = { #We save the type here for tooltips in fund_inspiration.1051
+						name = goblet
+						value = yes
+					}
+				}
+				15 = {
+					modifier = {
+						OR = {
+							scope:adventurer.adventure_inspiration_average_skill_value >= medium_inspiration_skill
+							AND = {
+								exists = scope:inspiration_owner.var:artifact_quality
+								scope:inspiration_owner.var:artifact_quality > medium_adventurer_epic_quality_level #Cumulative event choices
+							}
+						}
+						add = -2
+					}
+
+					trigger = {
+						trigger_if = {
+							limit = { exists = var:adventure_type }
+							OR = {
+								var:adventure_type = flag:bone_quest
+								var:adventure_type = flag:free_reign
+							}
+						}
+					}
+					scope:owner = {
+					 	create_artifact_bones_effect = {
+					 		OWNER = scope:owner
+							LOCATION = scope:inspiration_owner.location
+					 	}
+					}
+					save_scope_value_as = {
+						name = bone
+						value = yes
+					}
+				}
+			}
+			
+			if = {
+				limit = {
+					scope:inspiration_owner = {
+						location = { geographical_region = foglands_biozone }
+					}
+				}
+				random_list = {
+					50 = {
+						scope:newly_created_artifact = {
+							generate_fogged_artifact = yes
+						}
+					}
+					50 = {}
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:epic
+					NOT = { exists = scope:task_contract_taker }
+				}
+				scope:epic = {
+					add_artifact_history = {
+						location = root.capital_province
+						actor = scope:adventurer
+						recipient = root
+						type = given
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					exists = scope:newly_created_artifact
+					NOT = { exists = scope:task_contract_taker }
+				}
+				scope:newly_created_artifact = {
+					add_artifact_history = {
+						location = root.capital_province
+						actor = scope:adventurer
+						recipient = root
+						type = given
+					}
+				}
+			}
+			scope:newly_created_artifact = {
+				artifact_magical_infusion_effect = yes
+			}
+		}
+	}
+}

@@ -1,0 +1,165 @@
+﻿councillor_court_magi = { # GH ADD: Needs custom loc and other things from the 00_council_positions file
+	skill = learning
+	
+	name = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						is_fogeater = yes
+					}
+				}
+				desc = councillor_court_magi_fogeater
+			}
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						is_redlander = yes
+					}
+				}
+				desc = councillor_court_magi_redlander
+			}
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						GH_is_any_tribal_government_trigger = yes
+						highest_held_title_tier >= tier_empire
+					}
+				}
+				desc = councillor_court_magi_tribal_empire
+			}
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						GH_is_any_tribal_government_trigger = yes
+						highest_held_title_tier >= tier_kingdom
+					}
+				}
+				desc = councillor_court_magi_tribal_kingdom
+			}
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						GH_is_any_tribal_government_trigger = yes
+						highest_held_title_tier >= tier_duchy
+					}
+				}
+				desc = councillor_court_magi_tribal_duchy
+			}
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						GH_is_any_tribal_government_trigger = yes
+						highest_held_title_tier < tier_duchy
+					}
+					is_female = yes
+				}
+				desc = councillor_court_magi_tribal_county_female
+			}
+			triggered_desc = {
+				trigger = {
+					scope:councillor_liege = {
+						GH_is_any_tribal_government_trigger = yes
+						highest_held_title_tier < tier_duchy
+					}
+					is_female = no
+				}
+				desc = councillor_court_magi_tribal_county_male
+			}
+			desc = councillor_court_magi
+		}
+	}
+
+	tooltip = game_concept_court_magi_desc
+
+	valid_position = {
+		can_have_court_magi_trigger = yes
+	}
+
+	valid_character = {
+		exists = root.liege_or_court_owner
+		can_be_court_magi_trigger = { COURT_OWNER = root.liege_or_court_owner }
+	}
+
+	modifier = {
+		name = councillor_court_magi_modifier
+		prowess = 1 # GH TODO: Magic Prowess
+		#add = root.character_arcana_baseline_value
+		monthly_arcana_lifestyle_xp_gain_mult = 0.1
+		scale = council_scaled_by_liege_tier
+	}
+
+	council_owner_modifier = {
+		name = learn_on_the_job_modifier
+		learning = 1
+		scale = court_magi_learn_on_the_job_scale
+	}
+
+	council_owner_modifier = {
+		name = reliable_house_modifier
+		learning = 1
+		scale = court_magi_reliable_house_scale
+	}
+
+	on_get_position = {
+		got_council_position_effect = yes			
+	}
+	
+	on_fired_from_position = {
+		fired_from_council_position_effect = yes
+	}	
+	
+	portrait_animation = court_magi
+}
+
+councillor_quartermaster = { # GH ADD: Needs custom loc and other things from the 00_council_positions file
+	skill = stewardship
+	
+	name = councillor_quartermaster
+	tooltip = game_concept_quartermaster_desc
+
+	modifier = {
+		name = councillor_quartermaster_modifier
+		monthly_income = 1
+		scale = council_scaled_monthly_income
+	}
+
+	modifier = {
+		name = councillor_quartermaster_modifier
+		build_gold_cost = -0.05
+		monthly_stewardship_lifestyle_xp_gain_mult = 0.05
+		domain_tax_mult = 0.05
+		scale = council_scaled_by_liege_tier
+	}
+
+	council_owner_modifier = {
+		name = learn_on_the_job_modifier
+		stewardship = 1
+		scale = steward_learn_on_the_job_scale
+	}
+
+	council_owner_modifier = {
+		name = reliable_house_modifier
+		stewardship = 1
+		scale = steward_reliable_house_scale
+	}
+
+	valid_position = {
+		can_have_quartermaster_trigger = yes
+	}
+
+	valid_character = {
+		exists = root.liege_or_court_owner
+		can_be_quartermaster_trigger = { COURT_OWNER = root.liege_or_court_owner }
+	}
+
+	on_get_position = {
+		got_council_position_effect = yes
+	}
+
+	on_fired_from_position = {
+		fired_from_council_position_effect = yes
+	}
+
+	portrait_animation = steward
+}

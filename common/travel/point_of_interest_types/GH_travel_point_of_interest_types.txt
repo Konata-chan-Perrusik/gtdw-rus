@@ -1,0 +1,217 @@
+﻿# Anomalous Zones and Wizard's Towers
+poi_special_buildings_arcana = {
+	build_province_list = {
+		every_special_building_province = {
+			limit = {
+				has_building_with_flag = { flag = travel_point_of_interest_arcana }
+			}
+			add_to_list = provinces
+		}
+	}
+
+	on_visit = {
+		send_interface_toast = {
+			title = poi_special_buildings.visit
+			left_icon = root
+
+			add_arcana_lifestyle_xp = travel_medium_xp
+			traveler_travel_xp_effect = {
+				MIN = 3
+				MAX = 5
+			}
+			if = {
+				limit = {
+					is_landless_adventurer = yes
+					has_perk = organized_muster_rolls_perk
+				}
+				add_gold = see_how_its_done_gold_reward_value
+			}
+		}
+	}
+}
+
+# Aervalr Shards
+poi_aervalr_shards_enrichment = {
+	build_province_list = {
+		every_special_building_province = {
+			limit = {
+				has_building_with_flag = { flag = travel_point_of_interest_shard }
+			}
+			add_to_list = provinces
+		}
+	}
+
+	on_visit = {
+		send_interface_toast = {
+			title = poi_special_buildings.visit
+			left_icon = root
+
+			add_adventure_lifestyle_xp = travel_medium_xp
+			add_arcana_lifestyle_xp = travel_medium_xp
+			traveler_travel_xp_effect = {
+				MIN = 3
+				MAX = 3
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					scope:province.county.holder = root
+					scope:province.county.holder = { is_ruin = yes }
+				}
+			}
+			trigger_event = {
+				on_action = on_visited_arcane_site
+			}
+		}
+	}
+}
+
+poi_vounill = {
+	build_province_list = {
+		every_special_building_province = {
+			limit = {
+				has_building_with_flag = { flag = travel_point_of_interest_vounill }
+			}
+			add_to_list = provinces
+		}
+	}
+
+	on_visit = {
+		send_interface_toast = {
+			title = poi_vounill.visit
+			left_icon = root
+			custom_tooltip = gh_unique_poi.visit.tt
+
+			add_learning_lifestyle_xp = travel_major_xp
+			add_arcana_lifestyle_xp = travel_major_xp
+
+			if = {
+				limit = {
+					scope:province.barony ?= {
+						is_holy_site_of = root.faith
+					}
+				}
+				add_piety = medium_piety_gain
+			}
+			else = {
+				add_piety = minor_piety_gain
+			}
+
+			traveler_travel_xp_effect = {
+				MIN = 3
+				MAX = 5
+			}
+			if = {
+				limit = {
+					is_landless_adventurer = yes
+					has_perk = organized_muster_rolls_perk
+				}
+				add_gold = see_how_its_done_gold_reward_value
+			}
+		}
+	}
+}
+
+poi_towerwatch = {
+	build_province_list = {
+		every_special_building_province = {
+			limit = {
+				has_building_with_flag = { flag = travel_point_of_interest_towerwatch }
+			}
+			add_to_list = provinces
+		}
+	}
+	
+	on_visit = {
+		send_interface_toast = {
+			title = poi_towerwatch.visit
+			left_icon = root
+			custom_tooltip = gh_unique_poi.visit.tt
+
+			add_stewardship_lifestyle_xp = travel_medium_xp
+			add_prestige = medium_prestige_gain
+			add_arcana_skill = { VALUE = 1 }
+			force_character_skill_recalculation = yes
+
+			traveler_travel_xp_effect = {
+				MIN = 3
+				MAX = 5
+			}
+			if = {
+				limit = {
+					is_landless_adventurer = yes
+					has_perk = organized_muster_rolls_perk
+				}
+				add_gold = see_how_its_done_gold_reward_value
+			}
+		}
+	}
+}
+
+poi_abandoned_labyrinth = { # Aelfir Labyrinth
+	build_province_list = {
+		every_special_building_province = {
+			limit = { has_building_with_flag = { flag = travel_point_of_interest_abandoned_labyrinth } }
+			add_to_list = provinces
+		}
+	}
+
+	on_visit = {
+		custom_tooltip = {
+			text = poi_grand_city_visit_event_tt # Generic enough
+			trigger_event = gh_travel_event.9001
+		}
+		send_interface_toast = {
+			title = poi_abandoned_labyrinth.visit
+			left_icon = root
+			add_dread = minor_dread_gain
+			add_arcana_lifestyle_xp = travel_medium_xp
+			wanderer_lifestyle_destination_effect = yes
+			traveler_travel_xp_effect = {
+				MIN = 3
+				MAX = 5
+			}
+			if = {
+				limit = {
+					is_landless_adventurer = yes
+					has_perk = organized_muster_rolls_perk
+				}
+				add_gold = see_how_its_done_gold_reward_value
+			}
+		}
+		visiting_poi_effect = yes
+	}
+}
+
+poi_dragoncourt = {	# Dragoncourt
+	build_province_list = {
+		every_special_building_province = {
+			limit = { has_building_with_flag = { flag = travel_point_of_interest_dragoncourt } }
+			add_to_list = provinces
+		}
+	}
+	on_visit = {
+		send_interface_toast = {
+			title = poi_dragoncourt.visit
+			left_icon = root
+
+			add_poi_diplomacy_experience_effect = yes
+			point_of_interest_prestige_effect = yes
+
+			traveler_travel_xp_effect = {
+				MIN = 3
+				MAX = 5
+			}
+			if = {
+				limit = {
+					is_landless_adventurer = yes
+					has_perk = organized_muster_rolls_perk
+				}
+				add_gold = see_how_its_done_gold_reward_value
+			}
+			
+			visiting_poi_effect = yes
+		}
+	}
+}

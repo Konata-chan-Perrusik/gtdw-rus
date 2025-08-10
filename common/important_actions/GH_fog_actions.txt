@@ -1,0 +1,25 @@
+﻿### FOG RELATED ALERTS
+
+action_bordering_fog = {
+	type = alert
+	check_create_action = {
+		if = {
+			limit = {
+				any_sub_realm_county = {
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+			random_sub_realm_county = {
+				limit = { has_county_modifier = bordering_fog_modifier }
+				save_scope_as = fog_bordering_province
+			}
+			try_create_important_action = {
+				important_action_type = action_bordering_fog
+				actor = root
+			}
+		}
+	}
+	effect = {
+		pan_camera_to_title = scope:fog_bordering_province
+	}
+}
