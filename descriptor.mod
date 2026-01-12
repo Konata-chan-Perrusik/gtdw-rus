@@ -3,5 +3,5 @@ tags={
 	"Translation"
 }
 name="Godherja The Dying World Русский перевод"
-supported_version="1.15.0"
-remote_file_id="3453703863"
+supported_version="1.16.0"
+remote_file_id="3451241423"
