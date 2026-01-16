@@ -1,0 +1,875 @@
+﻿# if this needs to destroy a title (e.g. a 1-county duke with no vassals), it reads the destroying character from scope:destroyer
+gh_on_start_special_county_effect = {
+	every_county = {
+		if = {
+			limit = {
+				gh_special_province_lichdom_trigger = yes
+			}
+			random_list = {
+				100 = {
+				    modifier = {
+				    	add = {
+			    			subtract = necropolis_spawn_chance
+			    		}
+				    }
+				}
+				0 = {
+				    modifier = {
+				    	add = necropolis_spawn_chance
+				    }
+					spawn_special_province_necropolis = yes
+				}
+			}
+		}
+	}
+}
+
+spawn_special_province_necropolis = {
+	save_scope_as = special_county
+	create_character = {
+		#template = ruin_template
+		#location = $COUNTY$.title_province
+		#save_scope_as = ruin
+		location = scope:special_county.title_province
+		template = lich_basic_template
+		save_scope_as = necropolis_owner
+	}
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	scope:special_county = {
+		change_title_holder = {
+			holder = scope:necropolis_owner
+			change = scope:change
+		}
+	}
+	resolve_title_and_vassal_change = scope:change
+
+	#Make the kingdom title
+	create_dynamic_title = { # always saves to scope:new_title
+		tier = kingdom
+		name = NECROPOLIS_TITLE_NAME
+	}
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = setup_change
+		add_claim_on_loss = no
+	}
+	scope:new_title = {
+		set_delete_on_destroy = yes
+		set_capital_county = scope:special_county
+		set_landless_title = yes
+		set_no_automatic_claims = yes
+		set_can_be_named_after_dynasty = no
+		#generate_coa = yes
+		set_coa = scope:special_county
+		set_color_from_title = scope:special_county
+		change_title_holder = {
+			holder = scope:necropolis_owner
+			change = scope:setup_change
+		}
+		save_scope_as = lich_kingdom
+	}
+	resolve_title_and_vassal_change = scope:setup_change
+	# then do the actual wastelanding, but as a hidden effect (and show a custom tooltip for it instead)
+	#custom_tooltip = wasteland_effect_tt
+	hidden_effect = {
+		set_county_culture = culture:ojyczaynz
+		set_county_faith = faith:rejection
+		every_county_province = {
+			if = {
+				limit = {
+					NOT = { this = scope:special_county.title_province } 
+				}
+				scope:necropolis_owner = { get_title = prev.barony }
+			}
+			if = {
+				limit = { has_variable = colonization_story }
+				var:colonization_story = { end_story = yes }
+			}
+
+			if = {
+				limit = {
+					this = scope:special_county.title_province
+				}
+				set_holding_type = necropolis_holding
+			}
+			else_if = {
+				limit = {
+					OR = {
+						has_holding_type = castle_holding
+						has_holding_type = city_holding
+						has_holding_type = church_holding
+						has_holding_type = tribal_holding
+					}
+				}
+				if = {
+					limit = { has_special_building_slot = no }
+					set_holding_type = wasteland_empty_holding
+				}
+				else = { set_holding_type = ruin_holding }
+			}
+			else_if = {
+				limit = { is_any_metropolis_district = yes }
+				set_holding_type = ruined_district_holding
+			}
+		}
+		scope:necropolis_owner = { change_government = lichdom_government }
+		#scope:special_county = { save_scope_as = lichdom_capital_county }
+	}
+}
+
+set_lich_names = {
+	if = { 
+		limit = { is_female = no }     
+		random_list = {
+	    	55 = {
+	            random_list = {
+	            	1 = { change_first_name = flag:Кресим }
+	            	1 = { change_first_name = flag:Кресим}
+	                1 = { change_first_name = flag:Резим }
+	                1 = { change_first_name = flag:Басир }
+	                1 = { change_first_name = flag:Сасин }
+	                1 = { change_first_name = flag:Костмир }
+	            }
+	            random_list = {
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_kresimir" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_kresimir" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_vukimir" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_vukimir" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_rezimin" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_rezimin" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_ramizin" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_ramizin" }
+	                }
+	            }
+	        }
+	        55 = { #Couplet 2
+	            random_list = { #Couplet 2 FNames
+	                1 = { change_first_name = flag:Костей }
+	                1 = { change_first_name = flag:Марцтей }
+	                1 = { change_first_name = flag:Батори }
+	                1 = { change_first_name = flag:Рестей }
+	                1 = { change_first_name = flag:Ондей }
+	            }
+	            random_list = { #Couplet 2 LNames
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_kosterey" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_kosterey" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_oneygy" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_oneygy" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_daleyry" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_daleyry" }
+	                }
+	            }
+	        }
+	        55 = { #Couplet 3
+	            random_list = { #Couplet 3 FNames
+	                1 = { change_first_name = flag:Басир }
+	                1 = { change_first_name = flag:Батори }
+	                1 = { change_first_name = flag:Бавант }
+	                1 = { change_first_name = flag:Балтаз }
+	            }
+	            random_list = { #Couplet 3 LNames
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_batory" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_batory" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_ozba" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_ozba" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_balaraz" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_balaraz" }
+	                }
+	            }
+	        }
+	        55 = { #Couplet 4
+	            random_list = { #Couplet 4 FNames
+	                1 = { change_first_name = flag:Костей }
+	                1 = { change_first_name = flag:Костмир }
+	                1 = { change_first_name = flag:Моркос }
+	                1 = { change_first_name = flag:Костмар }
+	            }
+	            random_list = { #Couplet 4 LNames
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_kostor" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_kostor" }
+	                }
+	                1 = { #Special polish character 
+	                    house = { set_house_name = "dynn_lich_blogost" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_blogost" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_osterkampy" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_osterkampy" }
+	                }
+	            }
+	        }	
+	        55 = { #Couplet 5
+	            random_list = { #Couplet 5 FNames
+	                1 = { change_first_name = flag:Маргон }
+	                1 = { change_first_name = flag:Мазар }
+	                1 = { change_first_name = flag:Маран }
+	                1 = { change_first_name = flag:Мандан }
+	                1 = { change_first_name = flag:Марцтей }
+	            }
+	            random_list = { #Couplet 5 LNames
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_malkampy" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_malkampy" }
+	                }
+	                1 = { #Special polish character 
+	                    house = { set_house_name = "dynn_lich_ozmaran" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_ozmaran" }
+	                }
+	                1 = {
+	                    house = { set_house_name = "dynn_lich_razmalta" }
+	                    dynasty = { set_dynasty_name = "dynn_lich_razmalta" }
+	                }
+	            }
+	        }
+	    }
+	}
+	else = {
+   		random_list = {
+   			55 = { #Couplet 1
+   				random_list = { #Couplet 1 FNames
+   				    1 = { change_first_name = flag:Алерна }
+   				    1 = { change_first_name = flag:Аредерна }
+   				    1 = { change_first_name = flag:Эвредекса }
+   				    1 = { change_first_name = flag:Мариана }
+   				    1 = { change_first_name = flag:Азерета }
+   				    1 = { change_first_name = flag:Анарезья }
+   				}
+   				random_list = { #Couplet 1 LNames
+   				    1 = {
+   				        house = { set_house_name = "dynn_lich_aredoxna" }
+   				        dynasty = { set_dynasty_name = "dynn_lich_aladoxna" }
+   				    }
+   				    1 = {
+   				        house = { set_house_name = "dynn_lich_severna" }
+   				        dynasty = { set_dynasty_name = "dynn_lich_severena" }
+   				    }
+   				    1 = {
+   				        house = { set_house_name = "dynn_lich_melerena" }
+   				        dynasty = { set_dynasty_name = "dynn_lich_melerena" }
+   				    }
+   				    1 = {
+   				        house = { set_house_name = "dynn_lich_ronczyka" }
+   				        dynasty = { set_dynasty_name = "dynn_lich_ronczyka" }
+   				    }
+   				}
+   			}
+        	55 = { #Couplet 2
+        		random_list = { #Couplet 2 FNames
+        		    1 = { change_first_name = flag:Лоренция }
+        		    1 = { change_first_name = flag:Алеся }
+        		    1 = { change_first_name = flag:Агазья }
+        		    1 = { change_first_name = flag:Избеля }
+        		}
+        		random_list = { #Couplet 2 LNames
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_sezierya" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_sezierya" }
+        		    }
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_skoya" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_skoya" }
+        		    }
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_szaleya" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_szaleya" }
+        		    }
+        		}
+        	}
+        	55 = { #Couplet 3
+        		random_list = { #Couplet 3 FNames
+        		    2 = { change_first_name = flag:Майра }
+        		    2 = { change_first_name = flag:Анмайра }
+        		    1 = { change_first_name = flag:Клайра }
+        		    1 = { change_first_name = flag:Скайра }
+        		}
+        		random_list = { #Couplet 3 LNames
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_maylara" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_maylara" }
+        		    }
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_rosdayra" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_rosdayra" }
+        		    }
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_ceskayra" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_ceskayra" }
+        		    }
+        		}
+        	}
+        	55 = { #Couplet 4
+        		random_list = { #Couplet 4 FNames
+        		    1 = { change_first_name = flag:Изельра }
+        		    1 = { change_first_name = flag:Измела }
+        		    1 = { change_first_name = flag:Мелна }
+        		    1 = { change_first_name = flag:Зенла }
+        		}
+        		random_list = { #Couplet 4 LNames
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_izmelna" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_izmelna" }
+        		    }
+        		    1 = { #Special polish character 
+        		        house = { set_house_name = "dynn_lich_axamerna" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_axamerna" }
+        		    }
+        		    1 = {
+        		        house = { set_house_name = "dynn_lich_waremna" }
+        		        dynasty = { set_dynasty_name = "dynn_lich_waremna" }
+        		    }
+        		}
+        	}	
+        	55 = { #Couplet 5
+           		random_list = { #Couplet 5 FNames
+                	1 = { change_first_name = flag:Гражна }
+                	1 = { change_first_name = flag:Векна }
+                	1 = { change_first_name = flag:Скавра }
+                	1 = { change_first_name = flag:Скорна }
+                	1 = { change_first_name = flag:Важра }
+            	}
+           		random_list = { #Couplet 5 LNames
+                	1 = {
+                    	house = { set_house_name = "dynn_lich_skavorna" }
+                    	dynasty = { set_dynasty_name = "dynn_lich_skavorna" }
+                	}
+                	1 = { #Special polish character 
+                    	house = { set_house_name = "dynn_lich_moltevoltka" }
+                    	dynasty = { set_dynasty_name = "dynn_lich_moltevoltka" }
+                	}
+                	1 = {
+                	    house = { set_house_name = "dynn_lich_szeptyrna" }
+                	    dynasty = { set_dynasty_name = "dynn_lich_szeptyrna" }
+                	}
+                }
+            }
+		}
+	}
+}
+
+set_liches_court = {	
+	every_courtier = {
+		limit = {
+			NOT = {
+				has_faith = faith:rejection
+				has_culture = culture:lich_culture
+				has_trait = necromancy_undead_awakened
+			}
+		}
+		set_character_faith = faith:rejection
+		set_culture = culture:lich_culture
+		add_trait = necromancy_undead_awakened
+		copy_inheritable_appearance_from = character:lich_culture_rejection_20
+	}
+}
+
+select_arch_lich_effect = {
+	if = { # If the active lich is still alive, use them
+		limit = {
+			any_independent_ruler = {
+				has_character_flag = future_arch_lich
+			}
+		}
+		random_independent_ruler = {
+			limit = {
+				has_character_flag = future_arch_lich
+			}
+			save_scope_as = arch_lich
+		}
+	}
+	else = { # If not, grab a new lich
+		random_independent_ruler = {
+			limit = {
+				is_undead = yes
+				has_trait = necromancy_undead_lich
+			}
+			save_scope_as = arch_lich
+		}
+	}
+
+	scope:arch_lich = {
+		add_trait = gh_arch_lich_1
+		add_gold = 5000
+		add_prestige = 25000
+		add_piety = 25000
+		add_prowess_skill = 25 # Let's make them a better fighter just in case
+		dynasty = {
+			add_dynasty_prestige_level = 5
+			add_dynasty_perk = magic_legacy_1
+			add_dynasty_perk = magic_legacy_2
+			add_dynasty_perk = magic_legacy_3
+			add_dynasty_perk = magic_legacy_4
+			add_dynasty_perk = magic_legacy_5
+		}
+		if = {
+			limit = { NOT = { has_trait = education_lich_5 } }
+			change_trait_rank = {
+				trait = education_lich
+				rank = 1
+			}
+		}
+	}
+	if = { # Let's give them a unique artifact if it doesnt already exist
+		limit = {
+			NOT = { any_artifact = { has_variable = lich_king_ring } }
+		}
+		scope:arch_lich = {
+			create_artifact_ring_lich_king_effect = {
+				OWNER = scope:arch_lich
+			}
+		}
+	}
+}
+
+spawn_lichdom_empire_effect = {
+	create_title_and_vassal_change = {
+		type = conquest
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_lichdoms = {
+		change_title_holder = {
+			holder = scope:arch_lich
+			change = scope:change
+		}	
+	}
+	resolve_title_and_vassal_change = scope:change
+	scope:arch_lich = {
+		add_dread = 100
+	}
+}
+
+spawn_lich_court_effect = { # Just in case
+	while = {
+		count = { 7 15 }
+		create_character = {
+			gender_female_chance = 50
+			employer = scope:arch_lich
+			template = skeleton_adult_character_template
+		}
+	}
+}
+
+spawn_arch_lich_troops_effect = { # Gives Arch Lich starting troops, can be expanded by certain conquests through the story cycle
+	while = {
+		count = 2
+		spawn_army = {
+			uses_supply = no
+			inheritable = no
+			name = lich_event_troops
+			men_at_arms = {
+				type = undead_skirmishers
+				stacks = 80
+			}
+			men_at_arms = {
+				type = undead_skirmishers
+				stacks = 80
+			}
+			men_at_arms = {
+				type = elite_undead
+				stacks = 60
+			}
+			men_at_arms = {
+				type = elite_undead
+				stacks = 50
+			}
+			men_at_arms = {
+				type = death_elementals
+				stacks = 15
+			}
+			men_at_arms = {
+				type = death_elementals
+				stacks = 10
+			}
+			men_at_arms = {
+				type = stone_golems
+				stacks = 15
+			}
+			men_at_arms = {
+				type = stone_golems
+				stacks = 10
+			}
+			location = scope:arch_lich.capital_county.title_province
+		}
+	}
+}
+
+archlich_war_target_evaluation_and_declaration_effect = { # Guides the Arch Lich direction
+	save_scope_as = arch_lich
+	random_neighboring_top_liege_realm_owner = { # Select a new target
+		limit = { is_ruin = no }
+		weight = {
+			base = 0
+			modifier = { # Determines invasion direction
+				add = arch_lich_invasion_target_character_weight
+				always = yes
+			}
+		}
+		random_sub_realm_county = { # Pick a suitable kingdom to conquer
+			limit = { is_neighbor_to_realm = scope:arch_lich }
+			weight = {
+				base = 0
+				modifier = { # Determines invasion direction
+					add = arch_lich_invasion_target_county_weight
+					always = yes
+				}
+			}
+			save_temporary_scope_as = invasion_target
+		}
+	}
+	scope:invasion_target.kingdom = {
+		every_de_jure_top_liege = { # All proper independent rulers become war targets
+			limit = {
+				NOR = {
+					is_in_list = top_liege_targets
+					this = scope:arch_lich
+					is_ruin = yes
+				}
+			}
+			if = { # Fogeaters submit
+				limit = { is_undead = no }
+				add_to_temporary_list = top_liege_targets
+			}
+			else = { trigger_event = arch_lich_invasion.2001 }
+		}
+	}
+	ordered_in_list = { # Find the primary war target
+		list = top_liege_targets
+		order_by = {
+			value = 0
+			if = { # Invasion kingdom title holders or their lieges
+				limit = {
+					OR = {
+						has_title = scope:invasion_target.kingdom
+						any_vassal = { has_title = scope:invasion_target.kingdom }
+					}
+				}
+				add = 100
+			}
+			if = { # Other emperors
+				limit = { highest_held_title_tier = tier_empire }
+				add = 90
+			}
+			if = { # Multi-kings
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_kingdom
+						any_held_title = {
+							count >= 2
+							tier = tier_kingdom
+						}
+					}
+				}
+				add = 80
+			}
+			if = { # Other Kings
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_kingdom
+						any_held_title = {
+							count < 2
+							tier = tier_kingdom
+						}
+					}
+				}
+				add = 70
+			}
+			if = { # Multi-dukes
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_duchy
+						any_held_title = {
+							count >= 2
+							tier = tier_duchy
+						}
+					}
+				}
+				add = 60
+			}
+			if = { # Other Dukes
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_duchy
+						any_held_title = {
+							count < 2
+							tier = tier_duchy
+						}
+					}
+				}
+				add = 50
+			}
+			if = { # Multi-counts
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_county
+						any_held_title = {
+							count >= 4
+							tier = tier_county
+						}
+					}
+				}
+				add = 40
+			}
+			if = { # Other Counts
+				limit = {
+					AND = {
+						highest_held_title_tier = tier_county
+						any_held_title = {
+							count < 2
+							tier = tier_county
+						}
+					}
+				}
+				add = 30
+			}
+			if = { # Prioritize Players
+				limit = { is_ai = no }
+				add = 5
+			}
+			if = { # Prioritize Neighbors
+				limit = { any_realm_county = { is_neighbor_to_realm = scope:arch_lich } }
+				add = 1
+			}
+		}
+		scope:arch_lich = { # Declare war on them
+			start_war = {
+				cb = lich_invasion_cb
+				target = prev
+				target_title = scope:invasion_target.kingdom
+			}
+		}
+	}
+}
+
+arch_lich_consume_effect = {
+	hidden_effect = {
+		every_realm_county = { # Change county culture
+			limit = {
+				tier = tier_county
+				NOT = { culture = { has_cultural_pillar = heritage_lich } }
+			}
+			every_county_province = {
+				limit = { 
+					OR = {
+						has_holding_type = castle_holding
+						has_holding_type = city_holding
+						has_holding_type = church_holding
+						has_holding_type = tribal_holding
+						has_holding_type = colony_holding
+					}
+					has_special_building_slot = no
+				}
+				set_holding_type = necropolis_holding
+			}
+			every_county_province = {
+				limit = { 
+					OR = {
+						has_holding_type = castle_holding
+						has_holding_type = city_holding
+						has_holding_type = church_holding
+						has_holding_type = tribal_holding
+						has_holding_type = colony_holding
+					}
+					has_special_building_slot = yes
+				}
+				set_holding_type = ruin_holding
+			}
+			every_county_province = {
+				limit = { is_any_metropolis_district = yes }
+				set_holding_type = ruined_district_holding
+			}
+			set_county_culture = prev.culture
+			set_county_faith = prev.faith
+			prev = {
+				change_variable = { # Add county development to consumption tracker variable
+					name = lich_consumed_variable
+					add = prev.development_level
+				}
+			}
+			change_development_level = -100
+		}
+		every_prisoner = {
+			limit = { is_undead = no }
+			death = {
+				death_reason = death_execution
+				killer = prev
+			}
+		}
+		spawn_army = {
+			uses_supply = no
+			inheritable = no
+			name = lich_event_troops
+			men_at_arms = {
+				type = raised_undead
+				stacks = {
+					value = var:lich_consumed_variable
+					divide = 40
+					round = yes
+					min = 1
+				}
+			}
+			men_at_arms = {
+				type = elite_undead
+				stacks = {
+					value = var:lich_consumed_variable
+					divide = 40
+					round = yes
+					min = 1
+				}
+			}
+			men_at_arms = {
+				type = skeleton_archers
+				stacks = {
+					value = var:lich_consumed_variable
+					divide = 40
+					round = yes
+					min = 1
+				}
+			}
+			men_at_arms = {
+				type = undead_skirmishers
+				stacks = {
+					value = var:lich_consumed_variable
+					divide = 40
+					round = yes
+					min = 1
+				}
+			}
+			location = capital_province
+		}
+		set_variable = {
+			name = lich_consumed_variable
+			value = 0
+		}
+	}
+}
+
+# Notify that important regions have fallen to a Lich
+# This is separate to the story cycle effect for summoning unique MAAs from special buildings
+gh_lichdom_region_fall_effect = {
+	save_scope_as = arch_lich_conqueror
+	if = { # Fall of Chevalie
+		limit = {
+			NOR = {
+				has_global_variable = gh_lichdom_region_fall_chevalie
+				any_county_in_region = {
+					region = special_fogeater_empire_conquest_region_grey_gates_chevalie_fall
+					holder = {
+						NOR = {
+							this = scope:arch_lich_conqueror
+							is_ruin = yes
+							is_undead = yes
+						}
+					}
+				}
+			}
+		}
+		every_player = {
+			trigger_event = {
+				id = arch_lich_invasion.4001
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_lichdom_region_fall_chevalie
+			value = yes
+		}
+	}
+	if = { # Fall of Kalathipsomi
+		limit = {
+			NOR = {
+				has_global_variable = gh_lichdom_region_fall_kalathipsomi
+				any_county_in_region = {
+					region = special_fogeater_empire_conquest_region_grey_gates_kalathipsomi_fall
+					holder = {
+						NOR = {
+							this = scope:arch_lich_conqueror
+							is_ruin = yes
+							is_undead = yes
+						}
+					}
+				}
+			}
+		}
+		every_player = {
+			trigger_event = {
+				id = arch_lich_invasion.4002
+				days = 2
+			}
+		}
+		set_global_variable = {
+			name = gh_lichdom_region_fall_kalathipsomi
+			value = yes
+		}
+	}
+}
+
+# Spawns Worldeater Dummy for world wars
+spawn_dummy_worldeater_effect = {
+	hidden_effect = {
+		scope:arch_lich = { add_character_flag = worldeater_dummy }
+		create_character = {
+			template = worldeater_dummy_character_template
+			location = scope:worldeater_target_county.title_province
+			culture = scope:worldeater_target_county.culture
+			faith = scope:worldeater_target_county.faith
+			save_scope_as = worldeater_dummy_character
+		}
+		create_dynamic_title = {
+			tier = duchy
+			name = d_worldeater
+		}
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = change
+			add_claim_on_loss = no
+		}
+		scope:new_title = {
+			set_capital_county = scope:worldeater_target_county
+			set_landless_title = yes
+			set_destroy_on_succession = yes
+			set_delete_on_destroy = yes
+			set_no_automatic_claims = yes
+			set_definitive_form = yes
+			set_can_be_named_after_dynasty = no
+			change_title_holder = {
+				holder = scope:worldeater_dummy_character
+				change = scope:change
+			}
+		}
+		resolve_title_and_vassal_change = scope:change
+		scope:worldeater_dummy_character = {
+			spawn_army = {
+				uses_supply = no
+				inheritable = no
+				name = lich_worldeater_event_troops
+				men_at_arms = {
+					type = undead_worldeater
+					stacks = 1
+				}
+				location = scope:worldeater_target_county.title_province 
+			}
+		}
+	}
+}
