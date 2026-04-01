@@ -46,17 +46,18 @@
  COLONIZATION_PROGRESS_VALUE_FORMAT: "$KEY$: [Concept('colonization_progress','@colonization_progress_icon!')]$VALUE|=+1$"
  COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT: "$KEY$: [Concept('colonization_progress','@colonization_progress_icon!')]$VALUE|=+0%$"
  HABITABILITY_VALUE_FORMAT: "$KEY$: [Concept('habitability','@habitability_icon!')]$VALUE|=+0$"
+ COLONIZATION_THRESHOLD_BASE_FORMAT: "$KEY$: [Concept('habitability_threshold','@habitability_threshold_icon!')]#V $VALUE|0$#!"
  COLONIZATION_THRESHOLD_VALUE_FORMAT: "$KEY$: [Concept('habitability_threshold','@habitability_threshold_icon!')]$VALUE|=-0$"
  COLONIZATION_PRESTIGE_COST_FORMAT: "$KEY$: [Concept('prestige','@prestige_icon!')]#V $VALUE|0$#!"
  COLONIZATION_PRESTIGE_COST_PERCENTAGE_FORMAT: "$KEY$: [Concept('prestige','@prestige_icon!')]#V $VALUE|=-0%$#!"
  COLONIZATION_GOLD_COST_FORMAT: "$KEY$: [Concept('gold','@gold_icon!')]#V $VALUE|0$#!"
  COLONIZATION_GOLD_COST_PERCENTAGE_FORMAT: "$KEY$: [Concept('gold','@gold_icon!')]#V $VALUE|=-0%$#!"
 
- COUNTY_HABITABILITY_MAPMODE_TOOLTIP:90 "$county_habitability_mapmode_header$$county_habitability_mapmode_warning$$county_habitability_mapmode_effects$$county_habitability_mapmode_breakdown$"
+ COUNTY_HABITABILITY_MAPMODE_TOOLTIP:90 "$county_habitability_mapmode_header$$county_habitability_mapmode_effects$$county_habitability_mapmode_warning$$county_habitability_mapmode_breakdown$"
 
  county_habitability_mapmode_header:90 "#T County Habitability of [ROOT.Province.GetCounty.GetName]: [ROOT.Province.GetCounty.GetTitle.MakeScope.ScriptValue('county_habitability_value')|0]#!"
- county_habitability_mapmode_warning:90 "\n[AddTextIf(LessThan_CFixedPoint(ROOT.Province.GetCounty.GetTitle.MakeScope.ScriptValue('county_habitability_value'),GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target',ROOT.Province.GetCounty.GetTitle.MakeScope).ScriptValue('colonization_threshold_value')),'@warning_icon! #X Habitability of this County is below your Habitability Threshold!#!\n')]"
- county_habitability_mapmode_effects:90 "[SelectLocalization(LessThan_CFixedPoint(ROOT.Province.GetCounty.GetTitle.MakeScope.ScriptValue('county_habitability_value'),'(CFixedPoint)100'),'COLONIZATION_COST_PENALTY_MAPMODE','COLONIZATION_COST_NO_PENALTY')]"
+ county_habitability_mapmode_warning:90 "[AddTextIf(LessThan_CFixedPoint(ROOT.Province.GetCounty.GetTitle.MakeScope.ScriptValue('county_habitability_value'),GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target',ROOT.Province.GetCounty.GetTitle.MakeScope).ScriptValue('colonization_threshold_value')),'\n@warning_icon! #X Habitability of this County is below your Habitability Threshold!#!')]"
+ county_habitability_mapmode_effects:90 "\n[SelectLocalization(LessThan_CFixedPoint(ROOT.Province.GetCounty.GetTitle.MakeScope.ScriptValue('county_habitability_value'),'(CFixedPoint)100'),'COLONIZATION_COST_PENALTY_MAPMODE','COLONIZATION_COST_NO_PENALTY')]"
  COLONIZATION_COST_PENALTY_MAPMODE:90 "[colonization|E] Cost is increased by [Scope.Province.GetCounty.GetTitle.MakeScope.ScriptValue('fast_habitability_penalty_value')|N%0]"
  county_habitability_mapmode_breakdown:90 "\n\nOverall County Habitability: @habitability_icon! #V [ROOT.Province.GetCounty.GetTitle.MakeScope.ScriptValue('county_habitability_value')|0]#!\nYour Habitability Threshold: @habitability_icon! #V [GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('target', ROOT.Province.GetCounty.GetTitle.MakeScope).ScriptValue('colonization_threshold_value')|0]#!"
 
