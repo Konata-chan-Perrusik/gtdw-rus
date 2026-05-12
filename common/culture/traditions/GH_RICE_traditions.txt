@@ -1,0 +1,273 @@
+﻿# These are traditions integrated from RICE, all credits go to the great Cybrxkhan, may his reign be eternal
+
+tradition_RICE_agdud_iqadib = {
+	category = regional
+
+	layers = {
+		0 = diplo
+		1 = mena
+		4 = RICE_tuareg_turban.dds
+	}
+
+	is_shown = {
+		any_culture_county = {
+			title_province = {
+				geographical_region = GH_geographic_sarradonian_desert
+			}
+		}
+	}
+
+	can_pick = {
+		any_parent_culture_or_above = {
+			has_cultural_tradition = tradition_RICE_agdud_iqadib
+		}
+	}
+
+	parameters = {
+		unlock_rice_cheaper_dream_divination = yes
+		number_of_spouses = 1
+		gender_equal_inheritance = yes
+	}
+
+	character_modifier = {
+		monthly_prestige_gain_per_happy_powerful_vassal_mult = 0.03
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_communal = { is_in_list = traits }
+						culture_pillar:ethos_egalitarian = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_communal_egalitarian_or_stoic_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = { # AI should avoid stacking traditions that do similar things
+				any_in_list = { list = traits this = flag:tradition_monogamous }
+			}
+			multiply = 0.25
+		}
+		if = {
+			limit = { # AI should avoid stacking traditions that do similar things
+				any_in_list = { list = traits this = flag:tradition_equal_inheritance }
+			}
+			multiply = 0.25
+		}
+	}
+}
+
+tradition_RICE_oral_poetry = {
+	category = societal
+
+	layers = {
+		0 = steward
+		1 = mena
+		4 = philosopher.dds
+	}
+
+	is_shown = {
+		OR = {
+			has_cultural_pillar = heritage_marmaladid
+			has_cultural_pillar = heritage_zanaumaures
+			has_cultural_pillar = heritage_takopara
+		}
+	}
+
+	can_pick = {
+		OR = {
+			has_cultural_pillar = heritage_marmaladid
+			has_cultural_pillar = heritage_zanaumaures
+			has_cultural_pillar = heritage_takopara
+		}
+		custom_tooltip = {
+			text = cannot_have_tradition_fp1_northern_stories
+			NOT = { culture_tradition:tradition_fp1_northern_stories = { is_in_list = traits } }
+		}
+	}
+
+	parameters = {
+		poet_trait_gives_bonuses = yes
+		poet_trait_more_common = yes
+		better_ward_education = yes
+		extra_language_cap = yes
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_courtly = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+						culture_pillar:ethos_spiritual = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_courtly_communal_or_spiritual_desc
+				}
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							scope:character = {
+								is_ai = no
+							}
+						}
+						NOT = {
+							any_ruler = {
+								count >= 3
+								culture = prev
+								primary_title.tier >= tier_county
+								has_trait = lifestyle_poet
+							}
+						}
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				add = {
+					value = tradition_unfulfilled_criteria_penalty
+					desc = rulers_with_poet_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = { value = 0 }
+}
+
+tradition_RICE_settled_nomads = {
+	category = regional
+
+	layers = {
+		0 = intrigue
+		1 = mena
+		4 = RICE_mideast_items.dds
+	}
+
+	is_shown = {
+		has_cultural_pillar = heritage_marmaladid
+	}
+
+	can_pick = {
+		has_cultural_pillar = heritage_marmaladid
+		custom_tooltip = {
+			text = cultrad_not_nomadic_government_type
+			scope:character = {
+				NOT = {
+					government_has_flag = government_is_nomadic
+				}
+			}
+		}
+	}
+
+	parameters = {
+		culture_can_raid_over_land_even_if_feudal = yes
+		harder_to_hybridize = yes
+		harder_to_convert_county_culture = yes
+		unlock_voluntary_laampdom = yes
+		much_more_likely_to_be_laamps = yes
+	}
+
+	character_modifier = {
+		opinion_of_liege = -10
+		hostile_county_attrition_raiding = -0.1
+		movement_speed_land_raiding = 0.1
+	}
+
+	province_modifier = {
+		mountains_supply_limit_mult = 0.25
+		desert_mountains_supply_limit_mult = 0.25
+	}
+
+	cost = {
+		prestige = {
+			add = {
+				value = tradition_base_cost
+				desc = BASE
+				format = "BASE_VALUE_FORMAT"
+			}
+			if = {
+				limit = {
+					NOR = {
+						culture_pillar:ethos_bellicose = { is_in_list = traits }
+						culture_pillar:ethos_stoic = { is_in_list = traits }
+						culture_pillar:ethos_communal = { is_in_list = traits }
+					}
+				}
+				add = {
+					value = tradition_incompatible_ethos_penalty
+					desc = not_bellicose_stoic_or_communal_desc
+				}
+			}
+			
+			multiply = tradition_replacement_cost_if_relevant
+		}
+	}
+	
+	ai_will_do = {
+		value = 100
+		if = {
+			limit = {
+				NOT = {
+					scope:character = {
+						any_sub_realm_county = {
+							percent >= 0.2
+							culture = scope:character.culture
+							any_county_province = {
+								OR = {
+									terrain = drylands
+									terrain = desert
+								}
+							}
+						}
+					}
+				}
+			}
+			multiply = 0.1
+		}
+		if = {
+			limit = {
+				NOR = {
+					scope:character = {
+						OR = {
+							government_has_flag = government_is_tribal
+							government_has_flag = government_is_clan #Update for FP3
+						}
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}

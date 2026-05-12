@@ -1,0 +1,371 @@
+﻿gh_buy_book_from_library_interaction = {
+	category = interaction_category_friendly
+	icon = icon_scheme_coerce_contribution
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:recipient = { NOT = { has_variable = character_text_holder_var } } }
+				desc = gh_buy_book_from_library_interaction_desc
+			}
+			desc = gh_buy_book_from_library_interaction_desc_alt
+		}
+	}
+
+	interface_priority = 80
+	desc = gh_buy_book_from_library_interaction_desc
+	common_interaction = yes
+	
+	is_shown = {
+		OR = {
+			scope:actor ?= { has_variable = library_interaction_visible }
+			always = no
+		}
+	}
+	
+	is_valid_showing_failures_only = {}
+	auto_accept = yes
+
+	send_option = {
+		flag = gh_purchase_book_directly
+		localization = gh_purchase_book_directly_name
+		current_description = gh_purchase_book_directly
+		starts_enabled = { always = yes }
+	}	
+	send_option = {
+		flag = gh_commission_book_copy
+		localization = gh_commission_book_copy_name
+		current_description = gh_commission_book_copy
+		is_valid = {
+			scope:actor = {
+				custom_tooltip = {
+					text = gh_is_already_buying_book_tt
+					NOT = { has_character_flag = gh_is_already_buying_book }
+				}
+			}
+		}
+	}
+
+
+	on_accept = {
+		scope:recipient = {
+			if = {
+				limit = { NOT = { has_variable = character_text_holder_var } }
+				custom_tooltip = gh_purchase_book_artifact_tooltip	
+			}
+			else = { custom_tooltip = gh_purchase_book_artifact_tooltip_alt	} 
+			if = {
+				limit = { scope:gh_purchase_book_directly = yes }			
+				remove_short_term_gold = {
+					value = gh_book_purchase_cost_value
+					multiply = 1.5
+				}
+				if = {
+					limit = { NOT = { has_variable = character_text_holder_var } }
+					custom_tooltip = {
+						text = gh_purchase_book_directly_tooltip
+						location ?= { #ASKIL NOTE: If collections should be county-based, change value here
+							var:gh_search_library_story ?= {
+								gh_remove_book_from_collection_effect = yes
+							}
+						}
+					}
+				}
+				else = { 
+					custom_tooltip = {
+						text = gh_purchase_book_directly_tooltip_alt
+						location ?= { #ASKIL NOTE: If collections should be county-based, change value here
+							var:gh_search_library_story ?= {
+								gh_remove_book_from_collection_effect = yes
+							}
+						}
+					}
+				} 
+				gh_create_book_artifact_effect = { BUYER = scope:recipient }
+			}
+			else_if = {
+				limit = { scope:gh_commission_book_copy = yes }
+				remove_short_term_gold = gh_book_purchase_cost_value
+				if = {
+					limit = { NOT = { has_variable = character_text_holder_var } }
+					custom_tooltip = gh_commission_book_copy_tooltip
+				}
+				else = { custom_tooltip = gh_commission_book_copy_tooltip_alt	} 
+				add_character_flag = {
+					flag = gh_is_already_buying_book
+					months = 7
+				}
+				trigger_event = {
+					id = gh_search_in_library.0004
+					months = 6
+				}
+			}
+			remove_variable = character_text_holder_var
+		}
+	}
+}
+
+gh_retrieve_book_from_library_interaction = {
+	category = interaction_category_friendly
+	icon = icon_gh_transfer_book_to_collection_interaction
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:recipient = { NOT = { has_variable = character_text_holder_var } } }
+				desc = gh_buy_book_from_library_interaction_desc
+			}
+			desc = gh_retrieve_book_from_library_interaction_desc_alt
+		}
+	}
+
+	interface_priority = 80
+	desc = gh_buy_book_from_library_interaction_desc
+	common_interaction = yes
+	
+	is_shown = {
+		OR = {
+			scope:actor ?= { has_variable = library_interaction_visible }
+			always = no
+		}
+	}
+	
+	is_valid_showing_failures_only = {}
+	auto_accept = yes
+
+	send_option = {
+		flag = gh_retrieve_book_directly
+		localization = gh_retrieve_book_directly_name
+		current_description = gh_purchase_book_directly
+		starts_enabled = { always = yes }
+	}	
+	send_option = {
+		flag = gh_commission_book_copy
+		localization = gh_commission_book_copy_name
+		current_description = gh_commission_book_copy
+		is_valid = {
+			scope:actor = {
+				custom_tooltip = {
+					text = gh_is_already_buying_book_tt
+					NOT = { has_character_flag = gh_is_already_buying_book }
+				}
+			}
+		}
+	}
+
+
+	on_accept = {
+		scope:recipient = {
+			if = {
+				limit = { NOT = { has_variable = character_text_holder_var } }
+				custom_tooltip = gh_purchase_book_artifact_tooltip	
+			}
+			else = { custom_tooltip = gh_purchase_book_artifact_tooltip_alt	} 
+			if = {
+				limit = { scope:gh_retrieve_book_directly = yes }			
+				if = {
+					limit = { NOT = { has_variable = character_text_holder_var } }
+					custom_tooltip = {
+						text = gh_purchase_book_directly_tooltip
+						location ?= { #ASKIL NOTE: If collections should be county-based, change value here
+							var:gh_search_library_story ?= {
+								gh_remove_book_from_collection_effect = yes
+							}
+						}
+					}
+				}
+				else = { 
+					custom_tooltip = {
+						text = gh_purchase_book_directly_tooltip_alt
+						location ?= { #ASKIL NOTE: If collections should be county-based, change value here
+							var:gh_search_library_story ?= {
+								gh_remove_book_from_collection_effect = yes
+							}
+						}
+					}
+				} 
+				gh_create_book_artifact_effect = { BUYER = scope:recipient }
+			}
+			else_if = {
+				limit = { scope:gh_commission_book_copy = yes }
+				remove_short_term_gold = gh_book_purchase_cost_value
+				if = {
+					limit = { NOT = { has_variable = character_text_holder_var } }
+					custom_tooltip = gh_commission_book_copy_tooltip
+				}
+				else = { custom_tooltip = gh_commission_book_copy_tooltip_alt	} 
+				add_character_flag = {
+					flag = gh_is_already_buying_book
+					months = 7
+				}
+				trigger_event = {
+					id = gh_search_in_library.0004
+					months = 6
+				}
+			}
+			remove_variable = character_text_holder_var
+		}
+	}
+}
+
+gh_transfer_book_to_collection_interaction = {
+	category = interaction_category_friendly
+	icon = icon_gh_transfer_book_to_collection_interaction
+
+	interface_priority = 80
+	desc = gh_transfer_book_to_collection_interaction_desc
+	common_interaction = yes
+	
+	is_shown = {
+		OR = {
+			scope:actor ?= { has_variable = library_transfer_interaction_visible }
+			always = no
+		}
+	}
+	
+	is_valid_showing_failures_only = {}
+	auto_accept = yes
+
+	send_option = {
+		flag = gh_theology_topic
+		localization = gh_theology_topic_title
+		current_description = gh_theology_topic_option_desc
+		starts_enabled = { always = yes }
+	}
+	send_option = {
+		flag = gh_law_and_governance_topic
+		localization = gh_law_and_governance_topic_title
+		current_description = gh_law_and_governance_topic_option_desc
+	}
+	send_option = {
+		flag = gh_warfare_topic
+		localization = gh_warfare_topic_title
+		current_description = gh_warfare_topic_option_desc
+	}
+	send_option = {
+		flag = gh_philosophy_topic
+		localization = gh_philosophy_topic_title
+		current_description = gh_philosophy_topic_option_desc
+	}
+	send_option = {
+		flag = gh_language_and_letters_topic
+		localization = gh_language_and_letters_topic_title
+		current_description = gh_language_and_letters_topic_option_desc
+	}
+	send_option = {
+		flag = gh_history_topic
+		localization = gh_history_topic_title
+		current_description = gh_history_topic_option_desc
+	}
+	send_option = {
+		flag = gh_mathematics_topic
+		localization = gh_mathematics_topic_title
+		current_description = gh_mathematics_topic_option_desc
+	}
+	send_option = {
+		flag = gh_cosmology_topic
+		localization = gh_cosmology_topic_title
+		current_description = gh_cosmology_topic_option_desc
+	}
+	send_option = {
+		flag = gh_natural_sciences_topic
+		localization = gh_natural_sciences_topic_title
+		current_description = gh_natural_sciences_topic_option_desc
+	}
+	send_option = {
+		flag = gh_medicine_topic
+		localization = gh_medicine_topic_title
+		current_description = gh_medicine_topic_option_desc
+	}
+	send_option = {
+		flag = gh_practical_arts_topic
+		localization = gh_practical_arts_topic_title
+		current_description = gh_practical_arts_topic_option_desc
+	}
+	send_option = {
+		flag = gh_commerce_topic
+		localization = gh_commerce_topic_title
+		current_description = gh_commerce_topic_option_desc
+	}
+	send_option = {
+		flag = gh_literature_topic
+		localization = gh_literature_topic_title
+		current_description = gh_literature_topic_option_desc
+	}
+	send_option = {
+		flag = gh_magic_topic
+		localization = gh_magic_topic_title
+		current_description = gh_magic_topic_option_desc
+	}
+
+	on_accept = {
+		scope:recipient = {
+			custom_tooltip = gh_transfer_book_to_collection_tooltip
+
+			# If the library doesn't exist in the location, then create one		
+			if = {
+				limit = { NOT = { scope:recipient.location = {  has_variable = gh_search_library_story } } } #ASKIL NOTE: If collections should be county-based, change value here
+				build_collection_of_topics_effect = yes
+			}
+			
+			# Scope to the 
+			scope:recipient.location.var:gh_search_library_story ?= {
+				# What topic the book will be put in?
+				if = { 
+					limit = { scope:gh_theology_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_theology_topic } 
+				}
+				else_if = {
+					limit = { scope:gh_law_and_governance_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_law_and_governance_topic }
+				}
+				else_if = {
+					limit = { scope:gh_warfare_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_warfare_topic }
+				}
+				else_if = {
+					limit = { scope:gh_philosophy_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_philosophy_topic }
+				}
+				else_if = {
+					limit = { scope:gh_language_and_letters_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_language_and_letters_topic }
+				}
+				else_if = {
+					limit = { scope:gh_history_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_history_topic }
+				}
+				else_if = {
+					limit = { scope:gh_mathematics_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_mathematics_topic }
+				}
+				else_if = {
+					limit = { scope:gh_cosmology_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_cosmology_topic }
+				}
+				else_if = {
+					limit = { scope:gh_natural_sciences_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_natural_sciences_topic }
+				}
+				else_if = {
+					limit = { scope:gh_medicine_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_medicine_topic }
+				}
+				else_if = {
+					limit = { scope:gh_practical_arts_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_practical_arts_topic }
+				}
+				else_if = {
+					limit = { scope:gh_commerce_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_commerce_topic }
+				}
+				else_if = {
+					limit = { scope:gh_literature_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_literature_topic }
+				}
+				else_if = {
+					limit = { scope:gh_magic_topic = yes }
+					transfer_book_to_library = { TOPIC = gh_magic_topic }
+				}
+			}
+		}	
+	}
+}

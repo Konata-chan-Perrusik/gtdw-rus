@@ -1,0 +1,154 @@
+﻿court_gaffer_teach_ruler = { # Teach Ruler
+	court_position_types = { court_gaffer_court_position }
+
+	cost = {
+		round = no
+		gold = {
+			value = 0
+			if = {
+				limit = { scope:liege = { has_treasury = no } }
+				add = {
+					value = monthly_court_position_task_cost
+					multiply = 2
+					desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+					format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+				}
+			}
+		}
+		treasury = {
+			value = 0
+			if = {
+				limit = { scope:liege = { has_treasury = yes } }
+				add = {
+					value = monthly_court_position_task_cost
+					multiply = 2
+					desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+					format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+				}
+			}
+		}
+		prestige = {
+			value = 0
+			add = {
+				value = monthly_court_position_task_cost
+				desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+				format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		custom_tooltip = { # The Ruler must not have more glassmith trait xp than the Court Gaffer
+			text = court_gaffer_teach_ruler_insufficient_experience
+			has_trait_xp = {
+				trait = gh_lifestyle_glassmith
+				value > "scope:liege.has_trait_xp(gh_lifestyle_glassmith)"
+			}
+		}
+		scope:liege = { is_incapable = no }
+	}
+
+	employee_modifier = { monthly_prestige = 0.3 }
+
+	on_start = { custom_tooltip = court_gaffer_teach_ruler_tt }
+
+	on_monthly = {
+		random = {
+			chance = {
+				value = 1
+				add = {
+					value = "aptitude(court_gaffer_court_position)"
+					multiply = 0.8
+				}
+			}
+			scope:liege = { # Ruler gains Glassmith trait xp
+				send_interface_toast = {
+					type = event_royal_court_good_with_text
+					title = court_gaffer_teach_ruler_title
+					desc = court_gaffer_teach_ruler_notification_desc
+					left_icon = root
+					right_icon = scope:liege
+					if = {
+						limit = { NOT = { has_trait = gh_lifestyle_glassmith } }
+						add_trait = gh_lifestyle_glassmith
+					}
+					add_trait_xp = {
+						trait = gh_lifestyle_glassmith
+						value = {
+							value = { 2 5 }
+							multiply = {
+								value = "root.aptitude(court_gaffer_court_position)"
+								multiply = 0.005
+								add = 1
+								round = yes
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_will_do = { value = ai_energy }
+}
+
+court_gaffer_expand_the_workshop = { # Expand the Workshop
+	court_position_types = { court_gaffer_court_position }
+
+	cost = {
+		round = no
+		gold = {
+			value = 0
+			if = {
+				limit = { scope:liege = { has_treasury = no } }
+				add = {
+					value = monthly_court_position_task_cost
+					multiply = 4
+					desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+					format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+				}
+			}
+		}
+		treasury = {
+			value = 0
+			if = {
+				limit = { scope:liege = { has_treasury = yes } }
+				add = {
+					value = monthly_court_position_task_cost
+					multiply = 4
+					desc = COURT_POSITION_TASK_COST_BREAKDOWN_BASE
+					format = "BASE_VALUE_FORMAT_DECIMALS_PLUS_NEGATIVE"
+				}
+			}
+		}
+	}
+
+	employee_modifier = { stress_gain_mult = 0.25 }
+
+	on_start = {
+		custom_tooltip = court_gaffer_expand_the_workshop_tt
+		set_variable = performing_expand_the_workshop
+	}
+
+	on_monthly = {
+		if = { # Improve oneself if there is yet room for personal improvement
+			limit = {
+				has_trait_xp = {
+					trait = gh_lifestyle_glassmith
+					value < 100
+				}
+			}
+			random = {
+				chance = 10
+				add_trait_xp = {
+					trait = gh_lifestyle_glassmith
+					value = { 1 5 }
+				}
+			}
+		}
+	}
+
+	on_end = { remove_variable = performing_expand_the_workshop }
+
+	ai_will_do = { value = 50 }
+}

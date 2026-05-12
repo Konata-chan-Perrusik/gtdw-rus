@@ -1,0 +1,263 @@
+﻿GetInspirationCategory = { # Localize whether the Inspiration is a Personal Inspiration
+	type = character
+
+	text = { # Personal Inspiration
+		trigger = { exists = var:personal_inspiration_story }
+		localization_key = inspiration_category_personal_inspiration
+	}
+
+	text = { localization_key = inspiration_category_regular_inspiration } # Inspiration (vanilla)
+}
+
+GetExpectedPersonalInspirationArtifactRarity = { # Get the expected Artifact Rarity in a Personal Inspiration
+	type = character
+
+	text = { # Common
+		trigger = { var:personal_inspiration_story.personal_inspiration_combined_rarity_value < 50 }
+		localization_key = expected_personal_inspiration_artifact_rarity_common
+	}
+
+	text = { # Masterwork
+		trigger = { var:personal_inspiration_story.personal_inspiration_combined_rarity_value < 130 }
+		localization_key = expected_personal_inspiration_artifact_rarity_masterwork
+	}
+
+	text = { # Famed
+		trigger = { var:personal_inspiration_story.personal_inspiration_combined_rarity_value < 180 }
+		localization_key = expected_personal_inspiration_artifact_rarity_famed
+	}
+
+	text = { localization_key = expected_personal_inspiration_artifact_rarity_illustrious } # Illustrious
+}
+
+GetPersonalInspirationProgressMonthMonths = { # Get the correct form of a month for Personal Inspiration UI
+	type = character
+
+	text = { # Month
+		trigger = { personal_inspiration_remaining_time_estimate_value = 1 }
+		localization_key = personal_inspiration_progress_month
+	}
+
+	text = { localization_key = personal_inspiration_progress_months } # Months
+}
+
+GetPersonalInspirationProgressPause = { # Get whether the Personal Inspiration is progressing
+	type = character
+
+	text = { # Pause
+		trigger = { available_for_personal_inspiration_trigger = no }
+		localization_key = personal_inspiration_pause
+	}
+
+	text = { localization_key = INSPIRATION_IN_PROGRESS } # Vanilla localization key
+}
+
+GetPersonalInspirationTooltipProgressPause = { # Get Personal Inspiration pause/progress tooltip
+	type = character
+
+	text = { # Pause tooltip
+		trigger = { available_for_personal_inspiration_trigger = no }
+		localization_key = personal_inspiration_tooltip_pause
+	}
+
+	text = { localization_key = personal_inspiration_tooltip_progress } # Progress tooltip
+}
+
+GetPersonalInspirationPauseReason = { # Get Personal Inspiration pause reason
+	type = character
+
+	text = { # Character is incapable
+		trigger = { is_incapable = yes }
+		localization_key = personal_inspiration_pause_reason_incapable
+	}
+
+	text = { # Character is imprisoned
+		trigger = { is_imprisoned = yes }
+		localization_key = personal_inspiration_pause_reason_imprisoned
+	}
+
+	text = { # Character is too injured to continue
+		trigger = { has_trait = wounded_3 }
+		localization_key = personal_inspiration_pause_reason_mauled
+	}
+
+	text = { # Character is in an activity
+		trigger = { exists = involved_activity }
+		localization_key = personal_inspiration_pause_reason_activity
+	}
+
+	text = { # Character is traveling
+		trigger = { is_travelling = yes }
+		localization_key = personal_inspiration_pause_reason_traveling
+	}
+
+	text = { localization_key = personal_inspiration_pause_reason_fallback } # Character has escaped containment
+}
+
+GetPersonalInspirationEstimateProgressPause = { # Get Personal Inspiration time estimate pause/progress loc key
+	type = character
+
+	text = { # Pause
+		trigger = { available_for_personal_inspiration_trigger = no }
+		localization_key = personal_inspiration_estimate_pause
+	}
+
+	text = { localization_key = personal_inspiration_estimate_progress } # Progress
+}
+
+GetPersonalInspirationEstimateTooltipProgressPause = { # Get Personal Inspiration time estimate pause/progress tooltip
+	type = character
+
+	text = { # Pause
+		trigger = { available_for_personal_inspiration_trigger = no }
+		localization_key = personal_inspiration_estimate_tooltip_pause
+	}
+
+	text = { localization_key = personal_inspiration_estimate_tooltip_progress } # Progress
+}
+
+GetPersonalInspirationQualityCapitalType = { # Get a Capital County equivalent for Artifact Quality tooltip
+	type = character
+
+	text = { # Camp
+		trigger = { has_government = landless_adventurer_government }
+		localization_key = personal_inspiration_quality_capital_type_adventurer
+	}
+
+	text = { # Estate
+		trigger = { any_held_title = { is_noble_family_title = yes } }
+		localization_key = personal_inspiration_quality_capital_type_estate
+	}
+
+	text = { localization_key = personal_inspiration_quality_capital_type_capital } # Capital
+}
+
+GetPersonalInspirationActionForgeCapitalType = { # Get a Capital County equivalent for Construct a Personal Forge Tooltip
+	type = character
+
+	text = { # Camp
+		trigger = { has_government = landless_adventurer_government }
+		localization_key = personal_inspiration_action_forge_capital_type_camp
+	}
+
+	text = { # Estate
+		trigger = { any_held_title = { is_noble_family_title = yes } }
+		localization_key = personal_inspiration_action_forge_capital_type_estate
+	}
+
+	text = { localization_key = personal_inspiration_action_forge_capital_type_capital } # Capital
+}
+
+GetPersonalInspirationActionTutorQuip = { # Get skill-based flavor text for Find Tutor Inspiration Action
+	type = character
+
+	text = { # Master glassmith version
+		trigger = {
+			has_trait_xp = {
+				trait = gh_lifestyle_glassmith
+				value >= 100
+			}
+		}
+		localization_key = personal_inspiration_action_tutor_desc_master
+	}
+
+	text = { localization_key = personal_inspiration_action_tutor_desc_learner } # Normal version
+}
+
+GetPersonalInspirationActionTutorCourtType = { # Get a Court equivalent for Find a Tutor Tooltip
+	type = character
+
+	text = { # Camp
+		trigger = { has_government = landless_adventurer_government }
+		localization_key = personal_inspiration_action_tutor_court_type_camp
+	}
+
+	text = { # Estate
+		trigger = { any_held_title = { is_noble_family_title = yes } }
+		localization_key = personal_inspiration_action_tutor_court_type_estate
+	}
+
+	text = { localization_key = personal_inspiration_action_tutor_court_type_court } # Court
+}
+
+GetPersonalInspirationVeryGoodQualityReason = { # Get random very positive Personal Inspiration toast title
+	type = character
+	random_valid = yes
+
+	text = { localization_key = personal_inspiration_very_good_quality_reason_perfect_annealing } # Perfect Annealing
+
+	text = { localization_key = personal_inspiration_very_good_quality_reason_clean_melt } # Clean Melt
+
+	text = { localization_key = personal_inspiration_very_good_quality_reason_lucky_batch } # Lucky Batch
+
+	text = { localization_key = personal_inspiration_very_good_quality_reason_divine_inspiration } # Divine Inspiration
+
+	text = { localization_key = personal_inspiration_very_good_quality_reason_brilliant_cut } # Brilliant Cut
+}
+
+GetPersonalInspirationGoodQualityReason = { # Get random positive Personal Inspiration toast title
+	type = character
+	random_valid = yes
+
+	text = { localization_key = personal_inspiration_good_quality_reason_stable_draw } # Stable Draw
+
+	text = { localization_key = personal_inspiration_good_quality_reason_ideal_humidity } # Ideal Humidity
+
+	text = { localization_key = personal_inspiration_good_quality_reason_unexpected_iridescence } # Unexpected Iridescence
+
+	text = { localization_key = personal_inspiration_good_quality_reason_delicate_filigree } # Delicate Filigree
+
+	text = { localization_key = personal_inspiration_good_quality_reason_helpful_assistant } # Helpful Assistant
+}
+
+GetPersonalInspirationBadQualityReason = { # Get random negative Personal Inspiration toast title
+	type = character
+	random_valid = yes
+
+	text = { localization_key = personal_inspiration_bad_quality_reason_cracked_mold } # Cracked Mold
+
+	text = { localization_key = personal_inspiration_bad_quality_reason_low_purity } # Low Purity
+
+	text = { localization_key = personal_inspiration_bad_quality_reason_dirty_workshop } # Dirty Workshop
+
+	text = { localization_key = personal_inspiration_bad_quality_reason_small_accident } # Small Accident
+
+	text = { localization_key = personal_inspiration_bad_quality_reason_bad_batch } # Bad Batch
+}
+
+GetPersonalInspirationVeryBadQualityReason = { # Get random very negative Personal Inspiration toast title
+	type = character
+	random_valid = yes
+
+	text = { localization_key = personal_inspiration_very_bad_quality_reason_cracked_gem } # Cracked Gem
+
+	text = { localization_key = personal_inspiration_very_bad_quality_reason_workshop_fire } # Workshop Fire
+
+	text = { localization_key = personal_inspiration_very_bad_quality_reason_rare_impurity } # Rare Impurity
+
+	text = { localization_key = personal_inspiration_very_bad_quality_reason_unexplained_sabotage } # Unexplained Sabotage
+
+	text = { localization_key = personal_inspiration_very_bad_quality_reason_forge_explosion } # Forge Explosion
+}
+
+GetPersonalInspirationSingularPlural = { # Get proper localization depending on the number of completed Personal Inspirations
+	type = character
+
+	text = { # Singular
+		trigger = { var:personal_inspiration_tracker = 1 }
+		localization_key = personal_inspiration_singular
+	}
+
+	text = { localization_key = personal_inspiration_plural } # Plural
+}
+
+GetPersonalInspirationSingularPluralDesc = { # Get proper description depending on the number of completed Personal Inspirations
+	type = character
+
+	text = { # Singular
+		trigger = { var:personal_inspiration_tracker = 1 }
+		localization_key = personal_inspiration_desc_singular
+	}
+
+	text = { localization_key = personal_inspiration_desc_plural } # Plural
+}
