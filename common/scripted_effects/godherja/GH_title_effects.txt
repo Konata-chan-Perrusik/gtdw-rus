@@ -1,0 +1,169 @@
+﻿create_alliance_with_title_or_synonym = {
+	if = {
+		limit = { 
+			# Make sure not to ally yourself
+			NOT = {
+				any_held_title = {
+					OR = {
+						this = $TITLE$
+						trigger_if = {
+							limit = { has_variable_list = title_synonyms }
+							any_in_list = {
+								variable = title_synonyms
+								this = $TITLE$
+							}
+						}
+						trigger_else = { always = no }
+					}
+				}
+			}
+		}
+		if = {
+			limit = { $TITLE$ = { is_title_created = yes } }
+			$TITLE$ = { holder = { save_scope_as = holder_to_ally } }
+		}
+		else_if = {
+			limit = {
+				trigger_if = {
+					limit = { $TITLE$ = { has_variable_list = title_synonyms } }
+					any_in_list = {
+						variable = title_synonyms
+						exists = holder
+					}
+				}
+				trigger_else = { always = no }
+			}
+			$TITLE$ = {
+				random_in_list = {
+					variable = title_synonyms
+					limit = { exists = holder }
+					save_scope_as = holder_to_ally
+				}
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:holder_to_ally }
+		create_alliance = {
+			target = scope:holder_to_ally
+			allied_through_owner = this
+			allied_through_target = scope:holder_to_ally
+		}
+	}
+}
+
+demote_empire_to_kingdom_effect = {
+	$NEW_EMPIRE_LIEGE_TITLE$ = {	
+		save_scope_as = new_empire_de_jure_liege_title
+		if = {
+			limit = { exists = holder }
+			holder = { save_scope_as = new_empire_de_jure_liege_title_holder }
+		}
+	}
+	save_scope_as = empire_being_demoted
+	if = {
+		limit = {
+			NOT = {
+				scope:new_empire_de_jure_liege_title = {
+					this = scope:empire_being_demoted
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable = kingdom_demotion_title
+			}
+			var:kingdom_demotion_title = {
+				save_scope_as = kingdom_demotion_title_scope
+			}
+		}
+		else = {
+			create_dynamic_title = {
+				tier = kingdom
+				name = GENERATED_DEMOTED_EMPIRE_NAME
+			}
+			scope:new_title = {
+				set_definitive_form = yes
+				set_coa = scope:empire_being_demoted
+				set_color_from_title = scope:empire_being_demoted
+				copy_title_history = scope:empire_being_demoted
+				set_de_jure_liege_title = scope:new_empire_de_jure_liege_title
+				if = {
+					limit = { exists = scope:empire_being_demoted.title_capital_county }
+					set_capital_county = scope:empire_being_demoted.title_capital_county
+				}
+				save_scope_as = kingdom_demotion_title_scope
+			}
+			scope:empire_being_demoted = {
+				set_variable = {
+					name = kingdom_demotion_title
+					value = scope:kingdom_demotion_title_scope
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:new_empire_de_jure_liege_title_holder
+				exists = scope:kingdom_demotion_title_scope
+				NOT = { exists = scope:kingdom_demotion_title_scope.holder }
+			}
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			scope:new_title = {
+				change_title_holder = {
+					holder = scope:new_empire_de_jure_liege_title_holder
+					change = scope:change
+				}
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+		scope:empire_being_demoted = {
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_duchy }
+				set_de_jure_liege_title = scope:kingdom_demotion_title_scope
+			}
+		}
+		if = {
+			limit = { exists = scope:empire_being_demoted.holder }
+			scope:empire_being_demoted.holder = {
+				destroy_title = scope:empire_being_demoted
+			}
+		}
+	}
+}
+
+create_title_drift = {
+	title:$DRIFTING_TITLE$ = {
+		set_variable = {
+			name = fluid_title_1
+			value = title:$WARRING_TITLE_1$
+		}
+		set_variable = {
+			name = fluid_title_2
+			value = title:$WARRING_TITLE_2$
+		}
+	}
+}
+
+setup_title_drift = {
+	#Aversaria
+	create_title_drift = { DRIFTING_TITLE = d_halaca WARRING_TITLE_1 = k_morn WARRING_TITLE_2 = k_day }
+	create_title_drift = { DRIFTING_TITLE = d_lephyalouanata WARRING_TITLE_1 = k_helenai WARRING_TITLE_2 = k_westkatraddia_6 }
+
+	#Chevalie
+	create_title_drift = { DRIFTING_TITLE = d_neufrisa WARRING_TITLE_1 = k_niidinia WARRING_TITLE_2 = k_rohr }
+
+	#Aironoi
+	create_title_drift = { DRIFTING_TITLE = d_saigoor WARRING_TITLE_1 = k_dartar WARRING_TITLE_2 = k_arbaz }
+	
+	#Kashirya
+	create_title_drift = { DRIFTING_TITLE = d_vavkebcha WARRING_TITLE_1 = k_kinilam WARRING_TITLE_2 = k_kebnachi }
+	create_title_drift = { DRIFTING_TITLE = d_south_kashirya_1 WARRING_TITLE_1 = k_sheytara WARRING_TITLE_2 = k_peytrelle }
+
+
+	#Sarradon
+	# create_title_drift = { DRIFTING_TITLE = d_issiyyes WARRING_TITLE_1 = k_ghudiyyia WARRING_TITLE_2 = k_eastern_frontier }
+}

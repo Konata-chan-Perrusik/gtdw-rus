@@ -1,0 +1,82 @@
+﻿#USED TO NOT OVERRITE THE VANILLA FILE
+
+# scope:first = Character in relation
+# scope:second = Other character in relation
+# This is run once, so anything applied on both characters must be done on both root and scope:second here
+on_alliance_added = {
+	on_actions = {
+		GH_on_alliance_added
+	}
+}
+
+GH_on_alliance_added = {
+	effect = {
+		scope:first = {
+			if = {
+				limit = {
+					NOT = { faith.religion = scope:second.faith.religion }
+					any_character_struggle = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_interfaith_alliance
+							CHAR = scope:second
+						}
+					}
+				}
+				every_character_struggle = {
+					limit = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_interfaith_alliance
+							CHAR = scope:second
+						}
+					}
+					activate_struggle_catalyst = {
+						catalyst = catalyst_interfaith_alliance
+						character = scope:first
+					}
+				}
+			}
+		}
+	}
+}
+
+# scope:first = Character in relation
+# scope:second = Other character in relation
+# List 'first' = The "left" half of the reason characters
+# List 'second' = The "right" half of the reason characters
+# The two lists are ordered together so the top of first and the top of second together make one alliance reason pair
+# This is run once, so anything applied on both characters must be done on both root and scope:second here
+on_alliance_broken = {
+	on_actions = {
+		GH_on_alliance_broken
+	}
+}
+
+GH_on_alliance_broken = {
+	effect = {
+		scope:first = {
+			if = {
+				limit = {
+					NOT = { faith.religion = scope:second.faith.religion }
+					any_character_struggle = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_interfaith_alliance_broken
+							CHAR = scope:second
+						}
+					}
+				}
+				every_character_struggle = {
+					limit = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_interfaith_alliance_broken
+							CHAR = scope:second
+						}
+					}
+					activate_struggle_catalyst = {
+						catalyst = catalyst_interfaith_alliance_broken
+						character = scope:first
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,480 @@
+﻿###################################################
+################ MAGICAL MAA TYPES ################
+###################################################
+# For regiments of (presumably) human Magi, make #
+# sure to debuff in Marcher terrain (depreciated?)#
+# and give a small (0.05 normally) siege_value as #
+# a general unit type bonus.					 #
+#												 #
+# Since regiments are stupidly hardcoded there's #
+# sadly only so much we can do to make these	 #
+# interesting. Oh well!							 #
+###################################################
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+@cultural_maa_extra_ai_score = 80 # Equivalent to having 8 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+## CULTURAL ##
+
+arcane_auxiliaries = { # Aversarian cultural unit
+	type = magi
+
+	damage = 220
+	toughness = 100
+	pursuit = 45
+	screen = 40
+	siege_value = 0.05
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -50 }
+		marcher_farmlands = { damage = -200 toughness = -75 }
+		marcher_plains = { damage = -200 toughness = -75 }
+		marcher_mountains = { damage = -200 toughness = -75 }
+		marcher_forest = { damage = -200 toughness = -75 }
+		marcher_wetlands = { damage = -200 toughness = -75 }
+		marcher_floodplains = { damage = -200 toughness = -75 }
+		antimagic_terrain = { damage = -200 toughness = -75 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magi = 0.3
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_hymns = 1
+		#magical_time = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = arcane_auxiliaries_recruitment_cost prestige = arcane_auxiliaries_recruitment_cost_prestige piety = arcane_auxiliaries_recruitment_cost_piety }
+	low_maintenance_cost = { gold = arcane_auxiliaries_low_maint_cost }
+	high_maintenance_cost = { gold = arcane_auxiliaries_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = auxiliaries
+}
+
+
+partic_seers = { # Partic cultural unit
+	type = magi
+
+	damage = 230
+	toughness = 100
+	pursuit = 45
+	screen = 45
+	siege_value = 0.05
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -45 }
+		marcher_farmlands = { damage = -200 toughness = -70 }
+		marcher_plains = { damage = -200 toughness = -70 }
+		marcher_mountains = { damage = -200 toughness = -70 }
+		marcher_forest = { damage = -200 toughness = -70 }
+		marcher_wetlands = { damage = -200 toughness = -70 }
+		marcher_floodplains = { damage = -200 toughness = -70 }
+		antimagic_terrain = { damage = -200 toughness = -70 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magi = 0.5
+	}
+
+	buy_cost = { gold = partic_seers_recruitment_cost prestige = partic_seers_recruitment_cost_prestige piety = partic_seers_recruitment_cost_piety }
+	low_maintenance_cost = { gold = partic_seers_low_maint_cost }
+	high_maintenance_cost = { gold = partic_seers_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = magi_regular
+}
+
+redland_cultists = { # Standard Redlander Magi MAA
+	type = magi
+	allowed_in_hired_troops = no
+
+	#mercenary_fallback = yes # GH_EP3_TODO: Need a better unit to give redlander mercs to make sure they have maa (its required)
+	damage = 250
+	toughness = 100
+	pursuit = 15
+	screen = 15
+	siege_value = 0.1
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 siege_value = 0.5 }
+		redlands_mountains = { damage = 50 toughness = 25 siege_value = 0.5 }
+		redlands_desert = { damage = 50 toughness = 25 siege_value = 0.5 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 screen = 200 siege_value = 0.75 }
+
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -45 }
+		marcher_farmlands = { damage = -200 toughness = -70 }
+		marcher_plains = { damage = -200 toughness = -70 }
+		marcher_mountains = { damage = -200 toughness = -70 }
+		marcher_forest = { damage = -200 toughness = -70 }
+		marcher_wetlands = { damage = -200 toughness = -70 }
+		marcher_floodplains = { damage = -200 toughness = -70 }
+		antimagic_terrain = { damage = -200 toughness = -70 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		monsters = 1
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_time = 1
+		#magical_hymns = 1
+		#magical_dawn = 1
+		magi = 0.5
+	}
+
+	buy_cost = { piety = redland_cultists_recruitment_cost_piety }
+	low_maintenance_cost = { piety = redland_cultists_low_maint_cost_piety }
+	high_maintenance_cost = { piety = redland_cultists_high_maint_cost_piety }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = magi_regular
+}
+
+voidhosts = { # Redlands advanced Magi unit
+	type = magi
+	allowed_in_hired_troops = no
+
+	damage = 350
+	toughness = 200
+	screen = 50
+	siege_value = 0.5
+	siege_tier = 1
+
+	terrain_bonus = {
+		redlands_drylands = { damage = 50 toughness = 25 siege_value = 0.5 }
+		redlands_mountains = { damage = 50 toughness = 25 siege_value = 0.5 }
+		redlands_desert = { damage = 50 toughness = 25 siege_value = 0.5 }
+		redlands_chasms = { damage = 100 toughness = 50 pursuit = 200 screen = 200 siege_value = 0.75 }
+
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -45 }
+		marcher_farmlands = { damage = -200 toughness = -70 }
+		marcher_plains = { damage = -200 toughness = -70 }
+		marcher_mountains = { damage = -200 toughness = -70 }
+		marcher_forest = { damage = -200 toughness = -70 }
+		marcher_wetlands = { damage = -200 toughness = -70 }
+		marcher_floodplains = { damage = -200 toughness = -70 }
+		antimagic_terrain = { damage = -200 toughness = -70 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		monsters = 1
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_time = 1
+		#magical_hymns = 1
+		#magical_dawn = 1
+		magi = 0.5
+	}
+
+	buy_cost = { piety = voidhosts_recruitment_cost_piety }
+	low_maintenance_cost = { piety = voidhosts_low_maint_cost_piety }
+	high_maintenance_cost = { piety = voidhosts_high_maint_cost_piety }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = voidhost
+}
+
+whisperers = { # Fogeater cultural unit
+	type = magi
+	allowed_in_hired_troops = no
+
+	damage = 260
+	toughness = 85
+	pursuit = 60
+	screen = 30
+	siege_value = 0.05
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -100 toughness = -35 }
+		marcher_farmlands = { damage = -150 toughness = -60 }
+		marcher_plains = { damage = -150 toughness = -60 }
+		marcher_mountains = { damage = -150 toughness = -60 }
+		marcher_forest = { damage = -150 toughness = -60 }
+		marcher_wetlands = { damage = -150 toughness = -60 }
+		marcher_floodplains = { damage = -150 toughness = -60 }
+		antimagic_terrain = { damage = -150 toughness = -60 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_time = 1
+		#magical_hymns = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = magi_recruitment_cost }
+	low_maintenance_cost = { gold = magi_low_maint_cost }
+	high_maintenance_cost = { gold = magi_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = magi_regular
+}
+
+## RELIGIOUS ##
+veiled = { # Gestanwoder special unit #
+	type = magi
+
+	damage = 300
+	toughness = 170
+	pursuit = 75
+	screen = 75
+	siege_value = 0.05
+	terrain_bonus = {
+		wetlands = { damage = 50 toughness = 25 }
+		marcher_wetlands = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = 50 toughness = 25 }
+	}
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		archers = 1
+		magi = 0.5
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+	}
+	buy_cost = { gold = veiled_recruitment_cost prestige = veiled_recruitment_cost_prestige piety = veiled_recruitment_cost_piety }
+	can_recruit = {
+		faith = { has_doctrine_parameter = unlock_maa_veiled }
+	}
+	low_maintenance_cost = { gold = veiled_low_maint_cost }
+	high_maintenance_cost = { gold = veiled_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive#
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = magi_regular
+}
+
+stepwalkers = { # Supposed to be religious
+	type = magi
+
+	damage = 290
+	toughness = 110
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -60 }
+		marcher_farmlands = { damage = -150 toughness = -60 }
+		marcher_plains = { damage = -150 toughness = -60 }
+		marcher_mountains = { damage = -150 toughness = -60 }
+		marcher_forest = { damage = -150 toughness = -60 }
+		marcher_wetlands = { damage = -150 toughness = -60 }
+		marcher_floodplains = { damage = -150 toughness = -60 }
+		antimagic_terrain = { damage = -150 toughness = -60 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magi = 0.5
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_hymns = 1
+		#magical_time = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = stepwalkers_recruitment_cost }
+	low_maintenance_cost = { gold = stepwalkers_low_maint_cost }
+	high_maintenance_cost = { gold = stepwalkers_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+	can_recruit = {
+		faith = { has_doctrine_parameter = unlock_maa_stepwalkers }
+	}
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = magi_regular
+}
+
+markwardens = { # Kedari Cultural Magi
+	type = magi
+
+	damage = 180
+	toughness = 50
+	pursuit = 50
+	screen = 20
+
+	terrain_bonus = {
+		hills = { damage = 20 toughness = 10 }
+		mountains = { damage = 50 toughness = 25 }
+		jungle = { damage = 60 pursuit = 30 toughness = 30 }
+		marcher_hills = { damage = -150 toughness = -60 }
+		marcher_farmlands = { damage = -150 toughness = -60 }
+		marcher_plains = { damage = -150 toughness = -60 }
+		marcher_mountains = { damage = -150 toughness = -60 }
+		marcher_forest = { damage = -150 toughness = -60 }
+		marcher_wetlands = { damage = -150 toughness = -60 }
+		marcher_floodplains = { damage = -150 toughness = -60 }
+		antimagic_terrain = { damage = -150 toughness = -60 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_hymns = 1
+		#magical_time = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = markwardens_recruitment_cost }
+	low_maintenance_cost = { gold = markwardens_low_maint_cost }
+	high_maintenance_cost = { gold = markwardens_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = magi_regular
+
+	can_recruit = {
+		culture = {
+			has_cultural_parameter = unlock_maa_markwardens
+			culture_has_standard_maa = yes
+		}
+	}
+}

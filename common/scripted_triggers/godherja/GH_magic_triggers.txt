@@ -1,0 +1,671 @@
+﻿
+##################################
+# SPELL COST AND ACCESS TRIGGERS #
+##################################
+
+has_stored_magic_trigger = {
+	custom_description = {
+		text = magic_counter_greater_or_equal
+		subject = this
+		#value = $VALUE$
+		exists = var:magic_counter
+		var:magic_counter >= $VALUE$
+	}
+}
+
+can_access_magic = {
+	custom_description = {
+		text = can_access_magic
+		subject = this
+		is_adult = yes
+		OR = {
+			has_variable_list = known_magic_school_list
+			has_trait = gh_historical_school # For making sure historical court magi get set correctly
+		}
+		NOT = { has_trait_with_flag = can_not_access_magic }
+	}
+}
+
+can_access_magic_including_children = {
+	custom_description = {
+		text = can_access_magic
+		subject = this
+		OR = {
+			has_variable_list = known_magic_school_list
+			has_trait = gh_historical_school # For making sure historical court magi get set correctly
+		}
+		NOT = { has_trait_with_flag = can_not_access_magic }
+	}
+}
+
+# GH URGENT: Remove this and replace it in the AI magi events
+spell_magic_cost_raw = {
+	OR = {
+		trigger_if = {
+			limit = { has_variable = magic_counter } 
+			#NOT = {
+			#	any_councillor = {
+			#		is_performing_council_task = task_court_magi_cast_spells
+			#	}
+			#}
+			var:magic_counter >= $COST$
+		}
+		trigger_else = {
+			always = no
+		}
+		#any_councillor = {
+		#	trigger_if = {
+		#		limit = { 
+		#			is_performing_council_task = task_court_magi_cast_spells
+		#			exists = var:magic_counter 
+		#		}
+		#		var:magic_counter >= root.$COST$
+		#	}
+		#	trigger_else = {
+		#		always = no
+		#	}
+		#}
+	}
+}
+
+# TODO: Remove this and replace it in the AI magi events
+spell_magic_cost_by_tier = {
+	spell_magic_cost_raw = {
+		COST = tier_$TIER$_spell
+	}
+}
+
+############################
+# MOON TRIGGERS				 #
+############################
+
+is_any_good_moon_trigger = {
+	OR = {
+		is_full_moon_trigger = yes
+		is_gibbous_moon_trigger = yes
+	}
+}
+
+is_any_bad_moon_trigger = {
+	OR = {
+		is_new_moon_trigger = yes
+		is_crescent_moon_trigger = yes
+	}
+}
+
+is_gibbous_moon_trigger = {
+	exists = global_var:current_moon_phase
+	global_var:current_moon_phase = {
+		OR = {
+			var:moon_phase_name = flag:waxing_gibbous_moon
+			var:moon_phase_name = flag:waning_gibbous_moon
+		}
+	}
+}
+
+is_quarter_moon_trigger = {
+	exists = global_var:current_moon_phase
+	global_var:current_moon_phase = {
+		OR = {
+			var:moon_phase_name = flag:first_quarter_moon
+			var:moon_phase_name = flag:last_quarter_moon
+		}
+	}
+}
+
+is_crescent_moon_trigger = {
+	exists = global_var:current_moon_phase
+	global_var:current_moon_phase = {
+		OR = {
+			var:moon_phase_name = flag:waxing_crescent_moon
+			var:moon_phase_name = flag:waning_crescent_moon
+		}
+	}
+}
+
+is_full_moon_trigger = {
+	exists = global_var:current_moon_phase
+	global_var:current_moon_phase = {
+		var:moon_phase_name = flag:full_moon
+	}
+}
+
+is_new_moon_trigger = {
+	exists = global_var:current_moon_phase
+	global_var:current_moon_phase = {
+		var:moon_phase_name = flag:new_moon
+	}
+}
+
+dead_magic_moon_lvl3 = {
+	OR = {
+		is_any_good_moon_trigger = yes
+		NOT = {
+			var:magic_lvl = 3
+		}
+	}
+}
+
+dead_magic_moon_lvl2 = {
+	OR = {
+		is_any_bad_moon_trigger = no
+		NOT = {
+			var:magic_lvl = 2
+		}
+	}
+}
+
+############################
+# MAGIC EDUCATION UPGRADES #
+############################
+
+can_level_up_magic = {
+	trigger_if = {
+		limit = { has_trait = magic_good_20 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_19 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_18 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_17 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_16 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_15 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_14 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_13 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_12 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_11 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_10 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_9 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_8 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_7 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_6 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_5 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_4 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_3 }
+		NOT = { has_trait = education_$MAGIC_TYPE$_4 }	# No point in levelling up anymore if at max
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_2 }
+		NOR = { 
+			has_trait = education_$MAGIC_TYPE$_4
+			has_trait = education_$MAGIC_TYPE$_3
+		}
+	}
+	trigger_else_if = {
+		limit = { has_trait = magic_good_1 }
+		NOR = { 
+			has_trait = education_$MAGIC_TYPE$_4
+			has_trait = education_$MAGIC_TYPE$_3
+			has_trait = education_$MAGIC_TYPE$_2
+		}
+	}
+	trigger_else = {
+		always = no
+	}
+}
+
+has_leveled_up = {
+	trigger_if = {
+		limit = { exists = var:$MAGIC_TYPE$_education_progress }
+		AND = {
+			var:$MAGIC_TYPE$_education_progress >= $THRESHOLD$
+			age >= $MIN_AGE$
+			NOT = {	# has_trait_rank is wonky since the ranks for magic education start at lvl 2, in my experience
+				has_trait_rank = {
+					trait = education_$MAGIC_TYPE$
+					rank >= $RANK$
+				}
+			}
+		}
+	}
+	trigger_else = { always = no }
+}
+
+has_magic_education_trait_rank = {
+	has_trait = education_arcana_$RANK$
+}
+
+glimpse_reality_choice_not_taken = {
+	NOR = {
+		is_target_in_variable_list = {
+			name = glimpse_reality_choices
+			target = flag:$OPTION$
+		}
+		#has_character_flag = $OPTION$
+	}
+}
+
+# TODO: these should use magic_education script values + custom descriptions if possible
+has_any_gh_education_trigger = {
+	OR = {
+		has_education_lich_trigger = yes
+		has_education_magic_trigger = yes
+	}
+}
+has_education_lich_trigger = { has_trait = education_lich }
+has_education_magic_trigger = {
+	OR = {
+		AND = {
+			is_alive = yes #GH TODO: Need a better solution for this
+			can_access_magic = yes
+		}
+		has_trait = gh_historical_school
+	}
+}
+has_education_living_magic_trigger = {
+	custom_description = {
+		text = "education_living_magic_gte_1_tt"
+		is_alive = yes #GH TODO: Need a better solution for this
+		can_access_magic = yes
+		1 <= living_magic_education
+	}
+}
+has_education_dead_magic_trigger = {
+	custom_description = {
+		text = "education_dead_magic_gte_1_tt"
+		is_alive = yes #GH TODO: Need a better solution for this
+		can_access_magic = yes
+		1 <= dead_magic_education
+	}
+}
+has_education_mixed_magic_trigger = {
+	custom_description = {
+		text = "education_mixed_magic_gte_1_tt"
+		is_alive = yes #GH TODO: Need a better solution for this
+		can_access_magic = yes
+		1 <= mixed_magic_education
+	}
+}
+
+has_at_least_magi_potency_rank_trigger = {
+	custom_description = {
+		text = magi_potency_gte_$RANK$_tt
+		$RANK$ <= magi_potency
+	}
+}
+
+has_magi_potency_trigger = {
+	has_at_least_magi_potency_rank_trigger = { RANK = 1 }
+}
+has_magic = { has_magi_potency_trigger = yes }
+
+targeted_by_hostile_spell_trigger = { # Put all hostile spell character modifiers here
+	has_character_modifier = magic_health_loss_modifier
+}
+
+#has_magic_education_rank_trigger = {
+#	save_temporary_scope_value_as = {
+#		name = operator
+#		value = flag:$OPERATOR$
+#	}
+#	OR = {
+#		AND = {
+#			scope:operator = flag:equals
+#			OR = {
+#				has_trait_rank = {
+#					trait = education_living_magic
+#					rank = $RANK$
+#				}
+#				has_trait_rank = {
+#					trait = education_dead_magic
+#					rank = $RANK$
+#				}
+#				has_trait_rank = {
+#					trait = education_mixed_magic
+#					rank = $RANK$
+#				}
+#			}
+#		}
+#		AND = {
+#			scope:operator = flag:greater
+#			OR = {
+#				has_trait_rank = {
+#					trait = education_living_magic
+#					rank > $RANK$
+#				}
+#				has_trait_rank = {
+#					trait = education_dead_magic
+#					rank > $RANK$
+#				}
+#				has_trait_rank = {
+#					trait = education_mixed_magic
+#					rank > $RANK$
+#				}
+#			}
+#		}
+#		AND = {
+#			scope:operator = flag:less
+#			OR = {
+#				has_trait_rank = {
+#					trait = education_living_magic
+#					rank < $RANK$
+#				}
+#				has_trait_rank = {
+#					trait = education_dead_magic
+#					rank < $RANK$
+#				}
+#				has_trait_rank = {
+#					trait = education_mixed_magic
+#					rank < $RANK$
+#				}
+#			}
+#		}
+#	}
+#}
+
+can_be_magic_tutor_of = {
+	is_courtier_of = $EMPLOYER$
+	is_adult = yes
+	basic_is_available_ai = yes
+	NOT = { has_trait = incapable }
+}
+
+secret_magic_is_shunned_trigger = {
+	$OWNER$ = {
+		OR = {
+			faith = { has_doctrine_parameter = magic_shunned }
+			any_liege_or_above = { faith = { has_doctrine_parameter = magic_shunned } }
+		}
+	}
+}
+
+secret_magic_is_criminal_trigger = {
+	$OWNER$ = {
+		OR = {
+			faith = { has_doctrine_parameter = magic_illegal }
+			any_liege_or_above = { faith = { has_doctrine_parameter = magic_illegal } }
+		}
+	}
+}
+
+##################################
+# MAGIC MUTATIONS COLOR TRIGGERS #
+##################################
+
+has_any_glowing_mutation_trait_trigger = {
+	OR = {
+		has_trait = gh_glowing_eyes
+		has_trait = gh_glowing_veins
+	}
+}
+
+#
+# Conditions for obtaining glowing mutations of a given color
+#
+
+can_have_red_magic_mutations_trigger = {
+	has_education_living_magic_trigger = yes
+}
+
+can_have_green_magic_mutations_trigger = {
+	has_education_dead_magic_trigger = yes
+}
+
+can_have_white_magic_mutations_trigger = {
+	has_education_mixed_magic_trigger = yes
+}
+
+#
+# Checks for which color to use for the Magi's current mutations
+#
+
+# GH TODO: Currently mutations will NOT be visible if the character's strongest aspect at the time of gaining them
+#	is not checked for in any of the does_have_*_magic_mutations_trigger below.
+
+does_have_red_magic_mutations_trigger = {
+	OR = {
+		AND = {
+			is_alive = yes
+			has_variable = gh_strongest_aspect_on_first_glowing_mutation
+			OR = {
+				var:gh_strongest_aspect_on_first_glowing_mutation = flag:fire
+				var:gh_strongest_aspect_on_first_glowing_mutation = flag:blood
+				var:gh_strongest_aspect_on_first_glowing_mutation = flag:dawn
+			}
+		}
+
+		# Use red glow color as fallback for the dead and characters in the lobby (we can't determine actual color at that point)
+		is_alive = no
+		NOT = { has_variable = gh_strongest_aspect_on_first_glowing_mutation }
+	}
+}
+
+does_have_green_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:stone
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:nature
+	}
+}
+
+does_have_white_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:celestial
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:ethereal
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:death
+	}
+}
+
+does_have_blue_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:water
+	}
+}
+
+does_have_gold_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:light
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:hymns
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:sand
+	}
+}
+
+does_have_grey_magic_mutations_trigger = {
+	always = no # unused
+}
+
+does_have_pink_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:air
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:time
+	}
+}
+
+does_have_purple_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:dark
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:dream
+	}
+}
+
+does_have_teal_magic_mutations_trigger = {
+	is_alive = yes
+	has_variable = gh_strongest_aspect_on_first_glowing_mutation
+	OR = {
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:ice
+		var:gh_strongest_aspect_on_first_glowing_mutation = flag:metal
+	}
+}
+
+# Bonecrafting Triggers
+
+bonecrafter_artifact_type_trigger = {
+	AND = {
+		exists = var:created_bone_artifact_type
+		var:created_bone_artifact_type = flag:$TYPE$
+	}
+}
+
+##################
+# CABAL TRIGGERS #
+##################
+
+#has_cabal_room_limit = {
+	#custom_description = {
+		#text = has_cabal_room_limit_trigger
+		#subject = this
+		#value = current_cabal_count
+		#current_cabal_count < cabal_limit
+	#}
+#}
+
+#########################
+# Magic School Triggers #
+#########################
+knows_any_magic_spell_trigger = { has_variable_list = known_spell_list }
+
+knows_any_magic_school_trigger = { has_variable_list = known_magic_school_list }
+
+magic_school_is_known_by_trigger = { # does MAGI know the MAGIC_SCHOOL?
+	$MAGI$ = {
+		has_variable_list = known_magic_school_list
+		is_target_in_variable_list = {
+			name = known_magic_school_list
+			target = $MAGIC_SCHOOL$
+		}
+	}
+}
+
+magic_spell_is_known_by_trigger = { # does MAGI know the SPELL?
+	$MAGI$ = {
+		has_variable_list = known_spell_list
+		is_target_in_variable_list = {
+			name = known_spell_list
+			target = $SPELL$
+		}
+	}
+}
+
+character_knows_magic_school = {
+	has_variable_list = known_magic_school_list
+	is_target_in_variable_list = {
+		name = known_magic_school_list
+		target = $MAGIC_SCHOOL$
+	}
+}
+
+culture_knows_magic_school = { # Note that cultures magic schools are actually stored as the var:magic schools
+	any_in_list = {
+		variable = magic_school_list
+		OR = {
+			this = $MAGIC_SCHOOL$
+			var:magic_school = $MAGIC_SCHOOL$
+		}
+	}
+}
+
+knows_spell_with_tag_trigger = {
+	has_variable_list = known_spell_list
+	any_in_list = {
+		variable = known_spell_list
+		spell_has_tag_trigger = { NAME = $NAME$ }
+	}
+}
+
+########################
+# ENCHANTMENT TRIGGERS #
+########################
+
+gh_enchantment_perdition_trigger = { # Perdition Enchantment
+	scope:weapon_type = {
+		OR = {
+			this = flag:artifact_weapon_type_dagger
+			this = flag:artifact_weapon_type_sword
+			this = flag:artifact_weapon_type_spear
+			this = flag:artifact_weapon_type_axe
+		}
+	}
+	trigger_if = {
+		limit = { exists = scope:adventurer }
+		scope:location = {
+			OR = {
+				always = yes
+				culture = { culture_knows_magic_school = { MAGIC_SCHOOL = global_var:wane_tender_harmoniarchy } }
+				geographical_region = world_ga_aironoi
+				geographical_region = world_ga_kashirya
+				geographical_region = GH_geographic_dahangon
+				geographical_region = GH_geographic_krehejad
+			}
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			scope:host ?= { faith = { NOT = { has_doctrine = doctrine_magic_crime } } }
+			scope:activity ?= { has_activity_type = activity_tournament }
+		}
+		scope:host = {
+			OR = {
+				culture = { culture_knows_magic_school = { MAGIC_SCHOOL = global_var:wane_tender_harmoniarchy } }
+				location = {
+					OR = {
+						geographical_region = world_ga_aironoi
+						geographical_region = world_ga_kashirya
+						geographical_region = GH_geographic_dahangon
+						geographical_region = GH_geographic_krehejad
+					}
+				}
+			}
+		}
+	}
+	trigger_else = { always = no }
+}
+

@@ -1,0 +1,253 @@
+﻿##########################
+### GH GOVERNMENT TRIGGERS
+## GH Governments
+# Pirate
+# Magocracies
+# Peasant Republic
+# Landed Order
+# Military Unit
+# Migratory
+#
+## Vanilla Governments
+# Tribal
+# Theocracy
+# Holy Order
+# Mercenary
+# Clan
+#
+## Vanilla Mixes
+# Theocracy
+# Holy Order
+#
+## Misc
+
+#################
+## GH Governments
+
+# Pirate
+commerce_raiding_income_greater_than = { #Takes VALUE
+	exists = var:commerce_raiding_gold_potential
+	AND = {
+		quartermaster_commerce_raid_nearby_counties > $VALUE$
+		quartermaster_commerce_shadow_trade_cap > $VALUE$		
+	}
+}
+
+# Magocracies
+is_magocracy_trigger = {
+	trigger_if = {
+		limit = { exists = holder }
+		holder = {
+			OR = {
+				government_has_flag = government_is_magocratic
+				government_has_flag = government_is_magocratic_republic
+			}
+		}
+	}
+}
+government_flag_magocracy_trigger = {
+	OR = {
+		government_has_flag = government_is_magocratic
+		government_has_flag = government_is_magocratic_republic
+	}
+}
+
+GH_is_any_magocracy_government_trigger = {
+	OR = {
+		government_has_flag = government_is_magocratic
+		government_has_flag = government_is_magocratic_republic
+	}
+}
+
+# Peasant Republic
+is_peasant_republic_trigger = {
+	trigger_if = {
+		limit = { exists = holder }
+		holder = {
+			government_has_flag = government_is_peasant_republic
+		}
+	}
+}
+government_flag_peasant_republic_trigger = { government_has_flag = government_is_peasant_republic }
+
+# Landed Order
+is_landed_order_trigger = {
+	trigger_if = {
+		limit = { exists = holder }
+		holder = {
+			government_has_flag = government_is_landed_order
+		}
+	}
+}
+government_flag_landed_order_trigger = { government_has_flag = government_is_landed_order }
+
+# Military Unit
+is_military_unit_trigger = {
+	trigger_if = {
+		limit = { exists = holder }
+		holder = {
+			government_has_flag = government_is_military_unit
+		}
+	}
+}
+government_flag_military_unit_trigger = { government_has_flag = government_is_military_unit }
+GH_is_any_military_unit_trigger = { government_has_flag = government_is_military_unit } # for possible expansion for playable knightly orders, adventuring band, and bandit group in future
+
+GH_is_any_military_government_trigger = {
+	OR = {
+		GH_is_any_military_unit_trigger = yes
+		GH_is_any_mercenary_government_trigger = yes
+	}
+}
+
+# Migratory
+is_migratory_trigger = {
+	trigger_if = {
+		limit = { exists = holder }
+		holder = {
+			government_has_flag = government_is_migratory
+		}
+	}
+}
+government_flag_migratory_trigger = { government_has_flag = government_is_migratory }
+
+######################
+## Vanilla Governments
+
+# Tribal
+GH_is_any_tribal_government_trigger = {
+	OR = {
+		government_has_flag = government_is_migratory
+		government_has_flag = government_is_tribal
+		government_has_flag = government_is_continental_clan
+	}
+}
+
+GH_is_any_tribal_government_building_trigger = { # This is for buildings so that tribal clans can still build certain things in more developed holdings 
+	OR = {
+		government_has_flag = government_is_migratory
+		government_has_flag = government_is_tribal
+	}
+}
+
+# Theocracy
+GH_is_any_theocracy_government_trigger = {
+	OR = {
+		government_has_flag = government_is_theocracy
+		is_theocratic_lessee = yes
+	}
+}
+gov_is_any_theocracy_trigger = { government_has_flag = government_is_theocracy }
+
+# Holy Order
+
+# Mercenary
+GH_is_any_mercenary_government_trigger = { government_has_flag = government_is_mercenary } # GH TO ADD: Possible merc expansion
+gov_is_any_mercenary_trigger = { government_has_flag = government_is_mercenary } # GH TO ADD: Possible merc expansion
+
+# Clan
+gov_is_any_clan_trigger = {
+	OR = {
+		government_has_flag = government_is_clan
+		government_has_flag = government_is_continental_clan
+	}
+} # GH TO ADD: Possible merc expansion
+
+GH_gov_is_tribal_clan_trigger = {
+	government_has_flag = government_is_continental_clan	
+}
+
+################
+## Vanilla Mixes
+# For replacing vanilla triggers with ones that match our governments - IE: changing a trigger for Republic to also check for Peasant Republic
+# Mixes are named for the first mentioned government, no multiples if possible
+
+# Theocracy
+gov_mix_theo_or_ho_trigger = {
+	OR = {
+		GH_is_any_theocracy_government_trigger = yes
+		gov_mix_ho_or_lo_trigger = yes
+	}
+}
+
+# Holy Order
+gov_mix_ho_or_lo_trigger = {
+	OR = {
+		government_has_flag = government_is_landed_order
+		government_has_flag = government_is_holy_order
+	}
+}
+
+# Republic
+gov_mix_rep_or_playrep_trigger = {
+	OR = {
+		government_has_flag = government_is_republic
+		government_has_flag = government_is_republic_playable
+	}
+}
+
+#######
+## Misc
+
+GH_is_unmarryable_government_trigger = { # GH CHANGE: Unrestricted peasants
+	OR = {
+		primary_title = { is_mercenary_company = yes }
+		AND = {
+			government_has_flag = government_is_landed_order
+			faith = {
+				NOT = { has_doctrine_parameter = clergy_can_marry }
+			}
+		}
+	}
+}
+
+GH_is_unplayable_government_trigger = {
+	OR = {
+		government_has_flag = government_is_migratory
+		government_has_flag = government_is_mercenary
+		government_has_flag = government_is_lichdom
+		government_has_flag = government_is_wasteland
+		government_has_flag = government_is_administrative_bureaucracy
+	}
+}
+
+#########
+## Groups
+# For arbitrary groupings of governments like 'any Imperial government'
+
+GH_is_any_republic_government_trigger = {
+	OR = {
+		government_has_flag = government_is_republic
+		government_has_flag = government_is_republic_playable
+		GH_is_any_special_republic_government_trigger = yes
+		GH_is_judicial_republic_government_trigger = yes
+		GH_is_administrative_republic_government_trigger = yes
+	}
+}
+
+GH_is_any_special_republic_government_trigger = {
+	OR = {
+		government_has_flag = government_is_peasant_republic
+		government_has_flag = government_is_magocratic_republic
+		government_has_flag = government_is_administrative_republic
+		government_has_flag = government_is_judicial_republic
+	}
+}
+
+GH_is_judicial_republic_government_trigger = {
+	government_has_flag = government_is_judicial_republic
+}
+
+GH_is_administrative_republic_government_trigger = {
+	government_has_flag = government_is_administrative_republic
+}
+
+GH_is_any_cult_government_trigger = { government_has_flag = government_is_lichdom } # GH TO ADD: Cult government
+GH_is_any_criminal_government_trigger = { government_has_flag = government_is_pirate } # GH TO ADD: Bandit / raider / cult groups
+GH_is_any_imperial_government_trigger = { government_has_flag = government_is_administrative_bureaucracy } # GH TO ADD: Aversarian Imperial government
+GH_is_any_organized_government_trigger = { # For can_have_partition_succession_law_trigger in 00_law_triggers
+	OR = {
+		government_has_flag = government_is_magocratic
+		government_has_flag = government_is_feudal
+	}
+}

@@ -1,0 +1,292 @@
+﻿story_cycle_golden_terror = {
+	
+	on_setup = {
+		set_global_variable = {
+			name = golden_terror_leader
+			value = story_owner
+		}
+		set_variable = {
+			name = terror_intensity
+			value = 5 # Starts high
+		}
+		set_global_variable = {
+			name = golden_terror
+			value = this
+		}
+	}
+
+	on_end = {
+		debug_log = "Golden Terror ended on:"
+		debug_log_date = yes
+		remove_global_variable = golden_terror
+	}
+
+	on_owner_death = {
+		if = {
+			limit = {
+				exists = story_owner.player_heir
+			}
+			set_global_variable = {
+				name = golden_terror_leader
+				value = story_owner.player_heir
+			}
+			make_story_owner = story_owner.player_heir
+		}
+	}
+
+	# End after exactly 15 years - the Terror has run its course
+	effect_group = {
+		years = 15
+		
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				remove_global_variable = golden_terror
+				every_ruler = {
+					limit = {
+						OR = {
+							has_title = title:k_de_kanzelerij
+							top_liege ?= { has_title = title:k_de_kanzelerij }
+						}
+					}
+					trigger_event = gh_golden_terror.0015 # The Terror ends
+				}
+				end_story = yes
+			}
+		}
+	}
+
+	# Terror events for Republican leader
+	effect_group = {
+		days = { 15 30 }
+
+		trigger = {
+			story_owner = {
+				is_alive = yes
+			}
+		}
+
+		first_valid = {
+			triggered_effect = {
+				trigger = { always = yes }
+				effect = {
+					save_scope_as = story_scope
+					story_owner = {
+						trigger_event = {
+							on_action = ongoing_terror_leader_events
+						}
+					}
+				}
+			}
+		}
+	}
+
+	### Terror intensity mechanics
+	# Intensity increases over time - the Terror consumes everything
+	effect_group = {
+		months = 1
+		
+		triggered_effect = {
+			trigger = {
+				var:terror_intensity < 30
+			}
+			effect = {
+				change_variable = {
+					name = terror_intensity
+					add = 1
+				}
+			}
+		}
+	}
+
+	# At peak intensity, the Terror even turns on its creators
+	effect_group = {
+		months = 6
+		
+		triggered_effect = {
+			trigger = {
+				var:terror_intensity >= 25
+			}
+			effect = {
+				story_owner = {
+					trigger_event = gh_golden_terror.0020 # The Terror consumes its own
+				}
+			}
+		}
+	}
+
+	### Impact effects - HARSHER than the original
+	
+	# Dread gains - absolute terror
+	effect_group = {
+		months = 1
+
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					var:terror_intensity > 25
+				}
+				effect = {
+					story_owner = {
+						add_dread = 20
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = {
+					var:terror_intensity > 15
+				}
+				effect = {
+					story_owner = {
+						add_dread = 15
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = {
+					var:terror_intensity > 5
+				}
+				effect = {
+					story_owner = {
+						add_dread = 10
+					}
+				}
+			}
+		}
+	}
+
+	# County Control - revolutionary consolidation through purges
+	effect_group = {
+		months = 2
+
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					var:terror_intensity > 20
+				}
+				effect = {
+					story_owner = {
+						every_sub_realm_county = {
+							limit = {
+								holder = {
+									is_member_of_clique_with_flag_trigger = { FLAG = raadilist }
+								}
+							}
+							change_county_control = -35 # Monarchist lands seized and destabilized
+						}
+						every_sub_realm_county = {
+							limit = {
+								holder = {
+									NOT = {
+										is_member_of_clique_with_flag_trigger = { FLAG = raadilist }
+									}
+								}
+							}
+							change_county_control = 15 # Revolutionary control strengthened
+						}
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = {
+					var:terror_intensity > 10
+				}
+				effect = {
+					story_owner = {
+						every_sub_realm_county = {
+							limit = {
+								holder = {
+									is_member_of_clique_with_flag_trigger = { FLAG = raadilist }
+								}
+							}
+							change_county_control = -25
+						}
+						every_sub_realm_county = {
+							limit = {
+								holder = {
+									NOT = {
+										is_member_of_clique_with_flag_trigger = { FLAG = raadilist }
+									}
+								}
+							}
+							change_county_control = 10
+						}
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = {
+					var:terror_intensity > 0
+				}
+				effect = {
+					story_owner = {
+						every_sub_realm_county = {
+							limit = {
+								holder = {
+									is_member_of_clique_with_flag_trigger = { FLAG = raadilist }
+								}
+							}
+							change_county_control = -15
+						}
+						every_sub_realm_county = {
+							limit = {
+								holder = {
+									NOT = {
+										is_member_of_clique_with_flag_trigger = { FLAG = raadilist }
+									}
+								}
+							}
+							change_county_control = 5
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Faction discontent - what remains of the monarchists rage against the Terror
+	effect_group = {
+		months = 1
+
+		triggered_effect = {
+			trigger = {
+				var:terror_intensity > 10
+			}
+			effect = {
+				story_owner = {
+					if = {
+						limit = {
+							has_targeting_faction = yes
+						}
+						add_targeting_factions_discontent = 8
+					}
+				}
+			}
+		}
+	}
+
+	# Maintenance - transfer to new ruler of the Netherlands
+	effect_group = {
+		days = 1
+		
+		triggered_effect = {
+			trigger = {
+				story_owner = {
+					NOT = {
+						has_title = title:k_de_kanzelerij
+					}
+				}
+			}
+			effect = {
+				title:k_de_kanzelerij.holder = {
+					save_scope_as = new_republican_leader
+				}
+				make_story_owner = scope:new_republican_leader
+				set_global_variable = {
+					name = golden_terror_leader
+					value = story_owner
+				}
+			}
+		}
+	}
+}

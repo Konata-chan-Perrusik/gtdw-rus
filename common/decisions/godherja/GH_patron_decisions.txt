@@ -1,0 +1,139 @@
+﻿submit_yourself_to_the_divine_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	ai_check_interval = 36
+
+	cooldown = { years = 5 }
+	
+	desc = submit_yourself_to_the_divine_decision_desc
+	decision_group_type = decisions
+	
+	is_shown = {
+		character_has_any_patron_saint = yes
+		any_character_patron_saint_has_aspect_trigger = { ASPECT = values_humility }
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available = yes
+		prestige >= major_prestige_value
+	}
+	
+	effect = {
+		add_prestige = major_prestige_loss
+		add_piety = major_piety_gain
+		patron_saint_frivolous_spending_affinity_check = { GOLD = minor_gold_value }
+		add_character_modifier = { modifier = gh_patron_submission_to_the_divine_mod years = 5 }
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 30
+
+		ai_value_modifier = {
+			ai_zeal = 5
+		}
+	}
+}
+
+donate_to_the_poor_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	ai_check_interval = 36
+
+	cooldown = { years = 5 }
+	
+	desc = submit_yourself_to_the_divine_decision_desc
+	decision_group_type = decisions
+	
+	is_shown = {
+		OR = {
+			AND = {
+				character_has_any_patron_saint = yes
+				any_character_patron_saint_has_aspect_trigger = { ASPECT = values_generosity }
+			}
+			faith = { has_doctrine_parameter = vows_of_poverty_active }
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available = yes
+		short_term_gold >= medium_gold_value
+	}
+	
+	effect = {
+		remove_short_term_gold = medium_gold_value
+		
+		if = {
+			limit = { faith = { has_doctrine_parameter = vows_of_poverty_active } }
+			add_piety = medium_piety_gain
+		}
+		else = { add_piety = minor_piety_gain }
+		patron_saint_generosity_affinity_check = { GOLD = medium_gold_value }
+		stress_impact = {
+			greedy = medium_stress_impact_gain
+			generous = minor_stress_impact_loss
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 50
+
+		ai_value_modifier = {
+			ai_zeal = 5
+			ai_greed = -5
+		}
+	}
+}
+
+heal_the_sick_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	ai_check_interval = 24
+
+	cooldown = { years = 5 }
+	
+	desc = heal_the_sick_decision_desc
+	decision_group_type = decisions
+	
+	is_shown = {
+		OR = {
+			AND = {
+				character_has_any_patron_saint = yes
+				any_character_patron_saint_has_aspect_trigger = { ASPECT = values_healing }
+			}
+			faith = { has_doctrine_parameter = can_use_heal_the_sick_decision }
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available = yes
+	}
+	
+	effect = {
+		trigger_event = patron_saint_event.0201
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 60
+
+		ai_value_modifier = {
+			ai_zeal = 5
+			ai_compassion = 5
+			ai_greed = -1
+		}
+	}
+}

@@ -1,0 +1,155 @@
+﻿setup_queue = {
+	$QUEUE_SCOPE$ = {
+		set_variable = {
+			name = queue_incrementor_$QUEUE_NAME$
+			value = 1
+			days = 2
+		}
+		while = {
+			limit = {
+				trigger_if = {
+					limit = {
+						has_variable_list = $SOURCE_LIST$
+					}
+					any_in_list = {
+						variable = $SOURCE_LIST$
+						NOR = { 
+							has_character_flag = already_checked_for_$QUEUE_NAME$_queue
+							has_character_flag = already_added_to_queue
+						} 
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+			random_in_list = {
+				variable = $SOURCE_LIST$
+				limit = { 
+					NOR = { 
+						has_character_flag = already_checked_for_$QUEUE_NAME$_queue
+						has_character_flag = already_added_to_queue
+					} 
+				}
+				add_character_flag = {
+					flag = already_checked_for_$QUEUE_NAME$_queue
+					days = 1
+				}
+				if = {
+					limit = {
+						$QUEUE_SCOPE$ = {
+							var:queue_incrementor_$QUEUE_NAME$ = $REMAINING_QUEUE_SIZE$
+						}
+					}
+					$QUEUE_SCOPE$ = {
+						add_to_variable_list = {
+							name = $QUEUE_NAME$
+							target = prev
+						}
+					}
+					add_character_flag = {
+						flag = in_queue_$QUEUE_NAME$
+						weeks = 1
+					}
+					add_character_flag = {
+						flag = already_added_to_queue
+						days = 1
+					}
+					trigger_event = {
+						id = $QUEUE_EVENT$
+						days = 1
+					}
+				}
+				$QUEUE_SCOPE$ = {
+					change_variable = {
+						name = queue_incrementor_$QUEUE_NAME$
+						add = 1
+					}
+					if = {
+						limit = { var:queue_incrementor_$QUEUE_NAME$ > $REMAINING_QUEUE_SIZE$ }
+						set_variable = {
+							name = queue_incrementor_$QUEUE_NAME$
+							value = 1
+						}
+					}
+				}
+			}
+		}
+		#remove_variable = queue_incrementor_$QUEUE_NAME$
+	}
+}
+
+execute_queue = {
+	$QUEUE_SCOPE$ = {
+		if = {
+			limit = { has_variable_list = $QUEUE_NAME$ }
+			# First, remove any queue participants that no longer fit the required criteria
+			every_in_list = {
+				variable = $QUEUE_NAME$
+				limit = { $QUEUE_CRITERION$ = no }
+				$QUEUE_SCOPE$ = {
+					remove_list_variable = {
+						name = $QUEUE_NAME$
+						target = prev
+					}
+				}
+			}
+		}
+		# If there are no people in the queue at all, fire a fallback event for safety purposes
+		if = {
+			limit = { NOT = { has_variable_list = $QUEUE_NAME$ } }
+			trigger_event = $EMPTY_LIST_FALLBACK_EVENT$
+		}
+		else_if = { # If there is only one participant left in the queue, trigger the event that they require
+			limit = {
+				variable_list_size = {
+					name = $QUEUE_NAME$
+					value = 1
+				}
+			}
+			random_in_list = {
+				variable = $QUEUE_NAME$
+				trigger_event = $LAST_QUEUE_PARTICIPANT_EVENT$
+			}
+		}
+		else = { # Otherwise, continue executing the queue
+			random_in_list = {
+				variable = $QUEUE_NAME$
+				save_temporary_scope_as = first_queue_pick
+			}
+			random_in_list = {
+				variable = $QUEUE_NAME$
+				limit = { NOT = { this = scope:first_queue_pick } }
+				save_temporary_scope_as = second_queue_pick
+				set_variable = {
+					name = partner
+					value = scope:first_queue_pick
+				}
+				scope:first_queue_pick = {
+					set_variable = {
+						name = partner
+						value = scope:second_queue_pick
+					}
+				}
+			}
+			if = {	# Players should have a priority for queue events
+				limit = { scope:first_queue_pick = { is_ai = no } }
+				scope:first_queue_pick = {
+					trigger_event = $QUEUE_DUEL_EVENT$
+				}
+			}
+			else = {
+				scope:second_queue_pick = {
+					trigger_event = $QUEUE_DUEL_EVENT$
+				}
+			}
+			# The random character is merely a host, so it doesn't fire on a dead person. The person in question should (hopefully...) not get dragged into the succession
+			random_living_character = {
+				trigger_event = {
+					id = $QUEUE_CONTINUE_EVENT$
+					days = 1
+				}
+			}
+		}
+	}
+}

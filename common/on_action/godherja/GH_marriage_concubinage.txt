@@ -1,0 +1,68 @@
+﻿# Characters get divorced in any way
+# root = character initiating the divorce
+# scope:spouse = the divorced spouse
+# scope:reason = flag:script or flag:faith
+on_divorce = { # Will not fire from historical divorces
+	on_actions = {
+		GH_on_divorce
+	}
+}
+
+GH_on_divorce = { # Will not fire from historical divorces
+	effect = {
+		if = {
+			limit = {
+				NOT = { faith.religion = scope:spouse.faith.religion }
+				any_character_struggle = {
+					activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+						CATALYST = catalyst_interfaith_marriage
+						CHAR = scope:spouse
+					}
+				}
+			}
+			every_character_struggle = {
+				limit = {
+					activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+						CATALYST = catalyst_interfaith_marriage
+						CHAR = scope:spouse
+					}
+				}
+				activate_struggle_catalyst = {
+					catalyst = catalyst_interfaith_marriage
+					character = scope:spouse
+				}
+			}
+		}
+	}
+}
+
+
+## Character ceases to be another's concubine
+## root = the concubinist
+## scope:concubine = the concubine
+## scope:reason = flag:death, flag:faith, or flag:script
+#on_concubinage_end = {
+#	on_actions = {
+#		GH_on_concubinage_end 
+#	}
+#}
+#
+#GH_on_concubinage_end = {
+#	effect = {
+#	}
+#}
+#
+#
+## root = first person in betrothal
+## scope:second = second person in betrothal
+## scope:reason = flag:timeout, flag:death, flag:faith, or flag:script
+#on_betrothal_broken = {
+#	on_actions = {
+#		GH_on_betrothal_broken
+#	}
+#}
+#
+#GH_on_betrothal_broken = {
+#	effect = {
+#	}
+#}

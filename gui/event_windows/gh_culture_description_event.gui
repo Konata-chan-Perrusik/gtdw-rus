@@ -1,0 +1,79 @@
+﻿window = {
+	name = "gh_culture_description_event"
+	visible = "[GetVariableSystem.HasValue( 'culture_creation_right_view', 'name_selection' )]"
+	parentanchor = center
+	widgetanchor = center
+
+	position = { 305 -20 }
+	size = { 420 295 }
+	layer = events
+	movable = no
+	datacontext = "[EventWindow.AccessEventWindowData]"
+
+	state = {
+		name = show
+		on_start = "[GetVariableSystem.Clear( 'event_window_mouse_leave')]"
+	}
+
+	state = {
+		name = _hide
+	}
+
+	state = {
+		name = _mouse_hierarchy_leave
+		on_start = "[GetVariableSystem.Set( 'event_window_mouse_leave', 'true' )]"
+	}
+
+
+	vbox = {
+		name = "event_window"
+
+		widget = {
+			name = "event_window_content"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			hbox = {
+
+				widget = {
+					name = "text"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					vbox = {
+						name = "description_and_options"
+
+						text_single = {
+							text = "GH_CUSTOM_DESCRIPTION"
+							default_format = ""
+							margin_top = 10
+							margin_left = 20
+						}
+						spacer = { size = { 0 5 } }
+						vbox = {
+							allow_outside = yes
+							layoutpolicy_horizontal = expanding
+							margin_left = 5
+							margin_right = -15
+							datacontext_from_model = {
+								datamodel = "[EventWindowData.GetOptions]"
+								index = "0"
+							}
+
+							state = {
+							  name = _mouse_hierarchy_leave
+							  on_finish = "[EventOption.Select]"
+							}
+							
+							hbox = {
+								name = "gh_culture_description_widgets_container"
+								layoutpolicy_horizontal = expanding
+							}
+						}
+						expand = {}
+					}
+				}
+			}
+		}
+	}
+}

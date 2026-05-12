@@ -1,0 +1,1923 @@
+﻿support_amsari_pretender_effect = {
+	$SUPPORTER$ = { save_scope_as = supporter }
+	$PRETENDER$ = { save_scope_as = pretender }
+	scope:supporter.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= { save_scope_as = old_pretender }
+
+	scope:supporter = {
+		# Set story if doesn't exists and only change supporting var if it does
+		if = {
+			limit = { 
+				NOR = { 
+					has_variable = gh_amsari_civil_war_info_story
+					exists = scope:old_pretender
+				}
+			}
+			create_story = gh_amsari_civil_war_info_story
+			var:gh_amsari_civil_war_info_story ?= {
+				set_variable = {
+					name = amsari_civil_war_supporting
+					value = scope:pretender
+				}
+			}
+			custom_tooltip = gh_acw_support_amsari_pretender_first_time_tooltip
+		}
+		else = {
+			# Remove old pretender supported if they exists
+			if = { 
+				limit = { exists = scope:old_pretender }
+				remove_support_to_amsari_pretender_effect = {
+					CHARACTER = scope:supporter
+					OLD_PRETENDER = scope:old_pretender
+				}
+			}		
+			# Then after removing we set the new pretender
+			var:gh_amsari_civil_war_info_story ?= {
+				set_variable = {
+					name = amsari_civil_war_supporting
+					value = scope:pretender
+				}
+			}
+			custom_tooltip = gh_acw_support_amsari_pretender_change_tooltip
+		}
+		
+		if = {
+			limit = {
+				NOT = {
+					is_target_in_global_variable_list = {
+						name = involved_character_amsari_civil_war
+						target = this
+					}
+				}
+			}			
+			add_to_global_variable_list = {
+				name = involved_character_amsari_civil_war
+				target = this
+			}
+		}
+
+		if = {
+			limit = { 
+				scope:pretender = { is_ruler = yes }
+				scope:pretender.highest_held_title_tier > scope:supporter.highest_held_title_tier
+				NOT = { scope:pretender = scope:supporter }
+			}
+			create_title_and_vassal_change = {
+				type = swear_fealty
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			change_liege = {
+				liege = scope:pretender
+				change = scope:change
+			}
+			resolve_title_and_vassal_change = scope:change	
+		}
+		# Add Pretender to the court of supporter if isn't adventurer nor already in allied court 
+		else_if = {
+			limit = { 
+				scope:pretender = {
+					is_ruler = no
+					NOT = { is_courtier_of = scope:supporter }
+					# If scope:supporter is AI, they shouldn't be a courtier of their liege, if their liege does not support them (not in variable list: amsari_civil_war_supporter_list), if scope:supporter is player, they should always join their court
+					NAND = {
+						scope:supporter = { is_ai = yes }
+						is_courtier = yes 
+						has_character_flag = amsari_pretender_staying_for_claim
+						var:gh_amsari_civil_war_info_story ?= {	
+							is_target_in_variable_list = {
+								name = amsari_civil_war_supporter_list
+								target = scope:pretender.liege
+							}
+						}
+					}		
+				}
+				scope:supporter = {
+					is_ruler = yes
+					is_landed = yes
+				}
+			}
+			add_courtier = scope:pretender
+			scope:pretender = { 
+				every_close_family_member = { 
+					limit = {
+						NOT = { is_courtier_of = scope:supporter }
+						is_spouse_of = scope:pretender
+						is_child_of = scope:pretender
+						is_grandchild_of = scope:pretender
+					}
+					scope:supporter = { add_courtier = prev }
+				}
+			}
+			# Won't leave court by themselves
+			scope:pretender = {
+				add_character_flag = amsari_pretender_staying_for_claim
+			}
+		}
+		# Making sure scope:supporter can't change pretender right away
+		add_character_flag = {
+			flag = gh_has_recently_supported_pretender
+			years = 4
+		}
+	}
+	scope:pretender = {
+		if = {
+			limit = { NOT = { scope:pretender = scope:supporter } }
+			custom_tooltip = gh_acw_amsari_pretender_is_supported_tooltip
+		}
+		# Set story if doesn't exists and only change supporting var if it does
+		if = {
+			limit = { NOT = { exists = this.var:gh_amsari_civil_war_info_story } }
+			create_story = gh_amsari_civil_war_info_story
+			var:gh_amsari_civil_war_info_story ?= {
+				set_variable = {
+					name = amsari_civil_war_supporting
+					value = scope:pretender
+				}
+			}
+		}
+		else = {		
+			# set the new pretender
+			var:gh_amsari_civil_war_info_story ?= {
+				set_variable = {
+					name = amsari_civil_war_supporting
+					value = scope:pretender
+				}
+			}
+		}
+		# Add supporter to the list of person that is supporting pretender
+		if = {
+			limit = { NOT = { scope:pretender = scope:supporter } }
+			var:gh_amsari_civil_war_info_story ?= {
+				add_to_variable_list = {
+					name = amsari_civil_war_supporter_list
+					target = scope:supporter
+				}					
+			}
+		}
+		# Add positive opinion of supporter
+		if = {
+			limit = { 
+				NOT = { scope:pretender = scope:supporter } 
+				scope:supporter = { is_ruler = yes }
+			}
+			add_opinion = {
+				target = scope:supporter
+				modifier = gh_acw_pushing_claim_opinion
+				opinion = 40
+			}
+		}
+		# Add Active Pretender trait if it doesn't exists
+		if = {
+			limit = { NOT = { has_trait = gh_trait_amsari_pretender } }
+			add_trait = gh_trait_amsari_pretender
+		}
+	}
+}
+
+support_acw_start_effect = {
+	$START_SUPPORTER$ = { save_scope_as = start_supporter }
+	$START_PRETENDER$ = { save_scope_as = start_pretender }
+	
+	scope:start_supporter = { 
+		if = {
+			limit = { 
+				trigger_if = { limit = { has_variable = gh_pretender_asking_player } }
+				trigger_else = { is_ai = yes }
+				is_independent_ruler = yes
+				NOR = { 
+					has_trait = gh_trait_amsari_pretender #Not one of the pretender themselves
+					exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting					
+				}
+				scope:start_pretender = { amsari_historical_pretender_is_ai_trigger = yes }
+			}		
+			support_amsari_pretender_effect = {
+				SUPPORTER = scope:start_supporter
+				PRETENDER = scope:start_pretender
+			}
+			add_character_flag = {
+				flag = gh_has_asked_for_loyalists
+				years = 8
+			}
+			spawn_army = {
+				name = "amsari_loyalists"
+				location = capital_province
+				levies = 1000
+				men_at_arms = {
+					type = prophets_sons
+					stacks = 4
+				}
+				men_at_arms = {
+					type = light_footmen
+					stacks = 2
+				}
+				inheritable = yes
+				uses_supply = no
+			}
+			scope:pretender = { 
+				# Need to take a look at this cause causing problems
+				#gh_acw_landless_pretenders_effect = yes
+			}	
+		}
+	}
+}
+
+gh_acw_chance_of_capturing_enemy_pretender = {
+	random_list = {
+		60 = {
+			if = {
+				limit = { 
+					scope:defender = { has_variable = gh_amsari_civil_war_info_story }
+					scope:defender.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+					scope:defender.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= { is_alive = yes }
+				}
+				add_character_flag = {
+					flag = gh_acw_war_victory_on_pretender
+					days = 2
+				}
+				scope:defender.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= { save_scope_as = enemy_pretender }
+				scope:attacker = { trigger_event = gh_amsari.0005 }	
+			}
+		}
+		40 = {}
+	}
+}
+
+gh_acw_find_other_pretender_effect = {
+	random_in_global_list = {
+		variable = gh_global_list_acw_pretenders
+		limit = {
+			is_alive = yes
+			is_available_adult = yes
+			NOR = {
+				has_trait = disinherited 
+				has_trait = gh_trait_renounced_claim
+				# You don't want to fight if your parent is already doing the work for you
+				any_parent = { has_trait = gh_trait_amsari_pretender  }
+			}
+		}
+		weight = {
+			base = 2
+			modifier = {
+				add = -3
+				has_trait = gh_trait_amsari_pretender
+			}
+			modifier = {
+				add = -1
+				has_title = title:e_amsari
+			}
+			modifier = {
+				add = 1
+				has_trait = ambitious
+			}
+			modifier = {
+				add = 1
+				has_trait = brave
+			}
+			modifier = {
+				add = 1
+				has_trait = gregarious
+			}
+			modifier = {
+				add = -1
+				has_trait = lazy
+			}
+			modifier = {
+				add = -4
+				has_trait = content
+			}
+			modifier = {
+				add = 1
+				is_landed = yes
+			}
+			modifier = {
+				add = 1
+				has_trait = intellect_good_1
+			}
+			modifier = {
+				add = 2
+				has_trait = intellect_good_2
+			}
+			modifier = {
+				add = 3
+				has_trait = intellect_good_3
+			}
+		}
+		save_scope_as = new_chosen_pretender
+	}
+	support_amsari_pretender_effect = {
+		SUPPORTER = this
+		PRETENDER = scope:new_chosen_pretender
+	}
+}
+
+remove_support_to_amsari_pretender_effect = {
+	$CHARACTER$ = { save_scope_as = older_supporter }
+	$OLD_PRETENDER$ = { save_scope_as = old_pretender }
+
+	scope:old_pretender = {
+		if = {
+			limit = { 
+				NOT = { scope:older_supporter = scope:old_pretender } 
+				is_alive = yes
+			}
+			remove_opinion = {
+				target = scope:older_supporter
+				modifier = gh_acw_pushing_claim_opinion
+			}
+			add_opinion = {
+				target = scope:older_supporter
+				modifier = gh_acw_stopped_pushing_claim_opinion
+				opinion = -30
+			}
+			remove_character_flag ?= amsari_pretender_staying_for_claim
+		}
+		var:gh_amsari_civil_war_info_story ?= { 
+			remove_list_variable = { 
+				name = amsari_civil_war_supporter_list
+				target = scope:older_supporter
+			}
+			if = {
+				limit = {
+					is_target_in_variable_list = {
+						name = gh_acw_forced_acknowledgement_list
+						target = scope:older_supporter
+					}
+				}
+				remove_list_variable = { 
+					name = gh_acw_forced_acknowledgement_list
+					target = scope:older_supporter
+				}			
+			}
+			if = {
+				limit = {
+					is_target_in_variable_list = {
+						name = gh_acw_will_get_strong_hook
+						target = scope:older_supporter
+					}
+				}
+				remove_list_variable = { 
+					name = gh_acw_will_get_strong_hook
+					target = scope:older_supporter
+				}			
+			}			
+			if = {
+				limit = {
+					has_variable_list = amsari_civil_war_supporter_list
+					variable_list_size = {
+						name = amsari_civil_war_supporter_list
+						value >= 1
+					}
+				}
+				ordered_in_list = {
+					variable = amsari_civil_war_supporter_list
+					order_by = max_military_strength
+					limit = { NOT = { this = scope:older_supporter } }
+					if = {
+						limit = { scope:old_pretender = { NOT = { government_has_flag = government_is_landless_adventurer } } }
+						add_courtier = scope:old_pretender
+					}
+				}
+			}
+			else_if = {
+				limit = { scope:old_pretender = { is_alive = yes } }
+				random_list = {
+					90 = { # Look for someone else to back their claim
+						modifier = { #Less likely if they are boring
+							scope:old_pretender = { has_trait = content }
+							add = -20
+						}
+						if = {
+							limit = {
+								any_in_global_list = {
+									variable = involved_character_amsari_civil_war
+									NOR = { 
+										trigger_if = { 
+											limit = { exists = this.var:gh_amsari_civil_war_info_story }
+											this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+										}
+										this = scope:old_pretender
+										is_at_war_with = scope:old_pretender
+										this = title:e_amsari.holder
+									}
+									is_alive = yes
+									is_landed = yes
+									is_ai = yes								
+								}						
+							}
+							random_in_global_list = {
+								variable = involved_character_amsari_civil_war
+								limit = {
+									NOR = { 
+										trigger_if = { 
+											limit = { exists = this.var:gh_amsari_civil_war_info_story }
+											this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+										}
+										exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting 
+										this = scope:old_pretender
+										is_at_war_with = scope:old_pretender
+										this = title:e_amsari.holder
+									}
+									is_alive = yes
+									is_landed = yes
+									is_ai = yes								
+								}			
+								save_scope_as = new_supporter		
+							}
+							if = {
+								limit = { scope:new_supporter ?= { is_ai = yes } }
+								# Apply back effect of new support
+								support_amsari_pretender_effect = {
+									SUPPORTER = scope:new_supporter
+									PRETENDER = scope:old_pretender
+								}
+							}
+							else = { scope:new_supporter ?= { trigger_event = gh_amsari.0009 } }
+						}
+						# If old_pretender can't find  ally they will still leave court and roam around
+						else = { scope:older_supporter = { remove_courtier_or_guest = scope:old_pretender } }
+					}
+					10 = { # Abandon Claim to Hikhlan Throne
+						modifier = {
+							scope:old_pretender = { has_trait = ambitious }
+							add = -9
+						}
+						scope:old_pretender ?= { remove_variable = gh_amsari_civil_war_info_story }
+					}
+				}
+			}
+		}		
+	}
+	scope:older_supporter ?= {
+		var:gh_amsari_civil_war_info_story ?= { 
+			remove_variable = amsari_civil_war_supporting
+		}
+		if = {
+			limit = {
+				has_hook_of_type = {
+					type = favor_hook
+					target = scope:old_pretender
+				}
+			}
+			remove_hook = {
+				type = favor_hook
+				target = scope:old_pretender
+			}			
+		}
+	}
+}
+
+set_up_amsari_pretender_story_effect = {
+	if = {
+		limit = { NOT = { has_variable = gh_amsari_civil_war_info_story } }
+		create_story = gh_amsari_civil_war_info_story
+	}
+	var:gh_amsari_civil_war_info_story ?= {
+		set_variable = {
+			name = amsari_civil_war_supporting
+			value = scope:supported_pretender
+		}
+	}
+}
+
+gh_acw_forcing_acknowledge_pretender_effect = {
+	$FORCED_SUPPORTER$ = { save_scope_as = forced_supporter }
+	$PRETENDER$ = { save_scope_as = victorious_pretender }
+	
+	scope:forced_supporter = {
+		remove_variable = gh_amsari_civil_war_info_story
+		add_character_flag = {
+			flag = gh_acw_forced_to_acknowledge_another_pretender
+			years = 7
+		}
+		if = {
+			limit = { NOT = { has_variable = gh_amsari_civil_war_info_story } }
+			create_story = gh_amsari_civil_war_info_story
+		}
+		var:gh_amsari_civil_war_info_story ?= {
+			set_variable = {
+				name = amsari_civil_war_supporting
+				value = scope:victorious_pretender
+			}
+		}
+	}
+	scope:victorious_pretender.var:gh_amsari_civil_war_info_story ?= {
+		add_to_variable_list = {
+			name = gh_acw_forced_acknowledgement_list
+			target = scope:forced_supporter
+		}
+	}
+}
+
+gh_acw_landless_pretenders_effect = {
+	if = {
+		limit = { 
+			exists = global_var:historical_heir_murdered
+			OR = {
+				scope:start_pretender = character:amsari_mahndayana_8 
+				scope:start_pretender = character:amsari_mahndayana_15
+			}
+		}	
+		gh_acw_create_landless_adventurer_title_effect = {
+			REASON = flag:wanderer
+			FLAVOR_CHAR = scope:start_pretender
+		}
+		add_realm_law = camp_purpose_legitimists	
+		add_gold = 500
+		domicile ?= {
+			change_provisions = major_provisions_gain
+		}
+		remove_character_flag ?= amsari_pretender_staying_for_claim
+		spawn_army = {
+			name = "amsari_loyalists"
+			location = capital_province
+			levies = 1500
+			men_at_arms = {
+				type = prophets_sons
+				stacks = 8
+			}
+			men_at_arms = {
+				type = light_footmen
+				stacks = 4
+			}
+			inheritable = yes
+			uses_supply = no
+		}
+		scope:start_supporter ?= {
+			add_opinion = {
+				modifier = perk_negotiated_alliance_opinion
+				target = scope:start_pretender
+			}
+			create_alliance = {
+				target = scope:start_pretender
+				allied_through_owner = scope:start_supporter
+				allied_through_target = scope:start_pretender
+			}
+		}		
+	}
+	else = {}
+}
+
+support_amsari_pretender_global_ai_effect = {
+	# Check a trigger effects for historical civil war
+	if = {
+		limit = { 
+			character:amsari_mahndayana_3 = { 
+				is_alive = yes 
+				this = title:e_amsari.holder
+			}
+			OR = {
+				character:amsari_mahndayana_4 = { 
+					is_alive = yes 
+					is_ai = yes 
+				}
+				character:amsari_mahndayana_5 = { 
+					is_alive = yes 
+					is_ai = yes 
+				}
+				character:amsari_mahndayana_7 = { 
+					is_alive = yes 
+					is_ai = yes 
+				}
+			}
+		}
+		if = { 
+			limit = { exists = character:amsari_mahndayana_3.primary_heir }
+			character:amsari_mahndayana_3.primary_heir ?= {
+				set_global_variable = {
+					name = gh_acw_historical_heir_wants_revenge
+					value = this
+				}		
+			}
+		}
+		character:amsari_mahndayana_3 = { death = { death_reason = death_murder } }
+		set_global_variable = {
+			name = historical_heir_murdered
+			days = 20
+		}
+	}
+	
+	# Look for someone to take the throne
+	if = {
+		limit = { 
+			character:amsari_mahndayana_4 = { 
+				is_ai = yes
+				is_alive = yes
+			}
+		}
+		character:amsari_mahndayana_4 = { save_scope_as = hiklahn_thief }
+	}
+	else_if = {
+		limit = { 
+			character:amsari_mahndayana_5 = { 
+				is_ai = yes
+				is_alive = yes
+			}
+		}
+		character:amsari_mahndayana_5 = { save_scope_as = hiklahn_thief }
+	}
+	else_if = {
+		limit = { 
+			character:amsari_mahndayana_7 = { 
+				is_ai = yes
+				is_alive = yes
+			}
+		}
+		character:amsari_mahndayana_7 = { save_scope_as = hiklahn_thief }
+	}
+
+	if = {
+		limit = { exists = global_var:historical_heir_murdered }
+		# Take the Hiklhan
+		scope:hiklahn_thief ?= {
+			add_trait = gh_trait_amsari_pretender
+			save_scope_as = supported_pretender
+			set_up_amsari_pretender_story_effect = yes
+			create_title_and_vassal_change = {
+				type = conquest
+				save_scope_as = change
+				add_claim_on_loss = yes
+			}
+			title:c_tchouran = {
+				change_title_holder = {
+					holder = scope:hiklahn_thief
+					change = scope:change
+				}
+			}
+			title:k_azadi = {
+				change_title_holder = {
+					holder = scope:hiklahn_thief
+					change = scope:change
+				}
+			}
+			title:e_amsari = {
+				change_title_holder = {
+					holder = scope:hiklahn_thief
+					change = scope:change
+				}
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+		
+		# Everyone becomes independent
+		title:e_amsari.holder = {
+			every_vassal = {
+				create_title_and_vassal_change = {
+					type = independency
+					save_scope_as = change
+					add_claim_on_loss = yes
+				}
+				becomes_independent = { change = scope:change }
+				resolve_title_and_vassal_change = scope:change
+				add_to_global_variable_list = {
+					name = involved_character_amsari_civil_war
+					target = this
+				}
+			}
+		}
+
+		# Every vassal gets its historical pretender 
+		if = {
+			limit = {
+				title:d_prathatha.holder  = { is_ai = yes }
+			}
+			#Imprison to betrothe to son
+			#imprison_character_effect = {
+			#	TARGET = character:amsari_mahndayana_16
+			#	IMPRISONER = title:d_prathatha.holder
+			#}
+			character:amsari_mahndayana_16 = { save_scope_as = supported_pretender }
+			title:d_prathatha.holder = {
+				if = {
+					limit = { any_child = { is_male = yes can_marry_trigger = yes } }
+					random_child = {
+						limit = { 
+							is_male = yes
+							can_marry_trigger = yes
+						}
+						marry = character:amsari_mahndayana_16
+					}
+				}
+				support_amsari_pretender_effect = {
+					SUPPORTER = title:d_prathatha.holder
+					PRETENDER = character:amsari_mahndayana_16
+				}
+				start_war = {
+					cb = claim_cb
+					target = title:d_kalbafaraj_mahalleh.holder
+					claimant = this
+					target_title = title:c_bandar_ozbak
+				}				
+			}
+		}
+		global_var:gh_acw_historical_heir_wants_revenge ?= { save_scope_as = supposed_heir }
+
+		if = {
+			limit = { exists = scope:supposed_heir }
+			support_acw_start_effect = {
+				START_SUPPORTER = scope:supposed_heir
+				START_PRETENDER = scope:supposed_heir
+			}
+			support_acw_start_effect = {
+				START_SUPPORTER = title:k_durab.holder
+				START_PRETENDER = scope:supposed_heir
+			}
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_kalbafaraj_mahalleh.holder
+			START_PRETENDER = character:amsari_mahndayana_6
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:c_kuchek.holder
+			START_PRETENDER = character:amsari_mahndayana_7
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:c_siuni.holder
+			START_PRETENDER = character:amsari_mahndayana_12
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_takyeh.holder
+			START_PRETENDER = character:amsari_mahndayana_14
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_gerd_mehdiabad.holder
+			START_PRETENDER = character:amsari_mahndayana_9
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_khvoshinane_sofla.holder
+			START_PRETENDER = character:amsari_mahndayana_2_daughter_2
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_shastakan.holder
+			START_PRETENDER = character:amsari_mahndayana_8
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_darundel.holder
+			START_PRETENDER = character:amsari_mahndayana_10
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:d_sar_dasht.holder
+			START_PRETENDER = character:amsari_mahndayana_5
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:c_shahrake_shahid_bahonar.holder
+			START_PRETENDER = character:amsari_mahndayana_15
+		}
+		support_acw_start_effect = {
+			START_SUPPORTER = title:k_shuran.holder
+			START_PRETENDER = character:amsari_mahndayana_2_daughter_1
+		}
+		title:k_shuran.holder = {	
+			if = {
+				limit = { is_ai = yes }
+				start_war = {
+					cb = claim_cb
+					target = title:c_damdama.holder
+					claimant = this
+					target_title = title:c_damdama
+				}
+			}
+		}
+		title:c_damdama.holder = {	
+			if = {
+				limit = { is_ai = yes }
+				start_war = {
+					cb = claim_cb
+					target = title:c_shahrake_shahid_bahonar.holder
+					claimant = this
+					target_title = title:c_shahrake_shahid_bahonar
+				}
+			}
+		}
+		title:c_khurnugban.holder = {	
+			if = {
+				limit = { is_ai = yes }
+				start_war = {
+					cb = claim_cb
+					target = title:d_darundel.holder
+					claimant = this
+					target_title = title:c_zargar
+				}
+			}
+		}
+		title:d_gerd_mehdiabad.holder = {	
+			if = {
+				limit = { is_ai = yes }
+				start_war = {
+					cb = claim_cb
+					target = title:c_madgh_kariz.holder
+					claimant = this
+					target_title = title:c_madgh_kariz
+				}
+			}
+		}
+		title:d_takyeh.holder = {	
+			if = {
+				limit = { is_ai = yes }
+				start_war = {
+					cb = claim_cb
+					target = title:c_siuni.holder
+					claimant = this
+					target_title = title:c_siuni
+				}
+			}
+		}
+		
+		title:k_durab.holder = {
+			if = {
+				limit = { NOT = { exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting } }
+				create_alliance = {
+					target = scope:supposed_heir
+					allied_through_owner = title:k_durab.holder
+					allied_through_target = scope:supposed_heir
+				}
+				scope:supposed_heir = {
+					add_opinion = {
+						modifier = perk_negotiated_alliance_opinion
+						target = title:k_durab.holder
+					}
+				}
+			}
+		}	
+		# Dissolution faction against Shuran Liege
+		if = {
+			limit = { 
+				exists = title:k_shuran.holder 
+				title:k_shuran.holder = {  
+					any_vassal = {
+						count >= 1
+						NOT = { this.dynasty = { this = title:k_shuran.holder.dynasty } }
+					}
+					NOT = { culture = culture:hixartii }
+				}
+			}
+			title:k_shuran.holder = {
+				save_scope_as = shuran_liege				
+				random_vassal = {
+					limit = {
+						is_landed = yes
+						can_create_faction = {
+							type = nation_fracturing_faction
+							target = scope:shuran_liege
+						}
+						NOT = { is_allied_to = scope:shuran_liege }
+					}
+					save_scope_as = faction_starter
+				}
+			}
+			scope:faction_starter ?= {	
+				create_faction = {
+					type = nation_fracturing_faction
+					target = scope:shuran_liege
+				}
+				joined_faction = {
+					save_scope_as = faction
+				}
+			}
+			title:k_shuran.holder = {
+				every_vassal = {
+					limit = {
+						NOT = { this = scope:faction_starter }
+						can_join_faction = scope:faction
+					}
+					join_faction = scope:faction
+				}
+			}
+			scope:faction ?= { faction_start_war = {} }				
+		}		
+		# Claimant Siralagi faction against Durab Liege
+		if = {
+			limit = { 
+				exists = title:k_durab.holder 
+				title:k_durab.holder = {  
+					any_vassal = {
+						count >= 1
+						is_ai = yes
+					}
+					title:k_durab.holder.dynasty = { this = dynasty:dyn_amsari_6 }
+				}
+			}
+			title:k_durab.holder = {
+				save_scope_as = durab_liege
+				random_vassal = {
+					limit = { 
+						NOT = { is_allied_to = scope:durab_liege } 
+					}
+					add_pressed_claim = title:k_durab
+					weight = {
+						base = 1
+						modifier = {
+							factor = 10
+							has_title = title:d_shastakan
+						}
+						modifier = {
+							factor = 3
+							highest_held_title_tier >= tier_duchy
+						}
+					}
+					save_scope_as = faction_starter
+				}
+			}
+			scope:faction_starter ?= {
+				start_war = {
+					cb = claim_cb
+					target = title:k_durab.holder
+					claimant = scope:faction_starter
+					target_title = title:k_durab
+				}	
+			}		
+		}
+		
+		# Send Event to inform/participate to players in Sarradon not too far
+		every_player = {
+			limit = { 
+				location = { geographical_region = GH_geographic_sarradon }
+				"this.capital_province.squared_distance(title:c_tchouran.title_province)" <= squared_distance_almost_massive
+			}
+			trigger_event = gh_amsari.0003
+		}
+		# Start the actual civil war
+		gh_acw_start_war_effect = yes
+	}
+	else = {
+		# Everyone becomes independent
+		title:e_amsari.holder = {
+			every_vassal = {
+				create_title_and_vassal_change = {
+					type = independency
+					save_scope_as = change
+					add_claim_on_loss = yes
+				}
+				becomes_independent = { change = scope:change }
+				resolve_title_and_vassal_change = scope:change
+				add_to_global_variable_list = {
+					name = involved_character_amsari_civil_war
+					target = this
+				}
+			}
+		}
+		# Chose random pretender 
+		every_in_global_list = {
+			variable = involved_character_amsari_civil_war
+			save_scope_as = supporter
+			random_in_global_list = {
+				variable = gh_global_list_acw_pretenders
+				limit = {
+					NOR = { 
+						exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+						this = title:e_amsari.holder 
+						has_trait = gh_trait_amsari_pretender
+						has_trait = gh_trait_renounced_claim
+						has_trait = disinherited
+						any_parent = { has_trait = gh_trait_amsari_pretender  }
+					}
+					is_available_adult = yes					
+				}
+				save_scope_as = pretender
+				support_acw_start_effect = {
+					START_SUPPORTER = scope:supporter
+					START_PRETENDER = scope:pretender
+				}
+			}
+		}	
+		# Start the actual civil war
+		gh_acw_start_war_effect = yes	
+		# Send Event to inform/participate to players in Sarradon not too far
+		every_player = {
+			limit = { 
+				location = { geographical_region = GH_geographic_sarradon }
+				"this.capital_province.squared_distance(title:c_tchouran.title_province)" <= squared_distance_almost_massive
+			}
+			trigger_event = gh_amsari.0003
+		}	
+	}
+}
+
+gh_acw_start_war_effect = {
+	every_in_global_list = {
+		variable = involved_character_amsari_civil_war
+		save_temporary_scope_as = defender
+		limit = {
+			exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+			NOT = { this = title:e_amsari.holder }
+		}			
+		every_in_global_list = {
+			variable = involved_character_amsari_civil_war
+			limit = {
+				exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+				NOR = {
+					THIS = PREV
+					is_at_war_with = scope:defender
+					trigger_if = {
+						limit = {
+							exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+							exists = scope:defender.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+						}
+						this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting = scope:defender.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting			
+					}
+					is_allied_to = scope:defender
+					this = title:e_amsari.holder
+					
+				}
+			}
+			# Declare the war
+			start_war = {
+				cb = gh_acw_enforce_pretender_cb
+				target = scope:defender
+			}
+		}
+		this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= { save_scope_as = gh_amsari_pretender }
+		start_war = {
+			cb = gh_acw_claim_cb
+			target = title:e_amsari.holder
+			claimant = scope:gh_amsari_pretender
+			target_title = title:e_amsari
+		}
+	}
+}
+
+gh_acw_historical_save_character_scope_immediate_effect = {
+	if = {
+		limit = { 
+			root = title:d_kalbafaraj_mahalleh.holder 
+			character:amsari_mahndayana_6 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_6 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:c_kuchek.holder
+			character:amsari_mahndayana_7 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_7 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:c_siuni.holder
+			character:amsari_mahndayana_12 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_12 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_takyeh.holder
+			character:amsari_mahndayana_14 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_14 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_gerd_mehdiabad.holder
+			character:amsari_mahndayana_9 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_9 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_khvoshinane_sofla.holder
+			character:amsari_mahndayana_2_daughter_2 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_2_daughter_2 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:k_durab.holder
+			has_global_variable = gh_acw_historical_heir_wants_revenge
+			global_var:gh_acw_historical_heir_wants_revenge = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		global_var:gh_acw_historical_heir_wants_revenge ?= { save_scope_as = supposed_heir }
+		scope:supposed_heir = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_shastakan.holder
+			character:amsari_mahndayana_8 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_8 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_darundel.holder
+			character:amsari_mahndayana_10 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_10 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_sar_dasht.holder
+			character:amsari_mahndayana_5 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_5 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:c_shahrake_shahid_bahonar.holder
+			character:amsari_mahndayana_15 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_15 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:k_shuran.holder
+			character:amsari_mahndayana_2_daughter_1 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_2_daughter_1 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:d_burjaki.holder
+			character:amsari_mahndayana_29 = { amsari_historical_pretender_is_ai_trigger = yes }
+		}
+		character:amsari_mahndayana_29 = { save_scope_as = amsari_pretender }
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = { 
+			root = title:c_khurnugban.holder
+		}
+		save_scope_as = pushing_claim
+	}
+	#Special cases
+	else_if = {
+		limit = { 
+			root = title:d_prathatha.holder
+			character:amsari_mahndayana_16 = { amsari_historical_pretender_is_ai_trigger = yes }
+			any_child = { is_male = yes can_marry_trigger = yes }
+		}
+		character:amsari_mahndayana_16 = { save_scope_as = amsari_pretender }
+		set_variable = has_kidnapped_amsari_pretender_option
+		save_scope_as = pushing_claim
+	}
+	else_if = {
+		limit = {
+			culture = culture:hixartii
+			any_liege_or_above = { 
+				has_title = title:k_shuran 
+				NOT = { culture = culture:hixartii }
+			}		
+		}
+		save_scope_as = pushing_rebelion
+		root.top_liege  = { save_scope_as = liege }
+	}
+}
+
+support_amsari_pretender_player_effect = {
+	set_variable = { name = gh_pretender_asking_player days = 5 }
+	if = {
+		limit = { exists = scope:amsari_pretender }
+		if = {
+			limit = { root = title:d_kalbafaraj_mahalleh.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_kalbafaraj_mahalleh.holder
+				START_PRETENDER = character:amsari_mahndayana_6
+			}
+		}
+		else_if = {
+			limit = { root = title:c_kuchek.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:c_kuchek.holder
+				START_PRETENDER = character:amsari_mahndayana_7
+			}
+		}
+		else_if = {
+			limit = { root = title:c_siuni.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:c_siuni.holder
+				START_PRETENDER = character:amsari_mahndayana_12
+			}
+		}
+		else_if = {
+			limit = { root = title:d_takyeh.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_takyeh.holder
+				START_PRETENDER = character:amsari_mahndayana_14
+			}
+		}
+		else_if = {
+			limit = { root = title:d_gerd_mehdiabad.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_gerd_mehdiabad.holder
+				START_PRETENDER = character:amsari_mahndayana_9
+			}
+		}
+		else_if = {
+			limit = { root = title:d_khvoshinane_sofla.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_khvoshinane_sofla.holder
+				START_PRETENDER = character:amsari_mahndayana_2_daughter_2
+			}
+		}
+		else_if = {
+			limit = { 
+				root = title:k_durab.holder 
+				has_global_variable = gh_acw_historical_heir_wants_revenge
+			}
+			global_var:gh_acw_historical_heir_wants_revenge ?= { save_scope_as = supposed_heir }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:k_durab.holder
+				START_PRETENDER = scope:supposed_heir
+			}
+		}
+		else_if = {
+			limit = { root = title:d_shastakan.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_shastakan.holder
+				START_PRETENDER = character:amsari_mahndayana_8
+			}
+		}
+		else_if = {
+			limit = { root = title:d_darundel.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_darundel.holder
+				START_PRETENDER = character:amsari_mahndayana_10
+			}
+		}
+		else_if = {
+			limit = { root = title:d_sar_dasht.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_sar_dasht.holder
+				START_PRETENDER = character:amsari_mahndayana_5
+			}
+		}
+		else_if = {
+			limit = { root = title:c_shahrake_shahid_bahonar.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:c_shahrake_shahid_bahonar.holder
+				START_PRETENDER = character:amsari_mahndayana_15
+			}
+		}
+		else_if = {
+			limit = { root = title:k_shuran.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:k_shuran.holder
+				START_PRETENDER = character:amsari_mahndayana_2_daughter_1
+			}
+		}
+		else_if = {
+			limit = { root = title:d_burjaki.holder }
+			support_acw_start_effect = {
+				START_SUPPORTER = title:d_burjaki.holder
+				START_PRETENDER = character:amsari_mahndayana_29
+			}
+		}
+		else_if = {
+			limit = { scope:supposed_heir ?= root  }
+			support_acw_start_effect = {
+				START_SUPPORTER = root
+				START_PRETENDER = root
+			}
+		}
+		#Special Case
+		else_if = {
+			limit = { root = title:d_prathatha.holder }
+			imprison_character_effect = {
+				TARGET = character:amsari_mahndayana_16
+				IMPRISONER = title:d_prathatha.holder
+			}
+			character:amsari_mahndayana_16 = { save_scope_as = supported_pretender }
+			support_amsari_pretender_effect = {
+				SUPPORTER = title:d_prathatha.holder
+				PRETENDER = character:amsari_mahndayana_16
+			}
+			custom_tooltip = gh_amsari.0003.e_kidnap.tooltip
+		}
+	}
+}
+
+extra_amsari_civil_war_effect_option = {
+	set_variable = has_chosen_amsari_claim_option
+	if = {
+		limit = { root = title:d_prathatha.holder }
+		start_war = {
+			cb = claim_cb
+			target = title:d_kalbafaraj_mahalleh.holder
+			claimant = this
+			target_title = title:c_bandar_ozbak
+		}
+	}
+	else_if = {
+		limit = { root = title:k_shuran.holder }
+		start_war = {
+			cb = claim_cb
+			target = title:c_damdama.holder
+			claimant = this
+			target_title = title:c_damdama
+		}
+	}
+	else_if = {
+		limit = { root = title:c_damdama.holder }
+		start_war = {
+			cb = claim_cb
+			target = title:c_shahrake_shahid_bahonar.holder
+			claimant = this
+			target_title = title:c_shahrake_shahid_bahonar
+		}
+	}
+	else_if = {
+		limit = { root = title:c_khurnugban.holder }
+		start_war = {
+			cb = claim_cb
+			target = title:d_darundel.holder
+			claimant = this
+			target_title = title:c_zargar
+		}
+	}	
+	else_if = {
+		limit = { root = title:d_gerd_mehdiabad.holder }
+		start_war = {
+			cb = claim_cb
+			target = title:c_madgh_kariz.holder
+			claimant = this
+			target_title = title:c_madgh_kariz
+		}
+	}
+	else_if = {
+		limit = { root = title:d_takyeh.holder }
+		start_war = {
+			cb = claim_cb
+			target = title:c_siuni.holder
+			claimant = this
+			target_title = title:c_siuni
+		}
+	}
+	else_if = {
+		limit = {
+			culture = culture:hixartii
+			any_liege_or_above = { 
+				has_title = title:k_shuran 
+				NOT = { culture = culture:hixartii }
+			}		
+		}
+		save_scope_as = faction_starter
+		scope:faction_starter ?= {	
+			create_faction = {
+				type = nation_fracturing_faction
+				target = scope:shuran_liege
+			}
+			joined_faction = {
+				save_scope_as = faction
+			}
+		}
+		title:k_shuran.holder = {
+			every_vassal = {
+				limit = {
+					NOT = { this = scope:faction_starter }
+					can_join_faction = scope:faction
+				}
+				join_faction = scope:faction
+			}
+		}
+		scope:faction ?= { faction_start_war = {} }	
+	}
+}
+
+join_amsari_civil_war_player_effect = {
+	while = {
+		count = total_amsari_supporters_civil_war_half_value
+		random_in_global_list = {
+			variable = involved_character_amsari_civil_war
+			limit = {
+				exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+				NOR = {
+					this = root
+					is_at_war_with = root
+					trigger_if = {
+						limit = {
+							exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+							exists = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+						}
+						this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting			
+					}
+					is_allied_to = root
+					this = title:e_amsari.holder
+				}
+			}			
+			save_scope_as = defender			
+		}
+		# Declare the war
+		if = {
+			limit = { exists = scope:defender }
+			start_war = {
+				cb = gh_acw_enforce_pretender_cb
+				target = scope:defender
+			}
+		}
+	}
+	every_in_global_list = {
+		variable = involved_character_amsari_civil_war
+		limit = {
+			exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+			NOR = {
+				this = root
+				is_at_war_with = root
+				trigger_if = {
+					limit = {
+						exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+						exists = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+					}
+					this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting			
+				}
+				is_allied_to = root			
+			}
+		}
+		# Declare the war
+		start_war = {
+			cb = gh_acw_enforce_pretender_cb
+			target = root
+		}
+	}
+	this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= { save_scope_as = gh_amsari_pretender }
+	start_war = {
+		cb = gh_acw_claim_cb
+		target = title:e_amsari.holder
+		claimant = scope:gh_amsari_pretender
+		target_title = title:e_amsari
+	}
+}
+
+##################################################
+# Laamps
+##################################################
+
+gh_acw_create_landless_adventurer_title_effect = {
+	save_scope_as = new_landless_adventurer
+	if = {
+		limit = {
+			exists = house
+		}
+		house = { save_scope_as = new_landless_adventurer_house }
+	}
+	if = {
+		limit = {
+			exists = location
+		}
+		location = { save_scope_as = new_landless_adventurer_location }
+	}
+	save_scope_value_as = {
+		name = adventurer_creation_reason
+		value = $REASON$
+	}
+	$FLAVOR_CHAR$ = { save_scope_as = adventurer_flavor_char }
+	hidden_effect = {
+		random_list = {
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_001
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_house
+				}
+				create_adventurer_title = {
+					name = adventurer_name_002
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_003
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_004
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				# GH CHANGE: Removed mention of Kurdish culture
+				create_adventurer_title = {
+					name = adventurer_name_005
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_006
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_007
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_house
+				}
+				create_adventurer_title = {
+					name = adventurer_name_008
+					holder = scope:new_landless_adventurer
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_009
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_location
+				}
+				create_adventurer_title = {
+					name = adventurer_name_010
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_location
+				}
+				create_adventurer_title = {
+					name = adventurer_name_011
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_location
+				}
+				create_adventurer_title = {
+					name = adventurer_name_012
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > 0
+				}
+				create_adventurer_title = {
+					name = adventurer_name_013
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > 0
+				}
+				create_adventurer_title = {
+					name = adventurer_name_014
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > 0
+				}
+				create_adventurer_title = {
+					name = adventurer_name_015
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					OR = {
+						has_martial_lifestyle_trait_trigger = yes
+						ai_boldness >= medium_positive_ai_value
+						has_trait = education_martial_prowess_1
+						has_trait = education_martial_prowess_2
+						has_trait = education_martial_prowess_3
+						has_trait = education_martial_prowess_4
+						has_education_martial_trigger = yes
+					}
+				}
+				create_adventurer_title = {
+					name = adventurer_name_016
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					OR = {
+						has_martial_lifestyle_trait_trigger = yes
+						has_trait = lifestyle_blademaster
+						has_trait = education_martial_prowess_1
+						has_trait = education_martial_prowess_2
+						has_trait = education_martial_prowess_3
+						has_trait = education_martial_prowess_4
+						has_education_martial_trigger = yes
+					}
+				}
+				create_adventurer_title = {
+					name = adventurer_name_017
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > medium_negative_ai_value
+					scope:new_landless_adventurer.ai_boldness >= 0
+					# GH CHANGE: Removed mention of Bori religion
+				}
+				create_adventurer_title = {
+					name = adventurer_name_018
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > medium_negative_ai_value
+					scope:new_landless_adventurer.ai_greed >= 0
+					# GH CHANGE: Removed mention of Bori religion
+				}
+				create_adventurer_title = {
+					name = adventurer_name_019
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > medium_negative_ai_value
+					scope:new_landless_adventurer.ai_compassion >= 0
+					# GH CHANGE: Removed mention of Bori religion
+				}
+				create_adventurer_title = {
+					name = adventurer_name_020
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_location.county
+				}
+				scope:new_landless_adventurer_location.county = {
+					save_scope_as = new_landless_adventurer_county
+				}
+				create_adventurer_title = {
+					name = adventurer_name_021
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				create_adventurer_title = {
+					name = adventurer_name_022
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				trigger = {
+					exists = scope:new_landless_adventurer_house
+				}
+				create_adventurer_title = {
+					name = adventurer_name_023
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal > medium_negative_ai_value
+					scope:new_landless_adventurer.ai_rationality >= 0
+					#Many names using Allah already
+					# GH CHANGE: Removed mention of Islam
+				}
+				create_adventurer_title = {
+					name = adventurer_name_024
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			7 = {
+				trigger = {
+					scope:new_landless_adventurer.ai_zeal < low_negative_ai_value
+					scope:new_landless_adventurer.ai_compassion < medium_negative_ai_value
+				}
+				create_adventurer_title = {
+					name = adventurer_name_025
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+			10 = {
+				create_adventurer_title = {
+					name = adventurer_name_0026
+					holder = scope:new_landless_adventurer
+					save_scope_as = new_title
+				}
+			}
+			5 = {
+				trigger = {
+					exists = scope:new_landless_adventurer.culture
+					OR = {
+						has_martial_lifestyle_trait_trigger = yes
+						ai_boldness >= medium_positive_ai_value
+						has_trait = education_martial_prowess_1
+						has_trait = education_martial_prowess_2
+						has_trait = education_martial_prowess_3
+						has_trait = education_martial_prowess_4
+						has_education_martial_trigger = yes
+					}
+				}
+				create_adventurer_title = {
+					name = adventurer_name_0027
+					holder = scope:new_landless_adventurer
+					article = DEFAULT_TITLE_NAME_ARTICLE
+					save_scope_as = new_title
+				}
+			}
+		}
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = change
+			add_claim_on_loss = no
+		}
+		scope:new_title ?= {
+			create_landless_adventurer_title_history_effect = yes
+			set_variable = {
+				name = adventurer_creation_reason
+				value = scope:adventurer_creation_reason
+			}
+			set_variable = {
+				name = adventurer_flavor_char
+				value = scope:adventurer_flavor_char
+			}
+			change_title_holder = {
+				holder = scope:new_landless_adventurer
+				change = scope:change
+			}
+		}
+		resolve_title_and_vassal_change = scope:change
+		scope:new_title = { save_scope_as = new_landless_adventurer_title }
+		scope:new_landless_adventurer = {
+			if = {
+				limit = {
+					NOT = { has_government = landless_adventurer_government }
+				}
+				change_government = landless_adventurer_government
+			}
+			if = {
+				limit = {
+					NOT = { has_realm_law = landless_adventurer_succession_law }
+				}
+				add_realm_law = landless_adventurer_succession_law
+			}
+			if = {
+				limit = {
+					has_realm_law = crown_authority_0
+				}
+				remove_realm_law = crown_authority_0
+			}
+			domicile = { change_provisions = starting_provisions_value }
+		}
+	}
+	custom_tooltip = laamp_become_adventurer_tt
+	if = {
+		limit = {
+			OR = {
+				scope:adventurer_creation_reason = flag:deposition
+				scope:adventurer_creation_reason = flag:conquest
+				scope:adventurer_creation_reason = flag:exile
+			}
+		}
+		add_opinion = {
+			target = $FLAVOR_CHAR$
+			modifier = demanded_eviction_opinion
+		}
+		remove_laamp_from_exiled_county_automatically_effect = {
+			PROVINCE = scope:new_landless_adventurer.location
+			LAAMP = scope:new_landless_adventurer
+		}
+		save_scope_value_as = {
+			name = expelled
+			value = yes
+		}
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				scope:new_landless_adventurer = {
+					is_ai = no
+				}
+				NOT = { exists = scope:expelled }
+			}
+			populate_location_with_contracts_effect = {
+				AREA_CHAR = scope:new_landless_adventurer
+				AMOUNT = 3
+			}
+		}
+		scope:new_landless_adventurer = {
+			every_councillor = {
+				if = {
+					limit = {
+						NOR = {
+							has_council_position = councillor_court_chaplain
+							has_council_position = councillor_spouse
+						}
+					}
+					scope:new_landless_adventurer = {
+						fire_councillor = prev
+					}
+					remove_opinion = {
+						modifier = fired_from_council_opinion
+						target = scope:new_landless_adventurer
+					}
+				}
+				else_if = {
+					limit = {
+						NOR = {
+							is_close_or_extended_family_of = scope:new_landless_adventurer
+							has_relation_lover = scope:new_landless_adventurer
+							has_relation_friend = scope:new_landless_adventurer
+							is_consort_of = scope:new_landless_adventurer
+							has_council_position = councillor_spouse
+						}
+					}
+					death = {
+						death_reason = death_vanished
+					}
+				}
+			}
+			every_courtier = {
+				limit = {
+					NOR = {
+						is_close_or_extended_family_of = scope:new_landless_adventurer
+						has_relation_lover = scope:new_landless_adventurer
+						has_relation_friend = scope:new_landless_adventurer
+						is_consort_of = scope:new_landless_adventurer
+					}
+				}
+				move_to_pool = yes
+			}
+			# Give us a couple of starting chars if we're almost completely bereft.
+			if = {
+				limit = {
+					any_courtier = { count <= 2 }
+				}
+				trigger_event = {
+					id = ep3_laamps.1001
+					weeks = { 2 6 }
+				}
+			}
+		}
+		trigger_event = { id = misc.0001 days = 1 }
+		local_arbitration_boon_change_purpose_effect = yes
+	}
+	add_to_global_variable_list = {
+		name = laamps_tally
+		target = scope:new_landless_adventurer.primary_title
+	}
+	set_variable = flavourise_camp_purpose_wanderers
+}

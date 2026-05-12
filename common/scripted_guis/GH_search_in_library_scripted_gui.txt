@@ -1,0 +1,414 @@
+﻿gh_can_read_more_sgui = {
+	saved_scopes = { gh_book_name_flag }
+	is_valid = {
+		trigger_if = {
+			limit = {
+				has_variable = gh_number_of_recently_read_book
+				has_variable = gh_max_number_of_book_read
+			}
+			var:gh_number_of_recently_read_book < var:gh_max_number_of_book_read
+		}
+		trigger_else = {}
+	}
+}
+
+gh_read_book_sgui = {
+	effect = {
+		scope:character_scope ?= {
+			add_to_variable_list = {
+				name = gh_book_personally_read
+				target = root
+			}
+			if = {
+				limit = {
+					NOT = { has_variable = gh_number_of_recently_read_book }
+				}
+				set_variable = {
+					name = gh_number_of_recently_read_book
+					value = 1
+					years = 1
+				}
+			}
+			else = {
+				change_variable = {
+					name = gh_number_of_recently_read_book
+					add = 1
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_variable = gh_has_read_a_book_in_session }
+				}
+				set_variable = {
+					name = gh_has_read_a_book_in_session
+					value = yes
+				}
+			}
+			random_list = {
+				70 = {} # No Bonus
+				30 = {  # Temporary/Permanent Bonus
+					modifier = {
+						scope:gh_rarity_of_book ?= flag:masterwork
+						add = 5
+					}
+					modifier = {
+						scope:gh_rarity_of_book ?= flag:famed
+						add = 7
+					}
+					modifier = {
+						scope:gh_rarity_of_book ?= flag:illustrious
+						add = 10
+					}
+
+					modifier = {
+						stewardship <= low_skill_rating
+						add = -5
+					}
+					modifier = {
+						stewardship >= high_skill_rating
+						add = 5
+					}
+					modifier = {
+						stewardship >= very_high_skill_rating
+						add = 5
+					}
+					gh_add_topic_book_bonus_effect = yes
+				}
+			}			
+		}
+	}
+}
+
+gh_has_read_book_sgui = {
+	saved_scopes = { gh_book_name_flag }
+	is_shown = {
+		exists = scope:gh_book_name_flag
+		any_in_list = {
+			variable = gh_book_personally_read
+			this = scope:gh_book_name_flag
+		}
+	}
+	is_valid = {
+		exists = scope:gh_book_name_flag
+		any_in_list = {
+			variable = gh_book_personally_read
+			this = scope:gh_book_name_flag
+		}
+	}
+}
+
+gh_set_selected_topic_sgui = {
+	saved_scopes = { gh_topic_name_flag }
+	effect = {
+		if = {
+			limit = { exists = scope:gh_topic_name_flag }
+			set_variable = {
+				name = gh_chosen_topic
+				value = scope:gh_topic_name_flag
+			}
+		}
+	}
+}
+
+# BOOK RARITY
+global_common_book_list_sgui = {
+	saved_scopes = { gh_book_name_flag }
+	is_shown = {
+		exists = scope:gh_book_name_flag
+		OR = {
+			scope:book_story ?= { var:book_rarity ?= flag:common }
+			NOR = {
+				trigger_if = {
+					limit = { exists = scope:book_story }
+					scope:book_story ?= { 
+						OR = {
+							var:book_rarity ?= flag:masterwork 
+							var:book_rarity ?= flag:famed
+							var:book_rarity ?= flag:illustrious
+						}
+					}
+				}
+				trigger_else = { always = no }
+			}
+		}
+		NOR = {
+			any_in_global_list = {
+				variable = global_masterwork_book_list
+				this = scope:gh_book_name_flag
+			}
+			any_in_global_list = {
+				variable = global_famed_book_list
+				this = scope:gh_book_name_flag
+			}
+			any_in_global_list = {
+				variable = global_illustrious_book_list
+				this = scope:gh_book_name_flag
+			}
+		}
+	}
+}
+
+
+global_masterwork_book_list_sgui = {
+	saved_scopes = { gh_book_name_flag }
+	is_shown = {
+		exists = scope:gh_book_name_flag
+		OR = {
+			any_in_global_list = {
+				variable = global_masterwork_book_list
+				this = scope:gh_book_name_flag
+			}		
+			trigger_if = {
+				limit = { exists = scope:book_story }
+				scope:book_story ?= { var:book_rarity ?= flag:masterwork }
+			}
+			trigger_else = { always = no }
+		}
+	}
+}
+
+global_famed_book_list_sgui = {
+	saved_scopes = { gh_book_name_flag }
+	is_shown = {
+		exists = scope:gh_book_name_flag
+		OR = {
+			trigger_if = {
+				limit = { exists = scope:book_story }
+				scope:book_story ?= { var:book_rarity ?= flag:famed }
+			}
+			trigger_else = { always = no }
+			any_in_global_list = {
+				variable = global_famed_book_list
+				this = scope:gh_book_name_flag
+			}
+		}
+	}
+}
+
+global_illustrious_book_list_sgui = {
+	saved_scopes = { gh_book_name_flag }
+	is_shown = {
+		exists = scope:gh_book_name_flag
+		OR = {
+			trigger_if = {
+				limit = { exists = scope:book_story }
+				scope:book_story ?= { var:book_rarity ?= flag:illustrious }
+			}
+			trigger_else = { always = no }
+			
+			any_in_global_list = {
+				variable = global_illustrious_book_list
+				this = scope:gh_book_name_flag
+			}
+		}
+	}
+}
+
+artifact_is_scroll_sgui = {
+	is_shown = {
+		any_in_global_list = {
+			variable = artifact_is_scroll_list
+			this = scope:gh_book_name_flag
+		}
+	}
+}
+
+
+# BOOK OPTIONS
+
+gh_buy_book_from_collection_sgui = {
+	saved_scopes = { bought_book_name book_story }
+	is_shown = {
+		trigger_if = { # If the book has been deposited
+			limit = { 
+				exists = scope:book_story 
+				scope:book_story ?= { has_variable = book_donor  }
+			}
+			NOT = { scope:book_story.var:book_donor = root  } #Then we make sure it's not the player trying to buy it
+		}
+		trigger_else = {}
+	}
+	effect = {
+		set_variable = {
+			name = gh_attempt_to_buy_book_in_collection
+			value = scope:bought_book_name
+		}
+		
+		# If the book has a story variable, we store it so we can later retrieve the procedural title and description saved in the local collection story under the book's name.
+		if = {
+			limit = { scope:book_story ?= { has_variable = gh_book_text_holder } }
+			set_variable = {
+				name = character_text_holder_var
+				value = scope:book_story.var:gh_book_text_holder
+			}
+		}
+		else = {
+			remove_variable = character_text_holder_var
+		}
+		if = {
+			limit = { scope:book_story ?= { has_variable = book_rarity } }
+			set_variable = {
+				name = gh_temporary_book_rarity
+				value = scope:book_story.var:book_rarity
+			}
+		}
+		if = {
+			limit = { exists = scope:book_story }
+			set_variable = {
+				name = book_story_var
+				value = scope:book_story
+			}
+		}
+
+		open_interaction_window = {
+			interaction = gh_buy_book_from_library_interaction
+			actor = root
+			recipient = root
+		}
+	}
+}
+
+gh_retrieve_book_from_collection_sgui = {
+	saved_scopes = { bought_book_name book_story }
+	is_shown = {
+
+		trigger_if = { # If the book has been deposited
+			limit = { 
+				exists = scope:book_story 
+				scope:book_story ?= { has_variable = book_donor  }
+			}
+			NOT = { scope:book_story.var:book_donor = root  } #Then we make sure it's not the player trying to buy it
+		}
+		trigger_else = {}
+	}
+	effect = {
+		set_variable = {
+			name = gh_attempt_to_buy_book_in_collection
+			value = scope:bought_book_name
+		}
+		
+		# If the book has a story variable, we store it so we can later retrieve the procedural title and description saved in the local collection story under the book's name.
+		if = {
+			limit = { scope:book_story ?= { has_variable = gh_book_text_holder } }
+			set_variable = {
+				name = character_text_holder_var
+				value = scope:book_story.var:gh_book_text_holder
+			}
+		}
+		if = {
+			limit = { scope:book_story ?= { has_variable = book_rarity } }
+			set_variable = {
+				name = gh_temporary_book_rarity
+				value = scope:book_story.var:book_rarity
+			}
+		}
+		if = {
+			limit = { exists = scope:book_story }
+			set_variable = {
+				name = book_story_var
+				value = scope:book_story
+			}
+		}
+
+		open_interaction_window = {
+			interaction = gh_retrieve_book_from_library_interaction
+			actor = root
+			recipient = root
+		}
+	}
+}
+
+gh_hide_interactions_sgui = {
+	effect = {
+		remove_variable = library_transfer_interaction_visible
+		remove_variable = library_interaction_visible
+	}
+}
+
+gh_transfer_book_to_collection_sgui = {
+	saved_scopes = { transfered_book_name }
+	is_shown = {
+		exists = root
+		OR = {
+			artifact_type = book
+			#artifact_type = tablet
+			#artifact_type = scroll
+			artifact_type = runic_scroll
+			artifact_type = magical_scroll
+		}
+	}
+	effect = {
+		set_variable = { 
+			name = library_transfer_interaction_visible
+			value = yes
+		}
+		set_variable = {
+			name = gh_transfer_book_to_collection
+			value = scope:transfered_book_name
+		}
+		open_interaction_window = {
+			interaction = gh_transfer_book_to_collection_interaction
+			actor = root
+			recipient = root
+		}
+	}
+}
+
+gh_learn_from_book_with_knowledge_entries_sgui = {
+	saved_scopes = { book_with_knowledge }
+	effect = {
+		if = {
+			limit = { NOT = { var:gh_book_with_knowledge_entry = scope:book_with_knowledge } }
+			set_variable = {
+				name = gh_book_with_knowledge_entry
+				value = scope:book_with_knowledge
+			}
+		}
+		else = { remove_variable = gh_book_with_knowledge_entry }
+	}
+}
+
+gh_remove_learn_from_book_with_knowledge_entries_sgui = {
+	saved_scopes = { }
+	effect = {
+		remove_variable = gh_book_with_knowledge_entry
+	}
+}
+
+
+gh_stealing_book_sgui = {
+	saved_scopes = { book_with_knowledge }
+	effect = {
+		if = {
+			limit = { var:gh_stealing_book ?= scope:bought_book_name }
+			remove_variable = gh_stealing_book
+		}
+		else = {
+			set_variable = {
+				name = gh_stealing_book
+				value = scope:bought_book_name
+			}
+		}
+		
+		set_variable = {
+			name = gh_attempt_to_buy_book_in_collection
+			value = scope:bought_book_name
+		}
+		
+		# If the book has a story variable, we store it so we can later retrieve the procedural title and description saved in the local collection story under the book's name.
+		if = {
+			limit = { scope:book_story ?= { has_variable = gh_book_text_holder } }
+			set_variable = {
+				name = character_text_holder_var
+				value = scope:book_story.var:gh_book_text_holder
+			}
+		}
+		if = {
+			limit = { scope:book_story ?= { has_variable = book_rarity } }
+			set_variable = {
+				name = gh_temporary_book_rarity
+				value = scope:book_story.var:book_rarity
+			}
+		}
+	}
+}

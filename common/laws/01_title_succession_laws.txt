@@ -1,0 +1,561 @@
+﻿title_succession_laws = {
+	# Default Feudal Elective
+	feudal_elective_succession_law = {
+		can_have = {
+			government_has_flag = government_is_feudal
+			highest_held_title_tier >= tier_duchy
+			NOR = { #Cultures have their special flavor.
+				culture = { has_cultural_parameter = witenagemot_succession_enabled }
+				culture = { has_cultural_parameter = scandinavian_elective_enabled }
+				culture = { has_cultural_parameter = tribal_elective_enabled } #FP3 addition
+			}
+		}
+		can_pass = {
+			can_change_title_law_trigger = yes
+		}
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = feudal_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	# HRE Succession
+	princely_elective_succession_law = {
+		can_have = {
+			OR = {
+				government_has_flag = government_is_feudal
+				government_has_flag = government_is_clan
+				government_has_flag = government_is_continental_clan
+			}
+			highest_held_title_tier = tier_empire
+		}
+		can_pass = {
+			can_change_title_law_trigger = yes
+		}
+		can_title_have = {
+				OR = {
+					this = title:e_rocks_of_guillate # TOG_NOTE: need to make lore about why the Rocks would have this
+					this = title:e_rite_authority_rel
+				}
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = princely_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		modifier = {
+			vassal_limit = 20
+			minority_opinion = -15
+		}
+		revoke_cost = {
+			prestige = change_hre_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	#Witenagemot
+	saxon_elective_succession_law = {
+		can_have = {
+			OR = {
+				government_has_flag = government_is_feudal
+				government_has_flag = government_is_clan
+				government_has_flag = government_is_continental_clan
+				government_has_flag = government_is_tribal
+			}
+			highest_held_title_tier >= tier_kingdom
+			always = no # GH TODO: Find someone to give this to - its currently a waste
+		}
+		can_pass = {
+			can_change_title_law_trigger = yes
+			culture = { has_cultural_parameter = witenagemot_succession_enabled }
+		}
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = saxon_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 5
+		revoke_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	# Thing
+	scandinavian_elective_succession_law = {
+		can_have = {
+			OR = {
+				government_has_flag = government_is_feudal
+				government_has_flag = government_is_clan
+				government_has_flag = government_is_continental_clan
+				government_has_flag = government_is_tribal
+			}
+			highest_held_title_tier >= tier_duchy
+			always = no # GH TODO: Find someone to give this to - its currently a waste
+		}
+		can_pass = {
+			can_change_title_law_trigger = yes
+			culture = { has_cultural_parameter = scandinavian_elective_enabled }
+		}
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = scandinavian_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 5
+		revoke_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	#Tanistry
+	gaelic_elective_succession_law = {
+		can_have = {
+			OR = {
+				government_has_flag = government_is_feudal
+				government_has_flag = government_is_clan
+				government_has_flag = government_is_continental_clan
+				GH_is_any_tribal_government_trigger = yes
+			}
+			highest_held_title_tier >= tier_duchy
+		}
+		can_pass = {
+			can_change_title_law_trigger = yes
+			custom_description = {
+				culture = { has_cultural_pillar = heritage_partic } # GH TODO: This is arbitrary, consider who else to give this to (or make lore for it)
+				text = succession_laws_must_have_valid_tanistry_culture
+			}
+		}
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = gaelic_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 5
+		revoke_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	# Jirga elective
+	tribal_elective_succession_law = { #FOR FP3
+		can_have = {
+			OR = {
+				government_has_flag = government_is_feudal
+				government_has_flag = government_is_clan
+				government_has_flag = government_is_continental_clan
+				government_has_flag = government_is_tribal
+			}
+			highest_held_title_tier >= tier_kingdom
+		}
+		can_pass = {
+			can_change_title_law_trigger = yes
+			culture = { has_cultural_parameter = tribal_elective_enabled }
+		}
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = tribal_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 5
+		revoke_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	# Player Heir
+	temporal_head_of_faith_succession_law = {
+		can_title_have = {
+			is_temporal_head_of_faith_trigger = yes
+		}
+		should_show_for_title = { # Never show this in the UI, just apply it through script
+			always = no
+		}
+		can_remove_from_title = {
+			custom_description = {
+				text = succession_laws_must_not_be_temporal
+				is_temporal_head_of_faith_trigger = no
+			}
+		}
+		succession = {
+			order_of_succession = player_heir
+		}
+	}
+
+	# Noble Family Succession
+	noble_family_succession_law = {
+		can_title_have = {
+			is_noble_family_title = yes
+		}
+		should_show_for_title = { # Never show this in the UI, just apply it through script
+			always = no
+		}
+		can_remove_from_title = {
+			always = no
+		}
+		succession = {
+			order_of_succession = noble_family
+		}
+		flag = can_designate_heirs
+	}
+
+	# Law of the Land Title Succession
+	# Applied in on_title_gain when a county title's capital province has required heir government types defined and the new holder does not meet the requirement. 
+	law_of_the_land_succession_law = {
+		can_title_have = {
+			tier = tier_county
+			title_province = {
+				holding_type = {
+					has_required_heir_governments = yes
+					NOT = {
+						any_required_heir_government_type = {
+							this = root.holder.government_type
+						}
+					}
+				}
+			}
+		}
+		# Never show this in the UI, just apply it through script
+		should_show_for_title = { always = no }
+		can_remove_from_title = { always = no }
+		succession = {
+			order_of_succession = generate_from_template
+		}
+	}
+	#Confederation elective
+	confederation_elective_succession_law = {
+		can_title_have = {
+			tier >= tier_kingdom
+		}
+		should_show_for_title = { always = no }
+		succession = {
+			order_of_succession = election
+			election_type = confederation_elective
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+
+	########################
+	## GH SUCCESSION LAWS ##
+	########################
+
+	#Landed order
+	landed_order_elective_title_succession_law = {
+		can_have = {
+			government_has_flag = government_is_landed_order
+			highest_held_title_tier >= tier_county
+		}
+		can_keep = { government_has_flag = government_is_landed_order }
+		can_pass = { government_has_flag = government_is_landed_order }
+		can_remove_from_title = { holder = { NOT = { government_has_flag = government_is_landed_order } } }
+		can_title_have = { can_title_have_clique_law_trigger = yes }
+
+		succession = {
+			order_of_succession = election
+			election_type = landed_order_elective
+		}
+
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = { prestige = change_title_succession_law_prestige_cost }
+		pass_cost = { prestige = change_title_succession_law_prestige_cost }
+	}
+
+	# Republic clique
+	clique_republic_elective_title_succession_law = {
+		can_have = {
+			should_have_republic_clique_law_trigger = yes
+			# found in clique_triggers
+		}
+		can_keep = { government_has_flag = government_is_republic_playable } # Clique Repubs should only be for playable Repubs, not City Barons
+		can_pass = { government_has_flag = government_is_republic_playable }
+		can_remove_from_title = { holder = { NOT = { government_has_flag = government_is_republic_playable } } }
+		can_title_have = { can_title_have_clique_law_trigger = yes }
+		
+		succession = {
+			order_of_succession = election
+			election_type = clique_republic_elective
+		}
+
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = { prestige = change_title_succession_law_prestige_cost }
+		pass_cost = { prestige = change_title_succession_law_prestige_cost }
+	}
+
+	#Mercenary company test
+	clique_military_unit_elective_title_succession_law = {
+		can_have = {
+			can_have_military_unit_succession_law_trigger = yes
+			highest_held_title_tier >= tier_duchy
+		}
+		can_keep = { government_has_flag = government_is_military_unit }
+		can_pass = { government_has_flag = government_is_military_unit }
+		can_remove_from_title = { holder = { NOT = { government_has_flag = government_is_military_unit } } }
+		can_title_have = { tier >= tier_county }
+		
+		succession = {
+			order_of_succession = election
+			election_type = military_unit_elective
+		}
+	
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = { prestige = change_title_succession_law_prestige_cost }
+		pass_cost = { prestige = change_title_succession_law_prestige_cost }
+	}
+
+	#Magocracy
+	magocratic_elective_title_succession_law = {
+		can_have = {
+			can_have_magocracy_succession_law_trigger = yes
+			highest_held_title_tier >= tier_duchy
+		}
+		can_keep = { government_has_flag = government_is_magocratic }
+		can_pass = { government_has_flag = government_is_magocratic }
+		can_remove_from_title = { holder = { NOT = { government_has_flag = government_is_magocratic } } }
+		can_title_have = { tier >= tier_county }
+		
+		succession = {
+			order_of_succession = election
+			election_type = magocratic_elective
+		}
+
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		modifier = {
+			magic_focused_opinion = 10
+		}
+		revoke_cost = { prestige = change_title_succession_law_prestige_cost }
+		pass_cost = { prestige = change_title_succession_law_prestige_cost }
+	}
+
+	#Magocratic republic
+	clique_magocratic_republic_elective_title_succession_law = {
+		can_have = {
+			can_have_magocratic_republic_succession_law_trigger = yes
+			highest_held_title_tier >= tier_county
+		}
+		can_keep = { government_has_flag = government_is_magocratic_republic }
+		can_pass = { government_has_flag = government_is_magocratic_republic  }
+		can_remove_from_title = { holder = { NOT = { government_has_flag = government_is_magocratic_republic  } } }
+		can_title_have = { can_title_have_clique_law_trigger = yes }
+
+		succession = {
+			order_of_succession = election
+			election_type = clique_magocratic_republic_elective
+		}
+		modifier = {
+			magic_focused_opinion = 10
+		}
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = { prestige = change_title_succession_law_prestige_cost }
+		pass_cost = { prestige = change_title_succession_law_prestige_cost }
+	}
+
+	#Theocracy
+	clique_theocracy_elective_title_succession_law = {
+		can_have = {
+			government_has_flag = government_is_theocracy
+			highest_held_title_tier >= tier_county
+		}
+		can_keep = { government_has_flag = government_is_theocracy }
+		can_pass = { always = no }
+		can_remove_from_title = { holder = { NOT = { government_has_flag = government_is_theocracy} } }
+		can_title_have = { can_title_have_clique_law_trigger = yes }
+
+		succession = {
+			order_of_succession = election
+			election_type = clique_theocracy_elective
+		}
+
+		flag = elective_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = { prestige = change_title_succession_law_prestige_cost }
+		pass_cost = { prestige = change_title_succession_law_prestige_cost }
+	}
+
+	oligarchic_elective_law = {
+		can_have = {
+			government_has_flag = government_is_administrative_republic
+			highest_held_title_tier >= tier_duchy
+			is_independent_ruler = yes
+		}
+		can_pass = { always = no }
+		can_remove_from_title = { always = no }
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = oligarchic_elective
+		}
+		flag = elective_succession_law
+		flag = republican_succession_law
+		flag = oligarchic_succession_law
+		revoke_cost = { }
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		ai_will_do = {
+			if = {
+				limit = {
+					OR = {
+						NOT = {
+							primary_heir.dynasty = this.dynasty
+						}
+					}
+				}
+				value = 2
+			}
+		}
+	}
+	mercantile_elective_law = {
+		can_have = {
+			government_has_flag = government_is_administrative_republic
+			highest_held_title_tier >= tier_duchy
+			is_independent_ruler = yes
+		}
+		can_pass = { always = no }
+		can_remove_from_title = { always = no }
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = mercantile_elective
+		}
+		flag = elective_succession_law
+		flag = republican_succession_law
+		revoke_cost = { }
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		ai_will_do = {
+			if = {
+				limit = {
+					ai_boldness >= medium_positive_ai_value
+					OR = {
+						stewardship >= high_skill_rating
+						culture = { has_cultural_tradition = tradition_maritime_mercantilism } # Mercantilist cultures should lean this way
+					}
+				}
+				value = 2
+			}
+		}
+	}
+	blood_elective_law = {
+		can_have = {
+			government_has_flag = government_is_administrative_republic
+			highest_held_title_tier >= tier_duchy
+			is_independent_ruler = yes
+			has_realm_law = republican_centralization_3
+		}
+		can_pass = { always = no }
+		can_remove_from_title = { always = no }
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = blood_elective
+		}
+		flag = elective_succession_law
+		flag = republican_succession_law
+		flag = blood_succession_law
+		title_allegiance_opinion = -15
+		revoke_cost = {
+			  
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+	}
+	stratocratic_elective_law = {
+		can_have = {
+			OR = {
+				government_has_flag = government_is_administrative_republic
+				#government_has_flag = government_is_military_unit
+				#government_has_flag = government_is_landed_order
+			}
+			highest_held_title_tier >= tier_duchy
+			is_independent_ruler = yes
+		}
+		can_pass = { always = no }
+		can_remove_from_title = { always = no }
+		can_title_have = {
+			can_title_have_law_general_trigger = yes
+		}
+		succession = {
+			order_of_succession = election
+			election_type = stratocratic_elective
+		}
+		flag = elective_succession_law
+		flag = republican_succession_law
+		flag = stratocratic_succession_law
+		title_allegiance_opinion = 10
+		revoke_cost = {
+			  
+		}
+		pass_cost = {
+			prestige = change_title_succession_law_prestige_cost
+		}
+		ai_will_do = {
+			if = {
+				limit = {
+					OR = {
+						martial >= high_skill_rating
+						has_education_martial_trigger = yes
+					}
+				}
+				value = 2
+			}
+		}
+	}
+}

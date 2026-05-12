@@ -1,0 +1,275 @@
+﻿story_cycle_colonization = { # Colonization story cycle
+
+	on_setup = {
+		set_variable = {
+			name = colonization_progress
+			value = 0
+		}
+		set_variable = {
+			name = county_being_colonized
+			value = story_owner.var:colonization_target
+		}
+		if = {
+			limit = {
+				var:county_being_colonized = { has_county_modifier = pristine_paradise_modifier } ## GH TODO: Make a more generalized system for this
+				NOT = { has_game_rule = colonizable_epiromnuvo }
+			}
+			set_variable = {
+				name = colonization_special_region
+				value = flag:epiromnuvo
+			}
+		}
+		story_owner = {
+			var:colonization_target = {
+				set_variable = {
+					name = colonization_story
+					value = root
+				}
+			}
+			remove_variable = colonization_target
+		}
+	}
+
+	on_end = {
+		var:county_being_colonized ?= { remove_variable = colonization_story }
+	}
+
+	on_owner_death = {
+
+	}
+
+	effect_group = { # Update story ownership
+		days = 1
+
+		trigger = { var:county_being_colonized.holder = { NOT = { this = scope:story.story_owner } } }
+
+		first_valid = {
+			triggered_effect = { # Colony is reverted back to the wasteland
+				trigger = { var:county_being_colonized.holder = { is_ruin = yes } }
+				effect = {
+					if = { # Colony was already wastelanded
+						limit = {
+							var:county_being_colonized.title_province = {
+								OR = {
+									has_holding_type = wasteland_empty_holding
+									has_holding_type = ruin_holding
+								}
+							}
+						}
+						end_story = yes
+					}
+					else = { # Colony has not yet been wastelanded
+						var:county_being_colonized = { save_scope_as = target }
+						spawn_ruin = { COUNTY = var:county_being_colonized }
+						story_owner = {
+							send_interface_toast = {
+								title = gh_abandon_colony_lost_ruin_title
+								left_icon = scope:target
+								custom_tooltip = gh_abandon_colony_lost_ruin_tt
+							}
+						}
+						end_story = yes
+					}
+				}
+			}
+			triggered_effect = { # Colony has been lost to another playable character
+				trigger = { always = yes }
+				effect = {
+					story_owner = { save_scope_as = old_holder }
+					var:county_being_colonized = {
+						save_scope_as = target
+						holder = { save_scope_as = new_holder }
+					}
+					if = { # Lost to a vassal
+						limit = { scope:new_holder = { is_vassal_of = scope:story.story_owner } }
+						story_owner = {
+							send_interface_toast = {
+								title = gh_abandon_colony_lost_vassal_title
+								left_icon = scope:target
+								right_icon = scope:new_holder
+								custom_tooltip = gh_abandon_colony_lost_vassal_tt
+							}
+						}
+					}
+					else = { # Lost to another ruler
+						story_owner = {
+							send_interface_toast = {
+								title = gh_abandon_colony_lost_title
+								left_icon = scope:target
+								right_icon = scope:new_holder
+								custom_tooltip = gh_abandon_colony_lost_tt
+							}
+						}
+					}
+					scope:new_holder = {
+						send_interface_toast = {
+							title = gh_abandon_colony_gained_title
+							left_icon = scope:target
+							right_icon = scope:old_holder
+							custom_tooltip = gh_abandon_colony_gained_tt
+						}
+						scope:story = { make_story_owner = prev }
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = { # Colonization progress
+		days = 30
+
+		trigger = { always = yes }
+
+		first_valid = {
+			triggered_effect = { # Calculate colonization progress
+				trigger = { always = yes }
+				effect = {
+					if = { # Instant Colonization cheat
+						limit = { story_owner = { has_character_flag = instant_colony_cheat } }
+						change_variable = {
+							name = colonization_progress
+							add = 1000
+						}
+					}
+					else = {
+						change_variable = {
+							name = colonization_progress
+							add = var:county_being_colonized.monthly_colonization_progress_value
+						}
+						if = {
+							limit = {
+								story_owner = {
+									any_court_position_holder = {
+										type = colonial_administrator_court_position
+										has_character_flag = colonial_administrator_sustainable_development_flag
+									}
+								}
+							}
+							var:county_being_colonized = { change_development_progress_with_overflow = 5 }
+						}
+					}
+					if = { # End colonization
+						limit = { var:colonization_progress >= 100 }
+						var:county_being_colonized = { save_scope_as = target }
+						story_owner = { ## GH TODO: Making a dedicated scripted effect for this would be marginally cleaner
+							send_interface_toast = {
+								title = gh_colonization_completed_title
+								left_icon = scope:target
+								if = { # Tribal holding
+									limit = { GH_is_any_tribal_government_trigger = yes }
+									scope:story.var:county_being_colonized = {
+										if = {
+											limit = { var:overridden_holding_type ?= flag:ruined_district_holding }
+											title_province = { set_holding_type = metro_holding }
+										}
+										else = { title_province = { set_holding_type = tribal_holding } }
+										hidden_effect = { remove_colonization_progress_modifiers = yes }
+									}
+								}
+								else = { # Feudal holding
+									scope:story.var:county_being_colonized = {
+										if = {
+											limit = { var:overridden_holding_type ?= flag:ruined_district_holding }
+											title_province = { set_holding_type = metro_holding }
+										}
+										else = { title_province = { set_holding_type = castle_holding } }
+										hidden_effect = { remove_colonization_progress_modifiers = yes }
+									}
+								}
+								if = { # Perk gains
+									limit = { has_perk = beacon_of_civilization_perk }
+									add_prestige = massive_prestige_gain
+									add_legitimacy_effect = { LEGITIMACY = minor_legitimacy_gain }
+								}
+							}
+						}
+						end_story = yes
+					}
+					else_if = { # The colony has recovered
+						limit = {
+							var:colonization_progress >= 0
+							exists = var:failing_colony
+						}
+						remove_variable = failing_colony
+						if = {
+							limit = { exists = var:grace_period }
+							remove_variable = grace_period
+						}
+					}
+					else_if = { # The colony has failed
+						limit = {
+							var:colonization_progress < 0
+							exists = var:failing_colony
+							NOT = { exists = var:grace_period }
+						}
+						var:county_being_colonized = { save_scope_as = target }
+						spawn_ruin = { COUNTY = scope:target }
+						story_owner = {
+							send_interface_toast = {
+								title = gh_abandon_colony_failed_title
+								left_icon = scope:target
+								custom_tooltip = gh_abandon_colony_failed_tt
+							}
+						}
+						end_story = yes
+					}
+					else_if = { # The colony is at the risk of failure
+						limit = {
+							var:colonization_progress < 0
+							NOT = { exists = var:failing_colony }
+						}
+						set_variable = failing_colony
+						set_variable = {
+							name = grace_period
+							days = 730
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	effect_group = { # Random ongoing events
+		days = { 365 600 }
+
+		trigger = { NOT = { var:county_being_colonized = { has_variable = colonization_event_cooldown } } }	
+
+		first_valid = {
+			triggered_effect = {
+				trigger = { exists = var:colonization_special_region }
+				effect = {
+					if = {
+						limit = { var:colonization_special_region = flag:epiromnuvo }
+						var:county_being_colonized = { save_scope_as = colony }
+						if = {
+							limit = {
+								story_owner = { is_ai = yes }
+								story_owner = { any_liege_or_above = { is_ai = no } }
+							}
+							story_owner = {
+								random_liege_or_above = {
+									limit = { is_ai = no }
+									trigger_event = gh_colonization_events.0010
+								}
+							}
+						}
+						else = { story_owner = { trigger_event = gh_colonization_events.0010 } }
+					}
+				}
+			}
+			triggered_effect = {
+				trigger = { always = yes }
+				effect = {
+					var:county_being_colonized = {
+						save_scope_as = colony
+						set_variable = {
+							name = colonization_event_cooldown
+							years = 3
+						}
+					}
+					story_owner = { trigger_event = { on_action = gh_random_colonization_event_on_action } }
+				}
+			}
+		}
+	}
+}

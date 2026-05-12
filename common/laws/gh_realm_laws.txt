@@ -1,0 +1,816 @@
+﻿@crown_authority_cooldown_years = 20
+@pirate_authority_cooldown_years = 10
+@imperial_bureaucracy_cooldown_years_1 = 15
+@imperial_bureaucracy_cooldown_years_2 = 25
+@imperial_bureaucracy_cooldown_years_3 = 35
+
+
+pirate_authority = {
+	default = pirate_authority_1
+	cumulative = no
+	flag = realm_law
+	
+	pirate_authority_0 = {
+		modifier = {
+			vassal_levy_contribution_mult = -0.5
+			vassal_tax_contribution_mult = -0.5
+			domain_limit = -1
+			vassal_limit = -12
+			diplomatic_range_mult = 0.5
+			men_at_arms_maintenance = -0.5
+			tyranny_gain_mult = -0.25
+			glory_hound_opinion = 5
+			minority_opinion = 5
+			barons_and_minor_landholders_opinion = -5
+			courtly_opinion = -5
+		}
+		flag = allows_relocation
+		flag = can_have_tributaries
+		
+		can_keep = { realm_law_use_pirate_authority = yes }
+	}
+	
+	pirate_authority_1 = {
+		modifier = {
+			vassal_levy_contribution_mult = -0.25
+			vassal_tax_contribution_mult = -0.25
+			domain_limit = -1
+			vassal_limit = -10
+			diplomatic_range_mult = 0.25
+			men_at_arms_maintenance = -0.25
+			direct_vassal_opinion = -10
+		}
+		flag = allows_relocation
+
+		can_keep = { realm_law_use_pirate_authority = yes }
+
+		can_pass = {
+			trigger_if = {
+				limit = { has_realm_law = pirate_authority_0 }
+				custom_description = {
+					subject = root
+					text = "has_pirate_authority_cooldown"
+					NOT = {
+						has_variable = pirate_authority_cooldown
+					}
+				}
+			}
+		}
+		
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOR = {
+							has_realm_law = pirate_authority_2
+							has_realm_law = pirate_authority_3
+						}
+					}
+					add = increase_tribal_authority_prestige_cost
+				}
+			}
+		}
+		
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = pirate_authority_cooldown
+				years = @pirate_authority_cooldown_years
+			}
+		}
+
+		ai_will_do = {
+			if = {
+				limit = { has_realm_law = pirate_authority_0 }
+				value = 1
+			}
+		}
+	}
+	
+	pirate_authority_2 = {
+		modifier = {
+			vassal_levy_contribution_mult = -0.1
+			vassal_tax_contribution_mult = -0.1
+			direct_vassal_opinion = -20
+			domain_limit = -1
+			vassal_limit = -10
+		}
+		flag = title_revocation_allowed
+		flag = vassal_retraction_allowed
+		
+		can_keep = { realm_law_use_pirate_authority = yes }
+		
+		can_pass = {
+			trigger_if = {
+				limit = {
+					NOT = { has_realm_law = pirate_authority_3 }
+				}
+				has_realm_law = pirate_authority_1
+				custom_description = {
+					subject = root
+					text = "has_pirate_authority_cooldown"
+					NOT = {
+						has_variable = pirate_authority_cooldown
+					}
+				}
+			}
+		}
+
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOT = { has_realm_law = pirate_authority_3 }
+					}
+					add = increase_tribal_authority_prestige_cost
+				}
+			}
+		}
+		
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = pirate_authority_cooldown
+				years = @pirate_authority_cooldown_years
+			}
+		}
+
+		ai_will_do = {
+			if = {
+				limit = { has_realm_law = pirate_authority_1 }
+				value = 1
+			}
+		}
+	}
+	
+	pirate_authority_3 = {
+		modifier = {
+			direct_vassal_opinion = -30
+			domain_limit = -1
+			vassal_limit = -5
+		}
+		flag = can_change_succession_laws
+		
+		can_keep = { realm_law_use_pirate_authority = yes }
+		
+		can_pass = {
+			has_realm_law = pirate_authority_2
+			custom_description = {
+				subject = root
+				text = "has_pirate_authority_cooldown"
+				NOT = {
+					has_variable = pirate_authority_cooldown
+				}
+			}
+		}
+		
+		pass_cost = { prestige = increase_tribal_authority_prestige_cost }
+		
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = pirate_authority_cooldown
+				years = @pirate_authority_cooldown_years
+			}
+		}
+
+		ai_will_do = {
+			if = {
+				limit = { has_realm_law = pirate_authority_2 }
+				value = 1
+			}
+		}
+	}
+}
+
+clique_authority = {
+	default = clique_authority_1
+	cumulative = no
+	flag = realm_law
+
+	clique_authority_0 = { # This represents Cliques at their most powerful in the realm
+		modifier = {
+			barons_and_minor_landholders_opinion = 25
+			glory_hound_opinion = 5
+			parochial_opinion = 15
+			courtly_opinion = -15
+			magic_focused_opinion = 5
+			minority_opinion = 25
+			vassal_tax_contribution_mult = -0.1
+			vassal_levy_contribution_mult = -0.1
+		}
+		flag = uses_clique_authority
+		flag = titles_cannot_leave_realm_on_succession
+		flag = clique_authority_0
+		flag = can_have_tributaries
+		can_keep = { realm_law_use_clique_authority = yes }
+
+		can_pass = {
+			has_realm_law = clique_authority_1
+		}
+
+		on_pass = {
+			remove_law_related_modifiers_effect = yes
+		}
+
+		ai_will_do = {
+			value = 0
+			if = {
+				limit = {
+					has_realm_law = clique_authority_1
+					AND = { # really big trigger, need to separate out title laws maybe?
+						has_clique_government_trigger = yes
+						NOT = {
+							primary_title = {
+								any_elector = {
+									NOT = { this = root }
+									highest_held_title_tier >= tier_county
+									root.primary_heir ?= {
+										has_election_vote_of = {
+											who = prev
+											title = root.primary_title
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				add = 1
+			}
+		}
+	}
+
+	clique_authority_1 = { # Closer to Middle Ground
+		modifier = {
+			barons_and_minor_landholders_opinion = 15
+			glory_hound_opinion = 5
+			parochial_opinion = 10
+			courtly_opinion = -10
+			magic_focused_opinion = 5
+			minority_opinion = 15
+		}
+		flag = uses_clique_authority
+		flag = clique_authority_1
+		flag = diarchs_want_to_subsidise_without_this_flag
+		can_keep = { realm_law_use_clique_authority = yes }
+
+		can_pass = {
+			trigger_if = {
+				limit = { has_realm_law = clique_authority_0 }
+				custom_description = {
+					subject = root
+					text = "has_clique_authority_cooldown"
+					NAND = {
+						has_variable = clique_authority_cooldown
+						NOT = {
+							culture = { has_innovation = innovation_all_things }
+						}
+					}
+				}
+			}
+			can_pass_law_ca1_trigger = yes
+		}
+
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOR = {
+							has_realm_law = clique_authority_2
+							has_realm_law = clique_authority_3
+						}
+					}
+					add = increase_crown_authority_prestige_cost
+				}
+			}
+		}
+
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = clique_authority_cooldown
+				years = @crown_authority_cooldown_years
+			}
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+
+		ai_will_do = {
+			value = 0
+			if = {
+				limit = {
+					has_realm_law = clique_authority_0
+					vassal_count <= 5
+				}
+				add = 1
+			}
+			if = {
+				limit = {
+					has_realm_law = clique_authority_2
+					AND = { # really big trigger, need to separate out title laws maybe?
+						has_clique_government_trigger = yes
+						NOT = {
+							primary_title = {
+								any_elector = {
+									NOT = { this = root }
+									highest_held_title_tier >= tier_county
+									root.primary_heir = {
+										has_election_vote_of = {
+											who = prev
+											title = root.primary_title
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				add = 1
+			}
+		}
+	}
+
+	clique_authority_2 = { # Beyond Middle Ground, Liege consolidating begins
+		modifier = {
+			barons_and_minor_landholders_opinion = -5
+			glory_hound_opinion = 5
+			parochial_opinion = 5
+			courtly_opinion = -5
+			magic_focused_opinion = -5
+			minority_opinion = 10
+			vassal_tax_contribution_mult = 0.1
+			vassal_levy_contribution_mult = 0.1
+		}
+		flag = uses_clique_authority
+		flag = clique_authority_2
+		flag = vassal_retraction_allowed
+
+		can_keep = { realm_law_use_clique_authority = yes }
+
+		can_pass = {
+			trigger_if = {
+				limit = {
+					NOT = { has_realm_law = clique_authority_3 }
+				}
+				has_realm_law = clique_authority_1
+				custom_description = {
+					subject = root
+					text = "has_clique_authority_cooldown"
+					NAND = {
+						has_variable = clique_authority_cooldown
+						NOT = {
+							culture = { has_innovation = innovation_all_things }
+						}
+					}
+				}
+			}
+			can_pass_law_ca2_trigger = yes
+		}
+
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOT = { has_realm_law = clique_authority_3 }
+					}
+					add = increase_crown_authority_prestige_cost
+				}
+			}
+		}
+
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = clique_authority_cooldown
+				years = @crown_authority_cooldown_years
+			}
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+
+		ai_will_do = {
+			value = 0
+			if = {
+				limit = {
+					has_realm_law = clique_authority_1
+					vassal_count > 4
+				}
+				add = 1
+			}
+			if = {
+				limit = {
+					has_realm_law = clique_authority_3
+					AND = { # really big trigger, need to separate out title laws maybe?
+						has_clique_government_trigger = yes
+						NOT = {
+							primary_title = {
+								any_elector = {
+									NOT = { this = root }
+									highest_held_title_tier >= tier_county
+									root.primary_heir = {
+										has_election_vote_of = {
+											who = prev
+											title = root.primary_title
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				add = 1
+			}
+		}
+	}
+
+	clique_authority_3 = { # The Liege has domination over the cliques
+		modifier = {
+			barons_and_minor_landholders_opinion = -20
+			glory_hound_opinion = -10
+			parochial_opinion = -20
+			courtly_opinion = 15
+			magic_focused_opinion = 5
+			minority_opinion = -15
+			vassal_tax_contribution_mult = 0.15
+			vassal_levy_contribution_mult = 0.15
+		}
+		flag = uses_clique_authority
+		flag = vassal_internal_wars_banned
+		flag = title_revocation_allowed
+		flag = max_authority_level
+		can_keep = { realm_law_use_clique_authority = yes }
+
+		can_pass = {
+			has_realm_law = clique_authority_2
+			custom_description = {
+				subject = root
+				text = "has_clique_authority_cooldown"
+				NAND = {
+					has_variable = clique_authority_cooldown
+					NOT = {
+						culture = { has_innovation = innovation_all_things }
+					}
+				}
+			}
+			can_pass_law_ca3_trigger = yes
+		}
+
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOT = { has_realm_law = clique_authority_3 }
+					}
+					add = increase_crown_authority_prestige_cost
+				}
+			}
+		}
+
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = clique_authority_cooldown
+				years = @crown_authority_cooldown_years
+			}
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+
+		ai_will_do = {
+			if = {
+				limit = { has_realm_law = clique_authority_2 }
+				add = 1
+			}
+		}
+	}
+}
+
+republican_centralization = {
+	default = republican_centralization_1
+	cumulative = yes
+	flag = realm_law
+	
+	republican_centralization_0 = {
+		modifier = {
+			domain_limit_max = 1
+			vassal_limit_min = 8
+			barons_and_minor_landholders_opinion = 20
+			glory_hound_opinion = 20
+			parochial_opinion = -20
+			minority_opinion = 15
+			administrative_government_tax_contribution_add = -0.15
+			republic_government_tax_contribution_add = -0.20
+		}
+		flag = uses_republican_centralization
+		flag = titles_cannot_leave_realm_on_succession # Hardcoded flag
+		flag = can_have_tributaries
+
+		can_keep = {
+			realm_law_use_republican_centralization = yes
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+				}
+				liege = { has_realm_law = republican_centralization_0 }
+			}
+		}
+		
+		can_pass = {
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+					liege = { has_realm_law = republican_centralization_0 }
+				}
+				custom_tooltip = {
+					text = imperial_bureaucracy_pending_law_change
+					always = no
+				}
+			}
+		}
+
+		on_pass = {
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+	}
+	
+	republican_centralization_1 = {
+		modifier = {
+			domain_limit_max = 1
+			vassal_limit_min = -3
+			vassal_limit_max = -15
+			barons_and_minor_landholders_opinion = -10
+			glory_hound_opinion = -10
+			parochial_opinion = 10
+			courtly_opinion = -5
+			minority_opinion = -5
+			administrative_government_tax_contribution_add = 0.05
+			republic_government_tax_contribution_add = 0.05
+			
+		}
+		flag = uses_republican_centralization
+		flag = title_revocation_allowed
+		flag = vassal_retraction_allowed
+		flag = can_change_partition_succession_laws
+		flag = vassal_internal_wars_banned
+		flag = diarchs_want_to_subsidise_without_this_flag
+
+		can_keep = {
+			realm_law_use_republican_centralization = yes
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+				}
+				liege = { has_realm_law = republican_centralization_1 }
+			}
+		}
+
+		can_pass = {
+			trigger_if = {
+				limit = {
+					has_realm_law = republican_centralization_0
+					is_independent_ruler = yes
+				}
+				custom_description = {
+					subject = root
+					text = "has_imperial_bureaucracy_cooldown"
+					NAND = {
+						has_variable = imperial_bureaucracy_cooldown
+						NOT = {
+							culture = { has_innovation = innovation_all_things }
+						}
+					}
+				}
+			}
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+					liege = { has_realm_law = republican_centralization_1 }
+				}
+				custom_tooltip = {
+					text = imperial_bureaucracy_pending_law_change
+					always = no
+				}
+			}
+			can_pass_law_ca1_trigger = yes
+		}
+		
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOR = {
+							has_realm_law = republican_centralization_2
+							has_realm_law = republican_centralization_3
+						}
+					}
+					add = increase_crown_authority_prestige_cost
+				}
+			}
+		}
+		
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = imperial_bureaucracy_cooldown
+				years = @imperial_bureaucracy_cooldown_years_1
+			}
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+
+		ai_will_do = {
+			if = {
+				limit = { has_realm_law = republican_centralization_0 }
+				value = 1
+			}
+		}
+	}
+	
+	republican_centralization_2 = {
+		modifier = {
+			vassal_limit_min = 1
+			vassal_limit_max = -15
+			barons_and_minor_landholders_opinion = -20
+			glory_hound_opinion = -10
+			parochial_opinion = 20
+			courtly_opinion = -5
+			minority_opinion = -15
+			administrative_government_tax_contribution_add = 0.10
+			republic_government_tax_contribution_add = 0.10
+		}
+		flag = uses_republican_centralization
+		flag = vassal_refusal_is_treason
+		flag = can_change_succession_laws
+		flag = vassal_all_wars_banned
+		flag = admin_change_vassal_gov_cheaper
+		flag = admin_title_troop_cost_reduction
+		
+		can_keep = {
+			realm_law_use_republican_centralization = yes
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+				}
+				liege = { has_realm_law = republican_centralization_2 }
+			}
+		}
+
+		can_pass = {
+			trigger_if = {
+				limit = {
+					NOT = { has_realm_law = republican_centralization_3 }
+					is_independent_ruler = yes
+				}
+				has_realm_law = republican_centralization_1
+				custom_description = {
+					subject = root
+					text = "has_imperial_bureaucracy_cooldown"
+					NAND = {
+						has_variable = imperial_bureaucracy_cooldown
+						NOT = {
+							culture = { has_innovation = innovation_all_things }
+						}
+					}
+				}
+			}
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+					liege = { has_realm_law = republican_centralization_2 }
+				}
+				custom_tooltip = {
+					text = imperial_bureaucracy_pending_law_change
+					always = no
+				}
+			}
+			can_pass_law_ca2_trigger = yes
+		}
+
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOT = { has_realm_law = republican_centralization_3 }
+					}
+					add = increase_crown_authority_prestige_cost
+				}
+			}
+		}
+		
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = imperial_bureaucracy_cooldown
+				years = @imperial_bureaucracy_cooldown_years_2
+			}
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+
+		ai_will_do = {
+			if = {
+				limit = { has_realm_law = republican_centralization_1 }
+				value = 1
+			}
+		}
+	}
+	
+	republican_centralization_3 = {
+		modifier = {
+			domain_limit_max = 2
+			vassal_limit_max = -15
+			barons_and_minor_landholders_opinion = -10
+			glory_hound_opinion = -10
+			parochial_opinion = 10
+			courtly_opinion = -10
+			minority_opinion = -10
+			administrative_government_tax_contribution_add = 0.1
+			republic_government_tax_contribution_add = 0.1
+		}
+		flag = uses_republican_centralization
+		flag = vassal_all_wars_banned_permanent
+		flag = max_authority_level
+		flag = admin_title_troop_cost_reduction_high
+		
+		can_keep = {
+			realm_law_use_republican_centralization = yes
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+				}
+				liege = { has_realm_law = republican_centralization_3 }
+			}
+		}
+
+		can_pass = {
+			trigger_if = {
+				limit = {
+					is_independent_ruler = yes
+				}
+				has_realm_law = republican_centralization_2
+				custom_description = {
+					subject = root
+					text = "has_imperial_bureaucracy_cooldown"
+					NAND = {
+						has_variable = imperial_bureaucracy_cooldown
+						NOT = {
+							culture = { has_innovation = innovation_all_things }
+						}
+					}
+				}
+			}
+			trigger_if = {
+				limit = {
+					is_independent_ruler = no
+					liege = { has_realm_law = republican_centralization_3 }
+				}
+				custom_tooltip = {
+					text = imperial_bureaucracy_pending_law_change
+					always = no
+				}
+			}
+			can_pass_law_ca3_trigger = yes
+		}
+		
+		pass_cost = {
+			prestige = {
+				if = {
+					limit = {
+						NOT = { has_realm_law = republican_centralization_3 }
+					}
+					add = increase_crown_authority_prestige_cost
+				}
+			}
+		}
+		
+		on_pass = {
+			# Increment cooldown breaker tally, if appropriate.
+			calculate_authority_cooldown_break_effect = yes
+			# Set regular cooldown.
+			set_variable = {
+				name = imperial_bureaucracy_cooldown
+				years = @imperial_bureaucracy_cooldown_years_3
+			}
+			# Remove modifiers.
+			remove_law_related_modifiers_effect = yes
+		}
+	}
+}

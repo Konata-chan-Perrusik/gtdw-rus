@@ -1,0 +1,122 @@
+﻿military_unit_elective = {
+	elector_vote_strength = {
+		base = 0
+		modifier = { # Political power
+			desc = tooltip_clique_political_power_elector_strength
+			add = character_influence_total
+		}
+		modifier = {
+			desc = tooltip_vote_number_of_knights
+			add = {
+				add = max_number_of_knights
+				multiply = 0.5
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_martial
+			add = 1
+			has_trait = education_martial
+		}
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_martial
+			add = 1
+			martial_lifestyle_perks > 0
+		}
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_martial_trait
+			add = 3
+			has_martial_lifestyle_trait_trigger = yes	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_martial_3
+			add = 2
+			has_trait = education_martial_3	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_martial_4
+			add = 4
+			OR = {
+				has_trait = education_martial_4
+				has_trait = education_martial_5
+			}	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_commander_traits_number
+			add = {
+				add = number_of_commander_traits
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_martial_points
+			add = {
+				add = martial
+				multiply = 0.15
+			}
+		}
+	}
+	
+	electors = {
+		add = holder
+		add = holder_direct_vassals
+		add = title_claimants
+		limit = { culture = { has_same_culture_heritage = scope:holder.culture } }
+	}
+
+	candidate_score = {
+		base = 0
+		######################	Elector self-voting pattern	##########################
+		elector_self_voting_pattern_clique_elective_modifier = yes
+		# some stuff about children of the ruler voting for themselves needed to be changed from the feudal one
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		elector_voting_pattern_circumstances_military_unit_modifier = yes
+		# this one is in addition to the standard feudal one rather than a replacement
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_prestige_piety_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either
+		
+		##########################	Elector voting patterns (cliques)	##########################
+		elector_voting_pattern_circumstances_clique_mechanics_modifier = yes
+	}
+	
+	#scope:candidate = Candidate, scope:title = Title, scope:holder_candidate = Candidate currently selected by ruler.
+	candidates = {
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				government_has_flag = government_is_military_unit
+				is_adult = yes
+				feudal_elective_potential_landed_candidate_trigger = yes
+			}
+		}
+		add = {
+			type = title_claimants
+			limit = {
+				OR = {
+					government_has_flag = government_is_military_unit
+					is_playable_character = no
+				}
+				is_adult = yes
+				feudal_elective_potential_landless_claimant_candidate_trigger = yes
+			}
+		}
+		add = {
+			type = holder_close_family
+			limit = {
+				is_close_family_of = scope:holder
+				is_adult = yes
+				feudal_elective_potential_landless_dynastic_candidate_trigger = yes
+			}
+		}
+	}
+}

@@ -1,0 +1,1205 @@
+﻿
+########################
+# GENERAL SPELL VALUES #
+########################
+spell_level_iteration_value = 25
+
+spell_level_value = {
+	value = 0
+	if = {
+		limit = { exists = var:spell_level }
+		add = var:spell_level
+	}
+}
+
+very_low_spell_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 5
+	}
+}
+
+low_spell_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 10
+	}
+}
+
+standard_spell_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 25
+	}
+}
+
+very_low_spell_gold_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 5
+	}
+}
+
+low_spell_gold_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 10
+	}
+}
+
+standard_spell_gold_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 25
+	}
+}
+
+high_spell_gold_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 50
+	}
+}
+
+very_high_spell_gold_cost = {
+	value = 0
+	add = {
+		value = spell_level_value
+		multiply = 100
+	}
+}
+
+standard_life_extension_spell_cost = {
+	value = 0
+	if = {
+		limit = {
+			exists = scope:spell_organizer.var:life_extention_amount_raw
+		}
+		if = {
+			limit = {
+				scope:spell_organizer.var:life_extention_amount_raw > 30
+			}
+			add = scope:spell_organizer.var:life_extention_amount_raw
+			subtract = 30
+			multiply = 2
+		}
+		if = {
+			limit = {
+				scope:spell_organizer.var:life_extention_amount_raw > 20
+			}
+			add = scope:spell_organizer.var:life_extention_amount_raw
+			subtract = 20
+			multiply = 2
+		}
+		add = scope:spell_organizer.var:life_extention_amount_raw
+		if = {
+			limit = {
+				scope:spell_organizer.var:life_extention_amount_raw > 10
+			}
+			add = scope:spell_organizer.var:life_extention_amount_raw
+			subtract = 10
+		}
+		if = { # this one simply doubles all non-base cost for now, might look at it more later
+			limit = { 
+				scope:spell_organizer.var:life_extention_amount_raw > 50
+			}
+			multiply = 2
+		}
+	}
+	multiply = 2.5
+	add = 25
+	multiply = spell_level_value
+}
+
+standard_life_extension_spell_multiplier = {
+	value = 0
+	if = {
+		limit = {
+			exists = scope:spell_organizer.var:life_extention_amount_raw
+		}
+		if = {
+			limit = {
+				scope:spell_organizer.var:life_extention_amount_raw > 30
+			}
+			add = scope:spell_organizer.var:life_extention_amount_raw
+			subtract = 30
+			multiply = 2
+		}
+		if = {
+			limit = {
+				scope:spell_organizer.var:life_extention_amount_raw > 20
+			}
+			add = scope:spell_organizer.var:life_extention_amount_raw
+			subtract = 20
+			multiply = 2
+		}
+		add = scope:spell_organizer.var:life_extention_amount_raw
+		if = {
+			limit = {
+				scope:spell_organizer.var:life_extention_amount_raw > 10
+			}
+			add = scope:spell_organizer.var:life_extention_amount_raw
+			subtract = 10
+		}
+		if = { # this one simply doubles all non-base cost for now, might look at it more later
+			limit = { 
+				scope:spell_organizer.var:life_extention_amount_raw > 50
+			}
+			multiply = 2
+		}
+	}
+	multiply = 0.1
+	add = 1
+}
+
+spell_cost_overcharge_value = {
+	value = 0
+	if = {
+		limit = { 
+			exists = scope:spell_preparation_story_cycle_scope
+			exists = scope:spell_preparation_story_cycle_scope.var:total_overcharge
+		}
+		add = scope:spell_preparation_story_cycle_scope.var:total_overcharge
+		multiply = 25
+	}
+	if = {
+		limit = { 
+			exists = var:spell_cost
+			var:spell_cost <= 0
+		}
+		max = 0
+	}
+}
+
+total_spell_cost = {
+	value = {
+		value = var:spell_cost
+		desc = "base_value_desc"
+		format = "SPELL_MAGIC_COST_VALUE_FORMAT"
+	}
+	if = {
+		limit = { save_temporary_scope_as = total_spell_cost_spell_scope }
+	}
+	if = {
+		limit = {
+			NOT = { scope:spell_organizer ?= { has_variable_list = spell_targets } }
+		}
+		add = {
+			value = spell_cost_overcharge_value
+			desc = "spell_aspect_overcharge_value_desc"
+			format = "SPELL_MAGIC_COST_VALUE_FORMAT"
+		}
+	}
+	else = {
+		value = 0
+		scope:spell_organizer ?= {
+			every_in_list = {
+				variable = spell_targets
+				add = scope:total_spell_cost_spell_scope.var:spell_cost
+				add = scope:total_spell_cost_spell_scope.spell_cost_overcharge_value
+			}
+			every_in_list = {
+				variable = spell_l_targets
+				add = scope:total_spell_cost_spell_scope.var:spell_cost
+				add = scope:total_spell_cost_spell_scope.spell_cost_overcharge_value
+			}
+		}
+	}
+	if = {
+		limit = { 
+			has_variable_list = spell_cost_tag_list
+			any_in_list = {
+				variable = spell_cost_tag_list 
+				var:scalar_1 ?= flag:magic_arcane_degeneration_modifier_scale
+				var:target_type ?= flag:target
+				save_temporary_scope_as = magic_arcane_degeneration_modifier_scale_tag
+			}
+		}
+		if = {
+			limit = { scope:spell_organizer = { has_variable_list = spell_targets } }
+			scope:spell_organizer = {
+				every_in_list = {
+					variable = spell_targets
+					limit = { exists = var:magic_arcane_degeneration_modifier_scale }
+					add = {
+						value = var:magic_arcane_degeneration_modifier_scale
+						multiply = scope:magic_arcane_degeneration_modifier_scale_tag.var:cost_change_value
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = { scope:spell_organizer = { exists = var:magic_arcane_degeneration_modifier_scale } }
+			add = {
+				value = scope:spell_organizer.var:magic_arcane_degeneration_modifier_scale
+				multiply = scope:magic_arcane_degeneration_modifier_scale_tag.var:cost_change_value
+			}
+		}
+	}
+	if = {
+		limit = { 
+			has_variable_list = spell_cost_tag_list
+			any_in_list = {
+				variable = spell_cost_tag_list 
+				var:scalar_1 ?= flag:glassinger_modifier_scale
+				var:target_type ?= flag:target
+				save_temporary_scope_as = glassinger_modifier_scale_tag
+			}
+		}
+		if = {
+			limit = { scope:spell_organizer = { has_variable_list = spell_targets } }
+			scope:spell_organizer = {
+				every_in_list = {
+					variable = spell_targets
+					limit = { exists = var:glassinger_modifier_scale }
+					add = {
+						value = var:glassinger_modifier_scale
+						multiply = scope:glassinger_modifier_scale_tag.var:cost_change_value
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = { scope:spell_organizer = { exists = var:glassinger_modifier_scale } }
+			add = {
+				value = scope:spell_organizer.var:glassinger_modifier_scale
+				multiply = scope:glassinger_modifier_scale_tag.var:cost_change_value
+			}
+		}
+	}
+	if = {
+		limit = {
+			scope:spell_organizer ?= {
+				has_variable_list = spell_component_being_prepared_list
+			}
+		}
+		scope:spell_organizer = {
+			every_in_list = {
+				variable = spell_component_being_prepared_list
+				if = {
+					limit = { 
+						exists = var:spell_component_template.var:mana_cost_add
+						exists = var:spell_component_template.var:character_spell_component_input 
+						exists = var:spell_component_character_selection
+						var:spell_component_character_selection = {
+							save_temporary_scope_as = character_being_checked_for_suitability
+						}
+					}
+					add = var:spell_component_template.character_spell_component_suitability_value
+				}
+				else_if = {
+					limit = {
+						exists = var:spell_component_template.var:mana_cost_subtract
+						exists = var:spell_component_template.var:character_spell_component_input 
+						exists = var:spell_component_character_selection
+						var:spell_component_character_selection = {
+							save_temporary_scope_as = character_being_checked_for_suitability
+						}
+					}
+					subtract = var:spell_component_template.character_spell_component_suitability_value
+				}
+			}
+		}
+	}
+	if = {
+		limit = {
+			scope:caster = { has_perk = arcana_actuation_perk4_tree1 }
+		}
+		multiply = {
+			value = 0.90
+			desc = arcana_actuation_perk4_tree1_value_desc
+			format = "SPELL_MAGIC_COST_VALUE_FORMAT"
+		}
+	}
+	min = 0
+}
+
+total_spell_cost_inverted = {
+	value = 0
+	subtract = total_spell_cost
+}
+
+total_spell_gold_cost = {
+	value = 0
+	if = {
+		limit = { exists = var:spell_gold_cost }
+		add = {
+			value = var:spell_gold_cost
+			desc = base_value_desc
+			format = "SPELL_GOLD_COST_VALUE_FORMAT"
+		}
+	}
+	if = { # bonus from personal power arcana lifestyle tree
+		limit = { scope:spell_organizer ?= { has_perk = arcana_cognition_perk6_tree2 } }
+		multiply = {
+			value = 0.75
+			desc = arcana_cognition_perk6_tree2_value_desc
+			format = "SPELL_GOLD_COST_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = {
+			scope:spell_organizer ?= {
+				has_variable_list = spell_component_being_prepared_list
+			}
+		}
+		scope:spell_organizer = {
+			every_in_list = {
+				variable = spell_component_being_prepared_list
+				if = {
+					limit = { 
+						exists = var:spell_component_template.var:gold_cost_add
+						exists = var:spell_component_template.var:character_spell_component_input 
+						exists = var:spell_component_character_selection
+						var:spell_component_character_selection = {
+							save_temporary_scope_as = character_being_checked_for_suitability
+						}
+					}
+					add = {
+						value = var:spell_component_template.character_spell_component_suitability_value
+						multiply = var:spell_component_template.var:gold_cost_add
+					}
+				}
+				else_if = {
+					limit = {
+						exists = var:spell_component_template.var:gold_cost_subtract
+						exists = var:spell_component_template.var:character_spell_component_input 
+						exists = var:spell_component_character_selection
+						var:spell_component_character_selection = {
+							save_temporary_scope_as = character_being_checked_for_suitability
+						}
+					}
+					subtract = {
+						value = var:spell_component_template.character_spell_component_suitability_value
+						multiply = var:spell_component_template.var:gold_cost_subtract
+					}
+				}
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:spell_organizer }
+		multiply = {
+			value = {
+				value = 1
+				add = {
+					value = scope:spell_organizer.arcana_spell_gold_cost_discount_value
+					multiply = 0.01
+				}
+			}
+			desc = "[arcana_i][arcana|E]"
+			format = "SPELL_GOLD_COST_VALUE_FORMAT"
+		}
+	}
+}
+
+arcana_spell_gold_cost_discount_value = {
+	value = 8	# +8% cost if at 0 arcana
+	subtract = arcana
+	min = -90
+}
+
+spell_target_number_value = {
+	value = 0
+	every_in_list = {
+		list = spell_targets
+		add = 1
+	}
+	min = 1
+}
+
+spell_l_target_number_value = {
+	value = 0
+	every_in_list = {
+		list = spell_l_targets
+		add = 1
+	}
+	min = 1
+}
+
+################################
+# SPELL EFFECT-SPECIFIC VALUES #
+################################
+
+generate_magic_from_baseline_value = {
+	value = 25
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_value
+	}
+}
+
+generate_magic_from_components_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:spell_organizer }
+		scope:spell_organizer = {
+			every_in_list = {
+				variable = spell_component_being_prepared_list
+				limit = { 
+					exists = var:spell_component_template.var:magic_add
+					exists = var:spell_component_template.var:character_spell_component_input 
+					exists = var:spell_component_character_selection
+					var:spell_component_character_selection = {
+						save_temporary_scope_as = character_being_checked_for_suitability
+					}
+				}
+				add = var:spell_component_template.character_spell_component_suitability_value
+			}
+		}
+		if = {
+			limit = { scope:spell_organizer = { has_perk = arcana_cognition_perk3_tree2 } }
+			multiply = 1.5
+		}
+		if = {
+			limit = { exists = scope:spell_effect }
+			multiply = {
+				value = 1
+				add = { 
+					value = scope:spell_effect.spell_tag_scalar_value
+					multiply = 0.2
+				}
+			}
+		}
+	}
+}
+
+#####################
+# COURT MAGI VALUES #
+#####################
+
+court_magi_spellcasting_acceptance_value = {
+	value = 0
+	if = {
+		limit = {
+			exists = var:selected_spell 
+			scope:caster = { save_temporary_opinion_value_as = { name = opinion_of_liege_factor target = root } } 
+		}
+		add = {
+			value = scope:opinion_of_liege_factor
+			desc = court_magi_spellcasting_opinion_of_liege_desc
+		}
+	}
+	if = {
+		limit = {
+			exists = var:casting_through_court_magi_give_gold_var
+		}
+		add = {
+			value = 80
+			desc = court_magic_spellcasting_opinion_bribe_desc
+		}
+	}
+	if = {
+		limit = {
+			exists = var:casting_through_court_magi_give_hook_var
+		}
+		add = {
+			value = 80
+			desc = court_magic_spellcasting_opinion_hook_desc
+		}
+	}
+	if = {
+		limit = {
+			scope:caster.liege = { has_perk = arcana_erudition_perk3_tree3 }
+		}
+		add = {
+			value = 30
+			desc = court_magic_spellcasting_arcana_realm_power_perk_desc
+		}
+	}
+	if = {
+		limit = { 
+			exists = var:selected_spell 
+		}
+		subtract = {
+			value = var:selected_spell.total_spell_cost
+			desc = court_magi_spellcasting_total_spell_cost_value_desc
+		}
+		subtract = {
+			value = {
+				value = scope:caster.predicted_exposure_level_after_casting_spell_value
+				subtract = 1 # Exposure level 1 is usually fine and unavoidable. The big penalties should only start kicking in at level 2 and above
+				multiply = 75
+				min = 0
+			}
+			desc = court_magi_spellcasting_predicted_exposure_level_value_desc
+		}
+		if = {
+			limit = { var:selected_spell.spell_success_chance < 80 }
+			subtract = {
+				value = 80
+				subtract = var:selected_spell.spell_success_chance
+				desc = court_magi_spellcasting_success_chance
+				format = "SPELLCASTING_ABILITY_POS_VALUE_FORMAT"
+			}
+		}
+		add = {
+			value = {
+				value = 0
+				if = {
+					limit = { has_variable_list = spell_targets }
+					every_in_list = {
+						variable = spell_targets
+						limit = {
+							save_temporary_scope_as = spell_being_checked_ai_target
+						}
+						add = prev.var:selected_spell.ai_spell_weight_value
+						if = {
+							limit = { 
+								OR = {
+									this = scope:caster
+									is_child_of = scope:caster
+								}
+							}
+							multiply = 5
+						}
+						else_if = {
+							limit = {
+								OR = {
+									has_relation_friend = scope:caster
+									is_close_family_of = scope:caster
+								}
+							}
+							multiply = 0.5
+						}
+						else_if = {
+							limit = {
+								has_relation_rival = scope:caster
+							}
+							multiply = -0.5
+						}
+						else_if = {
+							limit = { scope:caster = { save_temporary_opinion_value_as = { name = opinion_of_target_factor target = prev } } }
+							multiply = {
+								value = scope:opinion_of_target_factor
+								multiply = 0.01
+							}
+						}
+					}
+				}
+				else_if = {
+					limit = { root = { save_temporary_scope_as = spell_being_checked_ai_target } }
+					add = prev.var:selected_spell.ai_spell_weight_value
+					if = {
+						limit = {
+							OR = {
+								has_relation_friend = scope:caster
+								is_close_family_of = scope:caster
+							}
+						}
+						multiply = 0.5
+					}
+					else_if = {
+						limit = {
+							has_relation_rival = scope:caster
+						}
+						multiply = -0.5
+					}
+					else_if = {
+						limit = { scope:caster = { save_temporary_opinion_value_as = { name = opinion_of_target_factor target = prev } } }
+						multiply = {
+							value = scope:opinion_of_target_factor
+							multiply = 0.01
+						}
+					}
+				}
+			}
+			desc = court_magi_spellcasting_opinion_of_target_value_desc
+		}
+	}
+}
+
+##########################
+# SPELL COMPONENT VALUES #
+##########################
+
+character_spell_component_suitability_value = {
+	value = 0
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { exists = scope:character_being_checked_for_suitability }
+				always = yes
+			}
+			trigger_else = {
+				exists = var:spell_component_character_selection
+				var:spell_component_character_selection = { save_temporary_scope_as = character_being_checked_for_suitability }
+			}
+		}
+		if = {
+			limit = {
+				var:spell_component_template = {
+					has_variable_list = spell_component_input_modifier_trait_group_list
+					any_in_list = {
+						variable = spell_component_input_modifier_trait_group_list
+						this = flag:magic_good_1
+					}
+				}
+			}
+			add = {
+				value = scope:character_being_checked_for_suitability.magi_potency
+				multiply = var:spell_component_template.var:magic_good_1
+			}
+		}
+		if = {
+			limit = {
+				var:spell_component_template = { has_variable_list = spell_component_input_modifier_trait_list }
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:lustful
+						}
+						scope:character_being_checked_for_suitability = { has_trait = lustful }
+					}
+				}
+				add = var:spell_component_template.var:lustful
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:chaste
+						}
+						scope:character_being_checked_for_suitability = { has_trait = chaste }
+					}
+				}
+				add = var:spell_component_template.var:chaste
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:gluttonous
+						}
+						scope:character_being_checked_for_suitability = { has_trait = gluttonous }
+					}
+				}
+				add = var:spell_component_template.var:gluttonous
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:temperate
+						}
+						scope:character_being_checked_for_suitability = { has_trait = temperate }
+					}
+				}
+				add = var:spell_component_template.var:temperate
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:shy
+						}
+						scope:character_being_checked_for_suitability = { has_trait = shy }
+					}
+				}
+				add = var:spell_component_template.var:shy
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:gregarious
+						}
+						scope:character_being_checked_for_suitability = { has_trait = gregarious }
+					}
+				}
+				add = var:spell_component_template.var:gregarious
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:content
+						}
+						scope:character_being_checked_for_suitability = { has_trait = content }
+					}
+				}
+				add = var:spell_component_template.var:content
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:ambitious
+						}
+						scope:character_being_checked_for_suitability = { has_trait = ambitious }
+					}
+				}
+				add = var:spell_component_template.var:ambitious
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:lazy
+						}
+						scope:character_being_checked_for_suitability = { has_trait = lazy }
+					}
+				}
+				add = var:spell_component_template.var:lazy
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:diligent
+						}
+						scope:character_being_checked_for_suitability = { has_trait = diligent }
+					}
+				}
+				add = var:spell_component_template.var:diligent
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:patient
+						}
+						scope:character_being_checked_for_suitability = { has_trait = patient }
+					}
+				}
+				add = var:spell_component_template.var:patient
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:impatient
+						}
+						scope:character_being_checked_for_suitability = { has_trait = impatient }
+					}
+				}
+				add = var:spell_component_template.var:impatient
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:calm
+						}
+						scope:character_being_checked_for_suitability = { has_trait = calm }
+					}
+				}
+				add = var:spell_component_template.var:calm
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:wrathful
+						}
+						scope:character_being_checked_for_suitability = { has_trait = wrathful }
+					}
+				}
+				add = var:spell_component_template.var:wrathful
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:arrogant
+						}
+						scope:character_being_checked_for_suitability = { has_trait = arrogant }
+					}
+				}
+				add = var:spell_component_template.var:arrogant
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:honest
+						}
+						scope:character_being_checked_for_suitability = { has_trait = honest }
+					}
+				}
+				add = var:spell_component_template.var:honest
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:bleeder
+						}
+						scope:character_being_checked_for_suitability = { has_trait = bleeder }
+					}
+				}
+				add = var:spell_component_template.var:bleeder
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_trait_list
+							this = flag:fecund
+						}
+						scope:character_being_checked_for_suitability = { has_trait = fecund }
+					}
+				}
+				add = var:spell_component_template.var:fecund
+			}
+		}
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_skill_list
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_skill_list
+							this = flag:health_skill
+						}
+					}
+				}
+				add = {
+					value = scope:character_being_checked_for_suitability.health
+					multiply = var:spell_component_template.var:health_skill
+				}
+			}
+			if = {
+				limit = {
+					var:spell_component_template = {
+						any_in_list = {
+							variable = spell_component_input_modifier_skill_list
+							this = flag:prowess_skill
+						}
+					}
+				}
+				add = {
+					value = scope:character_being_checked_for_suitability.prowess
+					multiply = var:spell_component_template.var:prowess_skill
+				}
+			}
+		}
+		if = {
+			limit = {
+				var:spell_component_template = {
+					has_variable_list = spell_component_input_modifier_age_list
+					any_in_list = {
+						variable = spell_component_input_modifier_age_list
+						this = flag:age_ideal
+					}
+					any_in_list = {
+						variable = spell_component_input_modifier_age_list
+						this = flag:age_change
+					}
+				}
+			}
+			if = {
+				limit = { scope:character_being_checked_for_suitability.age < var:spell_component_template.var:age_ideal }
+				subtract = {
+					value = var:spell_component_template.var:age_ideal
+					subtract = scope:character_being_checked_for_suitability.age
+					multiply = var:spell_component_template.var:age_change
+				}
+			}
+			else_if = {
+				limit = { scope:character_being_checked_for_suitability.age > var:spell_component_template.var:age_ideal }
+				subtract = {
+					value = scope:character_being_checked_for_suitability
+					subtract = var:spell_component_template.var:age_ideal
+					multiply = var:spell_component_template.var:age_change
+				}
+			}
+		}
+	}
+	min = 0
+}
+
+artifact_spell_component_suitability_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_quality_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_quality_group_list
+					this = flag:artifact_quality_scaling
+				}
+			}
+			add = {
+				value = 5
+				multiply = var:artifact_quality_scaling
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_feature_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_feature_group_list
+					this = flag:bone_constitution_strong
+				}
+			}
+			add = {
+				value = 10
+				multiply = 2
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_feature_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_feature_group_list
+					this = flag:bone_constitution_healthy
+				}
+			}
+			add = {
+				value = 5
+				multiply = 2
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_feature_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_feature_group_list
+					this = flag:bone_type_medium_animal
+				}
+			}
+			add = {
+				value = 10
+				multiply = 2
+			}
+		}
+	}
+
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_feature_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_feature_group_list
+					this = flag:bone_type_large_animal
+				}
+			}
+			add = {
+				value = 10
+				multiply = 2
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_feature_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_feature_group_list
+					this = flag:bone_type_human_bone
+				}
+			}
+			add = {
+				value = 10
+				multiply = 2
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:artifact_being_checked_for_suitability }
+		if = {
+			limit = {
+				has_variable_list = spell_component_input_modifier_artifact_feature_group_list
+				any_in_list = {
+					variable = spell_component_input_modifier_artifact_feature_group_list
+					this = flag:bone_type_monster_bone
+				}
+			}
+			add = {
+				value = 15
+				multiply = 2
+			}
+		}
+	}
+}
+
+#########################
+# SPECIFIC SPELL VALUES #
+#########################
+
+backfire_spell_development_loss_value = {
+	value = 0
+	subtract = scope:spell_being_casted.aspect_total_spell_level_value
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 2
+		}
+		multiply = 3
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 4
+		}
+		multiply = 3
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 6
+		}
+		multiply = 3
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 8
+		}
+		multiply = 3
+	}
+}
+
+weather_spell_development_loss_value = {
+	value = 0
+	subtract = scope:spell_being_casted.aspect_total_spell_level_value
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 1
+		}
+		multiply = 2
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 3
+		}
+		multiply = 2
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 5
+		}
+		multiply = 3
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 7
+		}
+		multiply = 3
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 9
+		}
+		multiply = 3
+	}
+}
+
+weather_spell_development_loss_secondary_value = {
+	value = 3
+	subtract = scope:spell_being_casted.aspect_total_spell_level_value
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 3
+		}
+		multiply = 2
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 5
+		}
+		multiply = 2
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 7
+		}
+		multiply = 3
+	}
+	if = {
+		limit = {
+			scope:spell_being_casted.aspect_total_spell_level_value > 9
+		}
+		multiply = 3
+	}
+}
+
+add_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+	min = major_lifestyle_xp
+}
+
+sanity_loss_spell_effect_stress_loss_value = {
+	value = minor_stress_gain
+    multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	min = minor_stress_gain
+}
+
+stress_gain_spell_effect_stress_gain_value = {
+	value = minor_stress_gain
+	multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}
+
+stress_loss_spell_effect_stress_loss_value = {
+	value = minor_stress_loss
+	multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}
+
+add_activity_host_prestige_reward_value = {
+	value = 75
+	multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}
+
+add_activity_participant_stress_loss_value = {
+	value = 20
+	multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}
+
+add_gold_magic_value = {
+	value = 25
+	add = {
+		value = 10
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+
+add_arcane_fallout_value = {
+	value = 20
+	multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}
+
+remove_arcane_fallout_value = {
+	value = 20
+	multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}

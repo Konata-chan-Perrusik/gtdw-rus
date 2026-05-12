@@ -1,0 +1,1428 @@
+﻿#####################################
+############DECISIONS LIST###########
+# refound_east_mamur_decision		#
+# refound_west_mamur_decision		#
+# refound_far_east_mamur_decision	#
+# found_southern_mamur_decision		#
+# found_far_western_mamur_decision  #
+# found_new_mamuramat_decision		#
+# create_filosi_school_decision		#
+# create_zorani_school_decision		#
+# create_kemsari_school_decision	#
+# create_dhahabi_school_decision	#
+# create_daifarosi_school_decision	#
+# wardenite_mamur_reclaim_kotserion_decision	#
+# wardenite_mamur_reclaim_sianna_decision		#
+# wardenite_mamur_reclaim_gahzi_decision		#
+# wardenite_mamur_reclaim_skiadhadhes_decision#
+# wardenite_mamur_reclaim_chegea_decision		#
+# wardenite_mamur_reclaim_almubid_decision	#
+# mamur_reassert_authority_kathsiti	#
+# mamur_reassert_authority_harthah	#
+# mamur_reassert_authority_ayyar	#
+# great_library_overstock_purchase	#
+# loot_tabik_betemisit				#
+#####################################
+
+#################################
+# Refound the Eastern Mamuramat	#
+# by Hapchazzard				#
+#################################
+
+refound_east_mamur_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = wardenite
+
+	ai_check_interval = 120
+
+	desc = refound_east_mamur_decision_desc
+	selection_tooltip = refound_east_mamur_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must be Wardenite.
+		has_religion = religion:wardenism_religion
+		#Must be in the vague region.
+		any_held_title = {
+			tier = tier_county
+			OR = {
+				kingdom = title:k_eastern_frontier
+				kingdom = title:k_isle_of_visions
+			}
+		}
+		#Can't already be a Mamur.
+		NOT = {
+			any_held_title = {
+				has_variable = attached_high_court
+			}
+		}
+		#The Eastern Mamuramat mustn't already exist.
+		title:e_eastern_mamuramat = { is_title_created = no }
+		#Can't be an Idealist
+		NOT = { faith = { has_doctrine_parameter = no_mamurs_recognized } }
+		#If the faith recognizes only one Mamur, make sure that it doesn't already have an appropriate one, since we can't create new faiths currently to represent schisms
+		trigger_if = {
+			limit = { faith = { has_doctrine_parameter = one_mamur_recognized } }
+			NOT = {
+				faith = {
+					save_temporary_scope_as = character_faith
+					any_in_list = {
+						variable = recognized_high_court_list
+						has_variable = high_court_mamuramat
+						exists = var:high_court_mamuramat.holder
+						var:high_court_mamuramat.holder = { has_faith = scope:character_faith }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Should have a decent piety level.
+		piety_level >= very_high_piety_level
+		#Rules Khenemhat
+		has_title = title:k_eastern_frontier
+		has_title = title:k_isle_of_visions
+		#Rules Kundahar
+		has_title = title:c_kudahhar
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		#Has to be around for the ceremony.
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = founder
+		found_mamuramat_effect = { MAMURAMAT_TITLE = title:e_eastern_mamuramat }
+		scope:founder = { leave_legal_tradition_effect = yes }
+	}
+
+	cost = {
+		gold = 200
+		piety = {
+			value = {
+				value = 2000
+				#Traditionalists get a massive discount
+				if = {
+					limit = { faith = { has_doctrine_parameter = four_traditional_mamurs_recognized } }
+					multiply = 0.25
+				}
+			}
+		}
+	}
+
+	ai_potential = { root = { character_harthah_trigger = no } }
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#################################
+# Refound the Western Mamuramat	#
+# by Hapchazzard				#
+#################################
+
+refound_west_mamur_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = wardenite
+
+	ai_check_interval = 120
+
+	desc = refound_west_mamur_decision_desc
+	selection_tooltip = refound_west_mamur_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must be Wardenite.
+		has_religion = religion:wardenism_religion
+		#Must be in the vague region.
+		any_held_title = {
+			tier = tier_county
+			OR = {
+				kingdom = title:k_uraghad
+				empire = title:e_ayyar
+			}
+		}
+		#Can't already be a Mamur.
+		NOT = {
+			any_held_title = {
+				has_variable = attached_high_court
+			}
+		}
+		#The Western Mamuramat mustn't already exist.
+		title:e_western_mamuramat = { is_title_created = no }
+		#Can't be an Idealist
+		NOT = { faith = { has_doctrine_parameter = no_mamurs_recognized } }
+		#If the faith recognizes only one Mamur, make sure that it doesn't already have an appropriate one, since we can't create new faiths currently to represent schisms
+		trigger_if = {
+			limit = { faith = { has_doctrine_parameter = one_mamur_recognized } }
+			NOT = {
+				faith = {
+					save_temporary_scope_as = character_faith
+					any_in_list = {
+						variable = recognized_high_court_list
+						has_variable = high_court_mamuramat
+						exists = var:high_court_mamuramat.holder
+						var:high_court_mamuramat.holder = { has_faith = scope:character_faith }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Should have a decent piety level.
+		piety_level >= very_high_piety_level
+		#Rules Uraghad
+		has_title = title:k_uraghad
+		#Rules Disuwai
+		has_title = title:c_disuwai
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		#Has to be around for the ceremony.
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = founder
+		found_mamuramat_effect = { MAMURAMAT_TITLE = title:e_western_mamuramat }
+		scope:founder = { leave_legal_tradition_effect = yes }
+	}
+
+	cost = {
+		gold = 200
+		piety = {
+			value = {
+				value = 2000
+				#Traditionalists get a massive discount
+				if = {
+					limit = { faith = { has_doctrine_parameter = four_traditional_mamurs_recognized } }
+					multiply = 0.25
+				}
+			}
+		}
+	}
+
+	ai_potential = { root = { character_harthah_trigger = no } }
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#####################################
+# Refound the Far Eastern Mamuramat	#
+# by Hapchazzard					#
+#####################################
+
+refound_far_east_mamur_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = wardenite
+
+	ai_check_interval = 120
+
+	desc = refound_far_east_mamur_decision_desc
+	selection_tooltip = refound_far_east_mamur_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must be Wardenite.
+		has_religion = religion:wardenism_religion
+		#Must be in the vague region.
+		any_held_title = {
+			tier = tier_county
+			OR = {
+				empire = title:e_crater
+				empire = title:e_rojihlat_mara
+				empire = title:e_cyrat
+			}
+		}
+		#Can't already be a Mamur.
+		NOT = {
+			any_held_title = {
+				has_variable = attached_high_court
+			}
+		}
+		#The Western Mamuramat mustn't already exist.
+		title:e_far_eastern_mamuramat = { is_title_created = no }
+		#Can't be an Idealist
+		NOT = { faith = { has_doctrine_parameter = no_mamurs_recognized } }
+		#If the faith recognizes only one Mamur, make sure that it doesn't already have an appropriate one, since we can't create new faiths currently to represent schisms
+		trigger_if = {
+			limit = { faith = { has_doctrine_parameter = one_mamur_recognized } }
+			NOT = {
+				faith = {
+					save_temporary_scope_as = character_faith
+					any_in_list = {
+						variable = recognized_high_court_list
+						has_variable = high_court_mamuramat
+						exists = var:high_court_mamuramat.holder
+						var:high_court_mamuramat.holder = { has_faith = scope:character_faith }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Should have a decent piety level.
+		piety_level >= high_piety_level
+		#Rules Kratemezin
+		has_title = title:e_crater
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		#Has to be around for the ceremony.
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = founder
+		found_mamuramat_effect = { MAMURAMAT_TITLE = title:e_far_eastern_mamuramat }
+		scope:founder = { leave_legal_tradition_effect = yes }
+	}
+
+	cost = {
+		gold = 200
+		piety = {
+			value = {
+				value = 2000
+				#Traditionalists get a massive discount
+				if = {
+					limit = { faith = { has_doctrine_parameter = four_traditional_mamurs_recognized } }
+					multiply = 0.25
+				}
+			}
+		}
+	}
+
+	ai_potential = { root = { character_harthah_trigger = no } }
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#################################
+# Found the Southern Mamuramat	#
+# by Hapchazzard				#
+#################################
+
+found_southern_mamur_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = wardenite
+
+	ai_check_interval = 120
+
+	desc = found_southern_mamur_decision_desc
+	selection_tooltip = found_southern_mamur_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must be Wardenite.
+		has_religion = religion:wardenism_religion
+		#Must be in the vague region.
+		any_held_title = {
+			tier = tier_county
+			title_province = {
+				geographical_region = world_es_damota
+			}
+		}
+		#Can't already be a Mamur.
+		NOT = {
+			any_held_title = {
+				has_variable = attached_high_court
+			}
+		}
+		#The Southern Mamuramat mustn't already exist.
+		title:e_southern_mamuramat = { is_title_created = no }
+		#Can't be an Idealist or Traditionalist
+		faith = {
+			NOR = {
+				has_doctrine_parameter = no_mamurs_recognized
+				has_doctrine_parameter = four_traditional_mamurs_recognized
+			}
+		}
+		#If the faith recognizes only one Mamur, make sure that it doesn't already have an appropriate one, since we can't create new faiths currently to represent schisms
+		trigger_if = {
+			limit = { faith = { has_doctrine_parameter = one_mamur_recognized } }
+			NOT = {
+				faith = {
+					save_temporary_scope_as = character_faith
+					any_in_list = {
+						variable = recognized_high_court_list
+						has_variable = high_court_mamuramat
+						exists = var:high_court_mamuramat.holder
+						var:high_court_mamuramat.holder = { has_faith = scope:character_faith }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Should have a massive piety level.
+		piety_level >= max_piety_level
+		#Rules Damota
+		completely_controls_region = world_es_damota
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		#Has to be around for the ceremony.
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = founder
+		religion:wardenism_religion = { create_high_court_effect = { HIGH_COURT_SCOPE_NAME = southern_high_court MAMURAMAT_TITLE = e_southern_mamuramat } }
+		scope:southern_high_court = { add_several_high_court_seats_effect = { NUMBER = 10 } }
+		found_mamuramat_effect = { MAMURAMAT_TITLE = title:e_southern_mamuramat }
+		scope:founder = { leave_legal_tradition_effect = yes }
+		if = {
+			limit = { root.faith = { this = faith:asdraqi } }
+			root.faith = { activate_holy_site = southern_mamur }
+		}
+		if = {
+			limit = {
+				is_ai = no
+				exists = global_var:started_nomorehalfmeasures_achievement
+			}
+			set_global_variable = nomorehalfmeasures_mamur
+			GH_achiev_nomorehalfmeasures_check = yes
+		}
+	}
+
+	cost = {
+		gold = 200
+		piety = {
+			value = {
+				value = 2000
+				#Radicals get a massive discount
+				if = {
+					limit = { faith = { has_doctrine_parameter = mamuramat_dependent_on_faith_head_doctrine } }
+					multiply = 0.25
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#####################################
+# Found the Far Western	Mamuramat	#
+# by Hapchazzard					#
+#####################################
+
+found_far_western_mamur_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = wardenite
+
+	ai_check_interval = 120
+
+	desc = found_far_western_mamur_decision_desc
+	selection_tooltip = found_far_western_mamur_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must be Wardenite.
+		has_religion = religion:wardenism_religion
+		#Must be in the vague region.
+		any_held_title = {
+			tier = tier_county
+			OR = {
+				empire = title:e_amsari
+				empire = title:e_kemsar
+			}
+		}
+		#Can't already be a Mamur.
+		NOT = {
+			any_held_title = {
+				has_variable = attached_high_court
+			}
+		}
+		#The Far Western Mamuramat mustn't already exist.
+		title:e_far_western_mamuramat = { is_title_created = no }
+		#Can't be an Idealist or Traditionalist
+		faith = {
+			NOR = {
+				has_doctrine_parameter = no_mamurs_recognized
+				has_doctrine_parameter = four_traditional_mamurs_recognized
+			}
+		}
+		#If the faith recognizes only one Mamur, make sure that it doesn't already have an appropriate one, since we can't create new faiths currently to represent schisms
+		trigger_if = {
+			limit = { faith = { has_doctrine_parameter = one_mamur_recognized } }
+			NOT = {
+				faith = {
+					save_temporary_scope_as = character_faith
+					any_in_list = {
+						variable = recognized_high_court_list
+						has_variable = high_court_mamuramat
+						exists = var:high_court_mamuramat.holder
+						var:high_court_mamuramat.holder = { has_faith = scope:character_faith }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Should have a massive piety level.
+		piety_level >= max_piety_level
+		#Rules Damota
+		has_title = title:e_amsari
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		#Has to be around for the ceremony.
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = founder
+		religion:wardenism_religion = { create_high_court_effect = { HIGH_COURT_SCOPE_NAME = far_western_high_court MAMURAMAT_TITLE = e_far_western_mamuramat } }
+		scope:far_western_high_court = { add_several_high_court_seats_effect = { NUMBER = 10 } }
+		found_mamuramat_effect = { MAMURAMAT_TITLE = title:e_far_western_mamuramat }
+		scope:founder = { leave_legal_tradition_effect = yes }
+	}
+
+	cost = {
+		gold = 200
+		piety = {
+			value = {
+				value = 2000
+				#Radicals get a massive discount
+				if = {
+					limit = { faith = { has_doctrine_parameter = mamuramat_dependent_on_faith_head_doctrine } }
+					multiply = 0.25
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#################################
+# Found a Continental Mamuramat	#
+# by Hapchazzard				#
+#################################
+
+found_new_mamuramat_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = wardenite
+
+	ai_check_interval = 120
+
+	desc = found_new_mamuramat_decision_desc
+	selection_tooltip = found_new_mamuramat_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must be Wardenite.
+		has_religion = religion:wardenism_religion
+		#Must not be in Sarradon.
+		exists = capital_county
+		capital_county.title_province = {
+			NOR = {
+				geographical_region = GH_graphical_sarradon
+				geographical_region = GH_graphical_damota
+			}
+		}
+		#Can't already be a Mamur.
+		NOT = {
+			any_held_title = {
+				OR = {
+					has_variable = attached_high_court
+					has_variable = attached_high_court
+				}
+			}
+		}
+		#The Continental Mamuramat mustn't already exist.
+		title:e_continental_mamuramat = { is_title_created = no }
+		#Can't be an Idealist or Traditionalist
+		faith = {
+			NOR = {
+				has_doctrine_parameter = no_mamurs_recognized
+				has_doctrine_parameter = four_traditional_mamurs_recognized
+			}
+		}
+		#If the faith recognizes only one Mamur, make sure that it doesn't already have an appropriate one, since we can't create new faiths currently to represent schisms
+		trigger_if = {
+			limit = { faith = { has_doctrine_parameter = one_mamur_recognized } }
+			NOT = {
+				faith = {
+					save_temporary_scope_as = character_faith
+					any_in_list = {
+						variable = recognized_high_court_list
+						has_variable = high_court_mamuramat
+						exists = var:high_court_mamuramat.holder
+						var:high_court_mamuramat.holder = { has_faith = scope:character_faith }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Should have a massive piety level.
+		piety_level >= max_piety_level
+		#Rules an empire
+		highest_held_title_tier = tier_empire
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		#Has to be around for the ceremony.
+		is_imprisoned = no
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = founder
+		#create_dynamic_title = {
+		#	tier = empire
+		#	name = GENERIC_MAMURAMAT_NAME
+		#}
+		title:e_continental_mamuramat = {
+			#set_title_name = GENERIC_MAMURAMAT_NAME
+			set_color_from_title = root.primary_title
+		}
+		religion:wardenism_religion = { create_high_court_effect = { HIGH_COURT_SCOPE_NAME = continental_mamuramat MAMURAMAT_TITLE = e_continental_mamuramat } }
+		scope:continental_mamuramat = { add_several_high_court_seats_effect = { NUMBER = 10 } }
+		found_mamuramat_effect = { MAMURAMAT_TITLE = title:e_continental_mamuramat }
+		scope:founder = { leave_legal_tradition_effect = yes }
+	}
+
+	cost = {
+		gold = 200
+		piety = {
+			value = {
+				value = 2000
+				#Radicals get a massive discount
+				if = {
+					limit = { faith = { has_doctrine_parameter = mamuramat_dependent_on_faith_head_doctrine } }
+					multiply = 0.25
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#################################
+# Wardenite Reclamation Decisions
+# By Mayor
+wardenite_mamur_reclaim_kotserion_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	
+	desc = wardenite_mamur_reclaim_kotserion_decision_desc
+	selection_tooltip = wardenite_mamur_reclaim_kotserion_decision_tt
+	
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			NOT = {
+				has_variable = kotserion_retaken
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:wardenite_mamur_reclaim_kotserion_decision
+			}
+		}
+	}
+	is_valid = {
+		custom_description = {
+			text = wardenite_mamur_reclaim_kotserion_decision_is_valid
+			title:k_mukhtab = {
+				OR = {
+					holder = root
+					holder.liege = root
+				}
+				NOT = {
+					any_de_jure_county_holder = {
+						religion = religion:agionism_religion
+						NOT = { is_vassal_or_below_of = root }
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		add_prestige = 250
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_1
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_2
+		remove_character_flag = declared_major_religious_war_flag
+		add_prestige = 250
+		title:e_central_mamuramat = {
+			if = {
+				limit = {
+					current_date < 1300.1.1
+				}
+			set_variable = {
+				name = kotserion_retaken_gen_1
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1330.1.1
+				}
+			set_variable = {
+				name = kotserion_retaken_gen_2
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1360.1.1
+				}			
+			set_variable = {
+				name = kotserion_retaken_gen_3
+				}
+			}
+		}
+		title:e_central_mamuramat = {
+			set_variable = {
+				name = kotserion_retaken
+				}
+		}
+		random_ruler = {
+			limit = {
+				has_religion = religion:agionism_religion
+				government_has_flag = government_is_landed_order
+				highest_held_title_tier >= tier_kingdom
+			}
+			add_character_modifier = kotserion_exiles
+			primary_title = {
+				set_variable = {
+					name = kotserion_refugees
+					years = 50
+				}
+			}
+		}
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:wardenite_mamur_reclaim_kotserion_decision
+		}
+	}
+}
+wardenite_mamur_reclaim_sianna_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = wardenite_mamur_reclaim_sianna_decision_desc
+	selection_tooltip = wardenite_mamur_reclaim_sianna_decision_tt
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			has_variable = kotserion_retaken
+			NOT = {
+				has_variable = sianna_retaken
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:wardenite_mamur_reclaim_sianna_decision
+			}
+		}
+	}
+	is_valid = {
+		custom_description = {
+			text = wardenite_mamur_reclaim_sianna_decision_is_valid
+			title:k_emporia = {
+				OR = {
+					holder = root
+					holder.liege = root
+				}
+				NOT = {
+					any_de_jure_county_holder = {
+						religion = religion:agionism_religion
+						NOT = { is_vassal_or_below_of = root }
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_1
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_2
+		remove_character_flag = declared_major_religious_war_flag
+		add_prestige = 500		
+		title:e_central_mamuramat = {
+			if = {
+				limit = {
+					current_date < 1300.1.1
+				}
+			
+			set_variable = {
+				name = sianna_retaken_gen_1
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1330.1.1
+				}
+			
+			set_variable = {
+				name = sianna_retaken_gen_2
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1360.1.1
+				}
+			
+			set_variable = {
+				name = sianna_retaken_gen_3
+				}
+			}
+		}
+		title:e_central_mamuramat = {
+			set_variable = {
+				name = sianna_retaken
+				}
+		}
+		random_ruler = {
+			limit = {
+				has_religion = religion:agionism_religion
+				government_has_flag = government_is_landed_order
+				highest_held_title_tier >= tier_kingdom
+			}
+			add_character_modifier = sianna_exiles
+			primary_title = {
+				set_variable = {
+					name = sianna_refugees
+					years = 50
+				}
+			}
+		}
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:wardenite_mamur_reclaim_sianna_decision
+		}
+	}
+}
+wardenite_mamur_reclaim_skiadhadhes_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = wardenite_mamur_reclaim_gahzi_decision_desc
+	selection_tooltip = wardenite_mamur_reclaim_skiadhadhes_decision_tt
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			has_variable = gahzi_retaken
+			not = {
+				has_variable = skiadhadhes_retaken
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:wardenite_mamur_reclaim_skiadhadhes_decision
+			}
+		}
+	}
+	is_valid = {
+		title:k_thaliteia = {
+			OR = {
+				holder = root
+				holder.liege = root
+			}
+			NOT = {
+				any_de_jure_county_holder = {
+					religion = religion:agionism_religion
+					NOT = { is_vassal_or_below_of = root }
+				}
+			}
+		}
+	}
+	effect = {
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_1
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_2
+		custom_tooltip = wardenite_mamur_reclaim_skiadhadhes_decision_reward_3
+		remove_character_flag = declared_major_religious_war_flag	
+		add_prestige = 1500
+		title:e_central_mamuramat = {
+			if = {
+				limit = {
+					current_date < 1300.1.1
+				}
+			
+			set_variable = {
+				name = skiadhadhes_retaken_gen_1
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1330.1.1
+				}
+			
+			set_variable = {
+				name = skiadhadhes_retaken_gen_2
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1360.1.1
+				}
+			
+			set_variable = {
+				name = skiadhadhes_retaken_gen_3
+				}
+			}
+		}
+		title:e_central_mamuramat = {
+			set_variable = {
+				name = skiadhadhes_retaken
+				}
+		}
+		random_ruler = {
+			limit = {
+				has_religion = religion:agionism_religion
+				government_has_flag = government_is_landed_order
+				highest_held_title_tier >= tier_kingdom
+			}
+			add_character_modifier = skiadhadhes_exiles
+			primary_title = {
+				set_variable = {
+					name = skiadhadhes_refugees
+					years = 50
+				}
+			}
+		}
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:wardenite_mamur_reclaim_skiadhadhes_decision
+		}
+	}
+}
+wardenite_mamur_reclaim_chegea_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = wardenite_mamur_reclaim_chegea_decision_desc
+	selection_tooltip = wardenite_mamur_reclaim_chegea_decision_tt
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			has_variable = skiadhadhes_retaken
+			NOT = {
+				has_variable = chegea_retaken
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:wardenite_mamur_reclaim_chegea_decision
+			}
+		}
+	}
+	is_valid = {
+		#title:k_dhami = {
+		#	OR = {
+		#		holder = root
+		#		holder.liege = root
+		#	}
+		#	NOT = {
+		#		any_de_jure_county_holder = {
+		#			religion = religion:agionism_religion
+		#			NOT = { is_vassal_or_below_of = root }
+		#		}
+		#	}
+		#}
+		title:k_eastern_frontier = {
+			OR = {
+				holder = root
+				holder.liege = root
+			}
+			NOT = {
+				any_de_jure_county_holder = {
+					religion = religion:agionism_religion
+					NOT = { is_vassal_or_below_of = root }
+				}
+			}
+		}
+	}
+	effect = {
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_1
+		custom_tooltip = wardenite_mamur_reclaim_decision_reward_2
+		remove_character_flag = declared_major_religious_war_flag
+		add_prestige = 1500		
+		title:e_central_mamuramat = {
+			if = {
+				limit = {
+					current_date < 1300.1.1
+				}
+			
+			set_variable = {
+				name = chegea_retaken_gen_1
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1330.1.1
+				}
+			
+			set_variable = {
+				name = chegea_retaken_gen_2
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1360.1.1
+				}
+			
+			set_variable = {
+				name = chegea_retaken_gen_3
+				}
+			}
+		}
+		title:e_central_mamuramat = {
+			set_variable = {
+				name = chegea_retaken
+				}
+		}
+		random_ruler = {
+			limit = {
+				has_religion = religion:agionism_religion
+				government_has_flag = government_is_landed_order
+				highest_held_title_tier >= tier_kingdom
+			}
+			add_character_modifier = chegea_exiles
+			primary_title = {
+				set_variable = {
+					name = chegea_refugees
+					years = 50
+				}
+			}
+		}
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:wardenite_mamur_reclaim_chegea_decision
+		}
+	}
+}
+wardenite_mamur_reclaim_almubid_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ruins.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = wardenite_mamur_reclaim_almubid_decision_desc
+	selection_tooltip = wardenite_mamur_reclaim_almubid_decision_tt
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			has_variable = chegea_retaken
+			NOT = {
+				has_variable = almubid_retaken
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:wardenite_mamur_reclaim_almubid_decision
+			}
+		}
+	}
+	is_valid = {
+		title:k_isle_of_visions = {
+			OR = {
+				holder = root
+				holder.liege = root
+			}
+			NOT = {
+				any_de_jure_county_holder = {
+					religion = religion:agionism_religion
+					NOT = { is_vassal_or_below_of = root}
+				}
+			}
+		}
+	}
+	effect = {
+		custom_tooltip = wardenite_mamur_reclaim_almubid_decision_reward_3
+		#if = {
+		#	limit = {
+		#		exists = dynasty	
+		#	}
+		#	dynasty = {
+		#		add_dynasty_modifier = age_of_mamur
+		#	}
+		#}
+		give_nickname = nick_the_redeemer
+		add_prestige = 1500
+		title:e_central_mamuramat = {
+			if = {
+				limit = {
+					current_date < 1300.1.1
+				}
+			
+			set_variable = {
+				name = almubid_retaken_gen_1
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1330.1.1
+				}
+			
+			set_variable = {
+				name = almubid_retaken_gen_2
+				}
+			}
+			else_if = {
+				limit = {
+					current_date < 1360.1.1
+				}
+			
+			set_variable = {
+				name = almubid_retaken_gen_3
+				}
+			}
+		}
+		title:e_central_mamuramat = {
+			set_variable = {
+				name = almubid_retaken
+				}
+		}
+		random_ruler = {
+			limit = {
+				has_religion = religion:agionism_religion
+				government_has_flag = government_is_landed_order
+				highest_held_title_tier >= tier_kingdom
+			}
+			add_character_modifier = almubid_exiles
+			primary_title = {
+				set_variable = {
+					name = almubid_refugees
+					years = 50
+				}
+			}
+		}
+		#Can only be done once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:wardenite_mamur_reclaim_almubid_decision
+		}
+	}
+}
+########################################
+# Wardenite Reassert Authority Decisions
+# By Mayor
+wardenite_mamur_reassert_authority_kathsiti = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = wardenite_mamur_reassert_authority_kathsiti_desc
+	selection_tooltip = wardenite_mamur_reassert_authority_kathsiti_tt
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			has_variable = sianna_retaken
+		}
+		NOT = {
+			title:e_central_mamuramat = {
+				has_variable = demanded_kathsiti_submission
+			}
+		}
+	}
+	is_valid = {
+		is_at_war = no
+	}
+	effect = {
+		every_ruler = {
+			limit = {
+				is_independent_ruler = yes
+				capital_county = {
+					title:k_uraghad = {
+						is_de_jure_liege_or_above_target = prev					
+					}
+				}
+				has_religion = religion:wardenism_religion
+			}
+			trigger_event = {
+				id = wardenite_decisions.0001
+				days = { 10 20 }
+			}
+		}
+		save_scope_as = triumphant_mamur
+		title:e_central_mamuramat  = {
+			set_variable = demanded_kathsiti_submission
+		}
+	}
+}
+
+#wardenite_mamur_reassert_authority_harthah = {
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+#	}
+#	decision_group_type = major
+#	ai_check_interval = 0
+#	desc = wardenite_mamur_reassert_authority_harthah_desc
+#	selection_tooltip = wardenite_mamur_reassert_authority_harthah_tt
+#	is_shown = {
+#		is_ruler = yes
+#		is_independent_ruler = yes
+#		has_title = title:e_central_mamuramat
+#		title:e_central_mamuramat = {
+#			has_variable = skiadhadhes_retaken
+#		}
+#		NOT = {
+#			title:e_central_mamuramat  = {
+#				has_variable = demanded_harthah_submission
+#			}
+#		}
+#	}
+#	is_valid = {
+#		is_at_war = no
+#	}
+#	effect = {
+#		every_ruler = {
+#			limit = {
+#				is_independent_ruler = yes
+#				primary_title = {
+#					any_this_title_or_de_jure_above = {
+#						this = title:e_kekhenemhat
+#					}
+#				}
+#				has_religion = religion:wardenism_religion
+#			}
+#			trigger_event = {
+#				id = wardenite_decisions.0001
+#				days = { 10 20 }
+#			}
+#		}
+#		save_scope_as = triumphant_mamur
+#		title:e_central_mamuramat  = {
+#			set_variable = demanded_harthah_submission
+#		}
+#	}
+#}
+wardenite_mamur_reassert_authority_ayyar = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = wardenite_mamur_reassert_authority_ayyar_desc
+	selection_tooltip = wardenite_mamur_reassert_authority_ayyar_tt
+	is_shown = {
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:e_central_mamuramat
+		title:e_central_mamuramat = {
+			has_variable = almubid_retaken
+		}
+		NOT = {
+			title:e_central_mamuramat  = {
+				has_variable = demanded_ayyar_submission
+			}
+		}
+	}
+	is_valid = {
+		is_at_war = no
+	}
+	effect = {
+		every_ruler = {
+			limit = {
+				is_independent_ruler = yes
+				capital_county = {
+					title:e_ayyar = {
+						is_de_jure_liege_or_above_target = prev					
+					}
+				}
+				has_religion = religion:wardenism_religion
+			}
+			trigger_event = {
+				id = wardenite_decisions.0001
+				days = { 10 20 }
+			}
+		}
+		save_scope_as = triumphant_mamur
+		title:e_central_mamuramat  = {
+			set_variable = demanded_ayyar_submission
+		}
+	}
+}
+
+######################
+#Loot Tabik Betemisit
+#By UltimateVictory
+
+loot_tabik_betemisit = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ruins.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 120
+	desc = loot_tabik_betemisit_desc
+	
+	is_shown = {
+		religion = religion:wardenism_religion
+		any_held_title = {
+			tier = tier_county
+			title_province = {
+				geographical_region = world_es_damota
+			}
+		}
+		title:c_zahali = {
+			title_province = {
+				has_building = 01_tabik_betemisit
+			}
+		}
+	}
+	
+	is_valid = {
+		has_title = title:c_zahali
+	}
+	
+	effect = {
+		title:c_zahali = {
+			title_province = {
+				remove_building = 01_tabik_betemisit
+				add_special_building = 02_tabik_betemisit
+			}
+			change_county_control = -10
+		}
+		add_gold = 500
+
+		if = {
+			limit = {
+				is_ai = no
+				exists = global_var:started_nomorehalfmeasures_achievement
+			}
+			set_global_variable = nomorehalfmeasures_looted
+			GH_achiev_nomorehalfmeasures_check = yes
+		}
+	}
+}

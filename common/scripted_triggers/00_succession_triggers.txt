@@ -1,0 +1,40 @@
+﻿#Special succession types
+#If adding new types to the decision, use a trigger, otherwise they may break if the culture is split.
+
+special_succession_witengamot_trigger = {
+	culture = { has_cultural_parameter = witenagemot_succession_enabled }
+}
+
+special_succession_thing_trigger = {
+	culture = { has_cultural_parameter = scandinavian_elective_enabled }
+}
+
+special_succession_tanistry_trigger = {
+	culture = { has_cultural_pillar = heritage_partic }
+}
+
+special_succession_jirga_trigger = {
+	culture = { has_cultural_parameter = tribal_elective_enabled }
+}
+
+historical_succession_access_single_heir_succession_law_trigger = {
+	OR = {
+		AND = {
+			culture = { has_cultural_pillar = heritage_marcher }
+			highest_held_title_tier >= tier_kingdom
+		}
+		government_has_flag = government_is_landed_order
+		government_has_flag = government_is_wasteland	# GH URGENT: Figure out if this is really the stopgap solution we want to use; currently just used to prevent a thousand startup errors when entering the map
+	}
+	NOT = { government_allows = administrative }
+}
+
+historical_succession_access_single_heir_succession_law_youngest_trigger = {
+	NOT = { government_allows = administrative }
+	OR = {
+		#has_title = title:e_byzantium
+		#Add any subsequent exceptions here.
+	}
+}
+
+historical_succession_access_single_heir_dynasty_house_trigger = { GH_historical_succession_access_single_heir_dynasty_house_trigger = yes }

@@ -1,0 +1,1359 @@
+﻿
+generate_scam_effect = {
+	reserve_scam_info_storage_effect = { SCOPE_NAME = $SCOPE_NAME$ }
+	if = {
+		limit = { exists = scope:$SCOPE_NAME$ }
+		scope:$SCOPE_NAME$ = {
+			pick_random_scam_skill_effect = yes
+			pick_random_ai_value_effect = { AI_VALUE_NUMBER = first }
+		}
+	}
+}
+
+# Generates three scams for a standard hoodwink event. 
+# Note that each takes up 1 province for relevant info, which means that theoretically one can run out of space
+# However, this would require so much hoodwinks initiated at the same time as to make it effectively impossible
+generate_event_scam_options_effect = {
+	generate_scam_effect = { SCOPE_NAME = first_scam_option }
+	generate_scam_effect = { SCOPE_NAME = second_scam_option }
+	generate_scam_effect = { SCOPE_NAME = third_scam_option }
+}
+
+# Reserve a province to serve as short-term storage for scam-related info
+reserve_scam_info_storage_effect = {
+	random_province = {
+		limit = { NOT = { has_variable = reserved_for_scam_information } }
+		set_variable = {
+			name = reserved_for_scam_information
+			days = 1
+		}
+		set_variable = {
+			name = scam_base_difficulty
+			value = flag:easy_scam
+			days = 1
+		}
+		# We set intrigue as the default skill
+		set_variable = {
+			name = scam_skill
+			value = flag:intrigue
+			days = 1
+		}
+		save_scope_as = $SCOPE_NAME$
+	}
+}
+
+# Assigns a random skill to a scam
+pick_random_scam_skill_effect = {
+	random_list = {
+		# Diplomacy, intrigue and stewardship-based scams are the most common
+		3 = {
+			set_variable = {
+				name = scam_skill
+				value = flag:diplomacy
+				days = 1
+			}
+		}
+		3 = {
+			set_variable = {
+				name = scam_skill
+				value = flag:intrigue
+				days = 1
+			}
+		}
+		3 = {
+			set_variable = {
+				name = scam_skill
+				value = flag:stewardship
+				days = 1
+			}
+		}
+		# Martial and learning scams less so, prowess are the most rare
+		2 = {
+			set_variable = {
+				name = scam_skill
+				value = flag:martial
+				days = 1
+			}
+		}
+		2 = {
+			set_variable = {
+				name = scam_skill
+				value = flag:learning
+				days = 1
+			}
+		}
+		1 = {
+			set_variable = {
+				name = scam_skill
+				value = flag:prowess
+				days = 1
+			}
+		}
+	}
+}
+
+# Minor utility scripted effect that adds an ai_value to a random list, if possible
+add_to_ai_value_tombola_effect = {
+	# It is possible to get the same ai value several times in a scam, though not two inverse ai_values
+	if = {
+		limit = { 
+			NOT = {
+				any_in_list = {
+					variable = already_picked_scam_ai_values
+					this = flag:$AI_VALUE$_inverse
+				}
+			}
+		}
+		add_to_variable_list = {
+			name = temporary_ai_value_tombola_list
+			target = flag:$AI_VALUE$_direct
+		}
+	}
+	if = {
+		limit = { 
+			NOT = {
+				any_in_list = {
+					variable = already_picked_scam_ai_values
+					this = flag:$AI_VALUE$_direct
+				}
+			}
+		}
+		add_to_variable_list = {
+			name = temporary_ai_value_tombola_list
+			target = flag:$AI_VALUE$_inverse
+		}
+	}
+}
+
+pick_ai_value_from_tombola_effect = {
+	if = {
+		limit = { has_variable_list = temporary_ai_value_tombola_list }
+		random_in_list = {
+			variable = temporary_ai_value_tombola_list
+			save_temporary_scope_as = picked_ai_value
+		}
+		add_to_variable_list = {
+			name = scam_ai_values
+			target = scope:picked_ai_value
+		}
+		set_variable = {
+			name = $AI_VALUE_NUMBER$_ai_value
+			value = scope:picked_ai_value
+		}
+	}
+	clear_variable_list = temporary_ai_value_tombola_list
+}
+
+# Picks a random AI value against which the scam is extra effective
+pick_random_ai_value_effect = {
+	add_to_ai_value_tombola_effect = { AI_VALUE = boldness }
+	add_to_ai_value_tombola_effect = { AI_VALUE = compassion }
+	add_to_ai_value_tombola_effect = { AI_VALUE = energy }
+	add_to_ai_value_tombola_effect = { AI_VALUE = honor }
+	#add_to_ai_value_tombola_effect = { AI_VALUE = rationality }
+	add_to_ai_value_tombola_effect = { AI_VALUE = sociability }
+	add_to_ai_value_tombola_effect = { AI_VALUE = vengefulness }
+	add_to_ai_value_tombola_effect = { AI_VALUE = greed }
+	#add_to_ai_value_tombola_effect = { AI_VALUE = zeal }
+	pick_ai_value_from_tombola_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ }
+}
+
+upgrade_scam_trait_counter_effect = {
+	add_to_variable_list = { name = already_hit_traits target = flag:$TRAIT$ }
+	set_variable = {
+		name = $AI_VALUE_NUMBER$_trait 
+		value = flag:$TRAIT$
+	}
+	custom_tooltip = scam_$TRAIT$_counter_tooltip
+	
+	if = {
+		limit = { NOT = { has_variable = second_ai_value } }
+		pick_random_ai_value_effect = { AI_VALUE_NUMBER = second }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = third_ai_value } }
+		pick_random_ai_value_effect = { AI_VALUE_NUMBER = third }
+	}
+}
+
+ai_value_trait_table_effect = {
+	random_list = {
+		20 = {
+			# Nothing
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = brave }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:brave
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:boldness_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = brave }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = craven }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:craven
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:boldness_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = craven }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = calm }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:calm
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:boldness_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = calm }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = wrathful }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:wrathful
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = wrathful }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = chaste }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:chaste
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = chaste }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = lustful }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:lustful
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 2
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = lustful }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = content }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:content
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = content }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = ambitious }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:ambitious
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = ambitious }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = diligent }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:diligent
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = diligent }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = lazy }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:lazy
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = lazy }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = fickle }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:fickle
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = fickle }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = stubborn }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:stubborn
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = stubborn }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = forgiving }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:forgiving
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = forgiving }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = vengeful }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:vengeful
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = vengeful }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = generous }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:generous
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = generous }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = greedy }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:greedy
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = greedy }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = gregarious }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:gregarious
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = gregarious }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = shy }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:shy
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = shy }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = honest }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:honest
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = honest }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = deceitful }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:deceitful
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = deceitful }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = humble }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:humble
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 2
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = humble }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = arrogant }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:arrogant
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 2
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = arrogant }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = just }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:just
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = just }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = arbitrary }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:arbitrary
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = arbitrary }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = patient }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:patient
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:boldness_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = patient }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = impatient }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:impatient
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = impatient }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = temperate }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:temperate
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = temperate }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = gluttonous }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:gluttonous
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:energy_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = gluttonous }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = trusting }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:trusting
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = trusting }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = paranoid }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:paranoid
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:vengefulness_direct
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = paranoid }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = compassionate }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:compassionate
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_direct
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:greed_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = compassionate }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = callous }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:callous
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 1.5
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 0.8
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:sociability_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = callous }
+		}
+		0 = {
+			trigger = { 
+				scope:recipient = { has_trait = sadistic }
+				NOT = { 
+					any_in_list = {  
+						list = already_hit_traits
+						this = flag:sadistic
+					}
+				}
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 3
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:compassion_inverse
+			}
+			modifier = {
+				add = {
+					value = root.intrigue
+					multiply = 2
+				}
+				var:$AI_VALUE_NUMBER$_ai_value = flag:honor_inverse
+			}
+			upgrade_scam_trait_counter_effect = { AI_VALUE_NUMBER = $AI_VALUE_NUMBER$ TRAIT = sadistic }
+		}
+	}
+}
+
+pick_scam_effect = {
+	scope:$SCAM$ = { save_scope_as = scam_being_executed }
+	custom_tooltip = pick_scam_tt
+	custom_tooltip = scam_first_attribute_tt
+	custom_tooltip = planning_phase_tt
+	trigger_event = philantrianist.0022
+}
+
+execute_scam_effect = {
+	if = {
+		limit = { exists = scope:$SCAM$ }
+		custom_tooltip = planning_scam_tt
+		custom_tooltip = scam_first_attribute_tt
+		if = {
+			limit = { scope:$SCAM$ = { has_variable = second_ai_value } }
+			custom_tooltip = scam_second_attribute_tt
+		}
+		if = {
+			limit = { scope:$SCAM$ = { has_variable = third_ai_value } }
+			custom_tooltip = scam_third_attribute_tt
+		}
+		execute_scam_duel_wrapper_effect = { SCAM = $SCAM$ }
+	}
+}
+
+execute_scam_duel_wrapper_effect = {
+	execute_scam_duel_effect = { SCAM = $SCAM$ SKILL = diplomacy }
+	execute_scam_duel_effect = { SCAM = $SCAM$ SKILL = intrigue }
+	execute_scam_duel_effect = { SCAM = $SCAM$ SKILL = stewardship }
+	execute_scam_duel_effect = { SCAM = $SCAM$ SKILL = martial }
+	execute_scam_duel_effect = { SCAM = $SCAM$ SKILL = learning }
+	execute_scam_duel_effect = { SCAM = $SCAM$ SKILL = prowess }
+}
+
+execute_scam_duel_effect = {
+	if = {
+		limit = {
+			scope:$SCAM$ = {
+				exists = scope:scam_skill 
+				scope:scam_skill = flag:$SKILL$
+			}
+		}
+		duel = {
+			skill = $SKILL$
+			target = scope:recipient
+			100 = {
+				desc = hoodwink.success_tt
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = 7
+					min = -99
+				}
+				modifier = {
+					add = scam_ai_value_factor_value
+				}
+				root = {
+					#trigger_event = philantrianist.0013
+					show_as_tooltip = {
+						scam_reward_effect = yes
+					}
+				}
+			}
+			100 = {
+				desc = hoodwink.failure_tt
+				compare_modifier = {
+					value = scope:duel_value
+					multiplier = -7
+					min = -99
+				}
+				modifier = {
+					add = scam_base_difficulty_value
+				}
+				root = {
+					#trigger_event = philantrianist.0014
+				}
+			}
+		}
+	}
+}
+
+scam_reward_effect = {
+	save_scope_as = scam_organizer
+	scope:recipient = {
+		pay_short_term_gold = {
+			target = scope:scam_organizer
+			gold = scam_gold_payout_value
+		}
+	}
+}
+
+# 'Upgrades' the scam by attaching an actual trait to one of the targeted AI values of the scam, and adding an additional targeted value
+upgrade_scam_effect = {
+	if = {
+		limit = { NOT = { exists = scope:first_scam_trait } }
+		if = {
+			limit = { scope:$SCAM$ = { has_variable = third_ai_value } }
+			ai_value_trait_table_effect = { AI_VALUE_NUMBER = third }
+		}
+		else_if = {
+			limit = { scope:$SCAM$ = { has_variable = second_ai_value } }
+			ai_value_trait_table_effect = { AI_VALUE_NUMBER = second }
+		}
+		else = {
+			scope:$SCAM$ = {
+				ai_value_trait_table_effect = { AI_VALUE_NUMBER = first }
+			}
+		}
+	}
+}
+
+# Clears out all scam-related info from a province
+cleanup_scam_info_effect = {
+	if = {
+		limit = { has_variable = reserved_for_scam_information }
+		remove_variable = reserved_for_scam_information
+	}
+	if = {
+		limit = { has_variable = scam_base_difficulty }
+		remove_variable = scam_base_difficulty
+	}
+	if = {
+		limit = { has_variable = scam_skill }
+		remove_variable = scam_skill
+	}
+	if = {
+		limit = { has_variable_list = temporary_ai_value_tombola_list }
+		clear_variable_list = temporary_ai_value_tombola_list
+	}
+	if = {
+		limit = { has_variable_list = scam_ai_values }
+		clear_variable_list = scam_ai_values
+	}
+}

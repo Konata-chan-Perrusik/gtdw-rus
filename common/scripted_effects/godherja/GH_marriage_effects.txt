@@ -1,0 +1,90 @@
+﻿#Various effect for the Godherja Alliance Mechanic
+create_defensive_alliance = {
+	allow_alliance = $target$
+	add_to_variable_list = {
+		name = defensive_alliance_character_list
+		target = $target$
+	}	
+	$target$ = {
+		add_to_variable_list = {
+			name = defensive_alliance_character_list
+			target = prev
+		}
+	}
+}
+
+break_defensive_alliance = {
+	break_alliance = $target$
+	remove_list_variable = {
+		name = defensive_alliance_character_list
+		target = $target$
+	}	
+	$target$ = {
+		remove_list_variable = {
+			name = defensive_alliance_character_list
+			target = prev
+		}
+	}
+}
+
+remove_marriage_truce = {
+	$CHARACTER$ = { save_scope_as = character_truce }
+	cancel_truce_both_ways = $CHARACTER$
+	send_interface_toast = {
+		type = event_toast_effect_good
+		title = remove_marriage_truce_effect.toast
+		left_icon = prev
+		right_icon = scope:character_truce
+	}	
+	remove_opinion = {
+		modifier = marriage_truce_opinion	
+		target = $CHARACTER$
+	}
+	$CHARACTER$ = {
+		remove_opinion = {
+			modifier = marriage_truce_opinion	
+			target = prev
+		}
+	}
+}
+
+
+gh_create_full_alliance_effect = { 
+	# For locs only
+	$CHARACTER$ = { save_scope_as = character }
+	$ALLY$ = { save_scope_as = ally }
+	
+	#If already have a defensive alliance, no need to create one, just remove the variable
+	if = {
+		limit = { 
+			$CHARACTER$ = {
+				is_target_in_variable_list = {
+					name = defensive_alliance_character_list
+					target = $ALLY$
+				}
+			}
+		}
+		$CHARACTER$ = {
+			remove_list_variable = {
+				name = defensive_alliance_character_list
+				target = $ALLY$
+			}
+			send_interface_toast = {
+				type = event_toast_effect_good
+				title = gh_create_full_alliance_effect.toast
+				left_icon = $CHARACTER$
+				right_icon = $ALLY$		
+				custom_tooltip = gh_create_full_alliance_effect.toast.tt
+			}			
+		}
+		$ALLY$ = {
+			remove_list_variable = {
+				name = defensive_alliance_character_list
+				target = $CHARACTER$
+			}
+		}
+
+	}
+	#If not create the alliance from scratch
+	else = { $CHARACTER$ = { allow_alliance = $ALLY$ } }
+}

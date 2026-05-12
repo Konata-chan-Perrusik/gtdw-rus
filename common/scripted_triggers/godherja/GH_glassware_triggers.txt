@@ -1,0 +1,143 @@
+﻿glassware_inspiration_difficulty_easy = { # Easy Glassware Artifact Types
+	OR = {
+		scope:glassware_type ?= flag:artifact_glassware_type_beads
+		var:artifact_glassware_type ?= flag:artifact_glassware_type_beads
+		scope:glassware_type ?= flag:artifact_glassware_type_flask
+		var:artifact_glassware_type ?= flag:artifact_glassware_type_flask
+	}
+}
+
+glassware_inspiration_difficulty_medium = { # Challenging Glassware Artifact types
+	OR = {
+		scope:glassware_type ?= flag:artifact_glassware_type_beaker
+		var:artifact_glassware_type ?= flag:artifact_glassware_type_beaker
+		scope:glassware_type ?= flag:artifact_glassware_type_ewer
+		var:artifact_glassware_type ?= flag:artifact_glassware_type_ewer
+	}
+}
+
+glassware_inspiration_difficulty_hard = { # Hard Glassware Artifact types
+	OR = {
+		scope:glassware_type ?= flag:artifact_glassware_type_vase
+		var:artifact_glassware_type ?= flag:artifact_glassware_type_vase
+		scope:glassware_type ?= flag:artifact_glassware_type_sculpture
+		var:artifact_glassware_type ?= flag:artifact_glassware_type_sculpture
+	}
+}
+
+glassware_inspiration_difficulty_easy_check = { # Character is an Novice glassmith
+	trigger_if = { # Primarily events
+		limit = { exists = scope:inspiration_owner }
+		scope:inspiration_owner = {
+			has_trait_xp = {
+				trait = gh_lifestyle_glassmith
+				value >= glassware_inspiration_difficulty_easy_value
+			}
+		}
+	}
+	trigger_else = { # Primarily Personal Inspiration
+		has_trait_xp = {
+			trait = gh_lifestyle_glassmith
+			value >= glassware_inspiration_difficulty_easy_value
+		}
+	}
+}
+
+glassware_inspiration_difficulty_medium_check = { # Character is an Amateur glassmith
+	trigger_if = { # Primarily events
+		limit = { exists = scope:inspiration_owner }
+		scope:inspiration_owner = {
+			has_trait_xp = {
+				trait = gh_lifestyle_glassmith
+				value >= glassware_inspiration_difficulty_medium_value
+			}
+		}
+	}
+	trigger_else = { # Primarily Personal Inspiration
+		has_trait_xp = {
+			trait = gh_lifestyle_glassmith
+			value >= glassware_inspiration_difficulty_medium_value
+		}
+	}
+}
+
+glassware_inspiration_difficulty_hard_check = { # Character is a Master glassmith
+	trigger_if = { # Primarily events
+		limit = { exists = scope:inspiration_owner }
+		scope:inspiration_owner = {
+			has_trait_xp = {
+				trait = gh_lifestyle_glassmith
+				value >= glassware_inspiration_difficulty_hard_value
+			}
+		}
+	}
+	trigger_else = { # Primarily Personal Inspiration
+		has_trait_xp = {
+			trait = gh_lifestyle_glassmith
+			value >= glassware_inspiration_difficulty_hard_value
+		}
+	}
+}
+
+glassware_inspiration_difficulty_far_above_check = { # Artifact type is far above Character's skill level
+	OR = {
+		AND = { # Hard Artifact type and below Amateur skill level
+			glassware_inspiration_difficulty_hard = yes
+			glassware_inspiration_difficulty_medium_check = no
+		}
+		AND = { # Challenging Artifact type and below Novice skill level
+			glassware_inspiration_difficulty_medium = yes
+			glassware_inspiration_difficulty_easy_check = no
+		}
+	}
+}
+
+glassware_inspiration_difficulty_above_check = { # Artifact type is above Character's skill level
+	OR = {
+		AND = { # Hard Artifact type and below Master skill level
+			glassware_inspiration_difficulty_hard = yes
+			glassware_inspiration_difficulty_hard_check = no
+		}
+		AND = { # Challenging Artifact type and below Amateur skill level
+			glassware_inspiration_difficulty_medium = yes
+			glassware_inspiration_difficulty_medium_check = no
+		}
+		AND = { # Easy Artifact type and below Novice skill level
+			glassware_inspiration_difficulty_easy = yes
+			glassware_inspiration_difficulty_easy_check = no
+		}
+	}
+}
+
+glassware_inspiration_difficulty_even_check = { # Artifact type is at Character's skill level
+	OR = {
+		AND = { # Hard Artifact type and at Master skill level
+			glassware_inspiration_difficulty_hard_check = yes
+			glassware_inspiration_difficulty_hard = yes
+		}
+		AND = { # Challenging Artifact type and at Amateur skill level
+			glassware_inspiration_difficulty_medium_check = yes
+			glassware_inspiration_difficulty_medium = yes
+		}
+		AND = { # Easy Artifact type and at Novice skill level
+			glassware_inspiration_difficulty_easy_check = yes
+			glassware_inspiration_difficulty_easy = yes
+		}
+	}
+}
+
+glassware_inspiration_difficulty_below_check = { # Artifact type is below Character's skill level
+	OR = {
+		AND = { # Master skill level and below Hard Artifact type
+			glassware_inspiration_difficulty_hard_check = yes
+			OR = {
+				glassware_inspiration_difficulty_medium = yes
+				glassware_inspiration_difficulty_easy = yes
+			}
+		}
+		AND = { # Amateur skill level and Novice Artifact type
+			glassware_inspiration_difficulty_medium_check = yes
+			glassware_inspiration_difficulty_easy = yes
+		}
+	}
+}

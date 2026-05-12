@@ -1,0 +1,221 @@
+﻿apply_generational_trait_bloodline_decision_effect = {
+	every_child = {
+		even_if_dead = yes
+		trigger_event = gh_major_decisions.0001
+
+		every_child = {
+			even_if_dead = yes
+			limit = { 
+				OR = {
+					is_grandchild_of = scope:bloodline_founder 
+					is_great_grandchild_of = scope:bloodline_founder  
+				}
+			}
+			trigger_event = gh_major_decisions.0001
+
+			every_child = {
+				even_if_dead = yes
+				limit = { 
+					OR = {
+						is_grandchild_of = scope:bloodline_founder 
+						is_great_grandchild_of = scope:bloodline_founder  
+					}
+				}
+				trigger_event = gh_major_decisions.0001
+			}
+		}
+	}
+}
+
+establish_thura_taw_decision_effects = {
+	#Prestige
+	add_prestige = massive_prestige_gain
+
+	#Laws
+	if = {
+		limit = { has_realm_law = crown_authority_0 }
+		add_realm_law_skip_effects = crown_authority_2
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_realm_law = crown_authority_1
+				has_realm_law = crown_authority_2
+			}
+		}
+		add_realm_law_skip_effects = crown_authority_3
+	}
+	 #Handle other Kingdom titles
+	 title:k_west_nattana = { add_to_list = nattanan_kingdoms }
+	 title:k_east_nattana = { add_to_list = nattanan_kingdoms }
+	 title:k_currentsprings = { add_to_list = nattanan_kingdoms }
+
+	custom_tooltip = unite_the_nattanan_thrones_decision_titles_tt
+	hidden_effect = {
+		every_in_list = {
+			list = nattanan_kingdoms
+			limit = {
+				NOT = { this = scope:nattanan_uniter.primary_title }
+				scope:nattanan_uniter = { completely_controls = prev }
+			}
+
+			#De jure shift all held Nattanan titles into your primary title
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_kingdom }
+				set_de_jure_liege_title = scope:nattanan_uniter.primary_title
+			}
+
+			#Destroys them all!
+			#scope:nattanan_uniter = { destroy_title = prev }
+		}
+	}
+}
+
+establish_thura_myo_decision_effects = {
+	#Prestige
+	add_prestige = massive_prestige_gain
+
+	#Laws
+	if = {
+		limit = { has_realm_law = crown_authority_0 }
+		add_realm_law_skip_effects = crown_authority_2
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_realm_law = crown_authority_1
+				has_realm_law = crown_authority_2
+			}
+		}
+		add_realm_law_skip_effects = crown_authority_3
+	}
+	#Handle other Kingdom titles
+	title:k_west_nattana = { add_to_list = conquered_kingdoms }
+	title:k_east_nattana = { add_to_list = conquered_kingdoms }
+	title:k_currentsprings = { add_to_list = conquered_kingdoms }
+
+	custom_tooltip = conquer_the_nattanan_thrones_decision_titles_tt
+	hidden_effect = {
+		every_in_list = {
+			list = conquered_kingdoms
+			limit = {
+				NOT = { this = scope:nattanan_uniter.primary_title }
+				scope:nattanan_uniter = { completely_controls = prev }
+			}
+
+			#De jure shift all held Nattanan titles into your primary title
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_kingdom }
+				set_de_jure_liege_title = scope:nattanan_uniter.primary_title
+			}
+
+			#Destroys them all!
+			#scope:nattanan_uniter = { destroy_title = prev }
+		}
+	}
+}
+
+
+become_thura_myinthein_decision_effect = {
+	give_nickname = nick_thura_myinthein
+	add_trait = thura_myinthein
+	custom_tooltip = become_thura_myinthein_decision_decendant_trait_tooltip
+	dynasty = {
+		add_dynasty_modifier = {
+			modifier = resurging_thura_myinthein
+			years = 25
+		}
+	}
+	if = {
+		limit = {
+			any_held_title = {
+				tier = tier_county
+				NOT = { faith = root.faith }
+			}
+		}
+		every_held_title = {
+			custom = all_held_counties
+			limit = {
+				tier = tier_county
+				NOT = { faith = root.faith }
+			}
+			random = {
+				chance = 35
+				set_county_faith = root.faith
+			}
+		}
+	}
+	faith = {
+		change_fervor = {
+			value = 15
+			desc = fervor_gain_thura_myinthein
+		}
+	}
+}
+
+
+establish_aungkyi_thuriya_decision_effects = {
+	#Prestige
+	add_prestige = massive_prestige_gain
+
+	#Laws
+	if = {
+		limit = { has_realm_law = crown_authority_0 }
+		add_realm_law_skip_effects = crown_authority_2
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_realm_law = crown_authority_1
+				has_realm_law = crown_authority_2
+			}
+		}
+		add_realm_law_skip_effects = crown_authority_3
+	}
+	
+	#Handle other Kingdom titles
+	title:k_currentsprings= { add_to_list = korlacan_kingdoms }
+	title:k_west_nattana = { add_to_list = korlacan_kingdoms }
+	title:k_east_nattana = { add_to_list = korlacan_kingdoms }
+
+	custom_tooltip = establish_aungkyi_thuriya_decision_titles_tt
+	hidden_effect = {
+		every_in_list = {
+			list = korlacan_kingdoms
+			limit = {
+				NOT = { this = scope:korlacan_conquerer.primary_title }
+				scope:korlacan_conquerer = { completely_controls = prev }
+			}
+
+			#De jure shift all held Korlacan titles into your primary title
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_kingdom }
+				set_de_jure_liege_title = scope:korlacan_conquerer.primary_title
+			}
+		}
+	}
+}
+restore_nalmavast_priesthood_decision_pluralist = {
+	remove_doctrine = tenet_pastoral_isolation
+	add_doctrine = tenet_adaptive
+	remove_doctrine = doctrine_clerical_gender_female_only
+	add_doctrine = doctrine_clerical_gender_either
+}
+
+restore_nalmavast_priesthood_decision_righteous = {
+	remove_doctrine = tenet_pastoral_isolation
+	add_doctrine = tenet_esotericism
+	remove_doctrine = doctrine_pluralism_pluralistic
+	add_doctrine = doctrine_pluralism_righteous
+	remove_doctrine = doctrine_clerical_function_alms_and_pacification
+	add_doctrine = doctrine_clerical_function_taxation
+}
+
+restore_nalmavast_priesthood_decision_fundamentalist = {
+	remove_doctrine = tenet_pastoral_isolation
+	add_doctrine = tenet_pursuit_of_power
+	remove_doctrine = doctrine_pluralism_pluralistic
+	add_doctrine = doctrine_pluralism_fundamentalist
+	remove_doctrine = doctrine_clerical_function_alms_and_pacification
+	add_doctrine = doctrine_clerical_function_recruitment
+}

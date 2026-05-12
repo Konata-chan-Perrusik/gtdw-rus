@@ -1,0 +1,424 @@
+﻿@provisions_cost_minimal = 25
+@provisions_cost_light = 50
+@provisions_cost_medium = 80
+@provisions_cost_high = 100
+@provisions_cost_extreme = 150
+@provisions_cost_very_extreme = 200
+
+marcher_plains = {
+	color = hsv { 0.1 0.5 0.8 }
+	travel_danger_color = hsv { 0.1 0.5 0.8 }
+	travel_danger_score = 10
+	provision_cost = @provisions_cost_light
+	county_fertility = 30
+	
+	province_modifier = {
+		supply_limit_mult = 0
+		travel_danger = 10
+		county_fertility_growth_add = plains_county_fertility_value
+	}
+	
+	audio_parameter = 1.0
+}
+
+marcher_farmlands = {
+	color = hsv { 0 1 1 }
+	provision_cost = @provisions_cost_minimal
+	county_fertility = 40
+	
+	province_modifier = {
+		supply_limit_mult = 0.5
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = 0.2
+		county_fertility_growth_add = farmlands_county_fertility_value
+	}
+	
+	audio_parameter = 1.0
+}
+
+marcher_hills = {
+	color = hsv { 29 0.867 0.353 }
+	travel_danger_color = hsv { 29 0.6 0.353 }
+	travel_danger_score = hills_danger_value
+	provision_cost = @provisions_cost_light
+	county_fertility = 20
+	
+	province_modifier = {
+		supply_limit_mult = -0.1
+		travel_danger = hills_danger_value
+		county_fertility_growth_add = hills_county_fertility_value
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.1
+	}
+	
+	defender_combat_effects = {
+		name = combat_hills
+		image = combat_hills
+		advantage = 5
+	}
+	
+	movement_speed = 0.8
+	combat_width = 0.8
+	
+	audio_parameter = 1.0
+}
+
+marcher_mountains = {
+	color = hsv { 0 0 0.392 }
+	travel_danger_color = hsv { 0 0 0.392 }
+	travel_danger_score = mountains_danger_value
+	provision_cost = @provisions_cost_extreme
+	county_fertility = 15
+	
+	province_modifier = {
+		supply_limit_mult = -0.5
+		travel_danger = mountains_danger_value
+		county_fertility_growth_add = mountains_county_fertility_value
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.25
+	}
+	
+	defender_combat_effects = {
+		name = combat_mountain
+		image = combat_mountain
+		advantage = 12
+	}
+	
+	movement_speed = 0.5
+	combat_width = 0.5
+	
+	audio_parameter = 6.0
+}
+
+marcher_forest = {
+	color = hsv { 0.3 0.75 0.7 } #50 255 25
+	travel_danger_color = hsv { 0.37 0.8 0.5 }
+	travel_danger_score = forest_danger_value
+	provision_cost = @provisions_cost_light
+	county_fertility = 15
+	
+	province_modifier = {
+		supply_limit_mult = -0.1
+		travel_danger = forest_danger_value
+		county_fertility_growth_add = forest_county_fertility_value
+	}
+	
+	defender_combat_effects = {
+		name = combat_forest
+		image = defender_forest
+		advantage = 3
+	}
+	
+	movement_speed = 0.8
+	combat_width = 0.9
+
+	audio_parameter = 4.0
+}
+
+marcher_wetlands = {
+	color = hsv { 0.5 0.5 0.6 } #75 200 200
+	travel_danger_color = { 47 128 97 } 
+	travel_danger_score = wetlands_danger_value
+	provision_cost = @provisions_cost_medium
+	county_fertility = 20
+	
+	province_modifier = {
+		supply_limit_mult = -0.25
+		travel_danger = wetlands_danger_value
+		county_fertility_growth_add = wetlands_county_fertility_value
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.25
+	}
+	
+	attacker_modifier = {
+		hard_casualty_modifier = 0.2
+		retreat_losses = 0.25
+	}
+	
+	defender_modifier = {
+		hard_casualty_modifier = 0.2
+		retreat_losses = 0.25
+	}
+	
+	defender_combat_effects = {
+		name = combat_wetlands
+		image = defender_wetlands
+		advantage = 5
+	}
+	
+	movement_speed = 0.7
+	combat_width = 0.6
+	
+	audio_parameter = 3.0
+}
+
+marcher_floodplains = {
+	color = hsv { 0.7 0.8 0.6 } #200 50 100
+	travel_danger_color = { 47 128 97 } 
+	travel_danger_score = floodplains_danger_value
+	provision_cost = @provisions_cost_medium
+	county_fertility = 30
+	
+	province_modifier = {
+		supply_limit_mult = 0.35
+		travel_danger = floodplains_danger_value
+		county_fertility_growth_add = floodplains_county_fertility_value
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = 0.2
+	}
+	
+	combat_width = 0.75
+	
+	audio_parameter = 2.0
+}
+
+deadlands = {
+	color = rgb { 50 50 50 }
+	travel_danger_color = hsv { 0.16 0.7 0.8 }
+	travel_danger_score = 99
+	provision_cost = @provisions_cost_very_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.8
+		travel_danger = 200
+		provisions_use_mult = 6
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.8
+	}
+	
+	movement_speed = 0.25
+	
+	audio_parameter = 5.0
+}
+
+mayik_caverns = {
+	color = rgb { 40 20 10 }
+	travel_danger_color = rgb { 40 20 10 }
+	travel_danger_score = 80
+	provision_cost = @provisions_cost_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.8
+		travel_danger = 160
+		provisions_use_mult = 2
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.8
+	}
+	
+	movement_speed = 0.15
+	combat_width = 0.15
+	audio_parameter = 1.0
+}
+
+mayik_corridors = {
+	color = rgb { 50 50 90 }
+	travel_danger_color = rgb { 50 50 90 }
+	travel_danger_score = 70
+	provision_cost = @provisions_cost_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.8
+		travel_danger = 160
+		provisions_use_mult = 2
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.8
+	}
+	
+	movement_speed = 0.25
+	combat_width = 0.10
+	audio_parameter = 1.0
+}
+
+mayik_chamber = {
+	color = rgb { 100 100 150 }
+	travel_danger_color = rgb { 100 100 150 }
+	travel_danger_score = 70
+	provision_cost = @provisions_cost_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.8
+		travel_danger = 170
+		provisions_use_mult = 2
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.8
+	}
+	
+	movement_speed = 0.50
+	combat_width = 0.50
+	audio_parameter = 1.0
+}
+
+redlands_chasms = {
+	color = rgb { 200 10 20 }
+	travel_danger_color = rgb { 18 25 40 }
+	travel_danger_score = 80
+	provision_cost = @provisions_cost_very_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.8
+		travel_danger = 160
+		provisions_use_mult = 3
+	}
+	
+	county_capital_modifier = {
+		development_growth_factor = -0.8
+	}
+	
+	movement_speed = 0.25
+	combat_width = 0.2
+	
+	audio_parameter = 5.0
+}
+
+redlands_desert = {
+	color = rgb { 100 14 50 }
+	travel_danger_color = hsv { 0.16 0.7 0.8 }
+	travel_danger_score = 60
+	provision_cost = @provisions_cost_very_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.3
+		travel_danger = 60
+		provisions_use_mult = 3
+	}
+
+	county_capital_modifier = {
+		development_growth_factor = -0.6
+	}
+	
+	movement_speed = 0.6
+	
+	audio_parameter = 2.0
+}
+
+redlands_mountains = {
+	color = rgb { 150 26 15 }
+	travel_danger_color = hsv { 0 0 0.392  }
+	travel_danger_score = 70
+	provision_cost = @provisions_cost_very_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.5
+		travel_danger = 70
+		provisions_use_mult = 3
+	}
+
+	county_capital_modifier = {
+		development_growth_factor = -0.65
+	}
+
+	defender_combat_effects = {
+		name = combat_desert_mountains
+		image = defender_desert_mountains
+		advantage = 12
+	}
+	
+	movement_speed = 0.4
+	combat_width = 0.5
+	
+	audio_parameter = 2.0
+}
+
+redlands_drylands = {
+	color = rgb { 60 68 0 }
+	travel_danger_color = hsv { 0.37 0.8 0.5 }
+	travel_danger_score = 45
+	provision_cost = @provisions_cost_very_extreme
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = -0.15
+		travel_danger = 45
+		provisions_use_mult = 3
+	}
+
+	county_capital_modifier = {
+		development_growth_factor = -0.3
+	}
+	
+	movement_speed = 0.8
+	
+	audio_parameter = 2.0
+}
+
+archipelagic = {
+	color = { 79 106 220  }
+	travel_danger_color = { 47 128 97 } 
+	travel_danger_score = wetlands_danger_value
+	provision_cost = @provisions_cost_medium
+	county_fertility = 10
+
+	province_modifier = {
+		supply_limit_mult = -0.2
+		travel_danger = wetlands_danger_value
+		provisions_use_mult = 1
+	}
+
+	county_capital_modifier = {
+		development_growth_factor = -0.15
+	}
+
+	attacker_modifier = {
+		hard_casualty_modifier = 0.1
+		retreat_losses = 0.2
+	}
+
+	defender_modifier = {
+		hard_casualty_modifier = 0.1
+		retreat_losses = 0.2
+	}
+
+	defender_combat_effects = {
+		name = combat_archipelagic
+		image = defender_wetlands
+		advantage = 8
+	}
+
+	movement_speed = 0.8
+	combat_width = 0.6
+
+	audio_parameter = 3.0
+}
+
+
+##
+
+antimagic_terrain = { #This is not a real terrain type and serves only to show Magi stat changes in antimagic terrain
+	color = hsv { 1 1 1 }
+	travel_danger_color = hsv { 1 1 1 }
+	travel_danger_score = 10
+	provision_cost = @provisions_cost_light
+	county_fertility = 1
+	
+	province_modifier = {
+		supply_limit_mult = 0
+		travel_danger = 0
+	}
+	
+	audio_parameter = 1.0
+}

@@ -1,0 +1,1172 @@
+﻿number_of_county_faith_involved_wih_central_struggle_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = {
+			faith = prev.faith
+		}
+		add = 1
+	}
+}
+
+number_of_county_faith_involved_wih_eastern_struggle_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = {
+			faith = prev.faith
+		}
+		add = 1
+	}
+}
+
+
+number_of_county_faith_involved_wih_far_eastern_struggle_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = {
+			faith = prev.faith
+		}
+		add = 1
+	}
+}
+
+
+number_of_county_faith_involved_wih_western_struggle_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = {
+			faith = prev.faith
+		}
+		add = 1
+	}
+}
+
+
+number_of_county_faith_involved_wih_far_western_struggle_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = {
+			faith = prev.faith
+		}
+		add = 1
+	}
+}
+
+
+gh_wih_central_sarradon_kingdom_counter_value = {
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			de_jure_liege = title:h_sarradon
+			root = { completely_controls = prev }
+		}
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_counties_total_light_value = {
+	value = gh_wih_central_sarradon_counties_total_value
+	multiply = 0.90
+	ceiling = yes
+}
+
+gh_wih_central_sarradon_counties_total_half_value = {
+	value = gh_wih_central_sarradon_counties_total_value
+	multiply = 0.6
+	ceiling = yes
+}
+
+gh_wih_central_sarradon_wardenite_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:wardenism_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_ritualist_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:ritualist_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_same_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = {
+			faith.religion = root.faith.religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_same_faith_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:wardenism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_ritualist_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:ritualist_religion } }
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_ritualist_or_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { 
+			OR = {
+				faith.religion = religion:ritualist_religion
+				faith.religion = religion:wardenism_religion
+			}
+		}
+		add = 1
+	}
+}
+
+gh_wih_ending_struggle_counties_controled_generic_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_counties_total_seventy_five_value = {
+	value = gh_wih_central_sarradon_counties_total_value
+	multiply = 0.75
+	ceiling = yes
+}
+
+gh_wih_central_sarradon_root_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { holder.top_liege ?= root }
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_root_controlled_counties_percent_value = {
+	value = gh_wih_central_sarradon_root_controlled_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_seventy_five_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_wardenite_counties_percent_value = {
+	value = gh_wih_central_sarradon_wardenite_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_ritualist_counties_percent_value = {
+	value = gh_wih_central_sarradon_ritualist_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_same_religion_list_counties_percent_value = {
+	value = gh_wih_central_sarradon_same_religion_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_same_faith_counties_percent_value = {
+	value = gh_wih_central_sarradon_same_faith_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_central_sarradon_wardenite_controlled_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_ritualist_controlled_counties_percent_value = {
+	value = gh_wih_central_sarradon_ritualist_controlled_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_ritualist_or_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_central_sarradon_ritualist_or_wardenite_controlled_counties_counter_value
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_ending_struggle_counties_controled_generic_percent_value = {
+	value = gh_wih_ending_struggle_counties_controled_generic_counter_value 
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_and_central_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		add = 1
+	}
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_eastern_and_central_sarradon_agionist_ruled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:agionism_religion } }
+		add = 1
+	}
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:agionism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_eastern_and_central_sarradon_agionist_ruled_counties_percent_value = {
+	value = gh_wih_eastern_and_central_sarradon_agionist_ruled_counties_counter_value 
+	divide = gh_wih_eastern_and_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_central_sarradon_agionist_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { faith.religion = religion:agionism_religion }
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_agionist_ruled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:agionism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_central_sarradon_agionist_ruled_counties_percent_value = {
+	value = gh_wih_central_sarradon_agionist_ruled_counties_counter_value 
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_agionist_religion_counties_percent_value = {
+	value = gh_wih_central_sarradon_agionist_religion_counties_counter_value 
+	divide = gh_wih_central_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_agionist_ruled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:agionism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_agionist_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_central_sarradon_struggle_region
+		limit = { faith.religion = religion:agionism_religion }
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_agionist_ruled_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_agionist_ruled_counties_counter_value 
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_agionist_religion_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_agionist_religion_counties_counter_value 
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+# =================================================== Eastern Sarradon ===================================================
+
+gh_wih_eastern_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_kingdom_counter_value = {
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			de_jure_liege = { title_capital_county.title_province = { geographical_region = GH_eastern_sarradon_struggle_region } }
+			root = { completely_controls = prev }
+		}
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_counties_total_light_value = {
+	value = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 0.90
+	ceiling = yes
+}
+
+gh_wih_eastern_sarradon_counties_total_half_value = {
+	value = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 0.6
+	ceiling = yes
+}
+
+gh_wih_eastern_sarradon_wardenite_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:wardenism_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_ritualist_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:ritualist_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_same_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = {
+			faith.religion = root.faith.religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_same_faith_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:wardenism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_ritualist_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:ritualist_religion } }
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_ritualist_or_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = { 
+			OR = {
+				faith.religion = religion:ritualist_religion
+				faith.religion = religion:wardenism_religion
+			}
+		}
+		add = 1
+	}
+}
+
+gh_wih_ending_struggle_counties_controled_generic_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_counties_total_seventy_five_value = {
+	value = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 0.75
+	ceiling = yes
+}
+
+gh_wih_eastern_sarradon_root_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= root }
+		add = 1
+	}
+}
+
+gh_wih_eastern_sarradon_root_controlled_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_root_controlled_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_seventy_five_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_wardenite_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_wardenite_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_ritualist_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_ritualist_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_same_religion_list_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_same_religion_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_same_faith_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_same_faith_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_wardenite_controlled_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_ritualist_controlled_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_ritualist_controlled_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_ritualist_or_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_eastern_sarradon_ritualist_or_wardenite_controlled_counties_counter_value
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_eastern_sarradon_ending_struggle_counties_controled_generic_percent_value = {
+	value = gh_wih_ending_struggle_counties_controled_generic_counter_value 
+	divide = gh_wih_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+
+# =================================================== Far Eastern Sarradon ===================================================
+
+gh_wih_far_eastern_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_kingdom_counter_value = {
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			de_jure_liege = { title_capital_county.title_province = { geographical_region = GH_far_eastern_sarradon_struggle_region } }
+			root = { completely_controls = prev }
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_counties_total_light_value = {
+	value = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 0.90
+	ceiling = yes
+}
+
+gh_wih_far_eastern_sarradon_counties_total_half_value = {
+	value = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 0.6
+	ceiling = yes
+}
+
+gh_wih_far_eastern_sarradon_wardenite_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:wardenism_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_ritualist_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:ritualist_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_same_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = {
+			faith.religion = root.faith.religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_same_faith_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:wardenism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_ritualist_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:ritualist_religion } }
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_ritualist_or_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = { 
+			OR = {
+				faith.religion = religion:ritualist_religion
+				faith.religion = religion:wardenism_religion
+			}
+		}
+		add = 1
+	}
+}
+
+gh_wih_ending_struggle_counties_controled_generic_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_counties_total_seventy_five_value = {
+	value = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 0.75
+	ceiling = yes
+}
+
+gh_wih_far_eastern_sarradon_root_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_eastern_sarradon_struggle_region
+		limit = { holder.top_liege ?= root }
+		add = 1
+	}
+}
+
+gh_wih_far_eastern_sarradon_root_controlled_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_root_controlled_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_seventy_five_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_wardenite_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_wardenite_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_ritualist_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_ritualist_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_same_religion_list_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_same_religion_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_same_faith_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_same_faith_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_wardenite_controlled_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_ritualist_controlled_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_ritualist_controlled_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_ritualist_or_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_far_eastern_sarradon_ritualist_or_wardenite_controlled_counties_counter_value
+	divide = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_eastern_sarradon_ending_struggle_counties_controled_generic_percent_value = {
+	value = gh_wih_ending_struggle_counties_controled_generic_counter_value 
+	divide = gh_wih_far_eastern_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+# =================================================== Western Sarradon ===================================================
+
+gh_wih_western_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_kingdom_counter_value = {
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			de_jure_liege = { title_capital_county.title_province = { geographical_region = GH_western_sarradon_struggle_region } }
+			root = { completely_controls = prev }
+		}
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_counties_total_light_value = {
+	value = gh_wih_western_sarradon_counties_total_value
+	multiply = 0.90
+	ceiling = yes
+}
+
+gh_wih_western_sarradon_counties_total_half_value = {
+	value = gh_wih_western_sarradon_counties_total_value
+	multiply = 0.6
+	ceiling = yes
+}
+
+gh_wih_western_sarradon_wardenite_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:wardenism_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_ritualist_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:ritualist_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_same_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = {
+			faith.religion = root.faith.religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_same_faith_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:wardenism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_ritualist_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:ritualist_religion } }
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_ritualist_or_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = { 
+			OR = {
+				faith.religion = religion:ritualist_religion
+				faith.religion = religion:wardenism_religion
+			}
+		}
+		add = 1
+	}
+}
+
+gh_wih_ending_struggle_counties_controled_generic_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_counties_total_seventy_five_value = {
+	value = gh_wih_western_sarradon_counties_total_value
+	multiply = 0.75
+	ceiling = yes
+}
+
+gh_wih_western_sarradon_root_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_western_sarradon_struggle_region
+		limit = { holder.top_liege ?= root }
+		add = 1
+	}
+}
+
+gh_wih_western_sarradon_root_controlled_counties_percent_value = {
+	value = gh_wih_western_sarradon_root_controlled_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_seventy_five_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_wardenite_counties_percent_value = {
+	value = gh_wih_western_sarradon_wardenite_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_ritualist_counties_percent_value = {
+	value = gh_wih_western_sarradon_ritualist_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_same_religion_list_counties_percent_value = {
+	value = gh_wih_western_sarradon_same_religion_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_same_faith_counties_percent_value = {
+	value = gh_wih_western_sarradon_same_faith_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_western_sarradon_wardenite_controlled_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_ritualist_controlled_counties_percent_value = {
+	value = gh_wih_western_sarradon_ritualist_controlled_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_ritualist_or_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_western_sarradon_ritualist_or_wardenite_controlled_counties_counter_value
+	divide = gh_wih_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_western_sarradon_ending_struggle_counties_controled_generic_percent_value = {
+	value = gh_wih_ending_struggle_counties_controled_generic_counter_value 
+	divide = gh_wih_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+# =================================================== Far Western Sarradon ===================================================
+
+gh_wih_far_western_sarradon_counties_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_kingdom_counter_value = {
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			de_jure_liege = { title_capital_county.title_province = { geographical_region = GH_far_western_sarradon_struggle_region } }
+			root = { completely_controls = prev }
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_counties_total_light_value = {
+	value = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 0.90
+	ceiling = yes
+}
+
+gh_wih_far_western_sarradon_counties_total_half_value = {
+	value = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 0.6
+	ceiling = yes
+}
+
+gh_wih_far_western_sarradon_wardenite_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:wardenism_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_ritualist_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = {
+			faith.religion = religion:ritualist_religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_same_religion_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = {
+			faith.religion = root.faith.religion
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_same_faith_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:wardenism_religion } }
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_ritualist_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = { holder.top_liege ?= { faith.religion = religion:ritualist_religion } }
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_ritualist_or_wardenite_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = { 
+			OR = {
+				faith.religion = religion:ritualist_religion
+				faith.religion = religion:wardenism_religion
+			}
+		}
+		add = 1
+	}
+}
+
+gh_wih_ending_struggle_counties_controled_generic_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = {
+			faith = root.faith
+		}
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_counties_total_seventy_five_value = {
+	value = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 0.75
+	ceiling = yes
+}
+
+gh_wih_far_western_sarradon_root_controlled_counties_counter_value = {
+	value = 0
+	every_county_in_region = {
+		region = GH_far_western_sarradon_struggle_region
+		limit = { holder.top_liege ?= root }
+		add = 1
+	}
+}
+
+gh_wih_far_western_sarradon_root_controlled_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_root_controlled_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_seventy_five_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_wardenite_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_wardenite_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_ritualist_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_ritualist_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_same_religion_list_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_same_religion_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_light_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_same_faith_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_same_faith_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 100
+	max = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_wardenite_controlled_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_ritualist_controlled_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_ritualist_controlled_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_ritualist_or_wardenite_controlled_counties_percent_value = {
+	value = gh_wih_far_western_sarradon_ritualist_or_wardenite_controlled_counties_counter_value
+	divide = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}
+
+gh_wih_far_western_sarradon_ending_struggle_counties_controled_generic_percent_value = {
+	value = gh_wih_ending_struggle_counties_controled_generic_counter_value 
+	divide = gh_wih_far_western_sarradon_counties_total_value
+	multiply = 100
+	min = 1
+}

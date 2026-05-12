@@ -1,0 +1,778 @@
+﻿struggle_opposing_faith_heresy_effect = {
+	save_scope_as = saved_struggle
+	religion:$RELIGION$_religion = {
+		random_faith = {
+			limit = {
+				NOR = {
+					has_doctrine_parameter = unreformed
+					has_variable = current_heresy
+				}			
+				scope:saved_struggle = { is_faith_involved_in_struggle = prev.faith }
+				number_of_county_faith_involved_wih_$REGION$_struggle_value > 0
+			}
+			weight = {
+				base = 20
+				modifier = {
+					add = 10
+					fervor < 30
+				}
+				modifier = {
+					add = 5
+					fervor < 40
+				}
+				modifier = {
+					add = 5
+					fervor < 50
+				}
+				modifier = {
+					add = 5
+					fervor < 70
+				}
+			}
+			random_list = {
+				80 = {}
+				20 = {
+					set_variable = {
+						name = heresy_struggle_location
+						value = scope:saved_struggle
+						days = 5
+					}
+					trigger_event = heresy.0001
+				}
+			}
+		}
+	}
+}
+
+start_regional_struggle_effect = {
+	if = {
+		limit = { this = global_var:gh_region_war_in_heaven_struggle }
+		start_struggle = {
+			struggle_type = gh_war_in_heaven_struggle
+			start_phase = struggle_wih_central_sarradon_phase_all_out_war
+		}
+	}
+	else_if = {
+		limit = { this = global_var:gh_region_eastern_war_in_heaven_struggle }
+		#Saving the value on a var to save on performance
+		start_struggle = {
+			struggle_type = gh_eastern_war_in_heaven_struggle
+			start_phase = struggle_wih_eastern_sarradon_phase_all_out_war
+		}
+	}
+	else_if = {
+		limit = { this = global_var:gh_region_far_eastern_war_in_heaven_struggle }
+		start_struggle = {
+			struggle_type = gh_far_eastern_war_in_heaven_struggle
+			start_phase = struggle_wih_far_eastern_sarradon_phase_all_out_war
+		}
+	}				
+	else_if = {
+		limit = { this = global_var:gh_region_western_war_in_heaven_struggle }
+		start_struggle = {
+			struggle_type = gh_western_war_in_heaven_struggle
+			start_phase = struggle_wih_western_sarradon_phase_all_out_war
+		}
+	}
+	#else_if = {
+	#	limit = { this = global_var:gh_region_far_western_war_in_heaven_struggle }
+	#	start_struggle = {
+	#		struggle_type = gh_far_western_war_in_heaven_struggle
+	#		start_phase = struggle_wih_far_western_sarradon_phase_all_out_war
+	#	}
+	#}
+}
+
+influence_phase_impact_level_injector = {
+	#We remove it before adding anything to the variable
+	remove_variable ?= great_struggle_influence_impact_level
+	
+	
+	set_variable = {
+		name = tempory_great_struggle_influence_impact_level
+		value = $STRUGGLE_PHASE$_impact_level_value
+	}
+	#Make it slightly more randomized
+	random_list = {
+		10 = { 
+			change_variable = {
+				name = tempory_great_struggle_influence_impact_level
+				add = -1
+			}
+		}
+		50 = { 
+			change_variable = {
+				name = tempory_great_struggle_influence_impact_level
+				add = 0
+			}
+		}
+		20 = { 
+			change_variable = {
+				name = tempory_great_struggle_influence_impact_level
+				add = 1
+			}
+		}
+		15 = { 
+			change_variable = {
+				name = tempory_great_struggle_influence_impact_level
+				add = 2
+			}
+		}
+		3 = { 
+			change_variable = {
+				name = tempory_great_struggle_influence_impact_level
+				add = 3
+			}
+		}
+		2 = { 
+			change_variable = {
+				name = tempory_great_struggle_influence_impact_level
+				add = 4
+			}
+		}
+	}
+	
+	if = {
+		limit = { var:tempory_great_struggle_influence_impact_level <= 1 }
+		set_variable = {
+			name = great_struggle_influence_impact_level
+			value = flag:weak
+		}
+		while = {
+			count = 1
+			activate_great_struggle_wih_injector_effect = { STRUGGLE_PHASE = $STRUGGLE_PHASE$ }
+		}
+	}
+	else_if = {
+		limit = { 
+			var:tempory_great_struggle_influence_impact_level > 1 
+			var:tempory_great_struggle_influence_impact_level <= 3 
+		}
+		set_variable = {
+			name = great_struggle_influence_impact_level
+			value = flag:moderate
+		}
+		while = {
+			count = 3
+			activate_great_struggle_wih_injector_effect = { STRUGGLE_PHASE = $STRUGGLE_PHASE$ }
+		}
+	}
+	else_if = {
+		limit = { 
+			var:tempory_great_struggle_influence_impact_level > 3 
+			var:tempory_great_struggle_influence_impact_level <= 7 
+		}
+		set_variable = {
+			name = great_struggle_influence_impact_level
+			value = flag:strong
+		}
+		while = {
+			count = 5
+			activate_great_struggle_wih_injector_effect = { STRUGGLE_PHASE = $STRUGGLE_PHASE$ }
+		}
+	}
+	else_if = {
+		limit = { 
+			var:tempory_great_struggle_influence_impact_level > 7 
+		}
+		set_variable = {
+			name = great_struggle_influence_impact_level
+			value = flag:overwhelming
+		}
+		while = {
+			count = 8
+			activate_great_struggle_wih_injector_effect = { STRUGGLE_PHASE = $STRUGGLE_PHASE$ }
+		}
+	}
+}
+
+activate_great_struggle_wih_injector_effect = {
+	if = { 
+		limit = { struggle:gh_war_in_heaven_struggle ?= { phase_has_catalyst =  catalyst_great_$STRUGGLE_PHASE$_influence } }
+		struggle:gh_war_in_heaven_struggle ?= {
+			activate_struggle_catalyst = catalyst_great_$STRUGGLE_PHASE$_influence
+		}
+	}
+	if = { 
+		limit = { struggle:gh_eastern_war_in_heaven_struggle ?= { phase_has_catalyst =  catalyst_great_$STRUGGLE_PHASE$_influence } }
+		struggle:gh_eastern_war_in_heaven_struggle ?= {
+			activate_struggle_catalyst = catalyst_great_$STRUGGLE_PHASE$_influence
+		}
+	}
+	if = { 
+		limit = { struggle:gh_far_eastern_war_in_heaven_struggle ?= { phase_has_catalyst =  catalyst_great_$STRUGGLE_PHASE$_influence } }
+		struggle:gh_far_eastern_war_in_heaven_struggle ?= {
+			activate_struggle_catalyst = catalyst_great_$STRUGGLE_PHASE$_influence
+		}
+	}
+	if = { 
+		limit = { struggle:gh_western_war_in_heaven_struggle ?= { phase_has_catalyst =  catalyst_great_$STRUGGLE_PHASE$_influence } }
+		struggle:gh_western_war_in_heaven_struggle ?= {
+			activate_struggle_catalyst = catalyst_great_$STRUGGLE_PHASE$_influence
+		}
+	}
+	#if = { 
+	#	limit = { struggle:gh_far_western_war_in_heaven_struggle ?= { phase_has_catalyst =  catalyst_great_$STRUGGLE_PHASE$_influence } }
+	#	struggle:gh_far_western_war_in_heaven_struggle ?= {
+	#		activate_struggle_catalyst = catalyst_great_$STRUGGLE_PHASE$_influence
+	#	}
+	#}
+}
+
+gh_great_struggle_ended_regional_struggle_info_effect = {
+	create_story = {
+		type = story_wih_struggle_story_cycle
+		save_scope_as = gh_wih_struggle_story
+	}
+	set_global_variable = {
+		name = $STRUGGLE_NAME$
+		value = scope:gh_wih_struggle_story
+	}
+	global_var:$STRUGGLE_NAME$ ?= {
+		set_variable = {
+			name = struggle_name
+			value = flag:$STRUGGLE_NAME$_name
+		}
+		set_variable = {
+			name = struggle_ending_reason
+			value = flag:$REASON$
+		}	
+		set_variable = {
+			name = struggle_ending_reason_desc
+			value = flag:$REASON_DESCRIPTION$
+		}
+		set_variable = {
+			name = struggle_ending_ender
+			value = $STRUGGLE_ENDER$
+		}
+		set_variable = {
+			name = gh_wih_struggle_end_date
+			value = current_year
+		}
+	}
+}
+
+
+
+gh_wih_struggle_event_ending_description_effect = {
+	if = {
+		limit = {
+			trigger_if = { 
+				limit = { scope:saved_struggle ?= struggle:gh_war_in_heaven_struggle }
+				gh_wih_struggles_control_region_trigger = { STRUGGLE_REGION = GH_central_sarradon_struggle_region }
+			}
+			trigger_else_if = {
+				limit = { scope:saved_struggle ?= struggle:gh_eastern_war_in_heaven_struggle }
+				gh_wih_struggles_control_region_trigger = { STRUGGLE_REGION = GH_eastern_sarradon_struggle_region }
+			}
+			trigger_else_if = {	
+				limit = { scope:saved_struggle ?= struggle:gh_far_eastern_war_in_heaven_struggle }
+				gh_wih_struggles_control_region_trigger = { STRUGGLE_REGION = GH_far_eastern_sarradon_struggle_region }
+			}
+			trigger_else_if = {	
+				limit = { scope:saved_struggle ?= struggle:gh_western_war_in_heaven_struggle }
+				gh_wih_struggles_control_region_trigger = { STRUGGLE_REGION = GH_western_sarradon_struggle_region }	
+			}
+			#trigger_else_if = {	
+			#	limit = { scope:saved_struggle ?= struggle:gh_far_western_war_in_heaven_struggle }
+			#	gh_wih_struggles_control_region_trigger = { STRUGGLE_REGION = GH_far_western_sarradon_struggle_region }	
+			#}
+			trigger_else = { always = no }
+		}	
+		set_variable = {
+			name = gh_ended_struggle_alone
+			days = 1
+			value = yes
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				scope:saved_struggle = {		
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes	
+						exists = primary_title
+						has_religion = religion:$RELIGION$_religion
+					}
+				}
+			}
+		}
+		set_variable = {
+			name = gh_$RELIGION$_gone
+			days = 1
+			value = yes
+		}
+	}
+	if = {
+		limit = { has_religion = religion:agionism_religion }
+		if = {
+			limit = {
+				NOT = {
+					scope:saved_struggle = {		
+						any_involved_ruler = {
+							NOT = { this = root }
+							is_independent_ruler = yes	
+							exists = primary_title
+							has_religion = religion:wardenism_religion
+						}
+					}
+				}
+			}
+			set_variable = {
+				name = gh_wardenism_gone
+				days = 1
+				value = yes
+			}
+		}		
+	}	
+	else = {
+		if = {
+			limit = {
+				NOT = {
+					scope:saved_struggle = {		
+						any_involved_ruler = {
+							NOT = { this = root }
+							is_independent_ruler = yes	
+							exists = primary_title
+							has_religion = religion:agionism_religion
+						}
+					}
+				}
+			}
+			set_variable = {
+				name = gh_agionists_gone
+				days = 1
+				value = yes
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:saved_struggle ?= struggle:gh_war_in_heaven_struggle
+					scope:saved_struggle ?= struggle:gh_eastern_war_in_heaven_struggle
+				}
+			}
+			set_variable = {
+				name = gh_agionists_remain
+				days = 1
+				value = yes
+			}
+		}
+	}
+}
+
+
+
+gh_struggle_house_rebuilder_modifier_effect = {
+	house = {
+		add_house_modifier = {
+			modifier = gh_struggle_house_rebuilder_modifier_$RELIGION$
+		}
+	}
+}
+
+gh_struggle_house_war_modifier_effect = {
+	house = {
+		add_house_modifier = {
+			modifier = gh_struggle_house_war_modifier_$RELIGION$
+		}
+	}
+}
+
+gh_struggle_house_faith_modifier_effect = {
+	house = {
+		add_house_modifier = {
+			modifier = gh_struggle_house_faith_modifier_$RELIGION$
+		}
+	}
+}
+
+
+general_WIH_catalyst_effect = {
+	save_scope_as = wih_primary_character
+	$CHAR$ = { save_scope_as = wih_secondary_character }
+	
+	if = {
+		limit = {
+			scope:wih_secondary_character = {
+				OR = {
+					faith_is_religion_or_syncretic_trigger = { RELIGION = ritualist_religion }
+					has_trait = gh_ritualist_aligned
+				}
+			}
+		}
+		general_catalyst_injector_effect = {
+			RELIGION = wardenite
+			CATALYST = $CATALYST$
+		}
+	}
+	else_if = {
+		limit = {
+			scope:wih_secondary_character = {
+				OR = {
+					faith_is_religion_or_syncretic_trigger = { RELIGION = wardenism_religion }
+					has_trait = gh_wardenite_aligned
+				}
+			}
+		}
+		general_catalyst_injector_effect = {
+			RELIGION = ritualist
+			CATALYST = $CATALYST$
+		}
+	}
+	else_if = {
+		limit = {
+			scope:wih_secondary_character = {
+				OR = {
+					faith_is_religion_or_syncretic_trigger = { RELIGION = agionism_religion }
+					has_trait = gh_agionist_aligned
+				}
+			}
+		}
+		general_catalyst_injector_effect = {
+			RELIGION = agionist
+			CATALYST = $CATALYST$
+		}
+	}
+}
+
+general_catalyst_injector_effect = {
+	scope:wih_primary_character = {
+		if = {
+			limit = {
+				any_character_struggle = {
+					activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+						CATALYST = catalyst_$RELIGION$_$CATALYST$
+						CHAR = scope:wih_secondary_character
+					}
+				}
+			}
+			every_character_struggle = {
+				limit = {
+					activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+						CATALYST = catalyst_$RELIGION$_$CATALYST$
+						CHAR = scope:wih_secondary_character
+					}
+				}
+				activate_struggle_catalyst = {
+					catalyst = catalyst_$RELIGION$_$CATALYST$
+					character = scope:wih_primary_character
+				}
+			}
+		}
+	}
+}
+
+basic_WIH_catalyst_one_way_effect = {
+	save_scope_as = wih_primary_character
+	if = {
+		limit = { faith.religion = religion:wardenism_religion }
+		if = {
+			limit = { any_character_struggle = { phase_has_catalyst = catalyst_wardenite_$CATALYST$ } }
+			basic_catalyst_injector_one_way_effect = {
+				RELIGION = wardenite
+				CATALYST = $CATALYST$
+			}	
+		}
+	}
+	else_if = {
+		limit = { faith.religion = religion:ritualist_religion }
+		if = {
+			limit = { any_character_struggle = { phase_has_catalyst = catalyst_ritualist_$CATALYST$ } }
+			basic_catalyst_injector_one_way_effect = {
+				RELIGION = ritualist
+				CATALYST = $CATALYST$
+			}	
+		}
+	}
+	else_if = {
+		limit = { faith.religion = religion:agionism_religion }
+		if = {
+			limit = { any_character_struggle = { phase_has_catalyst = catalyst_agionist_$CATALYST$ } }
+			basic_catalyst_injector_one_way_effect = {
+				RELIGION = agionist
+				CATALYST = $CATALYST$
+			}	
+		}
+	}
+}
+
+basic_catalyst_injector_one_way_effect = {
+	every_character_struggle = {
+		limit = { phase_has_catalyst = catalyst_$RELIGION$_$CATALYST$ }
+		activate_struggle_catalyst = {
+			catalyst = catalyst_$RELIGION$_$CATALYST$
+			character = scope:wih_primary_character
+		}
+	}
+}
+
+
+holy_war_WIH_catalyst_struggle_effect = {
+	hidden_effect = {
+		scope:attacker = {
+			if = {
+				limit = {
+					faith.religion = religion:ritualist_religion
+					any_character_struggle = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_wardenite_offensive_holy_war_defeat
+							CHAR = scope:defender
+						}
+					}
+				}
+				every_character_struggle = {
+					limit = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_wardenite_offensive_holy_war_defeat
+							CHAR = scope:defender
+						}
+					}
+					activate_struggle_catalyst = {
+						catalyst = catalyst_wardenite_offensive_holy_war_defeat
+						character = scope:attacker
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					faith.religion = religion:wardenism_religion
+					any_character_struggle = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_ritualist_offensive_holy_war_defeat
+							CHAR = scope:defender
+						}
+					}
+				}
+				every_character_struggle = {
+					limit = {
+						activate_struggle_catalyst_secondary_character_involvement_involved_or_aligned_trigger = {
+							CATALYST = catalyst_ritualist_offensive_holy_war_defeat
+							CHAR = scope:defender
+						}
+					}
+					activate_struggle_catalyst = {
+						catalyst = catalyst_ritualist_offensive_holy_war_defeat
+						character = scope:attacker
+					}
+				}
+			}
+		}
+	}
+}
+
+gh_wih_struggle_choose_side_effect = {
+	random_list = {
+		60 = {}
+		10 = {}
+		5 = { 
+			trigger = {
+				NOR = {
+					faith_is_religion_or_syncretic_trigger = { RELIGION = agionism_religion }
+					faith_is_religion_or_syncretic_trigger = { RELIGION = wardenism_religion }
+					faith_is_religion_or_syncretic_trigger = { RELIGION = ritualist_religion }
+				}		
+			}
+			modifier = {
+				add = -50
+				NOT = {
+					any_neighboring_top_liege_realm_owner = {
+						OR = {
+							faith.religion = religion:wardenism_religion
+							faith.religion = religion:ritualist_religion
+						}
+					}
+				}
+			}
+			modifier = {
+				add = 5
+				exists = scope:struggle_scope
+				trigger_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_war_in_heaven_struggle }
+					struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance }
+				}
+				trigger_else_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_eastern_war_in_heaven_struggle }
+					struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance }
+				}
+				trigger_else_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_far_eastern_war_in_heaven_struggle }
+					struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance }
+				}
+				trigger_else_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_western_war_in_heaven_struggle }
+					struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance }
+				}
+				#trigger_else_if = {
+				#	limit = { scope:struggle_scope ?= struggle:gh_far_western_war_in_heaven_struggle }
+				#	struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_ritualist_dominance }
+				#}
+				trigger_else = { always = no }
+			}
+			modifier = {
+				add = -30
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:wardenism_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = 20
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:ritualist_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = -40
+				any_character_struggle = {
+					scope:struggle_scope ?= this
+					involvement = involved 
+				}
+			}							
+			add_trait = gh_ritualist_aligned
+		}
+		5 = { 
+			trigger = {
+				NOR = {
+					faith_is_religion_or_syncretic_trigger = { RELIGION = agionism_religion }
+					faith_is_religion_or_syncretic_trigger = { RELIGION = wardenism_religion }
+					faith_is_religion_or_syncretic_trigger = { RELIGION = ritualist_religion }
+				}	
+			}
+			modifier = {
+				add = -50
+				NOT = {
+					any_neighboring_top_liege_realm_owner = {
+						OR = {
+							faith.religion = religion:wardenism_religion
+							faith.religion = religion:ritualist_religion
+						}
+					}
+				}
+			}
+			modifier = {
+				add = 5
+				exists = scope:struggle_scope
+				trigger_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_war_in_heaven_struggle }
+					struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance }
+				}
+				trigger_else_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_eastern_war_in_heaven_struggle }
+					struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance }
+				}
+				trigger_else_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_far_eastern_war_in_heaven_struggle }
+					struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance }
+				}
+				trigger_else_if = {
+					limit = { scope:struggle_scope ?= struggle:gh_western_war_in_heaven_struggle }
+					struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance }
+				}
+				#trigger_else_if = {
+				#	limit = { scope:struggle_scope ?= struggle:gh_far_western_war_in_heaven_struggle }
+				#	struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_wardenite_dominance }
+				#}
+				trigger_else = { always = no }
+			}
+			modifier = {
+				add = -30
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:ritualist_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = 20
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:wardenism_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = -40
+				any_character_struggle = {
+					scope:struggle_scope ?= this
+					involvement = involved 
+				}
+			}						
+			add_trait = gh_wardenite_aligned
+		}
+		5 = {
+			trigger = { 
+				NOR = {
+					faith_is_religion_or_syncretic_trigger = { RELIGION = agionism_religion }
+					faith_is_religion_or_syncretic_trigger = { RELIGION = wardenism_religion }
+					faith_is_religion_or_syncretic_trigger = { RELIGION = ritualist_religion }
+				}	
+				global_var:wih_great_struggle = { has_variable = agionist_involvement } 
+			}
+			modifier = {
+				add = -50
+				NOR = {
+					struggle:gh_war_in_heaven_struggle ?= scope:struggle_scope
+					struggle:gh_eastern_war_in_heaven_struggle ?= scope:struggle_scope
+				}								
+			}
+			# Sarradonian faiths don't want to join outsiders
+			modifier = {
+				add = -15
+				faith = { has_doctrine = sarradonian_hostility_doctrine  }								
+			}					
+			modifier = {
+				add = 5
+				trigger_if = {
+					limit = {
+						exists = scope:struggle_scope
+						OR = {
+							struggle:gh_war_in_heaven_struggle ?= scope:struggle_scope
+							struggle:gh_eastern_war_in_heaven_struggle ?= scope:struggle_scope
+						}
+					}								
+					trigger_if = {
+						limit = { scope:struggle_scope ?= struggle:gh_war_in_heaven_struggle }
+						struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_agionist_dominance }
+					}
+					trigger_else_if = {
+						limit = { scope:struggle_scope ?= struggle:gh_eastern_war_in_heaven_struggle }
+						struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_agionist_dominance }
+					}
+					trigger_else = { always = no }
+				}
+				trigger_else = { always = no }
+			}
+			modifier = {
+				add = -30
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:ritualist_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = -30
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:wardenism_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = 20
+				any_neighboring_top_liege_realm_owner = {
+					faith.religion = religion:agionism_religion
+					current_military_strength >= prev.one_and_a_half_times_current_military_strength
+				}
+			}
+			modifier = {
+				add = -40
+				any_character_struggle = {
+					scope:struggle_scope ?= this
+					involvement = involved 
+				}
+			}						
+			add_trait = gh_wardenite_aligned
+		}
+	}
+}

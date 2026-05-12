@@ -1,0 +1,211 @@
+﻿gh_on_faith_created = {
+	effect = {
+		if = {
+			limit = {
+				root.faith = { has_doctrine_parameter = lifepath_choice }
+			}
+			# Lonely Note: Basically all of these can be folded into scripted_effects
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							scope:old_faith = {
+								has_doctrine_parameter = lifepath_choice
+							}
+						}
+						scope:old_faith = {
+							has_variable = lifepath_relevance_measure
+						}
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				root.faith = {
+					set_variable = {
+						name = lifepath_relevance_measure
+						value = scope:old_faith.var:lifepath_relevance_measure
+					}
+				}
+			}
+			else = {
+				root.faith = {
+					set_variable = {
+						name = lifepath_relevance_measure
+						value = lifepath_relevance_measure_default_value
+					}
+				}
+			}
+			root.faith = { lifepaths_effect = { MODE = set_valid } }
+			root = { trigger_event = marcher_lifepath.0001 }
+			every_living_character = {
+				limit = { 
+					is_ai = yes
+					has_faith = root.faith
+					age >= 16
+				}
+				assign_all_lifepath_trait = yes
+			}
+		}
+		if = {
+			limit = {
+				# Mainliners should copy over recognized mamuramats
+				scope:old_faith = { has_variable_list = recognized_high_court_list }
+				root.faith = {
+					has_doctrine = wardenite_mainstream_doctrine
+				}
+			}
+			scope:old_faith = {
+				if = {
+					limit = { has_variable = sole_mamur_recognized }
+					every_in_list = {
+						variable = recognized_high_court_list
+						save_temporary_scope_as = high_court_to_copy
+						root.faith = {
+							add_recognized_high_court_faith_effect = {
+								HIGH_COURT = high_court_to_copy
+								SOLE_RECOGNIZED = yes
+							}
+						}
+					}
+				}
+				else = {
+					every_in_list = {
+						variable = recognized_high_court_list
+						save_temporary_scope_as = high_court_to_copy
+						root.faith = {
+							add_recognized_high_court_faith_effect = {
+								HIGH_COURT = high_court_to_copy
+								SOLE_RECOGNIZED = no
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				# Traditionalists should copy the classic 4
+				root.faith = {
+					has_doctrine = wardenite_traditionalist_doctrine
+				}
+			}
+			# Yes, I'm a lazy bastard
+			faith:haradar = {
+				every_in_list = {
+					variable = recognized_high_court_list
+					save_temporary_scope_as = high_court_to_copy
+					root.faith = {
+						add_recognized_high_court_faith_effect = {
+							HIGH_COURT = high_court_to_copy
+							SOLE_RECOGNIZED = no
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				# Idealists should form a new one
+				root.faith = {
+					has_doctrine = wardenite_idealist_doctrine
+				}
+			}
+			create_high_court_no_title_effect = { HIGH_COURT_SCOPE_NAME = new_idealist_high_court }
+			root = { save_scope_as = high_judge_template_character }
+			root.faith = {
+				add_recognized_high_court_faith_effect = {
+					HIGH_COURT = new_idealist_high_court
+					SOLE_RECOGNIZED = yes 
+				}
+			}
+			generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+			scope:created_legal_tradition = {
+				assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_idealist_high_court }
+			}
+			generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+			scope:created_legal_tradition = {
+				assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_idealist_high_court }
+			}
+			generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+			scope:created_legal_tradition = {
+				assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_idealist_high_court }
+			}
+			generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+			scope:created_legal_tradition = {
+				assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_idealist_high_court }
+			}
+			generate_procedural_legal_tradition_effect = { LEVEL = 0 TRAIT_POINTS = 4 }
+			scope:created_legal_tradition = {
+				assign_legal_tradition_to_high_court_effect = { HIGH_COURT = new_idealist_high_court }
+			}
+			scope:new_idealist_high_court = {
+				add_several_high_court_seats_effect = { NUMBER = 10 }
+				fill_all_high_court_seats_effect = yes
+			}
+		}
+		# By default, divergent mainliners still recognize the old Mamur, though this can change afterward
+		root.faith = {
+			if = {
+				limit = { has_doctrine = special_doctrine_singular_mamur_hostility }
+				remove_doctrine = special_doctrine_singular_mamur_hostility
+			}
+		}
+		if = {
+			limit = { 
+				scope:old_faith = { has_variable_list = judges_list }
+			}
+			scope:old_faith = {
+				every_in_list = {
+					variable = judges_list
+					save_scope_as = common_judge
+					root.faith = {
+						add_to_variable_list = {
+							name = judges_list
+							target = scope:common_judge
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+gh_on_faith_conversion = {
+	effect = {
+		if = {
+			limit = { has_character_modifier = aeschraes_pissed_on_my_wife } # You're not getting out of this that easily, Aeschraes
+			set_character_faith = scope:old_faith
+		}
+		if = {
+			limit = {
+				NOT = { has_global_variable = rite_wars } 
+				is_any_rite_faith_trigger = yes
+			}
+			set_character_faith = scope:old_faith
+		}
+		if = { # GH Addition: Removes or adds patrons when switching faiths.
+			limit = {
+				faith = { faith_has_patron_saints = yes }
+				is_ai = yes
+			}
+			assign_ai_patron_wrapper_effect = yes
+		}
+		else_if = {
+			limit = { scope:old_faith = { faith_has_patron_saints = yes } }
+			renounce_all_patron_saints_effect = yes
+		}
+
+		# GH Achievement checks
+		if = {
+			limit = { has_title = title:e_aversarinas_aautokrata }
+			GH_achiev_basicallyopakhasian_check = yes
+		}
+	}
+	events = {
+		marcher_lifepath.0001 #If Lifepath, get your lifepath focus
+		marcher_lifepath.0003 #If Opakasijan, get your lifepath focus
+		marcher_lifepath.0004 #Four Steps, get your own lifepath focus
+		marcher_lifepath.0005 #Four Steps, get your own lifepath focus
+	}
+}

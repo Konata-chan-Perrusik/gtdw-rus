@@ -1,0 +1,616 @@
+﻿magocratic_government = {
+	government_rules = {
+		dynasty_named_realms = yes
+		royal_court = yes
+		create_cadet_branches = yes
+		rulers_should_have_dynasty = yes
+		legitimacy = yes
+	}
+
+	primary_holding = castle_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding church_holding }
+	required_county_holdings = { castle_holding city_holding church_holding }
+
+	vassal_contract_group = feudal_vassal
+
+	ai = {
+		use_legends = yes
+	}
+
+	can_get_government = {
+		has_magi_potency_trigger = yes
+	}
+	flag = government_is_magocratic
+	flag = government_is_settled
+	flag = may_elevate_co_monarch
+	fallback = 5
+	
+	color = hsv{ 0.0 0.00 0.50 }
+}
+
+magocratic_republic = {
+	primary_holding = city_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { city_holding castle_holding church_holding }
+	government_rules = {
+		royal_court = yes
+		create_cadet_branches = yes
+		legitimacy = yes
+		administrative = yes
+		landless_playable = yes
+	}
+
+	domicile_type = estate
+	
+	can_get_government = {
+		has_magi_potency_trigger = yes
+	}
+	flag = government_has_influence
+	flag = government_has_powerful_families
+	flag = government_is_magocratic_republic
+	flag = government_is_settled
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = republic_playable_tax_slot
+
+	character_modifier = {
+		domain_limit = -2
+		vassal_limit = -10
+		men_at_arms_cap = -3
+		men_at_arms_limit = -3
+		knight_limit = -4
+		development_growth_factor = 0.1
+		mercenary_hire_cost_mult = -0.3
+		building_slot_add = 2
+	}
+	
+	fallback = 4
+
+	vassal_contract_group = GH_republic_vassal
+	
+	ai = {
+		use_legends = yes
+	}
+	color = hsv{ 0.00 0.00 0.60 }
+}
+
+peasant_republic = {
+	primary_holding = city_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { city_holding castle_holding church_holding }
+	government_rules = {
+		legitimacy = no
+		inherit_from_dynastic_government = no
+	}
+	vassal_contract_group = GH_republic_vassal
+	
+	fallback = 3
+
+	supply_limit_mult_for_others = -0.5
+
+	flag = can_not_be_vassal_or_liege
+	flag = government_is_peasant_republic
+	flag = government_is_settled
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = republic_playable_tax_slot
+
+	character_modifier = {
+		men_at_arms_cap = -2
+		men_at_arms_limit = -2
+		men_at_arms_recruitment_cost = 0.25
+		knight_limit = -5
+		domain_limit = -5
+		vassal_limit = 20
+		feudal_government_tax_contribution_mult = -0.5
+		feudal_government_levy_contribution_mult = -0.5
+		clan_government_tax_contribution_mult = -0.5
+		clan_government_levy_contribution_mult = -0.5
+		building_slot_add = 2
+		feudal_government_opinion = -50
+		clan_government_opinion = -50
+		republic_government_opinion = -50
+	}
+
+	ai = {
+		arrange_marriage = no
+		use_goals = no
+		perform_religious_reformation = no
+		use_legends = no
+	}
+
+	color = hsv{ 0.4 0.5 0.4 } #placeholder color
+}
+
+landed_order_government = {
+	government_rules = {
+		create_cadet_branches = no
+		rulers_should_have_dynasty = yes
+		dynasty_named_realms = no
+		royal_court = yes
+		religious = yes
+		legitimacy = yes
+	}
+
+	primary_holding = castle_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { castle_holding city_holding church_holding }
+	flag = government_is_landed_order
+	flag = government_is_settled
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = landed_order_tax_slot
+
+	vassal_contract_group = GH_landed_order_vassal
+	
+	ai = {
+		use_legends = yes
+	}
+	
+	color = hsv{ 0.3 0.3 0.3 }
+}
+
+military_unit_government = {
+	government_rules = {
+		create_cadet_branches = no
+		rulers_should_have_dynasty = yes
+		dynasty_named_realms = no
+		royal_court = yes
+		legitimacy = yes
+	}
+	flag = government_is_military_unit
+	flag = government_is_settled
+	primary_holding = castle_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { castle_holding city_holding church_holding }
+	court_generate_commanders = 5
+
+	vassal_contract_group = GH_military_unit_vassal
+	
+	ai = {
+		use_legends = yes
+	}
+
+	color = { 230 80 20 }
+}
+
+pirate_government = {
+	government_rules = {
+		create_cadet_branches = yes
+		inherit_from_dynastic_government = no
+		regiments_prestige_as_gold = yes
+		royal_court = yes
+		conditional_maa_refill = yes
+	}
+
+	affected_by_development = no
+	supply_limit_mult_for_others = -0.5
+
+	flag = government_is_pirate
+	flag = government_is_settled
+	flag = court_positions_are_more_expensive
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = pirate_tax_slot
+	primary_holding = castle_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding tribal_holding colony_holding ruin_holding }
+	required_county_holdings = { castle_holding city_holding church_holding }
+
+	vassal_contract_group = GH_pirate_vassal
+
+	character_modifier = {
+		feudal_government_opinion = -25
+		clan_government_opinion = -25
+		republic_government_opinion = -25
+		embarkation_cost_mult = -0.85
+		sea_travel_danger = low_sea_danger_reduction
+		coastal_sea_travel_danger = low_sea_danger_reduction
+		ai_war_chance = 0.2
+	}
+	
+	ai = {
+		use_legends = yes
+	}
+	
+	prestige_opinion_override = { -10 0 3 5 10 20 }
+	
+	flag = government_can_raid_over_water_rule
+	color = hsv{ 0.50 0.50 0.50 }
+}
+
+wasteland_government = {
+	primary_holding = wasteland_empty_holding
+	valid_holdings = { wasteland_empty_holding ruin_holding ruined_district_holding }
+	required_county_holdings = { wasteland_empty_holding }
+	
+	government_rules = {
+		create_cadet_branches = no
+		rulers_should_have_dynasty = no	
+		council = no
+		court_generate_spouses = no
+	}
+
+	vassal_contract_group = GH_wasteland_vassal 
+
+	court_generate_commanders = no
+	flag = can_not_be_vassal_or_liege
+	flag = government_is_wasteland
+	flag = government_is_settled
+
+	can_get_government = {
+		is_ruin = yes
+	}
+	
+	ai = {
+		arrange_marriage = no
+		use_goals = no
+		use_scripted_guis = no
+		perform_religious_reformation = no
+		use_legends = no
+	}
+	
+	color = { 0 0 0 0 }
+}
+
+administrative_bureaucracy_government = {
+	government_rules = {
+		create_cadet_branches = no
+		rulers_should_have_dynasty = no
+	}
+
+	primary_holding = castle_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { city_holding castle_holding church_holding }
+	
+	ai = {
+		perform_religious_reformation = no
+		arrange_marriage = no
+		use_goals = no
+		use_scripted_guis = no
+		use_legends = no
+	}
+
+	flag = can_not_be_vassal_or_liege
+	flag = government_is_administrative_bureaucracy
+	flag = government_is_settled
+
+	vassal_contract_group = republic_vassal
+	color = { 37 138 32 }
+}
+
+migratory_government = {
+	government_rules = {
+		rulers_should_have_dynasty = yes
+		regiments_prestige_as_gold = yes
+	}
+	
+	affected_by_development = no
+	supply_limit_mult_for_others = -0.5
+	primary_holding = tribal_holding
+	required_county_holdings = { tribal_holding }
+
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+
+	prestige_opinion_override = { -10 0 3 5 10 20 }
+	always_use_patronym = yes	
+
+	ai = {
+		perform_religious_reformation = no
+		arrange_marriage = no
+		use_goals = no
+		use_scripted_guis = no
+		use_legends = no
+	}
+
+	vassal_contract_group = herder_vassal
+	
+	character_modifier = {
+		title_creation_cost_mult = -0.5
+		army_maintenance_mult = -0.5
+
+		feudal_government_vassal_opinion = -20
+		clan_government_vassal_opinion = -20
+		republic_government_vassal_opinion = -20
+	
+		ai_war_chance = 0.25
+		monthly_prestige = 0.2
+	}
+	flag = can_not_be_vassal_or_liege
+	flag = government_can_raid_rule
+	flag = government_is_migratory
+
+	color = { 212 198 42 }
+}
+
+lichdom_government = {
+	government_rules = {
+		create_cadet_branches = no
+		rulers_should_have_dynasty = yes
+		dynasty_named_realms = yes
+		royal_court = yes
+		conditional_maa_refill = yes
+		court_generate_spouses = no
+	}
+
+	court_generate_commanders = no
+	affected_by_development = no
+	primary_holding = necropolis_holding
+	valid_holdings = { necropolis_holding ruin_holding }
+	required_county_holdings = { necropolis_holding }
+
+	character_modifier = {
+		additional_fort_level = 15
+		garrison_size = 10
+	}
+	ai = {
+		perform_religious_reformation = no
+		arrange_marriage = no
+		use_legends = no
+	}
+
+	vassal_contract_group = GH_lich_vassal
+
+	flag = government_is_lichdom
+	flag = government_is_settled
+	
+	color = { 20 20 20 }
+}
+
+republic_playable_government = {
+
+	primary_holding = city_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { city_holding castle_holding church_holding }
+	government_rules = {
+		create_cadet_branches = yes
+		rulers_should_have_dynasty = yes
+		royal_court = yes
+		legitimacy = yes
+		inherit_from_dynastic_government = no
+	}
+	can_get_government = {
+		highest_held_title_tier >= tier_county
+	}
+	ai = {
+		perform_religious_reformation = no
+		use_legends = yes
+	}
+	
+	fallback = 3
+
+	supply_limit_mult_for_others = -0.5
+
+	flag = government_is_republic_playable
+	flag = government_is_settled
+
+	character_modifier = {
+		levy_size = -0.5
+		men_at_arms_maintenance = 0.5
+		men_at_arms_recruitment_cost = 0.5
+		feudal_government_tax_contribution_mult = -0.5
+		feudal_government_levy_contribution_mult = -0.5
+		clan_government_tax_contribution_mult = -0.5
+		clan_government_levy_contribution_mult = -0.5
+		domain_limit = -3
+		men_at_arms_cap = -3
+		men_at_arms_limit = -3
+		knight_limit = -5
+		active_accolades = -1
+		mercenary_hire_cost_mult = -0.3
+		building_slot_add = 2
+		ai_war_chance = -0.2
+	}
+	vassal_contract_group = GH_republic_vassal 
+	flag = government_is_republic_nonadministrative
+	flag = government_is_settled
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = republic_playable_tax_slot
+	color = hsv{ 0.00 1.00 0.98 } #placeholder color
+}
+
+administrative_republic_playable_government = { # for kingdom and higher-level republics
+	government_rules = {
+		create_cadet_branches = yes
+		rulers_should_have_dynasty = yes
+		royal_court = yes
+		legitimacy = yes
+		inherit_from_dynastic_government = no
+		administrative = yes
+		landless_playable = yes
+		state_faith = no
+		use_as_base_on_landed = yes
+		use_as_base_on_rank_up = yes
+		sticky_government = yes
+	}
+	
+	domicile_type = estate
+
+	primary_holding = city_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding  }
+
+	ai = {
+		perform_religious_reformation = no
+		use_legends = yes
+	}
+	
+	character_modifier = {
+		levy_size = -0.5
+		men_at_arms_maintenance = 0.5
+		men_at_arms_recruitment_cost = 0.5
+		feudal_government_tax_contribution_mult = -0.5
+		feudal_government_levy_contribution_mult = -0.5
+		clan_government_tax_contribution_mult = -0.5
+		clan_government_levy_contribution_mult = -0.5
+		domain_limit = -1
+		men_at_arms_cap = -3
+		men_at_arms_limit = -3
+		knight_limit = -5
+		active_accolades = -1
+		mercenary_hire_cost_mult = -0.3
+		building_slot_add = 2
+		ai_war_chance = -0.2
+	}
+	vassal_contract_group = GH_republic_vassal 
+
+	flag = government_is_administrative_republic
+	flag = government_is_settled
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = republic_playable_tax_slot
+	flag = government_has_influence
+	flag = government_has_title_men_at_arms
+	flag = government_has_powerful_families
+	flag = government_is_administrative
+	flag = admin_no_state_faith
+
+	color = { 220 1 100 }
+}
+
+judicial_republic_government = { #Mainly for Wardenites
+	government_rules = {
+		create_cadet_branches = yes
+		rulers_should_have_dynasty = yes
+		royal_court = yes
+		legitimacy = yes
+		inherit_from_dynastic_government = no
+		administrative = yes
+		landless_playable = yes
+		use_as_base_on_landed = yes
+		use_as_base_on_rank_up = yes
+		state_faith = yes
+		sticky_government = yes
+	}
+	
+	domicile_type = estate
+
+	primary_holding = city_holding
+	valid_holdings = { castle_holding metro_holding ruined_district_holding colony_holding ruin_holding  }
+	required_county_holdings = { castle_holding city_holding church_holding }
+
+	ai = {
+		perform_religious_reformation = no
+		use_legends = yes
+	}
+	
+
+
+	character_modifier = {
+		levy_size = -0.5
+		men_at_arms_maintenance = 0.5
+		men_at_arms_recruitment_cost = 0.5
+		feudal_government_tax_contribution_mult = -0.5
+		feudal_government_levy_contribution_mult = -0.5
+		clan_government_tax_contribution_mult = -0.5
+		clan_government_levy_contribution_mult = -0.5
+		domain_limit = -1
+		men_at_arms_cap = -3
+		men_at_arms_limit = -3
+		knight_limit = -5
+		active_accolades = -1
+		mercenary_hire_cost_mult = -0.3
+		building_slot_add = 2
+		ai_war_chance = -0.2
+	}
+	vassal_contract_group = GH_republic_vassal 
+	flag = government_is_judicial_republic
+	flag = government_is_settled
+	flag = has_tax_slots # Needed for SGUI
+	tax_slot_type = republic_playable_tax_slot
+	flag = government_has_influence
+	flag = government_has_title_men_at_arms
+	flag = government_has_powerful_families
+	flag = government_is_administrative
+	flag = government_uses_state_faith
+
+	color = { 0 100 100 }
+}
+
+continental_clan_government = { # This is done to differentiate Sarradonian from Continental Clan govts 
+	primary_holding = castle_holding
+	primary_heritages = { heritage_sjalvolki heritage_partic heritage_karzarad }
+	
+	government_rules = {
+		create_cadet_branches = yes
+		rulers_should_have_dynasty = yes
+		royal_court = yes
+		regiments_prestige_as_gold = yes
+		legitimacy = yes
+		dynasty_named_realms = yes
+	}
+
+	supply_limit_mult_for_others = -0.5
+	prestige_opinion_override = { -10 0 3 5 10 20 }
+
+	valid_holdings = { castle_holding tribal_holding metro_holding ruined_district_holding colony_holding ruin_holding }
+	required_county_holdings = { castle_holding city_holding church_holding }
+	always_use_patronym = yes
+
+	house_unity = clan_house_unity
+
+	vassal_contract_group = GH_tribal_clan_vassal
+
+	ai = {
+		use_legends = yes
+	}
+
+	character_modifier = {
+		title_creation_cost_mult = -0.3
+		army_maintenance_mult = -0.3
+		development_growth_factor = -0.1
+		character_travel_safety = 10
+		tribal_government_vassal_opinion = 10
+		castle_holding_build_speed = 1
+		city_holding_build_speed = 1
+		ai_war_chance = 0.2
+		monthly_prestige = 0.15
+	}
+	
+	opinion_of_liege = {
+		scope:vassal = {
+			if = {
+				limit = {
+					NOT = {
+						is_allied_to = scope:liege
+					}
+				}
+				if = {
+					limit = {
+						is_powerful_vassal = yes
+					}
+					value = clan_powerful_vassal_no_alliance_opinion_penalty_value
+				}
+				else = {
+					value = clan_vassal_no_alliance_opinion_penalty_value
+				}
+			}
+		}
+	}
+	opinion_of_liege_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					scope:vassal = {
+						NOT = {
+							is_allied_to = scope:liege
+						}
+						is_powerful_vassal = yes
+					}
+				}
+				desc = "GOVERNMENT_CLAN_NOT_ALLIED_POWERFUL"
+			}
+			triggered_desc = {
+				trigger = {
+					scope:vassal = {
+						NOT = {
+							is_allied_to = scope:liege
+						}
+						is_powerful_vassal = no
+					}
+				}
+				desc = "GOVERNMENT_CLAN_NOT_ALLIED"
+			}
+		}
+	}
+
+	# Use flags instead of has_government for moddability if possible (i.e., wherever not visible to the player).
+	flag = government_can_raid_rule
+	flag = government_is_continental_clan
+	flag = government_is_settled
+	#flag = may_appoint_viziers
+	color = { 119 213 242 }
+}

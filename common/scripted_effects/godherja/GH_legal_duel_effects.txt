@@ -1,0 +1,831 @@
+﻿########################
+# JURISDICTION EFFECTS #
+########################
+
+# Finds the first eligible character or court that will take a suit between two characters
+find_jurisdiction_effect = {
+	# If the attacker is a liege of the defender, use a provisional court
+	if = {
+		limit = {
+			$DEFENDER$ = { is_vassal_or_below_of = $ATTACKER$ }
+		}
+		save_scope_value_as = {
+			name = using_provisional_court
+			value = yes
+		}
+		custom_tooltip = provisional_court_will_preside_tooltip
+	}
+	else_if = {	# If the defender has a liege that isn't a vassal or below of the attacker, use them
+		limit = {
+			$DEFENDER$ = {  
+				exists = liege
+				NOR = { 
+					liege = $DEFENDER$
+					liege = $ATTACKER$
+				}
+				liege = { has_trait = lifestyle_jurist }
+			}
+		}
+		$DEFENDER$.liege = { save_scope_as = trial_presiding_character }
+		custom_tooltip = liege_will_preside_tooltip
+		# Check to see if there's any conflict of interest in the liege being the presiding judge
+		if = {
+			limit = {
+				OR = {
+					$DEFENDER$ = { is_close_family_of = scope:trial_presiding_character }
+					$ATTACKER$ = { is_close_family_of = scope:trial_presiding_character }
+					$DEFENDER$ = { is_spouse_of = scope:trial_presiding_character }
+					$ATTACKER$ = { is_spouse_of = scope:trial_presiding_character }
+				}
+			}
+			save_scope_value_as = {
+				name = major_conflict_of_interest_exists
+				value = yes
+			}
+			custom_tooltip = major_conflict_of_interest_exists_tooltip
+		}
+		else_if = {
+			limit = {
+				OR = {
+					$DEFENDER$ = { is_extended_family_of = scope:trial_presiding_character }
+					$ATTACKER$ = { is_extended_family_of = scope:trial_presiding_character }
+					$DEFENDER$ = { has_relation_friend = scope:trial_presiding_character }
+					$ATTACKER$ = { has_relation_friend = scope:trial_presiding_character }
+				}
+			}
+			save_scope_value_as = {
+				name = minor_conflict_of_interest_exists
+				value = yes
+			}
+			custom_tooltip = minor_conflict_of_interest_exists_tooltip
+		}
+	}
+	else = { # Otherwise, it defaults to the High Court
+		#save_scope_value_as = {
+		#	name = using_high_court
+		#	value = yes
+		#}
+		#custom_tooltip = high_court_will_preside_tooltip
+		save_scope_value_as = {
+			name = using_provisional_court
+			value = yes
+		}
+		custom_tooltip = provisional_court_will_preside_tooltip
+	}
+}
+
+####################
+# LEGAL SUIT DUELS #
+####################
+
+legal_manipulation_effect = {
+	scope:actor = {
+		add_hook = {
+			type = favor_hook
+			target = scope:recipient
+		}
+	}
+}
+
+execute_legal_duel_with_judge_effect = {
+	random_list = {
+		1 = {
+			modifier = {
+				add = $SUPPORTED_CHARACTER$.judicial_power_value
+			}
+			modifier = {
+				add = $JUDGE$.judicial_power_value
+			}
+			send_interface_toast = {
+				title = legal_tradition_action_virtuous_ruling_tooltip
+				left_icon = root
+				add_piety = {
+					value = $PIETY_REWARD$
+					if = {
+						limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+						multiply = {
+							value = root.learning
+							multiply = 0.01
+							add = 1
+						}
+					}
+				}
+				if = {
+					limit = {
+						exists = dynasty
+						dynasty = { has_dynasty_perk = wardenite_legacy_1 }
+					}
+					add_prestige = {
+						value = $PIETY_REWARD$
+						if = {
+							limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+							multiply = {
+								value = root.learning
+								multiply = 0.01
+								add = 1
+							}
+						}
+					}
+					dynasty = {
+						add_dynasty_prestige = {
+							value = $PIETY_REWARD$
+							if = {
+								limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+								multiply = {
+									value = root.learning
+									multiply = 0.01
+									add = 1
+								}
+							}
+							multiply = 0.1
+						}
+					}
+				}
+			}
+			desc = legal_tradition_action_virtuous_ruling_tooltip
+		}
+		15 = {
+			send_interface_toast = {
+				title = legal_tradition_action_acceptable_ruling_tooltip
+				left_icon = root
+			}
+			desc = legal_tradition_action_acceptable_ruling_tooltip
+		}
+		1 = {
+			modifier = {
+				add = $OPPOSED_CHARACTER$.judicial_power_value
+			}
+			modifier = {
+				add = 10
+				exists = scope:minor_conflict_of_interest_exists
+			}
+			modifier = {
+				add = 20
+				exists = scope:major_conflict_of_interest_exists
+			}
+			send_interface_toast = {
+				title = legal_tradition_action_shoddy_ruling_tooltip
+				left_icon = root
+				if = {
+					limit = { exists = scope:major_conflict_of_interest_exists }
+					add_piety = {
+						value = $PIETY_LOSS$
+						multiply = 3
+					}
+					custom_tooltip = major_conflict_of_interest_exists_judge_tooltip
+				}
+				else_if = {
+					limit = { exists = scope:minor_conflict_of_interest_exists }
+					add_piety = {
+						value = $PIETY_LOSS$
+						multiply = 2
+					}
+					custom_tooltip = minor_conflict_of_interest_exists_judge_tooltip
+				}
+				else = {
+					add_piety = $PIETY_LOSS$
+				}
+			}
+			desc = legal_tradition_action_shoddy_ruling_tooltip
+		}
+	}
+}
+
+execute_legal_duel_without_judge_effect = {
+	random_list = {
+		1 = {
+			modifier = {
+				add = $ATTACKER$.judicial_power_value
+			}
+			$EFFECT$ = yes
+		}
+		1 = {
+			modifier = {
+				add = $DEFENDER$.judicial_power_value
+			}
+		}
+	}
+}
+
+execute_legal_challenge_with_skill_effect = {
+	duel = {
+		skill = $SKILL$
+		value = $TARGET_VALUE$
+		0 = {
+			desc = legal_challenge.critical_success
+			trigger = { $SKILL$ >= $TARGET_VALUE$ }
+			compare_modifier = {
+				value = scope:duel_value
+			}
+			modifier = {
+				add = {
+					value = judicial_power_value
+					multiply = 0.25
+				}
+			}
+			modifier = {	# Double the difficulty when using the innovation approach
+				factor = 0.5
+				exists = var:judicial_approach
+				var:judicial_approach = flag:innovation_approach
+			}
+			send_interface_toast = {
+				title = legal_challenge.critical_success
+				left_icon = root
+				if = {
+					limit = { NOT = { $PIETY_REWARD$ = 0 } }
+					add_piety = {
+						value = {
+							value = $PIETY_REWARD$
+							if = {
+								limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+								multiply = {
+									value = root.learning
+									multiply = 0.01
+									add = 1
+								}
+							}
+							if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_1 } }
+									value = root.diplomacy
+									multiply = 0.01
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_2 } }
+									value = root.diplomacy
+									multiply = 0.02
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_3 } }
+									value = root.diplomacy
+									multiply = 0.03
+									add = 1
+								}
+							if = {
+								limit = {
+									legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+									exists = var:character_legal_tradition
+									exists = var:character_legal_tradition.var:broad_rank
+								}
+								multiply = {
+									value = 5
+									add = var:character_legal_tradition.var:broad_rank
+									multiply = 0.2
+								}
+							}
+						}
+						multiply = 2
+					}
+					if = {
+						limit = {
+							exists = dynasty
+							dynasty = { has_dynasty_perk = wardenite_legacy_1 }
+						}
+						add_prestige = {
+							value = {
+								value = $PIETY_REWARD$
+								if = {
+									limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+									multiply = {
+										value = root.learning
+										multiply = 0.01
+										add = 1
+									}
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_1 } }
+									value = root.diplomacy
+									multiply = 0.01
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_2 } }
+									value = root.diplomacy
+									multiply = 0.02
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_3 } }
+									value = root.diplomacy
+									multiply = 0.03
+									add = 1
+								}
+								if = {
+									limit = {
+										legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+										exists = var:character_legal_tradition
+										exists = var:character_legal_tradition.var:broad_rank
+									}
+									multiply = {
+										value = 5
+										add = var:character_legal_tradition.var:broad_rank
+										multiply = 0.2
+									}
+								}
+							}
+							multiply = 2
+						}
+						dynasty = {
+							add_dynasty_prestige = {
+								value = {
+									value = $PIETY_REWARD$
+									if = {
+										limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+										multiply = {
+											value = root.learning
+											multiply = 0.01
+											add = 1
+										}
+									}
+									if = {
+										limit = { root.domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_1 } }
+										value = root.diplomacy
+										multiply = 0.01
+										add = 1
+									}
+									if = {
+										limit = { root.domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_2 } }
+										value = root.diplomacy
+										multiply = 0.02
+										add = 1
+									}
+									if = {
+										limit = { root.domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_3 } }
+										value = root.diplomacy
+										multiply = 0.03
+										add = 1
+									}
+									if = {
+										limit = {
+											legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+											exists = var:character_legal_tradition
+											exists = var:character_legal_tradition.var:broad_rank
+										}
+										multiply = {
+											value = 5
+											add = var:character_legal_tradition.var:broad_rank
+											multiply = 0.2
+										}
+									}
+								}
+								multiply = 0.2
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						exists = var:judicial_approach
+						var:judicial_approach = flag:scholarship_approach
+					}
+					add_prestige = {
+						value = $PIETY_REWARD$
+						multiply = 2
+					}
+					var:character_legal_tradition = {
+						add_legal_tradition_progress_effect = { VALUE = $JURIST_PROGRESS_VALUE_CRITICAL_SUCCESS$ }
+					}
+				}
+				
+				if = {
+					limit = { legal_tradition_has_flag_trigger = { FLAG = participating_in_legal_action_can_give_learning } }
+					random = {
+						chance = 30
+						modifier = {
+							add = {
+								value = root.learning
+								multiply = -1
+							}
+						}
+						add_learning_skill = 1
+					}
+				}
+				if = {
+					limit = { 
+						legal_tradition_has_flag_trigger = { FLAG = may_gain_mystic_from_trials }
+						NOT = { has_trait = lifestyle_mystic has_trait_xp = { trait = lifestyle_mystic value >= 100 } }
+					}
+					random = {
+						chance = 60
+						modifier = {
+							factor = 0.3
+							has_trait = lifestyle_mystic 
+							has_trait_xp = { trait = lifestyle_mystic value >= 50 }
+						}
+						modifier = {
+							factor = 0.6
+							has_trait = lifestyle_mystic 
+							has_trait_xp = { trait = lifestyle_mystic value < 50 }
+						}
+						if = {
+							limit = { has_trait = lifestyle_mystic }
+							add_trait_xp = {
+								trait = lifestyle_mystic
+								value = 25
+							}
+						}
+						else = { add_trait = lifestyle_mystic }
+					}
+				}
+				add_jurist_progress_effect = { VALUE = $JURIST_PROGRESS_VALUE_CRITICAL_SUCCESS$ }
+			}
+		}
+		0 = {
+			desc = legal_challenge.success
+			compare_modifier = {
+				value = scope:duel_value
+			}
+			modifier = {
+				add = $TARGET_VALUE$
+			}
+			modifier = {
+				add = {
+					value = judicial_power_value
+					max = $SKILL$
+				}
+			}
+			modifier = {	# Double the difficulty when using the innovation approach
+				factor = 0.5
+				exists = var:judicial_approach
+				var:judicial_approach = flag:innovation_approach
+			}
+			send_interface_toast = {
+				title = legal_challenge.success
+				left_icon = root
+				if = {
+					limit = { NOT = { $PIETY_REWARD$ = 0 } }
+					add_piety = {
+						value = {
+							value = $PIETY_REWARD$
+							if = {
+								limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+								multiply = {
+									value = root.learning
+									multiply = 0.01
+									add = 1
+								}
+							}
+							if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_1 } }
+									value = root.diplomacy
+									multiply = 0.01
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_2 } }
+									value = root.diplomacy
+									multiply = 0.02
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_3 } }
+									value = root.diplomacy
+									multiply = 0.03
+									add = 1
+								}
+							if = {
+								limit = {
+									legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+									exists = var:character_legal_tradition
+									exists = var:character_legal_tradition.var:broad_rank
+								}
+								multiply = {
+									value = 5
+									add = var:character_legal_tradition.var:broad_rank
+									multiply = 0.2
+								}
+							}
+						}
+					}
+					if = {
+						limit = {
+							exists = dynasty
+							dynasty = { has_dynasty_perk = wardenite_legacy_1 }
+						}
+						add_prestige = {
+							value = {
+								value = $PIETY_REWARD$
+								if = {
+									limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+									multiply = {
+										value = root.learning
+										multiply = 0.01
+										add = 1
+									}
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_1 } }
+									value = root.diplomacy
+									multiply = 0.01
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_2 } }
+									value = root.diplomacy
+									multiply = 0.02
+									add = 1
+								}
+								if = {
+									limit = { domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_3 } }
+									value = root.diplomacy
+									multiply = 0.03
+									add = 1
+								}
+								if = {
+									limit = {
+										legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+										exists = var:character_legal_tradition
+										exists = var:character_legal_tradition.var:broad_rank
+									}
+									multiply = {
+										value = 5
+										add = var:character_legal_tradition.var:broad_rank
+										multiply = 0.2
+									}
+								}
+							}
+						}
+						dynasty = {
+							add_dynasty_prestige = {
+								value = {
+									value = $PIETY_REWARD$
+									if = {
+										limit = { legal_tradition_has_flag_trigger = { FLAG = learning_boosts_piety_gain_from_trials } }
+										multiply = {
+											value = root.learning
+											multiply = 0.01
+											add = 1
+										}
+									}
+								if = {
+									limit = { root.domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_1 } }
+									value = root.diplomacy
+									multiply = 0.01
+									add = 1
+								}
+								if = {
+									limit = { root.domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_2 } }
+									value = root.diplomacy
+									multiply = 0.02
+									add = 1
+								}
+								if = {
+									limit = { root.domicile ?= { has_domicile_parameter = increased_rewards_penalties_law_cases_3 } }
+									value = root.diplomacy
+									multiply = 0.03
+									add = 1
+								}
+									if = {
+										limit = {
+											legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+											exists = var:character_legal_tradition
+											exists = var:character_legal_tradition.var:broad_rank
+										}
+										multiply = {
+											value = 5
+											add = var:character_legal_tradition.var:broad_rank
+											multiply = 0.2
+										}
+									}
+								}
+								multiply = 0.1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						exists = var:judicial_approach
+						var:judicial_approach = flag:scholarship_approach
+					}
+					add_prestige = $PIETY_REWARD$
+					var:character_legal_tradition = {
+						add_legal_tradition_progress_effect = { VALUE = $JURIST_PROGRESS_VALUE_SUCCESS$ }
+					}
+				}
+				if = {
+					limit = { legal_tradition_has_flag_trigger = { FLAG = participating_in_legal_action_can_give_learning } }
+					random = {
+						chance = 30
+						modifier = {
+							add = {
+								value = root.learning
+								multiply = -1
+							}
+						}
+						add_learning_skill = 1
+					}
+				}
+				if = {
+					limit = { 
+						legal_tradition_has_flag_trigger = { FLAG = may_gain_mystic_from_trials }
+						NOT = { has_trait = lifestyle_mystic has_trait_xp = { trait = lifestyle_mystic value >= 100 } }
+					}
+					random = {
+						chance = 30
+						modifier = {
+							factor = 0.3
+							has_trait = lifestyle_mystic 
+							has_trait_xp = { trait = lifestyle_mystic value >= 50 }
+						}
+						modifier = {
+							factor = 0.6
+							has_trait = lifestyle_mystic 
+							has_trait_xp = { trait = lifestyle_mystic value < 50 }
+						}
+						if = {
+							limit = { has_trait = lifestyle_mystic }
+							add_trait_xp = {
+								trait = lifestyle_mystic
+								value = 25
+							}
+						}
+						else = { add_trait = lifestyle_mystic }
+					}
+				}
+				add_jurist_progress_effect = { VALUE = $JURIST_PROGRESS_VALUE_SUCCESS$ }
+			}
+		}
+		0 = {
+			desc = legal_challenge.failure
+			compare_modifier = {
+				value = scope:duel_value
+				multiplier = -1
+			}
+			modifier = {
+				add = $TARGET_VALUE$
+			}
+			modifier = {	# Double the difficulty when using the innovation approach
+				factor = 2
+				exists = var:judicial_approach
+				var:judicial_approach = flag:innovation_approach
+			}
+			modifier = {
+				factor = {
+					value = 10
+					subtract = var:character_legal_tradition.var:narrow_rank
+					multiply = 0.1
+				}
+				legal_tradition_has_flag_trigger = { FLAG = each_level_decreases_difficulty }
+				exists = var:character_legal_tradition
+				exists = var:character_legal_tradition.var:narrow_rank
+			}
+			modifier = {
+				factor = {
+					value = 5
+					add = var:character_legal_tradition.var:broad_rank
+					multiply = 0.2
+				}
+				legal_tradition_has_flag_trigger = { FLAG = each_level_increases_difficulty_and_rewards }
+				exists = var:character_legal_tradition
+				exists = var:character_legal_tradition.var:broad_rank
+			}
+			send_interface_toast = {
+				title = legal_challenge.failure
+				left_icon = root
+				if = {
+					limit = { NOT = { $PIETY_LOSS$ = 0 } }
+					add_piety = $PIETY_LOSS$
+				}
+				add_jurist_progress_effect = { VALUE = $JURIST_PROGRESS_VALUE_FAILURE$ }
+			}
+		}
+	}
+	if = {
+		limit = {
+			exists = var:judicial_approach
+			NOT = { var:judicial_approach = flag:orthodoxy_approach }
+		}
+		if = {
+			limit = {
+				OR = {
+					var:judicial_approach = flag:innovation_approach
+					var:judicial_approach = flag:scholarship_approach
+				}
+			}
+			random = {
+				chance = 25
+				modifier = {
+					factor = 0.5
+					has_trait = deceitful
+				}
+				modifier = {
+					factor = 0.5
+					var:judicial_approach = flag:scholarship_approach
+				}
+				modifier = {
+					factor = 1.5
+					has_trait = honest
+				}
+				add_radicalism_effect = { VALUE = $TARGET_VALUE$ }
+			}
+		}
+	}
+	else = {
+		if = {
+			limit = {
+				exists = var:radicalism
+				var:radicalism > 0
+				trigger_if = {
+					limit = { 
+						exists = var:character_legal_tradition
+						NOT = { faith = { has_doctrine = wardenite_radical_doctrine } }	# Already radical faiths should not receive radicalism if following a radical school
+					}
+					NOT = { var:character_legal_tradition = { has_variable = radical_tradition } }
+				}
+			}
+			add_radicalism_effect = { VALUE = -5 }
+		}
+		else_if = {
+			limit = {
+				exists = var:character_legal_tradition
+				var:character_legal_tradition = { has_variable = radical_tradition }
+			}
+			add_radicalism_effect = { VALUE = 15 }
+		}
+		if = {
+			limit = {
+				exists = var:corruption
+				var:corruption > 0
+			}
+			add_corruption_effect = { VALUE = -5 }
+		}
+	}
+}
+
+execute_corruption_duel_effect = {
+	add_gold = $GOLD_REWARD$
+	duel = {
+		skill = $SKILL$
+		value = $TARGET_VALUE$
+		0 = {
+			desc = corruption_challenge.success
+			compare_modifier = {
+				value = scope:duel_value
+			}
+			modifier = {
+				add = $TARGET_VALUE$
+			}
+			send_interface_toast = {
+				title = corruption_challenge.success
+				left_icon = root
+			}
+		}
+		1 = {
+			desc = corruption_challenge.failure
+			compare_modifier = {
+				value = scope:duel_value
+				multiplier = -1
+			}
+			modifier = {
+				add = $TARGET_VALUE$
+			}
+			send_interface_toast = {
+				title = corruption_challenge.failure
+				left_icon = root
+				add_piety = $PIETY_LOSS$
+				add_corruption_effect = { VALUE = $CORRUPTION_GAIN$ }
+			}
+		}
+	}
+}
+
+apply_legal_case_stress_effect = {
+	if = {
+		limit = { is_ai = no }
+		add_stress = {
+			value = $STRESS_GAIN$
+			if = {
+				limit = { has_trait = diligent }
+				multiply = 0.25
+			}
+			if = {
+				limit = { has_trait = lazy }
+				multiply = 0.5
+			}
+			if = {
+				limit = { domicile ?= { has_domicile_parameter = reduced_legal_case_stress_1 } }
+				multiply = -0.2
+				add = 1
+			}
+			if = {
+				limit = { domicile ?= { has_domicile_parameter = reduced_legal_case_stress_2 } }
+				multiply = -0.35
+				add = 1
+			}
+		}
+	}
+}
+
+justify_claim_effect = {
+	if = {
+		limit = {
+			exists = scope:actor
+			exists = scope:target
+		}
+		scope:actor = {
+			add_unpressed_claim = scope:target
+		}
+	}
+}

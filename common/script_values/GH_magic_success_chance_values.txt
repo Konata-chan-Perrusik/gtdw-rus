@@ -1,0 +1,1950 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/script_values/GH_magic_success_chance_values.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+spell_success_chance = {
+	value = {
+		value = 50
+		desc = spell_success_chance_base_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	subtract = {
+		value = spell_level_value
+		multiply = 15
+		desc = aspect_total_spell_level_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+	}
+	if = {
+		limit = { 
+			scope:caster.spellcasting_value > 0
+			NOT = {
+				AND = {
+					exists = scope:caster.var:casting_through_court_magi_var
+					exists = scope:caster.cp:councillor_court_magi
+				}
+			}
+		}
+		#add = {
+		#	value = {
+		#		value = scope:caster.spellcasting_value
+		#		multiply = 5
+		#	}
+		#	desc = caster_magic_prowess_value_desc
+		#	format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		#}
+		# Bonus from Magic Court Type
+		if = {
+			limit = {
+				scope:caster = {
+					has_royal_court = yes
+					has_court_type = court_magic
+					court_grandeur_current_level = 10
+				}
+			}
+			add = {
+				value = 10
+				desc = magic_court_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from Arcana Lifestyle
+		if = {
+			limit = {
+				scope:caster = {
+					has_focus = arcana_actuation_focus
+				}
+			}
+			add = {
+				value = 5
+				desc = arcana_actuation_focus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		if = {
+			limit = {
+				scope:caster = {
+					has_perk = arcana_actuation_perk3_tree1
+				}
+			}
+			add = {
+				value = 8
+				desc = arcana_actuation_perk3_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		if = {
+			limit = {
+				exists = var:spell_faith
+				scope:caster.faith.religion = var:spell_faith.religion
+			}
+			add = {
+				value = {
+					value = 10
+					multiply = scope:caster.piety_level
+				}
+				desc = caster_spell_faith_piety_level_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		else_if = {
+			limit = {
+				exists = var:spell_faith
+			}
+			add = {
+				value = -50
+				desc = caster_not_spell_faith_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { fire_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.fire_aspect_spell_success_bonus_value
+					multiply = fire_aspect_spell_ratio_value
+				}
+				desc = fire_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.fire_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.fire_aspect_overcharge_success_chance_decrease_value
+				desc = fire_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { water_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.water_aspect_spell_success_bonus_value
+					multiply = water_aspect_spell_ratio_value
+				}
+				desc = water_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.water_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.water_aspect_overcharge_success_chance_decrease_value
+				desc = water_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { ice_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.ice_aspect_spell_success_bonus_value
+					multiply = ice_aspect_spell_ratio_value
+				}
+				desc = ice_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.ice_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.ice_aspect_overcharge_success_chance_decrease_value
+				desc = ice_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { air_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.air_aspect_spell_success_bonus_value
+					multiply = air_aspect_spell_ratio_value
+				}
+				desc = air_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.air_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.air_aspect_overcharge_success_chance_decrease_value
+				desc = air_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { stone_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.stone_aspect_spell_success_bonus_value
+					multiply = stone_aspect_spell_ratio_value
+				}
+				desc = stone_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.stone_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.stone_aspect_overcharge_success_chance_decrease_value
+				desc = stone_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { dream_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.dream_aspect_spell_success_bonus_value
+					multiply = dream_aspect_spell_ratio_value
+				}
+				desc = dream_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.dream_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.dream_aspect_overcharge_success_chance_decrease_value
+				desc = dream_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { celestial_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.celestial_aspect_spell_success_bonus_value
+					multiply = celestial_aspect_spell_ratio_value
+				}
+				desc = celestial_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.celestial_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.celestial_aspect_overcharge_success_chance_decrease_value
+				desc = celestial_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { dark_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.dark_aspect_spell_success_bonus_value
+					multiply = dark_aspect_spell_ratio_value
+				}
+				desc = dark_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.dark_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.dark_aspect_overcharge_success_chance_decrease_value
+				desc = dark_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { light_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.light_aspect_spell_success_bonus_value
+					multiply = light_aspect_spell_ratio_value
+				}
+				desc = light_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.light_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.light_aspect_overcharge_success_chance_decrease_value
+				desc = light_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { blood_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.blood_aspect_spell_success_bonus_value
+					multiply = blood_aspect_spell_ratio_value
+				}
+				desc = blood_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.blood_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.blood_aspect_overcharge_success_chance_decrease_value
+				desc = blood_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { nature_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.nature_aspect_spell_success_bonus_value
+					multiply = nature_aspect_spell_ratio_value
+				}
+				desc = nature_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.nature_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.nature_aspect_overcharge_success_chance_decrease_value
+				desc = nature_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { ethereal_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.ethereal_aspect_spell_success_bonus_value
+					multiply = ethereal_aspect_spell_ratio_value
+				}
+				desc = ethereal_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.ethereal_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.ethereal_aspect_overcharge_success_chance_decrease_value
+				desc = ethereal_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { hymns_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.hymns_aspect_spell_success_bonus_value
+					multiply = hymns_aspect_spell_ratio_value
+				}
+				desc = hymns_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.hymns_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.hymns_aspect_overcharge_success_chance_decrease_value
+				desc = hymns_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { death_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.death_aspect_spell_success_bonus_value
+					multiply = death_aspect_spell_ratio_value
+				}
+				desc = death_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.death_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.death_aspect_overcharge_success_chance_decrease_value
+				desc = death_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { sand_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.sand_aspect_spell_success_bonus_value
+					multiply = sand_aspect_spell_ratio_value
+				}
+				desc = sand_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.sand_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.sand_aspect_overcharge_success_chance_decrease_value
+				desc = sand_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { metal_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.metal_aspect_spell_success_bonus_value
+					multiply = metal_aspect_spell_ratio_value
+				}
+				desc = metal_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.metal_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.metal_aspect_overcharge_success_chance_decrease_value
+				desc = metal_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { time_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.time_aspect_spell_success_bonus_value
+					multiply = time_aspect_spell_ratio_value
+				}
+				desc = time_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.time_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.time_aspect_overcharge_success_chance_decrease_value
+				desc = time_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { dawn_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.dawn_aspect_spell_success_bonus_value
+					multiply = dawn_aspect_spell_ratio_value
+				}
+				desc = dawn_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.dawn_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.dawn_aspect_overcharge_success_chance_decrease_value
+				desc = dawn_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	else_if = {
+		limit = { 
+			exists = scope:caster.var:casting_through_court_magi_var
+			exists = scope:caster.cp:councillor_court_magi
+		}
+		add = {
+			value = scope:caster.cp:councillor_court_magi.spellcasting_value
+			desc = caster_magic_prowess_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { fire_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.fire_aspect_spell_success_bonus_value
+					multiply = fire_aspect_spell_ratio_value
+				}
+				desc = fire_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.fire_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.fire_aspect_overcharge_success_chance_decrease_value
+				desc = fire_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { water_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.water_aspect_spell_success_bonus_value
+					multiply = water_aspect_spell_ratio_value
+				}
+				desc = water_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.water_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.water_aspect_overcharge_success_chance_decrease_value
+				desc = water_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { ice_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.ice_aspect_spell_success_bonus_value
+					multiply = ice_aspect_spell_ratio_value
+				}
+				desc = ice_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.ice_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.ice_aspect_overcharge_success_chance_decrease_value
+				desc = ice_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { air_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.air_aspect_spell_success_bonus_value
+					multiply = air_aspect_spell_ratio_value
+				}
+				desc = air_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.air_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.air_aspect_overcharge_success_chance_decrease_value
+				desc = air_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { stone_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.stone_aspect_spell_success_bonus_value
+					multiply = stone_aspect_spell_ratio_value
+				}
+				desc = stone_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.stone_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.stone_aspect_overcharge_success_chance_decrease_value
+				desc = stone_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { dream_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.dream_aspect_spell_success_bonus_value
+					multiply = dream_aspect_spell_ratio_value
+				}
+				desc = dream_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.dream_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.dream_aspect_overcharge_success_chance_decrease_value
+				desc = dream_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { celestial_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.celestial_aspect_spell_success_bonus_value
+					multiply = celestial_aspect_spell_ratio_value
+				}
+				desc = celestial_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.celestial_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.celestial_aspect_overcharge_success_chance_decrease_value
+				desc = celestial_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { dark_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.dark_aspect_spell_success_bonus_value
+					multiply = dark_aspect_spell_ratio_value
+				}
+				desc = dark_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.dark_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.dark_aspect_overcharge_success_chance_decrease_value
+				desc = dark_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { light_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.light_aspect_spell_success_bonus_value
+					multiply = light_aspect_spell_ratio_value
+				}
+				desc = light_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.light_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.light_aspect_overcharge_success_chance_decrease_value
+				desc = light_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { blood_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.blood_aspect_spell_success_bonus_value
+					multiply = blood_aspect_spell_ratio_value
+				}
+				desc = blood_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.blood_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.blood_aspect_overcharge_success_chance_decrease_value
+				desc = blood_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { nature_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.nature_aspect_spell_success_bonus_value
+					multiply = nature_aspect_spell_ratio_value
+				}
+				desc = nature_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.nature_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.nature_aspect_overcharge_success_chance_decrease_value
+				desc = nature_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { ethereal_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.ethereal_aspect_spell_success_bonus_value
+					multiply = ethereal_aspect_spell_ratio_value
+				}
+				desc = ethereal_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.ethereal_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.ethereal_aspect_overcharge_success_chance_decrease_value
+				desc = ethereal_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { hymns_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.hymns_aspect_spell_success_bonus_value
+					multiply = hymns_aspect_spell_ratio_value
+				}
+				desc = hymns_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.hymns_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.hymns_aspect_overcharge_success_chance_decrease_value
+				desc = hymns_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { death_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.death_aspect_spell_success_bonus_value
+					multiply = death_aspect_spell_ratio_value
+				}
+				desc = death_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.death_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.death_aspect_overcharge_success_chance_decrease_value
+				desc = death_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { sand_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.sand_aspect_spell_success_bonus_value
+					multiply = sand_aspect_spell_ratio_value
+				}
+				desc = sand_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.sand_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.sand_aspect_overcharge_success_chance_decrease_value
+				desc = sand_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { metal_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.metal_aspect_spell_success_bonus_value
+					multiply = metal_aspect_spell_ratio_value
+				}
+				desc = metal_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.metal_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.metal_aspect_overcharge_success_chance_decrease_value
+				desc = metal_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { time_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.time_aspect_spell_success_bonus_value
+					multiply = time_aspect_spell_ratio_value
+				}
+				desc = time_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.time_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.time_aspect_overcharge_success_chance_decrease_value
+				desc = time_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Bonus from aspect-specific spellcasting skill
+		if = {
+			limit = { dawn_aspect_total_spell_level_value > 0 }
+			add = {
+				value = {
+					value = scope:caster.cp:councillor_court_magi.dawn_aspect_spell_success_bonus_value
+					multiply = dawn_aspect_spell_ratio_value
+				}
+				desc = dawn_aspect_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+		# Malus from overcharge
+		if = {
+			limit = { scope:caster.cp:councillor_court_magi.dawn_aspect_overcharge_success_chance_decrease_value > 0 }
+			subtract = {
+				value = scope:caster.cp:councillor_court_magi.dawn_aspect_overcharge_success_chance_decrease_value
+				desc = dawn_aspect_overcharge_success_chance_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+			}
+		}
+	}
+	max = 100
+	min = 0
+}
+
+task_court_magi_defend_against_hostile_magic_resistance_value = {
+	value = spellcasting_value
+	multiply = 3
+	add = intrigue
+	add = character_arcana_baseline_value
+	add = 10
+}
+
+antimagic_field_magic_resistance_bonus_value = {
+	value = magic_defense_from_antimagic_field
+}
+
+antimagic_field_magic_resistance_bonus_value_2 = {
+	value = magic_defense_from_antimagic_field_2
+}
+
+antimagic_field_magic_resistance_bonus_value_3 = {
+	value = magic_defense_from_antimagic_field_3
+}
+
+antimagic_field_magic_resistance_bonus_value_4 = {
+	value = magic_defense_from_antimagic_field_4
+}
+
+spell_inverse_success_chance = {
+	value = 100
+	subtract = spell_success_chance
+	if = {
+		limit = {
+			scope:caster = { has_perk = arcana_actuation_perk2_tree1 }
+		}
+		multiply = 0.75
+		desc = "arcana_actuation_perk2_tree1_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 8
+		}
+		multiply = 1.10
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	else_if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 7
+		}
+		multiply = 1.25
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	else_if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 6
+		}
+		multiply = 1.4
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	else_if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 5
+		}
+		multiply = 1.55
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	else_if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 4
+		}
+		multiply = 1.7
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	else_if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 3
+		}
+		multiply = 1.85
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	else_if = {
+		limit = {
+			scope:caster.character_arcana_baseline_value < 2
+		}
+		multiply = 2
+		desc = "arcana_backfire_value_desc"
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+}
+
+magic_resistance_from_arcana_value = {
+	value = arcana
+	multiply = 2
+}
+
+magic_resistance_value = {
+	value = 0
+	add = {
+		value = magic_resistance_from_arcana_value
+		desc = arcana_value_desc
+	}
+	# Bonus from Arcane Lifestyle
+	if = {
+		limit = { has_perk = arcana_actuation_perk2_tree1 }
+		add = {
+			value = 10
+			desc = arcana_actuation_perk2_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	# Bonus from Antimagic Fields
+	if = {
+		limit = {
+			exists = location
+			location.county = {
+				has_county_modifier = antimagic_field 
+			}
+		}
+		add = {
+			value = antimagic_field_magic_resistance_bonus_value
+			desc = antimagic_field_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	if = {
+	        limit = {
+	            exists = location
+	            location.county = {
+	                has_county_modifier = antimagic_field_2
+	            }
+	        }
+	        add = {
+	            value = antimagic_field_magic_resistance_bonus_value_2
+	            desc = antimagic_field_magic_resistance_bonus_value_desc
+	            format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	        }
+	    }
+	if = {
+        limit = {
+            exists = location
+            location.county = {
+                has_county_modifier = antimagic_field_3
+            }
+        }
+        add = {
+            value = antimagic_field_magic_resistance_bonus_value_3
+            desc = antimagic_field_magic_resistance_bonus_value_desc
+            format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+        }
+    }
+    if = {
+        limit = {
+            exists = location
+            location.county = {
+                has_county_modifier = antimagic_field_4
+            }
+        }
+        add = {
+            value = antimagic_field_magic_resistance_bonus_value_4
+            desc = antimagic_field_magic_resistance_bonus_value_desc
+            format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+        }
+    }
+	# Bonus from court magi task
+	if = {
+		limit = {
+			exists = cp:councillor_court_magi
+			cp:councillor_court_magi = { is_performing_council_task = task_court_magi_defend_against_hostile_magic }
+		}
+		add = {
+			value = cp:councillor_court_magi.task_court_magi_defend_against_hostile_magic_resistance_value
+			desc = task_court_magi_defend_against_hostile_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	# Court Magi should also be better equipped to protect themselves
+	if = {
+		limit = {
+			has_council_position = councillor_court_magi
+		}
+		add = {
+			value = cp:councillor_court_magi.task_court_magi_defend_against_hostile_magic_resistance_value
+			desc = task_court_magi_defend_against_hostile_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	# Bonus from Magic Ward modifiers
+	if = {
+		limit = { has_character_modifier = magic_resistance_magic_modifier_5 }
+		add = {
+			value = 50
+			desc = magic_ward_5_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_resistance_magic_modifier_4 }
+		add = {
+			value = 40
+			desc = magic_ward_4_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_resistance_magic_modifier_3 }
+		add = {
+			value = 30
+			desc = magic_ward_3_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_resistance_magic_modifier_2 }
+		add = {
+			value = 20
+			desc = magic_ward_2_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_resistance_magic_modifier_1 }
+		add = {
+			value = 10
+			desc = magic_ward_1_magic_resistance_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	# Debuffs from Magic Penetration modifiers
+	if = {
+		limit = { has_character_modifier = magic_penetration_magic_modifier_5 }
+		add = {
+			value = -50
+			desc = magic_debuff_5_magic_penetration_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_penetration_magic_modifier_4 }
+		add = {
+			value = -40
+			desc = magic_debuff_4_magic_penetration_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_penetration_magic_modifier_3 }
+		add = {
+			value = -30
+			desc = magic_debuff_3_magic_penetration_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_penetration_magic_modifier_2 }
+		add = {
+			value = -20
+			desc = magic_debuff_2_magic_penetration_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	else_if = {
+		limit = { has_character_modifier = magic_penetration_magic_modifier_1 }
+		add = {
+			value = -10
+			desc = magic_debuff_1_magic_penetration_bonus_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	add = {
+		value = {
+			value = 0
+			every_equipped_character_artifact = {
+				limit = {
+					exists = var:artifact_magic_resistance
+				}
+				add = var:artifact_magic_resistance
+			}
+		}
+		desc = artifacts_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	if = {
+		limit = { has_trait = fogeater_invasion_leader }
+		add = {
+			value = 50
+			desc = magic_fogeater_leader_magic_resistance_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	if = {
+		limit = { has_trait = gh_arch_lich_1 }
+		add = {
+			value = 75
+			desc = magic_arch_lich_magic_resistance_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+}
+
+magic_resistance_chance = {
+	value = {
+		value = 20 # Intentional, it's harder to resist a spell than to cast it
+		desc = spell_success_chance_base_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+	}
+	subtract = {
+		value = aspect_total_spell_level_value
+		multiply = 12
+		desc = aspect_total_spell_level_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	add = {
+		value = scope:spell_defender.magic_resistance_value
+		desc = magic_resistance_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+	}
+	# Bonus from distance
+	if = {
+		limit = { exists = scope:spell_organizer.location }
+		if = {
+			limit = {
+				exists = scope:spell_defender.location
+				scope:spell_defender.location = {
+					squared_distance = {
+						target = scope:spell_organizer.location
+						value >= squared_distance_small
+					}
+				}
+			}
+			add = {
+				value = 10
+				desc = distance_magic_resistance_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				exists = scope:spell_defender.location
+				scope:spell_defender.location = {
+					squared_distance = {
+						target = scope:spell_organizer.location
+						value >= squared_distance_medium
+					}
+				}
+			}
+			add = {
+				value = 20
+				desc = distance_magic_resistance_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				exists = scope:spell_defender.location
+				scope:spell_defender.location = {
+					squared_distance = {
+						target = scope:spell_organizer.location
+						value >= squared_distance_large
+					}
+				}
+			}
+			add = {
+				value = 30
+				desc = distance_magic_resistance_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				exists = scope:spell_defender.location
+				scope:spell_defender.location = {
+					squared_distance = {
+						target = scope:spell_organizer.location
+						value >= squared_distance_huge
+					}
+				}
+			}
+			add = {
+				value = 40
+				desc = distance_magic_resistance_bonus_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	max = 100
+	min = 0
+}
+
+########################
+# SPELLCASTING SECRECY #
+########################
+
+spellcasting_discovery_chance_value = {
+	value = 0 # Weak spells are not easy to trace; most of the time it'll only be strong stuff that immediately gets tracked back to its source
+	if = {
+		limit = { exists = scope:spell_organizer }
+		subtract = {
+			value = scope:spell_organizer.intrigue
+			desc = spell_organizer_intrigue_skill_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+		}
+	}
+	if = {
+		limit = { scope:spell_defender = { has_perk = arcana_actuation_perk5_tree1 } }
+		add = {
+			value = 10
+			desc = spell_defender_arcane_secrets_perk_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { fire_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_fire_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.fire_aspect_spellcasting_value > scope:spell_defender.fire_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.fire_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = fire_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_fire_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.fire_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = fire_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { water_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_water_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.water_aspect_spellcasting_value > scope:spell_defender.water_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.water_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = water_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_water_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.water_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = water_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { ice_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_ice_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.ice_aspect_spellcasting_value > scope:spell_defender.ice_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.ice_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = ice_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_ice_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.ice_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = ice_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { air_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_air_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.air_aspect_spellcasting_value > scope:spell_defender.air_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.air_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = air_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_air_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.air_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = air_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { stone_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_stone_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.stone_aspect_spellcasting_value > scope:spell_defender.stone_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.stone_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = stone_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_stone_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.stone_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = stone_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { dream_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_dream_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.dream_aspect_spellcasting_value > scope:spell_defender.dream_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.dream_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = dream_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_dream_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.dream_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = dream_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { celestial_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_celestial_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.celestial_aspect_spellcasting_value > scope:spell_defender.celestial_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.celestial_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = celestial_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_celestial_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.celestial_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = celestial_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { dark_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_dark_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.dark_aspect_spellcasting_value > scope:spell_defender.dark_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.dark_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = dark_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_dark_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.dark_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = dark_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { light_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_light_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.light_aspect_spellcasting_value > scope:spell_defender.light_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.light_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = light_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_light_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.light_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = light_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { blood_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_blood_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.blood_aspect_spellcasting_value > scope:spell_defender.blood_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.blood_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = blood_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_blood_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.blood_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = blood_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { nature_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_nature_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.nature_aspect_spellcasting_value > scope:spell_defender.nature_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.nature_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = nature_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_nature_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.nature_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = nature_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { ethereal_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_ethereal_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.ethereal_aspect_spellcasting_value > scope:spell_defender.ethereal_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.ethereal_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = ethereal_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_ethereal_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.ethereal_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = ethereal_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { hymns_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_hymns_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.hymns_aspect_spellcasting_value > scope:spell_defender.hymns_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.hymns_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = hymns_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_hymns_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.hymns_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = hymns_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { death_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_death_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.death_aspect_spellcasting_value > scope:spell_defender.death_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.death_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = death_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_death_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.death_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = death_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { sand_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_sand_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.sand_aspect_spellcasting_value > scope:spell_defender.sand_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.sand_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = sand_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_sand_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.sand_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = sand_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { metal_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_metal_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.metal_aspect_spellcasting_value > scope:spell_defender.metal_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.metal_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = metal_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_metal_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.metal_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = metal_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { time_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_time_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.time_aspect_spellcasting_value > scope:spell_defender.time_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.time_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = time_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_time_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.time_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = time_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	# Bonus from aspect-specific spellcasting skill - either the defender's own or court magi's, whichever is higher
+	if = {
+		limit = { dawn_aspect_total_spell_level_value > 0 }
+		if = {
+			limit = { 
+				exists = scope:spell_defender.cp:councillor_court_magi
+				scope:spell_defender.cp:councillor_court_magi = { knows_magic_school_with_dawn_aspect_trigger = yes }
+				scope:spell_defender.cp:councillor_court_magi.dawn_aspect_spellcasting_value > scope:spell_defender.dawn_aspect_spellcasting_value
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.cp:councillor_court_magi.dawn_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = dawn_spell_defender_court_magi_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+		else_if = {
+			limit = {
+				scope:spell_defender = { knows_magic_school_with_dawn_aspect_trigger = yes }
+			}
+			add = {
+				value = {
+					value = scope:spell_defender.dawn_aspect_spellcasting_value
+					multiply = 2
+				}
+				desc = dawn_spell_defender_aspect_skill_value_desc
+				format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+			}
+		}
+	}
+	add = {
+		value = {
+			value = aspect_total_spell_level_value
+			multiply = 10
+		}
+		desc = spell_level_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+	}
+	min = 0
+	max = 100
+
+	if = {
+		limit = {
+			OR = {
+				scope:spell_defender = { has_trait = gh_riftsight_1 }
+				scope:spell_defender.cp:councillor_court_magi ?= { has_trait = gh_riftsight_1 }
+			}
+		}
+		add = {
+			value = 10
+			desc = spell_riftsight_discovery_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				scope:spell_defender = { has_trait = gh_riftsight_2 }
+				scope:spell_defender.cp:councillor_court_magi ?= { has_trait = gh_riftsight_2 }
+			}
+		}
+		add = {
+			value = 20
+			desc = spell_riftsight_discovery_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				scope:spell_defender = { has_trait = gh_riftsight_3 }
+				scope:spell_defender.cp:councillor_court_magi ?= { has_trait = gh_riftsight_3 }
+			}
+		}
+		add = {
+			value = 30
+			desc = spell_riftsight_discovery_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				scope:spell_defender = { has_trait = gh_riftsight_4 }
+				scope:spell_defender.cp:councillor_court_magi ?= { has_trait = gh_riftsight_4 }
+			}
+		}
+		add = {
+			value = 40
+			desc = spell_riftsight_discovery_value_desc
+			format = "SPELLCASTING_ABILITY_VALUE_FORMAT_NEG"
+		}
+	}
+}
+
+#######################
+# SPELL EFFECT CHANCE #
+#######################
+
+spell_effect_chance_value = {
+	value = 100
+	if = {
+		limit = { exists = var:spell_effect_chance }
+		value = var:spell_effect_chance
+		if = {
+			limit = { NOT = { exists = var:spell_effect_chance_iteration } }
+			multiply = spell_tag_scalar_threshold_diff_value
+		}
+		else = {
+			add = {
+				value = var:spell_effect_chance_iteration
+				subtract = 1
+				multiply = spell_tag_scalar_threshold_diff_value
+			}
+		}
+	}
+}

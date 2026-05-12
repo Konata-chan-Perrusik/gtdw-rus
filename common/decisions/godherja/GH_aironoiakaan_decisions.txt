@@ -1,0 +1,62 @@
+﻿#################################
+##DECISIONS LIST##
+#hire_aironoiakaan_magi_decision
+#################################
+
+###################################
+# Hire a Magi from the Aironoiakaan
+# by ScionEol
+
+hire_aironoiakaan_magi_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+
+	cooldown = { years = 10 }
+
+	desc = hire_aironoiakaan_magi_decision_desc
+	decision_group_type = aversarian
+
+	selection_tooltip = hire_aironoiakaan_magi_decision_tooltip
+	
+	is_shown = {
+		is_playable_character = yes
+		title:c_dethnys.title_province = {
+			has_building = 02_aironoiakaan
+		}
+		OR = {
+			has_title = title:c_dethnys
+			title:c_dethnys = {
+				squared_distance = {
+					target = root.capital_province
+					value <= squared_distance_large
+				}
+			}		
+		}
+	}
+	
+	is_valid = {
+		prestige_level >= 3
+		highest_held_title_tier >= tier_duchy
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+	}
+
+	effect = {
+		trigger_event = aironoiakaan.0001
+		custom_tooltip = hire_aironoiakaan_magi_decision_tooltip
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

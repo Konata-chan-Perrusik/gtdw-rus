@@ -1,0 +1,14 @@
+﻿holder_voting_pattern_holy_order_elective = {
+	modifier = { #Current ruler will always try to elect his player heir before everybody else.
+		add = 50
+		desc = tooltip_feudal_holder_elector_vote_player_heir
+		player_heir = scope:candidate
+		NOT = { player_heir = root }
+		scope:holder = {
+			this = root
+			NOT = {
+				has_relation_rival = scope:candidate #Unless is rival.
+			}
+		}
+	}
+}

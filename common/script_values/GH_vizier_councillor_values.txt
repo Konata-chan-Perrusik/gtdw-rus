@@ -1,0 +1,80 @@
+﻿vizier_default_task_arcana_scale = {
+	add = character_arcana_baseline_value
+	if = {
+		limit = {
+			scope:councillor_liege = { has_perk = loyalty_and_respect_perk }
+		}
+		multiply = 1.25
+	}
+	if = {
+		limit = {
+			scope:councillor = {
+				AND = {
+					exists = dynasty
+					dynasty = { has_dynasty_perk = fp3_khvarenah_legacy_3 }
+				}
+			}
+		}
+		multiply = 1.25
+	}
+	divide = 5
+	if = {
+		limit = {
+			OR = {
+				scope:councillor_liege = { has_perk = loyalty_and_respect_perk }
+				scope:councillor = {
+					AND = {
+						exists = dynasty
+						dynasty = { has_dynasty_perk = fp3_khvarenah_legacy_3 }
+					}
+				}
+			}
+		}
+		ceiling = yes
+	}
+	else = {
+		floor = yes
+	}
+	min = 1
+}
+
+vizier_task_arcanistics_scale = {
+	add = character_arcana_baseline_value
+	if = {
+		limit = {
+			scope:councillor_liege = { has_perk = loyalty_and_respect_perk }
+		}
+		multiply = 1.25
+	}
+	if = {
+		limit = {
+			scope:councillor = {
+				AND = {
+					exists = dynasty
+					dynasty = { has_dynasty_perk = fp3_khvarenah_legacy_3 }
+				}
+			}
+		}
+		multiply = 1.25
+	}
+	divide = 2
+	if = {
+		limit = {
+			OR = {
+				scope:councillor_liege = { has_perk = loyalty_and_respect_perk }
+
+				scope:councillor = {
+					AND = {
+						exists = dynasty
+						dynasty = { has_dynasty_perk = fp3_khvarenah_legacy_3 }
+					}
+				}
+			}
+		}
+		ceiling = yes
+	}
+	else = {
+		floor = yes
+	}
+	min = 1
+}

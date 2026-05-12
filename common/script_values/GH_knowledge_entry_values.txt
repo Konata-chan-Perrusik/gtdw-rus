@@ -1,0 +1,397 @@
+﻿knowledge_entry_skill_frame_value = {
+	value = 0
+	if = {
+		limit = { var:knowledge_entry_skill = flag:diplomacy }
+		value = 1
+	}
+	if = {
+		limit = { var:knowledge_entry_skill = flag:martial }
+		value = 2
+	}
+	if = {
+		limit = { var:knowledge_entry_skill = flag:stewardship }
+		value = 3
+	}
+	if = {
+		limit = { var:knowledge_entry_skill = flag:intrigue }
+		value = 4
+	}
+	if = {
+		limit = { var:knowledge_entry_skill = flag:learning }
+		value = 5
+	}
+	if = {
+		limit = { var:knowledge_entry_skill = flag:prowess }
+		value = 6
+	}
+	if = {
+		limit = { var:knowledge_entry_skill = flag:arcana }
+		value = 7
+	}
+}
+
+knowledge_entry_cipher_skill_frame_value = {
+	value = 0
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:diplomacy }
+		value = 1
+	}
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:martial }
+		value = 2
+	}
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:stewardship }
+		value = 3
+	}
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:intrigue }
+		value = 4
+	}
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:learning }
+		value = 5
+	}
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:prowess }
+		value = 6
+	}
+	if = {
+		limit = { var:knowledge_entry_cipher_skill ?= flag:arcana }
+		value = 7
+	}
+}
+
+# GH TODO: Move this to an appropriate file
+physician_level_value = {
+	value = 0
+	if = {
+		limit = { has_trait = lifestyle_physician }
+		add = { "this.has_trait_xp(lifestyle_physician)" = {add = this} floor = yes }
+	}
+}
+
+mystic_level_value = {
+	value = 0
+	if = {
+		limit = { has_trait = lifestyle_mystic }
+		add = { "this.has_trait_xp(lifestyle_mystic)" = {add = this} floor = yes }
+	}
+}
+
+knowledge_entry_success_chance_value = {
+	value = 0
+	add = {
+		value = scope:knowledge_entry.var:knowledge_entry_difficulty
+		multiply = -3
+		desc = "Difficulty"
+	}
+	if = {
+		limit = { scope:knowledge_entry.var:knowledge_entry_skill = flag:learning }
+		add = {
+			value = scope:researcher.learning
+			multiply = 3
+			desc = "[learning|E]"
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				scope:knowledge_entry.var:knowledge_entry_skill = flag:arcana
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:fire
+					scope:researcher.fire_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:water
+					scope:researcher.water_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:ice
+					scope:researcher.ice_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:air
+					scope:researcher.air_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:stone
+					scope:researcher.stone_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:dream
+					scope:researcher.dream_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:celestial
+					scope:researcher.celestial_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:dark
+					scope:researcher.dark_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:light
+					scope:researcher.light_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:blood
+					scope:researcher.blood_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:nature
+					scope:researcher.nature_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:ethereal
+					scope:researcher.ethereal_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:hymns
+					scope:researcher.hymns_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:death
+					scope:researcher.death_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:sand
+					scope:researcher.sand_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:metal
+					scope:researcher.metal_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:time
+					scope:researcher.time_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+				AND = {
+					scope:knowledge_entry.var:knowledge_entry_skill = flag:dawn
+					scope:researcher.dawn_aspect_spellcasting_value < scope:researcher.character_arcana_baseline_value
+				}
+			}
+		}
+		add = {
+			value = scope:researcher.character_arcana_baseline_value
+			multiply = 3
+			desc = "[arcana|E]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:fire
+			scope:researcher.fire_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.fire_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_fire]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:water
+			scope:researcher.water_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.water_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_water]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:ice
+			scope:researcher.ice_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.ice_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_ice]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:air
+			scope:researcher.air_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.air_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_air]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:stone
+			scope:researcher.stone_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.stone_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_stone]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:dream
+			scope:researcher.dream_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.dream_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_dream]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:celestial
+			scope:researcher.celestial_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.celestial_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_celestial]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:dark
+			scope:researcher.dark_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.dark_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_dark]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:light
+			scope:researcher.light_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.light_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_light]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:blood
+			scope:researcher.blood_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.blood_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_blood]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:nature
+			scope:researcher.nature_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.nature_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_nature]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:ethereal
+			scope:researcher.ethereal_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.ethereal_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_ethereal]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:hymns
+			scope:researcher.hymns_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.hymns_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_hymns]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:death
+			scope:researcher.death_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.death_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_death]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:sand
+			scope:researcher.sand_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.sand_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_sand]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:metal
+			scope:researcher.metal_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.metal_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_metal]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:time
+			scope:researcher.time_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.time_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_time]"
+		}
+	}
+	if = {
+		limit = { 
+			scope:knowledge_entry.var:knowledge_entry_skill = flag:dawn
+			scope:researcher.dawn_aspect_spellcasting_value >= scope:researcher.character_arcana_baseline_value
+		}
+		add = {
+			value = scope:researcher.dawn_aspect_spellcasting_value
+			multiply = 3
+			desc = "[aspect_dawn]"
+		}
+	}
+	if = {
+		limit = { scope:knowledge_entry.var:knowledge_entry_skill = flag:lifestyle_physician }
+		add = {
+			value = scope:researcher.physician_level_value
+			multiply = 3
+			desc = "Physician XP"
+		}
+	}
+	if = {
+		limit = { scope:knowledge_entry.var:knowledge_entry_skill = flag:lifestyle_mystic }
+		add = {
+			value = scope:researcher.mystic_level_value
+			multiply = 3
+			desc = "Mystic XP"
+		}
+	}
+	max = 100
+	#min = 0
+}

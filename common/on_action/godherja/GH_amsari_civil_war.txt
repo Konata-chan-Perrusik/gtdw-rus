@@ -1,0 +1,60 @@
+﻿on_imprison = {
+	on_actions = {
+		gh_on_imprison_amsari_rework
+	}
+}
+
+gh_on_imprison_amsari_rework = {
+	trigger = { 
+		exists = global_var:story_gh_amsari_civil_war
+		has_trait = gh_trait_amsari_pretender
+		scope:imprisoner = { 
+			has_variable = gh_amsari_civil_war_info_story 
+			this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+			NOT = { has_character_flag = gh_acw_war_victory_on_pretender }
+		}
+		this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }	
+		trigger_if = {
+			limit = {
+				has_variable = gh_amsari_civil_war_info_story
+				root.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+				exists = root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+				
+				scope:imprisoner = { has_variable = gh_amsari_civil_war_info_story }
+				scope:imprisoner.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+				exists = scope:imprisoner.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+			}
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= prev.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+		}
+	}
+	effect = {
+		save_scope_as = enemy_pretender
+		scope:imprisoner = { 
+			if = { 
+				limit = { scope:imprisoner.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting = { is_alive = no } }
+				this.var:gh_amsari_civil_war_info_story ?= { remove_variable = amsari_civil_war_supporting }
+			}		
+			else = {  trigger_event = gh_amsari.0005 }
+		}
+	}
+}
+
+gh_acw_on_siege_event = {
+	trigger = {
+		scope:county = { this = title:c_tchouran }
+		OR = {
+			NAND = { 
+				has_global_variable = tchouran_taken_by_marchers 
+				culture = { has_cultural_pillar = heritage_marcher }
+				scope:county = { NOT = { has_county_modifier = gh_acw_recently_sacked_county_modifier } }
+			}
+			AND = {
+				has_religion = religion:amsari_religion
+				root.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }	
+			}
+		}
+	}
+	events = {
+		gh_amsari.0012
+	}
+}

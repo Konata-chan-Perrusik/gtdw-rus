@@ -1,0 +1,259 @@
+﻿gh_employ_sarthian_farmers_barony_is_valid_trigger = {
+	this.county = { NOT = { has_county_modifier = gh_sarthian_farmers_modifier } }
+	holder = scope:ruler
+	is_leased_out = no
+	is_capital_barony = yes
+}
+
+gh_amsari_settles_county_is_valid_trigger = {
+	is_leased_out = no
+	is_capital_barony = yes
+	this.county = { 
+		NOR = { 
+			has_county_modifier = gh_forced_settlements_modifier 
+			culture = culture:amsari
+		}
+		OR = {
+			this = title:c_karamkura 
+			this = title:c_bandar_ozbak 
+			this = title:c_durranduf 
+			this = title:c_kharawarki 
+			this = title:c_dkran 
+			this = title:c_pardula 
+			this = title:c_bherak 
+			this = title:c_kirathu 
+		}		
+	}
+}
+
+gh_acw_valid_independent_ruler_in_amsar = {
+	is_landed = yes
+	OR = {
+		culture = { has_cultural_pillar = heritage_zarasadari }
+		culture = { has_cultural_pillar = heritage_thyssae }
+		religion = religion:amsari_religion
+	}
+	capital_county.title_province ?= { geographical_region = world_ws_amsari }
+	NOT = { this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting } }
+}
+gh_acw_trigger_war_against_hiklahn = {
+	OR = {
+		AND = {
+			this.gh_number_of_current_wars <= 3
+			is_ai = yes
+		}
+		this.gh_number_of_current_wars <= 1
+	}
+	any_in_global_list = {
+		variable = involved_character_amsari_civil_war
+		this.max_military_strength >= prev.max_military_strength
+		gh_acw_basic_declare_war_trigger = yes
+	}
+}
+
+
+gh_acw_basic_declare_war_trigger = {
+	is_alive = yes
+	highest_held_title_tier >= tier_county
+	has_variable = gh_amsari_civil_war_info_story
+	this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+	NOR = {
+		trigger_if = {
+			limit = {
+				has_variable = gh_amsari_civil_war_info_story
+				this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+				exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+				
+				prev = { has_variable = gh_amsari_civil_war_info_story }
+				prev.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+				exists = prev.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+			}
+			this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= prev.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+		}
+		is_allied_to = prev
+		this = prev
+		is_at_war_with = prev
+		has_truce = prev
+	}
+	is_independent_ruler = yes
+	is_landed = yes
+}
+
+gh_amsari_civil_war_possible = {
+	exists = global_var:story_gh_amsari_civil_war
+}
+
+amsari_historical_pretender_is_ai_trigger = {
+	is_alive = yes
+	is_ai = yes
+}
+can_support_amsari_historical_pretender_ai_trigger = {
+	is_ai = yes
+	is_independent_ruler = yes
+	NOR = { 
+		has_trait = gh_trait_amsari_pretender #Not one of the pretender themselves
+		exists = this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting
+	}
+	#Historical Check
+	trigger_if = {
+		limit = { 
+			this = title:d_kalbafaraj_mahalleh.holder
+		}
+		primary_title = { this = title:d_kalbafaraj_mahalleh }
+		character:amsari_mahndayana_6 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:c_kuchek.holder
+		}
+		primary_title = { this = title:c_kuchek }	
+		character:amsari_mahndayana_7 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:c_siuni.holder
+		}
+		primary_title = { this = title:c_siuni }	
+		character:amsari_mahndayana_12 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:d_takyeh.holder
+		}
+		primary_title = { this = title:d_takyeh }
+		character:amsari_mahndayana_14 = { amsari_historical_pretender_is_ai_trigger = yes }		
+	}
+	trigger_if = {
+		limit = { 
+			this = title:d_gerd_mehdiabad.holder
+		}
+		primary_title = { this = title:d_gerd_mehdiabad }
+		character:amsari_mahndayana_9 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	#trigger_if = {
+	#	limit = { 
+	#		this = title:c_madgh_kariz.holder
+	#	}
+	#	primary_title = { this = title:c_madgh_kariz }	
+	#	character:amsari_mahndayana_6 = { amsari_historical_pretender_is_ai_trigger = yes }
+	#}
+	trigger_if = {
+		limit = { 
+			this = title:d_khvoshinane_sofla.holder
+		}
+		primary_title = { this = title:d_khvoshinane_sofla }
+		character:amsari_mahndayana_2_daughter_2 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	#trigger_if = {
+	#	limit = { 
+	#		this = title:c_khurnugban.holder
+	#	}
+	#	primary_title = { this = title:c_khurnugban }	
+	#	character:amsari_mahndayana_6 = { amsari_historical_pretender_is_ai_trigger = yes }
+	#}
+	#trigger_if = {
+	#	limit = { 
+	#		this = title:k_dizaje_dul.holder
+	#	}
+	#	primary_title = { this = title:k_dizaje_dul }
+	#	character:amsari_mahndayana_6 = { amsari_historical_pretender_is_ai_trigger = yes }
+	#}
+	trigger_if = {
+		limit = { 
+			this = title:k_durab.holder
+		}
+		primary_title = { this = title:k_durab }
+		character:amsari_mahndayana_24 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:d_shastakan.holder
+		}
+		primary_title = { this = title:d_shastakan }
+		character:amsari_mahndayana_8 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:d_darundel.holder
+		}
+		primary_title = { this = title:d_darundel }	
+		character:amsari_mahndayana_10 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:d_sar_dasht.holder
+		}
+		primary_title = { this = title:d_sar_dasht }
+		character:amsari_mahndayana_5 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:c_shahrake_shahid_bahonar.holder
+		}
+		primary_title = { this = title:c_shahrake_shahid_bahonar }	
+		character:amsari_mahndayana_15 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:k_shuran.holder
+		}
+		primary_title = { this = title:k_shuran }	
+		character:amsari_mahndayana_2_daughter_1 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+	trigger_if = {
+		limit = { 
+			this = title:d_burjaki.holder
+		}
+		primary_title = { this = title:d_burjaki }	
+		character:amsari_mahndayana_29 = { amsari_historical_pretender_is_ai_trigger = yes }
+	}
+}
+
+can_have_extra_gh_amsari_0003_e_optional_trigger = {
+	exists = global_var:historical_heir_murdered
+	OR = {
+		AND = { 
+			root = title:d_prathatha.holder 
+			NOR = { 
+				is_liege_or_above_of = title:c_bandar_ozbak.holder
+				is_allied_to = title:c_bandar_ozbak.holder
+			}
+		}
+		AND = { 
+			root = title:k_shuran.holder 
+			NOR = { 
+				is_liege_or_above_of = title:c_damdama.holder
+				is_allied_to = title:c_damdama.holder
+			}
+		}
+		AND = { 
+			root = title:c_damdama.holder 
+			NOR = { 
+				is_liege_or_above_of = title:c_shahrake_shahid_bahonar.holder
+				is_allied_to = title:c_shahrake_shahid_bahonar.holder
+			}
+		}
+		AND = { 
+			root = title:c_khurnugban.holder 
+			NOR = { 
+				is_liege_or_above_of = title:d_darundel.holder
+				is_allied_to = title:d_darundel.holder
+			}
+		}
+		AND = { 
+			root = title:d_gerd_mehdiabad.holder 
+			NOR = { 
+				is_liege_or_above_of = title:c_madgh_kariz.holder
+				is_allied_to = title:c_madgh_kariz.holder
+			}
+		}
+		AND = { 
+			root = title:d_takyeh.holder 
+			NOR = { 
+				is_liege_or_above_of = title:c_siuni.holder
+				is_allied_to = title:c_siuni.holder
+			}
+		}
+	}
+}
+

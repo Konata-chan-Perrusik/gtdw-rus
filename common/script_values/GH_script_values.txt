@@ -1,0 +1,61 @@
+﻿lifepath_relevance_measure_default_value = 0.4
+
+lifepath_relevance_measure_start_value = 0.5
+
+court_chaplain_conversion_inquisitor_monthly_increase = {
+	value = 0.2
+	add = court_chaplain_conversion_base_total
+	multiply = 0.15
+}
+
+elephant_race_stress_loss_value = -35
+
+greymarch_soldier_female_chance = {
+	if = {
+		limit = {
+			NOT = { dummy_female = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = scope:scathach_arawn } } }
+			dummy_male = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = scope:scathach_arawn } }
+		}
+		add =  0
+	}
+	else_if = {
+		limit = {
+			dummy_female = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = scope:scathach_arawn } }
+			NOT = { dummy_male = { can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = scope:scathach_arawn } } }
+		}
+		add =  100
+	}
+	else = {
+	 	add = 50
+	}
+}
+
+root_court_magi_female_chance = {
+	value = root.court_magi_female_chance
+}
+
+court_magi_female_chance = {
+	value = 0
+	if = {
+		limit = { faith = { has_doctrine_parameter = male_dominated_council } }
+		add = 0
+	}
+	else_if = { 
+		limit = { faith = { has_doctrine_parameter = female_dominated_council } }
+		add = 100
+	}
+	else = { 
+		add = 50
+	}
+}
+
+age_difference_to_prev = {
+	value = age
+	subtract = prev.age
+	abs = yes
+}
+
+squared_value = {
+	value = this
+	multiply = this
+}

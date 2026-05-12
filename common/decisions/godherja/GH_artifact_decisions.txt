@@ -1,0 +1,64 @@
+﻿##################
+##DECISIONS LIST##
+# make_new_artifact
+##################
+
+study_malik_cipher = { #Study Fields of Pearls - by Mayor
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_recruitment.dds"
+	}
+	desc = study_malik_cipher_desc
+	selection_tooltip = study_malik_cipher_tooltip
+	ai_check_interval = 36
+	cooldown = { years = 10 }
+	is_shown = {
+			any_character_artifact = {
+				has_artifact_feature = book_topic_masenmalik
+			}
+			death_aspect_skill_trigger = { VALUE = 5 }
+	}
+	is_valid = {
+		learning >= 8
+	}
+	cost = {
+		gold = {
+			value = 250
+		}
+	}
+	effect = {
+		custom_tooltip = study_malik_cipher.effect.tt
+		trigger_event = artifacts_flavor.1001
+	}
+}
+
+sell_abyssal_prism = { #Sell Abyssal Prism
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	desc = sell_abyssal_prism_desc
+	ai_check_interval = 36
+	is_shown = {
+		any_character_artifact = {
+			has_variable = abyssal_prism
+			NOT = {
+				has_variable = sold
+			}
+		}
+		has_government = pirate_government
+		NOT = {
+			has_faith = faith:redland_cults
+		}
+	}
+	is_valid = {
+		NOT = {
+			any_directly_owned_province = {
+				geographical_region = redlands_biozone
+			}
+		}
+	}
+	effect = {
+		add_gold = 3000
+		custom_tooltip = sell_abyssal_prism.effect.tt
+		trigger_event = redlands_decision.0001
+	}
+}

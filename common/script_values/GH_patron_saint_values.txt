@@ -1,0 +1,1718 @@
+﻿#############################
+# SAINT AFFINITY VALUES	    #
+#############################
+
+patron_saint_affinity_total_value = {
+
+	value = patron_saint_affinity_piety_value
+	
+	add = patron_saint_affinity_trait_value
+	
+	add = patron_saint_affinity_pilgrimage_value
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_duels }
+			has_variable = patron_saint_duel_affinity
+		}
+		add = patron_saint_affinity_duel_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_scheming }
+			has_variable = patron_saint_scheme_affinity
+		}
+		add = patron_saint_affinity_scheme_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_medical_experiments }
+		}
+		add = patron_saint_affinity_medical_experiments_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_languages }
+		}
+		add = patron_saint_affinity_languages_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_battle_victory }
+		}
+		add = patron_saint_affinity_battle_victory_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_battle_slaughter }
+		}
+		add = patron_saint_affinity_battle_slaughter_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_dread }
+		}
+		add = patron_saint_affinity_dread_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_pain }
+		}
+		add = patron_saint_affinity_pain_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_raiding }
+		}
+		add = patron_saint_affinity_raid_value
+	}
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_raiding_antislavery }
+		}
+		add = patron_saint_affinity_antislavery_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_executing_heathens }
+		}
+		add = patron_saint_affinity_executed_heathens_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_frivolous_expenses }
+		}
+		add = patron_saint_affinity_frivolous_expenses_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_generosity }
+		}
+		add = patron_saint_affinity_generosity_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_just_rule }
+		}
+		add = patron_saint_affinity_just_rule_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_healing }
+		}
+		add = patron_saint_affinity_healing_value
+	}
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_humility }
+		}
+		add = patron_saint_affinity_humility_value
+	}
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_piety }
+		}
+		add = patron_saint_affinity_piety_value
+	}
+	
+	
+	add = patron_saint_affinity_skill_value
+}
+
+patron_saint_affinity_piety_value = {
+
+	value = piety_level
+	subtract = 1
+	multiply = 10
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_piety_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_piety_mod
+	}
+}
+
+patron_saint_affinity_values_piety_shown_value = {
+
+	value = patron_saint_affinity_piety_value
+	multiply = 2
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_piety_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_piety_mod
+	}
+}
+
+
+
+patron_saint_affinity_humility_value = {
+	
+	value = prestige_level
+	subtract = 1
+	multiply = -5
+	add = 10
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_humility_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_humility_mod
+	}
+}
+
+patron_saint_affinity_max_value_gui = {
+	
+	value = 200
+	
+}
+
+patron_saint_affinity_pilgrimage_value = {
+	value = 0
+	
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint.var:patron_saint_holy_site
+			has_variable_list = patron_saint_visited_holy_sites_list
+			any_in_list = { 
+				variable = patron_saint_visited_holy_sites_list
+				this = scope:relevant_patron_saint.var:patron_saint_holy_site
+			}
+		}
+		add = 5
+	}
+}
+
+patron_saint_affinity_duel_value = {
+	value = 0
+	
+	if = {
+		limit = { 
+			scope:relevant_patron_saint = { has_variable = patron_saint_aspect_values_duels }
+			has_variable = patron_saint_duel_affinity
+		}
+		add = var:patron_saint_duel_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_duels_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_duels_mod
+	}
+}
+
+patron_saint_affinity_scheme_value = {
+	value = 0
+	
+	if = {
+		limit = { has_variable = patron_saint_scheme_affinity }
+		add = var:patron_saint_scheme_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_scheming_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_scheming_mod
+	}
+}
+
+patron_saint_max_scheme_target_affinity_value = {
+	value = 10
+	add = intrigue
+}
+
+patron_saint_affinity_languages_value = {
+	value = num_of_known_languages
+	subtract = 1
+	multiply = 5
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_languages_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_languages_mod
+	}
+}
+
+patron_saint_affinity_dread_value = {
+	value = dread
+	divide = 2
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_dread_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_dread_mod
+	}
+}
+
+patron_saint_affinity_raid_value = {
+	value = 1
+	subtract = patron_saint_affinity_raid_function_value
+	multiply = 60
+	round = yes
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_raiding_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_raiding_mod
+	}
+}
+
+patron_saint_affinity_raid_function_value = {
+	value = 130
+	divide = patron_saint_raid_affinity_function_base_value
+}
+
+patron_saint_raid_affinity_function_base_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = accumulated_raid_loot
+		}
+		add = var:accumulated_raid_loot
+	}
+	if = {
+		limit = {
+			has_variable = accumulated_ransom_total
+		}
+		add = var:accumulated_ransom_total
+	}
+	divide = 10
+	round = yes
+	add = 130
+}
+
+patron_saint_affinity_antislavery_value = {
+	value = 1
+	subtract = patron_saint_affinity_antislavery_function_value
+	multiply = 65
+	round = yes
+}
+
+patron_saint_affinity_antislavery_function_value = {
+	value = 20
+	divide = patron_saint_antislavery_affinity_function_base_value
+}
+
+patron_saint_antislavery_affinity_function_base_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = accumulated_antislave_raids
+		}
+		add = var:accumulated_antislave_raids
+	}
+	divide = 2
+	round = yes
+	add = 20
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_raiding_antislavery_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_raiding_antislavery_mod
+	}
+}
+
+patron_saint_affinity_executed_heathens_value = {
+	value = 0
+	if = {
+		limit = { has_variable = patron_saint_executed_heathens_affinity }
+		add = var:patron_saint_executed_heathens_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_executing_heathens_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_executing_heathens_mod
+	}
+}
+
+patron_saint_from_heathen_execution_max_value = {
+	value = 20
+	if = {
+		limit = {
+			is_ruler = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					highest_held_title_tier = 5
+					AND = {
+						exists = faith.religious_head
+						this = faith.religious_head
+					}
+				}
+			}
+			add = 30
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 4 }
+			add = 20
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 3 }
+			add = 10
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 2 }
+			add = 5
+		}
+	}
+}
+
+patron_saint_from_heathen_execution_gain_value = {
+	value = 2
+	if = {
+		limit = {
+			is_ruler = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					highest_held_title_tier = 5
+					AND = {
+						exists = faith.religious_head
+						this = faith.religious_head
+					}
+				}
+			}
+			add = 13
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 4 }
+			add = 3
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 3 }
+			add = 2
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 2 }
+			add = 1
+		}
+	}
+}
+
+patron_saint_affinity_battle_victory_value = {
+	value = 0
+	if = {
+		limit = { has_variable = patron_saint_battle_victory_affinity }
+		add = var:patron_saint_battle_victory_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_battle_victory_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_battle_victory_mod
+	}
+}
+
+patron_saint_battle_victory_affinity_from_battle_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:max_affinity_from_battle_victory_value }
+		add = scope:max_affinity_from_battle_victory_value
+	}
+	divide = 4
+}
+
+patron_saint_battle_victory_max_affinity_from_battle_value = {
+	value = 1
+	subtract = patron_saint_battle_victory_affinity_from_battle_function_value
+	multiply = 50
+	add = 10
+	round = yes
+}
+
+patron_saint_battle_victory_affinity_from_battle_function_value = {
+	value = 100
+	divide = patron_saint_battle_victory_affinity_from_battle_function_base_value
+}
+
+patron_saint_battle_victory_affinity_from_battle_function_base_value = {
+	value = scope:relevant_combat_side.num_enemies_killed
+	divide = scope:relevant_combat_side.percent_enemies_killed # as a percentage of 25% is given as 25 and not 0.25, diving num_enemies_killed by percent_enemies_killed gives the total number of enemies divided by 100
+	round = yes
+	add = 100
+}
+
+inverted_troops_ratio_value = {
+	value = 1
+	subtract = troops_ratio
+}
+
+patron_saint_affinity_battle_slaughter_value = {
+	value = 0
+	if = {
+		limit = { has_variable = patron_saint_battle_slaughter_affinity }
+		add = var:patron_saint_battle_slaughter_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_battle_slaughter_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_battle_slaughter_mod
+	}
+}
+
+patron_saint_battle_slaughter_affinity_from_battle_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:max_affinity_from_battle_slaughter_value }
+		add = scope:max_affinity_from_battle_slaughter_value
+	}
+	divide = 4
+}
+
+patron_saint_battle_slaughter_max_affinity_from_battle_value = {
+	value = 1
+	subtract = patron_saint_battle_slaughter_affinity_from_battle_function_value
+	multiply = 12
+	add = 10
+	round = yes
+}
+
+patron_saint_battle_slaughter_affinity_from_battle_function_value = {
+	value = 100
+	divide = patron_saint_battle_slaughter_affinity_from_battle_function_base_value
+}
+
+patron_saint_battle_slaughter_affinity_from_battle_function_base_value = {
+	value = scope:relevant_combat_side.num_enemies_killed
+	divide = 35
+	round = yes
+	add = 100
+}
+
+patron_saint_affinity_frivolous_expenses_value = {
+	value = 0
+	add = patron_saint_court_grandeur_or_prestige_value
+	add = patron_saint_frivolous_spending_value
+}
+
+patron_saint_court_grandeur_or_prestige_value = {
+	value = 0
+	if = {
+		limit = { has_royal_court = yes }
+		add = court_grandeur_current_level
+		multiply = 2.5
+	}
+	else = {
+		add = prestige_level
+		multiply = 2
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_frivolous_expenses_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_frivolous_expenses_mod
+	}
+}
+
+patron_saint_frivolous_spending_value = {
+	value = 1
+	subtract = patron_saint_affinity_frivolous_spending_function_value
+	multiply = 70
+	round = yes
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_frivolous_expenses_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_frivolous_expenses_mod
+	}
+}
+
+patron_saint_affinity_frivolous_spending_function_value = {
+	value = 100
+	divide = patron_saint_affinity_frivolous_spending_function_base_value
+}
+
+patron_saint_affinity_frivolous_spending_function_base_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = patron_saint_frivolous_spending
+		}
+		add = var:patron_saint_frivolous_spending
+	}
+	divide = 25
+	round = yes
+	add = 100
+}
+
+patron_saint_affinity_generosity_value = {
+	value = 0
+	add = patron_saint_generosity_wrapper_value
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_generosity_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_generosity_mod
+	}
+}
+
+patron_saint_generosity_wrapper_value = {
+	value = 1
+	subtract = patron_saint_affinity_generosity_function_value
+	multiply = 100
+	round = yes
+}
+
+patron_saint_affinity_generosity_function_value = {
+	value = 100
+	divide = patron_saint_affinity_generosity_function_base_value
+}
+
+patron_saint_affinity_generosity_function_base_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = patron_saint_generosity_gold
+		}
+		add = var:patron_saint_generosity_gold
+	}
+	divide = 25
+	round = yes
+	add = 100
+}
+
+patron_saint_hunting_gold_cost = {
+	value = standard_activity_cost
+	divide = 1.5
+	if = {
+		limit = {
+			has_character_flag = free_hunt
+		}
+		multiply = 0
+	}
+}
+
+patron_saint_affinity_just_rule_value = {
+	value = 0
+	add = patron_saint_affinity_just_punishments_value
+	if = {
+		limit = { is_ruler = yes }
+		add = patron_saint_affinity_no_tyranny_value
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_just_rule_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_just_rule_mod
+	}
+}
+
+patron_saint_affinity_just_punishments_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = patron_saint_just_rule_affinity
+		}
+		add = var:patron_saint_just_rule_affinity
+	}
+}
+
+patron_saint_affinity_no_tyranny_value = {
+	value = 0
+	subtract = tyranny
+	add = 10
+}
+
+patron_saint_affinity_just_rule_punishment_max_value = {
+	value = 20
+	if = {
+		limit = {
+			is_ruler = yes
+		}
+		if = {
+			limit = { highest_held_title_tier >= 4 }
+			add = 20
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 3 }
+			add = 10
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 2 }
+			add = 5
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				has_relation_friend = scope:punisher
+				has_relation_lover = scope:punisher
+				is_close_family_of = scope:punisher
+				is_spouse_of = scope:punisher
+			}
+		}
+		add = 15
+		if = {
+			limit = {
+				OR = {
+					has_relation_best_friend = scope:punisher
+					has_relation_soulmate = scope:punisher
+					is_spouse_of = scope:punisher
+					is_child_of = scope:punisher
+				}
+			}
+			add = 10
+		}
+	}
+	max = 55
+}
+
+patron_saint_affinity_just_rule_punishment_gain_value = {
+	value = 1
+	if = {
+		limit = { is_ruler = yes }
+		if = {
+			limit = { highest_held_title_tier = 4 }
+			add = 4
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 3 }
+			add = 3
+		}
+		else_if = {
+			limit = { highest_held_title_tier = 2 }
+			add = 2
+		}
+		else = {
+			add = 1
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				has_relation_friend = scope:punisher
+				has_relation_lover = scope:punisher
+				is_close_family_of = scope:punisher
+				is_spouse_of = scope:punisher
+			}
+		}
+		add = 3
+		if = {
+			limit = {
+				OR = {
+					has_relation_best_friend = scope:punisher
+					has_relation_soulmate = scope:punisher
+					is_spouse_of = scope:punisher
+					is_child_of = scope:punisher
+				}
+			}
+			add = 2
+		}
+	}
+}
+
+patron_saint_affinity_healing_value = {
+	value = 0
+	if = {
+		limit = { has_variable = patron_saint_healing_affinity }
+		add = var:patron_saint_healing_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_healing_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_healing_mod
+	}
+}
+
+patron_saint_affinity_medical_experiments_value = {
+	value = 0
+	if = {
+		limit = { has_variable = patron_saint_medical_experiments_affinity }
+		add = var:patron_saint_medical_experiments_affinity
+	}
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_medical_experiments_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_medical_experiments_mod
+	}
+}
+
+patron_saint_affinity_pain_value = {
+	value = 1
+	subtract = patron_saint_affinity_pain_function_value
+	multiply = 60
+	round = yes
+	if = {
+		limit = {
+			exists = scope:relevant_patron_saint
+			scope:relevant_patron_saint = {
+				has_variable = patron_saint_aspect_values_pain_mod
+			}
+		}
+		multiply = scope:relevant_patron_saint.var:patron_saint_aspect_values_pain_mod
+	}
+}
+
+patron_saint_affinity_pain_function_value = {
+	value = 100
+	divide = patron_saint_pain_affinity_function_base_value
+}
+
+patron_saint_pain_affinity_function_base_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = patron_saint_values_pain_affinity
+		}
+		add = var:patron_saint_values_pain_affinity
+	}
+	round = yes
+	add = 100
+}
+
+# Patron Saint Affinity for Traits and Skills
+
+patron_saint_affinity_trait_value = {
+	value = 0
+	
+	if = {
+		limit = { exists = scope:relevant_patron_saint }
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = brave PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_brave_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = craven PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_craven_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = calm PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_calm_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = wrathful PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_wrathful_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = chaste PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_chaste_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lustful PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lustful_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = content PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_content_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = ambitious PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_ambitious_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = diligent PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_diligent_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lazy PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lazy_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = fickle PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_fickle_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = stubborn PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_stubborn_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = forgiving PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_forgiving_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = vengeful PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_vengeful_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = generous PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_generous_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = greedy PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_greedy_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = gregarious PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_gregarious_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = shy PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_shy_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = honest PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_honest_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = deceitful PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_deceitful_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = humble PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_humble_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = arrogant PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_arrogant_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = just PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_just_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = arbitrary PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_arbitrary_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = patient PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_patient_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = impatient PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_impatient_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = temperate PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_temperate_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = gluttonous PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_gluttonous_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = trusting PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_trusting_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = paranoid PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_paranoid_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = zealous PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_zealous_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = cynical PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_cynical_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = compassionate PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_compassionate_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = callous PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_callous_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = sadistic PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_sadistic_affinity_value
+		}
+		
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = gallant PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_gallant_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = strategist PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_strategist_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = administrator PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_administrator_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = schemer PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_schemer_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = whole_of_body PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_whole_of_body_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = scholar PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_scholar_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = theologian PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_theologian_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = overseer PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_overseer_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = torturer PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_torturer_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = avaricious PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_avaricious_affinity_value
+		}
+		
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lifestyle_blademaster PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lifestyle_blademaster_affinity_value
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_blademaster
+						value >= 50
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_blademaster_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_blademaster
+						value >= 100
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_blademaster_affinity_value
+			}
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lifestyle_mystic PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lifestyle_mystic_affinity_value
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_mystic
+						value >= 50
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_mystic_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_mystic
+						value >= 100
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_mystic_affinity_value
+			}
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lifestyle_traveler PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lifestyle_traveler_affinity_value
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_traveler
+						track = travel
+						value >= 50
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_traveler_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_traveler
+						track = travel
+						value >= 100
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_traveler_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_traveler
+						track = danger
+						value >= 50
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_traveler_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_traveler
+						track = danger
+						value >= 100
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_traveler_affinity_value
+			}
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lifestyle_reveler PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lifestyle_reveler_affinity_value
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_reveler
+						value >= 50
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_reveler_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_reveler
+						value >= 100
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_reveler_affinity_value
+			}
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = lifestyle_physician PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_lifestyle_physician_affinity_value
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_physician
+						value >= 50
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_physician_affinity_value
+			}
+			if = {
+				limit = {
+					has_trait_xp = {
+						trait = lifestyle_physician
+						value >= 100
+					}
+				}
+				add = scope:relevant_patron_saint.var:patron_saint_lifestyle_physician_affinity_value
+			}
+		}
+		
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = forder PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_forder_affinity_value
+		}
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = reaver PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_reaver_affinity_value
+		}
+		
+		if = {
+			limit = { has_patron_saint_trait_trigger = { TRAIT = improvident PATRON_SAINT =  scope:relevant_patron_saint } }
+			add = scope:relevant_patron_saint.var:patron_saint_improvident_affinity_value
+		}
+	}
+}
+
+patron_saint_affinity_skill_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:relevant_patron_saint }
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:diplomacy
+					}
+				}
+			}
+			add = patron_saint_diplomacy_skill_value
+		}
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:intrigue
+					}
+				}
+			}
+			add = patron_saint_intrigue_skill_value
+		}
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:martial
+					}
+				}
+			}
+			add = patron_saint_martial_skill_value
+		}
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:stewardship
+					}
+				}
+			}
+			add = patron_saint_stewardship_skill_value
+		}
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:learning
+					}
+				}
+			}
+			add = patron_saint_learning_skill_value
+		}
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:prowess
+					}
+				}
+			}
+			add = patron_saint_prowess_skill_value
+		}
+		if = {
+			limit = {
+				scope:relevant_patron_saint = {
+					any_in_list = {
+						variable = patron_saint_skills
+						this = flag:arcana
+					}
+				}
+			}
+			add = patron_saint_arcana_skill_value
+		}
+	}
+}
+
+patron_saint_diplomacy_skill_value = {
+
+	value = diplomacy
+	multiply = scope:relevant_patron_saint.var:patron_saint_diplomacy_affinity_modifier
+
+}
+
+patron_saint_intrigue_skill_value = {
+
+	value = intrigue
+	multiply = scope:relevant_patron_saint.var:patron_saint_intrigue_affinity_modifier
+
+}
+
+patron_saint_martial_skill_value = {
+
+	value = martial
+	multiply = scope:relevant_patron_saint.var:patron_saint_martial_affinity_modifier
+
+}
+
+patron_saint_stewardship_skill_value = {
+
+	value = stewardship
+	multiply = scope:relevant_patron_saint.var:patron_saint_stewardship_affinity_modifier
+
+}
+
+patron_saint_learning_skill_value = {
+
+	value = learning
+	multiply = scope:relevant_patron_saint.var:patron_saint_learning_affinity_modifier
+
+}
+
+patron_saint_prowess_skill_value = {
+
+	value = prowess
+	multiply = scope:relevant_patron_saint.var:patron_saint_prowess_affinity_modifier
+
+}
+
+patron_saint_arcana_skill_value = {
+
+	value = character_arcana_baseline_value
+	multiply = scope:relevant_patron_saint.var:patron_saint_arcana_affinity_modifier
+
+}
+
+patron_saint_required_affinity_for_next_level_value = {
+	value = 0
+	
+	if = {
+		limit = { character_has_patron_saint_level = { PATRON_SAINT = scope:relevant_patron_saint LEVEL = 1 } }
+		add = 30
+	}
+	else_if = {
+		limit = { character_has_patron_saint_level = { PATRON_SAINT = scope:relevant_patron_saint LEVEL = 2 } }
+		add = 65
+	}
+	else_if = {
+		limit = { character_has_patron_saint_level = { PATRON_SAINT = scope:relevant_patron_saint LEVEL = 3 } }
+		add = 100
+	}
+	else = {
+		add = 140
+	}
+}
+
+#############################
+# Patron Saint Level Values #
+#############################
+
+patron_saint_max_individual_saint_level_value = {
+	value = faith.patron_saint_faith_max_individual_saint_level_value
+}
+
+patron_saint_max_total_saint_level_value = {
+	value = faith.patron_saint_faith_max_total_saint_level_value
+}
+
+patron_saint_max_saint_number_value = {
+	value = faith.patron_saint_faith_max_saint_number_value
+}
+
+patron_saint_faith_max_individual_saint_level_value = {
+	value = 0
+	if = {
+		limit = { has_doctrine_parameter = max_patron_saint_level_doctrine_5 }
+		add = 5
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = max_patron_saint_level_doctrine_4 }
+		add = 4
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = max_patron_saint_level_doctrine_3 }
+		add = 3
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = max_patron_saint_level_doctrine_2 }
+		add = 2
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = patron_saints_enabled }
+		add = 1
+	}
+}
+
+patron_saint_faith_max_total_saint_level_value = {
+	value = 0
+	if = {
+		limit = { has_doctrine_parameter = total_patron_saint_level_doctrine_5 }
+		add = 5
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_level_doctrine_4 }
+		add = 4
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_level_doctrine_3 }
+		add = 3
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_level_doctrine_2 }
+		add = 2
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_level_doctrine_1 }
+		add = 1
+	}
+}
+
+patron_saint_faith_max_saint_number_value = {
+	value = 1
+	if = {
+		limit = { has_doctrine_parameter = total_patron_saint_number_doctrine_5 }
+		add = 4
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_number_doctrine_4 }
+		add = 3
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_number_doctrine_3 }
+		add = 2
+	}
+	else_if = {
+		limit = { has_doctrine_parameter = total_patron_saint_number_doctrine_2 }
+		add = 1
+	}
+}
+
+patron_saint_character_saint_number_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_list
+			add = 1
+		}
+	}
+}
+
+patron_saint_character_total_saint_level_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_1_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_1_list
+			add = 1
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_2_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_2_list
+			add = 2
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_3_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_3_list
+			add = 3
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_4_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_4_list
+			add = 4
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_5_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_5_list
+			add = 5
+		}
+	}
+}
+
+patron_saint_character_all_other_saints_total_saint_level_value = {
+	value = 0
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_1_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_1_list
+			limit = { NOT = { this = scope:relevant_patron_saint } }
+			add = 1
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_2_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_2_list
+			limit = { NOT = { this = scope:relevant_patron_saint } }
+			add = 2
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_3_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_3_list
+			limit = { NOT = { this = scope:relevant_patron_saint } }
+			add = 3
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_4_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_4_list
+			limit = { NOT = { this = scope:relevant_patron_saint } }
+			add = 4
+		}
+	}
+	if = {
+		limit = {
+			has_variable_list = character_patron_saint_level_5_list
+		}
+		every_in_list = {
+			variable = character_patron_saint_level_5_list
+			limit = { NOT = { this = scope:relevant_patron_saint } }
+			add = 5
+		}
+	}
+}
+
+patron_saint_levels_left_for_this_saint_value = {
+	value = patron_saint_max_individual_saint_level_value
+	subtract = patron_saint_character_all_other_saints_total_saint_level_value 
+}
+
+patron_saint_remaining_levels_left_value = {
+	value = faith.patron_saint_faith_max_total_saint_level_value
+	subtract = patron_saint_character_total_saint_level_value
+}
+
+##################
+# AI YEAR VALUES #
+##################
+
+gh_year_divided_by_5_remainder_value = {
+	value = current_year
+	modulo = 5
+}
+
+gh_year_divided_by_15_remainder_value = {
+	value = current_year
+	modulo = 15
+}
+
+###################################
+# MISC PATRON SAINT SYSTEM VALUES #
+###################################
+
+offer_treatment_physican_skill_value = { # GH TODO: Make this dependent on lifestyle rank
+	if = {
+		limit = {
+			has_trait = lifestyle_physician
+		}
+		add = 20
+	}
+}
+
+offer_treatment_mystic_skill_value = { # GH TODO: Make this dependent on lifestyle rank
+	if = {
+		limit = {
+			has_trait = lifestyle_mystic
+		}
+		add = 10
+	}
+}
+
+court_physician_learning_value = {
+	value = 0
+	every_court_position_holder = {
+		type = court_physician_court_position
+		
+		add = learning
+	}
+}
+
+court_physician_lifestyle_value = {
+	value = 0
+	every_court_position_holder = {
+		type = court_physician_court_position
+		
+		add = physician_lifestyle_experiments_value
+	}
+}
+
+physician_lifestyle_experiments_value = {
+	value = 0
+	if = {
+		limit = { has_trait = lifestyle_physician }
+		add = 7
+		if = {
+			limit = {
+				has_trait_xp = {
+					trait = lifestyle_physician
+					value >= 100
+				}
+			}
+			add = 14
+		}
+		else_if = {
+			limit = {
+				has_trait_xp = {
+					trait = lifestyle_physician
+					value >= 50
+				}
+			}
+			add = 7
+		}
+	}
+}
+
+###################################
+# MEDICAL VALUIES	              #
+###################################
+
+
+medical_experiments_great_success_bonus_value = {
+	value = learning
+	add = physician_lifestyle_experiments_value
+	add = court_physician_learning_value
+	add = court_physician_lifestyle_value
+	divide = 2
+	floor = yes
+}
+
+medical_experiments_critical_success_bonus_value = {
+	value = medical_experiments_great_success_bonus_value
+	divide = 2
+	floor = yes
+}
+
+heal_the_sick_bad_base_success_chance = {
+	value = 30
+}
+
+heal_the_sick_good_base_success_chance = {
+	value = 40
+}
+
+heal_the_sick_great_base_success_chance = {
+	value = 5
+}
+
+heal_the_sick_medicine_success_chance = {
+	value = 0
+	add = learning
+	multiply = 2
+	add = physician_lifestyle_experiments_value
+}
+
+heal_the_sick_diplomacy_success_chance = {
+	value = 0
+	add = diplomacy
+	multiply = 3
+	add = learning
+	add = physician_lifestyle_experiments_value
+	divide = 2
+	floor = yes
+}
+
+heal_the_sick_stewardship_success_chance = {
+	value = 0
+	add = stewardship
+	multiply = 2
+}
+
+heal_the_sick_medicine_bad_success_chance = {
+	value = heal_the_sick_bad_base_success_chance
+	subtract = heal_the_sick_medicine_success_chance
+	min = 10
+}
+
+heal_the_sick_medicine_good_success_chance = {
+	value = heal_the_sick_good_base_success_chance
+	add = heal_the_sick_medicine_success_chance
+}
+
+heal_the_sick_medicine_great_success_chance = {
+	value = heal_the_sick_great_base_success_chance
+	add = heal_the_sick_medicine_success_chance
+}
+
+heal_the_sick_diplomacy_bad_success_chance = {
+	value = heal_the_sick_bad_base_success_chance
+	subtract = heal_the_sick_diplomacy_success_chance
+	min = 10
+}
+
+heal_the_sick_diplomacy_good_success_chance = {
+	value = heal_the_sick_good_base_success_chance
+	add = heal_the_sick_diplomacy_success_chance
+}
+
+heal_the_sick_diplomacy_great_success_chance = {
+	value = heal_the_sick_great_base_success_chance
+	add = heal_the_sick_diplomacy_success_chance
+}
+
+heal_the_sick_stewardship_bad_success_chance = {
+	value = heal_the_sick_bad_base_success_chance
+	subtract = heal_the_sick_stewardship_success_chance
+	min = 10
+}
+
+heal_the_sick_stewardship_good_success_chance = {
+	value = heal_the_sick_good_base_success_chance
+	add = heal_the_sick_stewardship_success_chance
+}
+
+heal_the_sick_stewardship_great_success_chance = {
+	value = heal_the_sick_great_base_success_chance
+	add = heal_the_sick_stewardship_success_chance
+}

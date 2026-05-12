@@ -1,0 +1,549 @@
+﻿########################
+# Exposure Base Values #
+########################
+
+exposure_from_spells_value = {
+	value = 0
+	if = {
+		limit = { has_variable = spell_exposure }
+		add = {
+			value = var:spell_exposure
+		}
+	}
+}
+
+exposure_total_value = {
+	value = 0
+	if = {
+		limit = { has_variable = magic_counter }
+		add = {
+			value = var:magic_counter
+			desc = exposure_from_magic_desc
+			format = "MAGIC_BASELINE_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_variable = spell_exposure }
+		add = {
+			value = var:spell_exposure
+			desc = exposure_from_spell_desc
+			format = "MAGIC_BASELINE_VALUE_FORMAT"
+		}
+	}
+}
+
+exposure_level_value = {
+	value = 0
+	if = {
+		limit = { exposure_total_value > magic_power_limit_5 }
+		add = 5
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_4 }
+		add = 4
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_3 }
+		add = 3
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_2 }
+		add = 2
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_1 }
+		add = 1
+	}
+}
+
+exposure_current_milestone_value = {
+	value = 0
+	if = {
+		limit = { exposure_total_value > magic_power_limit_5 }
+		add = magic_power_limit_5
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_4 }
+		add = magic_power_limit_4
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_3 }
+		add = magic_power_limit_3
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_2 }
+		add = magic_power_limit_2
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_1 }
+		add = magic_power_limit_1
+	}
+}
+
+exposure_next_milestone_value = {
+	value = 0
+	if = {
+		limit = { exposure_total_value > magic_power_limit_5 }
+		add = 10000
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_4 }
+		add = magic_power_limit_5
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_3 }
+		add = magic_power_limit_4
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_2 }
+		add = magic_power_limit_3
+	}
+	else_if = {
+		limit = { exposure_total_value > magic_power_limit_1 }
+		add = magic_power_limit_2
+	}
+	else = {
+		add = magic_power_limit_1
+	}
+}
+
+#######################
+# Spell Exposure Gain #
+#######################
+
+spell_exposure_low_gain = {
+	value = spell_exposure_base_gain
+	divide = 2
+}
+
+spell_exposure_base_gain = {
+	value = 0
+	if = {
+		limit = { exists = scope:spell_being_casted }
+		add = scope:spell_being_casted.total_spell_cost
+	}
+	add = {
+		value = {
+			value = 0
+			every_equipped_character_artifact = {
+				limit = {
+					exists = var:artifact_magic_overwhelmation
+				}
+				add = var:artifact_magic_overwhelmation
+			}
+		}
+		desc = artifacts_value_desc
+		format = "SPELLCASTING_ABILITY_VALUE_FORMAT_POS"
+	}
+	multiply = 2
+	ceiling = yes
+}
+
+spell_exposure_high_gain = {
+	value = spell_exposure_base_gain
+	multiply = 1.5
+}
+
+
+spell_exposure_loss_minimum_value = {
+	value = character_magic_baseline_income_value
+	multiply = 1.5
+}
+
+spell_exposure_monthly_loss = {
+	value = exposure_from_spells_value
+	divide = 10
+	min = spell_exposure_loss_minimum_value
+}
+
+###########################
+# Predicted Exposure Gain #
+###########################
+
+predicted_exposure_after_casting_spell_value = {
+	value = exposure_total_value
+	if = {
+		limit = { exists = scope:spell_organizer.var:selected_spell }
+		subtract = scope:spell_organizer.var:selected_spell.total_spell_cost
+		add = {
+			value = spell_exposure_low_gain
+			multiply = {
+				value = 10
+				add = spellcasting_value
+				multiply = 2
+				divide = spell_exposure_random_chance_sum_value
+			}
+		}
+		add = {
+			value = spell_exposure_base_gain
+			multiply = {
+				value = 60
+				add = spellcasting_value
+				divide = spell_exposure_random_chance_sum_value
+			}
+		}
+		add = {
+			value = spell_exposure_high_gain
+			multiply = {
+				value = 15
+				divide = spell_exposure_random_chance_sum_value
+			}
+		}
+	}
+}
+
+predicted_exposure_level_after_casting_spell_value = {
+	value = 0
+	if = {
+		limit = { predicted_exposure_after_casting_spell_value > magic_power_limit_5 }
+		add = 5
+	}
+	else_if = {
+		limit = { predicted_exposure_after_casting_spell_value > magic_power_limit_4 }
+		add = 4
+	}
+	else_if = {
+		limit = { predicted_exposure_after_casting_spell_value > magic_power_limit_3 }
+		add = 3
+	}
+	else_if = {
+		limit = { predicted_exposure_after_casting_spell_value > magic_power_limit_2 }
+		add = 2
+	}
+	else_if = {
+		limit = { predicted_exposure_after_casting_spell_value > magic_power_limit_1 }
+		add = 1
+	}
+}
+
+# This is the sum of the random chances in the increase_exposure_spell effect
+spell_exposure_random_chance_sum_value = {
+	value = 85
+	add = {
+		value = spellcasting_value
+		multiply = 3
+	}
+}
+
+###################
+# Exposure Limits #
+###################
+
+magic_power_limit_1 = {
+	value = character_magic_baseline_value
+	add = {
+		value = character_magic_baseline_value
+		multiply = 0.5
+	}
+	if = {
+		limit = { has_perk = arcana_actuation_perk7_tree1 }
+		multiply = 1.2
+	}
+}
+
+magic_power_limit_2 = {
+	value = magic_power_limit_1
+	multiply = 2
+}
+
+magic_power_limit_3 = {
+	value = magic_power_limit_1
+	multiply = 3
+}
+
+magic_power_limit_4 = {
+	value = magic_power_limit_1
+	multiply = 4
+}
+
+magic_power_limit_5 = {
+	value = magic_power_limit_1
+	multiply = 5
+}
+
+########################
+# Ambient Magic Values #
+########################
+
+@ambient_magic_limit_1 = 50
+@ambient_magic_limit_2 = 100
+@ambient_magic_limit_3 = 150
+@ambient_magic_limit_4 = 200
+@ambient_magic_limit_5 = 300
+
+aftoenischi_effect_threshold_value = @ambient_magic_limit_2
+
+arcane_fallout_decay_value = {
+	value = {
+		value = 20
+		desc = arcana_base_value_desc
+		format = "AMBIENT_MAGIC_DECAY_BASE_FORMAT"
+	}
+	if = {
+		limit = { 
+			exists = var:arcane_fallout
+			var:arcane_fallout > aftoenischi_effect_threshold_value
+		}
+		multiply = {
+			value = {
+				value = 100
+				subtract = {
+					value = var:arcane_fallout
+					subtract = aftoenischi_effect_threshold_value
+				}
+				multiply = 0.01
+				min = 0.1
+			}
+			desc = aftoenischi_effect_value_desc
+			format = "AMBIENT_MAGIC_DECAY_FORMAT"
+		}
+	}
+	add = decennial_arcane_fallout_modifier_value
+}
+
+
+lichdom_sorrow_decay_value = {
+	value = {
+		value = 5
+		desc = arcana_base_value_desc
+		format = "AMBIENT_MAGIC_DECAY_BASE_FORMAT"
+	}
+	if = {
+		limit = { 
+			exists = var:lichdom_sorrow
+			var:lichdom_sorrow > aftoenischi_effect_threshold_value
+		}
+		multiply = {
+			value = {
+				value = 100
+				subtract = {
+					value = var:lichdom_sorrow
+					subtract = aftoenischi_effect_threshold_value
+				}
+				multiply = 0.01
+				min = 0.1
+			}
+			desc = aftoenischi_effect_value_desc
+			format = "AMBIENT_MAGIC_DECAY_FORMAT"
+		}
+	}
+}
+
+desertification_decay_value = {
+	value = {
+		value = 5
+		desc = arcana_base_value_desc
+		format = "AMBIENT_MAGIC_DECAY_BASE_FORMAT"
+	}
+	if = {
+		limit = { 
+			exists = var:desertification
+			var:desertification > aftoenischi_effect_threshold_value
+		}
+		multiply = {
+			value = {
+				value = 100
+				subtract = {
+					value = var:desertification
+					subtract = aftoenischi_effect_threshold_value
+				}
+				multiply = 0.01
+				min = 0.1
+			}
+			desc = aftoenischi_effect_value_desc
+			format = "AMBIENT_MAGIC_DECAY_FORMAT"
+		}
+	}
+}
+
+arcane_frost_decay_value = {
+	value = {
+		value = 5
+		desc = arcana_base_value_desc
+		format = "AMBIENT_MAGIC_DECAY_BASE_FORMAT"
+	}
+	if = {
+		limit = { 
+			exists = var:arcane_frost
+			var:arcane_frost > aftoenischi_effect_threshold_value
+		}
+		multiply = {
+			value = {
+				value = 100
+				subtract = {
+					value = var:arcane_frost
+					subtract = aftoenischi_effect_threshold_value
+				}
+				multiply = 0.01
+				min = 0.1
+			}
+			desc = aftoenischi_effect_value_desc
+			format = "AMBIENT_MAGIC_DECAY_FORMAT"
+		}
+	}
+}
+
+total_ambient_magic_value = {
+	value = 0
+	if = { # Wayline
+		limit = { has_county_modifier = wayline_modifier }
+		add = {
+			value = 50
+			desc = wayline_modifier_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Wayline Intersection
+		limit = { has_county_modifier = wayline_intersection_modifier }
+		add = {
+			value = 100
+			desc = wayline_intersection_modifier_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Sorrowfield
+		limit = { any_county_province = { has_building = 01_thesorrowfield } }
+		add = {
+			value = 100
+			desc = thesorrowfield_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Tenenae
+		limit = { any_county_province = { has_building = 01_tenenae } }
+		add = {
+			value = 100
+			desc = tenenae_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Magic Abyss
+		limit = { any_county_province = { has_building = 01_magic_hole } }
+		add = {
+			value = 25
+			desc = magic_hole_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Aeynor's Void
+		limit = { any_county_province = { has_building = 01_redportal } }
+		add = {
+			value = 50
+			desc = redportal_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Yaawdet Maw
+		limit = { any_county_province = { has_building = 01_yaawdetmaw } }
+		add = {
+			value = 50
+			desc = yaawdetmaw_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # The Sunken Tower
+		limit = { any_county_province = { has_building = 01_sunkentower } }
+		add = {
+			value = 25
+			desc = sunkentower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Paerasjatan's Spire
+		limit = { any_county_province = { has_building = 01_kashiryatower } }
+		add = {
+			value = 25
+			desc = kashiryatower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Frozen Spire
+		limit = { any_county_province = { has_building = 01_frozentower } }
+		add = {
+			value = 25
+			desc = frozentower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # The Eastern Tower
+		limit = { any_county_province = { has_building = 01_easterntower } }
+		add = {
+			value = 25
+			desc = easterntower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # The Oltenic Tower
+		limit = { any_county_province = { has_building = 01_oltenictower } }
+		add = {
+			value = 25
+			desc = oltenictower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Amaghean Tower
+		limit = { any_county_province = { has_building = 01_amagheantower } }
+		add = {
+			value = 25
+			desc = amagheantower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Gehaze Lake
+		limit = { any_county_province = { has_building = 01_gehazetower } }
+		add = {
+			value = 25
+			desc = gehazetower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Desert Tower
+		limit = { any_county_province = { has_building = 01_westtower } }
+		add = {
+			value = 25
+			desc = westtower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Sea Tower
+		limit = { any_this_title_or_de_jure_above = { this = title:d_starlight_isles } }
+		add = {
+			value = 50
+			desc = sea_tower_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Arcane Fallout
+		limit = { exists = var:arcane_fallout }
+		add = {
+			value = var:arcane_fallout
+			desc = arcane_fallout_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Lichdom Sorrow
+		limit = { exists = var:lichdom_sorrow }
+		add = {
+			value = var:lichdom_sorrow
+			desc = lichdom_sorrow_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Desertification
+		limit = { exists = var:desertification }
+		add = {
+			value = var:desertification
+			desc = desertification_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+	if = { # Arcane Frost
+		limit = { exists = var:arcane_frost }
+		add = {
+			value = var:arcane_frost
+			desc = arcane_frost_value_desc
+			format = "AMBIENT_MAGIC_FORMAT"
+		}
+	}
+}
+

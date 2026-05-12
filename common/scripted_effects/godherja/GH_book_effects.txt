@@ -1,0 +1,84 @@
+﻿artifact_book_page_effect = {
+	if = {
+		limit = { 
+			has_variable = $ARTIFACT$_selected
+			trigger_if = {
+				limit = { has_variable = current_page }
+				var:current_page = $PAGE$
+			}
+			trigger_else = { always = no }
+		}
+		custom_tooltip = $ARTIFACT$_page_$PAGE$
+	}
+}
+artifact_book_set_final_page_effect = {
+	if = {
+		limit = { 
+			has_variable = $ARTIFACT$_selected
+		}
+		set_variable = {
+			name = final_page
+			value = $PAGE$
+		}
+	}
+}
+next_page = {
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { 
+					has_variable = current_page
+					has_variable = final_page
+				}
+				var:current_page < var:final_page
+			}
+			trigger_else = { always = yes }
+		}
+		change_variable = {
+			name = current_page
+			add = 1
+		}
+	}
+}
+previous_page = {
+	if = {
+		limit = {
+			has_variable = current_page
+		}
+		change_variable = {
+			name = current_page
+			subtract = 1
+		}
+		if = {
+			limit = { var:current_page < 1 }
+			set_variable = {
+				name = current_page
+				value = 1
+			}
+		}
+	}
+}
+table_of_contents_entry = {
+	root = {
+		add_to_variable_list = {
+			name = table_of_contents
+			target = flag:$ARTIFACT$_$ENTRY_NAME$
+		}
+		set_variable = {
+			name = $ARTIFACT$_$ENTRY_NAME$_page
+			value = $PAGE$
+		}
+	}
+	custom_tooltip = $ARTIFACT$_$ENTRY_NAME$_title
+}
+goto_page_in_table_of_contents_entry = {
+	root = {
+		if = {
+			limit = { has_variable = $ENTRY_NAME$_page }
+			set_variable = {
+				name = current_page
+				value = var:$ENTRY_NAME$_page
+			}
+		}
+	}
+}

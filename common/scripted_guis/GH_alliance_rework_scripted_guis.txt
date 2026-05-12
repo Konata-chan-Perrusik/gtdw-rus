@@ -1,0 +1,80 @@
+﻿defensive_alliance_sgui = {
+	scope = character
+	saved_scopes = { ally }	
+	
+	is_shown = { 
+		exists = root
+		exists = scope:ally
+		has_variable_list = defensive_alliance_character_list
+		is_target_in_variable_list = {
+			name = defensive_alliance_character_list
+			target = scope:ally
+		}
+	}
+}
+
+setup_full_allies_list_sgui = {
+	effect = {
+		this.var:war_leader_view_ally = {
+			every_ally = {
+				limit = {
+					NOR = { 
+						is_vassal_of = prev
+						top_liege = root.var:war_leader_view_ally
+						root.var:war_leader_view_ally = {
+							is_target_in_variable_list = {
+								name = defensive_alliance_character_list
+								target = prev
+							}
+						}
+					}
+				}
+				prev = {
+					add_to_variable_list = {
+						name = offensive_alliance_character_list
+						target = prev
+					}
+				}
+			}
+			every_in_list = {
+				variable = defensive_alliance_character_list
+				limit = { NOT = { is_vassal_of = prev } }
+				prev = {
+					add_to_variable_list = {
+						name = defensive_alliance_temporary_character_list
+						target = prev
+					}
+				}
+			}
+			set_variable = {
+				name = gh_full_allies_military_strengh_value_var
+				value = gh_full_allies_military_strengh_value
+			}
+			set_variable = {
+				name = gh_limited_allies_military_strengh_value_var
+				value = gh_limited_allies_military_strengh_value
+			}				
+		}
+	}
+}
+
+clear_allies_list_sgui = {
+	effect = {
+		this.var:war_leader_view_ally = {
+			clear_variable_list = offensive_alliance_character_list 
+			clear_variable_list = defensive_alliance_temporary_character_list
+			remove_variable = gh_full_allies_military_strengh_value_var
+			remove_variable = gh_limited_allies_military_strengh_value_var
+		}
+	}
+}
+
+save_viewed_leader_sgui = {
+	saved_scopes = { character }	
+	effect = {
+		set_variable = {
+			name = war_leader_view_ally
+			value = scope:character
+		}
+	}
+}

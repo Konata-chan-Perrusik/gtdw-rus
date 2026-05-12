@@ -1,0 +1,394 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/script_values/GH_magic_misc_values.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+# Modifier Duration Years to Days Conversion
+
+GH_magic_modifier_months_to_days_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:years }
+		add = scope:years
+		multiply = 30
+		floor = yes
+	}
+}
+
+# Modifier Durations
+spell_effect_modifier_duration_value = {
+	value = 60
+	if = {
+		limit = { exists = var:spell_effect_duration_override }
+		value = var:spell_effect_duration_override
+	}
+	else_if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_duration_override }
+		value = scope:spell_effect.var:spell_effect_duration_override
+	}
+}
+
+spell_effect_modifier_duration_ai_weighting_value = {
+	value = spell_effect_modifier_duration_value
+	if = {
+		limit = { spell_effect_modifier_duration_value = -1 }
+		value = 30	# Permanent modifiers are valued at effectively being 30 years long...
+		if = {
+			limit = {
+				exists = scope:spell_being_checked_ai_target
+				scope:spell_being_checked_ai_target.age > 50
+				scope:spell_being_checked_ai_target.health < death_chance_dying_health
+			}
+			subtract = { # ...but the older and closer to natural death one is, the less important they are (exceptions exist, such as modifiers that actually *extend lifespan*)
+				value = death_chance_dying_health
+				subtract = scope:spell_being_checked_ai_target.health
+				multiply = 10
+				max = 30
+				min = 0
+			}
+		}
+	}
+}
+
+# Trait XP Change Amounts
+scarred_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+scarred_xp_base_value = {
+	value = scarred_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+lifestyle_physician_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+lifestyle_physician_xp_base_value = {
+	value = lifestyle_physician_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+lifestyle_reveler_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+lifestyle_reveler_xp_base_value = {
+	value = lifestyle_reveler_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_fire_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_fire_xp_base_value = {
+	value = gh_elementalist_magical_fire_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_water_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_water_xp_base_value = {
+	value = gh_elementalist_magical_water_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_air_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_air_xp_base_value = {
+	value = gh_elementalist_magical_air_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_stone_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_stone_xp_base_value = {
+	value = gh_elementalist_magical_stone_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_dream_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_dream_xp_base_value = {
+	value = gh_elementalist_magical_dream_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_dark_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_dark_xp_base_value = {
+	value = gh_elementalist_magical_dark_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_ice_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_ice_xp_base_value = {
+	value = gh_elementalist_magical_ice_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_death_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_death_xp_base_value = {
+	value = gh_elementalist_magical_death_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_blood_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_blood_xp_base_value = {
+	value = gh_elementalist_magical_blood_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_sand_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_sand_xp_base_value = {
+	value = gh_elementalist_magical_sand_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_metal_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_metal_xp_base_value = {
+	value = gh_elementalist_magical_metal_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_ethereal_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_ethereal_xp_base_value = {
+	value = gh_elementalist_magical_ethereal_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_celestial_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_celestial_xp_base_value = {
+	value = gh_elementalist_magical_celestial_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_nature_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_nature_xp_base_value = {
+	value = gh_elementalist_magical_nature_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_dawn_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_dawn_xp_base_value = {
+	value = gh_elementalist_magical_dawn_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_hymns_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_hymns_xp_base_value = {
+	value = gh_elementalist_magical_hymns_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_time_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_time_xp_base_value = {
+	value = gh_elementalist_magical_time_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_magical_light_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_magical_light_xp_base_value = {
+	value = gh_elementalist_magical_light_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_elementalist_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_elementalist_xp_base_value = {
+	value = gh_elementalist_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+gh_ritual_tattoos_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+gh_ritual_tattoos_xp_base_value = {
+	value = gh_ritual_tattoos_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+lifestyle_mystic_xp_change_value = {
+	value = 5
+	if = {
+		limit = { exists = scope:spell_effect.var:spell_effect_xp_change_override }
+		value = scope:spell_effect.var:spell_effect_xp_change_override
+	}
+}
+lifestyle_mystic_xp_base_value = {
+	value = lifestyle_mystic_xp_change_value
+	multiply = spell_tag_scalar_threshold_diff_value
+}
+
+# Other Script Values
+add_diplomacy_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+add_intrigue_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+add_martial_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+add_stewardship_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+add_learning_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+add_arcana_lifestyle_xp_spell_effect_value = {
+	value = major_lifestyle_xp
+	if = {
+		limit = { exists = scope:spell_effect }
+		multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+	}
+}
+damage_army_spell_effect_value = {
+    value = 5
+    multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+}
+
+knight_summons_value = {
+    value = 3
+    add = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+    max = 6
+}
+
+add_relevant_lifestyle_xp_value = {
+    value = major_lifestyle_xp
+    if = {
+        limit = { exists = scope:spell_effect }
+        multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+    }
+}
+
+increase_max_durability_spell_effect_value = {
+    value = 0
+    if = {
+        limit = { exists = artifact_durability }
+        add = artifact_durability
+    }
+    add = {
+        value = 30
+        multiply = scope:spell_effect.spell_tag_scalar_threshold_diff_value
+    }
+}

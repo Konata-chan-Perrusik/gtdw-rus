@@ -1,0 +1,710 @@
+﻿check_fog_resistance_effect = {
+	if = {
+		limit = { NOT = { has_variable = fog_resistance } }
+		set_variable = {
+			name = fog_resistance
+			value = 0
+		}
+		if = {
+			limit = {
+				title_province = {
+					GH_any_mountains_terrain_trigger = yes
+				}
+			}
+			change_variable = {
+				name = fog_resistance
+				add = 3
+			}
+		}
+		if = {
+			limit = {
+				title_province = {
+					GH_any_hills_terrain_trigger = yes
+				}
+			}
+			change_variable = {
+				name = fog_resistance
+				add = 1
+			}
+		}
+		if = {
+			limit = {
+				title_province = {
+					GH_any_marcher_terrain_trigger = yes
+				}
+			}
+			change_variable = {
+				name = fog_resistance
+				add = 1
+			}
+		}
+	}
+}
+
+spread_fog_effect = {
+	save_scope_as = county
+	if = {
+		limit = { NOT = { has_variable = fog_blocked } }
+		check_fog_resistance_effect = yes
+		if = {
+			limit = {
+				var:fog_resistance > 0
+			}
+			change_variable = {
+				name = fog_resistance
+				add = -1
+			}
+		}
+		else = {
+			if = { 
+				limit = { has_county_modifier = bordering_fog_modifier } 
+				remove_county_modifier = bordering_fog_modifier
+			}
+			add_county_modifier = fogswept_modifier
+			if = {
+				limit = { 
+					holder = {
+						capital_county = prev
+						highest_held_title_tier >= tier_duchy
+					}
+				}
+				holder = {
+					save_temporary_scope_as = former_holder
+					every_held_title = {
+						limit = { tier >= tier_duchy }
+						scope:former_holder = { destroy_title = prev }
+					}
+				}
+			}
+			random_list = {
+				90 = { spawn_ruin = { COUNTY = scope:county } }
+				10 = {
+					scope:county = {	# Jomini throws a fit without this seemingly redundant scope switch. Remove at your own peril
+						set_county_culture = culture:fog_eaters
+						set_county_faith = faith:fogeater
+						holder = {
+							if = {
+								limit = {
+									domain_size = 1
+									NOT = { faith = faith:fogeater }
+								}
+								trigger_event = gh_fog_spread_events.11
+							}
+							else_if = {
+								limit = {
+									NOT = { faith = faith:fogeater }
+								}
+								trigger_event = gh_fog_spread_events.12 # Will likely fire this several times in some cases
+							}
+						}
+					}
+					if = {
+						limit = {
+							NOT = { has_variable = already_fogswept }
+						}
+						every_county_province = {
+							limit = { 
+								OR = {
+									has_holding_type = castle_holding
+									is_urban_trigger = yes
+									has_holding_type = church_holding
+								}
+							}
+							set_holding_type = tribal_holding
+						}
+						set_variable = already_fogswept
+						set_variable = {
+							name = recently_fogswept # For oversea expansion
+							days = 15
+						}
+					}
+				}
+			}
+			every_neighboring_county = {
+				limit = {
+					NOR = {
+						has_county_modifier = bordering_fog_modifier
+						has_county_modifier = fogswept_modifier
+					}
+				}
+				add_county_modifier = bordering_fog_modifier
+			}
+		}
+	}
+}
+
+spread_fog_effect_offmap = {	# To introduce the Fog from 'offmap' e.g. Elysian Pass
+	if = {
+		limit = { 
+			$PROVINCE$ = {
+				NOR = {
+					has_county_modifier = bordering_fog_modifier
+					has_county_modifier = fogswept_modifier
+				}
+			}
+		}
+		$PROVINCE$ = { add_county_modifier = bordering_fog_modifier }
+	} 
+	else_if = {
+		limit = { 
+			$PROVINCE$ = { has_county_modifier = bordering_fog_modifier }
+		}
+		$PROVINCE$ = { spread_fog_effect = yes }
+	}
+}
+
+spread_fog_sea_short_connection_effect = {
+	if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier 
+			set_variable = { name = recently_fogbordered days = 15 }
+		}
+	}
+	else_if 
+	{
+		limit = {
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+			}
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+				NOT = { has_variable = recently_fogbordered }
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			spread_fog_effect = yes
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier 
+			set_variable = { name = recently_fogbordered days = 15 }
+		}
+	}
+	else_if 
+	{
+		limit = {
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+			}
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+				NOT = { has_variable = recently_fogbordered }
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			spread_fog_effect = yes
+		}
+	}
+}
+
+spread_fog_sea_mid_connection_effect = {
+	if = {
+		limit = {
+			$FIRST_PROVINCE$ = {
+				NOT = {
+					has_variable = fog_sea_crossing_progress
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			set_variable = {
+				name = fog_sea_crossing_progress
+				value = 0
+			}
+		}
+	}
+	if = {
+		limit = {
+			$SECOND_PROVINCE$ = {
+				NOT = {
+					has_variable = fog_sea_crossing_progress
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			set_variable = {
+				name = fog_sea_crossing_progress
+				value = 0
+			}
+		}
+	}
+	if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress < 3
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			change_variable = {
+				name = fog_sea_crossing_progress
+				add = 1
+			}
+		}
+	}
+	else_if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 3
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier
+		}
+	}
+	else_if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 3
+			}
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+			}
+		}
+		$SECOND_PROVINCE$ = { spread_fog_effect = yes }
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress < 3
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			change_variable = {
+				name = fog_sea_crossing_progress
+				add = 1
+			}
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 3
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 3
+			}
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+			}
+		}
+		$FIRST_PROVINCE$ = { spread_fog_effect = yes }
+	}
+}
+
+spread_fog_sea_long_connection_effect = {
+	if = {
+		limit = {
+			$FIRST_PROVINCE$ = {
+				NOT = {
+					has_variable = fog_sea_crossing_progress
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			set_variable = {
+				name = fog_sea_crossing_progress
+				value = 0
+			}
+		}
+	}
+	if = {
+		limit = {
+			$SECOND_PROVINCE$ = {
+				NOT = {
+					has_variable = fog_sea_crossing_progress
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			set_variable = {
+				name = fog_sea_crossing_progress
+				value = 0
+			}
+		}
+	}
+	if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress < 6
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			change_variable = {
+				name = fog_sea_crossing_progress
+				add = 1
+			}
+		}
+	}
+	else_if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 6
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier
+		}
+	}
+	else_if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 6
+			}
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+			}
+		}
+		$SECOND_PROVINCE$ = { spread_fog_effect = yes }
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress < 6
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			change_variable = {
+				name = fog_sea_crossing_progress
+				add = 1
+			}
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 6
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 6
+			}
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+			}
+		}
+		$FIRST_PROVINCE$ = { spread_fog_effect = yes }
+	}
+}
+
+spread_fog_sea_very_long_connection_effect = {
+	if = {
+		limit = {
+			$FIRST_PROVINCE$ = {
+				NOT = {
+					has_variable = fog_sea_crossing_progress
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			set_variable = {
+				name = fog_sea_crossing_progress
+				value = 0
+			}
+		}
+	}
+	if = {
+		limit = {
+			$SECOND_PROVINCE$ = {
+				NOT = {
+					has_variable = fog_sea_crossing_progress
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			set_variable = {
+				name = fog_sea_crossing_progress
+				value = 0
+			}
+		}
+	}
+	if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress < 10
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			change_variable = {
+				name = fog_sea_crossing_progress
+				add = 1
+			}
+		}
+	}
+	else_if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 10
+			}
+			$SECOND_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier
+		}
+	}
+	else_if = {
+		limit = {	
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 10
+			}
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+			}
+		}
+		$SECOND_PROVINCE$ = { spread_fog_effect = yes }
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress < 10
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$SECOND_PROVINCE$ = {
+			change_variable = {
+				name = fog_sea_crossing_progress
+				add = 1
+			}
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 10
+			}
+			$FIRST_PROVINCE$ = {
+				NOR = {
+					has_county_modifier = fogswept_modifier
+					has_county_modifier = bordering_fog_modifier
+				}
+			}
+		}
+		$FIRST_PROVINCE$ = {
+			add_county_modifier = bordering_fog_modifier
+		}
+	}
+	else_if = {
+		limit = {	
+			$SECOND_PROVINCE$ = {
+				has_county_modifier = fogswept_modifier
+				var:fog_sea_crossing_progress >= 10
+			}
+			$FIRST_PROVINCE$ = {
+				has_county_modifier = bordering_fog_modifier
+			}
+		}
+		$FIRST_PROVINCE$ = { spread_fog_effect = yes }
+	}
+}
+
+#####################
+# CHARACTER-RELATED #
+#####################
+
+#switch_province_to_fogeater_ruler = {	# Switches the ruler of a province to a fogeater
+#	if = {
+#		limit = { exists = $PROVINCE$ }
+#		create_character = {
+#			location = root.location
+#			culture = culture:fog_eaters
+#			faith = faith:fogeater
+#			gender_female_chance = {
+#				value = 50
+#			}
+#			save_scope_as = new_fogeater
+#		}
+#		create_title_and_vassal_change = {
+#			type = conquest_claim
+#			save_scope_as = change
+#			add_claim_on_loss = yes
+#		}
+#		$PROVINCE$ = {
+#			change_title_holder_include_vassals = {
+#				holder = scope:new_fogeater
+#				change = scope:change
+#			}
+#			resolve_title_and_vassal_change = scope:change
+#		}
+#	}
+#}
+
+fog_exodian_holdouts = {
+	every_county = {
+		limit = {
+			holder.top_liege = title:d_legio_xxvi_exodian.holder
+		}
+		spread_fog_effect = yes
+	}
+	#These guys are missed by the spread fog effect
+	title:c_elrica = {
+		spawn_ruin = { COUNTY = title:c_elrica }
+		add_county_modifier = bordering_fog_modifier
+	}
+	title:c_provincenewasoro = {
+		spawn_ruin = { COUNTY = title:c_provincenewasoro }
+		add_county_modifier = bordering_fog_modifier
+	}
+	#title:c_west_lichd141241421oms_47 = {
+	#	spawn_ruin = { COUNTY = title:c_west_lichd141241421oms_47 }
+	#	add_county_modifier = bordering_fog_modifier
+	#}
+	title:c_west_lfafafafa7 = {
+		spawn_ruin = { COUNTY = title:c_west_lfafafafa7 }
+		add_county_modifier = bordering_fog_modifier
+	}
+	title:c_provincexeneornos = {
+		spawn_ruin = { COUNTY = title:c_provincexeneornos }
+		add_county_modifier = bordering_fog_modifier
+	}
+}
+
+
+###################
+# INITIALIZAITION #
+###################
+
+initialize_fog_paramaters = {	# This initializes the Fog clock and provincial Fog resistances. Called on game start
+	title:c_oraispol = { # Setting up the Fog clock
+		set_variable = {
+			name = fog_clock
+			value = 0
+		}
+	}
+	title:c_knoike = {
+		set_variable = fog_blocked
+	}
+	title:c_thebastro = {
+		set_variable = {
+			name = fog_sea_crossing_progress
+			value = 0
+		}
+	}
+	title:c_magnonion = {
+		set_variable = {
+			name = fog_sea_crossing_progress
+			value = 0
+		}
+	}
+	title:c_lekos = {
+		set_variable = {
+			name = fog_sea_crossing_progress
+			value = 0
+		}
+	}
+}

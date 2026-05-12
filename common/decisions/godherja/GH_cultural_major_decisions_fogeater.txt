@@ -1,0 +1,271 @@
+﻿##################
+##DECISIONS LIST##
+# fogeater_listen_decision
+# become_fogeater_invasion_leader_decision
+##################
+
+##################
+# Listen!
+# by ThePinkPanzer
+fogeater_listen_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_foglands.dds"
+	}
+
+	desc = fogeater_listen_decision_desc
+	selection_tooltip = fogeater_listen_decision_tooltip
+
+	is_shown = {
+		faith = {
+			has_doctrine_parameter = fogeater_mechanics_active
+		}
+		highest_held_title_tier >= tier_county
+	}
+
+	is_valid = {
+
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = listen_to_the_mistmother_tooltip
+		hidden_effect = {
+			random_list = {
+				25 = {
+					trigger_event = {
+						id = gh_fogeater_events.1
+						days = 3
+					}
+				}
+				25 = {
+					trigger_event = {
+						id = gh_fogeater_events.2
+						days = 3
+					}
+				}
+				25 = {
+					trigger_event = {
+						id = gh_fogeater_events.3
+						days = 3
+					}
+				}
+				25 = {
+					trigger_event = {
+						id = gh_fogeater_events.4
+						days = 3
+					}
+				}
+			}
+		}
+	}
+
+	ai_check_interval = 60
+	cooldown = { months = 36 }	
+
+	ai_potential = {
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##################
+# Become Big Fogeater
+# by Wolverine422
+#become_fogeater_invasion_leader_decision = {
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_foglands.dds"
+#	}
+#	decision_group_type = major
+#	desc = become_fogeater_invasion_leader_decision_desc
+#
+#	ai_check_interval = 0
+#
+#	is_shown = {
+#		faith = { has_doctrine_parameter = fogeater_mechanics_active }
+#		highest_held_title_tier >= tier_duchy
+#		NOT = {
+#			is_target_in_global_variable_list = {
+#				name = unavailable_unique_decisions
+#				target = flag:become_fogeater_invasion_leader_decision
+#			}
+#		}
+#		NOT = { exists = title:e_foglands }
+#	}
+#
+#	is_valid = {
+#		is_fogeater = yes
+#		prestige_level >= 4
+#		sub_realm_size >= 25
+#		GH_is_any_tribal_government_trigger = yes
+#		capital_province = { geographical_region = world_ga_foglands  }
+#	}
+#
+#	is_valid_showing_failures_only = {
+#		custom_description  ={
+#			text = fogeater_invasion_leader_title_tier_requirement
+#			highest_held_title_tier >= tier_kingdom
+#		}
+#		is_adult = yes
+#		is_available = yes
+#		is_independent_ruler = yes
+#	}
+#
+#	cost = {
+#		gold = {
+#			value = massive_gold_value
+#		}
+#		prestige = {
+#			value = major_prestige_value
+#		}
+#	}
+#
+#	effect = {
+#		#Can only happen once
+#		add_to_global_variable_list = {
+#			name = unavailable_unique_decisions
+#			target = flag:become_fogeater_invasion_leader_decision
+#		}		
+#
+#		show_as_tooltip = {
+#			add_trait = fogeater_invasion_leader
+#
+#			custom_tooltip = become_fogeater_invasion_leader_decision_gain_fogeater_empire
+#			custom_tooltip = become_fogeater_invasion_leader_decision_enable_fogeater_invasion_cb
+#			
+#			if = {
+#				limit = {
+#					prestige_level < 5
+#				}
+#				add_prestige_level = 1
+#			}
+#
+#			spawn_fogeater_troops_effect = yes
+#		}
+#
+#		save_scope_as = fogeater_leader
+#
+#		trigger_event = fogland_event.0001 ####I am fogeater leader
+#		add_to_temporary_list = received_notification
+#
+#		every_vassal_or_below = {
+#			trigger_event = fogland_event.0002 ####liege is fogeater leader
+#			add_to_temporary_list = received_notification
+#		}
+#
+#		every_ruler = {
+#			limit = {
+#				NOT = {
+#					is_in_list = received_notification
+#				}
+#			}
+#
+#			trigger_event = fogland_event.0003 ####someone has become fogeater leader
+#		}
+#	}
+#}
+
+fogeater_consume_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_foglands.dds"
+	}
+	ai_check_interval = 6
+	desc = fogeater_consume_decision_desc
+
+	is_shown = {
+		#any_realm_county = { NOT = { culture = { has_cultural_pillar = heritage_fog_eaters } } }
+		faith = { has_doctrine_parameter = fogeater_mechanics_active }
+	}
+
+	is_valid = {
+		has_title = title:e_foglands
+	}
+
+	effect = {
+		fogeater_consume_effect = yes
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+send_aid_to_migraddr_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_mountaintop_castle_hf.dds"
+	}
+	title = send_aid_to_migraddr_decision.t
+	desc = send_aid_to_migraddr_decision_desc
+	ai_check_interval = 120
+
+	is_shown = {
+		title:e_foglands = { 
+			is_title_created = yes
+			holder = { is_fogeater = yes }
+		}
+		title:d_bwlcheit = { 
+			is_title_created = yes
+			holder = { is_fogeater = no }
+		}
+
+		is_fogeater = no
+	}
+
+	is_valid = {
+		capital_county.title_province ?= { geographical_region = world_greater_aversaria }
+		title:d_bwlcheit.holder = { is_at_war = yes }
+	}
+
+	cooldown = { days = 2000 }
+
+	effect = {
+		custom_tooltip = fogeater_invasion.5000.tt
+		trigger_event = fogeater_invasion.5000
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 23
+
+		ai_value_modifier = {
+			ai_greed = -1
+		}
+
+		modifier = {
+			add = 30
+			has_trait = generous
+		}
+		modifier = {
+			add = -99
+			has_trait = greedy
+		}
+		modifier = {
+			add = -55.5
+			has_trait = cynical
+		}
+		modifier = {
+			add = 47.5
+			has_trait = ambitious
+		}
+		modifier = {
+			add = -50
+			has_trait = sadistic 
+		}
+		modifier = {
+			add = -5
+			has_trait = craven
+		}
+	}
+}

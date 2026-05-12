@@ -1,0 +1,341 @@
+﻿number_of_books_with_increased_rarity_value = {
+	value = 0
+	integer_range = {
+		min = 1
+		max = 2
+	}	
+}
+
+
+
+# Count the number of existing topics in the collection
+number_of_existing_topic_in_location_value = {
+	value = 0
+	every_in_list = {
+		variable = list_of_available_topics
+		add = 1
+	}
+}
+
+# Calculate remaining capacity for new topics by subtracting the number of existing topics from the location's total topic capacity
+gh_post_creation_remaining_location_topic_capacity_value = {
+	value = gh_location_topic_capacity_value
+	if = {
+		limit = { has_variable_list = list_of_available_topics }
+		subtract = number_of_existing_topic_in_location_value
+	}
+}
+
+gh_initial_collection_topic_random_value = {
+	value = 0
+	integer_range = {
+		min = 0
+		max = 1
+	}	
+}
+
+gh_location_topic_capacity_value = {
+	value = 0
+	add = gh_initial_collection_topic_random_value
+
+	#General County dev influence available topics
+	if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 3
+				county.development_level <= 8
+			}
+		}
+		add = 1
+	}
+	else_if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 9
+				county.development_level <= 16
+			}
+		}
+		add = 2
+	}
+	else_if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 17
+				county.development_level <= 27
+			}
+		}
+		add = 6
+	}
+	else_if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 28
+				county.development_level <= 50
+			}
+		}
+		add = 8
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { county.development_level >= 51 } }
+		add = 10
+	}
+	add = gh_major_city_knowledge_bonus
+
+	# Library building gives bonus to topic capacity
+	if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_01_collection } }
+		add = 1
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_02_collection } }
+		add = 2
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_03_collection } }
+		add = 3
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_04_collection } }
+		add = 4
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_05_collection } }
+		add = 5
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_06_collection } }
+		add = 6
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_07_collection } }
+		add = 7
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_08_collection } }
+		add = 8
+	}
+
+	# Special Buildings with that give a medium boost to book collection
+	if = {
+		limit = { scope:reader ?= { any_directly_owned_province = { has_building_with_flag = gh_contain_medium_collection_books } } }
+		add = 4
+	}
+	# Special Buildings with special flags like libraries gives major bonus
+	if = {
+		limit = { scope:reader ?= { any_directly_owned_province = { has_building_with_flag = gh_contain_vast_collection_books } } }
+		add = 8
+	}
+	max = 14
+}
+
+gh_major_city_knowledge_bonus = {
+	value = 0
+	if = {
+		limit = {
+			OR = {
+				scope:reader.location.barony ?= title:b_dubabha
+				scope:reader.location.barony ?= title:b_meyangaran_sofla
+				scope:reader.location.barony ?= title:b_madi_quaed
+				scope:reader.location.barony ?= title:b_quehta
+				scope:reader.location.barony ?= title:b_trelea
+			}
+		}
+		add = 4
+	}
+}
+
+gh_pre_creation_remaining_location_topic_capacity_value = {
+	value = gh_location_topic_capacity_value
+	if = {
+		limit = { scope:reader ?= { has_variable = historical_topic_added } }
+		subtract = var:historical_topic_added
+	}
+}
+
+
+gh_collection_book_capacity_value = {
+	value = 0
+	add = scope:gh_maximum_number_of_regional_books_in_topic
+	add = scope:gh_maximum_number_of_general_books_in_topic
+}
+
+gh_initial_collection_books_random_value = {
+	value = 0
+	integer_range = {
+		min = 1
+		max = 3
+	}	
+}
+
+
+
+# Calculate remaining capacity for new topics by subtracting the number of existing topics from the location's total topic capacity
+gh_post_creation_remaining_location_book_capacity_value = {
+	value = gh_location_topic_book_capacity_value
+	if = {
+		limit = { exists = scope:number_of_existing_book_in_topic_location_value_scope }
+		subtract = scope:number_of_existing_book_in_topic_location_value_scope
+	}
+}
+
+
+gh_location_topic_book_capacity_value = {
+	value = 0
+	add = gh_initial_collection_books_random_value
+
+	#General County dev influence available topics
+	if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 3
+				county.development_level <= 8
+			}
+		}
+		add = 1
+	}
+	else_if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 9
+				county.development_level <= 16
+			}
+		}
+		add = 2
+	}
+	else_if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 17
+				county.development_level <= 27
+			}
+		}
+		add = 6
+	}
+	else_if = {
+		limit = {
+			scope:reader.location ?= { 
+				county.development_level >= 28
+				county.development_level <= 50
+			}
+		}
+		add = 8
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { county.development_level >= 51 } }
+		add = 10
+	}
+	add = gh_major_city_knowledge_bonus
+
+	# Library building gives bonus to book capacity
+	if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_01_collection } }
+		add = 2
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_02_collection } }
+		add = 4
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_03_collection } }
+		add = 6
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_04_collection } }
+		add = 8
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_05_collection } }
+		add = 10
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_06_collection } }
+		add = 12
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_07_collection } }
+		add = 14
+	}
+	else_if = {
+		limit = { scope:reader.location ?= { has_building_with_flag = increase_scriptorium_08_collection } }
+		add = 16
+	}
+
+	# Special Buildings with that give a medium boost to book collection
+	if = {
+		limit = { scope:reader = { any_directly_owned_province = { has_building_with_flag = gh_contain_medium_collection_books } } }
+		add = 10
+	}
+	# Special Buildings with special flags like libraries gives major bonus
+	if = {
+		limit = { scope:reader = { any_directly_owned_province = { has_building_with_flag = gh_contain_vast_collection_books } } }
+		add = 20
+	}
+	max = gh_collection_book_capacity_value
+	min = 0
+}
+
+gh_remaining_location_topic_book_capacity_value = {
+	value = gh_location_topic_book_capacity_value
+	if = {
+		limit = { scope:reader ?= { has_variable = historical_book_added } }
+		subtract = var:historical_book_added
+	}
+}
+
+gh_book_purchase_cost_value = {
+	value = 0
+	add = {
+		value = 0
+		if = {
+			limit = { has_variable = gh_temporary_book_rarity }
+			if = {
+				limit = { scope:gh_collector_procedural.var:gh_temporary_book_rarity ?= flag:illustrious }
+				add = monumental_gold_max_value
+			}
+			else_if = {
+				limit = { scope:gh_collector_procedural.var:gh_temporary_book_rarity ?= flag:famed }
+				add = massive_gold_max_value
+			}
+			else_if = {
+				limit = { scope:gh_collector_procedural.var:gh_temporary_book_rarity ?= flag:masterwork }
+				add = major_gold_max_value
+			}
+			else = {
+				add = medium_gold_max_value
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					any_in_global_list = {
+						variable = global_illustrious_book_list
+						this = scope:actor.var:gh_attempt_to_buy_book_in_collection
+					}
+				}
+				add = monumental_gold_max_value
+			}
+			else_if = {
+				limit = {
+					any_in_global_list = {
+						variable = global_famed_book_list
+						this = scope:actor.var:gh_attempt_to_buy_book_in_collection
+					}
+				}
+				add = massive_gold_max_value
+			}
+			else_if = {
+				limit = {
+					any_in_global_list = {
+						variable = global_masterwork_book_list
+						this = scope:actor.var:gh_attempt_to_buy_book_in_collection
+					}
+				}
+				add = major_gold_max_value
+			}
+			else = {
+				add = medium_gold_max_value
+			}
+		}
+	}
+}
+

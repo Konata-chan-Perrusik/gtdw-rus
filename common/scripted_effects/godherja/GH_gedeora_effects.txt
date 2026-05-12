@@ -1,0 +1,1361 @@
+﻿set_gedeora_distance = {
+	# Huge Gedeoras affect between a France-sized area and above
+	if = {
+		limit = { scope:gedeora_epicenter = { has_variable = huge_gedeora } }
+		set_variable = {
+			name = gedeora_distance
+			value = { 
+				fixed_range = {
+					min = squared_distance_large
+					max = squared_distance_massive
+				}
+			}
+			days = 7 
+		}
+	}
+	# Big Gedeoras affect between an Ireland-sized area and a France-sized area
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = big_gedeora } }
+		set_variable = {
+			name = gedeora_distance
+			value = { 
+				fixed_range = {
+					min = squared_distance_medium
+					max = squared_distance_large
+				}
+			}
+			days = 7
+		}
+	}
+	# Medium Gedeoras affect between a Wales-sized area and an Ireland-sized area
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = medium_gedeora } }
+		set_variable = {
+			name = gedeora_distance
+			value = { 
+				fixed_range = {
+					min = squared_distance_small
+					max = squared_distance_medium
+				}
+			}
+			days = 7
+		}
+	}
+	else = {
+		set_variable = {
+			name = gedeora_distance
+			value = { 
+				fixed_range = {
+					min = 1
+					max = squared_distance_small
+				}
+			}
+			days = 7
+		}
+	}
+}
+
+
+apply_gedeora_effect_to_character = {
+	gedeora_sadistic_effect = yes	# Sadistic and callous are special because they are aligned traits, yet oppose each other
+	gedeora_callous_effect = yes
+	
+	gedeora_apply_evil_trait_effect = { TRAIT = vengeful OPPOSITE_TRAIT = forgiving SECONDARY_OPPOSING_TRAIT = compassionate }
+	gedeora_apply_evil_trait_effect = { TRAIT = arrogant OPPOSITE_TRAIT = humble SECONDARY_OPPOSING_TRAIT = compassionate }
+	gedeora_apply_evil_trait_effect = { TRAIT = wrathful OPPOSITE_TRAIT = calm SECONDARY_OPPOSING_TRAIT = patient }
+	gedeora_apply_evil_trait_effect = { TRAIT = arbitrary OPPOSITE_TRAIT = just SECONDARY_OPPOSING_TRAIT = compassionate }
+	gedeora_apply_evil_trait_effect = { TRAIT = ambitious OPPOSITE_TRAIT = content SECONDARY_OPPOSING_TRAIT = honest }
+	gedeora_apply_evil_trait_effect = { TRAIT = lustful OPPOSITE_TRAIT = chaste SECONDARY_OPPOSING_TRAIT = temperate }
+	gedeora_apply_evil_trait_effect = { TRAIT = gluttonous OPPOSITE_TRAIT = temperate SECONDARY_OPPOSING_TRAIT = chaste }
+	gedeora_apply_evil_trait_effect = { TRAIT = deceitful OPPOSITE_TRAIT = honest SECONDARY_OPPOSING_TRAIT = trusting }
+	gedeora_apply_evil_trait_effect = { TRAIT = paranoid OPPOSITE_TRAIT = trusting SECONDARY_OPPOSING_TRAIT = honest }
+	gedeora_apply_evil_trait_effect = { TRAIT = zealous OPPOSITE_TRAIT = cynical SECONDARY_OPPOSING_TRAIT = deceitful }
+	gedeora_apply_evil_trait_effect = { TRAIT = gregarious OPPOSITE_TRAIT = shy SECONDARY_OPPOSING_TRAIT = chaste }
+}
+
+pick_gedeora_primary_effect = {
+	random_list = {
+		50 = { gedeora_set_type = { TYPE = generic_evil } }
+		25 = { gedeora_set_type = { TYPE = bloodlust } }
+		25 = { gedeora_set_type = { TYPE = depravity } }
+		25 = { gedeora_set_type = { TYPE = ambition } }
+		25 = { gedeora_set_type = { TYPE = zeal } }
+	}
+}
+
+pick_gedeora_personality_change_effect = {
+	if = {
+		limit = {
+			scope:gedeora_epicenter = { has_variable = generic_evil_gedeora }
+		}
+		random_list = {
+			40 = {
+				set_variable = {
+					name = gedeora_sadistic_effect_flag
+					days = 3
+				}
+			}
+			40 = {
+				set_variable = {
+					name = gedeora_callous_effect_flag
+					days = 3
+				}
+			}
+			20 = {
+				set_variable = {
+					name = gedeora_vengeful_effect_flag
+					days = 3
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_arrogant_effect_flag
+					days = 3
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_wrathful_effect_flag
+					days = 3
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_ambitious_effect_flag
+					days = 3
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_arbitrary_effect_flag
+					days = 3
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			scope:gedeora_epicenter = { has_variable = bloodlust_gedeora }
+		}
+		random_list = {
+			50 = {
+				set_variable = {
+					name = gedeora_wrathful_effect_flag
+					days = 3
+				}
+			}
+			30 = {
+				set_variable = {
+					name = gedeora_sadistic_effect_flag
+					days = 3
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_vengeful_effect_flag
+					days = 3
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			scope:gedeora_epicenter = { has_variable = depravity_gedeora }
+		}
+		random_list = {
+			50 = {
+				set_variable = {
+					name = gedeora_lustful_effect_flag
+					days = 3
+				}
+			}
+			50 = {
+				set_variable = {
+					name = gedeora_gluttonous_effect_flag
+					days = 3
+				}
+			}
+			30 = {
+				set_variable = {
+					name = gedeora_gregarious_effect_flag
+					days = 3
+				}
+			}
+			20 = {
+				set_variable = {
+					name = gedeora_arbitrary_effect_flag
+					days = 3
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			scope:gedeora_epicenter = { has_variable = ambition_gedeora }
+		}
+		random_list = {
+			50 = {
+				set_variable = {
+					name = gedeora_ambitious_effect_flag
+					days = 3
+				}
+			}
+			30 = {
+				set_variable = {
+					name = gedeora_deceitful_effect_flag
+					days = 3
+				}
+			}
+			30 = {
+				set_variable = {
+					name = gedeora_paranoid_effect_flag
+					days = 3
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			scope:gedeora_epicenter = { has_variable = zeal_gedeora }
+		}
+		set_variable = {
+			name = gedeora_zealous_effect_flag
+			days = 3
+		}
+	}
+}
+
+apply_gedeora_secondary_effect_to_character = {
+	if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_magic_surge } }
+		change_trait_rank = {
+			trait = magic_good
+			rank = 1
+		}
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_magic_drop } }
+		change_trait_rank = {
+			trait = magic_good
+			rank = -1
+		}
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_lunatic } }
+		add_trait = lunatic_1
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_loyal } }
+		add_trait = loyal
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_disloyal } }
+		add_trait = disloyal
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_melancholy } }
+		add_trait = depressed_1
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_impregnate } }
+		if = {
+			limit = { 
+				is_pregnant = no
+				is_female = yes
+				primary_partner = {
+					exists = this
+				}
+			}
+			make_pregnant = {
+				father = primary_partner
+				number_of_children = 1
+			}
+			set_variable = { 
+				name = carrying_gedeora_child
+				months = 12	# Should auto-expire
+			}
+		}
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_barren } }
+		if = {
+			limit = { is_pregnant = yes }
+			end_pregnancy = yes
+		}
+		add_trait = infertile
+	}
+	else_if = {
+		limit = { scope:gedeora_epicenter = { has_variable = gedeora_death } }
+		death = {
+			death_reason = death_gedeora
+		}
+	}
+}
+
+pick_gedeora_secondary_effect = {
+	random_list = {
+		100 = {
+			trigger = {
+				NOT = { has_variable = gedeora_no_primary_effect }
+			}
+			set_variable = {
+				name = gedeora_no_secondary_effect
+				days = 90
+			}
+		}
+		#50 = {
+		#	set_variable = {
+		#		name = gedeora_extra_powerful_against	# For Gedeoras that hit a certain target population extra hard
+		#		days = 90
+		#	}
+		#}
+		10 = {
+			set_variable = {
+				name = gedeora_magic_surge				# Raises the target population's magic
+				days = 90
+			}
+		}
+		10 = {
+			set_variable = {
+				name = gedeora_magic_drop				# Drops the target population's magic
+				days = 90
+			}
+		}
+		#10 = {
+		#	set_variable = {
+		#		name = gedeora_magic_invert				# Characters with low or no magic get magic surged, those with high magic lose it
+		#		days = 90
+		#	}
+		#}
+		10 = {
+			set_variable = {
+				name = gedeora_lunatic					# Has a 90% chance of making everyone in the target population insane
+				days = 90
+			}
+		}
+		10 = {
+			set_variable = {
+				name = gedeora_loyal  					# Has a chance of making everyone in the target population extremely loyal
+				days = 90
+			}
+		}
+		10 = {
+			set_variable = {							# HAs a chance of making everyone in the target population extremely disloyal
+				name = gedeora_disloyal
+				days = 90
+			}
+		}
+		10 = {
+			set_variable = {
+				name = gedeora_melancholy				# Has a 90% chance of making everyone in the target population depressed
+				days = 90
+			}
+		}
+		10 = {
+			trigger = {
+				NOR = {
+					has_variable = gedeora_target_men
+					has_variable = gedeora_target_boys
+				}
+			}
+			set_variable = {
+				name = gedeora_impregnate				# Has a 90% chance of impregnating every woman in the target population if they have a spouse (since doing it without a known other parent causes them to get 'fornicator')
+				days = 90
+			}
+		}
+		10 = {
+			set_variable = {
+				name = gedeora_barren					# Has a 90% chance of making everyone in the target population infertile
+				days = 90
+			}
+		}
+		#10 = {
+		#	set_variable = {
+		#		name = gedeora_wipe_relations			# Has a 90% chance of resetting all the relationships of everyone in the target population
+		#		days = 90
+		#	}
+		#}
+		#10 = {
+		#	set_variable = {
+		#		name = gedeora_bloodblight				# Has a 90% chance of giving everyone in the target population bloodblight
+		#		days = 90
+		#	}
+		#}
+		10 = {
+			trigger = {
+				NOR = {
+					has_variable = gedeora_target_women
+					has_variable = gedeora_target_men
+					has_variable = gedeora_target_nobility
+					has_variable = gedeora_target_commoners	# Categories too broad, might seriously throw gameplay arc off course if everyone in the category dies. Could be somehow balanced in the future
+				}
+			}
+			set_variable = {
+				name = gedeora_death					# Has a 90% chance of killing everyone in the target population
+				days = 90
+			}
+		}
+	}
+}
+
+pick_gedeora_target_populace = {
+	if = {
+		limit = { NOT = { has_variable = gedeora_no_secondary_effect } }
+		random_list = {
+			10 = {
+				set_variable = {
+					name = gedeora_target_nobility			# Affects every highborn character, but will not apply psychosis-related debuffs to the population at large/counties
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_commoners			# Nobility is unaffected, but county development/control will be especially hard hit
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_women				# Women are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_men				# Men are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_children			# Children are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_girls				# Female children are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_boys				# Male children are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_magical_ability	# Anyone with inherent magical ability is affected, even if they are not a Magi
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_magi_any			# All Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_living_magi		# Blood Aspect Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_dead_magi			# Stone Aspect Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_mixed_magi		# Ethereal Aspect Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_nature_magi		# Nature Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_dream_magi		# Dream Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_air_magi			# Air Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_death_magi		# Death Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_dark_magi			# Dark Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_metal_magi		# Metal Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_fire_magi			# Fire Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_ice_magi			# Ice Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_celestial_magi		# Celestial Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_light_magi		# Light Magi are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_sand_magi			# Sand Magi are extra affected
+					days = 90
+				}
+			}
+			#10 = {
+			#	set_variable = {
+			#		name = gedeora_target_hymns_magi		# Hymns Magi are extra affected
+			#		days = 90
+			#	}
+			#}
+			#10 = {
+			#	set_variable = {
+			#		name = gedeora_target_time_magi		# Time Magi are extra affected
+			#		days = 90
+			#	}
+			#}
+			#10 = {
+			#	set_variable = {
+			#		name = gedeora_target_dawn_magi		# Dawn Magi are extra affected
+			#		days = 90
+			#	}
+			#}
+			10 = {
+				set_variable = {
+					name = gedeora_target_diplomats			# Characters with a diplomatic education, gregarious or diplomacy above 15 are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_schemers			# Characters with an intrigue education, deceitful or intrigue above 15 are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_warriors			# Characters with a martial education, wrathful or martial above 15 are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_stewards			# Characters with a stewardship education or stewardship above 15 are extra affected
+					days = 90
+				}
+			}
+			10 = {
+				set_variable = {
+					name = gedeora_target_scholars			# Characters with a learning education or learning above 15 are extra affected
+					days = 90
+				}
+			}
+		}
+	}
+}
+
+pick_gedeora_tertiary_effect = {
+	random_list = {
+		200 = {
+			set_variable = {
+				name = gedeora_no_tertiary_effect
+				days = 90
+			}
+		}
+		50 = {
+			set_variable = {
+				name = gedeora_social_breakdown		# County control will be hit extra hard
+				days = 90
+			}
+		}
+		20 = {
+			set_variable = {
+				name = gedeora_earthquakes			# Development will be hit extra hard
+				days = 90
+			}
+		}
+		20 = {
+			set_variable = {
+				name = gedeora_famine				# Development and control will be hit extra hard
+				days = 90
+			}
+		}
+		20 = {
+			set_variable = {
+				name = gedeora_timeline_disruption	# Development will randomly increase or decrease, random characters will vanish
+				days = 90
+			} 
+		}
+	}
+}
+
+gedeora_child_on_birth_effect = {
+	add_trait = gh_gedeora_child
+	random_list = {	# Chance of a level up of magic skill
+		70 = { }
+		25 = { 
+			change_trait_rank = {
+				trait = magic_good
+				rank = 1
+			}
+		}
+		5 = { 
+			change_trait_rank = {
+				trait = magic_good
+				rank = 2
+			}
+		}
+	}
+	random_list = {	# Chance of changing intellect
+		120 = { }
+		25 = {
+			trigger = { NOT = { has_trait = intellect_bad } }
+			change_trait_rank = {
+				trait = intellect_good
+				rank = 1
+			}
+		}
+		5 = { 
+			trigger = { NOT = { has_trait = intellect_bad } }
+			change_trait_rank = {
+				trait = intellect_good
+				rank = 2
+			}
+		}
+		25 = {
+			trigger = { 
+				NOR = { 
+					has_trait = intellect_good
+					faith = {
+						has_doctrine_parameter = better_traits_from_gedeora
+					}
+				}
+			}
+			change_trait_rank = {
+				trait = intellect_bad
+				rank = 1
+			}
+		}
+		5 = { 
+			trigger = { 
+				NOR = { 
+					has_trait = intellect_good
+					faith = {
+						has_doctrine_parameter = better_traits_from_gedeora
+					}
+				}
+			}
+			change_trait_rank = {
+				trait = intellect_bad
+				rank = 2
+			}
+		}
+	}
+	random_list = {	# Chance of changing beauty
+		120 = { }
+		25 = {
+			trigger = { NOT = { has_trait = beauty_bad } }
+			change_trait_rank = {
+				trait = beauty_good
+				rank = 1
+			}
+		}
+		5 = { 
+			trigger = { NOT = { has_trait = beauty_bad } }
+			change_trait_rank = {
+				trait = beauty_good
+				rank = 2
+			}
+		}
+		25 = {
+			trigger = { 
+				NOR = { 
+					has_trait = beauty_good
+					faith = {
+						has_doctrine_parameter = better_traits_from_gedeora
+					}
+				}
+			}
+			change_trait_rank = {
+				trait = beauty_bad
+				rank = 1
+			}
+		}
+		5 = { 
+			trigger = { 
+				NOR = { 
+					has_trait = beauty_good
+					faith = {
+						has_doctrine_parameter = better_traits_from_gedeora
+					}
+				}
+			}
+			change_trait_rank = {
+				trait = beauty_bad
+				rank = 2
+			}
+		}
+	}
+	random_list = {	# Chance of changing strength
+		120 = { }
+		25 = {
+			trigger = { NOT = { has_trait = physique_bad } }
+			change_trait_rank = {
+				trait = physique_good
+				rank = 1
+			}
+		}
+		5 = { 
+			trigger = { NOT = { has_trait = physique_bad } }
+			change_trait_rank = {
+				trait = physique_good
+				rank = 2
+			}
+		}
+		25 = {
+			trigger = { 
+				NOR = { 
+					has_trait = physique_good
+					faith = {
+						has_doctrine_parameter = better_traits_from_gedeora
+					}
+				}
+			}
+			change_trait_rank = {
+				trait = physique_bad
+				rank = 1
+			}
+		}
+		5 = { 
+			trigger = { 
+				NOR = { 
+					has_trait = physique_good
+					faith = {
+						has_doctrine_parameter = better_traits_from_gedeora
+					}
+				}
+			}
+			change_trait_rank = {
+				trait = physique_bad
+				rank = 2
+			}
+		}
+	}
+	if = {
+		limit = {
+			NOT = {
+				faith = {
+					has_doctrine_parameter = better_traits_from_gedeora
+				}
+			}
+		}
+		random_list = {	# Chance of getting bad genetic trait
+			126 = { }
+			4 = { add_trait = stuttering }
+			4 = { add_trait = lisping }
+			4 = { add_trait = giant }
+			4 = { add_trait = hunchbacked }
+			4 = { add_trait = giant }
+			4 = { add_trait = dwarf }
+		}
+	}
+}
+
+gedeora_sadistic_effect = {
+	if = {
+		limit = {
+			has_variable = gedeora_sadistic_effect_flag
+		}
+		if = {
+			limit = { 
+				OR = { 
+					has_trait = callous 
+					has_trait = sadistic
+				} 
+			}
+			random_list = {
+				70 = { }
+				30 = { add_trait = lunatic_1 }
+			}
+		}
+		else_if = {
+			limit = { number_of_personality_traits < 3 }
+			if = {
+				limit = { has_trait = compassionate }
+				remove_trait = compassionate
+			}
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = compassionate }
+			remove_trait = compassionate
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = forgiving }
+			remove_trait = forgiving
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = generous }
+			remove_trait = generous
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = just }
+			remove_trait = just
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = humble }
+			remove_trait = humble
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = honest }
+			remove_trait = honest
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = content }
+			remove_trait = content
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = trusting }
+			remove_trait = trusting
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = fickle }
+			remove_trait = fickle
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = chaste }
+			remove_trait = chaste
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = calm }
+			remove_trait = calm
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = temperate }
+			remove_trait = temperate
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = gregarious }
+			remove_trait = gregarious
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = diligent }
+			remove_trait = diligent
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = zealous }
+			remove_trait = zealous
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = patient }
+			remove_trait = patient
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = impatient }
+			remove_trait = impatient
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = cynical }
+			remove_trait = cynical
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = gluttonous }
+			remove_trait = gluttonous
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = shy }
+			remove_trait = shy
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = greedy }
+			remove_trait = greedy
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = stubborn }
+			remove_trait = stubborn
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = lazy }
+			remove_trait = lazy
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = lustful }
+			remove_trait = lustful
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = craven }
+			remove_trait = craven
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = brave }
+			remove_trait = brave
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = wrathful }
+			remove_trait = wrathful
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = deceitful }
+			remove_trait = deceitful
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = paranoid }
+			remove_trait = paranoid
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = arrogant }
+			remove_trait = arrogant
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = arbitrary }
+			remove_trait = arbitrary
+			add_trait = sadistic
+		}
+		else_if = {
+			limit = { has_trait = vengeful }
+			remove_trait = vengeful
+			add_trait = sadistic
+		}
+	}
+}
+
+gedeora_callous_effect = {
+	if = {
+		limit = {
+			has_variable = gedeora_callous_effect_flag
+		}
+		if = {
+			limit = { 
+				OR = { 
+					has_trait = callous 
+					has_trait = sadistic
+				} 
+			}
+			random_list = {
+				70 = { }
+				30 = { add_trait = lunatic_1 }
+			}
+		}
+		else_if = {
+			limit = { number_of_personality_traits < 3 }
+			if = {
+				limit = { has_trait = compassionate }
+				remove_trait = compassionate
+			}
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = compassionate }
+			remove_trait = compassionate
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = forgiving }
+			remove_trait = forgiving
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = generous }
+			remove_trait = generous
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = just }
+			remove_trait = just
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = humble }
+			remove_trait = humble
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = honest }
+			remove_trait = honest
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = content }
+			remove_trait = content
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = trusting }
+			remove_trait = trusting
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = fickle }
+			remove_trait = fickle
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = chaste }
+			remove_trait = chaste
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = calm }
+			remove_trait = calm
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = temperate }
+			remove_trait = temperate
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = gregarious }
+			remove_trait = gregarious
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = diligent }
+			remove_trait = diligent
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = zealous }
+			remove_trait = zealous
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = patient }
+			remove_trait = patient
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = impatient }
+			remove_trait = impatient
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = cynical }
+			remove_trait = cynical
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = gluttonous }
+			remove_trait = gluttonous
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = shy }
+			remove_trait = shy
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = greedy }
+			remove_trait = greedy
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = stubborn }
+			remove_trait = stubborn
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = lazy }
+			remove_trait = lazy
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = lustful }
+			remove_trait = lustful
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = craven }
+			remove_trait = craven
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = brave }
+			remove_trait = brave
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = wrathful }
+			remove_trait = wrathful
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = deceitful }
+			remove_trait = deceitful
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = paranoid }
+			remove_trait = paranoid
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = arrogant }
+			remove_trait = arrogant
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = arbitrary }
+			remove_trait = arbitrary
+			add_trait = callous
+		}
+		else_if = {
+			limit = { has_trait = vengeful }
+			remove_trait = vengeful
+			add_trait = callous
+		}
+	}
+}
+
+gedeora_apply_evil_trait_effect = {
+	if = {
+		limit = {
+			has_variable = gedeora_$TRAIT$_effect_flag
+		}
+		if = {
+			limit = { has_trait = $TRAIT$ }
+			random_list = {
+				70 = { }
+				30 = { add_trait = lunatic_1 }
+			}
+		}
+		else_if = {
+			limit = { number_of_personality_traits < 3 }
+			if = {
+				limit = { has_trait = $OPPOSITE_TRAIT$ }
+				remove_trait = $OPPOSITE_TRAIT$
+			}
+			add_trait_force_tooltip = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = $OPPOSITE_TRAIT$ }
+			remove_trait = $OPPOSITE_TRAIT$
+			add_trait_force_tooltip = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = $SECONDARY_OPPOSING_TRAIT$ }
+			remove_trait = $SECONDARY_OPPOSING_TRAIT$
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = compassionate }
+			remove_trait = compassionate
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = forgiving }
+			remove_trait = forgiving
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = generous }
+			remove_trait = generous
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = just }
+			remove_trait = just
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = humble }
+			remove_trait = humble
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = content }
+			remove_trait = content
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = honest }
+			remove_trait = honest
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = chaste }
+			remove_trait = chaste
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = temperate }
+			remove_trait = temperate
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = trusting }
+			remove_trait = trusting
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = fickle }
+			remove_trait = fickle
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = calm }
+			remove_trait = calm
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = gregarious }
+			remove_trait = gregarious
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = diligent }
+			remove_trait = diligent
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = zealous }
+			remove_trait = zealous
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = patient }
+			remove_trait = patient
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = impatient }
+			remove_trait = impatient
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = cynical }
+			remove_trait = cynical
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = gluttonous }
+			remove_trait = gluttonous
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = shy }
+			remove_trait = shy
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = greedy }
+			remove_trait = greedy
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = stubborn }
+			remove_trait = stubborn
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = lazy }
+			remove_trait = lazy
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = craven }
+			remove_trait = craven
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = brave }
+			remove_trait = brave
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = wrathful }
+			remove_trait = wrathful
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = deceitful }
+			remove_trait = deceitful
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = paranoid }
+			remove_trait = paranoid
+			add_trait = $TRAIT$
+		}
+		else_if = {
+			limit = { has_trait = arrogant }
+			remove_trait = arrogant
+			add_trait = $TRAIT$
+		}
+	}
+}
+
+gedeora_set_type = {
+	set_variable = {
+		name = $TYPE$_gedeora
+		days = 90
+	}
+}

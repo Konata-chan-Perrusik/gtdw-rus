@@ -1,0 +1,993 @@
+﻿## Generic MAA units for each type ##
+
+# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+
+light_footmen = {
+	type = skirmishers
+
+	damage = 10
+	toughness = 16
+	pursuit = 10
+	screen = 16
+
+	terrain_bonus = {
+		forest = { damage = 4 toughness = 6 }
+		taiga = { damage = 4 toughness = 6 }
+		jungle = { damage = 4 toughness = 6 }
+		## GH ADDITIONS ##
+		marcher_forest = { damage = 4 toughness = 6 }
+
+		mayik_caverns = { damage = 12 toughness = 14 pursuit = 16 screen = 18 }
+		mayik_corridors = { damage = 10 toughness = 12 pursuit = 14 screen = 16 }
+		mayik_chamber = { damage = 8 toughness = 10 pursuit = 12 screen = 14 }
+	}
+
+	counters = {
+		heavy_infantry = 1
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+	}
+
+	buy_cost = { gold = skirmisher_recruitment_cost }
+	low_maintenance_cost = { gold = skirmisher_low_maint_cost }
+	high_maintenance_cost = { gold = skirmisher_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_cheap
+
+	#mercenary_fallback = yes
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = { value = culture_ai_weight_skirmishers }
+	icon = skirmishers
+}
+
+bowmen = {
+	type = archers
+
+	damage = 25
+	toughness = 10
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 10 toughness = 4 }
+		forest = { toughness = 4 screen = 4 }
+		taiga = { toughness = 4 screen = 4 }
+		## GH ADDITIONS ##
+		marcher_forest = { toughness = 4 screen = 4 }
+		marcher_hills = { damage = 10 toughness = 4 }
+
+		mayik_caverns = { damage = -20 screen = 12 }
+		mayik_corridors = { damage = -18 screen = 10 }
+		mayik_chamber = { damage = -15 screen = 8 }
+	}
+
+	counters = {
+		skirmishers = 1
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+	}
+
+	buy_cost = { gold = bowmen_recruitment_cost }
+	low_maintenance_cost = { gold = bowmen_low_maint_cost }
+	high_maintenance_cost = { gold = bowmen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_moderate
+
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_archers
+		add = counter_synergy_ai_weight_archers
+	}
+}
+
+light_horsemen = {
+	type = light_cavalry
+
+	damage = 22
+	toughness = 15
+	pursuit = 30
+	screen = 30
+
+	terrain_bonus = {
+		plains = { damage = 15 }
+		hills = { damage = -5 }
+		mountains = { damage = -10 pursuit = -20 }
+		wetlands = { damage = -15 toughness = -10 pursuit = -30 screen = -30 }
+		desert_mountains = { damage = -15 pursuit = -20 }
+		drylands = { damage = 15 }
+		## GH ADDITIONS ##
+		marcher_plains = { damage = 15 }
+		marcher_hills = { damage = -5 }
+		marcher_mountains = { damage = -10 pursuit = -20 }
+		marcher_wetlands = { damage = -15 toughness = -10 pursuit = -30 screen = -30 }
+
+		deadlands = { damage = 15 }
+
+		mayik_caverns = { damage = -20 toughness = -15 pursuit = -30 screen = -30 }
+		mayik_corridors = { damage = -18 toughness = -13 pursuit = -30 screen = -30 }
+		mayik_chamber = { damage = -16 toughness = -11 pursuit = -30 screen = -30 }
+	}
+	
+	counters = {
+		archers = 1
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+		NOT = { has_access_to_maa = steppe_raiders }
+	}
+
+	access_through_subject = {
+		NOT = { has_access_to_maa = steppe_raiders }
+	}
+
+	winter_bonus = {
+		harsh_winter = { damage = -5 toughness = -2 }
+	}
+
+	buy_cost = { gold = light_cavalry_recruitment_cost }
+	low_maintenance_cost = { gold = light_cavalry_low_maint_cost }
+	high_maintenance_cost = { gold = light_cavalry_high_maint_cost }
+	provision_cost = @provisions_cost_cavalry_cheap
+
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_light_cavalry
+		add = counter_synergy_ai_weight_light_cavalry
+	}
+	icon = light_cavalry
+}
+
+pikemen_unit = {
+	type = pikemen
+
+	damage = 22
+	toughness = 24
+	pursuit = 0
+	screen = 0
+	
+	terrain_bonus = {
+		hills = { toughness = 8 }
+		mountains = { toughness = 12 }
+		desert_mountains = { toughness = 12 }
+
+		marcher_hills = { toughness = 8 }
+		marcher_mountains = { toughness = 12 }
+
+		mayik_caverns = { toughness = 12 screen = 12 }
+		mayik_corridors = { toughness = 12 screen = 10 }
+		mayik_chamber = { toughness = 12 screen = 8 }
+	}
+
+	counters = {
+		light_cavalry = 1
+		heavy_cavalry = 1
+		camel_cavalry = 1
+		elephant_cavalry = 1
+		# GH ADDITIONS
+		monsters = 0.4
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+	}
+
+	buy_cost = { gold = pikemen_recruitment_cost }
+	low_maintenance_cost = { gold = pikemen_low_maint_cost }
+	high_maintenance_cost = { gold = pikemen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_pikemen
+		add = counter_synergy_ai_weight_pikemen
+	}
+	icon = pikemen
+}
+
+#Tribal Era
+armored_footmen = {
+	type = heavy_infantry
+
+	damage = 32
+	toughness = 22
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		mayik_caverns = { pursuit = 10 screen = 12 }
+		mayik_corridors = { pursuit = 8 screen = 10 }
+		mayik_chamber = { pursuit = 6 screen = 8 }
+	}
+
+	counters = {
+		pikemen = 1
+	}
+
+	can_recruit = {
+		culture = {
+			has_innovation = innovation_quilted_armor
+		}
+		NOT = {
+			culture = { has_cultural_parameter = strength_in_numbers_heavy_maa_ban }
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+			government_has_flag = government_is_lichdom
+		}
+	}
+	
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+	}
+
+	buy_cost = { gold = heavy_infantry_recruitment_cost }
+	low_maintenance_cost = { gold = heavy_infantry_low_maint_cost }
+	high_maintenance_cost = { gold = heavy_infantry_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_moderate
+
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = {
+		value = culture_ai_weight_heavy_infantry
+		add = counter_synergy_ai_weight_heavy_infantry
+	}
+	icon = heavy_infantry
+}
+
+onager = {
+	type = siege_weapon
+	fights_in_main_phase = no
+
+	damage = 0
+	toughness = 12
+
+	siege_tier = 1
+	siege_value = 0.2
+	terrain_bonus = {
+		mayik_caverns = { toughness = -8 siege_value = -0.1 }
+		mayik_corridors = { toughness = -7 siege_value = -0.075 }
+		mayik_chamber = { toughness = -6 siege_value = -0.05 }
+	}
+	
+	can_recruit = {
+		culture = {
+			culture_has_standard_maa = yes
+			has_innovation = innovation_catapult
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+	
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+	}
+
+	buy_cost = { gold = onager_recruitment_cost }
+	low_maintenance_cost = { gold = onager_low_maint_cost }
+	high_maintenance_cost = { gold = onager_high_maint_cost }
+	provision_cost = @provisions_cost_special_cheap
+	
+	stack = 10
+	allowed_in_hired_troops = no
+}
+
+#Medieval Era
+armored_horsemen = {
+	type = heavy_cavalry
+
+	damage = 100
+	toughness = 35
+	pursuit = 20
+	screen = 0
+
+	terrain_bonus = {
+		plains = { damage = 30 }
+		drylands = { damage = 30 }
+		hills = { damage = -20 }
+		mountains = { damage = -75 }
+		desert_mountains = { damage = -75 }
+		wetlands = { damage = -75 toughness = -10 pursuit = -10 }
+		## GH ADDITIONS ##
+		marcher_plains = { damage = 30 }
+		marcher_hills = { damage = -20 }
+		marcher_mountains = { damage = -75 }
+		marcher_wetlands = { damage = -75 toughness = -10 pursuit = -10 }
+
+		deadlands = { damage = 30 }
+
+		mayik_caverns = { damage = -90 toughness = -20 pursuit = -20 }
+		mayik_corridors = { damage = -85 toughness = -15 pursuit = -20 }
+		mayik_chamber = { damage = -80 toughness = -10 pursuit = -20 }
+	}
+
+	counters = {
+		archers = 1
+	}
+
+	can_recruit = {
+		culture = {
+			culture_has_standard_maa = yes
+			has_innovation = innovation_arched_saddle
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+		culture = { has_cultural_era_or_later = culture_era_early_medieval }
+		NOT = { has_access_to_maa = nomad_lancers }
+	}
+	
+	access_through_subject = {
+		NOT = { has_access_to_maa = nomad_lancers }
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = -10 toughness = -5 }
+		harsh_winter = { damage = -20 toughness = -10 }
+	}
+
+	buy_cost = { gold = heavy_cavalry_recruitment_cost }
+	low_maintenance_cost = { gold = heavy_cavalry_low_maint_cost }
+	high_maintenance_cost = { gold = heavy_cavalry_high_maint_cost }
+	provision_cost = @provisions_cost_cavalry_expensive
+	
+	stack = 50
+	ai_quality = { value = culture_ai_weight_heavy_cavalry }
+	icon = heavy_cavalry
+	fallback_in_hired_troops_if_unlocked = yes
+}
+
+mangonel = {
+	type = siege_weapon
+	fights_in_main_phase = no
+	
+	damage = 0
+	toughness = 12
+	
+	siege_tier = 2
+	siege_value = 0.3
+	
+	terrain_bonus = {
+		mayik_caverns = { toughness = -10 siege_value = -0.2 }
+		mayik_corridors = { toughness = -9 siege_value = -0.15 }
+		mayik_chamber = { toughness = -8 siege_value = -0.1 }
+	}
+	
+	can_recruit = {
+		culture = {
+			culture_has_standard_maa = yes
+			has_innovation = innovation_mangonel
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+	
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+		culture = { has_cultural_era_or_later = culture_era_early_medieval }
+	}
+
+	buy_cost = { gold = mangonel_recruitment_cost }
+	low_maintenance_cost = { gold = mangonel_low_maint_cost }
+	high_maintenance_cost = { gold = mangonel_high_maint_cost }
+	provision_cost = @provisions_cost_special_moderate
+	
+	stack = 10
+	allowed_in_hired_troops = no
+}
+
+#High Medieval Era
+crossbowmen = {
+	type = archers
+
+	damage = 42
+	toughness = 18
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 10 }
+		plains = { toughness = -8 }
+		drylands = { toughness = -8 }
+		desert = { toughness = -8 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = 10 }
+		marcher_plains = { toughness = -8 }
+
+		mayik_caverns = { damage = -24 screen = 12 }
+		mayik_corridors = { damage = -20 screen = 10 }
+		mayik_chamber = { damage = -14 screen = 8 }
+	}
+
+	counters = {
+		heavy_infantry = 1
+		heavy_cavalry = 1
+		archer_cavalry = 0.5
+		monsters = 0.5
+	}
+
+	can_recruit = {
+		culture = {
+			culture_has_standard_maa = yes
+			has_innovation = innovation_advanced_bowmaking
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+		culture = { has_cultural_era_or_later = culture_era_high_medieval }
+	}
+
+	buy_cost = { gold = crossbowmen_recruitment_cost }
+	low_maintenance_cost = { gold = crossbowmen_low_maint_cost }
+	high_maintenance_cost = { gold = crossbowmen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_moderate
+
+	ai_quality = {
+		value = counter_synergy_ai_weight_archers
+	}
+
+	holy_order_fallback = yes
+
+	stack = 100
+}
+
+trebuchet = {
+	type = siege_weapon
+	fights_in_main_phase = no
+
+	damage = 0
+	toughness = 12
+
+	siege_tier = 3
+	siege_value = 0.4
+	
+	terrain_bonus = {
+		mayik_caverns = { toughness = -11 siege_value = -0.35 }
+		mayik_corridors = { toughness = -10 siege_value = -0.25 }
+		mayik_chamber = { toughness = -9 siege_value = -0.2 }
+	}
+	can_recruit = {
+		culture = {
+			culture_has_standard_maa = yes
+			has_innovation = innovation_trebuchet
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+	
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+		culture = { has_cultural_era_or_later = culture_era_high_medieval }
+	}
+
+	buy_cost = { gold = trebuchet_recruitment_cost }
+	low_maintenance_cost = { gold = trebuchet_low_maint_cost }
+	high_maintenance_cost = { gold = trebuchet_high_maint_cost }
+	provision_cost = @provisions_cost_special_expensive
+	
+	stack = 10
+	allowed_in_hired_troops = no
+}
+
+bombard = {
+	type = siege_weapon
+	fights_in_main_phase = no
+
+	damage = 0
+	toughness = 12
+
+	siege_tier = 4
+	siege_value = 0.6
+	
+	terrain_bonus = {
+		mayik_caverns = { toughness = -12 siege_value = -0.55 }
+		mayik_corridors = { toughness = -11 siege_value = -0.45 }
+		mayik_chamber = { toughness = -10 siege_value = -0.3 }
+	}
+	
+	can_recruit = {
+		culture = {
+			culture_has_standard_maa = yes
+			has_innovation = innovation_bombard
+		}
+		NOR = {
+			government_has_flag = government_is_nomadic
+			government_has_flag = government_is_herder
+		}
+	}
+	
+	should_show_when_unavailable = {
+		government_allows = subject_men_at_arms
+		culture = { has_cultural_era_or_later = culture_era_late_medieval }
+	}
+
+	buy_cost = { gold = bombard_recruitment_cost }
+	low_maintenance_cost = { gold = bombard_low_maint_cost }
+	high_maintenance_cost = { gold = bombard_high_maint_cost }
+	provision_cost = @provisions_cost_special_bankrupting
+	
+	stack = 10
+	allowed_in_hired_troops = no
+}
+
+# Special
+house_guard = {
+	type = heavy_infantry
+	can_recruit = {
+		exists = dynasty
+		dynasty = {
+			has_dynasty_perk = warfare_legacy_5
+		}
+		culture = { culture_has_standard_maa = yes }
+		NOT = {
+			culture = { has_cultural_parameter = strength_in_numbers_heavy_maa_ban }
+		}
+	}
+
+	damage = 40
+	toughness = 32
+	pursuit = 0
+	screen = 24
+
+	terrain_bonus = {
+		mayik_caverns = { pursuit = 10 screen = 12 }
+		mayik_corridors = { pursuit = 8 screen = 10 }
+		mayik_chamber = { pursuit = 6 screen = 8 }
+	}
+
+	counters = {
+		pikemen = 2
+		archers = 2
+		monsters = 1
+		magi = 1
+	}
+
+	buy_cost = { gold = 50 }
+	low_maintenance_cost = { gold = 0 }
+	high_maintenance_cost = { gold = 1 }
+	provision_cost = @provisions_cost_infantry_expensive
+	
+	max_regiments = 1
+	
+	stack = 100
+	ai_quality = { value = 100 }
+}
+
+## SPECIAL MAA ##
+# The following were brought from the 00_cultural_maa_types file in case we want to use them
+@cultural_maa_extra_ai_score = 60 # Equivalent to having 6 extra regiments beyond what the code scoring would indicate (see NEGATIVE_SCORE_PER_EXISTING_REGIMENT)
+
+huscarl = {
+	type = heavy_infantry
+
+	damage = 40
+	toughness = 26
+	pursuit = 0
+	screen = 24
+
+	terrain_bonus = {
+		taiga = { damage = 8 }
+		forest = { damage = 8 }
+		## GH ADDITIONS ##
+		marcher_forest = { damage = 8 }
+
+		mayik_caverns = { pursuit = 10 screen = 12 }
+		mayik_corridors = { pursuit = 8 screen = 10 }
+		mayik_chamber = { pursuit = 6 screen = 8 }
+	}
+
+	counters = {
+		pikemen = 1
+		archers = 1
+	}
+
+	can_recruit = {
+		valid_for_maa_trigger = { PARAMETER = unlock_maa_huscarls }
+		NOT = {
+			culture = { has_cultural_parameter = strength_in_numbers_heavy_maa_ban }
+		}
+	}
+
+	winter_bonus = {
+		normal_winter = { toughness = 6 screen = 6 }
+		harsh_winter = { toughness = 6 screen = 6 }
+	}
+	
+	buy_cost = { gold = huscarls_recruitment_cost }
+	low_maintenance_cost = { gold = huscarls_low_maint_cost }
+	high_maintenance_cost = { gold = huscarls_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = danish_huskarls
+}
+
+longbowmen = {
+	type = archers
+	can_recruit = {
+		valid_for_maa_trigger = { PARAMETER = unlock_maa_longbowmen }
+	}
+
+	damage = 20
+	toughness = 8
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 12 toughness = 4 }
+		## GH ADDITIONS ##
+		marcher_hills = { damage = 12 toughness = 4 }
+
+		mayik_caverns = { damage = -15 screen = 12 }
+		mayik_corridors = { damage = -12 screen = 10 }
+		mayik_chamber = { damage = -10 screen = 8 }
+	}
+
+	counters = {
+		skirmishers = 1
+		heavy_cavalry = 1
+	}
+
+	buy_cost = { gold = longbowmen_recruitment_cost }
+	low_maintenance_cost = { gold = longbowmen_low_maint_cost }
+	high_maintenance_cost = { gold = longbowmen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = bowmen
+}
+
+horse_archers = {
+	type = archer_cavalry
+	
+	damage = 36
+	toughness = 18
+	pursuit = 40
+	screen = 30
+	
+	terrain_bonus = {
+		steppe = { damage = 45 }
+		plains = { damage = 20 }
+		drylands = { damage = 20 }
+		jungle = { damage = -20 pursuit = -20 }
+		wetlands = { damage = -30 pursuit = -30 }
+		mountains = { damage = -30 pursuit = -30 }
+		desert_mountains = { damage = -30 pursuit = -30 }
+		## GH ADDITIONS ##
+
+		mayik_caverns = { damage = -44 pursuit = -40 screen = -30 }
+		mayik_corridors = { damage = -42 pursuit = -40 screen = -30 }
+		mayik_chamber = { damage = -40 pursuit = -40 screen = -30 }
+
+		deadlands = { damage = 20 }
+
+		marcher_plains = { damage = 20 }
+		marcher_wetlands = { damage = -30 pursuit = -30 }
+		marcher_wetlands = { damage = -30 pursuit = -30 }
+		marcher_mountains = { damage = -30 pursuit = -30 }
+	}
+
+	counters = {
+		skirmishers = 1
+		heavy_infantry = 1
+	}
+
+	can_recruit = {
+		OR = {
+			AND = {
+				is_landless_adventurer = yes
+				has_perk = planned_cultivation_perk
+				location.county.culture ?= { culture_has_archer_cavalry_maa = yes }
+			}
+			culture = { has_cultural_parameter = unlock_maa_horse_archers }
+			mpo_can_recruit_nomad_maa_trigger = yes
+		}
+	}
+
+	buy_cost = { gold = horse_archers_recruitment_cost }
+	low_maintenance_cost = { gold = horse_archers_low_maint_cost }
+	high_maintenance_cost = { gold = horse_archers_high_maint_cost }
+	provision_cost = @provisions_cost_cavalry_cheap
+	
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = horse_archers
+}
+
+sjalvolki_waymakers = { # GH TODO: Rename
+	type = skirmishers
+
+	can_recruit = { always = no }
+
+	damage = 30
+	toughness = 30
+	pursuit = 40
+	screen = 40
+
+	terrain_bonus = {
+		desert = { damage = 20 toughness = 8 }
+		drylands = { damage = 15 toughness = 8 }
+		oasis = { damage = 15 }
+		floodplains = { damage = 5 }
+		hills = { damage = -10 }
+		mountains = { damage = -15 pursuit = -20 }
+		wetlands = { damage = -15 toughness = -10 pursuit = -20 screen = -20 }
+		## GH ADDITIONS ##
+		marcher_floodplains = { damage = 5 }
+		marcher_hills = { damage = -10 }
+		desert_mountains = { damage = -10 pursuit = -10 }
+		marcher_mountains = { damage = -15 pursuit = -20 }
+		marcher_wetlands = { damage = -15 toughness = -10 pursuit = -20 screen = -20 }
+
+		deadlands = { damage = 10 toughness = 4 }
+
+		mayik_caverns = { pursuit = 10 screen = 12 }
+		mayik_corridors = { pursuit = 8 screen = 10 }
+		mayik_chamber = { pursuit = 6 screen = 8 }
+	}
+
+	counters = {
+		monsters = 1
+		heavy_infantry = 1
+		archers = 1
+		magi = 0.5
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = 8 pursuit = 8 }
+		harsh_winter = { damage = 8 pursuit = 8 }
+	}
+
+	buy_cost = { gold = jomsviking_pirates_recruitment_cost }
+	low_maintenance_cost = { gold = jomsviking_pirates_low_maint_cost }
+	high_maintenance_cost = { gold = jomsviking_pirates_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 100
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = jomsviking_pirates
+}
+
+magi_regular = {
+	type = magi
+
+	damage = 210
+	toughness = 80
+	pursuit = 40
+	screen = 40
+	siege_value = 0.05
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -60 }
+		marcher_farmlands = { damage = -150 toughness = -60 }
+		marcher_plains = { damage = -150 toughness = -60 }
+		marcher_mountains = { damage = -150 toughness = -60 }
+		marcher_forest = { damage = -150 toughness = -60 }
+		marcher_wetlands = { damage = -150 toughness = -60 }
+		marcher_floodplains = { damage = -150 toughness = -60 }
+		antimagic_terrain = { damage = -150 toughness = -60 }
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_hymns = 1
+		#magical_time = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = magi_recruitment_cost }
+	low_maintenance_cost = { gold = magi_low_maint_cost }
+	high_maintenance_cost = { gold = magi_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = culture_ai_weight_magi }
+	icon = magi_regular
+}
+
+## REGIONAL MAA ##
+# The following were brought from the 00_regional_maa_types file in case we want to use them
+
+camel_rider = {
+	type = camel_cavalry
+
+	damage = 22
+	toughness = 15
+	pursuit = 20
+	screen = 20
+
+	terrain_bonus = {
+		desert = { damage = 20 toughness = 8 }
+		drylands = { damage = 15 toughness = 8 }
+		oasis = { damage = 15 }
+		floodplains = { damage = 5 }
+		hills = { damage = -10 }
+		mountains = { damage = -15 pursuit = -20 }
+		wetlands = { damage = -15 toughness = -10 pursuit = -20 screen = -20 }
+		## GH ADDITIONS ##
+		desert_mountains = { damage = -10 pursuit = -10 }
+		deadlands = { damage = 10 toughness = 4 }
+
+		mayik_caverns = { damage = -20 toughness = -15 pursuit = -20 screen = -20 }
+		mayik_corridors = { damage = -18 toughness = -14 pursuit = -20 screen = -20 }
+		mayik_chamber = { damage = -16 toughness = -13 pursuit = -20 screen = -20 }
+
+		marcher_floodplains = { damage = 5 }
+		marcher_hills = { damage = -10 }
+		marcher_mountains = { damage = -15 pursuit = -20 }
+		marcher_wetlands = { damage = -15 toughness = -10 pursuit = -20 screen = -20 }
+	}
+
+	counters = {
+		light_cavalry = 1
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = -3 }
+		harsh_winter = { damage = -5 toughness = -2 }
+	}
+
+	buy_cost = { gold = camel_rider_recruitment_cost }
+	low_maintenance_cost = { gold = camel_rider_low_maint_cost }
+	high_maintenance_cost = { gold = camel_rider_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 100
+	ai_quality = { value = culture_ai_weight_camels }
+	icon = camel_riders
+	fallback_in_hired_troops_if_unlocked = yes
+}
+
+war_elephant = {
+	type = elephant_cavalry
+
+	damage = 250
+	toughness = 50
+	pursuit = 0
+	screen = 0
+
+	siege_value = 0.1
+
+	terrain_bonus = {
+		jungle = { damage = 50 }
+		mountains = { damage = -100 }
+		desert_mountains = { damage = -100 }
+		wetlands = { damage = -150 toughness = -20 }
+		## GH ADDITIONS ##
+		mayik_caverns = { damage = -240 toughness = -45 siege_value = -0.1 }
+		mayik_corridors = { damage = -230 toughness = -40 siege_value = -0.1 }
+		mayik_chamber = { damage = -220 toughness = -35 siege_value = -0.1 }
+
+		marcher_mountains = { damage = -100 }
+		marcher_wetlands = { damage = -150 toughness = -20 }
+	}
+
+	counters = {
+		skirmishers = 2
+		heavy_infantry = 2
+	}
+
+	winter_bonus = {
+		normal_winter = { damage = -30 toughness = -5 }
+		harsh_winter = { damage = -60 toughness = -10 }
+	}
+
+	buy_cost = { gold = war_elephant_recruitment_cost }
+	low_maintenance_cost = { gold = war_elephant_low_maint_cost }
+	high_maintenance_cost = { gold = war_elephant_high_maint_cost }
+	provision_cost = @provisions_cost_cavalry_bankrupting
+
+	can_recruit = {
+		OR = {
+			AND = {
+				culture ?= { has_innovation = innovation_elephantry }
+				NOT = { is_landless_adventurer = yes }
+			}
+			domicile ?= { has_domicile_parameter = camp_reinforce_elephant_regiments_anywhere }
+		}
+	}
+	
+	stack = 25
+	hired_stack_size = 10
+	ai_quality = { value = culture_ai_weight_elephants }
+	icon = war_elephants
+}

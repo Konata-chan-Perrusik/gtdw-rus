@@ -1,0 +1,228 @@
+﻿possible_personal_inspiration_actions_forge_scripted_gui = { # Construct a Personal Forge
+	scope = character
+	
+	is_valid = {
+		custom_tooltip = { # Must not be traveling
+			text = possible_personal_inspiration_actions_forge_scripted_gui_is_traveling
+			is_travelling = no
+		}
+		trigger_if = { # Must not already have a Personal Forge in the Capital Barony
+			limit = { has_variable = personal_forge_location }
+			trigger_if = {
+				limit = { any_held_title = { is_noble_family_title = yes } }
+				custom_tooltip = {
+					text = possible_personal_inspiration_actions_forge_scripted_gui_already_has_forge_in_capital_location
+					NOT = { var:personal_forge_location ?= root.domicile.domicile_location.barony }
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = possible_personal_inspiration_actions_forge_scripted_gui_already_has_forge_in_capital_location
+					NOT = { var:personal_forge_location ?= root.capital_barony }
+				}
+			}
+		}
+		custom_tooltip = { # Must not be broke
+			text = possible_personal_inspiration_actions_forge_scripted_gui_missing_cost
+			gold > possible_personal_inspiration_actions_forge_cost_value
+		}
+	}
+	
+	effect = {
+		if = { # Give the warning about the previous Personal Forge being dismantled
+			limit = {
+				trigger_if = { # Noble Families construct at the Location of their Family Estate
+					limit = { any_held_title = { is_noble_family_title = yes } }
+					var:personal_forge_location ?= { NOT = { this = root.domicile.domicile_location.barony } }
+				}
+				trigger_else = { var:personal_forge_location ?= { NOT = { this = root.capital_barony } } }
+			}
+			custom_description_no_bullet = { text = possible_personal_inspiration_actions_forge_scripted_gui_dismantle_tt }
+		}
+		custom_tooltip = { # The forge is constructed in the appropriate barony
+			text = possible_personal_inspiration_actions_forge_scripted_gui_tt
+			if = {
+				limit = { has_domicile = yes }
+				domicile.domicile_location.barony = { save_scope_as = forge_location }
+			}
+			else = { capital_barony = { save_scope_as = forge_location } }
+			set_variable = {
+				name = personal_forge_location
+				value = scope:forge_location
+			}
+			remove_short_term_gold = possible_personal_inspiration_actions_forge_cost_value
+		}
+		custom_tooltip = personal_inspiration_change_artifact_quality_effect_gain_forge
+	}
+
+	ai_is_valid = {
+		has_variable = personal_inspiration_story
+		is_at_war = no
+	}
+	
+	ai_chance = {
+		base = 10
+		modifier = {
+			add = {
+				value = "has_trait_xp(gh_lifestyle_glassmith)"
+				multiply = 0.05
+			}
+		}
+	}
+}
+
+possible_personal_inspiration_actions_materials_scripted_gui = { # Purchase Crafting Materials
+	scope = character
+	
+	is_valid = {
+		custom_tooltip = { # Already used the Inspiration Action maximum allowable number of times
+			text = possible_personal_inspiration_actions_materials_scripted_gui_already_purchased_max_materials
+			var:personal_inspiration_story.var:possible_personal_inspiration_actions_materials_count < possible_personal_inspiration_actions_materials_max_count
+		}
+		custom_tooltip = { # Must not be broke
+			text = possible_personal_inspiration_actions_materials_scripted_gui_missing_cost
+			gold > possible_personal_inspiration_actions_materials_cost_value
+		}
+	}
+	
+	effect = {
+		custom_tooltip = { # Increment purchased materials counter
+			text = possible_personal_inspiration_actions_materials_scripted_gui_tt
+			remove_short_term_gold = possible_personal_inspiration_actions_materials_cost_value
+			var:personal_inspiration_story = {
+				change_variable = {
+					name = personal_inspiration_total_gold_investment
+					add = prev.possible_personal_inspiration_actions_materials_cost_value
+				}
+				change_variable = {
+					name = possible_personal_inspiration_actions_materials_count
+					add = 1
+				}
+			}
+		}
+		custom_tooltip = personal_inspiration_change_artifact_wealth_effect_gain
+	}
+
+	ai_is_valid = {
+		has_variable = personal_inspiration_story
+		is_at_war = no
+	}
+	
+	ai_chance = {
+		base = 5
+		modifier = {
+			add = {
+				value = "has_trait_xp(gh_lifestyle_glassmith)"
+				multiply = 0.02
+			}
+		}
+	}
+}
+
+possible_personal_inspiration_actions_tutor_scripted_gui = { # Find a Tutor
+	scope = character
+	
+	is_valid = {
+		trigger_if = { # Must not be traveling
+			limit = { is_travelling = yes }
+			custom_tooltip = {
+				text = possible_personal_inspiration_actions_tutor_scripted_gui_is_traveling
+				is_travelling = no
+			}
+		}
+		trigger_else_if = { # Cannot find tutors in the Fog
+			limit = { location.county = { has_county_modifier = fogswept_modifier } }
+			custom_tooltip = {
+				text = possible_personal_inspiration_actions_tutor_scripted_gui_fogswept
+				always = no
+			}
+		}
+		trigger_else_if = { # Cannot find tutors in the wastelands
+			limit = { location.county.holder = { is_ruin = yes } }
+			custom_tooltip = {
+				text = possible_personal_inspiration_actions_tutor_scripted_gui_wasteland
+				always = no
+			}
+		}
+		trigger_else = { always = yes }
+		custom_tooltip = { # Must not have already hired a tutor this Personal Inspiration
+			text = possible_personal_inspiration_actions_tutor_scripted_gui_already_hired_tutor
+			var:personal_inspiration_story = { NOT = { has_variable = possible_personal_inspiration_actions_hired_tutor } }
+		}
+		custom_tooltip = { # Still can learn something from others
+			text = possible_personal_inspiration_actions_tutor_scripted_gui_max_glassmith_xp
+			NOT = {
+				has_trait_xp = {
+					trait = gh_lifestyle_glassmith
+					value = 100
+				}
+			}
+		}
+		custom_tooltip = { # Must not be broke
+			text = possible_personal_inspiration_actions_tutor_scripted_gui_missing_cost
+			gold > possible_personal_inspiration_actions_tutor_minimum_cost
+		}
+	}
+	
+	effect = {
+		custom_tooltip = { # Trigger the Tutor event
+			text = possible_personal_inspiration_actions_tutor_scripted_gui_tt
+			trigger_event = gh_fund_inspiration.2004
+			var:personal_inspiration_story = { set_variable = possible_personal_inspiration_actions_hired_tutor }
+		}
+	}
+
+	ai_is_valid = {
+		has_variable = personal_inspiration_story
+		is_at_war = no
+	}
+	
+	ai_chance = {
+		base = 5
+		modifier = {
+			add = {
+				value = "has_trait_xp(gh_lifestyle_glassmith)"
+				multiply = -0.01
+			}
+		}
+	}
+}
+
+possible_personal_inspiration_actions_composition_scripted_gui = { # Pick Glass Composition
+	scope = character
+	
+	is_valid = {
+		custom_tooltip = { # Must not have already picked a Glass Composition
+			text = possible_personal_inspiration_actions_tutor_scripted_gui_already_picked_composition
+			var:personal_inspiration_story = { NOT = { has_variable = possible_personal_inspiration_actions_picked_composition } }
+		}
+	}
+	
+	effect = {
+		custom_tooltip = { # Trigger the Glass Composition event
+			text = possible_personal_inspiration_actions_composition_scripted_gui_tt
+			trigger_event = gh_fund_inspiration.2005
+			var:personal_inspiration_story = { set_variable = possible_personal_inspiration_actions_picked_composition }
+		}
+		custom_tooltip = possible_personal_inspiration_actions_composition_scripted_gui_modifier_tt
+	}
+}
+
+possible_personal_inspiration_actions_exit_scripted_gui = { # Abandon the Personal Inspiration
+	scope = character
+
+	confirm_title = possible_personal_inspiration_actions_exit_scripted_gui_confirm_title
+	confirm_text = possible_personal_inspiration_actions_exit_scripted_gui_confirm_text
+	
+	effect = {
+		if = { # Give the warning about Decision cooldown
+			limit = { is_decision_on_cooldown = create_glass_artifact_decision }
+			custom_description_no_bullet = { text = possible_personal_inspiration_actions_exit_scripted_gui_cooldown_tt }
+		}
+		custom_tooltip = possible_personal_inspiration_actions_exit_scripted_gui_tt
+		custom_tooltip = possible_personal_inspiration_actions_exit_scripted_gui_refund_tt
+		var:personal_inspiration_story = { save_scope_as = story }
+		personal_inspiration_refund_effect = yes
+		var:personal_inspiration_story = { end_story = yes }
+	}
+}

@@ -1,0 +1,600 @@
+﻿story_sjalvolki_reformation = {
+	
+	on_setup = {
+		story_owner = { save_scope_as = story_owner_scope }
+		add_progressbar_variable_effect = {
+			VARIABLE_NAME = reform_fervor
+			MAXIMUM_VALUE = 100
+			TRACKER_COLOR = orange
+			TRACKER_ICON = culture_icon
+		}
+		set_variable = {
+			name = reform_fervor
+			value = 0
+		}
+		set_global_variable = {
+			name = initial_spread_timer
+			years = 10
+		}
+	}
+	
+	on_end = {
+		remove_list_global_variable = {
+			name = global_story_cycle_list
+			target = root
+		}
+	}
+	
+	on_owner_death = {
+		story_owner = {
+			save_scope_as = sjalvolki_reformer
+		}
+		every_player = {
+			limit = { religion = religion:sjalvolki_religion }
+			trigger_event = sjalvolki_reformation.0031
+		}
+	}
+	
+	# The Preacher travels around
+	effect_group = {
+		days = { 30 60 }
+
+		trigger = {
+			NOT = { has_global_variable = orispolj_rite_disintegrating }
+			story_owner = {
+				is_imprisoned = no
+				#is_playable_character = no
+			}
+		}
+		
+		triggered_effect = {
+			trigger = {
+				always = yes
+			}
+			effect = {
+				save_scope_as = sjalvolki_reformist_story
+				story_owner = {
+					save_scope_as = sjalvolki_reformer
+					location.county = {
+						save_scope_as = reformer_current_location
+					}
+					# Increasing chance of getting assassinated over 50 notoriety
+					if = {
+						limit = { var:notoriety > 50 }
+						random = {
+							chance = 0
+							modifier = {
+								add = var:notoriety
+							}
+							modifier = {
+								add = -30
+							}
+							death = {
+								death_reason = death_murder
+							}
+						}
+					}
+					if = {
+						limit = { is_alive = yes }
+						scope:reformer_current_location = {
+							# If there's a neighboring unconverted county, go there
+							if = {
+								limit = {
+									any_neighboring_county = {
+										NOR = { 
+											faith = faith:orispolj_rite
+											has_variable = recently_visited_by_reformer
+										}
+										religion = religion:sjalvolki_religion
+									}
+								}
+								random_neighboring_county = {
+									limit = {
+										NOR = { 
+											faith = faith:orispolj_rite
+											has_variable = recently_visited_by_reformer
+										}
+										religion = religion:sjalvolki_religion
+									}
+									save_scope_as = reformer_current_location
+								}
+							}
+							else = {	# Otherwise, jump to any county that's bordering a county with rites, or a Sjalvolki county in general if that's not possible
+								random_county = {
+									limit = {  
+										NOT = { faith = faith:orispolj_rite }
+										religion = religion:sjalvolki_religion
+										any_neighboring_county = {
+											faith = faith:orispolj_rite
+										}
+									}
+									alternative_limit = {
+										NOT = { faith = faith:orispolj_rite }
+										religion = religion:sjalvolki_religion
+									}
+									save_scope_as = reformer_current_location
+								}
+							}
+						}
+						if = {
+							limit = {
+								is_travelling = no
+							}
+							start_travel_plan = {
+								destination = scope:reformer_current_location.capital_province
+								players_use_planner = yes
+								return_trip = no
+								travel_with_domicile = yes
+								on_arrival_destinations = last
+							}
+						}
+						# If the holder of the county in question hasn't yet decided on a policy towards the reformation, send them the event
+						scope:reformer_current_location = {
+							set_variable = {
+								name = recently_visited_by_reformer
+								days = 700
+							}
+							holder = {
+								if = {
+									limit = {
+										OR = {
+											NOT = { has_variable = sjalvolki_reformation_policy }
+											var:sjalvolki_reformation_policy = flag:hostile
+										}
+									}
+									trigger_event = sjalvolki_reformation.0011
+								}
+								else = {
+									scope:sjalvolki_reformer = {
+										reformer_convert_county_effect = { COUNTY = scope:reformer_current_location }
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Acolytes spread word of the Preacher's teachings
+	effect_group = {
+		days = { 30 60 }
+	
+		trigger = {
+			NOT = { has_global_variable = orispolj_rite_disintegrating }
+			story_owner = {
+				OR = {
+					AND = {
+						has_variable = notoriety
+						var:notoriety >= 10
+					}
+					is_alive = no
+				}
+			}
+		}
+	
+		triggered_effect = {
+			trigger = {
+				has_global_variable = initial_spread_timer
+			}
+			effect = {
+				save_scope_as = sjalvolki_reformist_story
+				set_local_variable = {
+					name = iterator
+					value = 0
+				}
+				while = {
+					limit = { local_var:iterator < var:reform_fervor }
+					if = {
+						limit = {
+							any_county = {
+								religion = religion:sjalvolki_religion
+								NOT = { faith = faith:orispolj_rite }
+								any_neighboring_county = {
+									faith = faith:orispolj_rite
+								}
+								trigger_if = {
+									limit = { holder = { has_variable = sjalvolki_reformation_policy } }
+									NOT = { holder.var:sjalvolki_reformation_policy = flag:hostile }
+								}
+							}
+						}
+						random_county = {
+							limit = {
+								religion = religion:sjalvolki_religion
+								NOT = { faith = faith:orispolj_rite }
+								any_neighboring_county = {
+									faith = faith:orispolj_rite
+								}
+								holder = { religion = religion:sjalvolki_religion }
+								trigger_if = {
+									limit = { holder = { has_variable = sjalvolki_reformation_policy } }
+									NOT = { holder.var:sjalvolki_reformation_policy = flag:hostile }
+								}
+							}
+							if = {
+								limit = { 
+									holder = {
+										has_variable = sjalvolki_reformation_policy
+										OR = {
+											var:sjalvolki_reformation_policy = flag:supportive
+											var:sjalvolki_reformation_policy = flag:neutral
+										}
+									}
+								}
+								set_county_faith = faith:orispolj_rite
+							}
+							else_if = {
+								limit = {
+									holder = {
+										is_ai = no
+										NOT = { has_character_flag = recently_encountered_acolytes }
+									}
+								}
+								holder = { trigger_event = sjalvolki_reformation.0012 }
+							}
+							else_if = {
+								limit = {
+									holder = {
+										is_ai = yes
+									}
+								}
+								holder = { trigger_event = sjalvolki_reformation.0012 }
+							}
+						}
+						if = {
+							limit = { root.var:reform_fervor < 100 }
+							increase_fervor_effect = { VALUE = 0.5 }
+						}
+					}
+					else = {
+						random_county = {
+							limit = {
+								religion = religion:sjalvolki_religion
+								NOT = { faith = faith:orispolj_rite }
+								is_coastal_county = yes
+								holder = { religion = religion:sjalvolki_religion }
+								trigger_if = {
+									limit = { holder = { has_variable = sjalvolki_reformation_policy } }
+									NOT = { holder.var:sjalvolki_reformation_policy = flag:hostile }
+								}
+							}
+							if = {
+								limit = { 
+									holder = {
+										has_variable = sjalvolki_reformation_policy
+										OR = {
+											var:sjalvolki_reformation_policy = flag:supportive
+											var:sjalvolki_reformation_policy = flag:neutral
+										}
+									}
+								}
+								set_county_faith = faith:orispolj_rite
+							}
+							else_if = {
+								limit = { holder = { is_ai = yes } }
+								holder = { trigger_event = sjalvolki_reformation.0012 }
+							}
+						}
+						if = {
+							limit = { var:reform_fervor < 100 }
+							increase_fervor_effect = { VALUE = 0.5 }
+						}
+					}
+					change_local_variable = {
+						name = iterator
+						add = 10
+					}
+				}
+			}
+		}
+	}
+	
+	effect_group = {
+		years = 1
+		trigger = {
+			NOT = { has_global_variable = rite_wars_started }
+		}
+		triggered_effect = {
+			trigger = { 
+				NOT = { has_global_variable = initial_spread_timer } 
+			}
+			effect = {
+				save_scope_as = story_sjalvolki_reformation
+				random_independent_ruler = {
+					trigger_event = sjalvolki_reformation.0201
+				}
+				set_global_variable = {
+					name = rite_wars_started
+				}
+			}
+		}
+	}
+	
+	#######SCHISM STUFF BELOW#######
+	
+	#The Piety Rite radiates outward from the inital conversion centers
+	effect_group = {
+		days = { 20 50 }
+	
+		trigger = {
+			has_global_variable = piety_rite_spreading
+		}
+	
+		triggered_effect = {
+			trigger = {
+				has_global_variable = piety_rite_spreading
+			}
+			effect = {
+				if = {
+					limit = {
+						any_county = {
+							faith = faith:orispolj_rite
+							any_neighboring_county = {
+								faith = faith:piety_rite
+							}
+						}
+					}
+					random_county = {
+						limit = {
+							faith = faith:orispolj_rite
+							any_neighboring_county = {
+								faith = faith:piety_rite
+							}
+						}
+						set_county_faith = faith:piety_rite
+					}
+				}
+				else = {
+					random_county = {
+						limit = {
+							faith = faith:orispolj_rite
+							is_coastal_county = yes
+						}
+						set_county_faith = faith:piety_rite
+					}
+				}		
+			}
+		}
+	}
+	
+	#The authority rite radiates outwards from the initial centers
+	effect_group = {
+		days = { 20 50 }
+	
+		trigger = {
+			has_global_variable = authority_rite_spreading
+		}
+	
+		triggered_effect = {
+			trigger = {
+				has_global_variable = authority_rite_spreading
+			}
+			effect = {
+				if = {
+					limit = {
+						any_county = {
+							faith = faith:orispolj_rite
+							any_neighboring_county = {
+								faith = faith:authority_rite
+							}
+						}
+					}
+					random_county = {
+						limit = {
+							faith = faith:orispolj_rite
+							any_neighboring_county = {
+								faith = faith:authority_rite
+							}
+						}
+						set_county_faith = faith:authority_rite
+					}
+				}
+				else = {
+					random_county = {
+						limit = {
+							faith = faith:orispolj_rite
+							is_coastal_county = yes
+						}
+						set_county_faith = faith:authority_rite
+					}
+				}		
+			}
+		}
+	}
+	
+	#Spawning of Opakasija Conclave
+	effect_group = {
+		years = 1
+		trigger = {
+			has_global_variable = opakasija_conclave_eligible
+			NOT = { has_global_variable = opakasija_conclave_spawned }
+		}
+		triggered_effect = {
+			trigger = { 
+				NOT = { has_global_variable = opakasija_conclave_timer } 
+			}
+			effect = {
+				debug_log = "Spawned Opakasija Conclave"
+				debug_log_date = yes
+				faith:conclave_of_opakhasia = {
+					remove_variable = block_conversion_till_nebulous_circumstances
+				}
+				random_independent_ruler = {
+					trigger_event = sjalvolki_reformation.0211
+				}
+				set_global_variable = {
+					name = opakasija_conclave_spawned
+				}
+			}
+		}
+	}
+	
+	effect_group = { #Opakasija conclave spreads through northern Opakasija
+		days = { 20 50 }
+	
+		trigger = {
+			has_global_variable = opakasija_conclave_spreading
+		}
+	
+		triggered_effect = {
+			trigger = {
+				has_global_variable = opakasija_conclave_spreading
+			}
+			effect = {
+				if = {
+					limit = {
+						any_county_in_region = {
+							region = world_ga_northeast_opakhasia
+							OR = {
+								faith = faith:sjalvolki
+								faith = faith:orispolj_rite
+							}
+							any_neighboring_county = {
+								faith = faith:conclave_of_opakhasia
+							}
+						}
+					}
+					random_county_in_region = {
+						region = world_ga_northeast_opakhasia
+						limit = {
+							OR = {
+								faith = faith:sjalvolki
+								faith = faith:orispolj_rite
+							}
+							any_neighboring_county = {
+								faith = faith:conclave_of_opakhasia
+							}
+						}
+					set_county_faith = faith:conclave_of_opakhasia
+					}
+				}
+				else = {
+					random_county_in_region = {
+						region = world_ga_northeast_opakhasia
+						limit = {
+							OR = {
+								faith = faith:sjalvolki
+								faith = faith:orispolj_rite
+							}
+							is_coastal_county = yes
+						}
+						set_county_faith = faith:conclave_of_opakhasia
+					}
+				}		
+			}
+		}
+	}
+	
+	#Spawning of Eastern Rite
+	effect_group = {
+		years = 1
+		trigger = {
+			has_global_variable = eastern_rite_eligible
+			NOT = { has_global_variable = eastern_rite_spawned }
+		}
+		triggered_effect = {
+			trigger = { 
+				NOT = { has_global_variable = eastern_rite_timer } 
+			}
+			effect = {
+				debug_log = "Spawned Eastern Rite"
+				debug_log_date = yes
+				random_independent_ruler = {
+					trigger_event = sjalvolki_reformation.0214
+				}
+				set_global_variable = {
+					name = eastern_rite_spawned
+				}
+				faith:eastern_rite = {
+					remove_variable = block_conversion_till_nebulous_circumstances
+				}
+			}
+		}
+	}
+	
+	effect_group = { #Eastern Rite spreads through Aironoi + west Opakhasia
+		days = { 20 50 }
+	
+		trigger = {
+			has_global_variable = eastern_rite_spreading
+		}
+	
+		triggered_effect = {
+			trigger = {
+				has_global_variable = eastern_rite_spreading
+			}
+			effect = {
+				if = {
+					limit = {
+						any_county_in_region = {
+							region = world_ga_east_shattered_coast
+							OR = {
+								faith = faith:sjalvolki
+								faith = faith:orispolj_rite
+								faith = faith:piety_rite
+								faith = faith:authority_rite
+							}
+							any_neighboring_county = {
+								faith = faith:eastern_rite
+							}
+						}
+					}
+					random_county_in_region = {
+						region = world_ga_east_shattered_coast
+						limit = {
+							OR = {
+								faith = faith:sjalvolki
+								faith = faith:orispolj_rite
+								faith = faith:piety_rite
+								faith = faith:authority_rite
+							}
+							any_neighboring_county = {
+								faith = faith:eastern_rite
+							}
+						}
+						set_county_faith = faith:eastern_rite
+					}
+				}
+				else = {
+					random_county_in_region = {
+						region = world_ga_east_shattered_coast
+						limit = {
+							OR = {
+								faith = faith:sjalvolki
+								faith = faith:orispolj_rite
+								faith = faith:piety_rite
+								faith = faith:authority_rite
+							}
+							is_coastal_county = yes
+						}
+						set_county_faith = faith:eastern_rite
+					}
+				}		
+			}
+		}
+	}
+	
+	#Ends the story cycle when the lines are drawn
+	effect_group = {
+		years = 15
+		trigger = {
+			NOT = { has_global_variable = initial_spread_timer }
+			has_global_variable = rite_wars_started 
+		}
+		triggered_effect = {
+			trigger = { 
+				NOR = { 
+					has_global_variable = eastern_rite_timer
+					has_global_variable = opakasija_conclave_timer
+				}
+			}
+			effect = {
+				debug_log = "Ended Sjalvolki Reformation"
+				debug_log_date = yes
+				end_story = yes
+			}
+		}
+	}
+}

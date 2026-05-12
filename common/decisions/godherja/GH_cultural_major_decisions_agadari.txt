@@ -1,0 +1,275 @@
+﻿##################
+##DECISIONS LIST##
+# reclaim_krehejad_decision
+# krehejad_seize_dethskel_decision
+# agadari_resurgence_decision
+##################
+
+##########################
+# Reclaim Krehejad
+# By Cairo
+##########################
+
+reclaim_krehejad_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	ai_check_interval = 120
+	desc = reclaim_krehejad_decision_desc
+	decision_group_type = agadari
+
+	is_shown = {
+		exists = capital_province
+		capital_province = {
+			geographical_region = krehejad_biozone
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reclaim_krehejad_decision
+			}
+		}
+		culture = {
+			has_cultural_pillar = heritage_agadari
+		}
+	}
+
+	is_valid = {
+		has_title = title:k_krehejad
+		completely_controls_region = krehejad_biozone
+	}
+
+	effect = {
+		save_scope_as = reclaimer
+		custom_tooltip = reclaim_krehejad_decision_effect_tooltip
+		trigger_event = { id = agadari.0001 }
+		hidden_effect = {
+			add_to_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reclaim_krehejad_decision
+			}
+		}
+		culture = { 
+			add_culture_tradition = tradition_scourge_of_the_seas
+			remove_culture_tradition = tradition_practiced_pirates
+		}
+		add_prestige = 2000
+		add_piety = 1000
+		dynasty = {
+			add_dynasty_prestige = 1500
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##########################
+# Krehejad Claiming Dethskel
+# By Cairo
+##########################
+
+krehejad_seize_dethskel_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds" }
+	decision_group_type = agadari
+
+	ai_check_interval = 120
+
+	desc = krehejad_seize_dethskel_decision_desc
+	selection_tooltip = krehejad_seize_dethskel_decision_tooltip
+
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		exists = dynasty
+		#Empire of Krehejad must be reclaimed#
+		is_target_in_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reclaim_krehejad_decision
+		}
+		#You must be agadari#
+		culture = {
+			has_cultural_pillar = heritage_agadari
+		}
+		#You must own the Empire of Krehejad#
+		has_title = title:e_krehejad
+
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:krehejad_seize_dethskel_decision
+			}
+		}
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		has_title = title:e_krehejad
+		completely_controls = title:k_dethskel
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		title:k_dethskel = {
+			set_de_jure_liege_title = title:e_krehejad
+		}
+		custom_tooltip = krehejad_seize_dethskel_effect_tooltip
+		hidden_effect = {
+			if = {
+				limit = { has_title = title:d_zaradar }
+				title:d_zaradar = { set_de_jure_liege_title = title:k_dethskel }
+			}
+		}	
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:krehejad_seize_dethskel_decision
+		}
+	}
+
+	cost = {
+		gold = 200
+		prestige = 500
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##########################
+# Agadari Resurgence
+# By Cairo
+##########################
+
+agadari_resurgence_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = agadari
+
+	ai_check_interval = 120
+
+	desc = agadari_resurgence_decision_desc
+
+	is_shown = {
+		#You must be agadari#
+		culture = { has_cultural_pillar = heritage_agadari }
+		
+		#Empire of Krehejad must be reclaimed#
+		is_target_in_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reclaim_krehejad_decision
+		}
+
+		is_landed_or_landless_administrative = yes
+		any_sub_realm_county = {
+			title_province = {  geographical_region = krehejad_biozone }
+			NOT = {
+				culture = { has_cultural_pillar = heritage_agadari }
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:agadari_resurgence_decision
+			}
+		}
+	}
+
+	is_valid = {
+		completely_controls_region  = krehejad_biozone
+
+		has_title = title:e_krehejad
+
+		# You can have no more than 1 powerful vassal with the "wrong" culture
+		custom_description = {
+			text = agadari_resurgence_custom_decision
+			
+			trigger_if = {
+				limit = {
+					any_vassal = {
+						#highest_held_title_tier >= tier_county
+						is_powerful_vassal = yes
+						NOT = {
+							culture = { has_cultural_pillar = heritage_agadari }
+						}
+					}
+				}
+				any_vassal = {
+					count <= 1
+					is_powerful_vassal = yes
+					NOT = {
+						culture = { has_cultural_pillar = heritage_agadari }
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	effect = {
+		save_scope_as = resurgent
+		gain_heroic_legend_seed_tooltip_effect = yes
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:agadari_resurgence_decision
+		}
+		show_as_tooltip = {
+			agadari_resurgence_decision_effect = yes
+		}
+		custom_tooltip = agadari_resurgence_tooltip
+		custom_tooltip = agadari_homecoming_tooltip
+		trigger_event = agadari.0010
+		
+		hidden_effect ={
+			agadari_resurgence_decision_effect = yes
+			every_vassal_or_below = {
+				limit = { NOT = { faith = title:e_krehejad.holder.faith } }
+				random = {
+					chance = 33
+					set_character_faith = title:e_krehejad.holder.faith
+				}
+			}
+		
+			every_sub_realm_county = {
+				limit = { 
+					NOR = { faith = title:e_krehejad.holder.faith 
+						culture = title:e_krehejad.holder.culture
+						culture = { has_cultural_pillar = heritage_agadari }
+					} 
+				}
+
+				random = {
+					chance = 33
+					set_county_faith = title:e_krehejad.holder.faith
+					set_county_culture = title:e_krehejad.holder.culture
+				}
+			}
+		}
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

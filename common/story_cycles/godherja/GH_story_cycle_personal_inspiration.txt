@@ -1,0 +1,152 @@
+﻿story_cycle_personal_inspiration = { # Personal Inspiration story cycle
+
+	on_setup = {
+		set_variable = {
+			name = personal_inspiration_story_type
+			value = story_owner.var:personal_inspiration_type
+		}
+		set_variable = {
+			name = personal_inspiration_quality
+			value = 0
+		}
+		set_variable = {
+			name = personal_inspiration_wealth
+			value = 0
+		}
+		set_variable = {
+			name = personal_inspiration_progress
+			value = 0
+		}
+		set_variable = {
+			name = personal_inspiration_total_gold_investment
+			value = story_owner.var:personal_inspiration_initial_gold_investment
+		}
+		add_to_variable_list = {
+			name = possible_personal_inspiration_actions
+			target = flag:possible_personal_inspiration_actions_forge
+		}
+		add_to_variable_list = {
+			name = possible_personal_inspiration_actions
+			target = flag:possible_personal_inspiration_actions_materials
+		}
+		set_variable = {
+			name = possible_personal_inspiration_actions_materials_count
+			value = 0
+		}
+		add_to_variable_list = {
+			name = possible_personal_inspiration_actions
+			target = flag:possible_personal_inspiration_actions_tutor
+		}
+		story_owner = {
+			set_variable = {
+				name = personal_inspiration_story
+				value = scope:story
+			}
+			remove_variable = personal_inspiration_initial_gold_investment
+			remove_variable = personal_inspiration_type
+			switch = { # Decide what we are going to make based on inspiration type
+				trigger = scope:story.var:personal_inspiration_story_type
+				#flag:weapon_inspiration = {  }
+				#flag:armor_inspiration = {  }
+				#flag:book_inspiration = {  }
+				#flag:weaver_inspiration = {  }
+				#flag:artisan_inspiration = {  }
+				#flag:smith_inspiration = {  }
+				#flag:alchemy_inspiration = {  }
+				#flag:research_inspiration = {  }
+				#flag:religious_inspiration = {  }
+				#flag:bow_inspiration = {  }
+				flag:glassware_inspiration = {
+					scope:story = {
+						add_to_variable_list = {
+							name = possible_personal_inspiration_actions
+							target = flag:possible_personal_inspiration_actions_composition
+						}
+					}
+					trigger_event = gh_fund_inspiration.0013
+				}
+				fallback = { scope:story = { end_story = yes } }
+			}
+		}
+		add_to_variable_list = {
+			name = possible_personal_inspiration_actions
+			target = flag:possible_personal_inspiration_actions_exit
+		}
+	}
+
+	on_end = {
+		story_owner = {
+			if = {
+				limit = { has_variable = personal_inspiration_story }
+				remove_variable = personal_inspiration_story
+			}
+			if = {
+				limit = { has_variable = artifact_glassware_type }
+				remove_variable = artifact_glassware_type
+			}
+		}
+	}
+
+	on_owner_death = {
+		if = {
+			limit = { story_owner.primary_heir = { exists = yes } }
+			story_owner.primary_heir = {
+				trigger_event = {
+					id = gh_fund_inspiration.1013
+					days = { 3 7 }
+				}
+			}
+		}
+		else = { end_story = yes }
+	}
+
+	effect_group = { # Inspiration advancement
+		days = 30
+
+		triggered_effect = { # Advancement
+			trigger = { story_owner = { available_for_personal_inspiration_trigger = yes } }
+			effect = {
+				random = {
+					chance = 75
+					change_variable = {
+						name = personal_inspiration_progress
+						add = 1
+					}
+					if = { # Random quality adjustment
+						limit = { var:personal_inspiration_progress < 10 }
+						story_owner = { trigger_event = { on_action = ongoing_personal_inspiration_minor_events } }
+					}
+				}
+				if = { # Story completion
+					limit = { var:personal_inspiration_progress >= 10 }
+					save_scope_value_as = {
+						name = quality
+						value = personal_inspiration_quality_value
+					}
+					save_scope_value_as = {
+						name = wealth
+						value = personal_inspiration_wealth_value
+					}
+					story_owner = { trigger_event = { on_action = ongoing_personal_inspiration_completion_events } }
+				}
+			}
+		}
+
+		triggered_effect = { # Invalidation
+			trigger = { story_owner = { is_incapable = yes } }
+			effect = { story_owner = { trigger_event = gh_fund_inspiration.1014 } }
+		}
+	}
+
+	effect_group = { # Random events
+		days = { 20 70 }
+		chance = 15
+
+		trigger = { var:personal_inspiration_progress >= 1 }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = { story_owner = { trigger_event = { on_action = ongoing_personal_inspiration_events } } }
+		}
+	}
+}

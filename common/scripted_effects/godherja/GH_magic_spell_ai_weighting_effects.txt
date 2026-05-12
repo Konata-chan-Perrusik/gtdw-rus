@@ -1,0 +1,182 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_magic_spell_ai_weighting_effects.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+add_learned_spell_to_quick_selection_list = {
+	if = {
+		limit = {
+			$SPELL$ = {
+				exists = var:healing
+			}
+		}
+		add_to_variable_list = {
+			name = healing_spell_list
+			target = $SPELL$
+		}
+	}
+	if = {
+		limit = {
+			$SPELL$ = {
+				exists = var:army_improvement
+			}
+		}
+		add_to_variable_list = {
+			name = army_improvement_spell_list
+			target = $SPELL$
+		}
+	}
+}
+select_healing_spell_effect = {
+	save_scope_as = spell_organizer
+	save_temporary_scope_as = spell_being_checked_ai_target
+	$CASTER$ = {
+		save_scope_as = caster
+		ordered_in_list = {
+			variable = healing_spell_list
+			order_by = ai_spell_weight_value
+			check_range_bounds = no
+			scope:spell_organizer = {
+				set_variable = {
+					name = selected_spell
+					value = prev
+				}
+			}
+		}
+	}
+}
+
+select_and_execute_healing_spell_with_triggers_effect = {
+	if = {
+		limit = {
+			health < death_chance_starts_health
+			# GH TODO: Move this crap elsewhere
+			OR = {
+				can_access_magic = yes
+				exists = cp:councillor_court_magi
+			}
+			OR = {
+				has_stored_magic_trigger = { VALUE = spell_level_iteration_value } # Needs to have enough magic for at least a level 1 spell
+				AND = {
+					exists = cp:councillor_court_magi
+					cp:councillor_court_magi = { has_stored_magic_trigger = { VALUE = spell_level_iteration_value } }
+				}
+			}
+			trigger_if = {
+				limit = { exists = var:spell_exposure }
+				OR = {
+					var:spell_exposure <= 0 # TODO: Make this more nuanced in the future, making it stay on the safe side for the moment
+					exists = cp:councillor_court_magi
+				}
+			}
+			is_pool_character = no
+			is_physically_able_ai_adult = yes
+		}
+		select_healing_spell_effect = { CASTER = this }
+		var:selected_spell ?= { save_scope_as = selected_spell_scope }
+		if = {
+			limit = {
+				exists = scope:selected_spell_scope
+				scope:selected_spell_scope.spell_success_chance >= 10
+				trigger_if = {
+					limit = { exists = var:casting_through_court_magi_var }
+					scope:caster.court_magi_spellcasting_acceptance_value > 0
+				}
+				can_cast_spell_trigger = { CASTER = scope:caster SPELL = scope:selected_spell_scope }
+			}
+			random = {
+				chance = scope:selected_spell_scope.spell_success_chance
+				scope:selected_spell_scope = { determine_spellcasting_outcome_effect = yes }
+				debug_log = "AI CASTED HEALING MAGIC THEMSELVES"
+				debug_log_scopes = yes
+				if = {
+					limit = { exists = scope:always_succeed_spellcasting }
+					trigger_event = magic.0001
+				}
+				else = {
+					trigger_event = {
+						on_action = magic_backfire_events
+					}
+				}
+			}
+		}
+	}
+}
+select_army_improvement_spell_effect = {
+	save_scope_as = spell_organizer
+	save_temporary_scope_as = spell_being_checked_ai_target
+	$CASTER$ = {
+		save_scope_as = caster
+		ordered_in_list = {
+			variable = army_improvement_spell_list
+			order_by = ai_spell_weight_value
+			check_range_bounds = no
+			scope:spell_organizer = {
+				set_variable = {
+					name = selected_spell
+					value = prev
+				}
+			}
+		}
+	}
+}
+
+select_and_execute_army_improvement_spell_with_triggers_effect = {
+	if = {
+		limit = {
+			is_at_war = yes
+			# GH TODO: Move this crap elsewhere
+			OR = {
+				can_access_magic = yes
+				exists = cp:councillor_court_magi
+			}
+			OR = {
+				has_stored_magic_trigger = { VALUE = spell_level_iteration_value } # Needs to have enough magic for at least a level 1 spell
+				AND = {
+					exists = cp:councillor_court_magi
+					cp:councillor_court_magi = { has_stored_magic_trigger = { VALUE = spell_level_iteration_value } }
+				}
+			}
+			trigger_if = {
+				limit = { exists = var:spell_exposure }
+				OR = {
+					var:spell_exposure <= 0 # TODO: Make this more nuanced in the future, making it stay on the safe side for the moment
+					exists = cp:councillor_court_magi
+				}
+			}
+			is_pool_character = no
+			is_physically_able_ai_adult = yes
+		}
+		select_army_improvement_spell_effect = { CASTER = this }
+		var:selected_spell ?= { save_scope_as = selected_spell_scope }
+		if = {
+			limit = {
+				exists = scope:selected_spell_scope
+				scope:selected_spell_scope.spell_success_chance >= 10
+				trigger_if = {
+					limit = { exists = var:casting_through_court_magi_var }
+					scope:caster.court_magi_spellcasting_acceptance_value > 0
+				}
+				can_cast_spell_trigger = { CASTER = scope:caster SPELL = scope:selected_spell_scope }
+			}
+			random = {
+				chance = scope:selected_spell_scope.spell_success_chance
+				scope:selected_spell_scope = { determine_spellcasting_outcome_effect = yes }
+				debug_log = "AI CASTED ARMY_IMPROVEMENT MAGIC THEMSELVES"
+				debug_log_scopes = yes
+				if = {
+					limit = { exists = scope:always_succeed_spellcasting }
+					trigger_event = magic.0001
+				}
+				else = {
+					trigger_event = {
+						on_action = magic_backfire_events
+					}
+				}
+			}
+		}
+	}
+}

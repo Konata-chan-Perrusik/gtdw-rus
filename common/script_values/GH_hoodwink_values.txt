@@ -1,0 +1,482 @@
+﻿scam_base_difficulty_value = {
+	value = 0
+	if = {
+		limit = {
+			exists = scope:scam_being_executed
+			scope:scam_being_executed = { has_variable = scam_base_difficulty }
+		}
+		if = {
+			limit = { scope:scam_being_executed.var:scam_base_difficulty = flag:very_easy_scam }
+			add = 20
+		}
+		if = {
+			limit = { scope:scam_being_executed.var:scam_base_difficulty = flag:easy_scam }
+			add = 40
+		}
+		if = {
+			limit = { scope:scam_being_executed.var:scam_base_difficulty = flag:medium_scam }
+			add = 60
+		}
+		if = {
+			limit = { scope:scam_being_executed.var:scam_base_difficulty = flag:hard_scam }
+			add = 80
+		}
+		if = {
+			limit = { scope:scam_being_executed.var:scam_base_difficulty = flag:very_hard_scam }
+			add = 100
+		}
+	}
+}
+
+scam_ai_value_factor_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:first_scam_ai_value }
+		scope:recipient = {
+			if = {
+				limit = { scope:first_scam_ai_value = flag:boldness_direct }
+				add = {
+					value = ai_boldness
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:boldness_inverse }
+				add = {
+					value = ai_boldness
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:compassion_direct }
+				add = {
+					value = ai_compassion
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:compassion_inverse }
+				add = {
+					value = ai_compassion
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:energy_direct }
+				add = {
+					value = ai_energy
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:energy_inverse }
+				add = {
+					value = ai_energy
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:honor_direct }
+				add = {
+					value = ai_honor
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:honor_inverse }
+				add = {
+					value = ai_honor
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:rationality_direct }
+				add = {
+					value = ai_rationality
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:rationality_inverse }
+				add = {
+					value = ai_rationality
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:sociability_direct }
+				add = {
+					value = ai_sociability
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:sociability_inverse }
+				add = {
+					value = ai_sociability
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:vengefulness_direct }
+				add = {
+					value = ai_vengefulness
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:vengefulness_inverse }
+				add = {
+					value = ai_vengefulness
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:greed_direct }
+				add = {
+					value = ai_greed
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:greed_inverse }
+				add = {
+					value = ai_greed
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:zeal_direct }
+				add = {
+					value = ai_zeal
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:first_scam_ai_value = flag:zeal_inverse }
+				add = {
+					value = ai_zeal
+					multiply = -1
+					max = 50
+				}
+			}
+			
+			if = {
+				limit = { scope:second_scam_ai_value = flag:boldness_direct }
+				add = {
+					value = ai_boldness
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:boldness_inverse }
+				add = {
+					value = ai_boldness
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:compassion_direct }
+				add = {
+					value = ai_compassion
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:compassion_inverse }
+				add = {
+					value = ai_compassion
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:energy_direct }
+				add = {
+					value = ai_energy
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:energy_inverse }
+				add = {
+					value = ai_energy
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:honor_direct }
+				add = {
+					value = ai_honor
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:honor_inverse }
+				add = {
+					value = ai_honor
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:rationality_direct }
+				add = {
+					value = ai_rationality
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:rationality_inverse }
+				add = {
+					value = ai_rationality
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:sociability_direct }
+				add = {
+					value = ai_sociability
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:sociability_inverse }
+				add = {
+					value = ai_sociability
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:vengefulness_direct }
+				add = {
+					value = ai_vengefulness
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:vengefulness_inverse }
+				add = {
+					value = ai_vengefulness
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:greed_direct }
+				add = {
+					value = ai_greed
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:greed_inverse }
+				add = {
+					value = ai_greed
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:zeal_direct }
+				add = {
+					value = ai_zeal
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:second_scam_ai_value = flag:zeal_inverse }
+				add = {
+					value = ai_zeal
+					multiply = -1
+					max = 50
+				}
+			}
+			
+			if = {
+				limit = { scope:third_scam_ai_value = flag:boldness_direct }
+				add = {
+					value = ai_boldness
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:boldness_inverse }
+				add = {
+					value = ai_boldness
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:compassion_direct }
+				add = {
+					value = ai_compassion
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:compassion_inverse }
+				add = {
+					value = ai_compassion
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:energy_direct }
+				add = {
+					value = ai_energy
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:energy_inverse }
+				add = {
+					value = ai_energy
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:honor_direct }
+				add = {
+					value = ai_honor
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:honor_inverse }
+				add = {
+					value = ai_honor
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:rationality_direct }
+				add = {
+					value = ai_rationality
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:rationality_inverse }
+				add = {
+					value = ai_rationality
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:sociability_direct }
+				add = {
+					value = ai_sociability
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:sociability_inverse }
+				add = {
+					value = ai_sociability
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:vengefulness_direct }
+				add = {
+					value = ai_vengefulness
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:vengefulness_inverse }
+				add = {
+					value = ai_vengefulness
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:greed_direct }
+				add = {
+					value = ai_greed
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:greed_inverse }
+				add = {
+					value = ai_greed
+					multiply = -1
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:zeal_direct }
+				add = {
+					value = ai_zeal
+					max = 50
+				}
+			}
+			else_if = {
+				limit = { scope:third_scam_ai_value = flag:zeal_inverse }
+				add = {
+					value = ai_zeal
+					multiply = -1
+					max = 50
+				}
+			}
+		}
+	}
+}
+
+scam_gold_payout_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:recipient }
+		add = {
+			value = scope:recipient.gold
+			multiply = {
+				value = scam_gold_payout_percentage_value
+				multiply = 0.01
+			}
+		}
+	}
+}
+
+scam_gold_payout_percentage_value = {
+	value = 10	# By default, a scam nets 10% of the victim's treasury
+	if = {	# If the victim is broke, you won't get anything
+		limit = { scope:recipient.gold < 0 }
+		multiply = 0
+	}
+	else = {
+		# Trusting victims are likely to get hustled out of more money
+		if = {
+			limit = { scope:recipient = { has_trait = trusting } }
+			add = 10
+		}
+		if = {
+			limit = { exists = local_var:scam_trait_matches }
+			# Every corresponding trait gives 10% more payout
+			add = {
+				value = 10
+				multiply = local_var:scam_trait_matches
+			}
+		}
+	}
+}

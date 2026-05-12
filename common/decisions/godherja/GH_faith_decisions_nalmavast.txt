@@ -1,0 +1,141 @@
+﻿##################
+# Restore Nalmavast Priesthood
+# by Deadr0x
+
+restore_nalmavast_priesthood_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds" }
+	desc = restore_nalmavast_priesthood_decision_desc
+	selection_tooltip = restore_nalmavast_priesthood_decision_tooltip
+	decision_group_type = major
+	ai_check_interval = 120
+
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		faith = {
+			this = faith:nalmavast
+			has_doctrine = special_doctrine_not_allowed_to_hof
+		}
+	}
+
+	is_valid = {
+		piety_level >= 4
+		custom_description = {
+			text = "restore_nalmavast_priesthood_decision_holy_sites"
+			faith = {
+				any_holy_site = {
+					county.holder = {
+						OR = {
+							this = root
+							any_liege_or_above = { this = root }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_independent_ruler = yes
+		is_at_war = no
+	}
+
+	widget = {
+		gui = "decision_view_widget_option_list_generic"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_REFORMATION_TYPE"
+		show_from_start = yes
+
+		item = { # Pluralist: Tradition
+			value = nalmavast_tradition
+			current_description = nalmavast_tradition_desc
+			localization = nalmavast_tradition
+			icon = "gfx/interface/icons/faith/mfi_bacchants.dds"
+			ai_chance = {
+				value = 10
+				add = ai_sociability
+				add = ai_compassion
+			}
+		}
+
+		item = { # Pluralist: Adaptive
+			value = nalmavast_pluralist
+			current_description = nalmavast_pluralist_desc
+			localization = nalmavast_pluralist
+			icon = "gfx/interface/icons/icon_culture.dds"
+			ai_chance = {
+				value = 100
+				add = ai_zeal
+			}
+		}
+
+		item = { # Righteous: Esotericism
+			value = nalmavast_righteous
+			current_description = nalmavast_righteous_desc
+			localization = nalmavast_righteous
+			icon = "gfx/interface/icons/trait_level_tracks/lifestyle_mystic.dds"
+			ai_chance = {
+				value = 100
+				add = { subtract = ai_rationality }
+			}
+		}
+
+		item = { # Fundementalist: Pursuit of Power
+			value = nalmavast_fundamentalist
+			current_description = nalmavast_fundamentalist_desc
+			localization = nalmavast_fundamentalist
+			icon = "gfx/interface/icons/struggle_types/struggle_iberia_phase_opportunity.dds"
+			ai_chance = {
+				value = 0
+				add = ai_zeal
+				add = ai_vengefulness
+				add = {
+					subtract = ai_sociability
+					subtract = ai_compassion
+				}
+			}
+		}
+	}
+
+	effect = {
+		trigger_event = gh_izikalek_events.0003
+		custom_tooltip = restore_nalmavast_priesthood_decision_tt
+		show_as_tooltip = {
+			root.faith = {
+				remove_doctrine = unreformed_faith_doctrine
+				remove_doctrine = special_doctrine_not_allowed_to_hof
+				if = {
+					limit = { scope:nalmavast_pluralist = yes }
+					restore_nalmavast_priesthood_decision_pluralist = yes
+				}
+				if = {
+					limit = { scope:nalmavast_righteous = yes }
+					restore_nalmavast_priesthood_decision_righteous = yes
+				}
+				if = {
+					limit = { scope:nalmavast_fundamentalist = yes }
+					restore_nalmavast_priesthood_decision_fundamentalist = yes
+				}
+			}
+		}
+	}
+
+	cost = {
+		gold = 300
+		piety = 1000
+	}
+	
+	ai_potential = {
+		faith = faith:nalmavast
+	}
+
+	ai_will_do = {
+		base = 100
+		modifier = {
+			factor = 0
+			has_trait = cynical
+		}
+	}
+}

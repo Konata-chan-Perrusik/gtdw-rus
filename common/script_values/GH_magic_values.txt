@@ -1,0 +1,658 @@
+﻿living_magi_trait_progress_threshold_base = 5
+dead_magi_trait_progress_threshold_base = 5
+magic_defense_from_magic_criminal = 25
+magic_defense_from_magic_shunned = 25
+magic_defense_from_antimagic_field = 40
+magic_defense_from_antimagic_field_2 = 30
+magic_defense_from_antimagic_field_3 = 20
+magic_defense_from_antimagic_field_4 = 10
+spell_casting_gh_elementalist_xp = 25
+
+##################
+# GENERATED MAGI #
+##################
+
+high_skill_court_magi_cost = {
+	value = medium_gold_value
+	if = {
+		limit = {
+			culture = { has_cultural_parameter = better_and_cheaper_magi_recruitment }
+		}
+		multiply = 0.5
+	}
+	if = {
+		limit = {
+			has_royal_court = yes
+			has_court_type = court_magic
+			court_grandeur_current_level >= 4
+		}
+		multiply = 0.7
+	}
+}
+
+low_skill_court_magi_cost = {
+	value = minor_gold_value
+	if = {
+		limit = {
+			culture = { has_cultural_parameter = better_and_cheaper_magi_recruitment }
+		}
+		multiply = 0.5
+	}
+	if = {
+		limit = {
+			has_royal_court = yes
+			has_court_type = court_magic
+			court_grandeur_current_level >= 4
+		}
+		multiply = 0.7
+	}
+}
+
+court_magi_character_female_chance_value = {
+	value = 50
+	if = {
+		limit = { root.faith = { has_doctrine = doctrine_gender_female_dominated } }
+		add = 50
+	}
+	else_if = {
+		limit = { root.faith = { has_doctrine = doctrine_gender_male_dominated } }
+		subtract = 50
+	}
+}
+
+#############################
+# DEAD MAGIC MUTATION VALUES#
+#############################
+
+dead_magi_trait_progress_1_value = {
+	value = 1
+}
+
+dead_magi_trait_progress_2_value = {
+	value = dead_magi_trait_progress_1_value
+	multiply = 2
+}
+
+dead_magi_trait_progress_3_value = {
+	value = dead_magi_trait_progress_1_value
+	multiply = 3
+}
+
+gedeora_sadist_resist_cost = {
+	value = 100
+	
+	subtract = { 
+		value = ai_compassion
+		multiply = 3
+	}
+	add = {
+		value = ai_vengefulness
+		multiply = 2
+	}
+	subtract = { 
+		value = ai_honor
+		divide = 2
+	}
+	max = 250
+	min = 0
+}
+
+ritual_scars_progress_threshold_first = 3
+ritual_scars_progress_threshold_second = 10
+ritual_scars_progress_threshold_third = 20
+
+dread_from_sacrifice = {
+	value = 0
+	
+	if = {
+		limit = { highest_held_title_tier = tier_barony }
+		add = 5
+	}
+	else_if = {
+		limit = { highest_held_title_tier = tier_county }
+		add = 10
+	}
+	else_if = {
+		limit = { highest_held_title_tier = tier_duchy }
+		add = 20
+	}
+	else_if = {
+		limit = { highest_held_title_tier = tier_kingdom }
+		add = 30
+	}
+	else_if = {
+		limit = { highest_held_title_tier = tier_empire }
+		add = 50
+	}
+}
+
+sacrifice_population_max_dev = {
+	value = development_level
+	subtract = 1
+	min = 0
+}
+
+sacrifice_population_county_min = {
+	value = 1
+	max = sacrifice_population_max_dev
+}
+
+sacrifice_population_county_mid = {
+	value = 0
+	add = development_level
+	multiply = 0.1
+	ceiling = yes
+	max = sacrifice_population_max_dev
+}
+
+sacrifice_population_county_major = {
+	value = sacrifice_population_county_mid
+	multiply = 2
+	max = sacrifice_population_max_dev
+}
+
+sacrifice_population_county_huge = {
+	value = sacrifice_population_county_mid
+	multiply = 3
+	max = sacrifice_population_max_dev
+}
+
+sacrifice_population_county_tyranny_min = {
+	value = sacrifice_population_county_min
+	multiply = 1.5
+}
+
+sacrifice_population_county_tyranny_mid = {
+	value = sacrifice_population_county_mid
+	multiply = 1.5
+}
+
+sacrifice_population_county_tyranny_major = {
+	value = sacrifice_population_county_major
+	multiply = 1.5
+}
+
+sacrifice_population_county_tyranny_huge = {
+	value = sacrifice_population_county_huge
+	multiply = 1.5
+}
+
+sacrifice_population_dev_malus_min = {
+	value = 0
+	subtract = sacrifice_population_county_min
+}
+
+sacrifice_population_dev_malus_mid = {
+	value = 0
+	subtract = sacrifice_population_county_mid
+}
+
+sacrifice_population_dev_malus_major = {
+	value = 0
+	subtract = sacrifice_population_county_major
+}
+
+sacrifice_population_dev_malus_huge = {
+	value = 0
+	subtract = sacrifice_population_county_huge
+}
+
+sacrifice_population_control_malus_min = {
+	value = 0
+	subtract = sacrifice_population_county_min
+	multiply = 2
+}
+
+sacrifice_population_control_malus_mid = {
+	value = 0
+	subtract = sacrifice_population_county_mid
+	multiply = 2
+}
+
+sacrifice_population_control_malus_major = {
+	value = 0
+	subtract = sacrifice_population_county_major
+	multiply = 2
+}
+
+sacrifice_population_control_malus_huge = {
+	value = 0
+	subtract = sacrifice_population_county_huge
+	multiply = 2
+}
+
+sacrifice_population_magic_multiplier = {
+	value = 35
+	if = {
+		limit = {
+			root.faith = {
+				has_doctrine = tenet_aeschraes_legacy
+			}
+		}
+		multiply = 1.2
+	}
+	if = {
+		limit = {
+			root = {
+				any_held_title = {
+					trigger_if = {
+						limit = { tier = tier_county }
+						any_county_province = {
+							OR = {
+								has_building = 01_thebloodyard
+								has_building = 02_thebloodyard
+							}
+						}
+					}
+					trigger_else = { always = no }
+				}
+			}
+		}
+		multiply = 2
+	}
+}
+
+sacrifice_population_magic_min = {
+	value = 1
+	max = sacrifice_population_max_dev
+	multiply = sacrifice_population_magic_multiplier
+}
+
+sacrifice_population_magic_mid = {
+	value = sacrifice_population_county_mid
+	multiply = sacrifice_population_magic_multiplier
+}
+
+sacrifice_population_magic_major = {
+	value = sacrifice_population_county_major
+	multiply = sacrifice_population_magic_multiplier
+}
+
+sacrifice_population_magic_huge = {
+	value = sacrifice_population_county_huge
+	multiply = sacrifice_population_magic_multiplier
+}
+
+sacrifice_population_piety_min = {
+	value = 1
+	max = sacrifice_population_max_dev
+	multiply = 15
+}
+
+sacrifice_population_piety_mid = {
+	value = sacrifice_population_county_mid
+	multiply = 15
+}
+
+sacrifice_population_piety_major = {
+	value = sacrifice_population_county_major
+	multiply = 15
+}
+
+sacrifice_population_piety_huge = {
+	value = sacrifice_population_county_huge
+	multiply = 15
+}
+
+living_magi_trait_progress_threshold = {
+	value = living_magi_trait_progress_threshold_base
+	if = {
+		limit = { has_variable = already_received_living_magic_trait }
+		add = var:already_received_living_magic_trait
+	}
+}
+
+dead_magi_trait_progress_threshold = {
+	value = dead_magi_trait_progress_threshold_base
+	if = {
+		limit = { has_variable = already_received_dead_magic_trait }
+		add = var:already_received_dead_magic_trait
+	}
+}
+
+#################
+# MAGIC SCHOOLS #
+#################
+
+culture_max_magic_schools_value = {
+	value = {
+		value = 2
+		desc = base_value_desc
+	}
+	if = {
+		limit = { has_cultural_era_or_later = culture_era_early_medieval }
+		add = {
+			value = 1
+			desc = era_early_medieval_value_desc
+		}
+	}
+	if = {
+		limit = { has_cultural_era_or_later = culture_era_high_medieval }
+		add = {
+			value = 1
+			desc = era_high_medieval_value_desc
+		}
+	}
+	if = {
+		limit = { has_cultural_era_or_later = culture_era_late_medieval }
+		add = {
+			value = 1
+			desc = era_late_medieval_value_desc
+		}
+	}
+}
+
+hybrid_culture_max_magic_schools_value = {
+	value = culture_max_magic_schools_value
+	if = {
+		limit = { 
+			exists = scope:other_culture
+			scope:other_culture.culture_max_magic_schools_value > culture_max_magic_schools_value
+		}
+		value = scope:other_culture.culture_max_magic_schools_value
+	}
+}
+
+culture_magic_school_magi_ratio_value = {
+	value = 0
+	add = var:mastery
+	divide = {
+		value = 0
+		scope:magic_school_culture_scope = {
+			every_in_list = {
+				variable = magic_school_list
+				add = var:mastery
+			}
+		}
+	}
+	multiply = 100
+}
+
+number_of_spells_from_magic_school_character_value = {
+	value = 0
+	if = {
+		limit = { save_temporary_scope_as = magic_school_being_checked_scope }
+	}
+	scope:character_being_checked_for_number_of_spells_from_school_scope = {
+		every_in_list = {
+			variable = known_spell_list
+			limit = {
+				exists = var:magic_school
+				var:magic_school = scope:magic_school_being_checked_scope
+			}
+			add = 1
+		}
+	}
+}
+
+# The chance that a generated character that is not explicitly a magi has some sort of magic education
+culture_magic_training_chance_value = {
+	value = 0
+	if = {
+		limit = { has_variable_list = magic_school_list }
+		every_in_list = {
+			variable = magic_school_list
+			add = var:mastery
+		}
+	}
+	
+}
+
+generated_character_min_spells_default_value = {
+	value = 3
+	if = {
+		limit = { 
+			exists = scope:magic_school_mastery_scope
+			scope:magic_school_mastery_scope.var:mastery > 3
+		}
+		value = scope:magic_school_mastery_scope.var:mastery
+	}
+}
+
+generated_character_max_spells_default_value = {
+	value = 5
+	if = {
+		limit = { 
+			exists = scope:magic_school_mastery_scope
+		}
+		add = scope:magic_school_mastery_scope.var:mastery
+	}
+}
+
+generated_character_max_spell_level_default_value = {
+	value = 4
+}
+
+court_magi_max_spell_level_default_value = {
+	value = 0
+	add = {
+		value = scope:councillor.character_arcana_baseline_value
+		multiply = 0.25
+	}
+	min = 1
+}
+
+character_maximum_magic_school_value = {
+	value = 1
+	if = {
+		limit = { has_trait_with_flag = can_learn_second_school }
+		add = 1
+	}
+}
+
+character_magic_school_num_value = {
+	value = 0
+	if = {
+		limit = { has_variable_list = known_magic_school_list }
+		every_in_list = {
+			variable = known_magic_school_list
+			add = 1
+		}
+	}	
+}
+
+##################
+# PROVINCE MAGIC #
+##################
+
+province_max_aspect_specializations_value = {
+	value = 0
+	add = province_max_aspect_specializations_building_value
+	add = province_max_aspect_specializations_modifier_value
+}
+
+################
+# CABAL VALUES #
+################
+
+#num_cabal_members = {
+#	value = num_of_relation_cabal_member
+#}
+#current_cabal_count = {
+#	value = num_of_relation_cabal_member
+#}
+#cabal_limit = {
+#	value = 3
+#	if = { limit = { highest_held_title_tier = tier_county } 	add = 1 }
+#	if = { limit = { highest_held_title_tier = tier_duchy } 	add = 2 }
+#	if = { limit = { highest_held_title_tier = tier_kingdom } 	add = 3 }
+#	if = { limit = { highest_held_title_tier = tier_empire } 	add = 4 }
+#}
+
+##########################
+#MAGIC COSTS (FOR EVENTS)#
+##########################
+
+minor_magic_value = 10
+small_magic_value = 25
+medium_magic_value = 50
+large_magic_value = 100
+huge_magic_value = 200
+
+
+minor_magic_cost = -10
+small_magic_cost = -25
+medium_magic_cost = -50
+large_magic_cost = -100
+huge_magic_cost = -200
+
+####################
+# COMPONENT VALUES #
+####################
+
+common_ingredient_cost = 25
+uncommon_ingredient_cost = 50
+rare_ingredient_cost = 100
+very_rare_ingredient_cost = 250
+
+########
+# MISC #
+########
+
+spell_effect_duration_override_value = {
+	value = scope:spell_effect.var:spell_effect_duration_override
+}
+
+character_creation_magic_customization_points_value = {
+	value = 0
+	every_in_list = {
+		variable = selected_spell_list
+		add = character_creation_magic_customization_points_per_spell_value
+	}
+	every_in_list = {
+		variable = selected_magic_school_list
+		add = character_creation_magic_customization_points_per_magic_school_value
+	}
+	add = ruler_designer_arcana_skill_value_cost
+	add = ruler_designer_total_aspect_skill_value_cost
+}
+
+character_creation_magic_customization_points_per_spell_value = {
+	value = spell_level_value
+	multiply = 10
+}
+
+character_creation_magic_customization_points_per_magic_school_value = 100
+
+#################
+# TODO : REMOVE #
+#################
+
+# I know that the formatting is not orthodox. It is formatted for easy readability and to conserve space. - Oddness
+
+# Returns a number which is equivalent to the Magi's magic_good_x trait.
+magi_potency = {
+	value = 0
+	if = { limit = { has_trait = magic_good_1  } add = 1  } 
+	if = { limit = { has_trait = magic_good_2  } add = 2  } 
+	if = { limit = { has_trait = magic_good_3  } add = 3  }
+	if = { limit = { has_trait = magic_good_4  } add = 4  } 
+	if = { limit = { has_trait = magic_good_5  } add = 5  } 
+	if = { limit = { has_trait = magic_good_6  } add = 6  }
+	if = { limit = { has_trait = magic_good_7  } add = 7  } 
+	if = { limit = { has_trait = magic_good_8  } add = 8  } 
+	if = { limit = { has_trait = magic_good_9  } add = 9  }
+	if = { limit = { has_trait = magic_good_10 } add = 10 } 
+	if = { limit = { has_trait = magic_good_11 } add = 11 } 
+	if = { limit = { has_trait = magic_good_12 } add = 12 }
+	if = { limit = { has_trait = magic_good_13 } add = 13 } 
+	if = { limit = { has_trait = magic_good_14 } add = 14 } 
+	if = { limit = { has_trait = magic_good_15 } add = 15 }
+	if = { limit = { has_trait = magic_good_16 } add = 16 } 
+	if = { limit = { has_trait = magic_good_17 } add = 17 } 
+	if = { limit = { has_trait = magic_good_18 } add = 18 }
+	if = { limit = { has_trait = magic_good_19 } add = 19 } 
+	if = { limit = { has_trait = magic_good_20 } add = 20 }
+}
+
+# Is this Magi talented with living magic? How talented with living magic is this Magi on a scale from 0-4?
+living_magic_education = {
+	value = 0
+	if = { limit = { blood_aspect_skill_trigger = { VALUE = 5 } } add = 1 }
+	if = { limit = { blood_aspect_skill_trigger = { VALUE = 10 } } add = 2 }
+	if = { limit = { blood_aspect_skill_trigger = { VALUE = 15 } } add = 3 }
+	if = { limit = { blood_aspect_skill_trigger = { VALUE = 20 } } add = 4 }
+}
+
+# Is this Magi talented with dead magic? How talented with dead magic is this Magi on a scale from 0-4?
+dead_magic_education = {
+	value = 0
+	if = { limit = { stone_aspect_skill_trigger = { VALUE = 5 } } add = 1 }
+	if = { limit = { stone_aspect_skill_trigger = { VALUE = 10 } } add = 2 }
+	if = { limit = { stone_aspect_skill_trigger = { VALUE = 15 } } add = 3 }
+	if = { limit = { stone_aspect_skill_trigger = { VALUE = 20 } } add = 4 }
+}
+
+# Is this Magi talented with mixed magic? How talented with mixed magic is this Magi on a scale from 0-4?
+mixed_magic_education = {
+	value = 0
+	if = { limit = { ethereal_aspect_skill_trigger = { VALUE = 5 } } add = 1 }  
+	if = { limit = { ethereal_aspect_skill_trigger = { VALUE = 10 } } add = 2 }
+	if = { limit = { ethereal_aspect_skill_trigger = { VALUE = 15 } } add = 3 }
+	if = { limit = { ethereal_aspect_skill_trigger = { VALUE = 20 } } add = 4 }
+}
+
+# How talented with any magic is this Magi on a scale from 0-4? (Value is equal to the highest of all disciplines)
+any_magic_education = {
+	value = 0
+	if = { limit = { OR = { living_magic_education = 1 dead_magic_education = 1 mixed_magic_education = 1 } } add = 1 }
+	if = { limit = { OR = { living_magic_education = 2 dead_magic_education = 2 mixed_magic_education = 2 } } add = 2 }
+	if = { limit = { OR = { living_magic_education = 3 dead_magic_education = 3 mixed_magic_education = 3 } } add = 3 }
+	if = { limit = { OR = { living_magic_education = 4 dead_magic_education = 4 mixed_magic_education = 4 } } add = 4 }
+}
+
+arcana_education = {
+	value = 0
+	if = { limit = { has_trait = education_arcana_1 } add = 1 }
+	if = { limit = { has_trait = education_arcana_2 } add = 2 }
+	if = { limit = { has_trait = education_arcana_3 } add = 3 }
+	if = { limit = { has_trait = education_arcana_4 } add = 4 }
+	if = { limit = { has_trait = education_arcana_5 } add = 5 }
+}
+
+# How talented with all magical disciplines is this Magi on a scale from 0-4? (Value is equal to the lowest of all disciplines)
+every_magic_education = {
+	value = 0
+	if = { limit = { arcana_education >= 4 } add = 4 }
+	if = { limit = { arcana_education >= 3  } add = 3 }
+	if = { limit = { arcana_education >= 2 } add = 2 }
+	if = { limit = { arcana_education >= 1 } add = 1 }
+}
+
+# How talented is this Magi on a scale from 0-12?
+total_magic_education = {
+	value = 0
+	add = living_magic_education
+	add = dead_magic_education
+	add = mixed_magic_education
+}
+
+# How brightly (0.0 to 1.0) should mutations glow if the spellcasting value of their relevant aspect is at or below mutation_glow_spellcasting_min_value?
+mutation_glow_strength_min_value = 0.275
+
+mutation_glow_strength_range_value = {
+	value = 1.0
+	subtract = mutation_glow_strength_min_value
+}
+
+# At which spellcasting value should glowing mutations start becoming brighter?
+mutation_glow_spellcasting_min_value = 10
+
+# At which spellcasting value should mutations reach their highest glow strength?
+mutation_glow_spellcasting_max_value = 30
+
+mutation_glow_spellcasting_range_value = {
+	value = mutation_glow_spellcasting_max_value
+	subtract = mutation_glow_spellcasting_min_value
+}
+
+# How brightly (0.0 to 1.0) do this Magi's mutations glow at the moment?
+mutation_glow_strength_value = {
+	value = strongest_aspect_on_first_glowing_mutation_value
+	min = mutation_glow_spellcasting_min_value
+	subtract = mutation_glow_spellcasting_min_value
+	divide = mutation_glow_spellcasting_range_value
+	multiply = mutation_glow_strength_range_value
+	add = mutation_glow_strength_min_value
+	max = 1.0
+}

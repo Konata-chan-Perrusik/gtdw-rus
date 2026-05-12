@@ -1,0 +1,151 @@
+﻿##################################################
+
+#	Magocracy Decisions List
+
+#	Magocratic Reformation - Reform into a magocracy
+
+##################################################
+
+#############################
+# Magocratic Reformation	#
+# by Hapchazzard			#
+#############################
+
+gh_magocratic_reformation_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	decision_group_type = realm
+
+	ai_check_interval = 120
+
+	desc = gh_magocratic_reformation_decision_desc
+	selection_tooltip = gh_magocratic_reformation_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		NOT = { government_has_flag = government_is_magocratic }
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Culture must have the appropriate parameter.
+		OR = {
+			culture = { has_cultural_parameter = magocracy_government_enabled }
+			capital_province = {
+				OR = {
+					has_building = 01_wizzhaod
+					has_building = 03_wizzhaod
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		#Must be independent.
+		is_independent_ruler = yes
+		#Must be a kingdom, at the very least
+		highest_held_title_tier >= tier_kingdom
+		#Should have a decent prestige level.
+		prestige_level >= high_prestige_level
+		#Must have the highest level crown authority.
+		has_realm_law = crown_authority_3
+		#Must be a Magi
+		can_access_magic = yes
+		#Every direct vassal must be a Magi themselves
+		NOT = {
+			any_vassal = {
+				highest_held_title_tier >= tier_county # For sanity sake
+				can_access_magic = no
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		is_at_war = no
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+	}
+
+	effect = {
+		change_government = magocratic_government
+		every_held_title = {
+			limit = { can_title_have_clique_law_trigger = yes }
+			add_title_law = magocratic_elective_title_succession_law
+		}
+		hidden_effect = {
+			every_vassal_or_below = {
+				limit = { 
+					highest_held_title_tier >= tier_county
+					OR = {
+						government_has_flag = government_is_feudal
+						government_has_flag = government_is_clan
+						government_has_flag = government_is_continental_clan
+					}
+				}
+				change_government = magocratic_government
+				if = {
+					limit = { has_realm_law = crown_authority_0 }
+					remove_realm_law = crown_authority_0
+					add_realm_law = clique_authority_0
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_1 }
+					remove_realm_law = crown_authority_1
+					add_realm_law = clique_authority_1
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_2 }
+					remove_realm_law = crown_authority_2
+					add_realm_law = clique_authority_2
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_3 }
+					remove_realm_law = crown_authority_3
+					add_realm_law = clique_authority_3
+				}
+				every_held_title = {
+					limit = { can_title_have_clique_law_trigger = yes }
+					add_title_law = magocratic_elective_title_succession_law
+				}
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_0 }
+				remove_realm_law = crown_authority_0
+				add_realm_law = clique_authority_0
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_1 }
+				remove_realm_law = crown_authority_1
+				add_realm_law = clique_authority_1
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_2 }
+				remove_realm_law = crown_authority_2
+				add_realm_law = clique_authority_2
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_3 }
+				remove_realm_law = crown_authority_3
+				add_realm_law = clique_authority_3
+			}
+		}
+	}
+
+	cost = {
+		gold = 500
+		prestige = 1000
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 20
+	}
+}

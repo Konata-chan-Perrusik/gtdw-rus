@@ -1,0 +1,80 @@
+﻿#######################
+# RITUAL UI BY PANZER #
+#######################
+
+window = {
+	name = "magic_view"
+	size = { 100% 60% }
+	parentanchor = center
+	movable = no
+	layer = top
+	
+	visible = "[GetVariableSystem.Exists('show_magic_window')]"
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Standard
+		using = Sound_WindowShow_Standard
+		using =	Sound_Window_AmbienceMute_Snapshot
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Standard
+		using = Sound_WindowHide_Standard
+	}
+
+	widget = {
+		size = { 100% 100% }
+
+		vbox = {
+			using = Window_Margins
+			spacing = 5
+			max_width = 450
+			margin = { 40 30 }
+
+			widget = {
+				name = "header_bar"
+				layoutpolicy_horizontal = expanding
+				size = { 0 85 }
+
+				background = {
+					texture = "gfx/interface/component_tiles/tile_background_window_header.dds"
+					spriteType = Corneredtiled
+					spriteborder = { 20 20 }
+					margin = { 12 0 }
+					alpha = .75
+				}
+			}
+
+			widget = {
+				name = "description"
+				layoutpolicy_vertical = expanding
+				layoutpolicy_horizontal = expanding
+
+				alpha = 0
+				state = {
+					name = appear
+					trigger_on_create = yes
+					delay = 0.2
+					using = Animation_Curve_Default
+					alpha = 1
+					duration = 1.5
+				}
+			}
+
+			divider_light = {
+				layoutpolicy_horizontal = expanding
+				alpha = 0.8
+			}
+
+			button_event_standard = {
+				name = "magic_window_close_button"
+				size = { 450 42 }
+
+				raw_text = "The die is cast..."
+				onclick = "[GetVariableSystem.Toggle( 'show_magic_window')]"
+			}
+		}
+	}
+}

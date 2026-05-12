@@ -1,0 +1,52 @@
+﻿story_cycle_fog_spread = {
+	on_setup = {
+
+	}
+
+	on_end = {
+		debug_log = "Fog stalled on:"
+		debug_log_date = yes
+	}
+
+	on_owner_death = {
+		random_county_in_region = {
+			region = GH_geographic_foglands
+			holder = { scope:story = { make_story_owner = prev } }
+		}
+	}
+
+	effect_group = {
+		days = 120
+
+		trigger = { # We want this to fire for any rule except for disabled
+			NOT = { has_game_rule = fog_speed_disabled }
+		}
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				scope:story_owner = { trigger_event = { id = gh_fog_spread_events.1 } }
+				every_ruler = {
+					limit = {
+						highest_held_title_tier >= tier_county
+						OR = {
+							is_fogeater = yes
+							any_sub_realm_county = {
+								OR = {
+									has_county_modifier = fogswept_modifier
+									culture = culture:fog_eaters
+									faith = faith:fogeater
+								}
+							}
+						}
+					}
+					if = {
+						limit = { is_fogeater = yes }
+						trigger_event = gh_fog_spread_events.5
+					}
+					else = { trigger_event = gh_fog_spread_events.6 }
+				}
+			}
+		}
+	}
+}

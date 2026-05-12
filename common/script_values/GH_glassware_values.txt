@@ -1,0 +1,32 @@
+﻿glassware_inspiration_average_skill_value = { # Glassware Inspiration Owner skill average
+	value = learning
+	multiply = 2
+	add = {
+		value = stewardship
+		multiply = 1.5
+	}
+	add = {
+		value = "has_trait_xp(gh_lifestyle_glassmith)"
+		divide = 2
+	}
+	divide = 4
+}
+
+glassware_inspiration_difficulty_easy_value = 25 # Novice glassmith threshold
+
+glassware_inspiration_difficulty_medium_value = 50 # Amateur glassmith threshold
+
+glassware_inspiration_difficulty_hard_value = 75 # Master glassmith threshold
+
+glassmith_inspiration_experience_gain = { # Glassmith trait xp gain
+	value = scope:quality
+	multiply = scope:quality
+	multiply = 0.0015
+	round = yes
+	add = 5
+	if = { # Making Glassware Artifact types below one's skill level is less rewarding
+		limit = { glassware_inspiration_difficulty_below_check = yes }
+		max = 10
+	}
+	else = { max = 20 }
+}

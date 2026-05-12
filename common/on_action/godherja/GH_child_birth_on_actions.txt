@@ -1,0 +1,58 @@
+﻿GH_on_birth_child = {
+	on_actions = {
+		nickname_preparation_on_birth_child
+	}
+	effect = {
+		if = {
+			limit = {
+				scope:mother = {
+					has_variable = carrying_gedeora_child
+				}
+			}
+			gedeora_child_on_birth_effect = yes
+			GH_blacksheep_check = yes
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { 
+					scope:mother = {
+						has_variable = carrying_powerful_magi_child
+					}
+				}
+				powerful_magi_generator_effect = yes
+				add_character_flag = potent_magi
+			}
+			else = {
+				powerful_magi_reducer_effect = yes
+			}
+			if = {
+				limit = {
+					AND = {
+						exists = scope:real_father
+						exists = scope:mother
+						scope:real_father.culture = { has_cultural_parameter = marriages_with_purity_of_blood_cultures_yield_better_magic }
+						scope:mother.culture = { has_cultural_parameter = marriages_with_purity_of_blood_cultures_yield_better_magic }
+						scope:real_father = { has_trait = magic_good }
+						scope:mother = { has_trait = magic_good }
+					}
+				}
+				random = {
+					chance = 50
+					change_trait_rank = {
+						trait = magic_good
+						rank = 1
+					}
+				}
+			}
+			set_variable = {
+				name = arcana_character_random_baseline
+				value = { 0 5 } # lower value for babies
+			}
+			set_variable = {
+				name = arcana_character_counter
+				value = character_arcana_baseline_value
+			}
+		}
+	}
+}

@@ -1,0 +1,605 @@
+﻿#should_be_magi_succession_trigger = {
+#	culture = {
+#		has_cultural_parameter = same_faith_inheritance_only
+#	}
+#	NOR = {
+#		government_has_flag = government_is_theocracy # Handled separately
+#		government_has_flag = government_is_holy_order # Handled separately
+#		government_has_flag = government_is_mercenary # Irrelevant
+#	}
+#}
+
+#####################
+## IsCulture Triggers
+
+is_sjalvolki_culture_trigger = { culture = { has_cultural_pillar = heritage_sjalvolki } }
+is_north_sjalvolki_culture_trigger = { is_north_sjalvolki = yes }
+
+culture_has_earthenware_pottery_trigger = { # For 00_artifact_triggers
+	culture = { has_cultural_pillar = heritage_aversarian }
+}
+culture_has_stone_pottery_trigger = { # For 00_artifact_triggers
+	#culture = { has_cultural_pillar = heritage_chinese }
+	always = no
+}
+culture_has_porcelain_pottery_trigger = { # For 00_artifact_triggers
+	culture = { has_cultural_pillar = heritage_easterner }
+}
+
+is_north_sjalvolki = {
+	trigger_if = {
+		limit = { culture = { has_cultural_pillar = heritage_sjalvolki } }
+		culture = {
+			OR = {
+				has_cultural_tradition = tradition_warriors_of_velos
+
+				any_parent_culture_or_above = { this = culture:fenvir }
+ 				any_parent_culture_or_above = { this = culture:irmionoth }
+ 				any_parent_culture_or_above = { this = culture:mastikigni }
+ 				any_parent_culture_or_above = { this = culture:vrodkin }
+ 				any_parent_culture_or_above = { this = culture:warisnik }
+ 				any_parent_culture_or_above = { this = culture:curgerski }
+			}
+		}
+	}
+}
+
+########################
+## IsAnyCulture Triggers
+
+###############
+## Chevalien ##
+###############
+
+## Merit System ##
+
+# Merit too low, Chevalie will collapse
+chevalie_will_shatter = {
+	AND = {
+		has_title = title:e_chevalie
+		OR = {
+			NOR = {
+				primary_heir = { is_child_of = prev }
+				primary_heir = { is_grandchild_of = prev }
+				primary_heir = { is_great_grandchild_of = prev }
+			}
+			NOT = {
+				primary_heir = {
+					character_merit_value >= 30
+				}
+			}
+			NOT = {
+				primary_heir = {
+					character_merit_value >= merit_threshold_value
+				}
+			}
+		}
+	}
+}
+
+#############
+## Damotan ##
+#############
+
+## Lodge System ##
+
+# Increase Lodge Power
+increase_caste_power_trigger = {
+	custom_description = {
+		text = caste_must_not_be_on_cooldown_trigger
+		NOT = { has_variable = caste_change_cooldown }
+	}
+	trigger_if = {
+		limit = { has_variable = combined_faction_powershare }
+		var:combined_faction_powershare < 4
+	}
+}
+
+# Decrease Lodge Power
+decrease_caste_power_trigger = {
+	custom_description = {
+		text = caste_must_not_be_on_cooldown_trigger
+		NOT = { has_variable = caste_change_cooldown }
+	}
+	OR = {
+		has_variable = $NAME$_power_1
+		has_variable = $NAME$_power_2
+		has_variable = $NAME$_power_3
+		has_variable = $NAME$_power_4
+	}
+}
+
+################
+## Sarminians ##
+################
+
+# Trait eligibility criteria
+eligible_for_gh_steppe_queenhood = {
+	culture = { has_cultural_parameter = steppe_queens_revered }
+	is_female = yes
+	NOR = {
+		has_character_modifier = seared_outcast_modifier
+		has_character_modifier = toxic_lye_modifier
+	}
+}
+
+#################
+## Culture Groups
+
+GH_sarradonian_culture_trigger = {
+	OR = {
+		GH_western_sarradonian_culture_trigger = yes
+		culture = { has_cultural_pillar = heritage_sarradonian }
+		culture = { has_cultural_pillar = heritage_kosharan }
+		culture = { has_cultural_pillar = heritage_dezhunic }
+		culture = { has_cultural_pillar = heritage_marmaladid }
+		culture = { has_cultural_pillar = heritage_damotan }
+	}
+}
+
+GH_gisreddean_culture_trigger = {
+	AND = {
+		culture = { has_cultural_pillar = heritage_marcher }
+		culture = culture:gisreddean
+	}
+}
+
+GH_western_sarradonian_culture_trigger = {
+	OR = {
+		culture = { has_cultural_pillar = heritage_kemsari }
+		culture = { has_cultural_pillar = heritage_zarasadari }
+		culture = { has_cultural_pillar = heritage_saradari }
+	}
+}
+
+GH_ojyczaynz_culture_no_liches_trigger = {
+	AND = {
+		culture = { has_cultural_pillar = heritage_ojyczaynz }
+		NOT = { culture = culture:lich_culture }
+	}
+}
+
+GH_marcher_culture_trigger = {
+	OR = {
+		culture = { has_cultural_pillar = heritage_marcher }
+		culture = { has_cultural_pillar = heritage_konijkmener }
+		GH_ojyczaynz_culture_no_liches_trigger = yes
+		culture = culture:etrandanexi
+	}
+}
+
+GH_imperial_culture_trigger = {
+	OR = {
+		culture = { has_cultural_pillar = heritage_aversarian }
+		culture = culture:etrandanexi
+	}
+}
+
+GH_cult_culture_trigger = { # For groups that should not act like standard medieval cultures - See: GH_cult_faith_trigger
+	OR = {
+		culture = { has_cultural_pillar = heritage_redlander }
+		culture = { has_cultural_pillar = heritage_fog_eaters }
+		culture = { has_cultural_pillar = heritage_partic }
+		culture = culture:lich_culture
+	}
+}
+
+GH_extinct_culture_trigger = {
+	OR = {
+		culture = { has_cultural_pillar = heritage_aelfir }
+		culture = { has_cultural_pillar = heritage_gh_dragon }
+	}
+}
+
+GH_underground_culture_trigger = {
+	OR = {
+		culture = { has_cultural_pillar = heritage_cavetribe }
+		culture = { has_cultural_pillar = heritage_dergi }
+	}
+}
+
+GH_no_writing_culture_trigger = {
+	OR = {
+		has_cultural_pillar = heritage_wasteland
+		has_cultural_pillar = heritage_fog_eaters
+		has_cultural_pillar = heritage_iyrossi # GH TODO: Make Iyrossi not applicable if the Aversarians are beat
+	}
+}
+
+### TO ADD ###
+
+GH_longbow_culture_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_west_germanic
+	#	has_cultural_pillar = heritage_brythonic
+	#	has_cultural_pillar = heritage_goidelic
+	#}
+	always = no
+}
+
+has_longbows_trigger = { # For portrait_should_wield_longbow_trigger in 00_artifact_triggers
+	has_cultural_tradition = tradition_longbow_competitions
+}
+
+GH_adventurer_culture_trigger = {
+	OR = {
+		GH_germanic_culture_trigger = yes
+		GH_marcher_culture_trigger = yes
+	}
+}
+GH_composite_bow_culture_trigger = {
+	always = no
+	# For set_bow_artifact_type_effect
+}
+GH_calligraphic_art_trigger = {
+	always = no
+}
+
+GH_has_beard_religion_trigger = { # For Islam-like religions that encourage beards
+	always = no
+}
+
+GH_culture_specializes_in_skirmisher_maa = { # Culture has a predisposition towards skirmishers (GH-specific)
+	OR = {
+		has_cultural_tradition = tradition_scarred_warriors_of_forest
+		has_cultural_tradition = tradition_dayarkan_warrior_queens
+		has_cultural_tradition = tradition_flame_children
+		has_cultural_tradition = tradition_axe_master
+		has_cultural_tradition = tradition_tenacious_herdmasters
+		has_cultural_tradition = tradition_branded_battlemasters
+		has_innovation = innovation_berserkers
+		has_innovation = innovation_moonkin
+		has_innovation = innovation_wodes
+		has_innovation = innovation_bloodbound
+		has_innovation = innovation_mountainstrikers
+		has_innovation = innovation_thrill_of_the_hunt
+		has_innovation = innovation_waranuux_spearmen
+		has_innovation = innovation_advanced_waranuux
+		has_innovation = innovation_retreat_tactics
+	}
+}
+
+GH_culture_shuns_skirmisher_maa = { # Culture dislikes skirmishers
+	GH_culture_specializes_in_skirmisher_maa = no
+	OR = {
+		has_cultural_pillar = heritage_aversarian # Provide reason
+		has_cultural_pillar = heritage_marcher # Provide reason
+		has_cultural_tradition = tradition_painted_men # Provide reason
+		has_cultural_era_or_later = culture_era_late_medieval # General technological development
+	}
+}
+
+GH_culture_specializes_in_archer_maa = { # Culture has a predisposition towards archers (GH-specific)
+	OR = {
+		has_cultural_tradition = tradition_eagle_court
+		has_innovation = innovation_thumb_rings
+		has_innovation = innovation_winged_shields
+		has_innovation = innovation_the_bloodied
+		has_innovation = innovation_grove_guardians
+		has_innovation = innovation_jerniems_rangers
+		has_innovation = innovation_adabyss
+		has_innovation = innovation_observant
+		has_innovation = innovation_rayakuux_archers
+		has_innovation = innovation_advanced_rayakuux
+	}
+}
+
+GH_culture_shuns_archer_maa = { # Culture dislikes archers
+	culture_specializes_in_archer_maa = no
+	OR = {
+		has_cultural_pillar = heritage_aversarian # Provide reason
+		has_cultural_pillar = heritage_marcher # Provide reason
+		has_cultural_tradition = tradition_kherkeloi_war_codes # Kherkeloi Geneva Convention limits archery
+	}
+}
+
+GH_culture_specializes_in_pikemen_maa = { # Culture has a predisposition towards pikemen (GH-specific)
+	OR = {
+		has_cultural_tradition = tradition_kherkeloi_war_codes
+		has_innovation = innovation_golden_spears
+		has_innovation = innovation_konijkmener_pikes
+		has_innovation = innovation_pure_pikes
+		has_innovation = innovation_jokhosani
+		has_innovation = innovation_kaphral
+		has_innovation = innovation_rearka_training
+		has_innovation = innovation_crimson_spears
+		has_innovation = innovation_molten_vanguard
+	}
+}
+
+GH_culture_specializes_in_heavy_infantry_maa = { # Culture has a predisposition towards heavy infantry (GH-specific)
+	OR = {
+		has_cultural_pillar = heritage_aversarian
+		has_cultural_pillar = heritage_marcher
+		has_cultural_tradition = tradition_armazli_sanctuaries
+		has_cultural_tradition = tradition_azakna_zagsa
+		has_cultural_tradition = tradition_inscribed_triumphs
+		has_cultural_tradition = tradition_frontier_warriors
+		has_cultural_tradition = tradition_mubaaizun
+		has_cultural_tradition = tradition_amaghean_lions
+		has_cultural_tradition = tradition_visvasavrak_guardians
+		has_innovation = innovation_aversarian_legionaires
+		has_innovation = innovation_home_legions
+		has_innovation = innovation_north_shields
+		has_innovation = innovation_stoneforged
+		has_innovation = innovation_huegodoc_legion
+		has_innovation = innovation_talabhau
+		has_innovation = innovation_fiber_plates
+		has_innovation = innovation_sarradon_imitation_legion
+		has_innovation = innovation_enlevett
+		has_innovation = innovation_sword_oaths
+	}
+}
+
+GH_culture_shuns_heavy_infantry_maa = { # Culture dislikes heavy infantry
+	GH_culture_specializes_in_heavy_infantry_maa = no
+	OR = {
+		has_cultural_pillar = heritage_kardwen # Does not facilitate biting attacks
+		has_cultural_pillar = heritage_narodlek # Cant run away from the Sarminians in all that armor
+		has_cultural_pillar = heritage_sarminian # Cant chase down the Leki in all that armor
+		has_cultural_pillar = heritage_tlakalak # Dont really do armor, at least for now
+		has_oltenic_heritage_pillar_trigger = yes # "A man on a horse..." quote
+	}
+}
+
+GH_culture_shuns_pikemen_maa = { # Culture dislikes pikemen
+	culture_specializes_in_pikemen_maa = no
+	OR = {
+		has_cultural_pillar = heritage_agadari # Naval engagements and piracy do not facilitate pike combat
+		has_cultural_pillar = heritage_tlakalak # Prefer swords and clubs
+		has_cultural_pillar = heritage_urkarith # Prefer fluid combat styles
+		has_cultural_pillar = heritage_kemsari # Not much use for spearmen in the desert
+	}
+}
+
+GH_culture_specializes_in_light_cavalry_maa = { # Culture has a predisposition towards light cavalry (GH-specific)
+	OR = {
+		has_cultural_tradition = tradition_lords_of_aironoi
+		has_cultural_tradition = tradition_kolrgii_tamers
+		has_cultural_tradition = tradition_kaegan_wind
+		has_innovation = innovation_prophets_sons
+		has_innovation = innovation_brother_riders
+		has_innovation = innovation_legion_outriders
+		has_innovation = innovation_duneriders
+		has_innovation = innovation_mezzarb_domestication
+	}
+}
+
+GH_culture_shuns_light_cavalry_maa = { # Culture dislikes light cavalry
+	culture_specializes_in_light_cavalry_maa = no
+	OR = {
+		has_cultural_pillar = heritage_iyrossi # Provide reason
+		has_cultural_pillar = heritage_aversarian # Provide reason
+		has_cultural_pillar = heritage_konijkmener # Horses are bad in swamps
+		has_cultural_pillar = heritage_oghainos # Island-based
+		has_cultural_pillar = heritage_anandrasi # Island-based
+		has_cultural_pillar = heritage_daidenos # Island-based
+		has_cultural_pillar = heritage_skoronyk # Island-based
+		has_cultural_pillar = heritage_guillater # Island-based
+		has_cultural_pillar = heritage_shamrania # Island-based
+		has_cultural_pillar = heritage_kelthiunai # Island-based
+		has_cultural_pillar = heritage_afoseniai # Island-based
+		has_cultural_pillar = heritage_iseni # Island-based
+		has_cultural_pillar = heritage_agadari # Island-based
+	}
+}
+
+GH_culture_specializes_in_heavy_cavalry_maa = { # Culture has a predisposition towards heavy cavalry (GH-specific)
+	OR = {
+		has_cultural_pillar = heritage_aversarian
+		has_cultural_pillar = heritage_aversarian
+		has_innovation = innovation_eastern_cav
+		has_innovation = innovation_grave_wardens
+		has_innovation = innovation_marcher_knights
+		has_innovation = innovation_sunstriders
+	}
+}
+
+GH_culture_shuns_heavy_cavalry_maa = { # Culture dislikes heavy cavalry
+	culture_specializes_in_heavy_cavalry_maa = no
+	OR = {
+		has_cultural_pillar = heritage_kardwen # Does not facilitate biting attacks
+		has_cultural_pillar = heritage_iyrossi # Provide reason
+		has_cultural_pillar = heritage_konijkmener # Horses are bad in swamps
+		has_cultural_pillar = heritage_oghainos # Island-based
+		has_cultural_pillar = heritage_anandrasi # Island-based
+		has_cultural_pillar = heritage_daidenos # Island-based
+		has_cultural_pillar = heritage_skoronyk # Island-based
+		has_cultural_pillar = heritage_guillater # Island-based
+		has_cultural_pillar = heritage_shamrania # Island-based
+		has_cultural_pillar = heritage_kelthiunai # Island-based
+		has_cultural_pillar = heritage_afoseniai # Island-based
+		has_cultural_pillar = heritage_iseni # Island-based
+		has_cultural_pillar = heritage_agadari # Island-based
+	}
+}
+
+GH_foot_competition_preference_culture_trigger = {
+	OR = {
+		has_cultural_pillar = heritage_abadelos # Kasiryan Olympics enjoyers
+	}
+	always = no
+}
+
+GH_archery_competition_preference_culture_trigger = {
+	OR = {
+		has_cultural_pillar = heritage_sarminian
+		has_cultural_pillar = heritage_vhanavid
+		has_cultural_pillar = heritage_kikarsag
+		has_cultural_pillar = heritage_khokhuud
+		has_cultural_pillar = heritage_xajirkel
+	}
+}
+
+GH_recital_competition_preference_culture_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_brythonic
+	#	has_cultural_pillar = heritage_goidelic
+	#	has_cultural_pillar = heritage_latin
+	#}
+	always = no
+}
+
+GH_jousting_competition_preference_culture_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_frankish
+	#	has_cultural_pillar = heritage_west_germanic
+	#	has_cultural_pillar = heritage_central_germanic
+	#}
+	always = no
+}
+
+GH_wrestling_competition_preference_culture_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_akan
+	#	has_cultural_pillar = heritage_arabic
+	#	has_cultural_pillar = heritage_balto_finnic
+	#	has_cultural_pillar = heritage_berber
+	#	has_cultural_pillar = heritage_burman
+	#	has_cultural_pillar = heritage_central_african
+	#	has_cultural_pillar = heritage_dravidian
+	#	has_cultural_pillar = heritage_east_african
+	#	has_cultural_pillar = heritage_east_slavic
+	#	has_cultural_pillar = heritage_goidelic
+	#	has_cultural_pillar = heritage_west_african
+	#	has_cultural_pillar = heritage_indo_aryan
+	#	has_cultural_pillar = heritage_yoruba
+	#	has_cultural_pillar = heritage_north_germanic
+	#	has_cultural_pillar = heritage_sahelian
+	#	has_cultural_pillar = heritage_senegambian
+	#	has_cultural_pillar = heritage_ugro_permian
+	#	has_cultural_pillar = heritage_west_slavic
+	#}
+	always = no
+}
+
+GH_high_wrestling_competition_preference_culture_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_burman
+	#	has_cultural_pillar = heritage_iranian
+	#	has_cultural_pillar = heritage_mongolic
+	#}
+	always = no
+}
+
+GH_horse_race_competition_preference_culture_trigger = {
+	OR = {
+		has_cultural_pillar = heritage_sarminian
+		has_cultural_pillar = heritage_vhanavid
+		has_cultural_pillar = heritage_kikarsag
+		has_cultural_pillar = heritage_khokhuud
+		has_cultural_pillar = heritage_xajirkel
+	}
+}
+
+GH_has_university_building_trigger = {
+	OR = {
+		has_building_or_higher = generic_university
+		has_building_or_higher = gh_university_01
+		has_building_or_higher = 01_mayikprolollan
+		has_building_or_higher = 01_academyofswords
+		has_building_or_higher = 01_portacademy
+		has_building_or_higher = 02_aironoiakaan
+		has_building_or_higher = 01_universityofgiherehalwajaf
+		has_building_or_higher = 02_benoriya_atawek
+		has_building_or_higher = 01_harekana_observatory
+		has_building_or_higher = 01_candamarun_academy
+		has_building_or_higher = 07_ashmarite_hospital
+		has_building_or_higher = 02_halite_temple
+		has_building_or_higher = 03_wizzhaod
+	}
+}
+
+GH_culture_uses_frequent_winter_transportation_trigger = { has_cultural_pillar = heritage_sjalvolki }
+
+GH_culture_native_trepanning_trigger = {
+	always = no
+}
+
+culture_likes_poets_trigger = {
+	always = no
+}
+
+culture_are_desert_nomads_trigger = { has_cultural_tradition = tradition_desert_nomads }
+
+culture_likes_sailing = { # GH TODO: Add our own stuff here
+	OR = {
+		has_cultural_tradition = tradition_seafaring
+		has_cultural_tradition = tradition_fishermen
+		has_cultural_tradition = tradition_maritime_mercantilism
+		has_cultural_tradition = tradition_islander
+		has_cultural_tradition = tradition_painted_burghers #GH ADDITION
+		has_cultural_tradition = tradition_starbound_sojourners #GH ADDITION
+	}
+}
+
+culture_has_chivalric_traditions_trigger = { # GH: This is for travel_events.1201
+	OR = {
+		has_cultural_tradition = tradition_chivalry
+		has_cultural_pillar = heritage_marcher
+	}
+}
+
+culture_knows_winter = { has_cultural_tradition = tradition_winter_warriors } # GH TODO: Add our own stuff here
+
+culture_is_pacifistic_trigger = { has_cultural_tradition = tradition_pacifism }
+
+culture_has_martial_tradition_trigger = {
+	OR = {
+		has_cultural_tradition = tradition_pacifism
+		has_cultural_tradition = tradition_winter_warriors
+		has_cultural_tradition = tradition_forest_fighters
+		has_cultural_tradition = tradition_mountaineers
+		has_cultural_tradition = tradition_warriors_of_the_dry
+		has_cultural_tradition = tradition_highland_warriors
+		has_cultural_tradition = tradition_jungle_warriors
+		has_cultural_tradition = tradition_quarrelsome
+		has_cultural_tradition = tradition_malleable_invaders
+		has_cultural_tradition = tradition_hunters
+		has_cultural_tradition = tradition_warrior_culture
+		has_cultural_tradition = tradition_martial_admiration
+		has_cultural_pillar = ethos_bellicose
+	}
+}
+
+culture_likes_hunting_trigger = {
+	OR = {
+		has_cultural_tradition = tradition_hunters
+		has_cultural_tradition = tradition_sacred_hunts
+	}
+}
+
+culture_is_vegetarian_trigger = { has_cultural_tradition = tradition_vegetarianism }
+
+##########################
+# Special tradition combos
+# For special versions of generic traditions to be triggered alongside one another
+
+has_any_storytellers_cultural_tradition_trigger = {
+	OR = {
+		has_cultural_tradition = tradition_storytellers
+		has_cultural_tradition = tradition_fp1_northern_stories
+		has_cultural_tradition = tradition_proud_history
+	}
+}
+
+has_any_poetry_cultural_tradition_trigger = {
+	OR = {
+		has_cultural_tradition = tradition_poetry
+		has_cultural_tradition = tradition_fp1_northern_stories
+	}
+}
+
+has_any_warrior_culture_tradition_trigger = { has_cultural_tradition = tradition_warrior_culture }
+
+has_any_martial_admiration_culture_tradition_trigger = {
+	OR = {
+		has_cultural_tradition = tradition_martial_admiration
+		has_cultural_tradition = tradition_pacifism
+		has_cultural_tradition = tradition_futuwaa
+		has_cultural_tradition = tradition_druzhina
+		has_cultural_tradition = tradition_chanson_de_geste
+	}
+}
+
+culture_has_any_martial_admiration_equivalent_trigger = { always = no } # For cultures with a special version of tradition_martial_admiration

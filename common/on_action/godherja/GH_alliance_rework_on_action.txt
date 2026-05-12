@@ -1,0 +1,212 @@
+﻿on_war_started = {
+	on_actions = {
+		gh_alliance_system_on_war_started
+	}
+}
+
+gh_alliance_system_on_war_started = {
+	trigger = {
+		scope:attacker = {
+			has_opinion_modifier = {
+				target = scope:defender
+				modifier = marriage_truce_opinion
+			}
+		}
+	}
+	effect = {
+		scope:attacker = {
+			cancel_truce_both_ways = scope:defender
+			remove_opinion = {
+				target = scope:defender
+				modifier = marriage_truce_opinion
+			}
+		}
+		scope:defender = {
+			remove_opinion = {
+				target = scope:attacker
+				modifier = marriage_truce_opinion
+			}
+		}
+	}
+}
+
+on_alliance_removed = {
+	on_actions = {
+		gh_alliance_system_on_alliance_removed
+	}
+}
+
+gh_alliance_system_on_alliance_removed = {
+	trigger = {
+		OR = {
+			AND = {
+				scope:first = {
+					is_alive = yes
+					is_target_in_variable_list = {
+						name = defensive_alliance_character_list
+						target = scope:second
+					}
+				}
+			}
+			AND = {
+				scope:second = {
+					is_alive = yes
+					is_target_in_variable_list = {
+						name = defensive_alliance_character_list
+						target = scope:first
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		if = {
+			limit = { scope:first = { is_alive = yes } }
+			scope:first = {
+				remove_list_variable = {
+					name = defensive_alliance_character_list
+					target = scope:second
+				}
+			}
+		}
+		if = {
+			limit = { scope:second = { is_alive = yes } }
+			scope:second = {
+				remove_list_variable = {
+					name = defensive_alliance_character_list
+					target = scope:first
+				}
+			}
+		}
+	}
+}
+
+on_alliance_broken = {
+	on_actions = {
+		gh_alliance_system_on_alliance_broken
+	}
+}
+
+gh_alliance_system_on_alliance_broken = {
+	trigger = {
+		has_game_rule = godherja_alliance_default
+		scope:first = {
+			is_target_in_variable_list = {
+				name = defensive_alliance_character_list
+				target = scope:second
+			}
+		}
+	}
+	effect = {
+		scope:first = {
+			remove_list_variable = {
+				name = defensive_alliance_character_list
+				target = scope:second
+			}
+		}
+		scope:second = {
+			remove_list_variable = {
+				name = defensive_alliance_character_list
+				target = scope:first
+			}
+		}
+	}
+}
+
+on_divorce = {
+	on_actions = {
+		gh_alliance_system_on_divorce
+	}
+}
+
+
+gh_alliance_system_on_divorce = {
+	trigger = { has_game_rule = godherja_alliance_default }
+	effect = {
+		if = {
+			limit = { any_truce_target = { exists = yes } }
+			every_truce_target = {
+				limit = {
+					#Check if special truce comes from spouse's family
+					OR = {
+						is_close_family_of = scope:spouse
+						is_grandparent_of = scope:spouse
+						is_uncle_or_aunt_of = scope:spouse
+						is_nibling_of = scope:spouse
+					}
+					gh_has_marriage_truce_trigger = { CHARACTER = root } 
+				}
+				#We remove the truce
+				remove_marriage_truce = { CHARACTER = root }
+			}
+		}
+		# Do the same for close family members of root
+		if = {
+			limit = { any_close_family_member = { any_truce_target = { exists = yes } } }
+			every_close_family_member = {
+				limit = { any_truce_target = { exists = yes } }
+				every_truce_target = {
+					limit = {
+						OR = {
+							is_close_family_of = scope:spouse
+							is_grandparent_of = scope:spouse
+							is_uncle_or_aunt_of = scope:spouse
+							is_nibling_of = scope:spouse
+						}
+						gh_has_marriage_truce_trigger = { CHARACTER = root } 
+					}
+					remove_marriage_truce = { CHARACTER = root }
+				}
+			}
+		}
+	}
+}
+
+on_betrothal_broken = {
+	on_actions = {
+		gh_alliance_system_on_betrothal_broken
+	}
+}
+
+gh_alliance_system_on_betrothal_broken = {
+	trigger = { has_game_rule = godherja_alliance_default }
+	effect = {
+		add_character_flag = broke_betrothals
+		if = {
+			limit = { any_truce_target = { exists = yes } }
+			every_truce_target = {
+				limit = {
+					#Check if special truce comes from spouse's family
+					OR = {
+						is_close_family_of = scope:second
+						is_grandparent_of = scope:second
+						is_uncle_or_aunt_of = scope:second
+						is_nibling_of = scope:second
+					}
+					gh_has_marriage_truce_trigger = { CHARACTER = root } 
+				}
+				#We remove the truce
+				remove_marriage_truce = { CHARACTER = root }
+			}
+		}
+		# Do the same for close family members of root
+		if = {
+			limit = { any_close_family_member = { any_truce_target = { exists = yes } } }
+			every_close_family_member = {
+				limit = { any_truce_target = { exists = yes } }
+				every_truce_target = {
+					limit = {
+						OR = {
+							is_close_family_of = scope:second
+							is_grandparent_of = scope:second
+							is_uncle_or_aunt_of = scope:second
+							is_nibling_of = scope:second
+						}
+						gh_has_marriage_truce_trigger = { CHARACTER = root } 
+					}
+					remove_marriage_truce = { CHARACTER = root }
+				}
+			}
+		}
+	}
+}

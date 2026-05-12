@@ -1,0 +1,200 @@
+﻿story_aversarian_anarchy = {
+	on_setup = {
+
+	}
+
+	on_end = {
+		debug_log = "Aversarian Anarchy ended on:"
+		debug_log_date = yes
+	}
+
+	on_owner_death = {
+		if = {
+			limit = {
+				story_owner.culture = { has_cultural_pillar = heritage_aversarian }
+			}
+			random_county_in_region = {
+				region = GH_geographic_shattered_coast
+				limit = { holder.culture = { has_cultural_pillar = heritage_aversarian } }
+				holder = { scope:story = { make_story_owner = prev } }
+			}			
+		}
+	}
+
+	# Malcois
+	effect_group = {
+		days = 360
+
+		triggered_effect = { #anarchy spread out
+			trigger = {
+				any_county_in_region = {
+					region = world_ga_northern_aversaria
+					holder.culture = { has_cultural_pillar = heritage_aversarian }
+				}
+			}
+			effect = {
+				every_county_in_region = {
+					region = world_ga_northern_aversaria
+					if = {
+						limit = {
+							has_county_modifier = malcoisiac_anarchy
+							OR = {
+								NOT = { holder.culture = { has_cultural_pillar = heritage_aversarian } }
+								holder.top_liege.primary_title = { tier = tier_kingdom }
+								holder.top_liege.primary_title = { tier = tier_empire }
+							}
+						}
+						remove_county_modifier = malcoisiac_anarchy
+					}
+					else_if = {
+						limit = {
+							holder.culture = { has_cultural_pillar = heritage_aversarian }
+							NOT = { has_county_modifier = malcoisiac_anarchy }
+							NOT = { holder.top_liege.primary_title = { tier = tier_kingdom } }
+							NOT = { holder.top_liege.primary_title = { tier = tier_empire } }
+						}
+						add_county_modifier = malcoisiac_anarchy
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = {
+		days = 400
+
+		triggered_effect = {
+			trigger = {
+				OR = {
+					any_county_in_region = {
+						region = world_ga_northern_aversaria
+						holder.culture = { has_cultural_pillar = heritage_aversarian }
+						count <= 2
+					}
+					current_date >= 6284.1.1
+				}
+			}
+
+			effect = {
+				every_ruler = {
+					limit = {
+						capital_province = { geographical_region = GH_geographic_malcois }
+						NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+					}
+					trigger_event = iyrossi_monthly.0001
+				}
+			}
+		}
+	}
+
+	#Black Mountains
+	effect_group = { # Yearly check to give Aversarian counties in the Black Mountains the Ash War modifier. Should self-terminate after 1264
+		days = 360
+
+		triggered_effect = {
+			trigger = {
+				current_date <= 6264.1.1
+			}
+
+			effect = {
+				every_county_in_region = {
+					region = world_ga_mountainheights
+					if = {
+						limit = {
+							has_county_modifier = aftermath_of_the_ash_war
+							NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+							holder.top_liege.primary_title = title:k_warisnik
+						}
+						remove_county_modifier = aftermath_of_the_ash_war
+
+					}
+				}
+			}
+		}
+	}
+
+	# etepezea
+	effect_group = {
+		days = 360
+		triggered_effect = {
+			trigger = {
+				current_date <= 6304.1.1
+			}
+			effect = {
+				every_county_in_region = {
+					region = world_ga_western_aversaria
+					limit = {
+						has_county_modifier = legacy_of_elysia
+						NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+						holder.top_liege.primary_title = title:e_migrant_coalition
+					}
+					remove_county_modifier = legacy_of_elysia
+				}
+			}
+		}
+	}
+
+	#opakhasia
+	effect_group = { # Yearly check to give Aversarian counties in Opakhasia the Legacy of the Civil War modifier. Should self-terminate after 1286
+		days = 360
+		triggered_effect = {
+			trigger = {
+				current_date <= 6286.1.1
+			}
+
+			effect = {
+				every_county_in_region = {
+					region = world_ga_central_aversaria
+					if = {
+						limit = {
+							has_county_modifier = legacy_of_icw
+							NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+							holder.top_liege.primary_title = title:e_migrant_coalition
+						}
+						remove_county_modifier = legacy_of_icw
+					}
+				}
+			}
+		}
+	}
+
+	#Ulfirx
+	effect_group = {
+		days = 360
+		triggered_effect = {
+			trigger = {
+				character:vrodkin_sjalvolki_1 = { is_alive = yes }
+				current_date <= 6284.1.1
+			}
+			effect = {
+				every_county_in_region = {
+					region = world_ga_aversarian_isles
+					if = {
+						limit = {
+							has_county_modifier = ruined_by_ulfirx
+								holder.top_liege = {
+									has_title_migrant_coalition_trigger = yes
+								}
+						}
+						remove_county_modifier = ruined_by_ulfirx
+					}
+				}	
+			}
+		}
+	}
+
+	# Ending
+	effect_group = { # Ends the Story Cycle entirely if the longest effects are over
+		years = 70
+
+		triggered_effect = {
+			trigger = { always = yes }
+
+			effect = {
+				debug_log = "Aversarian Anarchy ended on:"
+				debug_log_date = yes
+				end_story = yes
+			}
+		}
+	}
+}

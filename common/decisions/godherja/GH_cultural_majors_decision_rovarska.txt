@@ -1,0 +1,311 @@
+﻿##################
+##DECISIONS LIST##
+
+################################
+#ROVARSKA/PIRATE COAST DECISIONS
+################################
+# By TOG
+
+become_pirate_emperor = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_merchant_ship_at_sea_republic.dds"
+	}
+	decision_group_type = pirate_coast
+	desc = become_pirate_emperor_desc
+	selection_tooltip = become_pirate_emperor_tooltip
+	ai_check_interval = 60
+
+	is_shown = {
+		government_has_flag = government_is_pirate
+		capital_province = {
+			geographical_region = world_ga_pirate_coast
+		}
+		NOT = { exists = global_var:flag_fomred_pirate_kingdom }
+		NOT = { exists = global_var:flag_formed_pirate_emperor }
+	}
+	is_valid = {
+		government_has_flag = government_is_pirate
+		prestige_level >= max_prestige_level
+		NOT = { realm_size >= 50 }
+		custom_description = {
+			text = commerce_raiding_income_greater_than
+			commerce_raiding_income_greater_than = { VALUE = 40 }
+		}
+		highest_held_title_tier <= tier_kingdom
+	}
+	effect = {
+		save_scope_as = founder
+		show_as_tooltip = {	scourge_of_rovarska_effect = yes }
+		trigger_event = { id = gh_pirate_coast_decision.0002 }
+		every_player = {
+			limit = {
+				NOT = { this = scope:founder }
+			}
+			trigger_event = gh_pirate_coast_decision.0003
+		}
+		set_global_variable = {
+			name = flag_formed_pirate_emperor
+			value = root
+		}
+		GH_achiev_therealgreatsjalvolkimigration_check = yes
+	}
+
+	cost = {
+		prestige = 2000
+		gold = 2000
+	}
+
+	ai_potential = {
+		always = yes
+	}
+}
+
+unite_the_eastern_coast_decision = {
+	title = unite_the_eastern_coast.t
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_roi_throneroom.dds"
+	}
+	decision_group_type = pirate_coast
+	ai_check_interval = 48
+	desc = unite_the_eastern_coast_decision_desc
+
+	is_shown = {
+		game_start_date >= 1100.1.1
+		any_held_title = {
+			tier = tier_county
+			title_province = { geographical_region = world_ga_pirate_coast }
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:unite_the_eastern_coast_decision
+			}
+		}
+		highest_held_title_tier < tier_empire
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		
+		trigger_if = {
+			limit = { title:k_peytrelle = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_peytrelle
+			has_title = title:k_peytrelle
+		}
+		trigger_if = {
+			limit = { title:k_velliqalinka = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_velliqalinka
+			has_title = title:k_velliqalinka
+		}
+		trigger_if = {
+			limit = { title:k_ufaliracci = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_ufaliracci
+			has_title = title:k_ufaliracci
+		}
+	}
+
+	effect = {
+		save_scope_as = eastern_coast_uniter
+
+		show_as_tooltip = { unite_the_eastern_coast_decision_effects = yes }
+
+		trigger_event = gh_pirate_coast_decision.0004
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:unite_the_eastern_coast_decision
+		}
+	}
+
+	cost = {
+		prestige = 300
+	}
+}
+
+take_control_of_spice_trade_decision = {
+	title = take_control_of_spice_trade.t
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_roi_emissary.dds"
+	}
+	decision_group_type = pirate_coast
+	ai_check_interval = 48
+	desc = take_control_of_spice_trade_decision_desc
+	
+
+	is_shown = {
+		any_held_title = {
+			tier = tier_county
+			OR = {
+				title_province = { geographical_region = world_ga_pirate_coast }
+				title_province = { geographical_region = katuppilan_biozone }
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:take_control_of_spice_trade_decision
+			}
+		}
+	}
+
+	is_valid = {
+		any_directly_owned_province = {
+			count >= 4
+			has_building_or_higher = 01_mdala_hasira
+		}
+		trigger_if = {
+			limit = {
+				highest_held_title_tier >= tier_kingdom	
+			}
+			prestige_level >= 3
+		}
+		trigger_else = {
+			prestige_level >= 4
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	cost = {
+		gold = 750
+		prestige = 1000
+	}
+
+	effect = {
+		save_scope_as = spice_owner
+
+		take_control_of_spice_trade_effect = yes
+
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:take_control_of_spice_trade_decision
+		}
+		trigger_event = gh_pirate_coast_decision.0005
+	}
+
+}
+
+reform_ufaliracci_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_treasure_chamber.dds"
+	}
+	decision_group_type = ritualist
+	desc = reform_ufaliracci_decision_desc
+
+	is_shown = {
+		any_held_title = {
+			tier = tier_county
+			title_province = { geographical_region = world_ga_pirate_coast }
+		}
+		religion = religion:ritualist_religion
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reform_ufaliracci_decision
+			}
+		}
+		highest_held_title_tier < tier_kingdom
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		capital_province = {
+			has_building = 02_silverpalace
+		}
+		completely_controls = title:d_trinapaawa
+		custom_tooltip = {
+			text = reform_ufaliracci_duchy_tt
+			any_held_title = {
+				tier = tier_duchy
+				is_titular = no
+				NOT = { this = title:d_trinapaawa }
+				root = { completely_controls = prev }
+				any_title_to_title_neighboring_and_across_water_duchy = { this = title:d_trinapaawa }
+			}
+		}
+	}
+
+	cost = {
+		prestige = 1000
+	}
+
+	effect = {
+		save_scope_as = ufaliracci_reformer
+		reform_ufaliracci_decision_effect = yes
+		save_scope_value_as = {
+			name = has_kingdom_ufaliracci_absorb_list_been_created
+			value = yes
+		}
+		trigger_event = gh_pirate_coast_decision.0006
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reform_ufaliracci_decision
+		}
+		set_global_variable = {
+			name = reform_ufaliracci_decision
+			value = scope:ufaliracci_reformer
+		}
+	}
+
+	ai_check_interval = 120
+	ai_potential = {}
+	ai_will_do = {
+		base = 100
+	}
+}
+
+establish_legitimacy_over_kinilam_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_roi_ruler_riding_elephant.dds"
+	}
+	decision_group_type = pirate_coast
+	ai_check_interval = 48
+	desc = establish_legitimacy_over_kinilam_decision_desc
+	
+	is_shown = {
+		game_start_date >= 1254.1.1
+		has_title = title:k_kinilam_regency
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_legitimacy_over_kinilam_decision
+			}
+		}
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		prestige_level >= 4
+		has_title = title:k_kinilam
+		completely_controls = title:k_kinilam
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	cost = {
+		prestige = 1000
+	}
+
+	effect = {
+		save_scope_as = kinilam_ruler
+
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:establish_legitimacy_over_kinilam_decision
+		}
+
+		kinilam_legitimacy_effect = yes
+	}
+
+	ai_potential = {}
+	ai_will_do = {
+		base = 100
+	}
+}

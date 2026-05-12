@@ -1,0 +1,216 @@
+﻿claim_the_isles_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_ship_voyage_hf.dds"
+	}
+
+	desc = claim_the_isles_decision_desc
+	selection_tooltip = claim_the_isles_decision_tooltip
+	decision_group_type = the_isles
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		exists = house
+		NOR = {
+			culture = { has_cultural_tradition = tradition_islander }
+			religion = religion:islands_religion
+			house = { has_house_modifier = isles_naval_expedition_modifier }
+		}
+		any_sub_realm_county = { 
+			is_coastal_county = yes 
+			title_province = {
+				OR = {
+					geographical_region = GH_geographic_chevalie
+					geographical_region = GH_geographic_konij
+					geographical_region = GH_geographic_pathos_delta
+					geographical_region = GH_geographic_kalathipsomi_redwoods
+					geographical_region = GH_geographic_southern_kalathipsomi
+					geographical_region = GH_geographic_black_mountains
+					geographical_region = GH_geographic_imperial_isle
+					geographical_region = GH_geographic_etepezea
+					geographical_region = GH_geographic_kharadamat
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		OR = {
+			piety_level >= 3
+			prestige_level >= 3
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_independent_ruler = yes
+		is_at_war = no
+	}
+
+	cost = {
+		gold = 500
+		prestige = 1000
+		piety = 1000
+	}
+
+	effect = {
+		house = {
+			add_house_modifier = {
+				modifier = isles_naval_expedition_modifier
+				years = 50 
+			}
+		}
+		custom_tooltip = claim_the_isles_decision_effects_tooltip
+		root = { save_scope_as = isles_claimant }
+		every_player = {
+			limit = {
+				NOT = { this = ROOT }
+				any_held_title = { title_province = { geographical_region = world_ga_isles } }
+			}
+			send_interface_message = {
+				type = event_generic_bad_with_text
+				title = isles_claimant_war.involved_notif
+				desc = isles_claimant_war.involved_notif_desc # Players who get this: "why do I hear boss music?" (It is meant to sound vaguely threatening)
+				left_icon = scope:isles_claimant
+
+				show_as_tooltip = {
+					scope:isles_claimant = {
+						house = {
+							add_house_modifier = {
+								modifier = isles_naval_expedition_modifier
+								years = 50
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		is_at_war = no
+		ai_greed < medium_positive_ai_value
+		ai_boldness < medium_positive_ai_value
+	}
+
+	ai_will_do = {
+		base = 75
+	}
+}
+
+isles_retribution_war_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_camp_large_army.dds"
+	}
+
+	desc = isles_retribution_war_decision_desc
+	selection_tooltip = isles_retribution_war_decision_tooltip
+	decision_group_type = the_isles
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		culture = { has_cultural_tradition = tradition_islander }
+		exists = house
+		NOR = { 
+			exists = title:e_rocks_of_guillate.holder
+			house = { has_house_modifier = isles_retribution_modifier }
+		}
+	}
+
+	is_valid = {
+		OR = {
+			piety_level >= 3
+			prestige_level >= 3
+		}
+		OR = {
+			martial >= 15
+			stewardship >= 15
+			diplomacy >= 15
+		}
+		highest_held_title_tier >= tier_duchy
+		custom_tooltip = { # More than 25% of the Isles must be controlled by a non-Islander
+			text = isles_retribution_war_tt
+			any_county_in_region = {
+				region = world_ga_isles
+				percent > isles_retribution_owned_percent_decimal_value
+				NOT = { holder.culture = { has_cultural_tradition = tradition_islander }}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_independent_ruler = yes
+		is_at_war = no
+	}
+
+	cost = {
+		gold = 300
+		prestige = 1000
+	}
+
+	effect = {
+
+		house = {
+			add_house_modifier = {
+				modifier = isles_retribution_modifier
+				years = 100
+			}
+		}
+		spawn_army = {
+			name = islander_warriors
+			location = capital_province
+			inheritable = no
+			men_at_arms = {
+				type = armored_footmen
+				stacks = 8
+			}
+			men_at_arms = {
+				type = light_footmen
+				stacks = 8
+			}
+		}
+		custom_tooltip = isles_retribution_decision_effects_tooltip
+		root = { save_scope_as = isles_claimant }
+		every_player = {
+			limit = {
+				NOT = { this = ROOT }
+				any_held_title = { title_province = { geographical_region = world_ga_isles } }
+			}
+			send_interface_message = {
+				type = event_generic_bad_with_text
+				title = isles_claimant_war.involved_notif
+				desc = isles_claimant_war.involved_notif_desc # Players who get this: "why do I hear boss music?" (It is meant to sound vaguely threatening)
+				left_icon = scope:isles_claimant
+
+				show_as_tooltip = {
+					scope:isles_claimant = {
+						house = {
+							add_house_modifier = {
+								modifier = isles_retribution_modifier
+								years = 100
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		is_at_war = no
+		ai_greed < medium_positive_ai_value
+		ai_boldness < medium_positive_ai_value
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

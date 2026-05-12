@@ -1,0 +1,376 @@
+﻿struggle_rite_wars_south_ending_ending_decision_region_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = struggle_rite_wars_south
+		add = 1
+	}
+}
+
+struggle_rite_wars_south_ending_ending_decision_foreign_realm_total_value = {
+	value = 0
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				NOT = { this = root }
+				is_independent_ruler = yes
+				primary_title = { is_holy_order = no }
+				primary_title = { is_mercenary_company = no }
+			}
+			add = 1
+		}
+	}
+}
+
+fp2_struggle_rite_wars_south_ending_kingdom_counter_value = {
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			OR = {
+				de_jure_liege = title:e_opakhasia
+			}
+			root = { completely_controls = prev }
+		}
+		add = 1
+	}
+}
+
+# Counter for de jure capital kingdom's total counties
+gh_rws_struggle_hostility_county_total_value = {
+	capital_county.de_jure_liege.de_jure_liege = {
+		every_de_jure_county = { add = 1 }
+	}
+}
+
+gh_rws_struggle_hostility_county_total_light_value = {
+	capital_county.de_jure_liege.de_jure_liege = {
+		every_de_jure_county = { add = 1 }
+	}
+	multiply = 0.75
+}
+
+# Counter for de jure capital kingdom's same culture and faith counties
+gh_rws_struggle_hostility_county_counter_value = {
+	capital_county.de_jure_liege.de_jure_liege = {
+		every_de_jure_county = {
+			limit = {
+				culture = root.culture
+				faith = root.faith
+			}
+			add = 1
+		}
+	}
+}
+
+
+fp2_struggle_rite_wars_south_hostility_region_counter_value = {
+	value = 0
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				NOT = { this = root }
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+				any_county_in_region = {
+					region = struggle_rite_wars_south
+					percent > fp2_struggle_hostility_region_percent_decimal_value # set by fp2_struggle_hostility_region_percent_value
+					holder.top_liege = prev	
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+form_highkingdom_region_percent_decimal_value = {
+	value = form_highkingdom_region_percent_value
+	divide = 100
+	max = 1
+}
+
+form_highkingdom_region_percent_value = 25
+
+struggle_rite_wars_south_ending_compromise_decision_region_owned_value = {
+	value = 0
+ 	every_county_in_region = {
+ 		region = struggle_rite_wars_south
+ 		limit = { holder.top_liege = root }
+ 		add = 1
+ 	}
+}
+
+struggle_rite_wars_south_ending_compromise_decision_region_owned_percent_value = {
+	value = struggle_rite_wars_south_ending_compromise_decision_region_owned_value
+	divide = struggle_rite_wars_south_ending_ending_decision_region_total_value
+	multiply = 100
+}
+
+
+# Parameter for mininmum opinion
+struggle_rite_wars_south_ending_compromise_decision_opinion_value = {
+	value = 60
+}
+
+# Counter for hooked and friendly rulers
+struggle_rite_wars_south_ending_compromise_decision_opinion_counter_value = {
+	value = 0
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				NOT = { this = root }
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+				save_temporary_scope_as = this_character
+				OR = {
+					root = { has_strong_hook = scope:this_character }
+					opinion = {
+						target = root
+						value >= struggle_rite_wars_south_ending_compromise_decision_opinion_value
+					}
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+# Counter for Iberian counties owned by non-Involved
+struggle_rite_wars_south_ending_compromise_decision_region_interloper_value = {
+	value = 0
+	 every_county_in_region = {
+	 	region = struggle_rite_wars_south
+	 	limit = {
+	 		holder.top_liege = { fp2_character_involved_in_struggle_trigger = no }
+	 	}
+	 	add = 1
+	 }
+}
+
+# Percentage of Iberian counties owned by non-Involved
+struggle_rite_wars_south_ending_compromise_decision_region_interloper_percent_value = {
+	value = struggle_rite_wars_south_ending_compromise_decision_region_interloper_value
+	divide = struggle_rite_wars_south_ending_ending_decision_region_total_value
+	multiply = 100
+}
+
+# Counter for independent king or higher Involved rulers
+struggle_rite_wars_south_ending_compromise_decision_independent_counter_value = {
+	value = 0
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				NOT = { this = root }
+				is_independent_ruler = yes
+				primary_title = {
+					is_mercenary_company = no
+					tier >= tier_kingdom
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+# Counter for inter-Involved character wars
+struggle_rite_wars_south_ending_compromise_decision_war_counter_value = {
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				is_independent_ruler = yes
+				primary_title = { is_mercenary_company = no }
+				primary_title = { is_holy_order = no }
+				any_primary_war_enemy = {
+					is_independent_ruler = yes
+					any_character_struggle = {
+						involvement = involved
+						is_struggle_type = rite_wars_south_struggle
+					}
+					primary_title = { is_holy_order = no }
+					primary_title = { is_mercenary_company = no }
+				}
+			}
+			add =  {
+				value = 0
+				if = {
+					 limit = {
+					 	any_character_war = {
+							OR = {
+								AND = {
+									primary_attacker = prev
+									primary_defender = {
+										any_character_struggle = {
+											involvement = involved
+											is_struggle_type = rite_wars_south_struggle
+										}
+										is_independent_ruler = yes
+										primary_title = { is_mercenary_company = no }
+									}
+								}
+								AND = {
+									primary_defender = prev
+									primary_attacker = {
+										any_character_struggle = {
+											involvement = involved
+											is_struggle_type = rite_wars_south_struggle
+										}
+										is_independent_ruler = yes
+										primary_title = { is_mercenary_company = no }
+									}
+								}
+							}
+						}
+					 }
+					add = 0.5 # they are both primary participant so they will add 0.5 each
+				}
+				else = {
+					add = 1 # only one of them is primary participant, so we need to add 1
+				}
+			}
+		}
+	}
+}
+
+### Conciliation
+
+# Counter for allied Involved rulers 
+struggle_rite_wars_south_ending_conciliation_decision_alliance_counter_value = {
+	value = 0
+	struggle:rite_wars_south_struggle = {
+		every_involved_ruler = {
+			limit = {
+				NOT = { this = root }
+				is_independent_ruler = yes
+				primary_title = { is_holy_order = no }
+				primary_title = { is_mercenary_company = no }
+				is_allied_to = root
+			}
+			add = 1
+		}
+	}
+}
+
+
+fp2_struggle_secure_rite_wars_south_foothold_years_value = 15
+
+fp2_struggle_secure_rite_wars_south_foothold_faith_target_percent_value = 50
+
+fp2_struggle_secure_rite_wars_south_foothold_faith_total_value = {
+	if = {
+		limit = { exists = scope:iberian_kingdom_temp }
+		scope:iberian_kingdom_temp = {
+			every_de_jure_county = { add = 1 }
+		}
+	}
+	min = 1
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_faith_value = {
+	value = 0
+	if = {
+		limit = { exists = scope:iberian_kingdom_temp }
+		scope:iberian_kingdom_temp = {
+			every_de_jure_county = {
+				limit = { faith = holder.top_liege.faith }
+				add = 1
+			}
+		}
+	}
+	min = 1
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_faith_percent_value = {
+	value = fp2_struggle_secure_rite_wars_south_foothold_faith_value
+	divide = fp2_struggle_secure_rite_wars_south_foothold_faith_total_value
+	multiply = 100
+}
+
+##### Religion values #####
+
+# Total Iberian counties of my Religion
+fp2_struggle_secure_rite_wars_south_foothold_religion_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = struggle_rite_wars_south
+		limit = { religion = root.religion }
+		add = 1
+	}
+}
+
+# Held counties of my Religion
+fp2_struggle_secure_rite_wars_south_foothold_religion_owned_value = {
+	value = 0
+	every_county_in_region = {
+		region = struggle_rite_wars_south
+		limit = {
+			religion = root.religion
+			holder.top_liege = root
+		}
+		add = 1
+	}
+}
+
+# Percentage owned counties of my Religion
+fp2_struggle_secure_rite_wars_south_foothold_religion_percent_value = {
+	value = fp2_struggle_secure_rite_wars_south_foothold_religion_owned_value
+	divide = fp2_struggle_secure_rite_wars_south_foothold_religion_total_value
+	multiply = 100
+	min = 1
+}
+
+# Target percentage owned counties of my Religion
+fp2_struggle_secure_rite_wars_south_foothold_religion_target_percent_value = 50
+
+fp2_struggle_secure_rite_wars_south_foothold_religion_target_percent_decimal_value = {
+	value = fp2_struggle_secure_rite_wars_south_foothold_religion_target_percent_value
+	divide = 100
+}
+
+##### Outsider values #####
+
+# Target percentage owned counties of Iberia
+fp2_struggle_secure_rite_wars_south_foothold_outsider_target_percent_value = 66
+
+fp2_struggle_secure_rite_wars_south_foothold_outsider_target_percent_decimal_value = {
+	value = fp2_struggle_secure_rite_wars_south_foothold_outsider_target_percent_value
+	divide = 100		
+}
+
+# Decimal target percentage owned counties of Iberia
+fp2_struggle_secure_rite_wars_south_foothold_outsider_percent_decimal_value = {
+	value = fp2_struggle_secure_rite_wars_south_foothold_outsider_percent_value
+	divide = 100
+	max = 1
+}
+
+# Percentage owned counties of Iberia
+fp2_struggle_secure_rite_wars_south_foothold_outsider_percent_value = {
+	value = fp2_struggle_secure_rite_wars_south_foothold_outsider_value
+	divide = fp2_struggle_secure_rite_wars_south_foothold_outsider_total_value
+	multiply = 100
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_outsider_total_value = {
+	value = 0
+	every_county_in_region = {
+		region = struggle_rite_wars_south
+		add = 1
+	}
+}
+
+fp2_struggle_secure_rite_wars_south_foothold_outsider_value = {
+	value = 0
+	every_county_in_region = {
+		region = struggle_rite_wars_south
+		limit = { holder.top_liege = root }
+		add = 1
+	}
+}
+
+gh_rws_struggle_compromise_ending_minimal_empire_size = 4
+
+gh_rws_struggle_compromise_uninvolved_percent_decimal_value = {
+		value = gh_rws_struggle_compromise_uninvolved_percent_value
+		divide = 100
+		max = 1
+}
+
+gh_rws_struggle_compromise_uninvolved_percent_value = 50

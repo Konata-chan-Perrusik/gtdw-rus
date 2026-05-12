@@ -1,0 +1,857 @@
+﻿######################################## NOTE ########################################
+## This file is so that we can replace vanilla triggers without needing to manually
+## change every instance and / or so that we can tell when we've looked over a vanilla
+## file. Make the trigger and then replace the vanilla trigger with it at its source
+##
+## If you want to use one of these, you should move its code into a trigger elsewhere
+## and have this one just link straight to your trigger - this file should only be a
+## middleman and way for us to see which triggers we need to give attention to
+
+############################
+### GH VANILLA TRIGGER SWAPS
+
+#####################
+## Tradition Triggers
+
+GH_land_of_the_bow_tradition_trigger = { 
+	# has_cultural_pillar = heritage_east_african
+	always = no
+}
+
+GH_strong_kinship_tradition_trigger = {
+	#OR = {
+	#	this = culture:gaelic
+	#	this = culture:scottish
+	#	any_parent_culture_or_above = {
+	#		OR = {
+	#			this = culture:gaelic
+	#			this = culture:scottish
+	#		}
+	#	}
+	#}
+	always = no
+}
+
+GH_amharic_highlanders_tradition_trigger = {
+	#OR = {
+	#	this = culture:ethiopian
+	#	any_parent_culture_or_above = {
+	#		this = culture:ethiopian
+	#	}
+	#}
+	always = no
+}
+
+GH_hird_tradition_trigger = {
+	#OR = {
+	#	AND = {
+	#		has_cultural_pillar = heritage_north_germanic
+	#		has_fp1_dlc_trigger = no
+	#	}
+	#	any_parent_culture_or_above = {
+	#		OR = {
+	#			this = culture:old_saxon
+	#			this = culture:norse #For instance Norman culture
+	#		}
+	#	}
+	#}
+	always = no
+}
+
+GH_chanson_de_geste_tradition_trigger = {
+	# has_cultural_pillar = heritage_frankish
+	always = no
+}
+
+GH_upland_skirmishing_tradition_trigger = {
+	# has_cultural_pillar = heritage_west_african
+	always = no
+}
+
+GH_burman_royal_army_tradition_trigger = {
+	# has_cultural_pillar = heritage_burman
+	always = no
+}
+
+GH_mountain_herding_tradition_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_arabic
+	#	has_cultural_pillar = heritage_berber
+	#}
+	always = no
+}
+
+#GH Note: replaces khadga_puja
+GH_azakna_zagsa_tradition_trigger = {
+	has_cultural_pillar = heritage_azargi #GH CHANGE: changed from indo_aryan to azargi
+	always = no
+}
+
+GH_futuwaa_tradition_trigger = {
+	#has_cultural_pillar = heritage_iranian
+	always = no
+}
+
+GH_mobile_guards_tradition_trigger = {
+	# has_cultural_pillar = heritage_israelite
+	always = no
+}
+
+GH_bush_hunting_tradition_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_akan
+	#	has_cultural_pillar = heritage_yoruba
+	#}
+	always = no
+}
+
+GH_horn_mountain_skirmishing_tradition_trigger = {
+	#OR ={
+	#	has_cultural_pillar = heritage_somalian
+	#	has_cultural_pillar = heritage_east_african
+	#}
+	always = no
+}
+
+GH_druzhina_tradition_trigger = {
+	# has_cultural_pillar = heritage_east_slavic
+	always = no
+}
+
+GH_hussar_tradition_trigger = {
+	#OR = {
+	#	has_cultural_pillar = heritage_south_slavic
+	#	has_cultural_pillar = heritage_magyar
+	#	has_cultural_pillar = heritage_west_slavic
+	#}
+	always = no
+}
+
+#######################
+## 00_artifact_triggers
+
+GH_SWAP_artifact_use_african_unit_visuals_trigger = {
+	culture ?= { has_unit_gfx = sub_sahran_unit_gfx }
+}
+
+GH_SWAP_artifact_use_eastern_unit_visuals_trigger = {
+	culture ?= { has_unit_gfx = eastern_unit_gfx }
+}
+
+GH_SWAP_artifact_use_indian_unit_visuals_trigger = {
+	culture ?= { 
+		OR = {
+			has_unit_gfx = indian_unit_gfx
+			has_unit_gfx = pirate_coast_unit_gfx
+		}
+	}
+}
+
+GH_SWAP_artifact_use_mena_unit_visuals_trigger = {
+	culture ?= {
+		OR = {
+			has_unit_gfx = mena_unit_gfx
+			has_unit_gfx = iberian_muslim_unit_gfx
+		}
+	}
+}
+
+GH_SWAP_artifact_use_northern_unit_visuals_trigger = {
+	culture ?= {
+		OR = {
+			has_unit_gfx = norse_unit_gfx
+			has_unit_gfx = northern_unit_gfx
+		}
+	}
+}
+
+GH_SWAP_artifact_use_mongol_unit_visuals_trigger = {
+	culture ?= { has_unit_gfx = mongol_unit_gfx }
+}
+
+GH_SWAP_artifact_use_western_unit_visuals_trigger = {
+	culture ?= {
+		OR = {
+			has_unit_gfx = western_unit_gfx
+			has_unit_gfx = konjikmer_unit_gfx
+			has_unit_gfx = gisreddean_unit_gfx
+			has_unit_gfx = oejeynican_unit_gfx
+			has_unit_gfx = chevalie_unit_gfx
+			has_unit_gfx = etrandanexi_unit_gfx
+			has_unit_gfx = iberian_christian_unit_gfx
+		}
+	}
+}
+
+GH_SWAP_artifact_use_iberian_muslim_unit_visuals_trigger = {
+	culture ?= {	has_unit_gfx = iberian_muslim_unit_gfx }
+}
+
+GH_SWAP_artifact_use_iberian_christian_unit_visuals_trigger = {
+	culture ?= {	has_unit_gfx = iberian_christian_unit_gfx }
+}
+
+# BuildingGFX-based triggers
+GH_SWAP_artifact_use_indian_building_visuals_trigger = {
+	OR = { # GH TODO: Update for Eastern aesthetics when EP4 releases
+		culture ?= { has_building_gfx = indian_building_gfx }
+		culture ?= { has_building_gfx = sea_building_gfx }
+		culture ?= { has_building_gfx = damotan_building_gfx }
+		culture ?= { has_building_gfx = tibetan_building_gfx }
+		culture ?= { has_building_gfx = kathun_building_gfx }
+	}
+}
+
+GH_SWAP_artifact_use_mena_building_visuals_trigger = {
+	culture ?= { has_building_gfx = mena_building_gfx }
+}
+
+GH_SWAP_artifact_use_mediterranean_building_visuals_trigger = {
+	culture ?= { has_graphical_aversarian_culture_group_trigger = yes }
+}
+
+GH_SWAP_artifact_use_iberian_building_visuals_trigger = {
+	culture ?= { has_building_gfx = iberian_building_gfx }
+}
+
+GH_SWAP_artifact_use_western_building_visuals_trigger = {
+	culture ?= { has_building_gfx = western_building_gfx }
+}
+
+GH_SWAP_artifact_use_norse_building_visuals_trigger = {
+	culture ?= { has_building_gfx = norse_building_gfx }
+}
+
+GH_SWAP_artifact_use_northern_building_visuals_trigger = {
+	culture ?= { has_building_gfx = northern_building_gfx }
+}
+
+GH_SWAP_artifact_use_steppe_building_visuals_trigger = {
+	culture ?= { has_building_gfx = steppe_building_gfx }
+}
+
+GH_SWAP_artifact_use_iranian_building_visuals_trigger = {
+	culture ?= { has_building_gfx = iranian_building_gfx }
+}
+
+GH_SWAP_artifact_use_byzantine_building_visuals_trigger = {
+	culture ?= { has_building_gfx = byzantine_building_gfx }
+}
+
+###########################
+## 00_illustration_triggers
+
+GH_SWAP_should_use_tribal_realm_palace_graphics_trigger = {
+	GH_is_any_tribal_government_trigger = yes
+	culture = { # GH TODO: Would this apply to some of our custom graphics?
+		has_graphical_india_culture_group_trigger = no
+		has_graphical_mena_culture_group_trigger = no
+		has_graphical_steppe_culture_group_trigger = no
+		has_graphical_african_culture_group_trigger = no
+	}
+}
+
+GH_SWAP_has_graphical_mena_culture_group_trigger = {
+	has_graphical_sarradonian_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_india_culture_group_trigger = {
+	has_graphical_kashirya_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_mediterranean_culture_group_trigger = {
+	has_graphical_aversarian_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_western_culture_group_trigger = {
+	has_graphical_continental_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_norse_culture_group_trigger = {
+	has_graphical_katraddic_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_african_culture_group_trigger = {
+	has_graphical_southern_sarradonian_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_steppe_culture_group_trigger = {
+	has_graphical_olteni_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_iberian_culture_group_trigger = {
+	has_graphical_islander_culture_group_trigger = yes
+}
+
+GH_SWAP_has_graphical_iranian_culture_group_trigger = {
+	has_graphical_amsari_culture_group_trigger = yes
+}
+
+GH_SWAP_graphical_wilderness_desert_trigger = {
+	OR = {
+		GH_any_desert_terrain_trigger = yes
+		GH_any_desert_mountains_terrain_trigger = yes
+		GH_any_oasis_terrain_trigger = yes
+		AND = {
+			GH_any_hills_terrain_trigger = yes
+			OR = {
+				geographical_region = GH_REPLACE_world_africa
+				geographical_region = GH_REPLACE_world_middle_east
+			}
+		}
+	}
+}
+
+GH_SWAP_graphical_wilderness_forest_pine_trigger = {
+	OR = {
+		GH_any_taiga_terrain_trigger = yes
+		AND = {
+			GH_any_forest_terrain_trigger = yes
+			geographical_region = GH_REPLACE_world_europe_north
+		}
+	}
+}
+
+GH_SWAP_graphical_wilderness_forest_trigger = {
+	OR = {
+		GH_any_forest_terrain_trigger = yes
+		GH_any_farmlands_terrain_trigger = yes
+	}
+}
+
+GH_SWAP_graphical_wilderness_mountains_trigger = {
+	GH_any_mountains_no_desert_terrain_trigger = yes
+}
+
+GH_SWAP_graphical_wilderness_steppe_trigger = {
+	OR = {
+		GH_any_steppe_terrain_trigger = yes
+		AND = {
+			GH_any_hills_terrain_trigger = yes
+			OR = {
+				geographical_region = GH_REPLACE_world_steppe
+				geographical_region = GH_REPLACE_world_middle_east_persia
+				geographical_region = GH_REPLACE_world_middle_east_jerusalem
+			}
+		}
+	}
+}
+
+GH_SWAP_graphical_drylands_trigger = {
+	GH_any_drylands_terrain_trigger = yes
+}
+
+GH_SWAP_graphical_wilderness_wetlands_trigger = {
+	OR = {
+		GH_any_wetlands_terrain_trigger = yes
+		GH_any_floodplains_terrain_trigger = yes
+	}
+}
+
+GH_SWAP_graphical_wilderness_jungle_trigger = {
+	OR = {
+		GH_any_jungle_terrain_trigger = yes
+		AND = {
+			GH_any_hills_terrain_trigger = yes
+			geographical_region = GH_REPLACE_world_india
+		}
+	}
+}
+
+GH_SWAP_graphical_plains_trigger = {
+	GH_any_plains_terrain_trigger = yes
+}
+
+GH_SWAP_graphical_hills_trigger = {
+	GH_any_hills_terrain_trigger = yes
+}
+
+GH_SWAP_graphical_wilderness_ocean_trigger = {
+	is_sea_province = yes
+}
+
+GH_SWAP_has_graphical_india_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			OR = {
+				geographical_region = GH_REPLACE_world_india
+				geographical_region = GH_geographic_dahangon
+				geographical_region = GH_geographic_pirate_coast
+			}
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				OR = {
+					geographical_region = GH_REPLACE_world_india
+					geographical_region = GH_geographic_dahangon
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				OR = {
+					geographical_region = GH_REPLACE_world_india
+					geographical_region = GH_geographic_dahangon
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				OR = {
+					geographical_region = GH_REPLACE_world_india
+					geographical_region = GH_geographic_dahangon
+					geographical_region = GH_geographic_pirate_coast
+				}
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+GH_SWAP_has_graphical_mediterranean_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			geographical_region = GH_graphical_shattered_coast
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				geographical_region = GH_graphical_shattered_coast
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				geographical_region = GH_graphical_shattered_coast
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				geographical_region = GH_graphical_shattered_coast
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+GH_SWAP_has_graphical_mena_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			geographical_region = GH_graphical_sarradon
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				geographical_region = GH_graphical_sarradon
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				geographical_region = GH_graphical_sarradon
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				geographical_region = GH_graphical_sarradon
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+GH_SWAP_has_graphical_scandinavia_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			geographical_region = GH_REPLACE_world_europe_north
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				geographical_region = GH_REPLACE_world_europe_north
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				geographical_region = GH_REPLACE_world_europe_north
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				geographical_region = GH_REPLACE_world_europe_north
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+GH_SWAP_has_graphical_western_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			NOR = {
+				geographical_region = GH_graphical_kashirya
+				geographical_region = GH_graphical_shattered_coast
+				geographical_region = GH_graphical_sarradon
+				geographical_region = GH_graphical_pirate_coast
+				geographical_region = GH_graphical_dahangon
+			}
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				NOR = {
+					geographical_region = GH_graphical_kashirya
+					geographical_region = GH_graphical_shattered_coast
+					geographical_region = GH_graphical_sarradon
+					geographical_region = GH_graphical_pirate_coast
+					geographical_region = GH_graphical_dahangon
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				NOR = {
+					geographical_region = GH_graphical_kashirya
+					geographical_region = GH_graphical_shattered_coast
+					geographical_region = GH_graphical_sarradon
+					geographical_region = GH_graphical_pirate_coast
+					geographical_region = GH_graphical_dahangon
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				NOR = {
+					geographical_region = GH_graphical_kashirya
+					geographical_region = GH_graphical_shattered_coast
+					geographical_region = GH_graphical_sarradon
+					geographical_region = GH_graphical_pirate_coast
+					geographical_region = GH_graphical_dahangon
+				}
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+GH_SWAP_has_graphical_iberia_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			geographical_region = GH_REPLACE_world_europe_west_iberia
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				geographical_region = GH_REPLACE_world_europe_west_iberia
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				geographical_region = GH_REPLACE_world_europe_west_iberia
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				geographical_region = GH_REPLACE_world_europe_west_iberia
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+GH_SWAP_has_graphical_iran_region_trigger = {
+	trigger_if = {
+		limit = {
+			exists = capital_province
+		}
+		capital_province = {
+			geographical_region = GH_REPLACE_world_middle_east_persia
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			NOT = { exists = capital_province }
+		}
+		trigger_if = { 
+			limit = { exists = host.capital_province }
+			host.capital_province = {
+				geographical_region = GH_REPLACE_world_middle_east_persia
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = liege.capital_province
+			}
+			liege.capital_province = {
+				geographical_region = GH_REPLACE_world_middle_east_persia
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				exists = location.province_owner.capital_province
+			}
+			location.province_owner.capital_province = {
+				geographical_region = GH_REPLACE_world_middle_east_persia
+			}
+		}
+		trigger_else = { always = yes }
+	}
+	trigger_else = { always = yes }
+}
+
+
+######################
+## 00_faction_triggers
+
+GH_SWAP_immune_to_factions_trigger = { character_behavior_immune_to_factions_trigger = yes }
+
+######################
+## 00_faction_triggers
+
+GH_SWAP_can_keep_partition_succession_law_trigger = {
+	trigger_if = {
+		limit = {
+			has_realm_law = partition_succession_law
+		}
+		OR = {
+			can_have_partition_succession_law_trigger = yes
+			title_can_always_keep_partition_succession_law_trigger = yes
+		}
+	}
+	NOR = {
+		government_has_flag = government_is_clan
+		government_has_flag = government_is_continental_clan
+	}
+}
+
+GH_SWAP_can_keep_high_partition_succession_law_trigger = {
+	trigger_if = {
+		limit = {
+			has_realm_law = high_partition_succession_law
+		}
+		OR = {
+			can_have_high_partition_succession_law_trigger = yes
+			title_can_always_keep_high_partition_succession_law_trigger = yes
+		}
+	}
+	NOR = {
+		government_has_flag = government_is_clan
+		government_has_flag = government_is_continental_clan
+	}
+}
+
+GH_SWAP_can_have_high_partition_succession_law_trigger = {
+	trigger_if = {
+		limit = {
+			NOT = { 
+				culture = { has_cultural_parameter = can_enact_high_partition_succession_law }
+			}
+		}
+		culture = { has_innovation = innovation_heraldry }
+	}
+	custom_description = {
+		text = succession_laws_must_have_organised_government_tooltip
+		OR = {
+			government_has_flag = government_is_magocratic
+			government_has_flag = government_is_feudal
+		}
+	}
+}
+
+GH_SWAP_can_keep_single_heir_succession_law_trigger = {
+	trigger_if = {
+		limit = {
+			has_realm_law = single_heir_succession_law
+		}
+		OR = {
+			can_have_single_heir_succession_law_trigger = yes
+			# Byzantine Empire
+			historical_succession_access_single_heir_succession_law_trigger = yes
+		}
+	}
+}
+
+GH_SWAP_can_have_single_heir_succession_law_trigger = {
+	custom_description = {
+		text = succession_laws_must_have_innovation_or_marcher_tooltip
+		OR = {
+			culture = { has_innovation = innovation_primogeniture }
+			government_has_flag = government_is_landed_order
+			AND = {
+				culture = { has_cultural_pillar = heritage_marcher }
+				highest_held_title_tier >= tier_kingdom
+			}
+			AND = {
+				GH_is_any_republic_government_trigger = yes
+				highest_held_title_tier >= tier_county
+			}
+			AND = {
+				government_has_flag = government_is_military_unit
+				highest_held_title_tier >= tier_county
+			}
+		}
+	}
+	# Non-tribals only
+	custom_description = {
+		text = succession_laws_must_have_organised_government_tooltip
+		OR = {
+			government_has_flag = government_is_magocratic
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+			government_has_flag = government_is_landed_order
+			government_has_flag = government_is_administrative
+			AND = {
+				government_has_flag = government_is_military_unit
+				highest_held_title_tier >= tier_county
+			}
+			AND = {
+				GH_is_any_republic_government_trigger = yes
+				highest_held_title_tier >= tier_county
+			}
+		}
+	}
+}
+
+GH_SWAP_can_have_single_heir_youngest_succession_law_trigger = {
+	culture = {
+		has_innovation = innovation_primogeniture
+	}
+	# Non-tribals only
+	custom_description = {
+		text = succession_laws_must_have_organised_government_tooltip
+		OR = {
+			government_has_flag = government_is_magocratic
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+			government_has_flag = government_is_administrative
+		}
+	}
+	NOT = { government_allows = administrative }
+}
+
+GH_SWAP_can_designate_heir_trigger = {
+	can_do_diplomacy_trigger = yes
+	OR = {
+		AND = {
+			custom_description = {
+				text = "has_law_allowing_designate_heir"
+				has_realm_law_flag = can_designate_heirs
+			}	
+			custom_description = {
+				text = "dynasty_member_leads_election"
+				NAND = {
+					primary_title = {
+						has_title_law_flag = elective_succession_law
+					}
+					dynasty = primary_heir.dynasty
+				}
+			}
+		}
+		custom_description = {
+			text = "chevalie_allows_heir_designation"
+			AND = {
+				primary_title = title:e_chevalie
+				culture = { has_cultural_tradition = tradition_chevalien_identity }
+			}
+		}
+		custom_description = {
+			text = "redlanders_do_not_care_about_dynasties"
+			culture = { has_cultural_pillar = heritage_redlander }
+		}
+		legal_tradition_has_flag_trigger = { FLAG = can_designate_heir }
+	}
+}

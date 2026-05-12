@@ -1,0 +1,118 @@
+﻿commandry_tax_collector = {
+	flag = border_conflicts_sanctioned
+
+	levies_factor = -0.5
+	tax_factor = 0.25
+
+	subject_modifier = {
+		army_maintenance_mult = -0.1
+		garrison_size = 0.1
+		fellow_vassal_opinion = 10
+		men_at_arms_maintenance = -0.2
+		monthly_county_control_growth_factor = 0.1
+	}
+
+	ai_will_do = {
+		value = default_tax_obligation_ai_will_do
+
+		# Always take at least one default tax collector slot
+		if = {
+			limit = { scope:num_slots_with_obligation = 0 }
+			add = 100
+		}
+	}
+}
+
+inquisitive_special_rights_tax_collector = {
+	levies_factor = -0.2
+	tax_factor = -0.2
+
+	liege_modifier = {
+		monthly_piety_gain_mult = 0.02
+		cultural_head_fascination_mult = 0.02
+	}
+
+	subject_modifier = {
+		monthly_piety_gain_mult = 0.2
+		domain_tax_mult = -0.1
+		levy_reinforcement_rate = -0.1
+	}
+
+	ai_will_do = {
+		value = tax_obligation_base_ai_will_do
+	}
+}
+
+trade_rights_special_tax_collector = {
+	levies_factor = -0.75
+	tax_factor = -0.2
+
+	liege_modifier = {
+		domain_tax_mult = 0.03
+		development_growth_factor = 0.01
+	}
+
+
+	subject_modifier = {
+		domain_tax_mult = 0.1
+		development_growth_factor = 0.05
+		opinion_of_liege = 10
+	}
+
+	ai_will_do = {
+		value = default_tax_obligation_ai_will_do
+	}
+}
+
+exploitative_tax_collector = {
+	levies_factor = -0.9
+	tax_factor = 0.5
+
+	liege_modifier = {
+		domain_tax_mult = 0.1
+		county_opinion_add = -5
+	}
+	subject_modifier = {
+		monthly_county_control_growth_factor = -0.1
+		domain_tax_mult = 0.2
+		county_opinion_add = -20
+		development_growth_factor = -0.05
+		opinion_of_liege = -5
+	}
+
+	is_valid = {
+		custom_description = {
+			text = vassal_has_the_wrong_religion
+			subject = scope:vassal
+			NOT = { scope:vassal.faith ?= scope:liege.faith }
+		}
+		scope:liege.culture = {
+			has_innovation = innovation_bannus
+		}
+	}
+
+	ai_will_do = {
+		value = default_tax_obligation_ai_will_do
+
+		if = {
+			limit = {
+				scope:liege = {
+					ai_greed >= 75 # The AI has to be very greedy
+					ai_compassion <= 0 # And not kind enough to have qualms about it
+				}
+			}
+			add = 2
+		}
+		if = {
+			limit = {
+				scope:liege = {
+					any_vassal = {
+						percent >= 0.25
+						NOT = { faith = scope:liege.faith }
+					}
+				}
+			}
+			add = 5
+		}
+	}
+}

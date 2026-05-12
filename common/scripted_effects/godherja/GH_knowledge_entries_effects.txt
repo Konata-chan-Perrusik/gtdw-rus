@@ -1,0 +1,74 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_knowledge_entries_effects.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+initialize_automated_global_knowledge_entries_effect = {
+	# The Wiseman's Friend
+	# Owl Dissections
+	create_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = wingspan_pinion BONUS = air SCALE = 1 SKILL = air DIFFICULTY = poor_skill_level }
+	create_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = digits_talons BONUS = dark SCALE = 1 SKILL = air DIFFICULTY = poor_skill_level }
+	add_bonus_to_last_created_knowledge_entry_effect = { BONUS = add_trait_xp_lifestyle_hunter_falconer_knowledge_entry_effect SCALE = medium_trait_xp }
+	add_bonus_to_last_created_knowledge_entry_effect = { BONUS = sanity_loss SCALE = 1 }
+	create_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = lenses_oracle BONUS = learn_spell SCALE = 1 SKILL = air DIFFICULTY = average_skill_level }
+	# The Songwood
+	# Aeltheniax's 'Anatomy', Volume II
+	# Aeltheniax's 'Anatomy', Volume I
+	# The Fields of Pearls and Pits Full of Gold
+	# Book of Kurush
+	# Journal of Waymaster Germaine Dellecroix
+	# The Lost Cities
+	# Book of Forbidden Names
+	# The Godherja
+	# The Contents of Silver
+	# The Voyagers
+	# Clarifications on the Ivory Sea
+	# The Neverending Dream
+	# High Chants of the Watchful Stargazers
+	# The Splendorous Mirror Turned Inwards
+	# Sound of Veins
+	# Testament to Yunusfur
+	# Arl Janvreep's Series On the World-Tree
+	# Songs of the Sea
+	# Musings on the Flight Patterns of Birds
+	# The Stony Affair at Viridivie
+	# A Lesson on Funerary Rites and Practices in the Late Oejeynican Period
+	# The Kassidius Diagrams
+	# Book of the Lonely Spirit
+}
+
+
+initialize_automated_preset_spells_effect = {
+	## Summon Precious Meteor
+	create_two_aspect_spell_with_global_identifier_effect = { SPELL_IDENTIFIER = summon_precious_meteor ASPECT_1 = celestial TIER_1 = 1 ASPECT_2 = metal TIER_2 = 1 }
+	add_spell_effect_tag_to_last_created_spell_scripted_effect = { NAME = add_gold_positive TARGET = spell_organizer SCALED_BY = flag:total_spell_level THRESHOLD = 0 }
+	add_spell_effect_tag_to_last_created_spell_scripted_effect = { NAME = add_county_modifier_resource_exotic_metals_modifier TARGET = target_title SCALED_BY = flag:total_spell_level THRESHOLD = 3 }
+	scope:new_tag ?= {
+		set_variable = {
+			name = spell_effect_chance
+			value = 25
+		}
+	}
+	add_spell_effect_tag_to_last_created_spell_scripted_effect = { NAME = add_arcane_fallout TARGET = target_title SCALED_BY = flag:total_spell_level THRESHOLD = 5 }
+	scope:new_spell_scope ?= {
+		create_gemstone_spell_component_effect = { REWARD_TYPE = inherits_aspects REWARD_AMOUNT = 1 REQUIRED = no }
+		create_aervalr_shard_spell_component_effect = { REWARD_TYPE = inherits_aspects REWARD_AMOUNT = 1 REQUIRED = no }
+	}
+            
+	## Precious Metal Transmutation
+	create_one_aspect_spell_with_global_identifier_effect = { SPELL_IDENTIFIER = precious_metal_transmutation ASPECT_1 = dark TIER_1 = 1 }
+	add_spell_effect_tag_to_last_created_spell_scripted_effect = { NAME = add_gold_positive TARGET = spell_organizer SCALED_BY = flag:total_spell_level THRESHOLD = 0 }
+	add_spell_effect_tag_to_last_created_spell_scripted_effect = { NAME = add_county_modifier_resource_exotic_metals_modifier TARGET = target_title SCALED_BY = flag:total_spell_level THRESHOLD = 3 }
+	scope:new_tag ?= {
+		set_variable = {
+			name = spell_effect_chance
+			value = 25
+		}
+	}
+	add_spell_effect_tag_to_last_created_spell_scripted_effect = { NAME = add_arcane_fallout TARGET = target_title SCALED_BY = flag:total_spell_level THRESHOLD = 5 }
+	set_spell_gold_cost_of_last_created_spell_effect = { VALUE = 0 }
+            
+}

@@ -1,0 +1,92 @@
+﻿#####################################
+# Search in Library					#
+# by Askil							#
+#####################################
+
+gh_search_in_library_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_recruitment.dds"
+	}
+	ai_check_interval = 0
+	desc = gh_search_in_library_decision_desc
+	selection_tooltip = gh_search_in_library_decision_tooltip
+
+	is_shown = {
+		GH_is_any_tribal_government_trigger = no
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = gh_ruler_is_not_tribal
+			GH_is_any_tribal_government_trigger = no
+		}
+		age >= 8
+		location.barony.county ?= {
+			development_level >= 3
+		}
+		trigger_if = {
+			limit = { has_variable = gh_number_of_recently_read_book }
+			custom_description = {
+				text = "not_reached_limit_read_book_recently_tt"
+				NOT = { var:gh_number_of_recently_read_book = 7 }
+			}	
+		}
+		trigger_else = {
+			custom_tooltip = {
+				text = not_read_any_book_recently_tt
+			}
+		}	
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+		
+		custom_tooltip = {
+			text = gh_is_banned_from_studying_in_collection
+			NOT = {
+				has_variable_list = GH_attempted_to_steal_book_in_location 
+				any_in_list = {
+					variable = GH_attempted_to_steal_book_in_location
+					save_temporary_scope_as = theft_location
+					"squared_distance(root.location)" < squared_distance_massive #ASKIL NOTE: If collections should be county-based, change value here
+				}
+			}
+		}
+	}
+	
+	effect = {
+		custom_tooltip = search_within_location_library_tt
+		custom_tooltip = search_within_location_library_effect_tt
+		remove_variable = gh_max_number_of_book_read
+		hidden_effect = {
+			trigger_event = gh_search_in_library.0001
+		}
+	}
+	
+	cost = {
+		gold = {
+			value = 0
+			if = {
+				limit = { 
+					NOR = { 
+						location.county.holder ?= root
+					} 
+				}
+				add = miniscule_gold_value
+				if = {
+					limit = { NOT = { is_ruler = yes } }
+					add = 3
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

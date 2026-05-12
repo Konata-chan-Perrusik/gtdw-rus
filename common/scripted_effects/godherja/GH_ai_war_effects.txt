@@ -1,0 +1,72 @@
+﻿
+ai_conquer_kingdom_effect = {
+	save_temporary_scope_as = ai_attacker
+	if = {
+		limit = { NOT = { exists = var:ai_recently_launched_invasion } }
+		title:$KINGDOM_NAME$ = {
+			save_scope_as = defender_title
+			if = {
+				limit = {
+					any_in_de_jure_hierarchy = {
+						tier = tier_county 
+						holder.top_liege = {
+							save_temporary_scope_as = holder_top_liege_scope
+							NOT = { this = scope:ai_attacker }
+							$TARGET_LIST_SCOPE$ = {
+								has_variable_list = target_religions
+								is_target_in_variable_list = {
+									name = target_religions
+									target = scope:holder_top_liege_scope.religion
+								}
+							}
+						}
+					}
+				}
+				if = {
+					limit = { 
+						exists = title:$KINGDOM_NAME$.holder
+						NOT = { title:$KINGDOM_NAME$.holder = scope:ai_attacker }
+						$TARGET_LIST_SCOPE$ = {
+							has_variable_list = target_religions
+							is_target_in_variable_list = {
+								name = target_religions
+								target = title:$KINGDOM_NAME$.holder.religion
+							}
+						}
+					}
+					title:$KINGDOM_NAME$.holder = { save_scope_as = defender }
+				}
+				else = {
+					random_in_de_jure_hierarchy = {
+						limit = { 
+							tier = tier_county 
+							holder.top_liege = {
+								save_temporary_scope_as = holder_top_liege_scope
+								NOT = { this = scope:ai_attacker }
+								$TARGET_LIST_SCOPE$ = {
+									has_variable_list = target_religions
+									is_target_in_variable_list = {
+										name = target_religions
+										target = scope:holder_top_liege_scope.religion
+									}
+								}
+							}
+						}
+						holder.top_liege = { save_scope_as = defender }
+					}
+				}
+				scope:ai_attacker = {
+					set_variable = {
+						name = ai_recently_launched_invasion
+						days = 10
+					}
+					start_war = {
+						cb = $CASUS_BELLI$
+						target = scope:defender
+						target_title = scope:defender_title
+					}
+				}
+			}
+		}
+	}
+}

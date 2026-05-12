@@ -1,0 +1,614 @@
+﻿
+# vampire_template = {
+	# age = { 40 150 }
+	# gender_female_chance = 50
+	# dynasty = none
+	# trait = gh_vampiric
+	# culture = scope:vampire_county.var:dominant_vampire_culture
+	# faith = scope:vampire_county.var:dominant_vampire_faith
+	# random_traits_list = {
+		# count = 1
+		# education_martial_2	= { weight = { base = 25 } }
+		# education_martial_3	= { weight = { base = 50 } }
+		# education_martial_4	= { weight = { base = 25 } }
+		# education_arcana_2 = { weight = { base = 25 } }
+		# education_arcana_3 = { weight = { base = 50 } }
+		# education_arcana_4 = { weight = { base  = 25 } }
+	# }
+	# random_traits_list = {
+		# count = 1
+		# magic_good_3	= { weight = { base = 50 } }
+		# magic_good_4	= { weight = { base = 25 } }
+		# magic_good_5	= { weight = { base = 10 } }
+		# magic_good_5	= { weight = { base = 5 } }
+		# magic_good_6	= { weight = { base = 2 } }
+		# magic_good_7	= { weight = { base = 1 } }
+	# }
+	# random_traits_list = {
+		# count = { 2 3 }
+		# sadistic = { weight = { base = 50 } }
+		# ambitious = { weight = { base = 25 } }
+		# callous = { weight = { base = 25 } }
+		# deceitful = { weight = { base = 25 } }
+		# wrathful = { weight = { base = 20 } }
+		# arrogant = { weight = { base = 20 } }
+		# paranoid = { weight = { base = 20 } }
+		# gregarious = { weight = { base = 10 } }
+		# lustful = { weight = { base = 10 } }
+	# }
+	# random_traits_list = {
+		# count = { 2 3 }
+		# gh_glowing_eyes = { weight = { base = 100 } }
+		# gh_excessively_pale = { weight = { base = 25 } }
+		# gh_glowing_veins = { weight = { base = 25 } }
+		# gh_beset_by_visions = { weight = { base = 20 } }
+		# gh_ritual_tattoos = { weight = { base = 20 } }
+		# gh_racked_by_voices = { weight = { base = 20 } }
+		# gh_exhausted = { weight = { base = 10 } }
+		# gh_stimulated = { weight = { base = 10 } }
+	# }
+	# random_traits_list = {
+		# count = { 0 1 }
+		# gh_ritual_scars_1 = { weight = { base = 20 } }
+		# gh_ritual_scars_2 = { weight = { base = 20 } }
+		# gh_ritual_scars_3 = { weight = { base = 20 } }
+	# }
+	# random_traits_list = {
+		# count = { 0 2 }
+		# intellect_good_1 = { weight = { base = 20 } }
+		# intellect_good_2 = { weight = { base = 10 } }
+		# intellect_good_3 = { weight = { base = 5 } }
+		# beauty_good_1 = { weight = { base = 20 } }
+		# beauty_good_2 = { weight = { base = 10 } }
+		# beauty_good_3 = { weight = { base = 5 } }
+	# }
+	# random_traits_list = {
+		# count = 1
+		# lifestyle_blademaster = { weight = { base = 60 } }
+		# gallant = { weight = { base = 20 } }
+		# strategist = { weight = { base = 5 } }
+	# }
+	# random_traits = yes
+	# martial = {
+		# min_template_low_skill
+		# max_template_low_skill
+	# }
+	# stewardship = {
+		# min_template_low_skill
+		# max_template_low_skill
+	# }
+	# diplomacy = {
+		# min_template_decent_skill
+		# max_template_decent_skill
+	# }
+	# intrigue = {
+		# min_template_high_skill
+		# max_template_high_skill
+	# }
+	# learning = {
+		# min_template_decent_skill
+		# max_template_decent_skill
+	# }
+	
+	# after_creation = {
+		# if = {
+			# limit = { NOT = { scope:vampire_county = { has_variable = dominant_vampire_faith } } }
+			# set_character_faith = scope:vampire_county.faith
+		# }
+		# if = {
+			# limit = { NOT = { scope:vampire_county = { has_variable = dominant_vampire_culture } } }
+			# set_culture = scope:vampire_county.culture
+		# }
+		# add_random_tiered_trait_xp_effect = {
+			# TRAIT = lifestyle_blademaster
+			# LEVEL_1 = yes
+			# LEVEL_3 = no
+		# }
+		# add_to_magi_list = yes
+		# learn_random_culture_magic_school_effect = {
+			# MIN_SPELLS = generated_character_min_spells_default_value
+			# MAX_SPELLS = generated_character_max_spells_default_value
+			# MAX_SPELL_LEVEL = generated_character_max_spell_level_default_value
+		# }
+		# set_random_base_arcana = yes
+		# initialize_existing_glowing_mutations_color_effect = yes
+	# }
+# }
+
+assassin_template = {
+	age = { 18 40 }
+	gender_female_chance = 50
+	random_traits_list = {
+		count = 1
+		education_intrigue_2 = {}
+		education_intrigue_3 = {}
+		education_intrigue_4 = {}
+	}
+	random_traits_list = {
+		count = 3
+		deceitful = {}
+		vengeful = {}
+		fickle = {}
+		paranoid = {}
+		cynical = {}
+		callous = {}
+		sadistic = {}
+		craven = {}
+		patient = {}
+		brave = {}
+		lustful = {}
+		gregarious = {}
+	}
+	random_traits = yes
+	faith = root.faith
+	culture = root.culture
+	intrigue = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+physician_template = {
+	age = { 18 40 }
+	gender_female_chance = 50
+	random_traits_list = {
+		count = 1
+		education_learning_1 = {}
+		education_learning_2 = {}
+		education_learning_3 = {}
+		education_learning_4 = {}
+	}
+	random_traits_list = {
+		count = 1
+		lifestyle_physician = {}
+		lifestyle_mystic = {}
+		lifestyle_herbalist = {}
+	}
+	random_traits_list = {
+		count = 3
+		calm = {}
+		chaste = {}
+		content = {}
+		diligent = {}
+		stubborn = {}
+		forgiving = {}
+		generous = {}
+		honest = {}
+		humble = {}
+		compassionate = {}
+		patient = {}
+		just = {}
+		shy = {}
+	}
+	random_traits = yes
+	faith = root.faith
+	culture = root.culture
+	learning = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+child_prodigy_intellect_template = {
+	age = { 5 12 }
+	gender_female_chance = 50
+	random_traits = yes
+	trait = intellect_good_3
+	faith = root.faith
+	culture = root.culture
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+child_prodigy_magic_template = {
+	age = { 5 12 }
+	gender_female_chance = 50
+	random_traits = yes
+	random_traits_list = {
+		count = 1
+		intellect_good_1 = {
+			weight = { base = 40 }
+		}
+		intellect_good_2 = {
+			weight = { base = 20 }
+		}
+		intellect_good_3 = {
+			weight = { base = 10 }
+		}
+	}
+	random_traits_list = {
+		magic_good_4 = {}
+		magic_good_5 = {}
+		magic_good_6 = {}
+		magic_good_7 = {}
+		magic_good_8 = {}
+	}
+	faith = root.faith
+	culture = root.culture
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+outcast_priest_template = {
+	age = { 20 50 }
+	gender_female_chance = root_faith_clergy_gender_female_chance
+	random_traits = yes
+	random_traits_list = {
+		count = 1
+		education_learning_2 = {}
+		education_learning_3 = {}
+		education_learning_4 = {}
+	}
+	random_traits_list = {
+		lifestyle_mystic = {}
+		scholar = {}
+		theologian = {}
+	}
+	random_traits_list = {
+		count = 1
+		zealous = {
+			weight = { base = 30 }
+		}
+		diligent = {
+			weight = { base = 30 }
+		}
+		gregarious = {
+			weight = { base = 20 }
+		}
+		humble = {
+			weight = { base = 20 }
+		}
+	}
+	random_traits_list = {
+		count = 2
+		lustful = {
+			trigger = {
+				root.faith = { trait_is_virtue = lustful }
+			}
+		}
+		chaste = {
+			trigger = {
+				root.faith = { trait_is_virtue = chaste }
+			}
+		}
+		gluttonous = {
+			trigger = {
+				root.faith = { trait_is_virtue = gluttonous }
+			}
+		}
+		temperate = {
+			trigger = {
+				root.faith = { trait_is_virtue = temperate }
+			}
+		}
+		greedy = {
+			trigger = {
+				root.faith = { trait_is_virtue = greedy }
+			}
+		}
+		generous = {
+			trigger = {
+				root.faith = { trait_is_virtue = generous }
+			}
+		}
+		wrathful = {
+			trigger = {
+				root.faith = { trait_is_virtue = wrathful }
+			}
+		}
+		calm = {
+			trigger = {
+				root.faith = { trait_is_virtue = calm }
+			}
+		}
+		patient = {
+			trigger = {
+				root.faith = { trait_is_virtue = patient }
+			}
+		}
+		impatient = {
+			trigger = {
+				root.faith = { trait_is_virtue = impatient }
+			}
+		}
+		arrogant = {
+			trigger = {
+				root.faith = { trait_is_virtue = arrogant }
+			}
+		}
+		humble = {
+			trigger = {
+				root.faith = { trait_is_virtue = humble }
+			}
+		}
+		deceitful = {
+			trigger = {
+				root.faith = { trait_is_virtue = deceitful }
+			}
+		}
+		honest = {
+			trigger = {
+				root.faith = { trait_is_virtue = honest }
+			}
+		}
+		craven = {
+			trigger = {
+				root.faith = { trait_is_virtue = craven }
+			}
+		}
+		brave = {
+			trigger = {
+				root.faith = { trait_is_virtue = brave }
+			}
+		}
+		ambitious = {
+			trigger = {
+				root.faith = { trait_is_virtue = ambitious }
+			}
+		}
+		content = {
+			trigger = {
+				root.faith = { trait_is_virtue = content }
+			}
+		}
+		arbitrary = {
+			trigger = {
+				root.faith = { trait_is_virtue = arbitrary }
+			}
+		}
+		just = {
+			trigger = {
+				root.faith = { trait_is_virtue = just }
+			}
+		}
+		paranoid = {
+			trigger = {
+				root.faith = { trait_is_virtue = paranoid }
+			}
+		}
+		trusting = {
+			trigger = {
+				root.faith = { trait_is_virtue = trusting }
+			}
+		}
+		compassionate = {
+			trigger = {
+				root.faith = { trait_is_virtue = compassionate }
+			}
+		}
+		callous = {
+			trigger = {
+				root.faith = { trait_is_virtue = callous }
+			}
+		}
+		sadistic = {
+			trigger = {
+				root.faith = { trait_is_virtue = sadistic }
+			}
+		}
+		stubborn = {
+			trigger = {
+				root.faith = { trait_is_virtue = stubborn }
+			}
+		}
+		fickle = {
+			trigger = {
+				root.faith = { trait_is_virtue = fickle }
+			}
+		}
+		vengeful = {
+			trigger = {
+				root.faith = { trait_is_virtue = vengeful }
+			}
+		}
+		forgiving = {
+			trigger = {
+				root.faith = { trait_is_virtue = forgiving }
+			}
+		}
+	}
+	faith = root.faith
+	culture = root.culture
+	learning = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	after_creation = {
+		if = {
+			limit = {
+				root.faith = { has_doctrine = tenet_wayfathers }
+			}
+			random_list = {
+				5 = { add_trait = way_of_nullification_follower }
+				10 = { add_trait = way_of_coins_follower }
+				20 = { add_trait = way_of_crowns_follower }
+				10 = { add_trait = way_of_crows_follower }
+				10 = { add_trait = way_of_family_follower }
+				10 = { add_trait = way_of_harvests_follower }
+				5 = { add_trait = way_of_justice_follower }
+				10 = { add_trait = way_of_knowledge_follower }
+				20 = { add_trait = way_of_swords_follower }
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					root.faith = { has_doctrine = tenet_wardenite_legalism }
+					root.faith = { has_doctrine = tenet_wardenism_religion_syncretism }
+				}
+			}
+			add_trait = lifestyle_jurist
+			if = {
+				limit = { has_trait = lifestyle_jurist }
+				add_trait_xp = {
+					trait = lifestyle_jurist
+					value = {
+						integer_range = {
+							min = small_lifestyle_random_xp_low
+							max = medium_lifestyle_random_xp_high
+						}
+					}
+				}
+				GH_achiev_mywordislaw_check = yes
+			}
+		}
+		set_random_base_arcana = yes
+	}
+}
+
+scallywag_template = {
+	age = { 18 40 }
+	gender_female_chance = 50
+	random_traits = yes
+	random_traits_list = {
+		shrewd = {}
+		scarred = {}
+		one_legged = {}
+		one_eyed = {}
+		gh_one_handed = {}
+	}
+	trait = deceitful
+	random_traits_list = {
+		count = 1
+		brave = {}
+		lustful = {}
+		ambitious = {}
+		arrogant = {}
+		arbitrary = {}
+	}
+	random_traits_list = {
+		count = 1
+		education_diplomacy_1 = {}
+		education_diplomacy_2 = {}
+		education_diplomacy_3 = {}
+		education_diplomacy_4 = {}
+	}
+	random_traits_list = {
+		count = 1
+		lifestyle_reveler = {}
+	}
+	faith = root.faith
+	culture = root.culture
+	diplomacy = {
+		min_template_high_skill
+		max_template_high_skill
+	}
+	intrigue = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	learning = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+skilled_merchant_template = {
+	age = { 20 50 }
+	gender_female_chance = root_faith_clergy_gender_female_chance
+	random_traits = yes
+	random_traits_list = {
+		shrewd = {}
+		avaricious = {}
+		architect = {}
+		administrator = {}
+	}
+	random_traits_list = {
+		count = 2
+		diligent = {}
+		stubborn = {}
+		greedy = {}
+		temperate = {}
+		patient = {}
+		content = {}
+	}
+	random_traits_list = {
+		count = 1
+		education_stewardship_2 = {}
+		education_stewardship_3 = {}
+		education_stewardship_4 = {}
+	}
+	faith = root.faith
+	culture = root.culture
+	stewardship = {
+		min_template_high_skill
+		max_template_high_skill
+	}
+	learning = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	after_creation = {
+		set_random_base_arcana = yes
+	}
+}
+
+great_fighter_template = {
+	age = { 18 40 }
+	gender_female_chance = root_soldier_female_chance
+	random_traits = yes
+	random_traits_list = {
+		lifestyle_blademaster = {}
+	}
+	random_traits_list = {
+		lifestyle_hunter = {}
+		athletic = {}
+		giant = {}
+		strong = {}
+		gallant = {}
+		torturer = {}
+		adventurer = {}
+	}
+	random_traits_list = {
+		count = { 0 1 }
+		physique_good_1 = {}
+		physique_good_2 = {}
+		physique_good_3 = {}
+	}
+	random_traits_list = {
+		count = 2
+		brave = {}
+		wrathful = {}
+		ambitious = {}
+		vengeful = {}
+		zealous = {}
+		sadistic = {}
+		diligent = {}
+	}
+	random_traits_list = {
+		count = 1
+		education_martial_1 = {}
+		education_martial_2 = {}
+		education_martial_3 = {}
+	}
+	faith = root.faith
+	culture = root.culture
+	martial = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	prowess = {
+		min_template_decent_skill
+		max_template_decent_skill
+	}
+	
+	after_creation = {
+		add_random_tiered_trait_xp_effect = {
+			TRAIT = lifestyle_blademaster
+			LEVEL_1 = yes
+			LEVEL_3 = no
+		}
+		set_random_base_arcana = yes
+	}
+}

@@ -1,0 +1,1200 @@
+﻿gh_create_book_artifact_effect = {
+	$BUYER$ = { save_scope_as = character_book_buyer }
+	# If the book is historical, the process is much simpler
+	if = {
+		limit = {
+			scope:character_book_buyer ?= { has_variable = gh_attempt_to_buy_book_in_collection }
+			is_target_in_variable_list = { 
+				name = gh_global_historical_book_list
+				target = scope:character_book_buyer.var:gh_attempt_to_buy_book_in_collection
+			} 	
+		}
+		gh_create_historical_book_from_library_effect = yes
+	}
+	else_if = {
+		limit = { scope:character_book_buyer ?= { has_variable = gh_attempt_to_buy_book_in_collection } }
+		# First we check the rarity of the book
+		if = {
+			limit = {
+				OR = {
+					scope:character_book_buyer.var:gh_temporary_book_rarity ?= flag:illustrious # Books created from procedural artifacts have their own variable for rarity
+					any_in_global_list = {
+						variable = global_illustrious_book_list
+						this = scope:character_book_buyer.var:gh_attempt_to_buy_book_in_collection
+					}
+				}
+			}
+			set_artifact_rarity_illustrious = yes
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:character_book_buyer.var:gh_temporary_book_rarity ?= flag:famed
+					any_in_global_list = {
+						variable = global_famed_book_list
+						this = scope:character_book_buyer.var:gh_attempt_to_buy_book_in_collection
+					}
+				}
+			}
+			set_artifact_rarity_famed = yes
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:character_book_buyer.var:gh_temporary_book_rarity ?= flag:masterwork
+					any_in_global_list = {
+						variable = global_masterwork_book_list
+						this = scope:character_book_buyer.var:gh_attempt_to_buy_book_in_collection
+					}
+				}
+			}
+			set_artifact_rarity_masterwork = yes
+		}
+		else = {
+			set_artifact_rarity_common = yes
+		}
+		scope:character_book_buyer ?= { remove_variable = gh_temporary_book_rarity }
+		
+		if = {
+			limit = { 
+				trigger_if = {
+					limit = { scope:character_book_buyer ?= { has_variable = book_story_var } }
+					scope:character_book_buyer.var:book_story_var ?= { 
+						has_variable_list = GH_artifiact_modifier_list
+					}
+				}
+				trigger_else = { always = no }
+			}
+			random_dummy_gender_effect = yes #We don't really have a creator so we just use a random one
+			GH_create_artifact_book_light_effect = {
+				OWNER = scope:actor
+				CREATOR = scope:dummy_gender
+				SET_SUBJECT = flag:no
+				SET_TOPIC = flag:no
+			}
+		}	
+		else = {
+			random_dummy_gender_effect = yes
+			create_artifact_book_effect = {
+				OWNER = scope:actor
+				CREATOR = scope:dummy_gender
+				SET_SUBJECT = flag:no
+				SET_TOPIC = flag:no
+			}
+		}
+
+		hidden_effect_new_object = {
+			scope:newly_created_artifact = {
+				set_variable = { name = historical_book value = scope:character_book_buyer.var:gh_attempt_to_buy_book_in_collection }
+				
+				# If the book in the collection was previously a procedural artifact, its title and description are retrieved from another loc entry
+				if = {
+					limit = { scope:character_book_buyer = { has_variable = character_text_holder_var } }
+					set_variable = { 
+						name = gh_artifact_text_holder 
+						value = scope:character_book_buyer.var:character_text_holder_var 
+					}
+					set_artifact_name = GH_PROCEDURAL_ARTIFACT_BOOK_TITLE					
+					set_artifact_description = GH_PROCEDURAL_ARTIFACT_BOOK_DESC
+				}
+				# Otherwise we use the normal method to set the title and description
+				else = {
+					set_artifact_name = artifact_book_historical_title				
+					set_artifact_description = artifact_book_historical_description
+				}
+				remove_variable = character_text_holder_var
+		
+				scope:character_book_buyer.var:book_story_var ?= {
+					if = {
+						limit = { has_variable_list = knowledge_entry_list }
+						every_in_list = {
+							variable = knowledge_entry_list
+							scope:newly_created_artifact = {
+								add_to_variable_list = {
+									name = knowledge_entry_list
+									target = prev
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		remove_variable = gh_attempt_to_buy_book_in_collection
+	}
+	if = {
+		limit = { scope:character_book_buyer ?= { has_variable = book_story_var } }
+		scope:character_book_buyer.var:book_story_var ?= {
+			end_story = yes
+		}
+	}
+}
+
+build_collection_of_topics_effect = {
+	save_scope_as = reader
+	location.county.holder ?= { save_scope_as = gh_location_ruler }
+	if = {
+		limit = { NOT = { this.location = { has_variable = gh_search_library_story } } }
+		create_story = { 
+			type = gh_search_library_story
+			save_scope_as = scoped_gh_search_library_story
+		}
+		scope:scoped_gh_search_library_story ?= {
+			GH_create_library_topic_effect = { VALUE = gh_pre_creation_remaining_location_topic_capacity_value }
+		}
+	}
+	else_if = {
+		limit = { 
+			this.location = { has_variable = gh_search_library_story } 
+			NOT = { this.location.var:gh_search_library_story = { has_variable = recently_checked_collection  } }
+			gh_post_creation_remaining_location_topic_capacity_value > 0
+		}
+		this.location.var:gh_search_library_story ?= {
+			GH_create_library_topic_effect = { VALUE = gh_post_creation_remaining_location_topic_capacity_value }
+		}
+	}
+}
+
+gh_add_topic_to_collection_effect = {
+	# If the player has chosen to add a book to a non-existant topic in the collection, we create that topic
+	if = {
+		limit = {
+			NOT = { 
+				scope:recipient.location.var:gh_search_library_story ?= {  #ASKIL NOTE: If collections should be county-based, change value here
+					is_target_in_variable_list = { 
+						name = list_of_available_topics
+						target = flag:$TOPIC$
+					}
+				}
+			}
+		}
+		add_to_variable_list = {
+			name = list_of_available_topics
+			target = flag:$TOPIC$
+		}
+	}
+}
+
+transfer_book_to_library = {
+	# If this is a historical Godherja™ book then we just need to add the correct flag
+	if = {
+		limit = {
+			exists = scope:recipient.var:gh_transfer_book_to_collection.var:historical_book
+			is_target_in_global_variable_list = {
+				name = gh_global_historical_book_list
+				target = scope:recipient.var:gh_transfer_book_to_collection.var:historical_book
+			}
+		}
+		gh_transfer_historical_book_to_library_effect = { COLLECTOR = scope:recipient TOPIC = $TOPIC$ }
+		destroy_artifact = scope:recipient.var:gh_transfer_book_to_collection
+		remove_variable = gh_transfer_book_to_collection
+	}
+	# If it's not then it's a whole lot more work
+	else = {
+		gh_transfer_procedural_book_to_library = { COLLECTOR = scope:recipient TOPIC = $TOPIC$ }
+	}
+}
+
+gh_add_book_to_local_collection_in_topic_effect = {
+	# We add the book to the permanent list of topic
+	add_to_variable_list = {
+		name = gh_available_books_in_$TOPIC$_list
+		target = flag:$BOOK$
+	}
+	$GIVER$ = {
+		# We assume the player already has read the book
+		add_to_variable_list = {
+			name = gh_book_personally_read
+			target = flag:$BOOK$
+		}
+	}
+}
+
+increase_global_book_rarity_variable_effect = {
+	# Only a few book should become rare in each topics
+	if = {
+		limit = { NOT = { has_variable = book_rarity_set_var } }
+		set_variable = { name = book_rarity_set_var value = 1 }
+	}
+	else = { change_variable = { name = book_rarity_set_var add = 1 } }
+	# Only a few regional should become rare in the world
+	if = {
+		limit = { NOT = { has_global_variable = $REGION$_books_increased_rarity } }
+		set_global_variable = { name = $REGION$_books_increased_rarity value = 1 }
+	}
+	else = { change_global_variable = { name = $REGION$_books_increased_rarity add = 1 } }
+}
+
+gh_chance_of_increasing_rarity_effect = {
+	random_list = {
+		160 = { }
+		20 = {
+			save_scope_value_as = { name = gh_rarity_of_book value = flag:masterwork }
+			add_to_global_variable_list = {
+				name = global_masterwork_book_list
+				target = flag:$BOOK$
+			}
+			increase_global_book_rarity_variable_effect = { REGION = $REGION$ }
+		}		
+		10 = {
+			save_scope_value_as = { name = gh_rarity_of_book value = flag:famed }
+			add_to_global_variable_list = {
+				name = global_famed_book_list
+				target = flag:$BOOK$
+			}
+			increase_global_book_rarity_variable_effect = { REGION = $REGION$ }
+		}
+		5 = {
+			save_scope_value_as = { name = gh_rarity_of_book value = flag:illustrious }
+			add_to_global_variable_list = {
+				name = global_illustrious_book_list
+				target = flag:$BOOK$
+			}
+			increase_global_book_rarity_variable_effect = { REGION = $REGION$ }
+		}
+	}
+}
+
+
+create_procedural_book_attribute_story = {
+	scope:gh_collector_procedural = {
+		# We create the story on the player
+		create_story = {
+			type = gh_book_attribute_story
+			save_scope_as = book_attribute_story_scope
+		}
+		# We assume the player already has read the book
+		add_to_variable_list = {
+			name = gh_book_personally_read
+			target = flag:$BOOK_FLAG$
+		}
+	}
+	#Then we set the story as a variable inside the library story
+	set_variable = {
+		name = $BOOK_FLAG$
+		value = scope:book_attribute_story_scope
+	}	
+	
+	gh_add_book_to_local_collection_in_topic_effect = { GIVER = scope:gh_collector_procedural TOPIC = $TOPIC$  BOOK = $BOOK_FLAG$  }
+	
+	var:$BOOK_FLAG$ ?= {
+		set_variable = {
+			name = book_donor
+			value = scope:gh_collector_procedural
+		}
+		
+		# Set GH_artifiact_modifier_list variable list so we can retrieve the correct modifiers in the future
+		GH_add_artifact_modifier_to_list_effect = yes
+		
+		# Set rarity of book for GUI Collection Stuff
+		if = {
+			limit = { scope:gh_collector_procedural.var:gh_transfer_book_to_collection = { rarity = masterwork } }
+			set_variable = {
+				name = book_rarity
+				value = flag:masterwork
+			}
+		}
+		else_if = {
+			limit = { scope:gh_collector_procedural.var:gh_transfer_book_to_collection = { rarity = famed } }
+			set_variable = {
+				name = book_rarity
+				value = flag:famed
+			}
+		}											
+		else_if = {
+			limit = { scope:gh_collector_procedural.var:gh_transfer_book_to_collection = { rarity = illustrious } }
+			set_variable = {
+				name = book_rarity
+				value = flag:illustrious
+			}
+		}
+		scope:gh_collector_procedural.var:gh_transfer_book_to_collection ?= {
+			# Every knowledge entry on the artifact we add it to the book story
+			every_in_list = {
+				variable = knowledge_entry_list
+				scope:gh_collector_procedural.location.var:gh_search_library_story.var:$BOOK_FLAG$ ?= { #ASKIL NOTE: If collections should be county-based, change value here
+					add_to_variable_list = {
+						name = knowledge_entry_list
+						target = prev
+					}
+				}
+			}
+		}
+		
+		# We find a rando to hold the book artifact title and description
+		random_ruler = {
+			limit = { NOT = { has_variable = is_holding_text } }
+			save_scope_as = random_text_holder
+			
+			# Make sure the character isn't picked again to hold text
+			set_variable = {
+				name = is_holding_text
+				value = yes
+			}
+			
+			# We save the rando so we can scope to them in GUI and display the title and desc of the book
+			prev = {
+				set_variable = {
+					name = gh_book_text_holder
+					value = scope:random_text_holder
+				}
+			}			
+			scope:gh_collector_procedural = {
+				# We save on a variable the rando to be re-used in gh_search_in_library.0003
+				set_variable = {
+					name = gh_book_text_holder
+					value = scope:random_text_holder
+				}
+				trigger_event = gh_search_in_library.0003
+			}
+		}
+	}
+}
+
+create_book_attribute_story = {
+	scope:reader = {
+		# We create the story on the player
+		create_story = {
+			type = gh_book_attribute_story
+			save_scope_as = book_attribute_story_scope
+		}
+	}
+	#Then we set the story as a variable inside the library story
+	set_variable = {
+		name = $BOOK$
+		value = scope:book_attribute_story_scope
+	}
+}
+
+add_book_to_collection_effect = {
+	add_to_variable_list = {
+		name = gh_available_books_in_$TOPIC$_list
+		target = flag:$BOOK$
+	}
+
+	if = {
+		limit = { 
+			trigger_if = {
+				limit = {  has_global_variable = $REGION$_books_increased_rarity }
+				NOT = { global_var:$REGION$_books_increased_rarity >= 7 }
+			}
+			trigger_else = { always = yes }
+			
+			trigger_if = {
+				limit = { has_variable = book_list_initialized }
+				trigger_if = {
+					limit = { has_variable = book_rarity_set_var }
+					NOT = { var:book_rarity_set_var >= scope:number_of_books_with_increased_rarity_value_scope }
+				}
+			}
+			trigger_else = { always = no }
+		}
+		gh_chance_of_increasing_rarity_effect = { REGION = $REGION$ BOOK = $BOOK$ }		
+	}
+	random_list = {
+		90 = {} # No Knoweldge Entry
+		10 = {   # Possible GENERIC Knoweldge Entry	
+			if = {
+				limit = { NOT = { has_variable = $BOOK$  } }
+				create_book_attribute_story = { BOOK = $BOOK$ }
+			}	
+			var:$BOOK$ ?= {
+				set_variable = {
+					name = gh_temporary_knowledge_entry
+					value = yes
+				}
+				GH_select_topic_for_random_ke_effect = yes
+			}
+		}
+	}
+}
+
+GH_create_artifact_book_light_effect = { #ASKIL NOTE: This effect needs to be updated if the vanilla create_artifact_book_effect is updated 
+	$OWNER$ = { save_scope_as = owner } #Will always exist!
+	$CREATOR$ = { #Doesn't always exist
+		save_scope_as = author
+	}
+	save_temporary_scope_value_as = {
+		name = subject_is_set
+		value = $SET_SUBJECT$
+	}
+	save_temporary_scope_value_as = {
+		name = topic_is_set
+		value = $SET_TOPIC$
+	}
+	if = {
+		limit = {
+			exists = scope:dummy_gender
+			scope:author = scope:dummy_gender
+		}
+		clear_saved_scope = author
+		clear_saved_scope = dummy_gender
+	}
+	else = { #If we have an author we save them as a variable on the owner so that we can access them later on when setting the subject etc.
+		scope:owner = {
+			set_variable = {
+				name = book_artifact_author
+				value = scope:author
+				days = 1
+			}
+		}
+	}
+	hidden_effect_new_object = {
+		# Get artifact quality and wealth
+		get_artifact_quality_effect = yes
+		get_artifact_wealth_effect = yes
+		
+
+		# To save the subject, topic, and other variables we'll need if it has been set in events or in the effect
+		get_book_variables_effect = yes
+
+		if = { #Should this be a court artifact?
+			limit = {
+				has_royal_court = yes
+				has_dlc_feature = court_artifacts
+				NOT = { exists = scope:should_be_trinket }
+			}
+			if = { #Do we have an author?
+				limit = {
+					exists = scope:author
+				}
+				if = { #Is this author using Palm Leaf (indian) books?
+					limit = {
+						scope:author = { artifact_use_indian_building_visuals_trigger = yes }
+					}
+					if = {	# GH CHANGE: Does this book use a template?
+						limit = { 
+							exists = scope:book_uses_template
+							scope:book_uses_template = flag:religious
+						}
+						scope:owner = {
+							create_artifact = {	
+								name = placeholder # Will be regenerated in the post-creation effects
+								creator = scope:author
+								description = placeholder # Will be regenerated in the post-creation effects
+								template = gh_book_religious_template
+								visuals = indian_book
+								type = book
+								modifier = artifact_placeholder_modifier
+								save_scope_as = newly_created_artifact
+								wealth = scope:wealth
+								quality = scope:quality
+								#decaying = no
+							}
+						}
+					}
+					else = {
+						scope:owner = {
+							create_artifact = {	
+								name = placeholder # Will be regenerated in the post-creation effects
+								creator = scope:author
+								description = placeholder # Will be regenerated in the post-creation effects
+								visuals = indian_book
+								type = book
+								modifier = artifact_placeholder_modifier
+								save_scope_as = newly_created_artifact
+								wealth = scope:wealth
+								quality = scope:quality
+								#decaying = no
+							}
+						}
+					}
+				}
+				else = { #Codices/Non-Indian books
+					if = {	# GH CHANGE: Does this book use a template?
+						limit = { 
+							exists = scope:book_uses_template
+							scope:book_uses_template = flag:religious
+						}
+						scope:owner = {
+							create_artifact = {
+								name = placeholder # Will be regenerated in the post-creation effects
+								creator = scope:author
+								description = placeholder # Will be regenerated in the post-creation effects
+								template = gh_book_religious_template
+								visuals = book
+								type = book
+								modifier = artifact_placeholder_modifier
+								save_scope_as = newly_created_artifact
+								wealth = scope:wealth
+								quality = scope:quality
+								#decaying = no
+							}
+						}
+					}
+					else = {
+						scope:owner = {
+							create_artifact = {
+								name = placeholder # Will be regenerated in the post-creation effects
+								creator = scope:author
+								description = placeholder # Will be regenerated in the post-creation effects
+								visuals = book
+								type = book
+								modifier = artifact_placeholder_modifier
+								save_scope_as = newly_created_artifact
+								wealth = scope:wealth
+								quality = scope:quality
+								#decaying = no
+							}
+						}
+					}
+				}
+			}
+			else = { #We don't have an author
+				if = {
+					limit = { #Is this a palm leaf/indian book?
+						scope:owner = { artifact_use_indian_building_visuals_trigger = yes }
+					}
+					scope:owner = {
+						create_artifact = {	
+							name = placeholder # Will be regenerated in the post-creation effects
+							description = placeholder # Will be regenerated in the post-creation effects
+							visuals = indian_book
+							type = book
+							modifier = artifact_placeholder_modifier
+							save_scope_as = newly_created_artifact
+							wealth = scope:wealth
+							quality = scope:quality
+							#decaying = no
+						}
+					}
+				}
+				else = { #This is a codex/non-indian book:
+					scope:owner = {
+						create_artifact = {	
+							name = placeholder # Will be regenerated in the post-creation effects
+							description = placeholder # Will be regenerated in the post-creation effects
+							visuals = book
+							type = book
+							history = { type = created_before_history } # We don't know who wrote it
+							modifier = artifact_placeholder_modifier
+							save_scope_as = newly_created_artifact
+							wealth = scope:wealth
+							quality = scope:quality
+							#decaying = no
+						}
+					}
+				}
+			}
+		}
+		else = { #This is a court artifact
+			if = {
+				limit = {
+					exists = scope:author #We have an author
+				}
+				if = {
+					limit = {
+						scope:author = { artifact_use_indian_building_visuals_trigger = yes }
+					}
+					scope:owner = {
+						create_artifact = {	
+							name = placeholder # Will be regenerated in the post-creation effects
+							creator = scope:author
+							description = placeholder # Will be regenerated in the post-creation effects
+							visuals = indian_book
+							type = journal
+							modifier = artifact_placeholder_modifier
+							save_scope_as = newly_created_artifact
+							wealth = scope:wealth
+							quality = scope:quality
+						}
+					}
+					# Subject and cover material is set as a required feature for a book-type artifact, but for a miscellaneous-type it's an optional feature, so we need to set it here
+					scope:newly_created_artifact = {
+						set_artifact_feature_group = book_subject
+						set_artifact_feature_group = book_cover_material
+					}
+				}
+				else = { #This is a codex/non-indian book
+					scope:owner = {
+						create_artifact = {	
+							name = placeholder # Will be regenerated in the post-creation effects
+							creator = scope:author
+							description = placeholder # Will be regenerated in the post-creation effects
+							visuals = book
+							type = journal
+							modifier = artifact_placeholder_modifier
+							save_scope_as = newly_created_artifact
+							wealth = scope:wealth
+							quality = scope:quality
+							
+						}
+					}
+					# Subject and cover material is set as a required feature for a book-type artifact, but for a miscellaneous-type it's an optional feature, so we need to set it here
+					scope:newly_created_artifact = {
+						set_artifact_feature_group = book_subject
+						set_artifact_feature_group = book_cover_material
+					}
+				}
+			}
+			else = { #We don't have an author
+				if = {
+					limit = { #Is this a palm-leaf/indian book?
+						scope:owner = { artifact_use_indian_building_visuals_trigger = yes }
+					}
+					scope:owner = {
+						create_artifact = {	
+							name = placeholder # Will be regenerated in the post-creation effects
+							description = placeholder # Will be regenerated in the post-creation effects
+							visuals = indian_book
+							type = journal
+							modifier = artifact_placeholder_modifier
+							save_scope_as = newly_created_artifact
+							wealth = scope:wealth
+							quality = scope:quality
+						}
+					}
+					# Subject and cover material is set as a required feature for a book-type artifact, but for a miscellaneous-type it's an optional feature, so we need to set it here
+					scope:newly_created_artifact = {
+						set_artifact_feature_group = book_subject
+						set_artifact_feature_group = book_cover_material
+					}
+				}
+				else = { #This isn't a palm leaf/indian book
+					scope:owner = {
+						create_artifact = {	
+							name = placeholder # Will be regenerated in the post-creation effects
+							description = placeholder # Will be regenerated in the post-creation effects
+							visuals = book
+							type = journal
+							history = { type = created_before_history } # We don't know who wrote it
+							modifier = artifact_placeholder_modifier
+							save_scope_as = newly_created_artifact
+							wealth = scope:wealth
+							quality = scope:quality
+						}
+					}
+					# Subject and cover material is set as a required feature for a book-type artifact, but for a miscellaneous-type it's an optional feature, so we need to 	set it here
+					scope:newly_created_artifact = {
+						set_artifact_feature_group = book_subject
+						set_artifact_feature_group = book_cover_material
+					}
+				}
+			}
+		}
+
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = book_topic
+			set_artifact_feature_group = book_title
+			set_artifact_feature_group = book_decoration
+			set_artifact_feature_group = decoration_pattern
+			get_artifact_feature_references_effect = yes
+			# Get quality of written content
+			if = {
+				limit = {
+					NOT = { exists = scope:author }
+				}
+				get_book_content_quality_effect = { SKILL_BASE = scope:owner }
+			}
+			else = {
+				get_book_content_quality_effect = { SKILL_BASE = scope:author }
+			}
+			# We save these values as variables on the owner so that we can access them deep in scopes in the desc-loc later on
+			scope:owner = {
+				set_variable = {
+					name = quality
+					value = scope:quality
+				}
+				set_variable = {
+					name = wealth
+					value = scope:wealth
+				}
+				set_variable = {
+					name = book_content_quality
+					value = scope:book_content_quality
+				}
+			}
+			# All if/else_if a removed and is replaced by this effect
+			GH_add_artifact_modifier_from_list_effect = yes # We retrieve the modifiers that existed on the artifact before		
+		}
+	}
+
+	#To clean out variables
+	if = {
+		limit = {
+			exists = scope:author
+		}
+		scope:author = {
+			if = {
+				limit = {
+					has_variable = book_subject
+				}
+				remove_variable = book_subject
+			}
+			if = {
+				limit = {
+					has_variable = book_topic
+				}
+				remove_variable = book_topic
+			}
+			if = {
+				limit = {
+					has_variable = book_topic_category
+				}
+				remove_variable = book_topic_category
+			}
+			if = {
+				limit = {
+					has_variable = book_content_quality
+				}
+				remove_variable = book_content_quality
+			}
+		}
+	}
+	scope:owner = {
+		if = {
+			limit = { has_variable = book_artifact_subject }
+			remove_variable = book_artifact_subject
+		}
+		if = {
+			limit = { has_variable = book_artifact_topic }
+			remove_variable = book_artifact_topic
+		}
+		if = {
+			limit = { has_variable = book_topic_category }
+			remove_variable = book_topic_category
+		}
+		if = {
+			limit = {
+				has_variable = book_topic_category
+			}
+			remove_variable = book_topic_category
+		}
+		if = {
+			limit = {
+				has_variable = book_content_quality
+			}
+			remove_variable = book_content_quality
+		}
+	}
+
+	if = {
+		limit = {
+			exists = scope:should_be_trinket 
+		}
+		clear_saved_scope = should_be_trinket 	
+	}
+}
+
+
+
+add_collection_of_knowledge_temporary_bonus_effect = {
+	send_interface_toast = {
+		type = event_toast_effect_good
+		title = add_collection_of_knowledge_temporary_bonus_effect.tt.success
+		left_icon = scope:character_scope
+		add_character_modifier = {
+			modifier = gh_$MODIFIER$_book_bonus_modifier
+			years = 1
+		}
+	}
+}
+
+add_collection_of_knowledge_permanent_skill_bonus_effect = {
+	send_interface_toast = {
+		type = event_toast_effect_good
+		title = add_collection_of_knowledge_permanent_skill_bonus_effect.tt.success
+		left_icon = scope:character_scope
+		add_$SKILL$_skill = 1
+	}
+}
+
+add_collection_of_knowledge_lifestyle_xp_bonus_effect = {
+	send_interface_toast = {
+		type = event_toast_effect_good
+		title = add_collection_of_knowledge_permanent_skill_bonus_effect.tt.success
+		left_icon = scope:character_scope
+		add_$SKILL$_lifestyle_xp = minor_lifestyle_xp
+	}
+}
+
+add_gh_theology_topic_bonus_effect = {
+	random_list = {
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		60 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		40 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = learning } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_piety_gain_mult } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = same_faith_opinion } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = realm_priest_opinion } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = learning }
+		}
+	}
+}
+
+add_gh_law_and_governance_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = stewardship } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = diplomacy } }
+		30 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = stewardship } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_stewardship_lifestyle_xp_gain_mult } }		
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = vassal_tax_contribution_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = vassal_levy_contribution_mult } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = direct_vassal_opinion } }
+		5 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_legitimacy_add } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = stewardship }
+		}
+	}
+}
+
+add_gh_warfare_topic_bonus_effect = {
+	random_list = {
+		60 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = martial } }
+		40 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = martial } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_martial_lifestyle_xp_gain_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = dread_gain_mult } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = levy_size } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = independent_ruler_opinion } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = martial }
+		}
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 1
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 2
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 5
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = prowess }
+		}
+	}
+}
+
+add_gh_philosophy_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		35 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = learning } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = stress_gain_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_learning_lifestyle_xp_gain_mult } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = diplomacy } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = learning }
+		}
+	}
+}
+
+add_gh_magic_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = arcana_temporary } }
+		35 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = arcana } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_arcana_lifestyle_xp_gain_mult } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = dread_gain_mult } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = health } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			send_interface_toast = {
+				type = event_toast_effect_good
+				title = add_collection_of_knowledge_permanent_arcana_bonus_effect.tt.success
+				left_icon = scope:reader
+				add_arcana_skill = { VALUE = 1 }
+			}
+		}
+	}
+}
+
+add_gh_language_and_letters_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = diplomacy } }
+		35 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = diplomacy } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_diplomacy_lifestyle_xp_gain_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = courtier_and_guest_opinion } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = court_grandeur_baseline_add } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = diplomacy }
+		}
+	}
+}
+
+add_gh_history_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = legitimacy_gain_mult } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = dynasty_house_opinion } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_dynasty_prestige } }
+		5 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_lifestyle_xp_gain_mult } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = learning }
+		}
+	}
+}
+
+add_gh_mathematics_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = stewardship } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_income_mult } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = build_gold_cost } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = build_speed } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = stewardship }
+		}
+	}
+}
+
+add_gh_cosmology_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = intrigue } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_intrigue_lifestyle_xp_gain_mult } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_piety_gain_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_piety } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = legitimacy_gain_mult } }
+		10 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = intrigue } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = intrigue }
+		}
+	}
+}
+
+add_gh_natural_sciences_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = health } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = epidemic_resistance } }
+		15 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = learning } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_income_mult } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = learning }
+		}
+	}
+}
+
+add_gh_medicine_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = health } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = epidemic_resistance } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = stress_gain_mult } }
+		10 = { add_collection_of_knowledge_lifestyle_xp_bonus_effect = { SKILL = learning } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = learning }
+		}
+	}
+}
+
+add_gh_practical_arts_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = stewardship } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_income_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = build_speed } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = build_gold_cost } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = county_opinion_add } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = stewardship }
+		}
+	}
+}
+
+add_gh_commerce_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = stewardship } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		40 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_income_mult } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = vassal_tax_contribution_mult } }
+		15 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = build_gold_cost } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = stewardship }
+		}
+	}
+}
+
+add_gh_literature_topic_bonus_effect = {
+	random_list = {
+		50 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = diplomacy } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = learning } }
+		30 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = monthly_prestige } }
+		20 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = courtier_opinion } }
+		10 = { add_collection_of_knowledge_temporary_bonus_effect = { MODIFIER = attraction_opinion } }
+		5 = { 
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:masterwork
+				add = 4
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:famed
+				add = 7
+			}
+			modifier = {
+				scope:gh_rarity_of_book ?= flag:illustrious
+				add = 10
+			}
+			add_collection_of_knowledge_permanent_skill_bonus_effect = { SKILL = diplomacy }
+		}
+	}
+}
+
+remove_recently_checked_collection_variable_effect = { 
+	if = {
+		limit = { has_variable = gh_search_library_story }
+		this.var:gh_search_library_story = { remove_variable = recently_checked_collection  }
+	}
+}
+

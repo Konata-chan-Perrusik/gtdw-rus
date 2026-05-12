@@ -1,0 +1,361 @@
+﻿adopt_pirate_ways = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+
+	desc = adopt_pirate_ways_desc
+	selection_tooltip = adopt_pirate_ways_tooltip
+	is_shown = {
+		highest_held_title_tier <= tier_duchy
+		is_independent_ruler = yes
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+	}
+	is_valid = {
+		NOT = { highest_held_title_tier > tier_duchy }
+		any_sub_realm_county = { is_coastal_county = yes }
+		is_independent_ruler = yes
+		OR = {
+			AND = {
+				realm_size < 5
+				prestige_level >= medium_prestige_level
+			}
+			AND = {
+				realm_size < 10
+				prestige_level >= high_prestige_level
+			}
+			AND = {
+				realm_size < 15
+				prestige_level >= very_high_prestige_level
+			}
+			AND = {
+				realm_size < 20
+				prestige_level >= max_prestige_level
+			}
+		}
+	}
+	cost = {
+		prestige = { value = major_prestige_value } 
+	}
+	#TODO: add an event menu for this rather than just abrubtly making you pirate
+	effect = {
+		change_government = pirate_government
+		trigger_event = gh_pirate.0008
+		trigger_event = gh_pirate.0020
+		hidden_effect = {
+			#remove previous laws
+			if = {
+				limit = { has_realm_law = crown_authority_0 }
+				remove_realm_law = crown_authority_0
+				add_realm_law = pirate_authority_0
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_1 }
+				remove_realm_law = crown_authority_1
+				add_realm_law = pirate_authority_0
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_2 }
+				remove_realm_law = crown_authority_2
+				add_realm_law = pirate_authority_1
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_3 }
+				remove_realm_law = crown_authority_3
+				add_realm_law = pirate_authority_1
+			}
+			every_vassal_or_below = {
+				limit = {
+					OR = {
+						GH_is_any_tribal_government_trigger = yes 
+						government_has_flag = government_is_clan
+					government_has_flag = government_is_continental_clan
+					}
+				}
+				change_government = pirate_government
+				trigger_event = gh_pirate.0020
+				#Nuke tribal authorities.
+				if = {
+					limit = { has_realm_law = crown_authority_0 }
+					remove_realm_law = crown_authority_0
+					add_realm_law = pirate_authority_0
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_1 }
+					remove_realm_law = crown_authority_1
+					add_realm_law = pirate_authority_0
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_2 }
+					remove_realm_law = crown_authority_2
+					add_realm_law = pirate_authority_1
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_3 }
+					remove_realm_law = crown_authority_3
+					add_realm_law = pirate_authority_1
+				}
+			}
+			GH_apirateslifeforme_check = yes
+		}
+	}
+
+	ai_check_interval = 60
+	ai_will_do = {
+		base = 3
+		modifier = {#greed is a great motivator
+			add = 1
+			has_trait = greedy
+		}
+		modifier = {#Greedier you are the better
+			add = 1
+			ai_greed >= high_positive_ai_value
+		}
+		modifier = {#the brave seek adventure
+			add = 1
+			ai_boldness >= high_positive_ai_value
+		}
+		modifier = {#compassionate Characters are less likely to turn pirate
+			add = -2
+			ai_compassion >= medium_positive_ai_value
+		}
+		modifier = {#Honorable characters refuse outright
+			add = -3
+			ai_honor <= very_high_negative_ai_value
+		}
+		modifier = {#cowards don't make good pirates
+			add = -2
+			ai_boldness <= high_negative_ai_value
+		}
+		modifier = {#Marchers are not know for pirates
+			add = -3
+			culture = { has_cultural_pillar = heritage_marcher }
+		}
+		modifier = {#Dawasids are though
+			add = 3
+			has_culture = culture:dawasid
+		}
+	}
+}
+
+abandon_pirate_ways = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+
+	desc = abandon_pirate_ways_desc
+	selection_tooltip = abandon_pirate_ways_tooltip
+	is_shown = {
+		government_has_flag = government_is_pirate
+	}
+	is_valid = {
+			has_realm_law = pirate_authority_3
+	}
+	cost = {
+		prestige = { value = medium_prestige_value } 
+	}
+	effect = {
+		if = {
+			limit = {
+				religion = religion:wardenism_religion
+			}
+			change_government = clan_government 
+		}
+		else = {
+			change_government = feudal_government 
+		} 
+		trigger_event = gh_pirate.0009
+		hidden_effect = {
+			#remove previous laws
+			if = {
+				limit = { has_realm_law = pirate_authority_0 }
+				remove_realm_law = pirate_authority_0
+			}
+			if = {
+				limit = { has_realm_law = pirate_authority_1 }
+				remove_realm_law = pirate_authority_1
+			}
+			if = {
+				limit = { has_realm_law = pirate_authority_2 }
+				remove_realm_law = pirate_authority_2
+			}
+			if = {
+				limit = { has_realm_law = pirate_authority_3 }
+				remove_realm_law = pirate_authority_3
+			}
+			#Start off crown authorities.
+			add_realm_law = crown_authority_0
+		}
+	}
+	ai_check_interval = 24
+	ai_will_do = {
+		base = 0
+		modifier = {#greed is a great motivator
+			add = -2
+			has_trait = greedy
+		}
+		modifier = {#compassion Characters are less likely to turn pirate
+			add = 5
+			ai_compassion >= medium_positive_ai_value
+		}
+		modifier = {#selfless characters don't see the point in piracy
+			add = 1
+			ai_greed <= high_negative_ai_value
+		}
+		modifier = {#Cowards don't want to be pirates
+			add = 3
+			ai_boldness <= medium_negative_ai_value
+		}
+		modifier = {#Marchers are not know for pirates
+			add = 4
+			culture = { has_cultural_pillar = heritage_marcher }
+		}
+		modifier = {#Dawasids are though
+			add = -1
+			has_culture = culture:dawasid
+		}
+	}
+}
+
+adopt_pirate_ways_through_liege = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+
+	desc = adopt_pirate_ways_through_liege_desc
+	selection_tooltip = adopt_pirate_ways_through_liege_tooltip
+	is_shown = {
+		highest_held_title_tier <= tier_duchy
+		liege = { government_has_flag = government_is_pirate }
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+	}
+	is_valid = {
+		any_sub_realm_county = { is_coastal_county = yes }
+	}
+	cost = {
+		prestige = { value = medium_prestige_value } 
+	}
+	#TODO: add an event menu for this rather than just abrubtly making you pirate
+	effect = {
+		change_government = pirate_government 
+		trigger_event = gh_pirate.0020
+		hidden_effect = {
+			#remove previous laws
+			if = {
+				limit = { has_realm_law = crown_authority_0 }
+				remove_realm_law = crown_authority_0
+				add_realm_law = pirate_authority_0
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_1 }
+				remove_realm_law = crown_authority_1
+				add_realm_law = pirate_authority_0
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_2 }
+				remove_realm_law = crown_authority_2
+				add_realm_law = pirate_authority_1
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_3 }
+				remove_realm_law = crown_authority_3
+				add_realm_law = pirate_authority_1
+			}
+			#Start off crown authorities.
+		}
+	}
+
+	ai_check_interval = 12
+	ai_will_do = {
+		base = 5
+		modifier = {#greed is a great motivator
+			add = 2
+			has_trait = greedy
+		}
+		modifier = {#Greedier you are the better
+			add = 2
+			ai_greed >= high_positive_ai_value
+		}
+		modifier = {#the brave seek adventure
+			add = 2
+			ai_boldness >= high_positive_ai_value
+		}
+		modifier = {#compassion Characters are less likely to turn pirate
+			add = -4
+			ai_compassion >= medium_positive_ai_value
+		}
+		modifier = {#Honorable characters refuse outright
+			add = -5
+			ai_honor <= very_high_negative_ai_value
+		}
+		modifier = {#cowards don't make good pirates
+			add = -4
+			ai_boldness <= high_negative_ai_value
+		}
+		modifier = {#Marchers are not know for pirates
+			add = -8
+			culture = { has_cultural_pillar = heritage_marcher }
+		}
+		modifier = {#Dawasids are though
+			add = 5
+			has_culture = culture:dawasid
+		}
+	}
+}
+
+declare_yourself_the_pirate_king = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+	decision_group_type = major
+
+	desc = declare_yourself_the_pirate_king_desc
+	selection_tooltip = declare_yourself_the_pirate_king_tooltip
+
+	is_shown = {
+		government_has_flag = government_is_pirate
+		NOT = { exists = global_var:flag_fomred_pirate_kingdom }
+	}
+	is_valid = {
+		government_has_flag = government_is_pirate
+		prestige_level >= very_high_prestige_level
+		custom_description = {
+			text = commerce_raiding_income_greater_than
+			commerce_raiding_income_greater_than = { VALUE = 40 }
+		}
+	}
+	effect = {
+		show_as_tooltip = {
+			root.dynasty = {
+				add_dynasty_prestige = 500
+			}
+			add_character_modifier = {
+				modifier = pirate_king
+			}
+			title:k_pirate_coalition = {
+				change_title_holder = {
+					holder = root
+					change = scope:title_change
+				}
+			}
+		}
+		trigger_event = gh_pirate.0031
+		set_global_variable = {
+			name = flag_fomred_pirate_kingdom
+			value = root
+		}
+		GH_achiev_canwegetmuchhigher_check = yes
+	}
+	ai_check_interval = 120
+	ai_will_do = { base = 100 }
+}

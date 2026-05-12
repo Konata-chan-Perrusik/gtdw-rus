@@ -1,0 +1,624 @@
+﻿
+### Cultural trigger list
+
+# drinks_alcohol_trigger - Would this person drink alcohol?
+# holder_or_above_is_player_of_culture - Is this county's holder or anyone above them in the de facto hierarchy a player with the same culture?
+
+
+######################
+# Cultural triggers  #
+######################
+
+drinks_alcohol_trigger = {
+	is_adult = yes
+	custom_tooltip = {
+		text = drinks_alcohol
+		OR = {
+			has_trait = drunkard
+			faith_forbids_alcohol_trigger = no
+		}
+	}
+}
+
+faith_forbids_alcohol_trigger = {
+	# TODO: GH-equivalent
+	faith_prohibits_alcohol_trigger = yes
+}
+
+holder_or_above_is_player_of_culture = {
+	culture = {
+		save_temporary_scope_as = this_culture
+	}
+	OR = {
+		holder = {
+			AND = {
+				is_ai = no
+				culture = scope:this_culture
+			}
+			any_liege_or_above = {
+				is_ai = no
+				culture = scope:this_culture
+			}
+		}
+	}
+}
+
+culture_in_winter_geographical_region_trigger = { # GH CHANGE: Generic trigger replacement, replaced geo regions
+	custom_description = {
+		text = culture_in_winter_geographical_region_trigger_desc
+		any_culture_county = {
+			any_county_province = {
+				OR = {
+					geographical_region = world_ga_lichdoms
+					geographical_region = world_ga_marcher_kingdoms
+					geographical_region = world_ga_clanlands
+					geographical_region = mayikprolollan_biozone
+					geographical_region = world_ga_foglands
+					geographical_region = world_ga_whisperveil
+				}
+			}
+		}
+	}
+}
+
+culture_in_non_sedentary_geographical_region_trigger = { # GH CHANGE: Generic trigger replacement, replaced geo regions
+	custom_description = {
+		text = culture_in_non_sedentary_geographical_region_trigger_desc
+		any_culture_county = {
+			any_county_province = {
+				OR = {
+					geographical_region = world_ga_aironoi
+					geographical_region = world_ga_foglands
+					geographical_region = world_ga_mayikprolollan_mayikprolollan_depths
+					geographical_region = world_es_desert
+				}
+			}
+		}
+	}
+}
+
+culture_not_pacifistic_trigger = { # GH CHANGE: Generic trigger replacement, actually I'm not sure if vanilla is different with regards to this trigger
+	custom_description = {
+		text = culture_not_pacifist_trigger_desc
+		NOT = {
+			culture_tradition:tradition_pacifism = { is_in_list = traits }
+		}
+	}
+}
+
+culture_not_warlike_trigger = { # GH CHANGE: Generic trigger replacement, added traditions
+	custom_description = {
+		text = culture_not_warlike_trigger_desc
+		NOR = {
+			culture_tradition:tradition_winter_warriors = { is_in_list = traits }
+			culture_tradition:tradition_forest_fighters = { is_in_list = traits }
+			culture_tradition:tradition_mountaineers = { is_in_list = traits }
+			culture_tradition:tradition_warriors_of_the_dry = { is_in_list = traits }
+			culture_tradition:tradition_highland_warriors = { is_in_list = traits }
+			culture_tradition:tradition_jungle_warriors = { is_in_list = traits }
+			culture_tradition:tradition_quarrelsome = { is_in_list = traits }
+			culture_tradition:tradition_malleable_invaders = { is_in_list = traits }
+			culture_tradition:tradition_hunters = { is_in_list = traits }
+			culture_tradition:tradition_warrior_culture = { is_in_list = traits }
+			culture_tradition:tradition_martial_admiration = { is_in_list = traits }
+			# GH TODO: other people can set up the custom description for all the traditions below this line
+			culture_tradition:tradition_sacred_hunts = { is_in_list = traits }
+			culture_tradition:tradition_ardara = { is_in_list = traits }
+			culture_tradition:tradition_botai = { is_in_list = traits }
+			culture_tradition:tradition_bloodhounds_of_aversaria = { is_in_list = traits }			
+			culture_tradition:tradition_sammalriq = { is_in_list = traits }			
+			culture_tradition:tradition_painted_men = { is_in_list = traits }			
+			culture_tradition:tradition_redlanders = { is_in_list = traits }			
+		}
+	}
+	custom_description = {
+		text = culture_has_winter_warriors_desc
+		NOT = {
+			culture_tradition:tradition_winter_warriors = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_forest_fighter_desc
+		NOT = {
+			culture_tradition:tradition_forest_fighters = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_mountaineers_desc
+		NOT = {
+			culture_tradition:tradition_mountaineers = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_warriors_of_the_dry_desc
+		NOT = {
+			culture_tradition:tradition_warriors_of_the_dry = { is_in_list = traits }
+			culture_tradition:tradition_redlanders = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_highland_warriors_desc
+		NOT = {
+			culture_tradition:tradition_highland_warriors = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_jungle_warriors_desc
+		NOT = {
+			culture_tradition:tradition_jungle_warriors = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_quarrelsome_desc
+		NOT = {
+			culture_tradition:tradition_quarrelsome = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_malleable_invaders_desc
+		NOT = {
+			culture_tradition:tradition_malleable_invaders = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_hunters_desc
+		NOT = {
+			culture_tradition:tradition_hunters = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_warrior_culture_desc
+		NOT = {
+			culture_tradition:tradition_warrior_culture = { is_in_list = traits }
+		}
+	}
+	custom_description = {
+		text = culture_has_martial_admiration_desc
+		NOT = {
+			culture_tradition:tradition_martial_admiration = { is_in_list = traits }
+		}
+	}
+}
+
+should_have_same_faith_succession_trigger = { # GH TODO: Military Governments should get special rules
+	culture = {
+		has_cultural_parameter = same_faith_inheritance_only
+	}
+	NOR = {
+		GH_is_any_theocracy_government_trigger = yes # Handled separately
+		government_has_flag = government_is_holy_order # Handled separately
+		GH_is_any_mercenary_government_trigger = yes # Irrelevant
+	}
+}
+
+not_tribal_raid_trigger = {
+	culture = {
+		has_cultural_parameter = not_tribal_pirate_raiding_malus
+	}
+	NOR = { 
+		GH_is_any_tribal_government_trigger = yes
+		government_has_flag = government_is_pirate # GH QUESTION: Should pirates be here?
+	}
+}
+
+# TODO: Update this stuff with proper information
+culture_is_not_historical_hybrid_trigger = { # GH URGENT: Add ours
+	#Used to tell if a hybrid culture is one of the historical hybrids or not, mainly in checks for AI hybridization checks related to game rules.
+	#Expects to be used in culture scope
+	always = yes
+}
+
+# Cultural MAA triggers - Used in various places for triggers, AI weights, etc.
+culture_has_skirmisher_maa = { # GH URGENT: GH additions needed to this and all other MAA triggers
+	OR = {
+		has_innovation = innovation_berserkers
+		has_innovation = innovation_moonkin
+		has_innovation = innovation_wodes
+		has_innovation = innovation_eastern_cav
+		has_innovation = innovation_bloodbound
+		has_innovation = innovation_legion_raiders
+		has_innovation = innovation_legion_marines
+	}
+}
+
+culture_has_archer_maa = {
+	OR = {
+		has_innovation = innovation_the_bloodied
+		has_innovation = innovation_adabyss
+	}
+}
+
+culture_has_heavy_infantry_maa = {
+	OR = {
+		has_cultural_parameter = unlock_maa_mubaaizun
+		has_innovation = innovation_aversarian_legionaires
+		has_innovation = innovation_doriosian_reforms
+		has_innovation = innovation_anti_magic_combat
+		has_innovation = innovation_adabyss
+		has_innovation = innovation_north_shields
+		has_innovation = innovation_home_legions
+		has_innovation = innovation_enlevett
+		has_innovation = innovation_stoneforged
+	}
+}
+
+culture_has_pikemen_maa = { #I.e. Spearmen
+	OR = {
+		has_innovation = innovation_konijkmener_pikes
+		has_innovation = innovation_golden_spears
+		has_innovation = innovation_pure_pikes
+		has_cultural_tradition = tradition_lords_of_aironoi
+	}
+}
+
+culture_has_light_cavalry_maa = {
+	OR = {
+		has_innovation = innovation_prophets_sons
+		has_innovation = innovation_duneriders
+		has_innovation = innovation_brother_riders
+		has_innovation = innovation_legion_outriders
+		has_cultural_tradition = tradition_lords_of_aironoi 
+		has_cultural_parameter = unlock_maa_cloud_riders
+	}
+}
+
+culture_has_heavy_cavalry_maa = {
+	OR = {
+		has_innovation = innovation_eastern_cav 
+		has_innovation = innovation_grave_wardens
+		has_innovation = innovation_griffon_riders
+		has_innovation = innovation_war_chariots
+		has_innovation = innovation_flying_lances
+		has_innovation = innovation_marcher_knights
+		has_innovation = innovation_sunstriders
+	}
+}
+
+culture_has_archer_cavalry_maa = {
+	OR = {
+		has_cultural_parameter = unlock_maa_cloud_riders
+		has_cultural_tradition = tradition_lords_of_aironoi
+	}
+}
+
+culture_has_magi_maa = {
+	OR = {
+		has_innovation = innovation_imperial_magic
+		has_innovation = innovation_wodes
+		has_innovation = innovation_partic_seers
+		#has_innovation = innovation_stepwalkers
+		has_innovation = innovation_sword_oaths
+	}
+}
+
+culture_has_monster_maa = {
+	always = no # GH TODO: Add them (or make them)
+}
+
+culture_has_chariot_cavalry_maa = {
+	OR = {
+		has_innovation = innovation_war_chariots
+	}
+}
+
+culture_has_adventurers_maa = {
+	OR = {
+		has_innovation = innovation_anti_magic_combat
+		has_innovation = innovation_berserkers
+	}
+}
+
+# Blocks all non-special MAA
+culture_has_standard_maa = { culture_does_not_have_standard_maa = no }
+culture_does_not_have_standard_maa = { has_cultural_parameter = no_standard_maa }
+faith_does_not_have_standard_maa = { has_doctrine_parameter = no_standard_maa }
+character_does_not_have_standard_maa = {
+	OR = {
+		culture = { culture_does_not_have_standard_maa = yes }
+		faith = { faith_does_not_have_standard_maa = yes }
+	}
+}
+
+# Blocks all non-special Buildings
+culture_does_not_have_standard_buildings = { has_cultural_parameter = no_standard_buildings }
+faith_does_not_have_standard_buildings = { has_doctrine_parameter = no_standard_buildings }
+character_does_not_have_standard_buildings = {
+	OR = {
+		culture = { culture_does_not_have_standard_buildings = yes }
+		faith = { faith_does_not_have_standard_buildings = yes }
+	}
+}
+
+# Blocks all non-special Innovations
+culture_does_not_have_standard_innovations = { has_cultural_parameter = no_standard_innovations }
+faith_does_not_have_standard_innovations = { has_doctrine_parameter = no_standard_innovations }
+character_does_not_have_standard_innovations = {
+	OR = {
+		culture = { culture_does_not_have_standard_innovations = yes }
+		faith = { faith_does_not_have_standard_innovations = yes }
+		culture_has_archer_cavalry_maa = yes
+	}
+}
+
+#Culture specialized in maa type
+culture_specializes_in_skirmisher_maa = {
+	OR = {
+		has_cultural_tradition = tradition_forest_folk
+		has_cultural_tradition = tradition_jungle_dwellers
+		has_cultural_tradition = tradition_polders
+		has_cultural_tradition = tradition_adaptive_skirmishing
+		has_cultural_tradition = tradition_hit_and_run
+		has_cultural_tradition = tradition_forest_wardens
+		#has_cultural_tradition = tradition_hussar ## GH CHANGE: Removed for GH
+		has_cultural_tradition = tradition_fp3_pragmatic_creed
+		culture_has_skirmisher_maa = yes
+
+		GH_culture_specializes_in_skirmisher_maa = yes ## GH ADDITION: Various GH-specific archer bonuses
+	}
+}
+
+culture_specializes_in_archer_maa = {
+	OR = {
+		has_cultural_tradition = tradition_forest_folk
+		has_cultural_tradition = tradition_jungle_dwellers
+		has_cultural_tradition = tradition_adaptive_skirmishing
+		has_cultural_tradition = tradition_formation_fighting
+		culture_has_archer_maa = yes
+
+		GH_culture_specializes_in_archer_maa = yes ## GH ADDITION: Various GH-specific archer bonuses
+	}
+}
+
+culture_specializes_in_heavy_infantry_maa = {
+	OR = {
+		#has_cultural_tradition = tradition_roman_legacy ## GH CHANGE: Removed for GH
+		has_cultural_tradition = tradition_metal_craftsmanship
+		has_cultural_tradition = tradition_mountain_homes
+		has_cultural_tradition = tradition_stand_and_fight
+		#has_cultural_tradition = tradition_mobile_guards ## GH CHANGE: Removed for GH
+		#has_cultural_tradition = tradition_mountaineer_ruralism ## GH CHANGE: Removed for GH
+		culture_has_heavy_infantry_maa = yes
+
+		GH_culture_specializes_in_heavy_infantry_maa = yes ## GH ADDITION: Various GH-specific archer bonuses
+	}
+}
+
+culture_specializes_in_pikemen_maa = {
+	OR = {
+		#has_cultural_tradition = tradition_mountaineer_ruralism ## GH CHANGE: Removed for GH
+		has_cultural_tradition = tradition_metal_craftsmanship
+		has_cultural_tradition = tradition_mountain_homes
+		has_cultural_tradition = tradition_formation_fighting
+		has_cultural_tradition = tradition_stand_and_fight
+		has_cultural_tradition = tradition_mobile_guards
+		culture_has_pikemen_maa = yes
+
+		GH_culture_specializes_in_pikemen_maa = yes ## GH ADDITION: Various GH-specific pikemen bonuses
+	}
+}
+
+culture_specializes_in_light_cavalry_maa = {
+	OR = {
+		has_cultural_tradition = tradition_dryland_dwellers
+		has_cultural_tradition = tradition_pastoralists
+		has_cultural_tradition = tradition_hit_and_run
+		has_cultural_tradition = tradition_horse_breeder
+		#has_cultural_tradition = tradition_saharan_nomads ## GH CHANGE: Removed for GH
+		culture_has_light_cavalry_maa = yes
+
+		GH_culture_specializes_in_light_cavalry_maa = yes ## GH ADDITION: Various GH-specific light cavalry bonuses
+	}
+}
+
+culture_specializes_in_heavy_cavalry_maa = {
+	OR = {
+		#has_cultural_tradition = tradition_roman_legacy ## GH CHANGE: Removed for GH
+		has_cultural_tradition = tradition_mountain_homes
+		has_cultural_tradition = tradition_horse_breeder
+		has_cultural_tradition = tradition_stand_and_fight
+		#has_cultural_tradition = tradition_mobile_guards ## GH CHANGE: Removed for GH
+		#has_cultural_tradition = tradition_ep3_indomitable_azatani ## GH CHANGE: Removed for GH
+		#has_cultural_tradition = tradition_mountaineer_ruralism ## GH CHANGE: Removed for GH
+		culture_has_heavy_cavalry_maa = yes
+
+		GH_culture_specializes_in_heavy_cavalry_maa = yes ## GH ADDITION: Various GH-specific heavy cavalry bonuses
+	}
+}
+
+culture_specializes_in_archer_cavalry_maa = {
+	OR = {
+		has_cultural_tradition = tradition_horse_breeder
+		has_cultural_tradition = tradition_mpo_iron_cavalry
+		has_cultural_tradition = tradition_devoted_horsemanship
+		has_cultural_tradition = tradition_falcon_veneration
+		culture_has_archer_cavalry_maa = yes
+	}
+}
+
+culture_specializes_in_magi_maa = {
+	OR = {
+		has_cultural_tradition = tradition_kedari_marked
+		culture_has_magi_maa = yes
+	}
+}
+
+# Language trigger - Makes languages available when you diverge your culture
+language_is_shown_trigger = { # GH TODO: Regional possibilities based on what the local ruins and such are like?
+	scope:character = {
+		OR = {
+			AND = {
+				exists = var:legendary_culture
+				var:legendary_culture = { has_cultural_pillar = $LANGUAGE$ }
+			}
+			AND = {
+				# The target language needs to fulfill ALL of the following:
+				any_sub_realm_county = { # Language needs to be well-represented within your realm
+					percent >= 0.1
+					culture = { has_cultural_pillar = $LANGUAGE$ }
+				}
+				any_sub_realm_county = { # Language needs to border your own culture
+					culture = { has_cultural_pillar = $LANGUAGE$ }
+					any_neighboring_county = {
+						culture = { this = scope:character.culture }
+					}
+				}
+				any_sub_realm_county = { # You need a minimum acceptance with any culture speaking the language
+					culture = {
+						has_cultural_pillar = $LANGUAGE$
+						cultural_acceptance = {
+							target = scope:character.culture
+							value >= 25
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# Language trigger - Makes heritages available when you diverge your culture
+heritage_is_shown_trigger = {
+	scope:character = {
+		OR = {
+			AND = {
+				exists = var:legendary_culture
+				var:legendary_culture = { has_cultural_pillar = $HERITAGE$ }
+			}
+			culture = { has_cultural_pillar = $HERITAGE$ }
+		}
+	}
+}
+
+# Checks if you could Hybridise with the culture without checking for acceptance
+is_valid_for_hybridising_trigger = {
+	$CHARACTER$ = {
+		culture = {
+			NOT = { has_same_culture_heritage = $CULTURE$ }
+			culture_age >= culture_hybrid_cooldown
+		}
+		trigger_if = {
+			limit = {
+				faith = { has_doctrine = special_doctrine_imperrech_common_goal }
+			}
+			culture = {
+				culture_age >= culture_hybrid_cooldown
+			}
+		}
+		trigger_else = {
+			culture = {
+				NOT = { has_same_culture_heritage = $CULTURE$ }
+				culture_age >= culture_hybrid_cooldown
+			}
+		}
+		trigger_if = {
+			limit = {
+				NAND = {
+					exists = var:special_culture
+					var:special_culture = $CULTURE$
+				}
+			}
+			custom_description = {
+				text = culture_present_in_realm_for_hybridization
+				any_sub_realm_county = {
+					culture = $CULTURE$
+				}
+			}
+		}
+		custom_description = {
+			text = culture_is_not_parent_culture
+			culture = {
+				NOT = {
+					any_parent_culture = {
+						this = $CULTURE$
+					}
+				}
+			}
+		}
+		custom_description = {
+			text = culture_is_not_child_culture
+			$CULTURE$ = {
+				NOT = {
+					any_parent_culture = {
+						this = $CHARACTER$.culture
+					}
+				}
+			}
+		}
+	}
+	$CULTURE$ = {
+		NOT = { # GH TODO: Do our Wasteland, Fogeater, etc, cultures have this?
+			has_variable = culture_forbidden_from_diverging_or_hybridizing
+		}
+	}
+}
+
+# Checks if you can currently hybridise with the culture
+can_hybridize_culture_trigger = {
+	is_valid_for_hybridising_trigger = {
+		CHARACTER = $CHARACTER$
+		CULTURE = $CULTURE$
+	}
+	$CHARACTER$ = {
+		culture = {
+			cultural_acceptance = { target = $CULTURE$ value >= hybridization_threshold_value }
+			NOR = { # Wastelands, Undead, Fogeaters & Redlanders shouldn't be valid targets to Hybridize with
+				has_cultural_tradition = tradition_lich_culture
+				has_cultural_tradition = tradition_redlanders
+				has_cultural_pillar = heritage_fog_eaters
+				has_cultural_pillar = heritage_wasteland
+			}
+		}
+	}
+}
+
+
+# Uses current scope and scope:culture
+cultures_share_relevant_region_trigger = { # GH Question: What does this do? Should we have more regions here?
+	OR = {
+		AND = {
+			culture_overlaps_geographical_region = world_greater_aversaria
+			scope:culture = {
+				culture_overlaps_geographical_region = world_greater_aversaria
+			}
+		}
+		AND = {
+			culture_overlaps_geographical_region = world_ga_aironoi
+			scope:culture = {
+				culture_overlaps_geographical_region = world_ga_aironoi
+			}
+		}
+		AND = {
+			culture_overlaps_geographical_region = world_sarradon
+			scope:culture = {
+				culture_overlaps_geographical_region = world_sarradon
+			}
+		}
+		AND = {
+			culture_overlaps_geographical_region = world_ga_kashirya
+			scope:culture = {
+				culture_overlaps_geographical_region = world_ga_kashirya
+			}
+		}
+	}
+}
+
+is_vegetarian_trigger = {
+	OR = {
+		culture = {
+			has_cultural_parameter = cannot_hunt
+		}
+		faith_is_vegetarian_trigger = yes
+	}
+}
+
+faith_is_vegetarian_trigger = { faith_shuns_meat_trigger = yes }
+
+culture_tradition_reduction_trigger = {
+	scope:character = {
+		has_variable_list = culture_tradition_reduction
+		is_target_in_variable_list = {
+			name = culture_tradition_reduction
+			target = culture_tradition:$TRADITION$
+		}
+	}
+}

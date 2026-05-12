@@ -1,0 +1,30 @@
+﻿adopt_codex_scripted_gui = {
+	scope = character
+	
+	is_shown = {
+	
+	}
+	
+	is_valid = {
+		trigger_if = {
+			limit = { exists = scope:law_codex_being_picked }
+			learning >= scope:law_codex_being_picked.var:law_code_difficulty_threshold
+		}
+		trigger_else = { always = no }
+	}
+	
+	effect = {
+		if = {
+			limit = { exists = scope:law_codex_being_picked }
+			save_scope_as = character_being_assigned_codex
+			set_variable = {
+				name = character_law_codex
+				value = scope:law_codex_being_picked
+			}
+			scope:law_codex_being_picked = {
+				valid_judge_traits_effect = { MODE = remove }
+				valid_judge_traits_effect = { MODE = set_modifier }
+			}
+		}
+	}
+}

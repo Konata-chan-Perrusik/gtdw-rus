@@ -1,0 +1,3747 @@
+﻿##################################################
+
+#	War in Heaven Decisions List
+
+##################################################
+
+#####################################
+# Take a Side in the War in Heaven	#
+# by Askil							#
+#####################################
+
+gh_align_in_war_in_heaven_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_levy_outcasts.dds"
+	}
+	decision_group_type = major
+	ai_check_interval = 60
+
+	desc = gh_align_in_war_in_heaven_decision_desc
+	selection_tooltip = gh_align_in_war_in_heaven_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		#Struggle is active
+		any_character_struggle = {
+			involvement = interloper
+			OR = {
+				is_struggle_type = gh_war_in_heaven_struggle
+				is_struggle_type = gh_eastern_war_in_heaven_struggle
+				is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+			}
+		}	
+		#Not directly involved in the WIH
+		NOR = {		
+			faith_is_religion_or_syncretic_trigger = { RELIGION = wardenism_religion }
+			faith_is_religion_or_syncretic_trigger = { RELIGION = ritualist_religion }
+		}
+		#Isn't already aligned to one side
+		NOR = {
+			has_trait = gh_wardenite_aligned
+			has_trait = gh_ritualist_aligned
+		}
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		any_character_struggle = {
+			involvement = interloper
+			NOR = { 
+				is_struggle_phase = struggle_wih_central_sarradon_phase_detente
+				is_struggle_phase = struggle_wih_eastern_sarradon_phase_detente 
+				is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_detente
+				is_struggle_phase = struggle_wih_western_sarradon_phase_detente 
+				#is_struggle_phase = struggle_wih_far_western_sarradon_phase_detente		
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		custom_tooltip = {
+			text = recently_left_side_in_war_in_heaven_tt
+			NOT = { has_variable = recently_left_side_in_war_in_heaven }		
+		}
+	}
+	
+	widget = {
+		gui = "decision_view_widget_option_list_generic"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "SELECT_ACTION"
+		show_from_start = yes
+
+		item = { # Side with the Wardenite
+			value = align_with_wardenite_item
+			is_valid = {}
+			current_description = align_with_wardenite_item_desc
+			localization = align_with_wardenite_item
+			icon = "gfx/interface/icons/decision_items/gh_wardenite_aligned.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = {
+						any_character_struggle = {
+							involvement = interloper
+							OR = { 
+								is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance
+								is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance
+								is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance
+								is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance
+								#is_struggle_phase = struggle_wih_far_western_sarradon_phase_wardenite_dominance	
+							}
+						}					
+					}
+					add = 10
+				}
+				if = {
+					limit = {
+						any_relation = {
+							type = rival
+							has_religion = religion:wardenism_religion
+						}	
+					}
+					add = -50
+
+				}
+				if = {
+					limit = {
+						any_neighboring_top_liege_realm_owner = {
+							is_confederation_member = no
+							has_religion = religion:wardenism_religion
+							NOT = { is_allied_to = root }
+							confederation_worthy_foe_strength_ratio_value_root <= 0.25
+						}					
+					}
+					add = 60
+				}
+			}
+		}
+
+		item = { # Side with the Ritualist
+			value = align_with_ritualist_item
+			is_valid = {}
+			current_description = align_with_ritualist_item_desc
+			localization = align_with_ritualist_item
+			icon = "gfx/interface/icons/decision_items/gh_ritualist_aligned.dds"
+			ai_chance = {
+				value = 0
+				if = {
+					limit = {
+						any_character_struggle = {
+							involvement = interloper
+							OR = { 
+								is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance
+								is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance
+								is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance
+								is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance
+								#is_struggle_phase = struggle_wih_far_western_sarradon_phase_ritualist_dominance	
+							}
+						}	
+					}
+					add = 10
+				}
+				if = {
+					limit = {
+						any_relation = {
+							type = rival
+							has_religion = religion:ritualist_religion
+						}					
+					}
+					add = -50
+				}
+				if = {
+					limit = {
+						any_neighboring_top_liege_realm_owner = {
+							is_confederation_member = no
+							has_religion = religion:ritualist_religion
+							NOT = { is_allied_to = root }
+							confederation_worthy_foe_strength_ratio_value_root <= 0.25
+						}					
+					}
+					add = 60
+				}
+			}
+		}
+		item = { # Side with the Agionist
+			value = align_with_agionist_item
+			is_valid = {}
+			current_description = align_with_agionist_item_desc
+			localization = align_with_agionist_item
+			icon = "gfx/interface/icons/decision_items/gh_agionist_aligned.dds"
+			ai_chance = {
+				value = -50
+				if = {
+					limit = {
+						any_character_struggle = {
+							involvement = interloper
+							OR = { 
+								is_struggle_phase = struggle_wih_central_sarradon_phase_agionist_dominance
+								is_struggle_phase = struggle_wih_eastern_sarradon_phase_agionist_dominance
+							}
+						}	
+					}
+					add = 10
+				}
+				if = {
+					limit = {
+						any_relation = {
+							type = rival
+							has_religion = religion:agionism_religion
+						}					
+					}
+					add = -50
+				}
+				if = {
+					limit = {
+						any_neighboring_top_liege_realm_owner = {
+							is_confederation_member = no
+							has_religion = religion:agionism_religion
+							NOT = { is_allied_to = root }
+							confederation_worthy_foe_strength_ratio_value_root <= 0.25
+						}					
+					}
+					add = 60
+				}
+			}
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { scope:align_with_wardenite_item = yes }
+			add_trait = gh_wardenite_aligned
+			custom_tooltip = align_with_wardenite_item_tooltip
+			custom_tooltip = align_with_wardenite_item_enemy_tooltip
+		}
+		else_if = {
+			limit = { scope:align_with_ritualist_item = yes }
+			add_trait = gh_ritualist_aligned
+			custom_tooltip = align_with_ritualist_item_tooltip
+			custom_tooltip = align_with_ritualist_item_enemy_tooltip
+		}
+		else_if = {
+			limit = { scope:align_with_agionist_item = yes }
+			add_trait = gh_ritualist_aligned
+			custom_tooltip = align_with_ritualist_item_tooltip
+			custom_tooltip = align_with_ritualist_item_enemy_tooltip
+		}
+		add_prestige = medium_prestige_gain	
+		stress_impact = {
+			craven = medium_stress_impact_gain
+			brave = minor_stress_impact_loss
+			ambitious = miniscule_stress_impact_loss
+		}
+		set_variable = { 
+			name = recently_joined_side_in_war_in_heaven
+			years = 5
+		}
+	}
+	
+	cost = {
+		prestige = 200
+		prestige = 100
+	}
+
+	ai_potential = {
+		any_character_struggle = {
+			involvement = interloper
+			is_struggle_type = gh_war_in_heaven_struggle
+		}
+		short_term_gold >= medium_gold_value
+	}
+
+	ai_will_do = {
+		base = -20
+		modifier = {
+			add = 60
+			any_neighboring_top_liege_realm_owner = {
+				is_confederation_member = no
+				OR = {
+					has_religion = religion:wardenism_religion
+					has_religion = religion:ritualist_religion
+				}	
+				NOT = { is_allied_to = root }
+				confederation_worthy_foe_strength_ratio_value_root <= 0.25
+			}
+		}
+		modifier = {
+			add = 10
+			has_trait = ambitious
+		}
+		modifier = {
+			add = -30
+			has_trait = craven
+		}
+		modifier = {
+			add = -30
+			has_trait = lazy
+		}
+		modifier = {
+			add = -500
+			this = character:hudi_yugaug_6
+			this = character:mutsartan_wardenism_15
+			this = character:tapuso_selothaan_1
+		}
+	}
+}
+
+#####################################
+# Abandon Side in the Struggle		#
+# by Askil							#
+#####################################
+
+gh_align_in_war_in_heaven_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_carolingian_script_cm.dds"
+	}
+	decision_group_type = major
+	ai_check_interval = 60
+
+	desc = gh_align_in_war_in_heaven_decision_desc
+	selection_tooltip = gh_align_in_war_in_heaven_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		has_trait = gh_wardenite_aligned
+		has_trait = gh_ritualist_aligned
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		any_character_struggle = {
+			involvement = interloper
+			NOR = { 
+				is_struggle_phase = struggle_wih_central_sarradon_phase_all_out_war
+				is_struggle_phase = struggle_wih_eastern_sarradon_phase_all_out_war
+				is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_all_out_war
+				is_struggle_phase = struggle_wih_western_sarradon_phase_all_out_war
+				#is_struggle_phase = struggle_wih_far_western_sarradon_phase_all_out_war
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		custom_tooltip = {
+			text = recently_joined_side_in_war_in_heaven_tt
+			NOT = { has_variable = recently_joined_side_in_war_in_heaven }		
+		}
+	}
+	
+	effect = {
+		if = {
+			limit = { has_trait = gh_wardenite_aligned }
+			remove_trait = gh_wardenite_aligned
+			custom_tooltip = align_with_wardenite_item_tooltip
+			custom_tooltip = align_with_wardenite_item_enemy_tooltip
+		}
+		else_if = {
+			limit = { has_trait = gh_ritualist_aligned }
+			remove_trait = gh_ritualist_aligned
+			custom_tooltip = align_with_ritualist_item_tooltip
+			custom_tooltip = align_with_ritualist_item_enemy_tooltip
+		}
+		#GH 1298 TODO: Will need remove new trait for the agionists side probably?
+		
+		stress_impact = {
+			craven = medium_stress_impact_loss
+			brave = minor_stress_impact_gain
+			ambitious = miniscule_stress_impact_gain
+		}
+		set_variable = { 
+			name = recently_left_side_in_war_in_heaven
+			years = 5
+		}
+	}
+	
+	cost = {
+		prestige = 100
+	}
+
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = {
+		base = -20
+		modifier = {
+			add = 30
+			any_character_struggle = {
+				involvement = interloper
+				OR = { 
+					is_struggle_phase = struggle_wih_central_sarradon_phase_detente
+					is_struggle_phase = struggle_wih_eastern_sarradon_phase_detente 
+					is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_detente
+					is_struggle_phase = struggle_wih_western_sarradon_phase_detente 
+					#is_struggle_phase = struggle_wih_far_western_sarradon_phase_detente		
+				}
+			}
+		}
+		modifier = {
+			add = 30
+			has_trait = gh_wardenite_aligned
+			any_character_struggle = {
+				involvement = interloper
+				is_struggle_type = gh_war_in_heaven_struggle
+				OR = { 
+					is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance
+					is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance
+					is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance
+					is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance
+					#is_struggle_phase = struggle_wih_far_western_sarradon_phase_ritualist_dominance	
+				}
+			}
+		}
+		modifier = {
+			add = 30
+			has_trait = gh_ritualist_aligned
+			any_character_struggle = {
+				involvement = interloper
+				OR = { 
+					is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance
+					is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance
+					is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance
+					is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance
+					#is_struggle_phase = struggle_wih_far_western_sarradon_phase_wardenite_dominance	
+				}
+			}
+		}
+	}
+}
+
+
+# =================================================== Central Sarradon ===================================================
+
+#####################################
+# Secure Wardenite Hegemony			#
+# by Askil							#
+#####################################
+
+gh_central_sarradon_wardenite_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_supremacy.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_supremacy.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_central_sarradon_wardenite_victory_ending_decision_desc
+	selection_tooltip = gh_central_sarradon_wardenite_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+		
+		OR = {
+			custom_tooltip = {
+				text = gh_wardenite_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_central_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+
+		custom_tooltip = { #
+			text = struggle_central_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+			
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_first_kingdom
+			completely_controls = title:d_tell_habja
+			completely_controls = title:d_dozzan
+			completely_controls = title:d_beid_faluh
+			completely_controls = title:d_sagecrowns
+			completely_controls = title:d_thronelands
+			completely_controls = title:d_rifeh
+			completely_controls = title:d_aversaria_peripontica
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_wardenite_victory_ending_decision_no_ritualist_rulers_tt
+					NOT = {
+						struggle:gh_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:ritualist_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_counties_mostly_wardenite_religion_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:wardenism_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_counties_sixty_wardenite_faith_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_less_ritualist_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:ritualist_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+
+	effect = {
+		custom_tooltip = {
+			text = gh_central_sarradon_wardenite_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_central_war_in_heaven_struggle
+				REASON = gh_wih_ending_wardenite_victory
+				REASON_DESCRIPTION = gh_wih_ending_wardenite_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_war_in_heaven_struggle
+				STRUGGLE_ENDING = wardenite
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_muqtih_al_alayyiun
+		}
+		# Sarradon is available!
+		custom_tooltip = gh_struggle_can_create_empire_of_sarradon_tt
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0100
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Secure Ritualist Supremacy		#
+# by Askil							#
+#####################################
+
+gh_central_sarradon_ritualist_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_foundation.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_central_sarradon_ritualist_victory_ending_decision_desc
+	selection_tooltip = gh_central_sarradon_ritualist_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_ritualist_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_central_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_central_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_first_kingdom
+			completely_controls = title:d_tell_habja
+			completely_controls = title:d_dozzan
+			completely_controls = title:d_beid_faluh
+			completely_controls = title:d_sagecrowns
+			completely_controls = title:d_thronelands
+			completely_controls = title:d_rifeh
+			completely_controls = title:d_aversaria_peripontica
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_ritualist_victory_ending_decision_no_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:wardenism_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_counties_mostly_ritualist_religion_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_counties_sixty_ritualist_faith_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_less_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:wardenism_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = gh_central_sarradon_ritualist_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_central_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_ritualist_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_war_in_heaven_struggle
+				STRUGGLE_ENDING = ritualist
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_waqir_a_jadillah
+		}
+		# Sarradon is available!
+		custom_tooltip = gh_struggle_can_create_empire_of_sarradon_tt
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_wardenite_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+				
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0200
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Generic WIH Ending 				#
+# by Askil							#
+#####################################
+
+gh_central_sarradon_generic_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/GH_WIH_generic_ending.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_central_sarradon_generic_victory_ending_decision_desc
+	selection_tooltip = gh_central_sarradon_generic_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+	}
+
+	is_valid = {
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_generic_victory_ending_decision_three_incorrect_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_war_in_heaven_struggle
+					NOR = {
+						is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance
+						is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance
+						is_struggle_phase = struggle_wih_central_sarradon_phase_agionist_dominance
+					}
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_central_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_central_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_central_sarradon_ending_struggle_half_ritualist_or_wardenite_tt
+			NOT = {
+				any_county_in_region = {
+					region = GH_central_sarradon_struggle_region
+					percent >= 0.6
+					OR = {
+						faith.religion = religion:wardenism_religion
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+		}
+		# No other realm controls more than 20% of the Region
+		custom_tooltip = {
+			text = gh_central_sarradon_generic_victory_ending_decision_decision_region_tt
+			NOT = {
+				struggle:gh_war_in_heaven_struggle = {
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes
+						exists = primary_title
+						primary_title = { is_mercenary_company = no }
+						save_temporary_scope_as = sarradon_realm
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent > 0.2
+							holder.top_liege = scope:sarradon_realm
+						}
+					}
+				}
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_first_kingdom
+			completely_controls = title:d_tell_habja
+			completely_controls = title:d_dozzan
+			completely_controls = title:d_beid_faluh
+			completely_controls = title:d_sagecrowns
+			completely_controls = title:d_thronelands
+			completely_controls = title:d_rifeh
+			completely_controls = title:d_aversaria_peripontica
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_generic_victory_ending_decision_no_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_your_faith_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_less_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { 
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		custom_tooltip = {
+			text = gh_central_sarradon_generic_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_central_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_generic_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_war_in_heaven_struggle
+				STRUGGLE_ENDING = generic
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_the_conqueror
+		}
+		# Sarradon is available!
+		custom_tooltip = gh_struggle_can_create_empire_of_sarradon_tt
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to culture and faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_negative_tt
+		
+		custom_tooltip = struggle_wih_central_sarradon_unlock_maa
+
+		show_as_tooltip = {
+			if = {
+				limit = { exists = house }
+				house = {
+					add_house_modifier = {
+						modifier = gh_struggle_house_modifier_generic
+					}
+				}
+			}
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0300
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Agionist WIH Ending 				#
+# by Askil							#
+#####################################
+
+gh_central_sarradon_agionist_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_opening.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/GH_WIH_agionist_ending.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_central_sarradon_agionist_victory_ending_decision_desc
+	selection_tooltip = gh_central_sarradon_agionist_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		has_religion = religion:agionism_religion
+		
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_agionist_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_central_sarradon_phase_agionist_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_central_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_central_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		custom_tooltip = {
+			text = gh_central_sarradon_ending_struggle_fourty_ritualist_or_wardenite_tt
+			NOT = {
+				any_county_in_region = {
+					region = GH_central_sarradon_struggle_region
+					percent >= 0.4
+					OR = {
+						faith.religion = religion:wardenism_religion
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_first_kingdom
+			completely_controls = title:d_tell_habja
+			completely_controls = title:d_dozzan
+			completely_controls = title:d_beid_faluh
+			completely_controls = title:d_sagecrowns
+			completely_controls = title:d_thronelands
+			completely_controls = title:d_rifeh
+			completely_controls = title:d_aversaria_peripontica
+		}
+		
+		OR = {
+			AND = {	
+				custom_tooltip = {
+					text = gh_generic_victory_ending_decision_no_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}			
+				OR = {
+					custom_tooltip = {
+						text = gh_central_sarradon_ending_struggle_control_most_counties_tt
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.60
+							holder.top_liege ?= root
+						}
+					}
+					custom_tooltip = {
+						text = gh_central_sarradon_ending_struggle_agionist_controlled_eighty_counties_tt
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.80
+							holder.top_liege ?= { has_religion = religion:agionism_religion }
+						}
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_agionist_religion_tt
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_central_sarradon_ending_struggle_less_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { 
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}				
+				OR = {
+					custom_tooltip = {
+						text = gh_central_sarradon_ending_struggle_control_sixty_percent_counties_tt
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.60
+							holder.top_liege ?= root
+						}
+					}
+					custom_tooltip = {
+						text = gh_central_sarradon_ending_struggle_agionist_controlled_eighty_counties_tt
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.80
+							holder.top_liege ?= { has_religion = religion:agionism_religion }
+						}
+					}
+				}
+
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		custom_tooltip = {
+			text = gh_central_sarradon_agionist_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_central_war_in_heaven_struggle
+				REASON = gh_wih_ending_agionist_victory
+				REASON_DESCRIPTION = gh_wih_ending_agionist_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_war_in_heaven_struggle
+				STRUGGLE_ENDING = agionist
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 6000 }
+			add_prestige = 3000
+			give_nickname = nick_the_crusader
+		}
+		
+		# Sarradon is available!
+		custom_tooltip = gh_struggle_can_create_empire_of_sarradon_tt
+		#Struggle Available in the Region
+		custom_tooltip = gh_wih_ending_struggle_conquest_available_tt
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+		custom_tooltip = gh_struggle_wih_ending_wardenite_opinion_negative_tt
+
+		show_as_tooltip = {
+			if = {
+				limit = { exists = house }
+				house = {
+					add_house_modifier = {
+						modifier = gh_house_ended_central_sarradon_wih_struggle_patron_affinity 
+					}
+				}
+			}
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0400
+		
+		custom_tooltip = {
+			text = gh_central_sarradon_ending_struggle_patron_saint_affinity
+			set_variable = gh_ended_central_sarradon_wih_struggle_patron_affinity
+		}
+		
+		custom_tooltip = {
+			text = gh_central_sarradon_ending_struggle_patron_saint_affinity_house
+			set_variable = gh_ended_central_sarradon_wih_struggle_patron_affinity
+		}
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+	
+# =================================================== Eastern Sarradon ===================================================
+
+#####################################
+# Secure Wardenite Hegemony			#
+# by Askil							#
+#####################################
+
+gh_eastern_sarradon_wardenite_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_supremacy.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_supremacy.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_eastern_sarradon_wardenite_victory_ending_decision_desc
+	selection_tooltip = gh_eastern_sarradon_wardenite_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+		
+		OR = {
+			custom_tooltip = {
+				text = gh_wardenite_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_eastern_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+
+		custom_tooltip = { #
+			text = struggle_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+			
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_eastern_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_valley_of_the_djinn_kings
+			completely_controls = title:d_al_miwf
+			completely_controls = title:d_khekech
+			completely_controls = title:d_khenem_delta
+			completely_controls = title:d_forlorn_coast
+			completely_controls = title:d_isle_of_visions
+			completely_controls = title:d_western_dreamrend_isles
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_wardenite_victory_ending_decision_no_ritualist_rulers_tt
+					NOT = {
+						struggle:gh_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:ritualist_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_counties_mostly_wardenite_religion_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:wardenism_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_counties_sixty_wardenite_faith_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_less_ritualist_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:ritualist_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+
+	effect = {
+		custom_tooltip = {
+			text = gh_eastern_sarradon_wardenite_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_wardenite_victory
+				REASON_DESCRIPTION = gh_wih_ending_wardenite_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = wardenite
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_zayr_al_misrak
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0100
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Secure Ritualist Supremacy		#
+# by Askil							#
+#####################################
+
+gh_eastern_sarradon_ritualist_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_foundation.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_eastern_sarradon_ritualist_victory_ending_decision_desc
+	selection_tooltip = gh_eastern_sarradon_ritualist_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_ritualist_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_eastern_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_eastern_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_valley_of_the_djinn_kings
+			completely_controls = title:d_al_miwf
+			completely_controls = title:d_khekech
+			completely_controls = title:d_khenem_delta
+			completely_controls = title:d_forlorn_coast
+			completely_controls = title:d_isle_of_visions
+			completely_controls = title:d_western_dreamrend_isles
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_ritualist_victory_ending_decision_no_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:wardenism_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_counties_mostly_ritualist_religion_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_counties_sixty_ritualist_faith_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_less_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:wardenism_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = gh_eastern_sarradon_ritualist_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_ritualist_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = ritualist
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_hirzum_al_deyin
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_wardenite_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+				
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0200
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Generic WIH Ending 				#
+# by Askil							#
+#####################################
+
+gh_eastern_sarradon_generic_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/GH_WIH_generic_ending.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_eastern_sarradon_generic_victory_ending_decision_desc
+	selection_tooltip = gh_eastern_sarradon_generic_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+	}
+
+	is_valid = {
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_generic_victory_ending_decision_three_incorrect_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_eastern_war_in_heaven_struggle
+					NOR = {
+						is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance
+						is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance
+						is_struggle_phase = struggle_wih_eastern_sarradon_phase_agionist_dominance
+					}
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_eastern_sarradon_ending_struggle_half_ritualist_or_wardenite_tt
+			NOT = {
+				any_county_in_region = {
+					region = GH_eastern_sarradon_struggle_region
+					percent >= 0.6
+					OR = {
+						faith.religion = religion:wardenism_religion
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+		}
+		# No other realm controls more than 20% of the Region
+		custom_tooltip = {
+			text = gh_eastern_sarradon_generic_victory_ending_decision_decision_region_tt
+			NOT = {
+				struggle:gh_eastern_war_in_heaven_struggle = {
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes
+						exists = primary_title
+						primary_title = { is_mercenary_company = no }
+						save_temporary_scope_as = sarradon_realm
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent > 0.2
+							holder.top_liege = scope:sarradon_realm
+						}
+					}
+				}
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_valley_of_the_djinn_kings
+			completely_controls = title:d_al_miwf
+			completely_controls = title:d_khekech
+			completely_controls = title:d_khenem_delta
+			completely_controls = title:d_forlorn_coast
+			completely_controls = title:d_isle_of_visions
+			completely_controls = title:d_western_dreamrend_isles
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_generic_victory_ending_decision_no_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_your_faith_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_less_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { 
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		custom_tooltip = {
+			text = gh_eastern_sarradon_generic_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_generic_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = generic
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_the_conqueror
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to culture and faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_negative_tt
+		
+		custom_tooltip = struggle_wih_eastern_sarradon_unlock_maa
+
+		show_as_tooltip = {
+			if = {
+				limit = { exists = house }
+				house = {
+					add_house_modifier = {
+						modifier = gh_struggle_house_modifier_generic
+					}
+				}
+			}
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0300
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Agionist WIH Ending 				#
+# by Askil							#
+#####################################
+
+gh_eastern_sarradon_agionist_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_opening.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/GH_WIH_agionist_ending.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_eastern_sarradon_agionist_victory_ending_decision_desc
+	selection_tooltip = gh_eastern_sarradon_agionist_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		has_religion = religion:agionism_religion
+		
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_agionist_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_eastern_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_eastern_sarradon_phase_agionist_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		custom_tooltip = {
+			text = gh_eastern_sarradon_ending_struggle_fourty_ritualist_or_wardenite_tt
+			NOT = {
+				any_county_in_region = {
+					region = GH_eastern_sarradon_struggle_region
+					percent >= 0.4
+					OR = {
+						faith.religion = religion:wardenism_religion
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_valley_of_the_djinn_kings
+			completely_controls = title:d_al_miwf
+			completely_controls = title:d_khekech
+			completely_controls = title:d_khenem_delta
+			completely_controls = title:d_forlorn_coast
+			completely_controls = title:d_isle_of_visions
+			completely_controls = title:d_western_dreamrend_isles
+		}
+		
+		OR = {
+			AND = {	
+				custom_tooltip = {
+					text = gh_generic_victory_ending_decision_no_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}			
+				OR = {
+					custom_tooltip = {
+						text = gh_eastern_sarradon_ending_struggle_control_most_counties_tt
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.60
+							holder.top_liege ?= root
+						}
+					}
+					custom_tooltip = {
+						text = gh_eastern_sarradon_ending_struggle_agionist_controlled_eighty_counties_tt
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.80
+							holder.top_liege ?= { has_religion = religion:agionism_religion }
+						}
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_agionist_religion_tt
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_eastern_sarradon_ending_struggle_less_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { 
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}				
+				OR = {
+					custom_tooltip = {
+						text = gh_eastern_sarradon_ending_struggle_control_sixty_percent_counties_tt
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.60
+							holder.top_liege ?= root
+						}
+					}
+					custom_tooltip = {
+						text = gh_eastern_sarradon_ending_struggle_agionist_controlled_eighty_counties_tt
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.80
+							holder.top_liege ?= { has_religion = religion:agionism_religion }
+						}
+					}
+				}
+
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		custom_tooltip = {
+			text = gh_eastern_sarradon_agionist_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_agionist_victory
+				REASON_DESCRIPTION = gh_wih_ending_agionist_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = agionist
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 6000 }
+			add_prestige = 3000
+			give_nickname = nick_the_crusader
+		}
+		
+		#Struggle Available in the Region
+		custom_tooltip = gh_wih_ending_struggle_conquest_available_tt
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+		custom_tooltip = gh_struggle_wih_ending_wardenite_opinion_negative_tt
+
+		show_as_tooltip = {
+			if = {
+				limit = { exists = house }
+				house = {
+					add_house_modifier = {
+						modifier = gh_house_ended_eastern_sarradon_wih_struggle_patron_affinity 
+					}
+				}
+			}
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0400
+		
+		custom_tooltip = {
+			text = gh_eastern_sarradon_ending_struggle_patron_saint_affinity
+			set_variable = gh_ended_eastern_sarradon_wih_struggle_patron_affinity
+		}
+		
+		custom_tooltip = {
+			text = gh_eastern_sarradon_ending_struggle_patron_saint_affinity_house
+			set_variable = gh_ended_eastern_sarradon_wih_struggle_patron_affinity
+		}
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+# =================================================== Far Eastern Sarradon ===================================================
+
+#####################################
+# Secure Wardenite Hegemony			#
+# by Askil							#
+#####################################
+
+gh_far_eastern_sarradon_wardenite_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_supremacy.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_supremacy.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_far_eastern_sarradon_wardenite_victory_ending_decision_desc
+	selection_tooltip = gh_far_eastern_sarradon_wardenite_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+		
+		OR = {
+			custom_tooltip = {
+				text = gh_wardenite_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_far_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+
+		custom_tooltip = { #
+			text = struggle_far_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+			
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_sinasan
+			completely_controls = title:d_derawan
+			completely_controls = title:d_mehamani
+			completely_controls = title:d_gilhadu
+			completely_controls = title:d_aspayak
+			completely_controls = title:d_almudir
+			completely_controls = title:d_kemayere
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_wardenite_victory_ending_decision_no_ritualist_rulers_tt
+					NOT = {
+						struggle:gh_far_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:ritualist_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_counties_mostly_wardenite_religion_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:wardenism_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_counties_sixty_wardenite_faith_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_less_ritualist_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_far_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:ritualist_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+
+	effect = {
+		custom_tooltip = {
+			text = gh_far_eastern_sarradon_wardenite_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_far_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_wardenite_victory
+				REASON_DESCRIPTION = gh_wih_ending_wardenite_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_far_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = wardenite
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_malayk_al_sharwilah
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0100
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Secure Ritualist Supremacy		#
+# by Askil							#
+#####################################
+
+gh_far_eastern_sarradon_ritualist_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_foundation.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_far_eastern_sarradon_ritualist_victory_ending_decision_desc
+	selection_tooltip = gh_far_eastern_sarradon_ritualist_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_ritualist_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_far_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_far_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_sinasan
+			completely_controls = title:d_derawan
+			completely_controls = title:d_mehamani
+			completely_controls = title:d_gilhadu
+			completely_controls = title:d_aspayak
+			completely_controls = title:d_almudir
+			completely_controls = title:d_kemayere
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_ritualist_victory_ending_decision_no_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_far_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:wardenism_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_counties_mostly_ritualist_religion_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_counties_sixty_ritualist_faith_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_less_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_far_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:wardenism_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = gh_far_eastern_sarradon_ritualist_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_far_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_ritualist_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_far_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = ritualist
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_mar_iyyun_al_sharwilah
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_wardenite_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+				
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0200
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Generic WIH Ending 				#
+# by Askil							#
+#####################################
+
+gh_far_eastern_sarradon_generic_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/GH_WIH_generic_ending.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_far_eastern_sarradon_generic_victory_ending_decision_desc
+	selection_tooltip = gh_far_eastern_sarradon_generic_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+	}
+
+	is_valid = {
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_generic_victory_ending_decision_incorrect_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+					NOR = {
+						is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance
+						is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance
+					}
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_far_eastern_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_far_eastern_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_far_eastern_sarradon_ending_struggle_half_ritualist_or_wardenite_tt
+			NOT = {
+				any_county_in_region = {
+					region = GH_far_eastern_sarradon_struggle_region
+					percent >= 0.6
+					OR = {
+						faith.religion = religion:wardenism_religion
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+		}
+		# No other realm controls more than 20% of the Region
+		custom_tooltip = {
+			text = gh_far_eastern_sarradon_generic_victory_ending_decision_decision_region_tt
+			NOT = {
+				struggle:gh_far_eastern_war_in_heaven_struggle = {
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes
+						exists = primary_title
+						primary_title = { is_mercenary_company = no }
+						save_temporary_scope_as = sarradon_realm
+						any_county_in_region = {
+							region = GH_far_eastern_sarradon_struggle_region
+							percent > 0.2
+							holder.top_liege = scope:sarradon_realm
+						}
+					}
+				}
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_sinasan
+			completely_controls = title:d_derawan
+			completely_controls = title:d_mehamani
+			completely_controls = title:d_gilhadu
+			completely_controls = title:d_aspayak
+			completely_controls = title:d_almudir
+			completely_controls = title:d_kemayere
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_generic_victory_ending_decision_no_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_far_eastern_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_your_faith_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_far_eastern_sarradon_ending_struggle_less_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_far_eastern_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { 
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		custom_tooltip = {
+			text = gh_far_eastern_sarradon_generic_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_far_eastern_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_generic_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_far_eastern_war_in_heaven_struggle
+				STRUGGLE_ENDING = generic
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_the_conqueror
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to culture and faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_negative_tt
+		
+		custom_tooltip = struggle_wih_far_eastern_sarradon_unlock_maa
+
+		show_as_tooltip = {
+			if = {
+				limit = { exists = house }
+				house = {
+					add_house_modifier = {
+						modifier = gh_struggle_house_modifier_generic
+					}
+				}
+			}
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0300
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+# =================================================== Western Sarradon ===================================================
+
+#####################################
+# Secure Wardenite Hegemony			#
+# by Askil							#
+#####################################
+
+gh_western_sarradon_wardenite_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_supremacy.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_supremacy.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_western_sarradon_wardenite_victory_ending_decision_desc
+	selection_tooltip = gh_western_sarradon_wardenite_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+		
+		OR = {
+			custom_tooltip = {
+				text = gh_wardenite_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_western_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_western_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+
+		custom_tooltip = { #
+			text = struggle_western_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+			
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_western_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_eloi_myar
+			completely_controls = title:d_eloi_sashravun
+			completely_controls = title:d_zakhred
+			completely_controls = title:d_bharemhev
+			completely_controls = title:d_haradad
+			completely_controls = title:d_kathaanaksa
+			completely_controls = title:d_vabhrund
+			completely_controls = title:d_dafranis
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_wardenite_victory_ending_decision_no_ritualist_rulers_tt
+					NOT = {
+						struggle:gh_western_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:ritualist_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_counties_mostly_wardenite_religion_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:wardenism_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_counties_sixty_wardenite_faith_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_less_ritualist_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_western_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:ritualist_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+
+	effect = {
+		custom_tooltip = {
+			text = gh_western_sarradon_wardenite_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_western_war_in_heaven_struggle
+				REASON = gh_wih_ending_wardenite_victory
+				REASON_DESCRIPTION = gh_wih_ending_wardenite_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_western_war_in_heaven_struggle
+				STRUGGLE_ENDING = wardenite
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_yamil_al_azzan
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0100
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Secure Ritualist Supremacy		#
+# by Askil							#
+#####################################
+
+gh_western_sarradon_ritualist_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/fp3_decision_foundation.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_western_sarradon_ritualist_victory_ending_decision_desc
+	selection_tooltip = gh_western_sarradon_ritualist_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_ritualist_victory_ending_decision_correct_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_western_war_in_heaven_struggle
+					is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_western_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_western_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_wih_struggle_ending_decision_correct_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = gh_western_war_in_heaven_struggle
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_eloi_myar
+			completely_controls = title:d_eloi_sashravun
+			completely_controls = title:d_zakhred
+			completely_controls = title:d_bharemhev
+			completely_controls = title:d_haradad
+			completely_controls = title:d_kathaanaksa
+			completely_controls = title:d_vabhrund
+			completely_controls = title:d_dafranis
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_ritualist_victory_ending_decision_no_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_western_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								has_religion = religion:wardenism_religion
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_counties_mostly_ritualist_religion_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.90
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_counties_sixty_ritualist_faith_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_less_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_western_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { faith.religion = religion:wardenism_religion }
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = gh_western_sarradon_ritualist_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_western_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_ritualist_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_western_war_in_heaven_struggle
+				STRUGGLE_ENDING = ritualist
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_yamil_al_azzan
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_tt
+		custom_tooltip = gh_struggle_wih_ending_wardenite_opinion_negative_tt
+		# Choose one modifier
+		custom_description_no_bullet = { text = gh_struggle_wih_ending_list_tt }
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+				
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0200
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#####################################
+# Generic WIH Ending 				#
+# by Askil							#
+#####################################
+
+gh_western_sarradon_generic_victory_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/GH_WIH_generic_ending.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_western_sarradon_generic_victory_ending_decision_desc
+	selection_tooltip = gh_western_sarradon_generic_victory_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+	}
+
+	is_valid = {
+		NOR = {
+			has_religion = religion:wardenism_religion
+			has_religion = religion:ritualist_religion
+		}
+		trigger_if = {
+			limit = {
+				is_ai = no
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			custom_tooltip = {
+				text = gh_great_struggle_must_be_ended_in_window
+				has_variable = can_end_struggle_player
+			}
+		}
+		trigger_else = {}
+		is_independent_ruler = yes
+
+		OR = {
+			custom_tooltip = {
+				text = gh_generic_victory_ending_decision_incorrect_phase_tt
+				any_character_struggle = {
+					is_struggle_type = gh_western_war_in_heaven_struggle
+					NOR = {
+						is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance
+						is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance
+					}
+				}
+			}
+			## Completely control Central Sarradon for 5 years
+			AND = {
+				completely_controls_region = GH_western_sarradon_struggle_region
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+		
+		custom_tooltip = { #
+			text = struggle_western_sarradon_ending_decision_kingdom_tt
+			any_held_title = { # 1st kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom
+			}
+			any_held_title = { # 2nd kingdom
+				tier = tier_kingdom
+				de_jure_liege = title:h_sarradon
+				trigger_if = {
+					limit = { exists = scope:sarradon_kingdom }
+					NOT = { this = scope:sarradon_kingdom }
+				}
+				root = { completely_controls = prev }
+				save_temporary_scope_as = sarradon_kingdom_2
+			}
+		}
+		
+		custom_tooltip = {
+			text = gh_western_sarradon_ending_struggle_half_ritualist_or_wardenite_tt
+			NOT = {
+				any_county_in_region = {
+					region = GH_western_sarradon_struggle_region
+					percent >= 0.6
+					OR = {
+						faith.religion = religion:wardenism_religion
+						faith.religion = religion:ritualist_religion
+					}
+				}
+			}
+		}
+		# No other realm controls more than 20% of the Region
+		custom_tooltip = {
+			text = gh_western_sarradon_generic_victory_ending_decision_decision_region_tt
+			NOT = {
+				struggle:gh_western_war_in_heaven_struggle = {
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes
+						exists = primary_title
+						primary_title = { is_mercenary_company = no }
+						save_temporary_scope_as = sarradon_realm
+						any_county_in_region = {
+							region = GH_western_sarradon_struggle_region
+							percent > 0.2
+							holder.top_liege = scope:sarradon_realm
+						}
+					}
+				}
+			}
+		}
+		#Control at least two of the main kingdoms
+		calc_true_if = {
+			amount >= 2
+			completely_controls = title:d_eloi_myar
+			completely_controls = title:d_eloi_sashravun
+			completely_controls = title:d_zakhred
+			completely_controls = title:d_bharemhev
+			completely_controls = title:d_haradad
+			completely_controls = title:d_kathaanaksa
+			completely_controls = title:d_vabhrund
+			completely_controls = title:d_dafranis
+		}
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_generic_victory_ending_decision_no_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						struggle:gh_western_war_in_heaven_struggle = {		
+							any_involved_ruler = {
+								NOT = { this = root }
+								is_independent_ruler = yes	
+								exists = primary_title
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_your_faith_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.60
+						faith = root.faith
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_control_most_counties_tt
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.75
+						holder.top_liege ?= root
+					}
+				}
+				custom_tooltip = {
+					text = gh_western_sarradon_ending_struggle_less_ritualist_or_wardenite_rulers_tt
+					NOT = {
+						any_county_in_region = {
+							region = GH_western_sarradon_struggle_region
+							percent >= 0.10
+							holder.top_liege ?= { 
+								OR = {
+									faith.religion = religion:ritualist_religion 
+									faith.religion = religion:wardenism_religion 
+								}
+							}
+						}
+					}
+				}
+			}		
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+	
+	effect = {
+		custom_tooltip = {
+			text = gh_western_sarradon_generic_victory_ending_decision_effect_tooltip
+			gh_great_struggle_ended_regional_struggle_info_effect = {
+				STRUGGLE_NAME = gh_region_western_war_in_heaven_struggle
+				REASON = gh_wih_ending_ritualist_victory
+				REASON_DESCRIPTION = gh_wih_ending_generic_victory_desc
+				STRUGGLE_ENDER = root
+			}
+		}
+		
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = gh_western_war_in_heaven_struggle
+				STRUGGLE_ENDING = generic
+			}
+		}
+		
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 5000 }
+			give_nickname = nick_the_conqueror
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Boost to culture and faith conversion
+		custom_tooltip = gh_struggle_wih_ending_conversion_tt
+		# Damage opinion with other faiths
+		custom_tooltip = gh_struggle_wih_ending_opinion_negative_tt
+		
+		custom_tooltip = struggle_wih_western_sarradon_unlock_maa
+
+		show_as_tooltip = {
+			if = {
+				limit = { exists = house }
+				house = {
+					add_house_modifier = {
+						modifier = gh_struggle_house_modifier_generic
+					}
+				}
+			}
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+			}
+		}
+		
+		# Trigger a player facing event as a coda
+		trigger_event = gh_war_in_heaven_struggle.0300
+	}
+	
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}

@@ -1,0 +1,178 @@
+﻿# REMOVED FOR GODHERJA
+
+#Become a Poet - Ceremony - House Aspiration
+### Study Poetry ###
+tgp_japan_become_a_poet_decision = {
+	title = tgp_japan_become_a_poet_decision
+	desc = tgp_japan_become_a_poet_decision_desc
+	selection_tooltip = tgp_japan_become_a_poet_decision_tooltip
+	picture = {
+		trigger = {
+			OR = {
+				government_is_japanese_trigger = yes
+				government_has_flag = government_is_celestial
+				government_has_flag = government_is_meritocratic
+			}
+		}
+		reference = "gfx/interface/illustrations/decisions/tgp_poet.dds"
+	}
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_tale.dds"
+	}
+	cooldown = { years = 15 }
+	sort_order = 110
+
+	is_shown = {
+		has_tgp_dlc_trigger = yes
+		OR = {
+			AND = {
+				government_is_japanese_trigger = yes
+				house = { has_house_power_parameter = ceremony_become_a_poet_decision }
+			}
+			top_participant_group:dynastic_cycle ?= {
+				participant_group_type = advancement_movement
+			}
+		}
+	}
+
+	is_valid = {
+		NOT = { has_trait = lifestyle_poet }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		custom_tooltip = tgp_japan_become_a_poet_decision_effects_tooltip_trait
+		custom_tooltip = tgp_japan_become_a_poet_decision_effects_tooltip_stress
+
+		hidden_effect = {
+			trigger_event = {
+				id = tgp_japan_decision.9401
+				days = { 40 60 }
+			}
+		}
+	}
+	
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 36
+		duchy = 36
+		kingdom = 36
+		empire = 36
+		hegemony = 36
+	}
+
+	ai_potential = {
+		is_adult = yes
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#Inspire the Troops - Strength - House Aspiration
+### Inspire the Troops ###
+tgp_japan_train_with_troops_decision = {
+	title = tgp_japan_train_with_troops_decision
+	desc = tgp_japan_train_with_troops_decision_desc
+	selection_tooltip = tgp_japan_train_with_troops_decision_tooltip
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_hostility.dds"
+	}
+	cooldown = { years = 20 }
+	sort_order = 0
+
+	cost = {
+		prestige = {
+			value = major_prestige_value
+		}
+	}
+
+	is_shown = {
+		has_tgp_dlc_trigger = yes
+		government_is_japanese_trigger = yes
+		house = { has_house_power_parameter = strength_train_with_troops_decision }
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_incapable = no
+		has_contagious_deadly_disease_trigger = no
+		is_at_war = yes
+	}
+
+	effect = {
+		#Apply the Character Modifier
+		send_interface_toast = {
+			title = tgp_japan_train_with_troops_decision_effects_tooltip_modifier
+			type = event_toast_effect_good
+			left_icon = root
+			add_character_modifier = {
+				modifier = tgp_japan_train_with_troops_modifier
+				years = 10
+			}
+		}
+		#Chance to apply a Commander Trait
+		if = {
+			limit = {
+				number_of_commander_traits < 3
+			}
+			custom_tooltip = {
+				text = tgp_japan_train_with_troops_decision_effects_tooltip_trait
+				#The higher Martial, the better the odds of gaining a Commander Trait
+				random = {
+					chance = {
+						value = 20
+						if = {
+							limit = {
+								root.martial >= monumentally_high_skill_rating
+							}
+							add = 20
+						}
+						else_if = {
+							limit = {
+								root.martial >= extremely_high_skill_rating
+							}
+							add = 15
+						}
+						else_if = {
+							limit = {
+								root.martial >= very_high_skill_rating
+							}
+							add = 10
+						}
+						else_if = {
+							limit = {
+								root.martial >= high_skill_rating
+							}
+							add = 5
+						}
+					}
+					give_random_commander_trait_effect = yes
+				}
+			}
+		}
+	}
+	
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 12
+		duchy = 12
+		kingdom = 12
+		empire = 12
+		hegemony = 12
+	}
+
+	ai_potential = {
+		is_adult = yes
+		is_at_war = yes
+	}
+
+	ai_will_do = {
+		base = 10
+	}
+}

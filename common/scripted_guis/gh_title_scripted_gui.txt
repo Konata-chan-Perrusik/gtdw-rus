@@ -1,0 +1,39 @@
+﻿demote_title_scripted_gui = {
+	scope = character
+	
+	is_shown = { 
+		exists = primary_title
+		primary_title = { this = title:e_aversarinas_aautokrata }
+		exists = scope:title_being_demoted
+		exists = scope:title_being_demoted.holder
+		scope:title_being_demoted.holder = root
+		scope:title_being_demoted.tier = tier_empire
+		scope:title_being_demoted = {
+			NOR = {
+				this = title:e_aversarinas_aautokrata
+				this = title:e_asiupoli_aautokrata
+				this = title:e_oraispol_aautokrata
+				this = title:e_aversaria_voreias
+				# Mamuramats shouldn't be downgradeable
+				has_variable = attached_high_court
+			}
+			# Neither should titular titles
+			any_in_de_jure_hierarchy = {
+				exists = this
+			}
+		}
+	}
+	is_valid = { 
+		prestige >= monumental_prestige_value
+		completely_controls = scope:title_being_demoted
+		scope:title_being_demoted = { title_held_years >= 30 }
+	}
+	effect = {
+		hidden_effect = {
+			add_prestige = monumental_prestige_loss
+			scope:title_being_demoted = {
+				demote_empire_to_kingdom_effect = { NEW_EMPIRE_LIEGE_TITLE = title:e_aversarinas_aautokrata }
+			}
+		}
+	}
+}

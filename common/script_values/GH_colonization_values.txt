@@ -1,0 +1,1050 @@
+﻿monthly_colonization_progress_value = {
+	value = {
+		value = 1
+		desc = monthly_colonization_progress_value_base_desc
+		format = "COLONIZATION_PROGRESS_VALUE_FORMAT"
+	}
+	if = {
+		limit = { culture = { has_cultural_tradition = tradition_wasteland_reclaimers } }
+		add = {
+			value = 0.5
+			desc = colonization_wasteland_reclaimers_desc
+			format = "COLONIZATION_PROGRESS_VALUE_FORMAT"
+		}
+	}
+	multiply = {
+		value = 1
+		add = {
+			value = holder.stewardship
+			subtract = 8
+			multiply = 0.025
+			desc = monthly_colonization_progress_value_stewardship_desc
+			format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+		}
+		add = {
+			value = holder.character_arcana_baseline_value
+			subtract = 8
+			multiply = 0.025
+			desc = monthly_colonization_progress_value_arcana_desc
+			format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+		}
+		if = {
+			limit = { has_county_modifier = colonial_boom_modifier }
+			add = {
+				value = 0.3
+				desc = colonial_boom_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = colonial_prosperity_modifier }
+			add = {
+				value = 0.15
+				desc = colonial_prosperity_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = bandit_stronghold_modifier }
+			add = {
+				value = -0.5
+				desc = bandit_stronghold_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = frontier_banditry_modifier }
+			add = {
+				value = -0.25
+				desc = frontier_banditry_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = safe_roads_modifier }
+			add = {
+				value = 0.2
+				desc = safe_roads_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = adventurer_patrols_modifier }
+			add = {
+				value = 0.4
+				desc = adventurer_patrols_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = acute_food_shortages_modifier }
+			add = {
+				value = -0.8
+				desc = acute_food_shortages_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = colonial_mismanagement_modifier }
+			add = {
+				value = -0.2
+				desc = colonial_mismanagement_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = monster_infestation_modifier }
+			add = {
+				value = -0.4
+				desc = monster_infestation_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = adventurer_influx_modifier }
+			add = {
+				value = 0.1
+				desc = adventurer_influx_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = gold_rush_modifier }
+			add = {
+				value = 0.5
+				desc = gold_rush_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = migrant_influx_modifier }
+			add = {
+				value = 0.25
+				desc = migrant_influx_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { has_county_modifier = settling_ruins_modifier }
+			add = {
+				value = 0.2
+				desc = settling_ruins_modifier_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = { holder = { has_perk = swift_convoys_perk } }
+			add = {
+				value = 0.25
+				desc = swift_convoys_perk_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		if = {
+			limit = {
+				holder = {
+					employs_court_position = colonial_administrator_court_position
+					any_court_position_holder = {
+						type = colonial_administrator_court_position
+						NOT = { has_character_flag = colonial_administrator_sustainable_development_flag }
+					}
+				}
+			}
+			add = {
+				value = 0
+				if = {
+					limit = {
+						holder = {
+							any_court_position_holder = {
+								type = colonial_administrator_court_position
+								aptitude = {
+									court_position = colonial_administrator_court_position
+									value = 1
+								}
+							}
+						}
+					}
+					add = 0.05
+				}
+				else_if = {
+					limit = {
+						holder = {
+							any_court_position_holder = {
+								type = colonial_administrator_court_position
+								aptitude = {
+									court_position = colonial_administrator_court_position
+									value = 2
+								}
+							}
+						}
+					}
+					add = 0.1
+				}
+				else_if = {
+					limit = {
+						holder = {
+							any_court_position_holder = {
+								type = colonial_administrator_court_position
+								aptitude = {
+									court_position = colonial_administrator_court_position
+									value = 3
+								}
+							}
+						}
+					}
+					add = 0.15
+				}
+				else_if = {
+					limit = {
+						holder = {
+							any_court_position_holder = {
+								type = colonial_administrator_court_position
+								aptitude = {
+									court_position = colonial_administrator_court_position
+									value = 4
+								}
+							}
+						}
+					}
+					add = 0.2
+				}
+				else_if = {
+					limit = {
+						holder = {
+							any_court_position_holder = {
+								type = colonial_administrator_court_position
+								aptitude = {
+									court_position = colonial_administrator_court_position
+									value = 5
+								}
+							}
+						}
+					}
+					add = 0.25
+				}
+				if = {
+					limit = {
+						holder = {
+							any_court_position_holder = {
+								type = colonial_administrator_court_position
+								has_character_flag = colonial_administrator_attend_colonial_affairs_flag
+							}
+						}
+					}
+					multiply = 2
+				}
+				desc = colonial_administrator_value_desc
+				format = "COLONIZATION_PROGRESS_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+	}
+	multiply = {
+		value = 1
+		if = {
+			limit = { has_game_rule = half_colonization_speed }
+			add = {
+				value = -0.5
+			}
+		}
+		if = {
+			limit = { has_game_rule = x2_colonization_speed }
+			add = {
+				value = 1
+			}
+		}
+		if = {
+			limit = { has_game_rule = x4_colonization_speed }
+			add = {
+				value = 3
+			}
+		}
+		if = {
+			limit = { has_game_rule = x10_colonization_speed }
+			add = {
+				value = 3
+			}
+		}
+	}
+	min = 0.1
+}
+
+colonization_cost_value = {
+	if = {
+		limit = {
+			scope:actor ?= {
+				culture = { has_cultural_tradition = tradition_wasteland_reclaimers }
+				GH_is_any_tribal_government_trigger = yes
+			}
+		}
+		value = {
+			value = 1000
+			desc = colonization_cost_value_base_desc
+			format = "COLONIZATION_PRESTIGE_COST_FORMAT"
+		}
+		multiply = {
+			value = 1
+			add = {
+				value = 100
+				subtract = county_habitability_value
+				multiply = 0.02
+				desc = colonization_cost_value_habitability_penalty_desc
+				format = "COLONIZATION_PRESTIGE_COST_PERCENTAGE_FORMAT"
+			}
+			if = {
+				limit = {
+					is_coastal_county = yes
+					scope:actor = { NOT = { has_perk = beyond_the_horizon_perk } }
+					NOT = {
+						any_neighboring_county = {
+							AND = {
+								holder = {
+									OR = {
+										this = scope:actor
+										any_liege_or_above = { this = scope:actor }
+									}
+								}
+								title_province = { NOT = { has_holding_type = colony_holding } }
+							}
+						}
+					}
+				}
+				add = {
+					value = 0.5
+					desc = colonization_cost_value_overseas_desc
+					format = "COLONIZATION_PRESTIGE_COST_PERCENTAGE_FORMAT"
+				}
+			}
+			if = {
+				limit = { scope:actor = { has_perk = land_grants_perk } }
+				add = {
+					value = -0.2
+					desc = colonization_cost_value_land_grants_perk_desc
+					format = "COLONIZATION_PRESTIGE_COST_PERCENTAGE_FORMAT"
+				}
+			}
+		}
+	}
+	else = {
+		value = {
+			value = 300
+			desc = colonization_cost_value_base_desc
+			format = "COLONIZATION_GOLD_COST_FORMAT"
+		}
+		multiply = {
+			value = 1
+			add = {
+				value = 100
+				subtract = county_habitability_value
+				multiply = 0.02
+				desc = colonization_cost_value_habitability_penalty_desc
+				format = "COLONIZATION_GOLD_COST_PERCENTAGE_FORMAT"
+			}
+			if = {
+				limit = {
+					is_coastal_county = yes
+					scope:actor = { NOT = { has_perk = beyond_the_horizon_perk } }
+					NOT = {
+						any_neighboring_county = {
+							AND = {
+								holder = {
+									OR = {
+										this = scope:actor
+										any_liege_or_above = { this = scope:actor }
+									}
+								}
+								title_province = { NOT = { has_holding_type = colony_holding } }
+							}
+						}
+					}
+				}
+				add = {
+					value = 0.5
+					desc = colonization_cost_value_overseas_desc
+					format = "COLONIZATION_GOLD_COST_PERCENTAGE_FORMAT"
+				}
+			}
+			if = {
+				limit = { scope:actor = { has_perk = land_grants_perk } }
+				add = {
+					value = -0.2
+					desc = colonization_cost_value_land_grants_perk_desc
+					format = "COLONIZATION_GOLD_COST_PERCENTAGE_FORMAT"
+				}
+			}
+		}
+	}
+}
+
+fast_habitability_penalty_value = { # GUI Tooltip
+	value = 100
+	subtract = county_habitability_value
+	multiply = 0.02
+}
+
+colonization_range_value = { # Use square value below for final calculations
+	value = 250 # One Ireland in pixels
+	multiply = {
+		value = 1
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_chrys_lymani } } }
+			add = 0.2
+			if = {
+				limit = { any_county_province = { has_building = 01_chrys_lymani } }
+				add = 0.5
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_bastonport } } }
+			add = 0.1
+			if = {
+				limit = { any_county_province = { has_building = 01_bastonport } }
+				add = 0.3
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_mountainport } } }
+			add = 0.1
+			if = {
+				limit = { any_county_province = { has_building = 01_mountainport } }
+				add = 0.3
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 02_korkivo_port } } }
+			add = 0.1
+			if = {
+				limit = { any_county_province = { has_building = 02_korkivo_port } }
+				add = 0.3
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_slums_of_den_teriatrixx } } }
+			add = 0.1
+			if = {
+				limit = { any_county_province = { has_building = 01_slums_of_den_teriatrixx } }
+				add = 0.3
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_dielecport } } }
+			add = 0.1
+			if = {
+				limit = { any_county_province = { has_building = 01_dielecport } }
+				add = 0.3
+			}
+		}
+		else_if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 02_dielecport } } }
+			add = 0.2
+			if = {
+				limit = { any_county_province = { has_building = 02_dielecport } }
+				add = 0.5
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_gurardport } } }
+			add = 0.1
+			if = {
+				limit = { any_county_province = { has_building = 01_gurardport } }
+				add = 0.3
+			}
+		}
+		else_if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 02_gurardport } } }
+			add = 0.2
+			if = {
+				limit = { any_county_province = { has_building = 02_gurardport } }
+				add = 0.5
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_gisreddeport } } }
+			add = 0.2
+			if = {
+				limit = { any_county_province = { has_building = 01_gisreddeport } }
+				add = 0.4
+			}
+		}
+		else_if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 02_gisreddeport } } }
+			add = 0.3
+			if = {
+				limit = { any_county_province = { has_building = 02_gisreddeport } }
+				add = 0.6
+			}
+		}
+		else_if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 03_gisreddeport } } }
+			add = 0.4
+			if = {
+				limit = { any_county_province = { has_building = 03_gisreddeport } }
+				add = 0.8
+			}
+		}
+		else_if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 04_gisreddeport } } }
+			add = 0.5
+			if = {
+				limit = { any_county_province = { has_building = 04_gisreddeport } }
+				add = 1
+			}
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_portacademy } } }
+			add = 0.3
+		}
+		if = {
+			limit = { holder = { any_directly_owned_province = { has_building = 01_light_of_guillate } } }
+			add = 0.3
+		}
+		if = {
+			limit = { any_county_province = { has_building = common_tradeport_01 } }
+			add = 0.15
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_02 } }
+			add = 0.2
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_03 } }
+			add = 0.25
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_04 } }
+			add = 0.3
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_05 } }
+			add = 0.35
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_06 } }
+			add = 0.4
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_07 } }
+			add = 0.45
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = common_tradeport_08 } }
+			add = 0.5
+		}
+		if = {
+			limit = { any_county_province = { has_building = harbor_01 } }
+			add = 0.1
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_02 } }
+			add = 0.2
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_03 } }
+			add = 0.3
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_04 } }
+			add = 0.4
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_05 } }
+			add = 0.5
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_06 } }
+			add = 0.6
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_07 } }
+			add = 0.7
+		}
+		else_if = {
+			limit = { any_county_province = { has_building = harbor_08 } }
+			add = 0.8
+		}
+		if = {
+			limit = { holder.culture = { has_cultural_tradition = tradition_seafaring } }
+			add = 0.2
+		}
+		if = {
+			limit = { holder.culture = { has_innovation = innovation_longboats } }
+			add = 0.2
+		}
+		if = {
+			limit = { holder.culture = { has_innovation = innovation_kapmatans } }
+			add = 0.2
+		}
+		if = {
+			limit = { holder.culture = { has_innovation = innovation_armilary_sphere } }
+			add = 0.4
+		}
+		if = {
+			limit = { holder.culture = { has_innovation = innovation_konijkmener_sailing_developments } }
+			add = 1
+		}
+		if = {
+			limit = { holder = { has_perk = power_projection_perk } }
+			add = 0.3
+		}
+	}
+}
+
+colonization_range_value_squared = { # USE THIS!
+	value = colonization_range_value.squared_value
+}
+
+county_habitability_value = {
+	value = 100
+	if = {
+		limit = { title_province = { GH_any_drylands_terrain_trigger = yes } }
+		add = {
+			value = -10
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_wetlands_terrain_trigger = yes } }
+		add = {
+			value = -10
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_forest_or_taiga_terrain_trigger = yes } }
+		add = {
+			value = -10
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_steppe_terrain_trigger = yes } }
+		add = {
+			value = -20
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = archipelagic } }
+		add = {
+			value = -20
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_jungle_terrain_trigger = yes } }
+		add = {
+			value = -25
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_mountains_no_desert_terrain_trigger = yes } }
+		add = {
+			value = -25
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_oasis_terrain_trigger = yes } }
+		add = {
+			value = -25
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_desert_terrain_trigger = yes } }
+		add = {
+			value = -40
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_desert_mountains_terrain_trigger = yes } }
+		add = {
+			value = -40
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { GH_any_wasteland_terrain_trigger = yes } }
+		add = {
+			value = -200
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = mayik_caverns } }
+		add = {
+			value = -70
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = mayik_chamber } }
+		add = {
+			value = -70
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = mayik_corridors } }
+		add = {
+			value = -70
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = redlands_drylands } }
+		add = {
+			value = -40
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = redlands_desert } }
+		add = {
+			value = -60
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = redlands_mountains } }
+		add = {
+			value = -60
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { title_province = { terrain = redlands_chasms } }
+		add = {
+			value = -80
+			desc = county_capital_terrain_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = {
+			is_coastal_county = yes
+			NOT = { title_province = { terrain = archipelagic } }
+		}
+		add = {
+			value = 10
+			desc = coastal_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	else_if = {
+		limit = { has_county_modifier = bordering_fog_modifier }
+		add = {
+			value = -30
+			desc = bordering_fog_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_county_modifier = whisperveil_modifier }
+		add = {
+			value = -45
+			desc = whisperveil_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_county_modifier = dorajpor_modifier }
+		add = {
+			value = -50
+			desc = dorajpor_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { title_province = { has_province_modifier = extreme_desert_modifier } }
+		add = {
+			value = -50
+			desc = extreme_desert_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_county_modifier = haryaadad_modifier }
+		add = {
+			value = -60
+			desc = haryaadad_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_county_modifier = kadtarak_modifier }
+		add = {
+			value = -100
+			desc = kadtarak_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_county_modifier = takaday_forest_modifier }
+		add = {
+			value = -50
+			desc = takaday_forest_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	if = {
+		limit = { has_county_modifier = fogswept_modifier }
+		add = {
+			value = -200
+			desc = fogswept_modifier_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	add = habitability_modifier_value
+	if = { # Keep this at the bottom for a nicer tooltip
+		limit = { total_ambient_magic_value > 50 }
+		subtract = {
+			value = total_ambient_magic_value
+			multiply = 0.5
+			desc = habitability_ambient_magic_value_desc
+			format = "HABITABILITY_VALUE_FORMAT"
+		}
+	}
+	min = 0
+	max = 100
+}
+
+colonization_threshold_value = {
+	value = 50
+	if = { # Hill Dwellers
+		limit = {
+			culture = { has_cultural_tradition = tradition_hill_dwellers }
+			scope:target.title_province = { GH_any_hills_terrain_trigger = yes }
+		}
+		add = {
+			value = -10
+			desc = colonization_hill_dwellers_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Forest Folk
+		limit = {
+			culture = { has_cultural_tradition = tradition_forest_folk }
+			scope:target.title_province = { GH_any_forest_or_taiga_terrain_trigger = yes }
+		}
+		add = {
+			value = -10
+			desc = colonization_forest_folk_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Mountain Homes
+		limit = {
+			culture = { has_cultural_tradition = tradition_mountain_homes }
+			scope:target.title_province = { GH_any_mountains_terrain_trigger = yes }
+		}
+		add = {
+			value = -20
+			desc = colonization_mountain_homes_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Dryland Dwellers
+		limit = {
+			culture = { has_cultural_tradition = tradition_dryland_dwellers }
+			scope:target.title_province = { GH_any_drylands_terrain_trigger = yes }
+		}
+		add = {
+			value = -10
+			desc = colonization_dryland_dwellers_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Jungle Dwellers
+		limit = {
+			culture = { has_cultural_tradition = tradition_jungle_dwellers }
+			scope:target.title_province = { GH_any_jungle_terrain_trigger = yes }
+		}
+		add = {
+			value = -20
+			desc = colonization_jungle_dwellers_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Wetlanders
+		limit = {
+			culture = { has_cultural_tradition = tradition_wetlanders }
+			scope:target.title_province = { GH_any_wetlands_terrain_trigger = yes }
+		}
+		add = {
+			value = -10
+			desc = colonization_wetlanders_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Seafarers
+		limit = {
+			culture = { has_cultural_tradition = tradition_seafaring }
+			scope:target = { is_coastal_county = yes }
+		}
+		add = {
+			value = -10
+			desc = colonization_seafaring_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Iron Spines Settlers
+		limit = {
+			culture = { has_cultural_tradition = tradition_iron_spines_settlers }
+			scope:target.title_province = { GH_any_mountains_terrain_trigger = yes }
+		}
+		add = {
+			value = -30
+			desc = colonization_iron_spines_settlers_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Lightshy
+		limit = {
+			culture = { has_cultural_tradition = tradition_lightshy }
+			scope:target.title_province = { GH_any_underground_terrain_trigger = yes }
+		}
+		add = {
+			value = -30
+			desc = colonization_lightshy_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Lords of Aironoi
+		limit = {
+			culture = { has_cultural_tradition = tradition_lords_of_aironoi }
+			scope:target.title_province = { GH_any_steppe_terrain_trigger = yes }
+		}
+		add = {
+			value = -15
+			desc = colonization_lords_of_aironoi_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Armazli Sanctuaries
+		limit = {
+			culture = { has_cultural_tradition = tradition_armazli_sanctuaries }
+			scope:target.title_province = { GH_any_mountains_no_desert_terrain_trigger = yes }
+		}
+		add = {
+			value = -15
+			desc = colonization_armazli_sanctuaries_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Redland Dwellers
+		limit = {
+			culture = { has_cultural_tradition = tradition_redlanders }
+			scope:target.title_province = { GH_any_redlands_trigger = yes }
+		}
+		add = {
+			value = -80
+			desc = colonization_redlanders_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Sarradonian Desert Nomads
+		limit = {
+			culture = { has_cultural_tradition = tradition_desert_nomads }
+			scope:target.title_province = {
+				OR = {
+					GH_any_desert_terrain_trigger = yes
+					GH_any_desert_mountains_terrain_trigger = yes
+					GH_any_oasis_terrain_trigger = yes
+				}
+			}
+		}
+		add = {
+			value = -30
+			desc = colonization_desert_nomads_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Islanders
+		limit = {
+			culture = { has_cultural_tradition = tradition_islander }
+			scope:target.title_province = { terrain = archipelagic }
+		}
+		add = {
+			value = -10
+			desc = colonization_islander_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Wasteland Reclaimers
+		limit = { culture = { has_cultural_tradition = tradition_wasteland_reclaimers } }
+		add = {
+			value = -10
+			desc = colonization_wasteland_reclaimers_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Mutant Outcasts
+		limit = {
+			culture = { has_cultural_tradition = tradition_mutant_outcasts }
+			scope:target = { exists = var:arcane_fallout }
+		}
+		add = {
+			value = scope:target.var:arcane_fallout
+			multiply = -0.5
+			round = yes
+			desc = colonization_mutant_outcasts_desc # Tradition desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # City Planning
+		limit = { culture = { has_innovation = innovation_city_planning } }
+		add = {
+			value = -5
+			desc = colonization_city_planning_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Urbanization
+		limit = { culture = { has_innovation = innovation_development_03 } }
+		add = {
+			value = -5
+			desc = colonization_development_03_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Spiritskin
+		limit = {
+			culture = { has_innovation = innovation_spiritskin }
+			scope:target.title_province = { GH_any_jungle_terrain_trigger = yes }
+		}
+		add = {
+			value = -20
+			desc = colonization_spiritskin_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	if = { # Settler Perk - personal as opposed to culture-based, do not do this often!
+		limit = { has_perk = settler_perk }
+		add = {
+			value = -10
+			desc = colonization_settler_perk_desc
+			format = "COLONIZATION_THRESHOLD_VALUE_FORMAT"
+		}
+	}
+	min = 0
+	max = 100
+}

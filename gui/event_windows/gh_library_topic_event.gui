@@ -1,0 +1,803 @@
+﻿window = {
+	name = "gh_library_topic_event"
+	
+	visible = "[Not(HasOpenSuccession( GetPlayer ))]"
+
+	parentanchor = center
+	widgetanchor = center
+	size = { 1120 585 }
+	layer = events
+	alpha = 1
+
+	datacontext = "[EventWindow.AccessEventWindowData]"
+
+	using = Event_Window_Debug_OptionTooltips
+	using = Event_Window_Debug_EventTools
+
+	state = {
+		name = show
+		trigger_on_create = yes
+		using = Animation_FadeIn_Standard
+		duration = 0.7
+
+		on_start = "[GetVariableSystem.Clear( 'event_window_mouse_leave')]"
+
+		start_sound = {
+			soundeffect = "event:/SFX/Events/Panels/sfx_event_panel_large"
+
+			soundparam = {
+				name = StateChange
+				value = 1
+			}
+		}
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Standard
+
+		start_sound = {
+			soundeffect = "event:/MUSIC/Cues/Events/kill_mx_cue"
+		}
+	}
+
+	state = {
+		name = _mouse_hierarchy_leave
+		on_start = "[GetVariableSystem.Set( 'event_window_mouse_leave', 'true' )]"
+	}
+
+	event_window_dimmer_widget = {}
+
+	widget = {
+		size = { 100% 100% }
+		using = Window_Background
+		using = Window_Decoration_Frontend_Flat
+	}
+
+	event_window_background_widget = {
+		margin = { 40 20 }
+
+		state = {
+			name = _show
+			using = Animation_FadeIn_Standard
+			duration = 0.7
+		}
+
+		state = {
+			name = background_shake_loop
+			next = background_shake_loop_1
+			duration = 0.0
+			alpha = 1.0
+		}
+
+		state = {
+			name = background_shake_loop_1
+			next = background_shake_loop_2
+			position = { -6 0 }
+			duration = 0.2
+		}
+
+		state = {
+			name = background_shake_loop_2
+			next = background_shake_loop_3
+			position = { 5 0 }
+			duration = 0.12
+		}
+
+		state = {
+			name = background_shake_loop_3
+			next = background_shake_loop_1
+			position = { 7 1 }
+			duration = 0.12
+		}
+
+		blockoverride "event_picture_properties"
+		{}
+	}
+
+	#Background VFX
+	margin_widget = {
+		name = "background_shader_vfx_container"
+		position = { 40 20 }
+		size = { 100% 100% }
+		margin = { 40 20 }
+	}
+
+	###CHARACTERS
+	widget = {
+		layoutstretchfactor_horizontal = 55
+		parentanchor = bottom|hcenter
+		position = { -40 -15 }
+		size = { 100% 100% }
+		scissor = yes
+
+		state = {
+			name = appear
+			trigger_on_create = yes
+			delay = 0.5
+			using = Animation_Curve_Default
+			alpha = 1
+			duration = 0.5
+		}
+
+		state = {
+			name = character_shake_loop
+			next = character_shake_loop_1
+			duration = 0.0
+			alpha = 1.0
+		}
+
+		state = {
+			name = character_shake_loop_1
+			next = character_shake_loop_2
+			position = { -35 -15 }
+			duration = 0.2
+		}
+
+		state = {
+			name = character_shake_loop_2
+			next = character_shake_loop_3
+			position = { -27 -15 }
+			duration = 0.12
+		}
+
+		state = {
+			name = character_shake_loop_3
+			next = character_shake_loop_1
+			position = { -25 -17 }
+			duration = 0.12
+		}
+	}
+
+	# Event Effect Video
+	event_window_effect_2d_widget = {
+		margin = { 40 20 }
+	}
+
+	#Foreground VFX
+	margin_widget = {
+		name = "foreground_shader_vfx_container"
+		position = { 40 20 }
+		size = { 100% 100% }
+		margin = { 40 20 }
+	}
+
+	vbox = {
+		name = "event_window"
+
+		widget = {
+			name = "event_window_content"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+
+			hbox = {
+				margin = { 35 0 }
+				margin_bottom = 15
+
+				widget = {
+					name = "text_spacer"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					layoutstretchfactor_horizontal = 45
+				}
+			}
+
+			hbox = {
+				margin_left = 35
+				margin_right = 35
+				margin_bottom = 15
+
+				widget = {
+					name = "text"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					layoutstretchfactor_horizontal = 45
+
+					widget = {
+						size = { 155% 96%}
+						position = { 5 18 }
+
+						background = {
+							texture = "gfx/interface/component_tiles/tile_window_background_no_edge.dds"
+							spriteType = Corneredtiled
+							spriteborder = { 18 0 }
+							texture_density = 2
+							alpha = 0.7
+
+							modify_texture = {
+								texture = "gfx/interface/component_overlay/overlay_effect.dds"
+								blend_mode = overlay
+							}
+
+							modify_texture = {
+								texture = "gfx/interface/component_masks/mask_event_text.dds"
+								blend_mode = alphamultiply
+								alpha = 1
+							}
+						}
+					}
+
+					vbox = {
+						name = "description_and_options"
+
+						state = {
+							name = appear
+							trigger_on_create = yes
+							delay = 0.2
+							using = Animation_Curve_Default
+							alpha = 1
+							duration = 1.5
+						}
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							margin_bottom = 10
+							margin_top = 85
+
+							scrollarea = {
+								name = "description_scrollarea"
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								minimumsize = { 490 -1 }
+								maximumsize = { 490 -1 }
+
+								scrollbarpolicy_horizontal = always_off
+
+								scrollbar_vertical = {
+									using = Scrollbar_Vertical
+
+									blockoverride "alpha"{
+										alpha = 0.6
+									}
+								}
+
+								scrollwidget = {
+									text_multi = {
+										name = "description"
+										minimumsize = { 480 -1 }
+										maximumsize = { 480 -1 }
+										autoresize = yes
+										margin = { 20 4 }
+										text = "[EventWindowData.GetDescription]"
+										fontsize = 16
+									}
+								}
+							}
+
+							expand = {}
+						}
+
+						vbox = {
+							allow_outside = yes
+							layoutpolicy_horizontal = expanding
+							ignoreinvisible = yes
+							spacing = 5
+							margin_bottom = 5
+
+							hbox = {
+								spacing = 5
+
+								hbox = {
+									name = "dynamic_birth_name"
+									margin = { 5 0 }
+								}
+							}
+
+							# Has a parent hbox to hack around layout set in type so it can be placed differently here and in Activity events.
+							hbox = {
+								layoutpolicy_horizontal = expanding
+
+								hbox = {
+									name = "custom_widgets_container"
+									layoutpolicy_horizontal = expanding
+									margin = { 15 0 }
+
+									state = {
+										trigger_on_create = yes
+										name = appear_test
+										delay = 0.8
+										using = Animation_Curve_Default
+										alpha = 1
+										duration = 0.6
+									}
+								}
+
+								expand = {}
+							}
+
+							vbox = {
+								name = "travel_event_info"
+								visible = "[And(EventWindowData.ThemeKeyStartsWith('travel'), GetPlayer.GetTravelPlan.IsValid)]"
+								visible_at_creation = no
+								layoutpolicy_horizontal = expanding
+								margin = { 20 0 }
+
+								divider_light = {
+									layoutpolicy_horizontal = expanding
+
+									modify_texture = {
+										texture = "gfx/interface/component_masks/mask_fade_horizontal_right.dds"
+										blend_mode = alphamultiply
+									}
+								}
+
+								hbox = {
+									layoutpolicy_horizontal = expanding
+
+									hbox = {
+										datacontext = "[GetPlayer.GetTravelPlan]"
+										datacontext = "[TravelPlan.GetData]"
+										datacontext = "[TravelPlanData.GetCurrentLocation]"
+
+										layoutpolicy_horizontal = expanding
+										spacing = 5
+
+										### CoA
+										coa_title_small = {
+											datacontext = "[Province.GetTitle]"
+											visible = "[Title.HasHolder]"
+										}
+
+										vbox = {
+											layoutpolicy_horizontal = expanding
+
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												text = "TRAVEL_EVENT_WINDOW_CURRENT_LOCATION"
+												align = left|nobaseline
+											}
+
+											hbox = {
+												layoutpolicy_horizontal = expanding
+												spacing = 5
+
+												### Location Name
+												text_single = {
+													text = "[Province.GetNameNoTooltip]"
+													visible = "[Or( ObjectsEqual( Province.GetTerrain.GetName,  GetTerrain( 'coastal_sea' ).GetName ), ObjectsEqual( Province.GetTerrain.GetName, GetTerrain( 'sea' ).GetName ) ) ]"
+													align = left|nobaseline
+												}
+												text_single = {
+													text = "[Province.GetName]"
+													visible = "[Not( Or( ObjectsEqual( Province.GetTerrain.GetName,  GetTerrain( 'coastal_sea' ).GetName ), ObjectsEqual( Province.GetTerrain.GetName, GetTerrain( 'sea' ).GetName ) ) ) ]"
+													align = left|nobaseline
+												}
+
+												icon = {
+													name = "terrain"
+													visible = "[Province.HasTerrain]"
+													datacontext = "[Province.GetTerrain]"
+													texture = "[Terrain.GetIcon]"
+													size = { 25 25 }
+													tooltip = "HOLDING_TERRAIN_TOOLTIP"
+												}
+
+												expand = {}
+
+											}
+										}
+
+										expand = {
+											layoutpolicy_horizontal = expanding
+										}
+
+										vbox = {
+											layoutpolicy_horizontal = expanding
+											margin = { 20 4 }
+
+											### Danger event indicator
+											hbox = {
+												visible = "[GreaterThanOrEqualTo_CFixedPoint(Subtract_CFixedPoint(Province.GetDangerValue(TravelPlan.Self), TravelPlanData.GetSafetyValue), '(CFixedPoint)0')]"
+												datacontext = "[Province.GetDangerType(TravelPlanData.Self)]"
+												layoutpolicy_horizontal = expanding
+												spacing = 5
+
+												expand = {}
+
+												warning_icon = {
+													size = { 28 28 }
+												}
+
+												widget = {
+													size = { 30 30 }
+													icon = {
+														texture = "[TravelDangerType.GetIconActive]"
+														parentanchor = center
+														size = { 35 35 }
+													}
+												}
+
+												### Put some indicator of travel danger intensity vs travel safety here, when we have decided on exactly what that is.
+												#text_single = {
+												#	raw_text = "33%"
+												#	default_format = "#d"
+												#	align = right|nobaseline
+												#}
+
+												tooltip = "[Province.GetTravelDangerTooltip(TravelPlan.Self)]"
+											}
+
+											hbox = {
+												layoutpolicy_horizontal = expanding
+
+												expand =  {}
+
+												### ETA to your next destination
+												text_single = {
+													layoutpolicy_horizontal = expanding
+													text = "TRAVEL_EVENT_WINDOW_NEXT_DESTINATION"
+													align = right|nobaseline
+												}
+											}
+										}
+									}
+								}
+							}
+							widget = {
+								visible = "[Not(GetPlayer.MakeScope.Var('gh_chosen_topic').IsSet)]"
+								size = { 480 30}
+								text_single = {
+									raw_text = "@warning_icon! #X You must select a topic.#!"
+									default_format = "#N"
+									align = left|nobaseline
+									fontsize_min = 14
+								}
+								expand = { }
+							}
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								margin_left = 10
+
+								fixedgridbox = {
+									name = "option_grid"
+									addcolumn = 500
+									addrow = 42
+									datamodel = "[EventWindowData.GetOptions]"
+									item = {
+										button_eventoption = {
+											enabled = "[Or(And(GetPlayer.MakeScope.Var('gh_chosen_topic').IsSet, EventOption.HasFlag('greyed_out_at_start')),EventOption.HasFlag('option_always_available'))]"
+										}
+									}
+								}
+								expand = {}
+							}
+						}
+					}
+				}
+				divider = {
+					layoutpolicy_vertical = expanding
+				}
+				widget = {
+					size = { 550 500 }
+					scrollbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						size = { 100% 540 }
+						blockoverride "scrollbox_background" {}	
+						blockoverride "scrollbox_background_fade" {}
+						blockoverride "scrollbox_content"
+						{
+							vbox = {
+								margin_top = 35
+								text_single = {
+									raw_text = "Subjects available in the Collection of [GetPlayer.GetCurrentLocation.GetNameNoTooltip]"
+									default_format = "#high"
+									align = left
+									fontsize = 18
+								}
+								spacer = { size = {0 10 } }
+								divider = {
+									layoutpolicy_horizontal = expanding
+								}
+								spacer = { size = {0 10 } }
+								fixedgridbox = {
+									datamodel = "[GetPlayer.GetCurrentLocation.MakeScope.Var('gh_search_library_story').Story.MakeScope.GetList('list_of_available_topics')]"
+									addcolumn = 220
+									addrow = 60
+									setitemsizefromcell = yes
+									datamodel_wrap = 2
+									flipdirection = yes
+									maxhorizontalslots = 50									
+									item = {
+										widget = {
+											button_standard = {
+												down = "[EqualTo_string(Scope.GetFlagName, GetPlayer.MakeScope.Var('gh_chosen_topic').GetFlagName)]"
+												size = { 210 45 }
+												onclick = "[GetScriptedGui('gh_set_selected_topic_sgui').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope('gh_topic_name_flag', MakeScopeFlag(Scope.GetFlagName)).End)]"
+												raw_tooltip = "You will search knowledge on the topic of [Localize(Concatenate(Scope.GetFlagName, '_title'))]"
+												hbox = {
+													expand = { }
+													widget = {
+														size = { 35 35 }
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_theology_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/activity_types/pilgrimage_type_pious_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_law_and_governance_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_law_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_warfare_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_warfare_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_philosophy_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/activity_types/imperial_examination_focus_learning_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_language_and_letters_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_letters_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_history_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/activity_types/hunt_type_legendary_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_mathematics_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_mathematics_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_cosmology_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_cosmology_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_natural_sciences_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_natural_philosophy_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_medicine_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_medicine_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_practical_arts_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_practical_arts_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_commerce_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/activity_types/imperial_examination_focus_stewardship_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_literature_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_literatture_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+														highlight_icon = {
+															visible = "[EqualTo_string(Scope.GetFlagName, 'gh_magic_topic')]"
+															size = { 100% 100%}
+															texture = "gfx/interface/icons/book_topics/gh_book_topic_magic_icon.dds"
+															using = Master_Button_Modify_Texture
+														}
+													}
+													text_single = {
+														text = "[Localize(Concatenate(Scope.GetFlagName, '_title'))]"
+														default_format = "#Bold"
+														align = center
+														fontsize = 15
+													}
+													expand = { }
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	vbox = {
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { 0 70 }
+
+			icon = {
+				name = "theme_header"
+				position = { 24 20 }
+				size = { 1072 57 }
+				texture = "[EventWindowData.GetThemeHeader]"
+
+				modify_texture = {
+					name = overlay
+					texture = "gfx/interface/component_effects/effect_header_blue_shine.dds"
+					blend_mode = colordodge
+					translate_uv = { 0.6 0 }
+				}
+
+				state = {
+					name = right
+					next = left
+
+					duration = 8
+					bezier = { 0.8 0.18 0.96 .05 }
+
+					modify_texture = {
+						name = overlay
+						translate_uv = { -0.6 0 }
+					}
+				}
+
+				state = {
+					name = left
+					next = right
+
+					duration = 0.0
+					delay = 5
+
+					modify_texture = {
+						name = overlay
+						translate_uv = { 0.6 0 }
+					}
+				}
+
+				state = {
+					trigger_on_create = yes
+					name = start
+					next = right
+
+					duration = 0.0
+
+					modify_texture = {
+						name = overlay
+						translate_uv = { 0.6 0 }
+					}
+				}
+			}
+
+			text_single = {
+				name = "title"
+				parentanchor = vcenter
+				position = { 128 7 }
+				fontsize = 29
+				fontsize_min = 16
+				text = "[EventWindowData.GetTitle]"
+				default_format = "#high;glow_color:{0.1,0.1,0.1,1.0}"
+				using = Font_Type_Flavor
+				max_width = 950
+
+				alpha = 0
+
+				background = {
+					using = Background_Area_Dark
+					margin_left = 50
+					margin_right = 130
+					margin_top = 5
+					margin_bottom = 20
+					alpha = 0.3
+
+					modify_texture = {
+						texture = "gfx/interface/component_masks/mask_holding_illustration.dds"
+						blend_mode = alphamultiply
+					}
+				}
+
+				state = {
+					name = start
+					trigger_on_create = yes
+					delay = 0.2
+					using = Animation_Curve_Default
+					alpha = 1
+					duration = 0.5
+				}
+			}
+			icon = {
+				name = "theme_icon"
+				parentanchor = vcenter
+				position = { 28 10 }
+				size = { 90 90 }
+				texture = "[EventWindowData.GetThemeIcon]"
+
+				modify_texture = {
+					name = overlay
+					texture = "gfx/interface/component_effects/effect_blue_shine.dds"
+					blend_mode = colordodge
+					translate_uv = { 0.6 0 }
+				}
+
+				state = {
+					name = right
+					next = left
+
+					duration = 2
+					bezier = { .8 .18 .96 .05 }
+
+					modify_texture = {
+						name = overlay
+						translate_uv = { -0.6 0 }
+					}
+				}
+
+				state = {
+					name = left
+					next = right
+
+					duration = 0.0
+					delay = 5
+
+
+					modify_texture = {
+						name = overlay
+						translate_uv = { 0.6 0 }
+					}
+				}
+
+				state = {
+					trigger_on_create = yes
+					name = start
+					next = right
+
+					duration = 0.0
+
+					modify_texture = {
+						name = overlay
+						translate_uv = {0.6 0}
+					}
+				}
+			}
+		}
+
+		expand = {}
+	}
+
+	icon = {
+		visible = "[And( EventWindowData.ShouldShowContentSource, EventWindowData.GetContentSourceDlc.HasEventDecoration )]"
+		name = "source_icon"
+		position = { -22 20 }
+		size = { 263 64 }
+		parentanchor = top|right
+		texture = "[EventWindowData.GetContentSourceDlc.GetEventDecoration]"
+		tooltip = "EVENT_CONTENT_SOURCE_TT"
+		alpha = 1
+	}
+
+	flowcontainer = {
+		name = "debug_stuff"
+		visible = "[InDebugMode]"
+		visible_at_creation = no
+		parentanchor = top|right
+		position = { -100 25 }
+		ignoreinvisible = yes
+
+		using = Event_Window_Debug_Info
+	}
+
+	# GH ADDITIONS
+	# GH TODO: Place this in its appropriate place
+	#spell_icon = {
+	#	visible = "[And(EventOption.HasFlag('spell'), GetPlayer.MakeScope.Var('event_option_displayed_spell').IsSet)]"
+	#	datacontext = "[GetPlayer.MakeScope.Var('event_option_displayed_spell').Story]"
+	#	blockoverride "size" {
+	#		size = { 34 34 }
+	#	}
+	#}
+
+}

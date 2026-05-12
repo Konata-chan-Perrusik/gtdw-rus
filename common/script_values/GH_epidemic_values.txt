@@ -1,0 +1,444 @@
+﻿character_infection_chance_fools_curse_value = {
+	value = 10
+	# If you're a native youre immune
+	if = {
+		limit = {
+			culture = {
+				OR = {
+					has_cultural_pillar = heritage_kherkeloi
+					has_cultural_pillar = heritage_urkarith
+				}
+			}
+		}
+		multiply = 0
+	}
+	else_if = {
+		limit = {
+			is_human = no
+		}
+		multiply = 0
+	}
+	else = {
+		#If you're already sick/weak you're screwed
+		if = { 
+			limit = { 
+				OR = {
+					has_trait = sickly
+					has_trait = inbred
+					health <= poor_health
+				}
+			}
+			add = 20
+		}
+		if = {
+			limit = {
+				scope:epidemic ?= {
+					outbreak_intensity = apocalyptic
+				}
+			}
+			add = 30
+		}
+		else_if = {
+			limit = {
+				scope:epidemic ?= {
+					outbreak_intensity = major
+				}
+			}
+			add = 20
+		}
+		else = { #minor
+			add = 10
+		}
+		#Things to bump the numbers
+		if = {
+			limit = {
+				is_foreign_court_or_pool_guest = yes
+			}
+			add = 40
+		}
+		if = {
+			limit = {
+				is_ruler = no
+			}
+			add = 10
+		}
+		#Would you follow social distancing?
+		#your numerical social distance value gets transformed here into a bonus/malus
+		add = {
+			value = would_follow_social_distancing_value
+			multiply = -1 #inverted value
+		}
+		#How infected is your location?
+		#Follows the infection rate thresholds set for the barony/county modifiers
+		if = {
+			limit = {
+				location = { epidemic_resistance > 80 }
+			}
+			multiply = 0.25
+		}
+		else_if = {
+			limit = {
+				location = { epidemic_resistance > 50 }
+			}
+			multiply = 0.5
+		}
+		else_if = {
+			limit = {
+				location = { epidemic_resistance > 10 }
+			}
+			multiply = 0.75
+		}
+		#Are you taking proper measures?
+		if = {
+			limit = {
+				has_character_modifier = isolating_modifier
+			}
+			multiply = 0.25 #75% less likely
+		}
+		#How infected is your location?
+		#Follows the infection rate thresholds set for the barony/county modifiers
+		if = {
+			limit = {
+				scope:province = { epidemic_resistance > 80 }
+			}
+			multiply = 0.25
+		}
+		else_if = {
+			limit = {
+				scope:province = { epidemic_resistance > 50 }
+			}
+			multiply = 0.5
+		}
+		else_if = {
+			limit = {
+				scope:province = { epidemic_resistance > 10 }
+			}
+			multiply = 0.75
+		}
+	}
+	min = 1
+}
+
+character_infection_chance_pellagra_value = {
+	value = 10
+	if = {
+		limit = {
+			culture = { has_innovation = innovation_corn_cultivation }
+		}
+		multiply = 0 # if you know how to properly cultivate and use it you likely wont deal with this
+	}
+	else_if = {
+		limit = {
+			is_human = no # Wastelands and the like shouldnt get infected
+		}
+		multiply = 0
+	}
+	else_if = {
+		limit = {
+			has_royal_court = yes
+			amenity_level = {
+				type = court_food_quality
+				value <= 2 # poor food at your court could cause an outbreak due to bad nutrition
+			}
+		}
+		multiply = 1.1
+	}
+	else = {
+		#If you're already sick/weak you're screwed
+		if = { 
+			limit = { 
+				OR = {
+					has_trait = sickly
+					has_trait = inbred
+					health <= poor_health
+				}
+			}
+			add = 20
+		}
+		if = {
+			limit = {
+				scope:epidemic ?= {
+					outbreak_intensity = apocalyptic
+				}
+			}
+			add = 30
+		}
+		else_if = {
+			limit = {
+				scope:epidemic ?= {
+					outbreak_intensity = major
+				}
+			}
+			add = 20
+		}
+		else = { #minor
+			add = 10
+		}
+		#Things to bump the numbers
+		if = {
+			limit = {
+				is_foreign_court_or_pool_guest = yes
+			}
+			add = 40
+		}
+		if = {
+			limit = {
+				is_ruler = no
+			}
+			add = 10
+		}
+		#Would you follow social distancing?
+		#your numerical social distance value gets transformed here into a bonus/malus
+		add = {
+			value = would_follow_social_distancing_value
+			multiply = -1 #inverted value
+		}
+		#How infected is your location?
+		#Follows the infection rate thresholds set for the barony/county modifiers
+		if = {
+			limit = {
+				location = { epidemic_resistance > 80 }
+			}
+			multiply = 0.25
+		}
+		else_if = {
+			limit = {
+				location = { epidemic_resistance > 50 }
+			}
+			multiply = 0.5
+		}
+		else_if = {
+			limit = {
+				location = { epidemic_resistance > 10 }
+			}
+			multiply = 0.75
+		}
+		#Are you taking proper measures?
+		if = {
+			limit = {
+				has_character_modifier = isolating_modifier
+			}
+			multiply = 0.25 #75% less likely
+		}
+		#How infected is your location?
+		#Follows the infection rate thresholds set for the barony/county modifiers
+		if = {
+			limit = {
+				scope:province = { epidemic_resistance > 80 }
+			}
+			multiply = 0.25
+		}
+		else_if = {
+			limit = {
+				scope:province = { epidemic_resistance > 50 }
+			}
+			multiply = 0.5
+		}
+		else_if = {
+			limit = {
+				scope:province = { epidemic_resistance > 10 }
+			}
+			multiply = 0.75
+		}
+	}
+	min = 1
+}
+
+character_infection_chance_bloodblight_value = {
+	value = 10
+	#If you're already sick/weak you're screwed
+	if = { 
+		limit = { 
+			OR = {
+				has_trait = sickly
+				has_trait = inbred
+				health <= poor_health
+			}
+		}
+		add = 20
+	}
+	#Epidemic Intensity
+	if = {
+		limit = {
+			scope:epidemic ?= {
+				outbreak_intensity = apocalyptic
+			}
+		}
+		add = 30
+	}
+	else_if = {
+		limit = {
+			scope:epidemic ?= {
+				outbreak_intensity = major
+			}
+		}
+		add = 20
+	}
+	else = { #minor
+		add = 10
+	}
+	#Let's see if you have any advantageous traits/perks / Wash your hands is included in the social distancing calculation, these are purely health related
+	if = {
+		limit = {
+			has_trait = athletic
+		}
+		add = -4
+	}
+	if = {
+		limit = {
+			has_perk = iron_constitution_perk
+		}
+		add = -6
+	}
+	if = {
+		limit = {
+			has_perk = healthy_perk
+		}
+		add = -8
+	}
+	if = {
+		limit = {
+			has_trait = whole_of_body
+		}
+		add = -10
+	}
+	#Things to bump the numbers
+	if = {
+		limit = {
+			is_foreign_court_or_pool_guest = yes
+		}
+		add = 40
+	}
+	if = {
+		limit = {
+			is_ruler = no
+		}
+		add = 10
+	}
+	#Children getting hit with measles
+	if = {
+		limit = {
+			scope:epidemic.epidemic_type.epidemic_trait = trait:measles
+			is_adult = no
+		}
+		add = 20
+	}
+	#"Old" people get hit more in general
+	if = {
+		limit = {
+			age >= 65
+		}
+		add = 40
+	}
+	else_if = {
+		limit = {
+			age >= 50
+		}
+		add = 20
+	}
+	#If your society knows how to prepare corn, or are of a class that normally gets good food, you shouldnt get hit by pellagra
+	if = {
+		limit = {
+			scope:epidemic.epidemic_type.epidemic_trait = trait:pellagra
+			culture = { has_innovation = innovation_corn_cultivation }
+		}
+		add = -40
+	}
+	#Would you follow social distancing?
+	#your numerical social distance value gets transformed here into a bonus/malus
+	add = {
+		value = would_follow_social_distancing_value
+		multiply = -1 #inverted value
+	}
+	#How infected is your location?
+	#Follows the infection rate thresholds set for the barony/county modifiers
+	if = {
+		limit = {
+			location = { epidemic_resistance > 90 }
+		}
+		multiply = 0.12
+	}
+	else_if = {
+		limit = {
+			location = { epidemic_resistance > 80 }
+		}
+		multiply = 0.20
+	}
+	else_if = {
+		limit = {
+			location = { epidemic_resistance > 65 }
+		}
+		multiply = 0.42
+	}
+	else_if = {
+		limit = {
+			location = { epidemic_resistance > 50 }
+		}
+		multiply = 0.55
+	}
+	else_if = {
+		limit = {
+			location = { epidemic_resistance > 25 }
+		}
+		multiply = 0.78
+	}
+	else_if = {
+		limit = {
+			location = { epidemic_resistance > 12 }
+		}
+		multiply = 0.9
+	}
+	else_if = {
+		limit = {
+			location = { epidemic_resistance < 10 }
+		}
+		multiply = 1.15
+	}
+	#Are you taking proper measures?
+	if = {
+		limit = {
+			has_character_modifier = isolating_modifier
+		}
+		multiply = 0.25 #75% less likely
+	}
+	#How infected is your location?
+	#Follows the infection rate thresholds set for the barony/county modifiers
+	if = {
+		limit = {
+			scope:province = { epidemic_resistance > 80 }
+		}
+		multiply = 0.25
+	}
+	else_if = {
+		limit = {
+			scope:province = { epidemic_resistance > 50 }
+		}
+		multiply = 0.5
+	}
+	else_if = {
+		limit = {
+			scope:province = { epidemic_resistance > 10 }
+		}
+		multiply = 0.75
+	}
+	if = {
+		limit = {
+			is_human = no
+		}
+		multiply = 0
+	}
+	# if you dont have a Magi trait, must lower rate
+	if = {
+		limit = {
+			NOT = { has_trait = magic_good }
+		}
+		multiply = 0.01
+	}
+	if = {
+		limit = {
+			has_trait = magic_good
+		}
+		multiply = 1.3
+	}
+	min = 0.1 # Never totally immune
+}

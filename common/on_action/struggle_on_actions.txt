@@ -1,0 +1,44 @@
+﻿# root: is involved (or interloper) character
+# Scope:struggle is the currently pulsing struggle.
+yearly_struggle_playable_pulse = {}
+
+# root: is involved (or interloper) character
+# Scope:struggle is the currently pulsing struggle.
+five_year_struggle_playable_pulse = {
+	trigger = {
+		basic_is_valid_for_yearly_events_trigger = yes
+		OR = {
+			fp2_character_interloper_in_struggle_trigger = yes
+			fp2_character_involved_in_struggle_trigger = yes
+		}	
+	}
+	on_actions = {
+		fp2_ritewars_struggle_random_events
+	}
+}
+
+fp2_ritewars_struggle_random_events = {
+	trigger = {
+		fp2_character_involved_in_struggle_trigger = yes
+	}
+	random_events = {
+		chance_to_happen = 5
+		1 = ritewars_struggle.1002
+
+		# GH TODO: Removed vanilla flavor events, consider making our own, reintegrating some, or removing this on_action
+	}
+}
+
+fp2_ritewars_struggle_starting_events = {
+	events = {
+		neutral_struggle.0001
+		fp2_struggle.0003
+	}
+}
+
+rite_wars_south_starting_events = {
+	events = {
+		neutral_struggle.0001
+		rite_wars_south_struggle.0003
+	}
+}

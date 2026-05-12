@@ -1,0 +1,352 @@
+﻿decide_the_fate_of_the_kardwen_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/fp1_decisons_hold_bolt.dds" }
+	desc = decide_the_fate_of_the_kardwen_decision_desc
+	selection_tooltip = decide_the_fate_of_the_kardwen_decision_tooltip
+	decision_group_type = sjalvolki
+	ai_goal = yes
+
+	is_shown = {
+		is_playable_character = yes
+		culture = {
+			OR = {
+				has_cultural_pillar = heritage_kardwen
+				has_cultural_tradition = tradition_whistling_wilds
+			}
+			NOT = {
+				is_target_in_global_variable_list = {
+					name = culture_retained_whistletongue
+					target = this
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		prestige_level >= 3
+		culture = { has_cultural_tradition = tradition_whistling_wilds }
+		highest_held_title_tier >= tier_kingdom
+		OR = {
+			custom_tooltip = {
+				text = decide_the_fate_of_the_kardwen_decision_tribal_tooltip
+				OR = {
+					has_realm_law = tribal_authority_2
+					has_realm_law = tribal_authority_3
+				}
+			}
+			custom_tooltip = {
+				text = decide_the_fate_of_the_kardwen_decision_nomadic_tooltip
+				OR = {
+					has_realm_law = nomadic_authority_3
+					has_realm_law = nomadic_authority_4
+					has_realm_law = nomadic_authority_5
+				}
+			}
+			culture = { has_cultural_era_or_later = culture_era_early_medieval }
+		}
+		custom_tooltip = {
+			text = decide_the_fate_of_the_kardwen_decision_culture_head_tooltip
+			culture.culture_head ?= root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_at_war = no
+		custom_tooltip = {
+			text = decide_the_fate_of_the_kardwen_decision_coalition_tooltip
+			NOT = { top_liege = title:e_migrant_coalition.holder }
+		}
+	}
+
+	widget = {
+		gui = "decision_view_widget_option_list_generic"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_LANGUAGE"
+		show_from_start = yes
+
+		item = { # Whistletongue
+			value = kardwen_whistletongue
+			current_description = kardwen_whistletongue_desc
+			localization = kardwen_whistletongue
+			icon = "gfx/interface/icons/faith/kardawai_icon.dds"
+			ai_chance = { value = 10 }
+		}
+
+		item = { # Truetongue
+			value = kardwen_truetongue
+			current_description = kardwen_truetongue_desc
+			localization = kardwen_truetongue
+			icon = "gfx/interface/icons/attrition_2.dds"
+			ai_chance = { value = 10 }
+		}
+
+		item = { # Rekvolki
+			value = kardwen_rekvolki
+			is_valid = {
+				custom_tooltip = {
+					text = kardwen_rekvolki_trigger_tooltip
+					OR = {
+						trigger_if = {
+							limit = { is_ai = yes }
+							any_sub_realm_county = { culture = { has_cultural_pillar = language_rekvolki } }
+						}
+						trigger_else = {
+							any_sub_realm_county = {
+								culture = {
+									has_cultural_pillar = language_rekvolki
+									cultural_acceptance = { target = root.culture value >= 40 }
+								}
+							}
+						}
+						sjalvolki_or_syncretic_with_sjalvolki_trigger = { CHARACTER = root }
+					}
+				}
+			}
+			current_description = kardwen_rekvolki_desc
+			localization = kardwen_rekvolki
+			icon = "gfx/interface/icons/faith/sjalvolki_icon.dds"
+			ai_chance = { value = 10 }
+		}
+
+		item = { # Marcher
+			value = kardwen_marcher
+			is_valid = {
+				custom_tooltip = {
+					text = kardwen_marcher_trigger_tooltip
+					OR = {
+						trigger_if = {
+							limit = { is_ai = yes }
+							any_sub_realm_county = { culture = { has_cultural_pillar = language_marcher } }
+						}
+						trigger_else = {
+							any_sub_realm_county = {
+								culture = {
+									has_cultural_pillar = language_marcher
+									cultural_acceptance = { target = root.culture value >= 40 }
+								}
+							}
+						}
+						lifepath_or_syncretic_with_lifepath_trigger = { CHARACTER = root }
+					}
+				}
+			}
+			current_description = kardwen_marcher_desc
+			localization = kardwen_marcher
+			icon = "gfx/interface/icons/faith/waypath_conclave_or_raocourt_icon.dds"
+			ai_chance = { value = 10 }
+		}
+
+		item = { # Aversarian
+			value = kardwen_aversarian
+			is_valid = {
+				custom_tooltip = {
+					text = kardwen_aversarian_trigger_tooltip
+					OR = {
+						trigger_if = {
+							limit = { is_ai = yes }
+							any_sub_realm_county = { culture = { has_cultural_pillar = language_aversarian } }
+						}
+						trigger_else = {
+							any_sub_realm_county = {
+								culture = {
+									has_cultural_pillar = language_aversarian
+									cultural_acceptance = { target = root.culture value >= 40 }
+								}
+							}
+						}
+						aagiokratan_or_syncretic_with_aagiokratan_trigger = { CHARACTER = root }
+					}
+				}
+			}
+			current_description = kardwen_aversarian_desc
+			localization = kardwen_aversarian
+			icon = "gfx/interface/icons/faith/aversarian_aversarinas_aagiokrata_icon.dds"
+			ai_chance = { value = 10 }
+		}
+
+		item = { # Thalite
+			value = kardwen_thalite
+			is_valid = {
+				custom_tooltip = {
+					text = kardwen_thalite_trigger_tooltip
+					OR = {
+						trigger_if = {
+							limit = { is_ai = yes }
+							any_sub_realm_county = { culture = { has_cultural_pillar = language_thalite } }
+						}
+						trigger_else = {
+							any_sub_realm_county = {
+								culture = {
+									has_cultural_pillar = language_thalite
+									cultural_acceptance = { target = root.culture value >= 40 }
+								}
+							}
+						}
+						wardenite_or_syncretic_with_wardenite_trigger = { CHARACTER = root }
+					}
+				}
+			}
+			current_description = kardwen_thalite_desc
+			localization = kardwen_thalite
+			icon = "gfx/interface/icons/faith/wardenite_icon.dds"
+			ai_chance = { value = 10 }
+		}
+
+		item = { # Local Language
+			value = kardwen_local
+			is_valid = {
+				trigger_if = {
+					limit = { is_ai = yes }
+					any_sub_realm_county = { culture = { NOT = { has_cultural_pillar = language_kardwen } } }
+				}
+				trigger_else = {
+					custom_tooltip = {
+						text = kardwen_local_trigger_tooltip
+						any_sub_realm_county = {
+							culture = {
+								NOT = { has_cultural_pillar = language_kardwen }
+								cultural_acceptance = { target = root.culture value >= 40 }
+							}
+						}
+					}
+				}
+			}
+			current_description = kardwen_local_desc
+			localization = kardwen_local
+			icon = "gfx/interface/icons/character_interactions/icon_culture.dds"
+			ai_chance = { value = 10 }
+		}
+	}
+
+	effect = {
+		show_as_tooltip = { decide_the_fate_of_the_kardwen_decision_effect = yes }
+		#trigger_event = gh_kardwen_events.1003
+	}
+
+	cost = {
+		prestige = 2000
+	}
+	
+	#ai_potential = {
+		#culture = { has_cultural_tradition = tradition_whistletongue }
+	#}
+
+	ai_will_do = { base = 100 }
+}
+
+favour_the_whispering_rite_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_levy_outcasts.dds" }
+	decision_group_type = sjalvolki
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 0
+		duchy = 0
+		kingdom = 120
+		empire = 120
+		hegemony = 120
+	}
+
+	desc = favour_the_whispering_rite_decision_desc
+	selection_tooltip = favour_the_whispering_rite_decision_tooltip
+
+	is_shown = {
+		is_playable_character = yes
+		exists = dynasty
+		faith.religion = religion:kardawai_religion
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:favoured_the_whispering_rite
+			}
+		}
+	}
+
+	is_valid = {
+		OR = {
+			exists = struggle:rite_wars_south_struggle
+			exists = struggle:ritewars_struggle
+		}
+		OR = {
+			piety_level >= 3
+			custom_description = {
+				text = favour_the_whispering_rite_decision.you_have_x_or_more_traits_virtuous_to_whispering_rite
+				num_virtuous_traits = {
+					value >= 2
+					target = faith:whispering_rite
+				}
+			}
+		}
+		highest_held_title_tier >= tier_duchy
+		prestige_level >= 3
+		top_liege = this
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_at_peace_adult = yes
+	}
+
+	effect = {
+		gain_holy_legend_seed_tooltip_effect = yes
+		save_scope_as = religious_leader
+		faith = { save_scope_as = old_faith }
+		faith:whispering_rite = { save_scope_as = new_faith }
+
+		show_as_tooltip = {
+			form_the_whispering_rite_decision_generic_effects_scripted_effect = yes
+			random_list = {
+				100 = {
+					show_chance = no
+					desc = favour_the_whispering_rite_decision.path_default
+					form_the_whispering_rite_decision_default_path_scripted_effect = yes
+				}
+				100 = {
+					show_chance = no
+					desc = favour_the_whispering_rite_decision.path_cannibalism_curtailed
+					form_the_whispering_rite_decision_cannibalism_curtailed_path_scripted_effect = yes
+				}
+			}
+		}
+		
+		trigger_event = sjalvolki_reformation.0406
+		hidden_effect = {
+			add_to_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:favoured_the_whispering_rite
+			}
+		}
+	}
+
+	cost = {
+		piety = 1000
+		prestige = 1000
+	}
+
+	ai_potential = {
+		highest_held_title_tier >= tier_duchy
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 25
+			has_trait = arrogant
+		}
+		modifier = {
+			add = 25
+			has_trait = stubborn
+		}
+		modifier = {
+			add = 75
+			any_sub_realm_county = {
+				percent >= 0.51
+				OR = {
+					culture = culture:kardwens
+					culture = culture:sjalvolki
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,164 @@
+﻿## Global Effects ##
+
+gh_on_start_cliques_effect = {
+	initialize_clique_history_effect = yes # has to be down here to apply to custom clique government characters
+	update_global_clique_information = yes
+
+	every_player = {
+		limit = { has_clique_government_trigger = yes }
+		find_clique_title_effect = yes
+		save_temporary_scope_as = character_being_checked
+		if = {
+			limit = { 
+				has_variable = clique_title
+			}
+			set_variable = {
+				name = maximum_clique_weight
+				value = 0
+			}
+			clique_effect = { MODE = assign_ai }
+		}
+	}
+}
+
+gh_on_start_electoral_laws_effect = {
+	every_ruler = {
+		limit = {
+			highest_held_title_tier >= tier_county
+			OR = {
+				government_has_flag = government_is_administrative_republic
+				#government_has_flag = government_is_military_unit # Stratocratic
+			}
+		}
+		trigger_event = gh_realm_maintenance.0039
+	}
+}
+
+gh_on_start_character_armor_effect = {
+	character:apokiakas_aversarinas_aagiokratia_23 = {
+		if = {
+			limit = { is_ai = yes }
+			set_variable = temporary_black_sun_equip_variable
+		}
+		else = {
+			set_variable = {
+				name = temporary_black_sun_equip_variable
+				days = 1
+			}
+		}
+	}
+
+	character:southernimperial_aversarian_gorassos_1 = {
+		if = {
+			limit = { is_ai = yes }
+			set_variable = temporary_gorassos_equip_variable
+		}
+		else = {
+			set_variable = {
+				name = temporary_gorassos_equip_variable
+				days = 1
+			}
+		}
+	}
+}
+
+gh_on_start_after_lobby_culture_effect = {
+	imperrech_cultural_acceptance = yes
+	amsari_cultural_acceptance = yes
+}
+
+## Character Effects ##
+
+gh_on_start_character_effect = {
+	gh_on_start_character_armor_effect = yes
+
+	character:tasurmad_harthahi_1 = { # Harthah Story Cycle
+		if = {
+			limit = { is_alive = yes }
+			create_story = {
+				type = story_cycle_harthah
+			}
+		}
+	}
+	character:trustians_lifepath_3 = { # Mitheux Story Cycle
+		if = {
+			limit = { is_alive = yes }
+			create_story = {
+				type = story_cycle_mitheux
+			}
+		}
+	}
+	character:daukeni_sjalvolki_1 = {
+		if = {
+			limit = {
+				is_alive = yes
+				is_playable_character = yes
+				has_title = title:e_migrant_coalition
+			}
+			everybody_loves_cenware = yes # GH TODO: Should be a more generic Imperrech friendliness mechanic
+			setup_global_story_effect = {
+				STORY_TYPE = story_cycle_migration_coalition
+				STORY_NAME = the_sjalvolki_conquest
+				STORY_ILLUSTRATION = tribal_challenge_ruler
+			}
+		}
+	}
+	character:westernimperial_omitilos_aagiokrata_1 = {
+		if = {
+			limit = {
+				is_alive = yes
+				is_playable_character = yes
+			}
+			generate_web_of_intrigue = yes
+			generate_web_of_intrigue = yes
+		}
+	}
+	character:westernimperial_omitilos_aagiokrata_2 = {
+		if = {
+			limit = {
+				is_alive = yes
+				is_playable_character = yes
+			}
+			set_variable = {
+				name = conclave_immunity_cooldown
+				days = 180
+			}
+		}
+	}
+	character:sarminians_salacad_1 = {
+		if = {
+			limit = {
+				is_alive = yes
+				is_playable_character = yes
+			}
+			add_character_modifier = boczoj_modifier
+			add_character_modifier = last_stand_of_the_clans_modifier
+		}
+	}
+	if = { #Gives Adabyss AI a buff
+		limit = { exists = title:k_adabyss_borderfort.holder }
+		title:k_adabyss_borderfort.holder = { spawn_borderfort_troops_effect = yes }
+	}
+
+	# Apply fix for starting characters to get spells that they canonically have
+	all_characters_learn_magic_schools_in_queue_effect = yes
+	all_characters_learn_global_spells_in_queue_effect = yes
+
+	# Lock in the color of aspect-based glowing mutations for characters that start with them
+	all_characters_reset_existing_glowing_mutations_color_effect = yes
+}
+
+#gh_on_start_after_lobby_history_effect = {
+#	initialize_worldstate_historical_date_effect = yes
+#}
+
+clear_special_flags_effect = {
+	if = {
+		limit = { has_trait = setup_flag_opening_event }
+		remove_trait = setup_flag_opening_event
+	}
+	if = {
+		limit = { has_trait = setup_flag_story_content }
+		remove_trait = setup_flag_story_content
+	}
+}

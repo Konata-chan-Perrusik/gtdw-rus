@@ -1,0 +1,210 @@
+﻿initialize_metropoli_effect = {	# Run on game start to add building slots to metropoli and add in buildings that would otherwise refuse to load due to previous build cap
+	initialize_district_types_effect = yes
+	every_county = {
+		limit = {
+			title_province = {	is_any_metropolis_or_ruined_district_trigger = yes }
+		}
+		every_county_province = {
+			if = {
+				limit = {	# County capitals get two additional building slots
+					is_county_capital = yes
+				}
+				add_province_modifier = extra_building_slot
+				add_district_list_effect = yes
+				add_random_district_effect = yes
+				add_random_district_effect = yes
+			}
+		}
+	}# GH TODO: due to building slot changes these dont currently work
+	#title:c_oraispol = {
+	#	title_province = {
+	#		add_building = gh_walls_03
+	#		add_building = administration_03
+	#	}
+	#}
+	title:c_naupirnox = {
+		title_province = {
+			add_building = gh_walls_01
+		}
+	}
+	#title:c_tchouran = {
+	#	title_province = {
+	#		add_building = gh_walls_03
+	#		add_building = administration_02
+	#	}
+	#}
+	#title:c_sereksi = {
+	#	title_province = {
+	#		add_building = gh_walls_02
+	#	}
+	#}
+}
+
+clear_ruin_effect = {
+	if = {
+		limit = { 
+			always = no
+		}
+		save_scope_as = cleared_ruins_province
+		county_controller = {
+			trigger_event = metropolis.0001
+		}
+		#set_holding_type = metro_holding
+	}
+}
+
+initialize_district_types_effect = {
+	add_to_global_variable_list = {
+		name = metro_district_types
+		target = flag:martial_district
+	}
+	add_to_global_variable_list = {
+		name = metro_district_types
+		target = flag:leisure_district
+	}
+	add_to_global_variable_list = {
+		name = metro_district_types
+		target = flag:administrative_district
+	}
+	add_to_global_variable_list = {
+		name = metro_district_types
+		target = flag:trade_district
+	}
+	add_to_global_variable_list = {
+		name = metro_district_types
+		target = flag:craftsmen_district
+	}
+	add_to_global_variable_list = {
+		name = metro_district_types
+		target = flag:holy_district
+	}
+}
+
+add_random_district_effect = {
+	if = {
+		limit = { has_variable_list = metro_districts }
+		random_in_global_list = {
+			variable = metro_district_types
+			limit = {
+				save_temporary_scope_as = potential_new_district
+				NOT = {
+					prev = {
+						any_in_list = {
+							variable = metro_districts
+							var:district_type = scope:potential_new_district
+						}
+					}
+				}
+			}
+			save_scope_as = new_district_type
+			prev = {
+				ordered_in_list = {
+					variable = metro_districts
+					limit = {var:district_type = flag:none}
+					order_by = {
+						value = var:index
+						multiply = -1
+					}
+					position = 0
+					set_variable = {
+						name = district_type
+						value = scope:new_district_type
+					}
+				}
+			}
+		}
+	}
+}
+#creates five districts for a metro, since that is the standard number of districts for them to have.
+add_district_list_effect = {
+	create_district_effect = yes
+	create_district_effect = yes
+}
+#initializes a district and adds it to the district list
+create_district_effect = {
+	random_ruler = {
+		create_story = {
+			type = story_generic_storage
+			save_scope_as = new_district
+		}
+	}
+	scope:new_district = {
+		set_variable = {
+			name = district_type
+			value = flag:none
+		}
+		set_variable = {
+			name = index
+			value = 0
+		}
+	}
+	if = {
+		limit = { has_variable_list = metro_districts }
+		every_in_list = {
+			variable = metro_districts
+			scope:new_district = {
+				change_variable = {
+					name = index
+					add = 1
+				}
+			}
+		}
+	}
+	add_to_variable_list = {
+		name = metro_districts
+		target = scope:new_district
+	}
+}
+
+#########################################
+# BUILDING CONSTRUCTION DATING EFFECTS #
+#########################################
+
+# Initialization
+initialize_historical_building_construction_dates_effect = {
+	title:c_oraispol = {
+		title_province = {
+			set_building_construction_century_start_effect = 	{ BUILDING_NAME = walls_01 CENTURY = 0 }
+			set_building_construction_century_end_effect = 		{ BUILDING_NAME = walls_01 CENTURY = 8 }
+			
+			set_building_construction_century_end_effect = 		{ BUILDING_NAME = walls_02 CENTURY = 8 }
+			
+			set_building_construction_century_start_effect = 	{ BUILDING_NAME = walls_03 CENTURY = 8 }
+			set_building_construction_century_end_effect = 		{ BUILDING_NAME = walls_03 CENTURY = 10 }
+		}
+	}
+	title:c_madi = {
+		title_province = {
+			set_building_construction_century_start_effect = 	{ BUILDING_NAME = 00_easterncabal CENTURY = 3 }
+			set_building_construction_century_end_effect = 		{ BUILDING_NAME = 00_easterncabal CENTURY = 9 }
+			set_building_construction_century_end_effect = 		{ BUILDING_NAME = 01_easterncabal CENTURY = 10 }
+		}
+	}
+}
+
+# Note - the 0th century is treated as 'unknown'
+# Start of construction is optional
+set_building_construction_century_start_effect = {
+	set_variable = {
+		name = $BUILDING_NAME$_construction_century_start
+		value = $CENTURY$
+	}
+}
+
+set_building_construction_century_end_effect = {
+	set_variable = {
+		name = $BUILDING_NAME$_construction_century_end
+		value = $CENTURY$
+	}
+}
+
+###########################
+# BUILDING FLAVOR EFFECTS #
+###########################
+
+set_building_flavor_flag_effect = {
+	set_variable = {
+		name = $DETAIL_TYPE$
+		value = flag:$DETAIL_NAME$
+	}
+}

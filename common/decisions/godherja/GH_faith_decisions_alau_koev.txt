@@ -1,0 +1,62 @@
+﻿@flame_festival_cooldown_time = 3650
+
+##################
+##DECISIONS LIST##
+# alau_koev_flame_festival
+##################
+
+##################
+# Attend a Flame Festival
+# by Archduke
+
+alau_koev_flame_festival_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+
+	desc = alau_koev_flame_festival_decision_desc
+
+	selection_tooltip = alau_koev_flame_festival_decision_tooltip
+
+	cooldown = { days = @flame_festival_cooldown_time }
+
+	is_shown = {
+		is_playable_character = yes
+		has_religion = religion:alau_koev_religion
+		NOT = {
+			has_faith = faith:mokmanur
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+	}
+
+	is_valid = {
+		piety_level >= 1
+	}
+
+	cost = {
+		gold = minor_gold_value
+		prestige = 100
+	}
+
+	effect = {
+		trigger_event = {
+			id = alau_koev.0001
+		}
+	}
+	
+	ai_check_interval = 120
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+

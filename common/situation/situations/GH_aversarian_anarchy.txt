@@ -1,0 +1,273 @@
+﻿#aversarian_anarchy = {
+	#window = situation
+	#gui_window_name = "GH_window_aversarian_anarchy"
+	#map_mode = sub_regions
+	#illustration = "gfx/interface/illustrations/event_story/mpo_steppe_region.dds"
+	#situation_group_type = major
+#
+	#is_unique = yes
+#
+	###################################################
+	## Regions
+	###################################################
+	#sub_regions = {
+		#kalathipsomi = {
+			#map_color = { 193 161 10 }
+			#geographical_regions = { governate_aversarian_megos_kalathipsomi #governate_aversarian_mikros_kalathipsomi }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/kalathipsomi.dds"
+		#}
+		#etepezea = {
+			#map_color = { 169 10 10 }
+			#geographical_regions = { governate_aversarian_etepezea }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/etepezea.dds"
+		#}
+		#malcois = {
+			#map_color = { 126 20 60 }
+			#geographical_regions = { governate_aversarian_malcois }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/malcois.dds"
+		#}
+		#opakhasia = {
+			#map_color = { 58 8 41 }
+			#geographical_regions = { governate_aversarian_opakhasia }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/opakhasia.dds"
+		#}
+		#aironoi = {
+			#map_color = { 176 65 85 }
+			#geographical_regions = { governate_aversarian_aironoi }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/aironoi.dds"
+		#}
+		#katraddia = {
+			#map_color = { 46 46 124 }
+			#geographical_regions = { governate_aversarian_katraddia }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/katraddia.dds"
+		#}
+	#}
+#
+	###################################################
+	## On Actions
+	###################################################
+	#on_monthly = {
+	#}
+	#on_yearly = {
+	#}
+#
+	###################################################
+	## Groups
+	###################################################
+	#participant_groups = {
+		#aversarian_warlords = {
+			#require_capital_in_sub_region = yes
+			#is_character_valid = {
+				#highest_held_title_tier >= tier_county
+				#OR = {
+					#has_religion = religion:aversarinas_aagiokrata_religion
+					#culture = { has_cultural_pillar = heritage_aversarian }
+				#}
+				#is_ruin = no
+			#}
+#
+			#map_color = { 169 10 10 }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/aversarian.dds"
+		#}
+#		
+		#interlopers = {
+			#require_capital_in_sub_region = yes
+			#is_character_valid = {
+				#NOR = {
+					#has_religion = religion:aversarinas_aagiokrata_religion
+					#culture = { has_cultural_pillar = heritage_aversarian }
+				#}
+				#is_ruin = no
+			#}
+#
+			#map_color = { 193 161 10 }
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/interloper.dds"
+		#}
+	#}
+#
+	###################################################
+	## Phases
+	###################################################
+	#start_phase = anarchy
+#
+	#on_start = {
+	#}
+#
+	#phases = {
+		#anarchy = {
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/anarchy.dds"
+#
+			#future_phases = {
+				#fracture = {
+					#takeover_type = points
+					#takeover_points = 1000
+#
+					#catalysts = {
+						#catalyst_kalathipsomi_1254 = 910
+						#catalyst_malcois_1254 = 860
+						#catalyst_etepezea_1254 = 570
+						#catalyst_aironoi_1254 = 610
+						#catalyst_opakhasia_1254 = 540
+					#}
+				#}
+				#unity = {
+					#takeover_type = points
+					#takeover_points = 500
+#
+					#catalysts = {
+						#catalyst_betrayed_alliance = 25
+					#}
+				#}
+			#}
+#
+			#modifier_sets = {
+				#situation_subject_effects = {
+					#icon = "gfx/interface/icons/situations/situation_modifier_subject.dds"
+#
+					#aversarian_warlords = {
+						#character_modifier = {
+							#vassal_opinion = 20
+						#}
+						#parameters = {
+							#the_great_steppe_demand_herd_higher_rate = yes
+						#}
+					#}
+				#}
+#				
+				#situation_military_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_military.dds"
+#					
+					#aversarian_warlords = {
+						#character_modifier = {
+							#men_at_arms_maintenance = -0.2
+						#}
+					#}
+				#}
+#				
+				#situation_personal_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_character.dds"
+#					
+					#aversarian_warlords = {
+						#parameters = {
+							#the_great_steppe_cheaper_hunts = yes
+						#}
+					#}
+				#}
+			#}
+		#}
+		#fracture = {
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/fracture.dds"
+#
+			#modifier_sets = {
+				#situation_subject_effects = {
+					#icon = "gfx/interface/icons/situations/situation_modifier_subject.dds"
+#
+					#aversarian_warlords = {
+						#character_modifier = {
+							#vassal_opinion = 20
+						#}
+						#parameters = {
+							#the_great_steppe_demand_herd_higher_rate = yes
+						#}
+					#}
+				#}
+#				
+				#situation_military_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_military.dds"
+#					
+					#aversarian_warlords = {
+						#character_modifier = {
+							#men_at_arms_maintenance = -0.2
+						#}
+					#}
+				#}
+#				
+				#situation_personal_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_character.dds"
+#					
+					#aversarian_warlords = {
+						#parameters = {
+							#the_great_steppe_cheaper_hunts = yes
+						#}
+					#}
+				#}
+			#}
+		#}
+		#unity = {
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/unity.dds"
+#
+			#modifier_sets = {
+				#situation_subject_effects = {
+					#icon = "gfx/interface/icons/situations/situation_modifier_subject.dds"
+#
+					#aversarian_warlords = {
+						#character_modifier = {
+							#vassal_opinion = 20
+						#}
+						#parameters = {
+							#the_great_steppe_demand_herd_higher_rate = yes
+						#}
+					#}
+				#}
+#				
+				#situation_military_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_military.dds"
+#					
+					#aversarian_warlords = {
+						#character_modifier = {
+							#men_at_arms_maintenance = -0.2
+						#}
+					#}
+				#}
+#				
+				#situation_personal_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_character.dds"
+#					
+					#aversarian_warlords = {
+						#parameters = {
+							#the_great_steppe_cheaper_hunts = yes
+						#}
+					#}
+				#}
+			#}
+		#}
+		#fogged = {
+			#icon = "gfx/interface/icons/situations/aversarian_anarchy/fogged.dds"
+#
+			#modifier_sets = {
+				#situation_subject_effects = {
+					#icon = "gfx/interface/icons/situations/situation_modifier_subject.dds"
+#
+					#aversarian_warlords = {
+						#character_modifier = {
+							#vassal_opinion = 20
+						#}
+						#parameters = {
+							#the_great_steppe_demand_herd_higher_rate = yes
+						#}
+					#}
+				#}
+#				
+				#situation_military_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_military.dds"
+#					
+					#aversarian_warlords = {
+						#character_modifier = {
+							#men_at_arms_maintenance = -0.2
+						#}
+					#}
+				#}
+#				
+				#situation_personal_effects = {
+					#icon = "gfx/interface/icons/situations/#situation_modifier_character.dds"
+#					
+					#aversarian_warlords = {
+						#parameters = {
+							#the_great_steppe_cheaper_hunts = yes
+						#}
+					#}
+				#}
+			#}
+		#}
+	#}
+#}

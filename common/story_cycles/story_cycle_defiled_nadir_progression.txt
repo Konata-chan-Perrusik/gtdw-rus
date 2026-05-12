@@ -1,0 +1,223 @@
+﻿defiled_nadir_progression_story = { # Advancement of the Defiled Nadir mask artifact
+
+	on_setup = {
+		set_variable = {
+			name = defiled_nadir_mask_artifact
+			value = story_owner.var:defiled_nadir_bound_mask
+		}
+		var:defiled_nadir_mask_artifact = {
+			set_variable = {
+				name = associated_defiled_nadir_story
+				value = scope:story
+			}
+		}
+	}
+
+	on_end = {
+
+	}
+
+	on_owner_death = {
+		if = {
+			limit = { exists = var:defiled_nadir_mask_artifact }
+			var:defiled_nadir_mask_artifact = {
+				if = {
+					limit = {
+						is_target_in_variable_list = {
+							name = boundees
+							target = scope:story.story_owner
+						}
+						scope:story.story_owner = { has_variable = defiled_nadir_bound_mask }
+					}
+					set_variable = { # Handle the notification event trigger
+						name = defiled_nadir_pending_progression_notification
+						value = artifact_owner
+					}
+					save_scope_as = defiled_nadir_mask
+					if = { # Handle narrative progression
+						limit = { NOT = { has_variable = defiled_nadir_progression_counter } }
+						set_variable = {
+							name = defiled_nadir_progression_counter
+							value = 1
+						}
+						defiled_nadir_skills_setup_effect = yes
+						set_should_decay = no
+						set_artifact_rarity = illustrious
+						add_durability = 75
+					}
+					else = {
+						change_variable = {
+							name = defiled_nadir_progression_counter
+							add = 1
+						}
+					}
+					switch = { # Assign progressing description
+						trigger = var:defiled_nadir_progression_counter
+						1 = { set_artifact_description = awakened_mask_desc_1 }
+						2 = { set_artifact_description = awakened_mask_desc_2 }
+						3 = { set_artifact_description = awakened_mask_desc_3 }
+					}
+					if = { # Assign artifact name
+						limit = { var:defiled_nadir_progression_counter > 2 }
+						set_artifact_name = awakened_mask_name_vitiated
+					}
+					defiled_nadir_education_scripted_effect = yes
+				}
+			}
+		}
+		else = { end_story = yes }
+	}
+
+	effect_group = { # Update story ownership
+		days = 1
+
+		trigger = { var:defiled_nadir_mask_artifact ?= { NOT = { artifact_owner = scope:story.story_owner } } }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				var:defiled_nadir_mask_artifact = {
+					artifact_owner = {
+						scope:story = { make_story_owner = prev }
+						save_scope_as = defiled_nadir_caster
+					}
+					if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = boundees
+								target = scope:story.story_owner
+							}
+						}
+						set_artifact_name = awakened_mask_name_bound
+					}
+					else = { set_artifact_name = awakened_mask_name_dormant }
+				}
+			}
+		}
+	}
+
+	effect_group = { # Progression notification
+		days = { 30 60 }
+
+		trigger = { var:defiled_nadir_mask_artifact ?= { has_variable = defiled_nadir_pending_progression_notification } }
+
+		first_valid = {
+			triggered_effect = {
+				trigger = { always = yes }
+				effect = {
+					var:defiled_nadir_mask_artifact = {
+						save_scope_as = defiled_nadir_mask
+						var:defiled_nadir_pending_progression_notification = { save_scope_as = recently_dead_owner }
+						if = {
+							limit = { var:defiled_nadir_progression_counter < 3 }
+							scope:story.story_owner = { trigger_event = artifacts_flavor.1019 }
+						}
+						else = { scope:story.story_owner = { trigger_event = artifacts_flavor.1020 } }
+						remove_variable = defiled_nadir_pending_progression_notification
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = { # Mask separation and destruction
+		days = { 30 60 }
+
+		trigger = {
+			OR = {
+				NOT = { exists = var:defiled_nadir_mask_artifact }
+				story_owner = {
+					has_character_modifier = magic_defiled_nadir_separation_modifier
+					any_equipped_character_artifact = { this = prev.var:defiled_nadir_bound_mask }
+				}
+				var:defiled_nadir_mask_artifact = {
+					any_in_list = {
+						variable = boundees
+						is_alive = yes
+						NOT = { any_equipped_character_artifact = { this = scope:story.var:defiled_nadir_mask_artifact } }
+					}
+				}
+			}
+		}
+
+		first_valid = {
+			triggered_effect = { # The mask no longer exists
+				trigger = { NOT = { exists = var:defiled_nadir_mask_artifact } }
+				effect = {
+					every_in_list = {
+						variable = story_boundees
+						limit = { is_alive = yes }
+						trigger_event = artifacts_flavor.1026
+					}
+					end_story = yes
+				}
+			}
+			triggered_effect = { # Story Owner has reclaimed mask
+				trigger = {
+					story_owner = {
+						has_character_modifier = magic_defiled_nadir_separation_modifier
+						any_equipped_character_artifact = { this = prev.var:defiled_nadir_bound_mask }
+					}
+				}
+				effect = {
+					story_owner = {
+						save_scope_as = defiled_nadir_caster
+						send_interface_toast = {
+							title = awakened_mask_reclaimed.tt
+							right_icon = scope:story.var:defiled_nadir_mask_artifact
+							scope:story.var:defiled_nadir_mask_artifact = { set_artifact_name = awakened_mask_name_bound }
+							remove_character_modifier = magic_defiled_nadir_separation_modifier
+						}
+					}
+				}
+			}
+			triggered_effect = { # One of the boundees was separated from the mask
+				trigger = { always = yes }
+				effect = {
+					var:defiled_nadir_mask_artifact = {
+						save_scope_as = defiled_nadir_mask
+						random_in_list = {
+							variable = boundees
+							limit = {
+								NOR = {
+									has_character_modifier = magic_defiled_nadir_separation_modifier
+									any_equipped_character_artifact = { this = scope:story.var:defiled_nadir_mask_artifact }
+								}
+								var:defiled_nadir_bound_mask ?= scope:story.var:defiled_nadir_mask_artifact
+							}
+							trigger_event = artifacts_flavor.1025
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = { # Random ongoing events
+		days = { 365 600 }
+		chance = 25
+
+		trigger = {
+			always = yes
+			var:defiled_nadir_mask_artifact ?= {
+				artifact_owner = {
+					this = scope:story.story_owner
+					any_equipped_character_artifact = { this = scope:story.var:defiled_nadir_mask_artifact }
+				}
+				NOT = { has_variable = defiled_nadir_pending_progression_notification }
+				is_target_in_variable_list = {
+					name = boundees
+					target = scope:story.story_owner
+				}
+			}
+		}
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				var:defiled_nadir_mask_artifact = { save_scope_as = defiled_nadir_mask }
+				story_owner = { trigger_event = { on_action = ongoing_defiled_nadir_events } }
+			}
+		}
+	}
+}

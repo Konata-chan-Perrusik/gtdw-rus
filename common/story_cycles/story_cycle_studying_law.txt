@@ -1,0 +1,47 @@
+﻿#Story cycle for colonizing a county
+
+story_cycle_studying_law = {
+
+	on_setup = {
+		story_owner = {
+			trigger_event = legal_tradition.0401
+		}
+	}
+
+	on_end = {
+		
+	}
+
+	on_owner_death = {
+		end_story = yes
+	}
+
+	effect_group = {
+		months = 6
+
+		trigger = {
+			always = yes
+		}
+
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					NOT = { story_owner = { has_variable = studying_law } }
+				}
+				effect = {
+					end_story = yes
+				}
+			}
+			triggered_effect = {
+				trigger = {
+					always = yes
+				}
+				effect = {
+					story_owner = {
+						trigger_event = legal_tradition.0401
+					}
+				}
+			}
+		}
+	}
+}

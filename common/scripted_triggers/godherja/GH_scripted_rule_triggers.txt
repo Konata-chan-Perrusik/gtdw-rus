@@ -1,0 +1,39 @@
+﻿GH_can_raid_trigger = {
+	OR = {	
+		culture = { has_cultural_parameter = can_raid_even_if_feudal }
+		government_has_flag = government_can_raid_over_water_rule
+		faith = { has_doctrine_parameter = parameter_overseas_raiding_allowed }
+		has_faith = faith:seaborne_exalted # Lonely Note: We should never hardset to a faith if we can help it, let's get this swapped to a tenet or trigger ASAP
+		AND = {
+			has_variable = character_clique
+			var:character_clique = {  
+				trigger_if = {
+					limit = { has_variable_list = clique_guiding_principle_aspects }
+					any_in_list = {
+						variable = clique_guiding_principle_aspects
+						this = flag:enables_raiding
+					}
+				}
+				trigger_else = { always = no }
+			}
+		}
+	}
+}
+
+GH_can_ran_raid_overseas_cultural_innovations_trigger = {
+	OR = {
+		has_innovation = innovation_longboats
+		has_innovation = innovation_kapmatans
+	}
+}
+
+GH_can_raid_across_water_trigger = {
+	OR = {
+		AND = {
+			exists = dynasty
+			dynasty = { has_dynasty_modifier = fp1_legacy_of_piracy_modifier }
+		}
+		faith = { has_doctrine_parameter = parameter_overseas_raiding_allowed }
+		government_has_flag = government_can_raid_over_water_rule
+	}
+}

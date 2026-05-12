@@ -1,0 +1,66 @@
+﻿# Catalyst values
+minor_sarradonian_oasis_catalyst_gain = 15
+medium_sarradonian_oasis_catalyst_gain = 100
+major_sarradonian_oasis_catalyst_gain = 250
+massive_sarradonian_oasis_catalyst_gain = 500
+
+oasis_region_chance_per_year_value = {
+	value = 0.5
+	multiply = {
+		value = 1
+		if = {
+			limit = { 
+				exists = scope:oasis_temp
+				scope:oasis_temp = {
+					any_county_situation_sub_region = {
+						sub_region_current_phase = situation_steppe_severe_drought_season
+					}
+				}
+			}
+			subtract = 1
+		}
+	}
+}
+
+fertility_tirga_tissit_bonus_growth_value = {
+	value = 1
+
+	# Based on the county's fertility level
+	# No bonuses if higher than 60
+	if = {
+		limit = {
+			county_fertility <= bad_county_fertility_level 
+		}
+		multiply = 2.5
+	}
+	else_if = {
+		limit = {
+			county_fertility <= medium_county_fertility_level 
+		}
+		multiply = 2
+	}
+	else_if = {
+		limit = {
+			county_fertility <= good_county_fertility_level 
+		}
+		multiply = 1.5
+	}
+
+	# Based on the shaman's learning skill
+	add = {
+		add = 1
+		add = {
+			value = holder.court_position:court_astrologer_court_position.character_arcana_baseline_value
+			multiply = 0.3
+		}
+	}
+
+	#Based on the player's learning skill
+	add = {
+		add = 1
+		add = {
+			value = holder.character_arcana_baseline_value
+			multiply = 0.3
+		}
+	}
+}

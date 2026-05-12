@@ -1,0 +1,387 @@
+﻿##################
+##DECISIONS LIST##
+# iyrossi_kill_aversarians_decision
+# iyrossi_reform_religion_decision
+# reform_iyrossi_homelands_decision
+# new_iyrossi_capital_decision
+##################
+
+##################
+# Go on Adventures
+# by ThePinkPanzer
+iyrossi_kill_aversarians_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+	ai_check_interval = 120
+	desc = iyrossi_kill_aversarians_decision_desc
+	decision_group_type = iyrossi
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_iyrossi }
+	}
+
+	is_valid = {
+		is_at_war = no
+		custom_description = {
+			text = iyrossi_kill_aversarians_decision_valid_desc
+			OR = {
+				any_held_title = {
+					tier = tier_county
+					culture = { has_cultural_pillar = heritage_aversarian }
+				}
+				any_vassal_or_below = {
+					culture = { has_cultural_pillar = heritage_aversarian }
+				}
+			}
+		}
+	}
+
+	effect = {
+	
+		create_title_and_vassal_change = {
+			type = revoked
+			save_scope_as = change
+		}
+		
+		every_vassal_or_below = {
+			limit = {
+					culture = { has_cultural_pillar = heritage_aversarian }
+			}
+			prev = {
+				imprison = {
+					target = prev
+					type = dungeon
+				}
+			}
+			every_held_title = {
+				change_title_holder = {
+					holder = root
+					change = scope:change
+				}
+			}
+		}
+		
+		resolve_title_and_vassal_change = scope:change
+		
+		every_held_title = {
+			limit = {
+				trigger_if = {
+					limit = { tier = tier_county }
+					culture = { has_cultural_pillar = heritage_aversarian }
+				}
+				trigger_else = { always = no }
+			}
+			
+			culture = {
+				change_cultural_acceptance = {
+					target = root.culture
+					value = -5
+					desc = iyrossi_kill_aversarians_desc
+				}
+			}
+			
+			root.faith = {
+				change_fervor = {
+					value = 2
+					desc = iyrossi_kill_aversarians_desc
+				}
+			}
+			
+			set_county_culture = root.culture
+			set_county_faith = root.faith
+		
+			root = {
+				add_prestige = minor_prestige_gain
+				add_piety = minor_piety_gain
+			}
+		}
+		
+		every_prisoner = {
+			limit = {
+				culture = { has_cultural_pillar = heritage_aversarian }
+			}
+			death = {
+				death_reason = death_execution
+				killer = root
+			}
+		
+			IF = {
+				limit = {
+					highest_held_title_tier = tier_empire
+				}
+				root = {
+					add_prestige = medium_prestige_gain
+					add_piety = medium_piety_gain
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					highest_held_title_tier = tier_kingdom
+				}
+				root = {
+					add_prestige = minor_prestige_gain
+					add_piety = minor_piety_value
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					highest_held_title_tier = tier_duchy
+				}
+				root = {
+					add_prestige = miniscule_prestige_gain
+					add_piety = {
+						value = miniscule_piety_gain
+						add = minor_piety_gain
+						divide = 2
+		
+						# rounds to closest 5
+						divide = 5
+						ceiling = yes
+						multiply = 5
+					}
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					highest_held_title_tier = tier_county
+				}
+				root = {
+					add_prestige = {
+						value = miniscule_prestige_gain
+						multiply = 2
+					}
+					add_piety = miniscule_piety_gain
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					highest_held_title_tier = tier_barony
+				}
+				root = {
+					add_prestige = miniscule_prestige_gain
+					add_piety = miniscule_piety_gain
+				}
+			}
+			ELSE = {
+				root = {
+					add_piety = miniscule_piety_gain
+				}
+			}
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##################
+# Go on Adventures
+# by ThePinkPanzer
+iyrossi_reform_religion_decision = {
+	ai_check_interval = 120
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+	
+	desc = iyrossi_reform_religion_decision_desc
+	selection_tooltip = iyrossi_reform_religion_decision_tooltip
+	
+	decision_group_type = iyrossi
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_iyrossi }
+		NOT = {
+			has_global_variable = iyrossi_reformed
+		}
+	}
+
+	is_valid = {
+		is_at_war = no
+		completely_controls = title:c_myrespiae
+		completely_controls = title:c_cures
+		##completely_controls = title:c_iopus
+		##completely_controls = title:c_seuthona
+		has_trait = theologian
+		piety_level >= 3
+		piety >= 1500
+	}
+
+	effect = {
+		add_piety = -1500
+		set_character_faith_with_conversion = faith:iyrossi
+		set_global_variable = {
+			name = iyrossi_reformed
+			value = yes
+		}
+		every_ruler = {
+			if = {
+				limit = {
+					culture = { has_cultural_pillar = heritage_iyrossi }
+					is_ai = yes
+				}
+				set_character_faith_with_conversion = faith:iyrossi
+			}
+		}
+		every_county = {
+			limit = {
+				this.faith = faith:iyrossi_aagiokrata
+			}
+			set_county_faith = faith:iyrossi
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##################
+# Go on Adventures
+# by ThePinkPanzer
+reform_iyrossi_homelands_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+	decision_group_type = iyrossi
+	desc = reform_iyrossi_homelands_decision_desc
+
+	ai_check_interval = 120
+
+	is_shown = {
+		OR = {
+			has_faith = faith:iyrossi
+			has_faith = faith:iyrossi_aagiokrata
+		}
+		highest_held_title_tier >= tier_kingdom
+		culture = { has_cultural_pillar = heritage_iyrossi }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reform_iyrossi_homelands_decision
+			}
+		}
+	}
+
+	is_valid = {
+		completely_controls = title:k_mytidon
+		completely_controls = title:k_adgos
+		completely_controls = title:k_cyrocaea
+		OR = {
+			has_faith = faith:iyrossi
+			has_faith = faith:iyrossi_aagiokrata
+		}
+		culture = { has_cultural_pillar = heritage_iyrossi }
+		prestige_level >= 4
+	}
+
+	is_valid_showing_failures_only = {
+		is_adult = yes
+		is_available = yes
+		is_independent_ruler = yes
+	}
+
+	cost = {
+		prestige = {
+			value = medium_prestige_value
+		}
+		gold = {
+			value = massive_gold_value
+		}
+	}
+
+	effect = {
+		add_trait = gh_iyrossi_uniter
+		#Can only happen once
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reform_iyrossi_homelands_decision
+		}
+		
+		show_as_tooltip = {
+			add_prestige = massive_prestige_value
+			add_prestige_level = 2
+			faith = {
+				change_fervor = {
+					value = major_fervor_gain
+					desc = iyrossi_united_desc
+				}
+			}
+		}
+		create_iyrossi_empire_scripted_effect = yes
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+new_iyrossi_capital_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ruins.dds"
+	}
+	decision_group_type = iyrossi
+	
+	ai_check_interval = 72
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = { base = 100 }
+	
+	desc = new_iyrossi_capital_decision_desc 
+	selection_tooltip = new_iyrossi_capital_decision_tooltip
+	is_shown = {
+		capital_province = {
+			is_any_metropolis_district = no
+		}
+		has_title = title:e_iyrossi
+		NOT = {
+			has_global_variable = iyrossi_capital_built
+		}
+	}
+	is_valid = {
+		has_title = title:e_iyrossi
+		prestige_level >= 4
+		or = {
+			diplomacy >= 15
+			stewardship >= 15
+			learning >= 15
+		}
+		NOT = {
+			capital_province = {
+				has_special_building = yes
+			}
+		}
+	}
+	effect = {
+		trigger_event = {
+				id = gh_iyrossi_decision_events.001
+				months = 12
+			}
+		set_global_variable = {
+			name = iyrossi_capital_built
+			value = yes
+		}
+		show_as_tooltip = {
+			custom_tooltip = new_iyrossi_capital_decision_tt
+		}
+	}
+	cost = {
+		gold = {
+			value = 2000
+		}
+	}
+}

@@ -1,0 +1,63 @@
+﻿
+
+###########
+## Unsorted
+
+realm_law_use_pirate_authority = {
+	government_has_flag = government_is_pirate
+}
+
+realm_law_use_clique_authority = {
+	has_clique_government_trigger = yes
+}
+
+crimes_allow_any_punishment_trigger = {
+	legal_tradition_has_flag_trigger = { FLAG = crimes_allow_any_punishment }
+}
+
+has_any_crime_trigger = {
+	OR = {
+		has_revoke_title_reason = scope:$WHO$
+		has_execute_reason = scope:$WHO$
+		has_imprisonment_reason = scope:$WHO$
+		has_banish_reason = scope:$WHO$
+	}
+}
+
+
+# Tax Collector Triggers
+
+check_bailate_aptitude = {
+	$CHARACTER$ = {
+		tax_collector_aptitude = {
+			tax_slot_type = republic_playable_tax_slot
+			value = $VALUE$
+		}
+	}
+}
+
+check_magistrate_aptitude = {
+	$CHARACTER$ = {
+		tax_collector_aptitude = {
+			tax_slot_type = landed_order_tax_slot
+			value = $VALUE$
+		}
+	}
+}
+
+check_boatswain_aptitude = {
+	$CHARACTER$ = {
+		tax_collector_aptitude = {
+			tax_slot_type = pirate_tax_slot
+			value = $VALUE$
+		}
+	}
+}
+
+realm_law_use_republican_centralization = {
+	government_allows = administrative
+	OR = {
+		government_has_flag = government_is_administrative_republic
+		government_has_flag = government_is_judicial_republic
+	}
+}

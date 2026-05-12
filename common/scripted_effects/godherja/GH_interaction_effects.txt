@@ -1,0 +1,241 @@
+﻿sear_interaction_actor_effect = {
+	scope:actor = {
+
+		###STRESS###
+
+		#Stress loss if they are my rival I hate them
+		if = {
+			limit = { has_relation_rival = scope:recipient }
+
+			if = {
+				limit = {
+					NOR = {
+						has_trait = sadistic
+						has_trait = vengeful
+						has_trait = compassionate
+						has_trait = forgiving
+					}
+				}
+				add_stress = medium_stress_loss
+			}
+			else = {
+				stress_impact = {
+					sadistic = major_stress_impact_loss
+					vengeful = massive_stress_impact_loss
+					compassionate = minor_stress_impact_gain
+					forgiving = minor_stress_impact_gain
+				}
+			}
+		}
+		else_if = { # Torturing infidels is relaxing
+			limit = {
+				has_trait = zealous
+				NOT = { scope:actor.faith = scope:recipient.faith }
+			}
+
+			if = {
+				limit = {
+					NOR = {
+						has_trait = sadistic
+						has_trait = compassionate
+						has_trait = forgiving
+					}
+				}
+				add_stress = medium_stress_loss
+			}
+			else = {
+				stress_impact = {
+					sadistic = major_stress_impact_loss
+					compassionate = minor_stress_impact_gain
+					forgiving = minor_stress_impact_gain
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					has_trait = sadistic
+				}
+				scope:recipient = {
+					OR = {
+						is_child_of = scope:actor
+						is_grandchild_of = scope:actor
+						is_great_grandchild_of = scope:actor
+					}
+				}
+			}
+			stress_impact = {
+				base = medium_stress_impact_loss
+				compassionate = massive_stress_impact_gain
+				craven = major_stress_impact_gain
+				just = medium_stress_impact_gain
+				forgiving = major_stress_impact_gain
+				generous = medium_stress_impact_gain
+				trusting = minor_stress_impact_gain
+				content = minor_stress_impact_gain
+				family_first = minor_stress_impact_gain
+			}
+		}
+		else = {
+			stress_impact = {
+				sadistic = medium_stress_impact_loss
+				compassionate = major_stress_impact_gain
+				craven = major_stress_impact_gain
+				just = medium_stress_impact_gain
+				forgiving = medium_stress_impact_gain
+				generous = medium_stress_impact_gain
+				trusting = minor_stress_impact_gain
+				content = minor_stress_impact_gain
+			}
+		}
+
+		###DREAD###
+		if = {
+			limit = {
+				scope:recipient = {
+					OR = {
+						is_powerful_vassal_of = scope:actor # Is your powerful vassal
+						AND = { # Is an Emperor
+							exists = primary_title
+							primary_title.tier >= tier_empire
+						}
+						target_is_vassal_or_below = scope:actor # Your liege/s
+						scope:actor.faith.religious_head = scope:recipient # Your head of faith
+					}
+				}
+			}
+			add_dread = torture_interaction_massive_dread_gain
+		}
+		else_if = {
+			limit = {
+				scope:recipient = {
+					OR = {
+						AND = { # Is your vassal, and higher than Baron
+							is_vassal_of = scope:actor
+							primary_title.tier > tier_barony
+						}
+						AND = { # Is a King
+							exists = primary_title
+							primary_title.tier >= tier_kingdom
+						}
+					}
+				}
+			}
+			add_dread = torture_interaction_major_dread_gain
+		}
+		else_if = {
+			limit = {
+				scope:recipient = {
+					OR = {
+						scope:actor = { # Torturing close family of your vassals is dreadful...
+							any_vassal = {
+								is_close_family_of = scope:recipient
+							}
+						}
+						scope:actor = { # Torturing close family of your liege/s is the same...
+							any_liege_or_above = {
+								is_close_family_of = scope:recipient
+							}
+						}
+						AND = { # Peer Vassals
+							exists = primary_title
+							primary_title.tier > tier_barony
+							exists = liege
+							liege = scope:actor.liege
+						}
+						AND = { # Is a Duke
+							exists = primary_title
+							primary_title.tier >= tier_duchy
+						}
+					}
+				}
+			}
+			add_dread = torture_interaction_medium_dread_gain
+		}
+		else_if = {
+			limit = {
+				scope:recipient = {
+					OR = {
+						is_spouse_of = scope:actor # Your own spouse
+						is_close_or_extended_family_of = scope:actor # Your own family
+						AND = {
+							exists = primary_title
+							primary_title.tier >= tier_county # Is a Count
+						}
+						scope:actor = { # Torturing extended family of your vassals is dreadful...
+							any_vassal = {
+								is_extended_family_of = scope:recipient
+							}
+						}
+						scope:actor = { # Torturing extended family of your liege/s is the same...
+							any_liege_or_above = {
+								is_extended_family_of = scope:recipient
+							}
+						}
+					}
+				}
+			}
+			add_dread = torture_interaction_minor_dread_gain
+		}
+
+
+		###OPINIONS###
+		torture_blind_castrate_disfigure_opinion_effect = { VERB = seared }
+
+		###CHURCH OPINION & PIETY###
+		if = {
+			limit = {
+				NOR = {
+					# GH CHANGE: Also look at the self_mutilation_active parameter
+					faith = {
+						OR = {
+							has_doctrine = tenet_exaltation_of_pain 
+							has_doctrine_parameter = self_mutilation_active
+						}
+					}
+					AND = {
+						culture = { has_cultural_parameter = can_freely_execute_and_torture_commoners }
+						scope:recipient = { is_lowborn = yes }
+					}
+
+					# Divine Retribution cancels out faith-based penalties
+					has_perk = divine_retribution_perk
+				}
+			}
+			add_piety = medium_piety_loss
+
+			if = {
+				limit = {
+					any_learning_councillor = {
+						opinion = {
+							target = scope:recipient
+							value >= neutral_opinion
+						}
+					}
+				}
+				random_learning_councillor = {
+					add_opinion = {
+						modifier = impious_opinion
+						opinion = -10
+						target = scope:actor
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				# GH CHANGE: Also look at the self_mutilation_active parameter
+				faith = {
+					OR = {
+						has_doctrine = tenet_exaltation_of_pain 
+						has_doctrine_parameter = self_mutilation_active
+						has_doctrine = tenet_call_of_the_void
+					}
+				}
+			}
+			add_piety = medium_piety_gain
+		}
+		
+		patron_saint_affinity_from_pain_check = { VALUE = 5 }
+	}
+}

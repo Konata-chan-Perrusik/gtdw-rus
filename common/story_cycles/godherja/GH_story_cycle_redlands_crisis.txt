@@ -1,0 +1,241 @@
+﻿story_redlands_crisis = {
+	
+	on_setup = {
+		
+	}
+
+	on_end = {
+		debug_log = "Redlands Crisis ended on:"
+		debug_log_date = yes
+		remove_list_global_variable = {
+			name = global_story_cycle_list
+			target = root
+		}
+	}
+
+	on_owner_death = {
+		if = {
+			limit = {
+				any_artifact = { has_variable = abyssal_prism }
+			}
+			random_artifact = {
+				limit = { has_variable = abyssal_prism }
+				save_scope_as = abyssal_prism_story_cycle_scope # for tracking the owner upon death
+			}
+			scope:abyssal_prism_story_cycle_scope = {
+				artifact_owner = { scope:story = { make_story_owner = prev } }
+			}
+		}
+	}
+
+	# End the Story Cycle if the Prism doesnt exist anymore, the Redlanders have fully taken over the Redlands (or completely dont control it)
+	effect_group = {
+		months = 2
+
+		trigger = {
+			OR = {
+				NOT = { any_artifact = { has_variable = abyssal_prism } }
+				NOT = {
+					any_ruler = {
+						capital_province = { geographical_region = GH_geographic_redlands_mainland }
+						culture = { has_cultural_pillar = heritage_redlander  }
+					}
+				}
+				NOT = {
+					any_ruler = {
+						capital_province = { geographical_region = GH_geographic_redlands_mainland }
+						NOT = { culture = { has_cultural_pillar = heritage_redlander  } }
+					}
+				}
+				exists = global_var:sundeath_phase_1_start
+			}
+		}
+
+		first_valid = {
+			# The Redlanders are the only ones left
+			triggered_effect = {
+				trigger = {
+					NOT = {
+						any_ruler = {
+							capital_province = { geographical_region = GH_geographic_redlands_mainland }
+							NOT = { culture = { has_cultural_pillar = heritage_redlander  } }
+						}
+					}
+				}
+				effect = {
+					remove_global_variable = redlands_crisis
+					every_player = {
+						limit = {
+							capital_province = {
+								geographical_region = GH_geographic_redlands_mainland
+							}
+						}
+						trigger_event = redlands_decision.2001
+					}
+					end_story = yes
+				}
+			}
+
+			# No more Redlanders
+			triggered_effect = {
+				trigger = {
+					NOT = {
+						any_ruler = {
+							capital_province = { geographical_region = GH_geographic_redlands_mainland }
+							culture = { has_cultural_pillar = heritage_redlander  }
+						}
+					}
+				}
+				effect = {
+					remove_global_variable = redlands_crisis
+					every_player = {
+						limit = {
+							capital_province = {
+								geographical_region = GH_geographic_redlands_mainland
+							}
+						}
+						trigger_event = redlands_decision.2002
+					}
+					end_story = yes
+				}
+			}
+
+			# Anticlimatic, someone destroyed the prism!
+			triggered_effect = {
+				trigger = {
+					NOT = { any_artifact = { has_variable = abyssal_prism } }
+				}
+
+				effect = {
+					remove_global_variable = redlands_crisis
+					every_player = {
+						limit = {
+							capital_province = {
+								geographical_region = GH_geographic_redlands_mainland
+							}
+						}
+						trigger_event = redlands_decision.2003
+					}
+					end_story = yes
+				}
+			}
+
+			#Climatic, someone destroyed the sun!
+			triggered_effect = {
+				trigger = {
+					exists = global_var:sundeath_phase_1_start
+				}
+
+				effect = {
+					remove_global_variable = redlands_crisis
+					every_ruler = {
+						limit = {
+							capital_province = {
+								geographical_region = GH_geographic_redlands_mainland
+							}
+						}
+						trigger_event = redlands_decision.2005
+					}
+					end_story = yes
+				}
+			}
+		}
+	}
+
+	effect_group = {
+		years = 125
+
+		triggered_effect = { # Everyones still around, Redlanders dont have the artifact and havent managed to get it so far, world saved?
+			trigger = {
+				any_artifact = { has_variable = abyssal_prism }
+			}
+
+			effect = {
+				remove_global_variable = redlands_crisis
+				every_ruler = {
+					limit = {
+						capital_province = {
+							geographical_region = GH_geographic_redlands_mainland
+						}
+					}
+					trigger_event = redlands_decision.2004
+				}
+				end_story = yes
+			}
+		}
+	}
+
+	# Mystery Cults Spread
+	effect_group = {
+		days = { 60 180 }
+
+		trigger = {
+			NOT = { exists = global_var:sundeath_phase_1_start }
+			any_county_in_region = {
+				region = redlands_biozone
+				OR = {
+					culture = { NOT = { has_cultural_pillar = heritage_redlander } }
+					culture = { NOT = { has_cultural_pillar = heritage_wasteland } }
+				}
+				holder.culture = { NOT = { has_cultural_pillar = heritage_redlander } }
+				NOT = { has_county_modifier = redlander_mystery_cults_modifier }
+			}
+		}
+
+
+		first_valid = {
+			triggered_effect = {
+				trigger = {
+					always = yes
+				}
+				effect = {
+					random_county_in_region = {
+						region = redlands_biozone
+						limit = { culture = { NOT = { has_cultural_pillar = heritage_redlander } } }
+						add_county_modifier = {
+							modifier = redlander_mystery_cults_modifier
+							years = 4
+						}
+						save_scope_as = mystery_cult_spawn_location
+					}
+					every_player = {
+						limit = {
+							any_held_title = { 
+								tier = tier_county
+								any_county_province = {
+									geographical_region = redlands_biozone
+								}
+							}
+						}
+						send_interface_message = {
+							type = event_generic_bad_with_text
+							title = redlands_mystery_cult_spreads
+							desc = redlands_mystery_cult_spreads_desc
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Redrunner Flavor Events
+	effect_group = {
+		days = { 30 180 }
+		chance = 25
+
+		trigger = {
+			exists = global_var:redlands_crisis
+		}
+
+		first_valid = {
+			triggered_effect = {
+				trigger = { always = yes }
+				effect = {
+					story_owner = {
+						trigger_event = { on_action = ongoing_redrunner_flavor_events }
+					}
+				}
+			}
+		}
+	}
+}

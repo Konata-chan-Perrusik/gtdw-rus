@@ -1,0 +1,757 @@
+﻿# Lonely Note: Despite being very clean and pretty, this implementation was likely the cause of the Infinite Load bug,
+# as the on_start actions were being triggered outside of the load order from the rest of the on_start code. I'm not
+# entirely sure on what breaks where, and I'd like to test out to find what can go into this file and what can't,
+# but it's hard enough to diagnose when it's mod wide so we need to cut our losses. If the issues continue and we somehow
+# find another culprit, restore this please.
+
+### Misc Effects ##
+#
+### Called from the ruler_designer on_action file
+gh_on_start_ruler_designer_government_effect = {
+	if = {
+		limit = { exists = title:c_oraispol.var:GH_ruler_designer_government_override }
+		if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:feudal_government_flag }
+			change_government = feudal_government
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:republic_playable_government_flag }
+			change_government = republic_playable_government
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:theocracy_government_flag }
+			change_government = theocracy_government
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:landed_order_government_flag }
+			change_government = landed_order_government
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:military_unit_government_flag }
+			change_government = military_unit_government
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:magocratic_government_flag }
+			change_government = magocratic_government
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:magocratic_republic_flag }
+			change_government = magocratic_republic
+		}
+		else_if = {
+			limit = { title:c_oraispol.var:GH_ruler_designer_government_override = flag:pirate_government_flag }
+			change_government = pirate_government
+		}
+		title:c_oraispol = { remove_variable = GH_ruler_designer_government_override }
+	}
+}
+
+gh_on_start_holy_sites_effect = {
+	## Vanilla: Setup temple special building build sites ##
+	## Lonely Note: Changed vanilla structure to fold it into one every_religion check instead of having twenty of these ##
+	religion:wardenism_religion = {
+		every_faith = {
+			every_holy_site = {
+				limit = {
+					title_province = {
+						has_special_building_slot = no
+					}
+				}
+				title_province = {
+					add_special_building_slot = 01_holy_site_grand_courthouse
+				}
+			}
+		}
+	}
+	religion:agionism_religion = {
+		every_faith = {
+			every_holy_site = {
+				limit = {
+					title_province = {
+						has_special_building_slot = no
+					}
+				}
+				title_province = {
+					add_special_building_slot = 01_holy_site_saintly_cathedral
+				}
+			}
+		}
+	}
+	every_religion_global = {
+		every_faith = {
+			limit = { has_doctrine_parameter = judges_act_as_clergy }
+			every_faith_ruler = {
+				limit = { 
+					is_adult = yes
+					primary_title.tier = tier_barony
+					NOT = { has_trait = lifestyle_jurist }
+					OR = {
+						GH_is_any_theocracy_government_trigger = yes
+						AND = {
+							exists = primary_title.title_province
+							primary_title.title_province = {
+								has_holding_type = church_holding
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_trait = lifestyle_jurist
+							NOT = { has_variable = character_legal_tradition }
+						}
+					}
+					give_random_jurist_trait_random_effect = yes
+					assign_character_legal_tradition_effect = yes
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_family = gh_marcher
+			}
+			every_faith = {
+				every_holy_site = {
+					limit = {
+						title_province = {
+							has_special_building_slot = no
+						}
+					}
+					title_province = {
+						add_special_building_slot = 01_holy_site_marcher_cathedral
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				#is_in_family = gh_dravidic
+				is_in_family = rf_eastern
+				NOT = {
+					this = religion:fourteen_heavenly_methods_religion
+				}
+			}
+			every_faith = {
+				every_holy_site = {
+					limit = {
+						title_province = {
+							has_special_building_slot = no
+						}
+					}
+					title_province = {
+						add_special_building_slot = holy_site_indian_grand_temple_01
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_family = rf_pagan
+			}
+			every_faith = {
+				every_holy_site = {
+					limit = {
+						title_province = {
+							has_special_building_slot = no
+						}
+					}
+					title_province = {
+						add_special_building_slot = holy_site_pagan_grand_temple_01
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_family = gh_rf_aversarian
+			}
+			every_faith = {
+				every_holy_site = {
+					limit = {
+						title_province = {
+							has_special_building_slot = no
+						}
+					}
+					title_province = {
+						add_special_building_slot = 01_holy_site_hallowed_naon
+					}
+				}
+			}
+		}
+		every_faith = {
+			every_holy_site = {
+				limit = {
+					title_province = {
+						has_special_building_slot = no
+					}
+				}
+				title_province = {
+					add_special_building_slot = holy_site_other_grand_temple_01
+				}
+			}
+		}
+	}
+}
+
+
+
+gh_on_start_faith_and_religion_effect = {
+
+	faith:theygundaropei_cult = {
+		change_fervor = {
+			value = 40
+			desc = frodbrokna_radical_desc
+		}
+	}
+	faith:cleansed_ones = {
+		change_fervor = {
+			value = 30
+			desc = frodbrokna_radical_desc
+		}
+	}
+	faith:guillater_cult = {
+		change_fervor = {
+			value = 30
+			desc = frodbrokna_radical_desc
+		}
+	}
+	faith:shattered_stars_cult = {
+		change_fervor = {
+			value = 30
+			desc = frodbrokna_radical_desc
+		}
+	}
+
+	if = { # Common Cause Special Doctrine application
+		limit = {
+			game_start_date = 1254.1.1
+			NOT = { has_game_rule = imperrech_destroyed }
+		}
+		religion:apti_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:gethian_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:kakarataki_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:kardawai_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:partic_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:sjalvolki_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:stodherrn_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+		religion:salacad_religion = {
+			every_faith = { add_doctrine = special_doctrine_imperrech_common_goal }
+		}
+	}
+	
+	if = { # Faiths that do not exist except for player intervention - cannot be converted to unless formed through decision.
+		limit = { game_start_date = 1254.1.1 }
+		faith:nicanonean_aagiokrata = {
+			set_variable = { name = block_conversion_till_decision_taken }
+		}
+		faith:aversarinas_aagiokrata_reformed = {
+			set_variable = { name = block_conversion_till_decision_taken }
+		}
+	}
+	
+	if = { # Faiths that do not exist in 1254 - cannot be converted to unless former through events
+		limit = {
+			game_start_date = 1254.1.1
+		}
+		faith:orispolj_rite = {
+			set_variable = { name = block_conversion_till_nebulous_circumstances }
+		}
+		faith:piety_rite = {
+			set_variable = { name = block_conversion_till_nebulous_circumstances }
+		}
+		faith:authority_rite = {
+			set_variable = { name = block_conversion_till_nebulous_circumstances }
+		}
+		faith:eastern_rite = {
+			set_variable = { name = block_conversion_till_nebulous_circumstances }
+		}
+		faith:conclave_of_opakhasia = {
+			set_variable = { name = block_conversion_till_nebulous_circumstances }
+		}
+	}
+
+	if = { # Dismantled Nalmavast Priesthood
+		limit = { game_start_date >= 700.1.1 } ## GH TODO: Concrete date
+		faith:nalmavast = { set_variable = { name = block_reformation_var } }
+	}
+}
+
+gh_on_start_every_county_effect = {
+	every_county = {
+		if = {
+			limit = { is_coastal_county = yes }
+			save_scope_as = coastal_county
+			add_to_global_variable_list = {
+			  name = coastal_counties
+			  target = this
+			}
+		}
+		if = {
+			limit = {
+				AND = {
+					faith = faith:wasteland_faith
+					culture = culture:wasteland
+					holder = {
+						faith = faith:wasteland_faith
+						culture = culture:wasteland
+						has_trait = gh_wasteland
+					}
+				}
+			}
+			save_temporary_scope_as = ruined_county
+			spawn_ruin = { COUNTY = scope:ruined_county }
+		}
+	}
+}
+
+gh_on_start_every_character_effect = {
+	every_living_character = {
+		character_info_setup_effect = yes
+		if = {
+			limit = {
+				faith = { has_variable = faith_has_lifepaths }
+			}
+			if = {
+				limit = {
+					is_ruler = yes
+				}
+				populate_with_wayfathers = yes
+			}
+			if = {
+				limit = {
+					age >= 13
+				}
+				assign_all_lifepath_trait = yes
+			}
+		}
+		if = {
+			limit = {
+				should_adopt_legal_tradition_trigger = yes
+				NOT = { has_trait = lifestyle_jurist }
+			}
+			random_list = {
+				70 = {}
+				15 = {
+					add_trait = lifestyle_jurist
+					assign_character_legal_tradition_effect = yes
+				}
+				10 = {
+					add_trait = lifestyle_jurist
+					add_trait_xp = {
+						trait = lifestyle_jurist
+						value = 25
+					}
+					assign_character_legal_tradition_effect = yes
+				}
+				5 = {
+					add_trait = lifestyle_jurist
+					add_trait_xp = {
+						trait = lifestyle_jurist
+						value = 50
+					}
+					assign_character_legal_tradition_effect = yes
+				}
+			}
+		}
+		# Sets up historical lifestyle XP
+		if = { # Removes the substitute lifestyle trait and gives the normal one
+			limit = { has_trait = gh_historical_blademaster_1 }
+			remove_trait = gh_historical_blademaster_1
+			add_trait = lifestyle_blademaster
+		}
+		if = {
+			limit = { has_trait = gh_historical_blademaster_2 }
+			remove_trait = gh_historical_blademaster_2
+			add_trait = lifestyle_blademaster
+			add_trait_xp = {
+				trait = lifestyle_blademaster
+				value = trait_second_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_blademaster_3 }
+			remove_trait = gh_historical_blademaster_3
+			add_trait = lifestyle_blademaster
+			add_trait_xp = {
+				trait = lifestyle_blademaster
+				value = trait_third_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_reveler_1 }
+			remove_trait = gh_historical_reveler_1
+			add_trait = lifestyle_reveler
+		}
+		if = {
+			limit = { has_trait = gh_historical_reveler_2 }
+			remove_trait = gh_historical_reveler_2
+			add_trait = lifestyle_reveler
+			add_trait_xp = {
+				trait = lifestyle_reveler
+				value = trait_second_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_reveler_3 }
+			remove_trait = gh_historical_reveler_3
+			add_trait = lifestyle_reveler
+			add_trait_xp = {
+				trait = lifestyle_reveler
+				value = trait_third_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_physician_1 }
+			remove_trait = gh_historical_physician_1
+			add_trait = lifestyle_physician
+		}
+		if = {
+			limit = { has_trait = gh_historical_physician_2 }
+			remove_trait = gh_historical_physician_2
+			add_trait = lifestyle_physician
+			add_trait_xp = {
+				trait = lifestyle_physician
+				value = trait_second_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_physician_3 }
+			remove_trait = gh_historical_physician_3
+			add_trait = lifestyle_physician
+			add_trait_xp = {
+				trait = lifestyle_physician
+				value = trait_third_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_pilgrim_1 }
+			remove_trait = gh_historical_pilgrim_1
+			add_trait = pilgrim
+		}
+		if = {
+			limit = { has_trait = gh_historical_pilgrim_2 }
+			remove_trait = gh_historical_pilgrim_2
+			add_trait = pilgrim
+			add_trait_xp = {
+				trait = pilgrim
+				value = 50
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_pilgrim_3 }
+			remove_trait = gh_historical_pilgrim_3
+			add_trait = pilgrim
+			add_trait_xp = {
+				trait = pilgrim
+				value = 100
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_mystic_1 }
+			remove_trait = gh_historical_mystic_1
+			add_trait = lifestyle_mystic
+		}
+		if = {
+			limit = { has_trait = gh_historical_mystic_2 }
+			remove_trait = gh_historical_mystic_2
+			add_trait = lifestyle_mystic
+			add_trait_xp = {
+				trait = lifestyle_mystic
+				value = trait_second_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_mystic_3 }
+			remove_trait = gh_historical_mystic_3
+			add_trait = lifestyle_mystic
+			add_trait_xp = {
+				trait = lifestyle_mystic
+				value = trait_third_level
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_hunter }
+			remove_trait = gh_historical_hunter
+			add_trait = lifestyle_hunter
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_hunter_1 }
+			remove_trait = gh_historical_track_hunter_1
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = hunter
+				value = 25
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_hunter_2 }
+			remove_trait = gh_historical_track_hunter_2
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = hunter
+				value = 50
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_hunter_3 }
+			remove_trait = gh_historical_track_hunter_3
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = hunter
+				value = 75
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_hunter_4 }
+			remove_trait = gh_historical_track_hunter_4
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = hunter
+				value = 100
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_falconer_1 }
+			remove_trait = gh_historical_track_falconer_1
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = falconer
+				value = 50
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_falconer_2 }
+			remove_trait = gh_historical_track_falconer_2
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = falconer
+				value = 100
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_beasthunter_1 }
+			remove_trait = gh_historical_track_beasthunter_1
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = beasthunter
+				value = 25
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_beasthunter_2 }
+			remove_trait = gh_historical_track_beasthunter_2
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = beasthunter
+				value = 50
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_beasthunter_3 }
+			remove_trait = gh_historical_track_beasthunter_3
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = beasthunter
+				value = 75
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_track_beasthunter_4 }
+			remove_trait = gh_historical_track_beasthunter_4
+			add_trait = lifestyle_hunter
+			add_trait_xp = {
+				trait = lifestyle_hunter
+				track = beasthunter
+				value = 100
+			}
+		}
+		if = {
+			limit = { has_trait = gh_historical_school }
+			remove_trait = gh_historical_school
+		}
+	}
+}
+
+gh_on_start_titles_effect = {
+	if = {
+		limit = { game_start_date >= 200.1.1 }
+		title:e_opakhasia = {
+			set_title_name = cn_opakhasia
+		}
+	}
+}
+
+gh_on_start_variables_effect = {
+	culture:wasteland = {	set_variable = culture_forbidden_from_diverging_or_hybridizing }
+	culture:fog_eaters = {	set_variable = culture_forbidden_from_diverging_or_hybridizing }
+	culture:lich_culture = { set_variable = culture_forbidden_from_diverging_or_hybridizing }
+	culture:redlander = { set_variable = culture_forbidden_from_diverging_or_hybridizing }
+
+	faith:sansia = { 		set_variable = { name = agionist_saint			value = character:centralimperial_aversarinas_aagiokrata_59 } }
+	faith:eos = { 			set_variable = { name = agionist_saint			value = character:centralimperial_aversarinas_aagiokrata_60 } }
+	faith:philanthrios = { 	set_variable = { name = agionist_saint			value = character:westernimperial_aversarinas_aagiokrata_151 } }
+	faith:calysto = { 		set_variable = { name = agionist_saint			value = character:islander_aversarinas_aagiokrata_12 } }
+	faith:thysia = { 		set_variable = { name = agionist_saint			value = character:westernimperial_aversarinas_aagiokrata_150 } }
+	faith:katharitos = { 	set_variable = { name = agionist_saint			value = character:southernimperial_aversarinas_aagiokrata_26 } }
+	faith:dikaynos = { 		set_variable = { name = agionist_saint			value = character:westernimperial_aversarinas_aagiokrata_130 } }
+	faith:forgotten = { 	set_variable = { name = agionist_saint			value = character:erridai_forgotten_1 } }
+}
+
+initialize_historical_terrain_variant_effect = {
+	if = {
+		limit = { game_start_date > 155.1.1 }
+		title:e_east_lichdoms = { gh_set_dynamic_terrain_variant_effect = { VARIANT = lich } }
+		title:e_northern_lichdoms = { gh_set_dynamic_terrain_variant_effect = { VARIANT = lich } }
+		title:e_west_lichdoms_1 = { gh_set_dynamic_terrain_variant_effect = { VARIANT = lich } }
+	}
+	if = {
+		limit = { game_start_date > 399.1.1 }
+		title:e_kemsar = { gh_set_dynamic_terrain_variant_effect = { VARIANT = desert } }
+	}
+	if = {
+		limit = { game_start_date > 1200.1.1 }
+		title:d_herald = { gh_set_dynamic_terrain_variant_effect = { VARIANT = wasteland } }
+		title:d_heavenly_noon = { gh_set_dynamic_terrain_variant_effect = { VARIANT = wasteland } }
+	}
+}
+
+character_info_setup_effect = {
+	## Opening Events ##
+	if = {
+		limit = { has_opening_event = yes }
+		add_trait = setup_flag_opening_event
+	}
+	if = {
+		limit = { has_story_content = yes }
+		add_trait = setup_flag_story_content
+	}
+}
+
+initialize_unprunable_characters_effect = {
+	character:aeviaxian_aerasodiax_2 = { make_unprunable = yes } # Kalliphix, physician
+	character:southernimperial_aversarinas_aagiokrata_117 = { make_unprunable = yes } # Euneas, physician
+	character:westernimperial_aversarinas_aagiokrata_499 = { make_unprunable = yes } # Aeltheniax, living magi & physician
+	character:westernimperial_aversarinas_aagiokrata_150 = { make_unprunable = yes } # Saint Thysia, political figure & physician
+	character:tasurmad_ritualist_3 = { make_unprunable = yes } # Ikrima, political figure & physician
+	character:tasurmad_hulawite_5 = { make_unprunable = yes } # Talhah, alchemist & physician
+	character:jaduyada_sabiat_al_malaikiya_1 = { make_unprunable = yes } # Sirin of Sophocos, physician
+	character:carsavisians_lifepath_40 = { make_unprunable = yes } # Saint Hugoric, waysaint & physician
+	character:tasurmad_wardenism_117 = { make_unprunable = yes } # Abdar 'Godrender', famous Wardenite warlord
+	# Agionist Saints
+	character:centralimperial_aversarinas_aagiokrata_59 = { make_unprunable = yes } # Sansia
+	character:centralimperial_aversarinas_aagiokrata_60 = { make_unprunable = yes } # Eos
+	character:westernimperial_aversarinas_aagiokrata_151 = { make_unprunable = yes } # Philantros
+	character:islander_aversarinas_aagiokrata_12 = { make_unprunable = yes } # Calysto
+	character:westernimperial_aversarinas_aagiokrata_150 = { make_unprunable = yes } # Thysia
+	character:southernimperial_aversarinas_aagiokrata_26 = { make_unprunable = yes } # Katharitos
+	character:westernimperial_aversarinas_aagiokrata_130 = { make_unprunable = yes } # Dikaynos
+	character:erridai_forgotten_1 = { make_unprunable = yes } # Forgotten Saint
+	# Hubarite Judges
+	character:qushyed_hubarism_1 = { make_unprunable = yes }
+	character:qushyed_hubarism_2 = { make_unprunable = yes }
+	character:mazunic_hubarism_2 = { make_unprunable = yes }
+	character:qushyed_hubarism_3 = { make_unprunable = yes }
+	character:qushyed_hubarism_4 = { make_unprunable = yes }
+	character:qushyed_hubarism_5 = { make_unprunable = yes }
+	character:mazunic_hubarism_3 = { make_unprunable = yes }
+	# Liches
+	character:lich_culture_rejection_9 = { make_unprunable = yes } # Milon 'The Godtouched'
+	character:lich_culture_rejection_8 = { make_unprunable = yes } # Wethynod Wethydoltek, slain by Eos
+	character:lich_culture_rejection_10 = { make_unprunable = yes } # Petrovos Petrynix, part of Aesch's cabal, later tasked to research lichdom, which he achieved for himself
+}
+
+initialize_gh_laamp_landing_effect = {
+	if = {
+		limit = {
+			NOT = { has_dlc_feature = landless_playable }
+			game_start_date = 1254.1.1
+		}
+		character:voyagen_lifepath_8 = {
+			get_title = title:c_nambre
+			get_title = title:d_band_of_bastards
+		}
+		character:erimatos_aversarinas_aagiokrata_3 = {
+			get_title = title:c_rana
+			get_title = title:c_as_khasaireb
+			get_title = title:c_almarawi
+			get_title = title:d_heraklios
+
+			change_government = pirate_government
+			trigger_event = gh_pirate.0020
+
+			create_title_and_vassal_change = {
+				type = independency
+				save_scope_as = change
+				add_claim_on_loss = yes
+			}
+			becomes_independent = {
+				change = scope:change
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+		character:scusstari_iyrossi_aagiokrata_13 = {
+			get_title = title:c_deris
+			get_title = title:d_laamp_vengeance_seekers
+
+			create_title_and_vassal_change = {
+				type = independency
+				save_scope_as = change
+				add_claim_on_loss = yes
+			}
+			becomes_independent = {
+				change = scope:change
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+		character:tribocicai_sjalvolki_1 = {
+			get_title = title:c_erdataar
+
+			create_title_and_vassal_change = {
+				type = independency
+				save_scope_as = change
+				add_claim_on_loss = yes
+			}
+			becomes_independent = {
+				change = scope:change
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+		character:fenvir_sjalvolki_21 = {
+			get_title = title:c_chintallamadur
+
+			create_title_and_vassal_change = {
+				type = independency
+				save_scope_as = change
+				add_claim_on_loss = yes
+			}
+			becomes_independent = {
+				change = scope:change
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+	}
+}

@@ -1,0 +1,399 @@
+﻿sarradonian_oasis = { # This struggle creates and dissolves dynamic oases in the Sarradonian Desert to be exploited by the Desert Nomads 
+	is_unique = no
+	situation_group_type = natural_disasters
+	gui_window_name = GH_window_oasis
+	#migration = yes
+	# Regions
+	sub_regions = {
+		oasis_area = {
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			map_color = { 0.2 0.7 0.3 }
+		}
+	}
+
+
+	# On Actions
+	on_start = {
+	}
+	on_end = {
+		natural_disaster_save_base_scopes_effect = yes
+		# Cancel great projects
+		every_in_list = {
+			variable = great_projects
+			add_to_list = cancelled_great_projects
+		}
+		every_in_list = {
+			list = cancelled_great_projects
+			cancel_great_project = this
+		}
+		# Clear global tracking
+		remove_list_global_variable = {
+			name = ongoing_oases
+			target = root
+		}
+		log_natural_disaster = "ended"
+	}
+
+	on_leave = {
+		try_remove_disaster_vars_effect = yes
+	}
+
+	# Groups
+	participant_groups = {
+		oasis_ruler_capital = {
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			require_realm_in_sub_region = yes
+			auto_add_rulers = yes
+			map_color = rgb{ 170 130 200 }
+			is_character_valid = {
+				is_independent_ruler = yes
+				is_human = yes # No wastelands!
+			}
+			on_join = {
+				oasis_ruler_start_effect = yes
+				trigger_event = { on_action = gh_oasis_join_events }
+			}
+		}
+		oasis_subject = { # Dont get the same benefits as lieges
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			require_realm_in_sub_region = yes
+			auto_add_rulers = yes
+			map_color = rgb{ 100 150 250 }
+			is_character_valid = {
+				is_independent_ruler = no
+				highest_held_title_tier >= tier_county
+				is_human = yes # No wastelands!
+			}
+			on_join = {
+				trigger_event = { on_action = gh_oasis_join_events }
+			}
+		}
+		oasis_herders = {
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			auto_add_rulers = yes
+			is_character_valid = {
+				has_government = herder_government
+				highest_held_title_tier >= tier_county
+			}
+			map_color = { 235 213 52 }
+		}
+		wasteland = {
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			auto_add_rulers = yes
+			is_character_valid = {
+				has_government = wasteland_government
+				highest_held_title_tier >= tier_county
+			}
+			map_color = { 15 15 15 }
+		}
+	}
+
+	# Phases
+	start_phase = situation_oasis_flooding
+
+	phases = {
+		#situation_oasis_incomplete = {
+			#icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			#illustration = "gfx/interface/illustrations/terrain_types/oasis.dds"
+			#map_province_effect = summer
+			#map_province_effect_intensity = 0.3
+			#on_start = {
+				#if = {
+					#limit = {
+						#NOT = { exists = scope:situation }
+					#}
+					#scope:situation_sub_region.sub_region_participant_group:oasis_ruler_capital.participant_group_situation = {
+						#save_scope_as = situation
+						#var:oasis_county ?= { save_scope_as = oasis_county }
+						#var:oasis_area ?= { save_scope_as = oasis_area }
+						#scope:situation_sub_region ?= { save_scope_as = situation_sub_region }
+					#}
+				#}
+			#}
+			#max_duration = { years = 10 }
+			#future_phases = {
+				#situation_oasis_flooding = {}
+				#situation_oasis_oasis = {
+					#takeover_type = points
+					#takeover_points = 1000
+					#catalysts = {
+						#catalyst_situation_oasis_digging = massive_sarradonian_oasis_catalyst_gain
+					#}
+				#}
+			#}
+		#}
+		# Water is pooling quickly, the sands shifting, destructive and powerful life flourishes
+		situation_oasis_flooding = {
+			max_duration = { months = 6 } # Fairly short, allows time for players to get ready
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			illustration = "gfx/interface/illustrations/terrain_types/oasis.dds"
+			map_province_effect = summer
+			map_province_effect_intensity = 0.7
+			on_start = {
+				if = {
+					limit = {
+						NOT = { exists = scope:situation }
+					}
+					scope:situation_sub_region.sub_region_participant_group:oasis_ruler_capital.participant_group_situation = {
+						save_scope_as = situation
+						var:oasis_county ?= { save_scope_as = oasis_county }
+						var:oasis_area ?= { save_scope_as = oasis_area }
+						scope:situation_sub_region ?= { save_scope_as = situation_sub_region }
+					}
+				}
+			}
+			modifier_sets = {
+				situation_oasis_county_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_fertility.dds"
+
+					oasis_ruler_capital = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.25
+							monthly_county_control_decline_add = -2
+							travel_danger = 10
+						}
+					}
+
+					oasis_subject = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.25
+							monthly_county_control_decline_add = -2
+							travel_danger = 10
+						}
+					}
+
+					oasis_herders = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.25
+							monthly_county_control_decline_add = -2
+							travel_danger = 10
+						}
+					}
+
+					wasteland = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.30
+							monthly_county_control_decline_add = -2
+							travel_danger = 10
+						}
+					}
+				}
+
+				situation_oasis_movement_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_military.dds"
+
+					oasis_ruler_capital = {
+						character_modifier = {
+							movement_speed = -0.05
+						}
+					}
+
+					oasis_subject = {
+						character_modifier = {
+							movement_speed = -0.05
+						}
+					}
+
+					oasis_herders = {
+						character_modifier = {
+							movement_speed = -0.05
+						}
+					}
+				}
+
+				situation_oasis_subject_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_subject.dds"
+
+					oasis_ruler_capital = {
+						character_modifier = {
+							tributary_opinion = 10
+							vassal_opinion = 10
+							vassal_herd_contribution_mult = 0.2
+						}
+					}
+				}
+			}
+			future_phases = {
+				situation_oasis_oasis = {
+					takeover_type = duration
+					takeover_duration = { months = 6 }
+				}
+			}
+		}
+		# The Oasis is flourishing, green jewel in the desert 
+		situation_oasis_oasis = {
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			illustration = "gfx/interface/illustrations/terrain_types/oasis.dds"
+			max_duration = { years = 8 }
+			map_province_effect = summer
+			map_province_effect_intensity = 1.0
+			on_start = {
+				if = {
+					limit = {
+						NOT = { exists = scope:situation }
+					}
+					scope:situation_sub_region.sub_region_participant_group:oasis_ruler_capital.participant_group_situation = {
+						save_scope_as = situation
+						var:oasis_county ?= { save_scope_as = oasis_county }
+						var:oasis_area ?= { save_scope_as = oasis_area }
+						scope:situation_sub_region ?= { save_scope_as = situation_sub_region }
+					}
+				}
+				#trigger_event = {
+				#	id = gh_oasis_event.1010
+				#	days = 2
+				#}
+				oasis_growth_effect = yes # adds a few extra modifiers based on how abundant the oasis is
+			}
+			modifier_sets = {
+				situation_oasis_county_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_fertility.dds"
+
+					oasis_ruler_capital = {
+						county_modifier = {
+							county_fertility_growth_mult = 2.3
+							supply_limit_mult = 0.5
+						}
+					}
+
+					oasis_subject = {
+						county_modifier = {
+							county_fertility_growth_mult = 2.3
+						}
+					}
+
+					oasis_herders = {
+						county_modifier = {
+							county_fertility_growth_mult = 2.3
+						}
+					}
+
+					wasteland = {
+						county_modifier = {
+							county_fertility_growth_mult = 2.3
+						}
+					}
+				}
+
+				situation_oasis_herd_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_herd.dds"
+					oasis_ruler_capital = {
+						character_modifier = {
+							herd_gain_mult = 0.25
+						}
+					}
+				}
+
+				situation_oasis_subject_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_subject.dds"
+
+					oasis_ruler_capital = {
+						character_modifier = {
+							tributary_opinion = 10
+							vassal_opinion = 10
+							vassal_herd_contribution_mult = 0.2
+						}
+					}
+				}
+
+				situation_oasis_personal_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_character.dds"
+					oasis_ruler_capital = {
+						character_modifier = {
+							stress_gain_mult = -0.25
+						}
+					}
+
+					oasis_subject = {
+						character_modifier = {
+							stress_gain_mult = -0.25
+						}
+					}
+
+					oasis_herders = {
+						character_modifier = {
+							stress_gain_mult = -0.25
+						}
+					}
+				}
+			}
+
+			future_phases = {
+				situation_oasis_receding = {
+					takeover_type = duration
+					takeover_duration = { years = 8 }
+				}
+			}
+		}
+		# The waters recede, the land dries, and the life moves on
+		situation_oasis_receding = {
+			icon = "gfx/interface/icons/terrain_types/oasis.dds"
+			illustration = "gfx/interface/illustrations/terrain_types/oasis.dds"
+			map_province_effect = summer
+			map_province_effect_intensity = 0.7
+			max_duration = { years = 4 }
+			on_start = {
+				if = {
+					limit = {
+						NOT = { exists = scope:situation }
+					}
+					scope:situation_sub_region.sub_region_participant_group:oasis_ruler_capital.participant_group_situation = {
+						save_scope_as = situation
+						var:oasis_county ?= { save_scope_as = oasis_county }
+						var:oasis_area ?= { save_scope_as = oasis_area }
+						scope:situation_sub_region ?= { save_scope_as = situation_sub_region }
+					}
+				}
+			}
+			modifier_sets = {
+				situation_oasis_county_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_fertility.dds"
+
+					oasis_ruler_capital = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.1
+							travel_danger = 5
+						}
+					}
+
+					oasis_subject = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.1
+							travel_danger = 5
+						}
+					}
+
+					oasis_herders = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.1
+							travel_danger = 5
+						}
+					}
+
+					wasteland = {
+						county_modifier = {
+							county_fertility_growth_mult = 0.1
+							travel_danger = 5
+						}
+					}
+				}
+
+				situation_oasis_movement_effects = {
+					icon = "gfx/interface/icons/situations/situation_modifier_military.dds"
+
+					oasis_ruler_capital = {
+						character_modifier = {
+							movement_speed = 0.05
+						}
+					}
+
+					oasis_subject = {
+						character_modifier = {
+							movement_speed = 0.05
+						}
+					}
+				}
+			}
+		}
+	}
+}

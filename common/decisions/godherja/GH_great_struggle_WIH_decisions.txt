@@ -1,0 +1,480 @@
+﻿##################################################
+
+#	War in Heaven Decisions List
+
+##################################################
+
+gh_great_struggle_wardenite_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_supremacy.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/gh_great_struggle_wardenite_ending_decision.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_great_struggle_wardenite_ending_decision_desc
+	selection_tooltip = gh_great_struggle_wardenite_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_valid = {
+		any_character_struggle = {
+			OR = { 
+				is_struggle_type = gh_war_in_heaven_struggle
+				is_struggle_type = gh_eastern_war_in_heaven_struggle
+				is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+				is_struggle_type = gh_western_war_in_heaven_struggle
+				#is_struggle_type = gh_far_western_war_in_heaven_struggle	
+			}
+		}
+		prestige_level >= high_prestige_level
+		trigger_if = {
+			limit = {
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			trigger_if = {
+				limit = { exists = struggle:gh_war_in_heaven_struggle }
+				can_execute_decision = gh_central_sarradon_wardenite_victory_ending_decision
+			}
+			trigger_else_if = {
+				limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }
+				can_execute_decision = gh_eastern_sarradon_wardenite_victory_ending_decision
+			}
+			trigger_else_if = {
+				limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }
+				can_execute_decision = gh_far_eastern_sarradon_wardenite_victory_ending_decision
+			}
+			trigger_else_if = {
+				limit = { exists = struggle:gh_western_war_in_heaven_struggle }
+				can_execute_decision = gh_western_sarradon_wardenite_victory_ending_decision
+			}
+			#trigger_else_if = {
+			#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }
+			#	can_execute_decision = gh_far_western_sarradon_wardenite_victory_ending_decision
+			#}
+			trigger_else = { always = no }
+		}
+		trigger_else = {
+			custom_tooltip = {
+				text = gh_great_stuggle_ending_multiple_struggle_exists_tt
+				always = no
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+
+	effect = {
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 10000 }
+			add_prestige = 7000
+			give_nickname = nick_ma_dun_al_ira
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_all_struggles_end_tt		
+			if = { 
+				limit = { exists = struggle:gh_war_in_heaven_struggle }
+				struggle:gh_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }
+				struggle:gh_eastern_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }
+				struggle:gh_far_eastern_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_western_war_in_heaven_struggle }
+				struggle:gh_western_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			#if = { 
+			#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }
+			#	struggle:gh_far_western_war_in_heaven_struggle = { end_struggle = yes }
+			#}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_inconclusive_tt
+			remove_global_variable = wih_great_struggle
+		}
+	}
+	cost = {
+		piety = major_piety_value
+        prestige = {
+            value = major_prestige_value
+        }
+	}
+
+	ai_check_interval = 0
+
+	ai_will_do = { base = 100 }
+}
+
+
+gh_great_struggle_ritualist_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp3/fp3_decision_foundation.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/gh_great_struggle_ritualist_ending_decision.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_great_struggle_ritualist_ending_decision_desc
+	selection_tooltip = gh_great_struggle_ritualist_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_valid = {
+		any_character_struggle = {
+			OR = { 
+				is_struggle_type = gh_war_in_heaven_struggle
+				is_struggle_type = gh_eastern_war_in_heaven_struggle
+				is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+				is_struggle_type = gh_western_war_in_heaven_struggle
+				#is_struggle_type = gh_far_western_war_in_heaven_struggle	
+			}
+		}
+		prestige_level >= high_prestige_level
+		trigger_if = {
+			limit = {
+				calc_true_if = {
+					amount = 1
+					exists = struggle:gh_war_in_heaven_struggle
+					exists = struggle:gh_eastern_war_in_heaven_struggle
+					exists = struggle:gh_far_eastern_war_in_heaven_struggle
+					exists = struggle:gh_western_war_in_heaven_struggle
+					#exists = struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			trigger_if = {
+				limit = { exists = struggle:gh_war_in_heaven_struggle }
+				can_execute_decision = gh_central_sarradon_ritualist_victory_ending_decision
+			}
+			trigger_else_if = {
+				limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }
+				can_execute_decision = gh_eastern_sarradon_ritualist_victory_ending_decision
+			}
+			trigger_else_if = {
+				limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }
+				can_execute_decision = gh_far_eastern_sarradon_ritualist_victory_ending_decision
+			}
+			trigger_else_if = {
+				limit = { exists = struggle:gh_western_war_in_heaven_struggle }
+				can_execute_decision = gh_western_sarradon_ritualist_victory_ending_decision
+			}
+			#trigger_else_if = {
+			#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }
+			#	can_execute_decision = gh_far_western_sarradon_ritualist_victory_ending_decision
+			#}
+			trigger_else = { always = no }
+		}
+		trigger_else = {
+			custom_tooltip = {
+				text = gh_great_stuggle_ending_multiple_struggle_exists_tt
+				always = no
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+
+	effect = {
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 10000 }
+			add_prestige = 7000
+			give_nickname = nick_marak_al_hayir
+		}
+
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		custom_tooltip = gh_struggle_wih_ending_ritualist_opinion_negative_tt
+
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+				zealous = medium_stress_impact_loss
+			}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_all_struggles_end_tt		
+			if = { 
+				limit = { exists = struggle:gh_war_in_heaven_struggle }
+				struggle:gh_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }
+				struggle:gh_eastern_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }
+				struggle:gh_far_eastern_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_western_war_in_heaven_struggle }
+				struggle:gh_western_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			#if = { 
+			#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }
+			#	struggle:gh_far_western_war_in_heaven_struggle = { end_struggle = yes }
+			#}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_inconclusive_tt
+			remove_global_variable = wih_great_struggle
+		}
+	}
+	cost = {
+		piety = major_piety_value
+        prestige = {
+            value = major_prestige_value
+        }
+	}
+
+	ai_check_interval = 0
+
+	ai_will_do = { base = 100 }
+}
+
+gh_great_struggle_sarradon_divided_ending_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/gh_great_struggle_sarradon_divided_ending_decision.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decision_buttons/gh_great_struggle_sarradon_divided_ending_decision.dds"
+	decision_group_type = major
+	is_invisible = yes
+
+	desc = gh_great_struggle_sarradon_divided_ending_decision_desc
+	selection_tooltip = gh_great_struggle_sarradon_divided_ending_decision_tooltip
+
+	sort_order = 80
+
+	is_shown = {
+		is_landless_adventurer = no
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = gh_great_stuggle_ending_part_of_the_great_struggle_tt
+			any_character_struggle = {
+				OR = { 
+					is_struggle_type = gh_war_in_heaven_struggle
+					is_struggle_type = gh_eastern_war_in_heaven_struggle
+					is_struggle_type = gh_far_eastern_war_in_heaven_struggle
+					is_struggle_type = gh_western_war_in_heaven_struggle
+					#is_struggle_type = gh_far_western_war_in_heaven_struggle	
+				}
+			}
+		}
+		prestige_level >= high_prestige_level
+		piety_level >= high_piety_level
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_two_or_less_struggle_exist_tt	
+			calc_true_if = {
+				amount <= 3
+				exists = struggle:gh_war_in_heaven_struggle
+				exists = struggle:gh_eastern_war_in_heaven_struggle
+				exists = struggle:gh_far_eastern_war_in_heaven_struggle
+				exists = struggle:gh_western_war_in_heaven_struggle
+				#exists = struggle:gh_far_western_war_in_heaven_struggle
+			}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_one_or_less_is_in_wardenite_phase_tt
+			calc_true_if = {
+				amount < 2
+				struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance }
+				struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance }
+				struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance }
+				struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance }
+				#struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_wardenite_dominance }
+			}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_one_or_less_is_in_ritualist_phase_tt
+			calc_true_if = {
+				amount < 2
+				struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance }
+				struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance }
+				struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance }
+				struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance }
+				#struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_ritualist_dominance }
+			}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_current_year_is_past_1200_tt
+			current_year >= 6300
+		}
+		trigger_if = {
+			limit = { exists = struggle:gh_war_in_heaven_struggle }
+			custom_tooltip = {
+				text = gh_great_stuggle_ending_central_sarradon_less_than_seventy_percent_control_tt
+				NOT = {
+					struggle:gh_war_in_heaven_struggle = {
+						any_involved_ruler = {
+							is_independent_ruler = yes
+							save_temporary_scope_as = wih_involved_ruler
+							any_county_in_region = {
+								region = GH_central_sarradon_struggle_region
+								percent > 0.5
+								holder.top_liege = scope:wih_involved_ruler
+							}
+						}
+					}
+				}
+			}
+		}
+		trigger_else = {}
+		trigger_if = {
+			limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }
+			custom_tooltip = {
+				text = gh_great_stuggle_ending_eastern_sarradon_less_than_seventy_percent_control_tt
+				NOT = {
+					struggle:gh_eastern_war_in_heaven_struggle = {
+						any_involved_ruler = {
+							is_independent_ruler = yes
+							save_temporary_scope_as = wih_involved_ruler
+							any_county_in_region = {
+								region = GH_eastern_sarradon_struggle_region
+								percent > 0.5
+								holder.top_liege = scope:wih_involved_ruler
+							}
+						}
+					}
+				}
+			}
+		}
+		trigger_else = {}
+		trigger_if = {
+			limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }
+			custom_tooltip = {
+				text = gh_great_stuggle_ending_far_eastern_sarradon_less_than_seventy_percent_control_tt
+				NOT = {
+					struggle:gh_far_eastern_war_in_heaven_struggle = {
+						any_involved_ruler = {
+							is_independent_ruler = yes
+							save_temporary_scope_as = wih_involved_ruler
+							any_county_in_region = {
+								region = GH_far_eastern_sarradon_struggle_region
+								percent > 0.5
+								holder.top_liege = scope:wih_involved_ruler
+							}
+						}
+					}
+				}
+			}
+		}
+		trigger_else = {}
+		trigger_if = {
+			limit = { exists = struggle:gh_western_war_in_heaven_struggle }
+			custom_tooltip = {
+				text = gh_great_stuggle_ending_western_sarradon_less_than_seventy_percent_control_tt
+				NOT = {
+					struggle:gh_western_war_in_heaven_struggle = {
+						any_involved_ruler = {
+							is_independent_ruler = yes
+							save_temporary_scope_as = wih_involved_ruler
+							any_county_in_region = {
+								region = GH_western_sarradon_struggle_region
+								percent > 0.5
+								holder.top_liege = scope:wih_involved_ruler
+							}
+						}
+					}
+				}
+			}
+		}
+		trigger_else = {}
+		#trigger_if = {
+		#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }
+		#	custom_tooltip = {
+		#		text = gh_great_stuggle_ending_far_western_sarradon_less_than_seventy_percent_control_tt
+		#		NOT = {
+		#			struggle:gh_far_western_war_in_heaven_struggle = {
+		#				any_involved_ruler = {
+		#					is_independent_ruler = yes
+		#					save_temporary_scope_as = wih_involved_ruler
+		#					any_county_in_region = {
+		#						region = GH_far_western_sarradon_struggle_region
+		#						percent > 0.5
+		#						holder.top_liege = scope:wih_involved_ruler
+		#					}
+		#				}
+		#			}
+		#		}
+		#	}
+		#}
+		#trigger_else = {}
+	}
+	effect = {
+		show_as_tooltip = {
+			stress_impact = {
+				ambitious = major_stress_impact_gain
+				stubborn = medium_stress_impact_gain
+				content = minor_stress_impact_loss
+			}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_all_struggles_end_tt		
+			if = { 
+				limit = { exists = struggle:gh_war_in_heaven_struggle }
+				struggle:gh_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }
+				struggle:gh_eastern_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }
+				struggle:gh_far_eastern_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			if = { 
+				limit = { exists = struggle:gh_western_war_in_heaven_struggle }
+				struggle:gh_western_war_in_heaven_struggle = { end_struggle = yes }
+			}
+			#if = { 
+			#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }
+			#	struggle:gh_far_western_war_in_heaven_struggle = { end_struggle = yes }
+			#}
+		}
+		custom_tooltip = {	
+			text = gh_great_stuggle_ending_inconclusive_tt
+			remove_global_variable = wih_great_struggle
+		}
+	}
+	cost = {
+		piety = major_piety_value
+        prestige = {
+            value = major_prestige_value
+        }
+	}
+
+	ai_check_interval = 0
+
+	ai_will_do = { base = 100 }
+}

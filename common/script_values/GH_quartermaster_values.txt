@@ -1,0 +1,305 @@
+﻿################################
+#Script Values for Manage Crew Task
+################################
+quartermaster_manage_crew_base = {
+	add = stewardship
+}
+
+quartermaster_manage_crew_raid_speed = {
+	add = quartermaster_manage_crew_base
+	divide = 100
+}
+
+quartermaster_manage_crew_naval_speed = {
+	add = quartermaster_manage_crew_base
+	divide = 100
+}
+
+quartermaster_manage_crew_embark_cost = {
+	add = quartermaster_manage_crew_base
+	divide = 100
+}
+
+quartermaster_manage_crew_army_maintenance = {
+	add = quartermaster_manage_crew_base
+	divide = 200
+}
+
+################################
+#Script Values For Commerce Raiding
+################################
+
+quartermaster_commerce_raiding_skill_modifier = {
+	value = stewardship
+	add = 10
+	divide = 1000
+}
+
+quartermaster_commerce_raid_income = {
+	value = 0
+	add = {
+		value = quartermaster_commerce_raid_nearby_counties
+		desc = nearby_counties_value_desc
+	}
+	add = {
+		value = quartermaster_commerce_raid_traid_confluences
+		desc = trade_confluences_value_desc
+	}
+}
+
+quartermaster_commerce_raid_nearby_counties = {
+	value = 0
+	if = {
+		limit = { exists = var:commerce_raiding_gold_potential }
+		add = var:commerce_raiding_gold_potential
+		multiply = cp:councillor_quartermaster.quartermaster_commerce_raiding_skill_modifier
+	}
+}
+
+quartermaster_commerce_raid_traid_confluences = {
+	value = 0
+	if = {
+		limit = { 
+			exists = var:trade_confluence_imperial_strait_domain_count 
+		}
+		add = trade_confluence_imperial_strait_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_helvian_delta_domain_count 
+		}
+		add = trade_confluence_helvian_delta_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_evimos_strait_domain_count 
+		}
+		add = trade_confluence_evimos_strait_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_bay_of_swords_domain_count 
+		}
+		add = trade_confluence_bay_of_swords_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_varhara_channel_domain_count 
+		}
+		add = trade_confluence_varhara_channel_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_mouth_of_tarsuria_domain_count 
+		}
+		add = trade_confluence_mouth_of_tarsuria_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_the_watched_channel_domain_count 
+		}
+		add = trade_confluence_the_watched_channel_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_kratemezin_rim_domain_count 
+		}
+		add = trade_confluence_kratemezin_rim_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_krehejad_domain_count 
+		}
+		add = trade_confluence_krehejad_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_the_pirate_coast_domain_count 
+		}
+		add = trade_confluence_the_pirate_coast_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_teltheans_strait_domain_count 
+		}
+		add = trade_confluence_teltheans_strait_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_ageotaros_domain_count 
+		}
+		add = trade_confluence_ageotaros_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_korvion_strait_domain_count 
+		}
+		add = trade_confluence_korvion_strait_value
+	}
+	if = {
+		limit = { 
+			exists = var:trade_confluence_volos_pathway_domain_count 
+		}
+		add = trade_confluence_volos_pathway_value
+	}
+	if = {
+		limit = {
+			exists = var:trade_confluence_pathos_tower_domain_count
+		}
+		add = trade_confluence_pathos_tower_value
+	}
+}
+
+quartermaster_profit_losses = {
+	value = 0
+	add = {
+		value = quartermaster_commerce_shadow_trade_cap
+		desc = commerce_shadow_trade_cap_desc
+	}
+	subtract = {
+		value = quartermaster_commerce_raid_income
+		desc = commerce_raid_income_desc
+	}
+	max = 0
+}
+
+quartermaster_commerce_shadow_trade_cap = {
+	value = 0
+	if = {
+		limit = { exists = var:shadow_trade_base }
+		add = {
+			value = quartermaster_base_shadow_trade
+			desc = base_value_desc
+		}
+	}
+	if = {
+		limit = { exists = var:shadow_trade_shadow_ports }
+		add = {
+			value = quartermaster_shadow_trade_shadow_ports
+			desc = shadow_ports_value_desc
+		}
+	}
+	if = {
+		limit = { exists = var:shadow_trade_controlled_territories }
+		add = {
+			value = quartermaster_shadow_trade_controlled_territories
+			desc = shadow_trade_controlled_territory_value_desc
+		}
+	}
+}
+
+quartermaster_base_shadow_trade = {
+	value = 0
+	if = {
+		limit = { exists = var:shadow_trade_base }
+		add = var:shadow_trade_base
+	}
+	if = {
+		limit = { exists = cp:councillor_quartermaster }
+		multiply = cp:councillor_quartermaster.quartermaster_commerce_raiding_skill_modifier
+	}
+}
+
+quartermaster_shadow_trade_shadow_ports = {
+	value = 0
+	if = {
+		limit = { exists = var:shadow_trade_shadow_ports }
+		add = var:shadow_trade_shadow_ports
+	}
+	if = {
+		limit = { exists = cp:councillor_quartermaster }
+		multiply = cp:councillor_quartermaster.quartermaster_commerce_raiding_skill_modifier
+	}
+}
+
+quartermaster_shadow_trade_controlled_territories = {
+	value = 0
+	if = {
+		limit = { exists = var:shadow_trade_controlled_territories }
+		add = var:shadow_trade_controlled_territories
+	}
+	if = {
+		limit = { exists = cp:councillor_quartermaster }
+		multiply = cp:councillor_quartermaster.quartermaster_commerce_raiding_skill_modifier
+	}
+}
+
+################################
+#Script Values for establish Shadow Port
+################################
+
+quartermaster_establish_shadow_port_base = {
+	add = 50
+}
+
+quartermaster_establish_shadow_port_monthly_increase_base = {
+	add = stewardship
+	divide = 5
+}
+
+quartermaster_establish_shadow_port_base_total = {
+	add = quartermaster_establish_shadow_port_base
+	add = quartermaster_establish_shadow_port_monthly_increase_base
+}
+
+quartermaster_establish_shadow_port_monthly_increase_friend_bonus = {
+	value = quartermaster_establish_shadow_port_base_total
+	multiply = {
+		add = council_friend_impact_percentage
+		divide = 100
+	}
+}
+
+quartermaster_establish_shadow_port_monthly_increase_best_friend_bonus = {
+	value = quartermaster_establish_shadow_port_base_total
+	multiply = {
+		add = council_best_friend_impact_percentage
+		divide = 100
+	}
+}
+
+quartermaster_establish_shadow_port_monthly_increase_rival_bonus = {
+	value = quartermaster_establish_shadow_port_base_total
+	multiply = {
+		add = council_rival_impact_percentage
+		divide = 100
+	}
+}
+
+quartermaster_establish_shadow_port_monthly_increase_nemisis_bonus = {
+	value = quartermaster_establish_shadow_port_base_total
+	multiply = {
+		add = council_nemesis_impact_percentage
+		divide = 100
+	}
+}
+
+quartermaster_establish_shadow_port_dynasty_perk_bonus = {
+	value = quartermaster_establish_shadow_port_base_total
+	multiply = {
+		add = erudition_legacy_5_percentage
+		divide = 100
+	}
+}
+
+quartermaster_establish_shadow_port_cost = {
+	add = 40
+	add = scope:county.development_level
+	subtract = stewardship
+	multiply = {
+		add = 25
+		divide = 100
+	}
+
+}
+
+quartermaster_county_control_level = {
+	add = scope:county.county_control
+}
+
+quartermaster_county_raid_cap = {
+	add = scope:county.development_level
+	add = 3
+	multiply = 15
+	multiply = quartermaster_commerce_raiding_skill_modifier
+}

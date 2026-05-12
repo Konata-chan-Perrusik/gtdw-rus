@@ -1,0 +1,97 @@
+﻿reclaim_eloi = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_sun_temple_cm.dds"
+	}
+	decision_group_type = major
+
+	desc = reclaim_eloi_decision_desc
+	selection_tooltip = reclaim_eloi_decision_tooltip
+
+	is_shown = {
+		has_faith = faith:sheharddi
+		is_playable_character = yes
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reclaimed_eloi
+			}
+		}
+	}
+
+	is_valid = {
+		AND = {
+			completely_controls = title:d_tel_habja
+			completely_controls = title:d_merrha
+			# completely_controls = title:d_al_saitan
+			# completely_controls = title:d_lavagheh
+		}
+		piety_level >= 4
+	}
+
+	effect = {
+		add_prestige = major_prestige_gain
+		faith = {
+			change_fervor = {
+				value = major_fervor_gain
+				desc = eloi_reclaimed_desc
+			}
+		}
+		hidden_effect = {
+			trigger_event = sheharddi_flavor.1000
+		}
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reclaimed_eloi
+		}
+	}
+
+	ai_check_interval = 60
+}
+
+#reclaim_the_tribute = {
+#	picture = {
+#		reference = "gfx/interface/illustrations/decisions/decision_ck2_arson_hf.dds"
+#	}
+#	decision_group_type = major
+#
+#	desc = reclaim_the_tribute_decision_desc
+#	selection_tooltip = reclaim_the_tribute_decision_tooltip
+#
+#	is_shown = {
+#		has_faith = faith:sheharddi
+#		is_playable_character = yes
+#		NOT = {
+#			is_target_in_global_variable_list = {
+#				name = unavailable_unique_decisions
+#				target = flag:reclaimed_eloi
+#			}
+#		}
+#	}
+#
+#	is_valid = {
+#		completely_controls = title:k_tayalhun
+#		OR = {
+#			piety_level >= 4
+#			prestige_level >= 4
+#		}
+#	}
+#
+#	effect = {
+#		add_prestige = major_prestige_gain
+#		faith = {
+#			change_fervor = {
+#				value = major_fervor_gain
+#				desc = eloi_reclaimed_desc
+#			}
+#		}
+#		hidden_effect = {
+#			trigger_event = sheharddi_flavor.1000
+#		}
+#		add_to_global_variable_list = {
+#			name = unavailable_unique_decisions
+#			target = flag:reclaimed_eloi
+#		}
+#	}
+#
+#	ai_check_interval = 60
+#}

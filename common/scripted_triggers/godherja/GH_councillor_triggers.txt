@@ -1,0 +1,56 @@
+﻿can_have_court_magi_trigger = {
+	is_sentient = yes
+	is_playable_character = yes
+	OR = {
+		has_trait = cynical
+		faith = {
+			NOT = {
+				has_doctrine_parameter = magic_illegal
+			}
+		}
+	}
+}
+
+can_be_court_magi_trigger = {
+	can_be_councillor_basics_trigger = yes
+	NOT = { has_council_position = councillor_spouse }
+	OR = {
+		is_ruler = yes
+		AND = {
+			is_female = yes
+			$COURT_OWNER$.faith = { NOT = { has_doctrine_parameter = male_dominated_council } }
+		}
+		AND = {
+			is_male = yes
+			$COURT_OWNER$.faith = { NOT = { has_doctrine_parameter = female_dominated_council } }
+		}
+	}
+	$COURT_OWNER$ = { can_have_court_magi_trigger = yes }
+	can_access_magic = yes
+}
+
+can_be_quartermaster_trigger = {
+	can_be_councillor_basics_trigger = yes
+	NOT = { has_council_position = councillor_spouse }
+	OR = {
+		is_ruler = yes
+		AND = {
+			is_female = yes
+			$COURT_OWNER$.faith = { NOT = { has_doctrine_parameter = male_dominated_council } }
+		}
+		AND = {
+			is_male = yes
+			$COURT_OWNER$.faith = { NOT = { has_doctrine_parameter = female_dominated_council } }
+		}
+	}
+	$COURT_OWNER$ = { can_have_quartermaster_trigger = yes }
+}
+
+is_any_gh_councillor_trigger = {
+	has_council_position = councillor_court_magi
+	has_council_position = councillor_quartermaster
+}
+
+can_have_quartermaster_trigger = {
+	government_has_flag = government_is_pirate
+}

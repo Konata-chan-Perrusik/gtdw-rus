@@ -1,0 +1,542 @@
+﻿tirga_tissit_divination_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_campfire_hf.dds"
+	}
+
+	sort_order = 25
+	decision_group_type = nomad_minor
+	cooldown = { years = 5 }
+
+	cost = {
+		piety = medium_piety_value
+	}
+	
+	is_shown = {
+		has_mpo_dlc_trigger = yes
+		government_has_flag = government_is_nomadic
+		has_faith = faith:albot_al_mamurism
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	is_valid = {
+		employs_court_position = court_astrologer_court_position
+	}
+
+	effect = {
+		if = {
+    		limit = {
+    			culture ?= { has_cultural_pillar = ethos_spiritual }
+    		}
+    		custom_tooltip = {
+				text = tirga_tissit_divination_decision_tt_spiritual
+				trigger_event = gh_court_astrologer_events.0001
+			}
+    	}
+    	else = {
+    		custom_tooltip = {
+				text = tirga_tissit_divination_decision_tt
+				trigger_event = gh_court_astrologer_events.0001
+			}
+    	}
+	}
+
+	ai_check_interval = 60
+	
+	ai_potential = {
+	    is_at_war = no
+	    ai_greed < medium_positive_ai_value
+	    short_term_gold > ai_war_chest_desired_gold_value
+	    war_chest_gold >= halved_ai_war_chest_gold_maximum
+	}
+	
+	ai_will_do = {
+	    base = 100
+	}
+}
+
+gh_decision_fertility_tirga_tissit = {
+	picture = {
+        reference = "gfx/interface/illustrations/decisions/decision_ck2_campfire_hf.dds"
+    }
+    sort_order = 60
+	decision_group_type = nomad_minor
+
+    desc = gh_decision_fertility_tirga_tissit_desc
+
+    selection_tooltip = gh_decision_fertility_tirga_tissit_tooltip
+
+    cooldown = { years = 5 }
+
+    is_shown = {
+    	has_mpo_dlc_trigger = yes
+		government_has_flag = government_is_nomadic
+        is_landed = yes
+        is_available_adult = yes
+        any_sub_realm_county = {
+            uses_county_fertility = yes
+        }
+        culture = { has_cultural_tradition = tradition_desert_nomads }
+    }
+
+    is_valid_showing_failures_only = {
+        is_at_war = no
+		is_incapable = no
+		employs_court_position = court_astrologer_court_position
+    }
+
+    cost = {
+        piety = {
+            add = medium_piety_value
+        }
+    }
+
+    effect = {
+        scope:barony.county = { save_scope_as = fertility_county }
+        custom_tooltip = {
+            text = gh_decision_fertility_tirga_tissit_effects_tt
+            trigger_event = gh_court_astrologer_events.0300
+        }
+        custom_tooltip = gh_decision_fertility_tirga_tissit_bonus_tt
+        if = {
+			limit = {
+				domicile ?= {
+					has_domicile_parameter = nomad_yurt_improved_fertility_dance
+				}
+			}
+			custom_tooltip = mpo_decisions_events.0300.a.tt.yurt
+			show_as_tooltip = {
+				scope:fertility_county = {
+					every_neighboring_county = {
+						limit = {
+							OR = {
+								holder = root
+								holder = {
+									government_has_flag = government_is_herder
+								}
+							}
+						}
+						add_county_modifier = {
+							modifier = gh_fertility_tirga_tissit_county_modifier
+							years = 2
+						}
+					}
+				}
+			}		
+		}
+    }
+
+    widget = {
+        controller = create_holy_order
+        barony_valid = {
+            trigger_if = {
+                limit = { exists = this }
+                is_capital_barony = yes
+                county = {
+                    uses_county_fertility = yes
+                }
+            }
+        }
+    }
+
+
+    ai_check_interval = 12
+
+    ai_potential = {
+        is_landed = yes
+        is_available_adult = yes
+        is_at_war = no
+		is_incapable = no
+        any_sub_realm_county = {
+            uses_county_fertility = yes
+            county_fertility <= 25
+        }
+		piety >= medium_piety_value
+    }
+
+    ai_will_do = {
+        base = 100
+        ai_value_modifier = {
+            ai_rationality = 1
+        }
+        modifier = {
+            factor = 1.25
+            has_trait = diligent
+        }
+        modifier = {
+            factor = 1.5
+            has_trait = zealous
+        }
+        modifier = {
+            factor = 0.75
+            has_trait = cynical
+        }
+        modifier = {
+            factor = 2
+            any_sub_realm_county = {
+                uses_county_fertility = yes
+                county_fertility <= 50
+            }
+        }
+    }
+}
+
+reform_great_tarrafent_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_hl_desert.dds"
+	}
+	decision_group_type = major
+
+	ai_check_interval = 120
+
+	desc = reform_great_tarrafent_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_marmaladid }
+		is_landed_or_landless_administrative = yes
+		any_sub_realm_county = {
+			title_province = { geographical_region = GH_geographic_sarradonian_desert }
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:reform_great_tarrafent_decision
+			}
+		}
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		highest_held_title_tier >= tier_kingdom
+		completely_controls_region = historic_great_tarrafent
+
+		custom_description = {
+			text = reform_great_tarrafent_decision_powerful_vassals_tt
+
+			trigger_if = {
+				limit = {
+					any_vassal = {
+						is_powerful_vassal = yes
+						NOT = { culture = { has_cultural_tradition = tradition_desert_nomads}  }
+					}
+				}
+				any_vassal = {
+					count <= 1
+					is_powerful_vassal = yes
+					NOT = { culture = { has_cultural_tradition = tradition_desert_nomads } }
+				}
+			}
+		}
+
+		custom_description = {
+			text = reform_great_tarrafent_decision_legend_seed_req_tt
+			has_character_flag = unlock_great_tarrafent_flag
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	effect = {
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reform_great_tarrafent_decision
+		}
+		save_scope_as = great_tarrafent_uniter
+		show_as_tooltip = {
+			reform_great_tarrafent_decision_effect = yes
+		}
+
+		trigger_event = sarradon_decisions.1001
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+revive_the_chosen_magi_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_golden_age.dds" }
+	desc = revive_the_chosen_magi_decision_desc
+	decision_group_type = major
+
+	ai_check_interval = 120
+
+	is_shown = {
+		current_date >= 6000.1.1
+		is_playable_character = yes
+		culture = { has_cultural_pillar = heritage_marmaladid }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:revive_the_chosen_magi_decision
+			}
+		}
+		NOT = {
+			has_faith = faith:talita_namit
+		}
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		prestige_level >= high_prestige_level
+		highest_held_title_tier > tier_duchy
+		any_realm_county = {
+			count >= 40
+			culture = { has_cultural_pillar = heritage_marmaladid }
+		} 
+		OR = {
+			piety_level >= high_piety_level
+			has_trait = theologian
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_at_war = no
+		is_independent_ruler = yes
+	}
+
+	cost = {
+		piety = 2000
+	}
+
+	effect = {
+		gain_holy_legend_seed_tooltip_effect = yes
+		show_as_tooltip = { 
+			revive_the_chosen_magi_decision_scripted_effect = yes 
+			custom_tooltip = sarradon_decisions.2001.effect_school_tooltip
+		}
+		trigger_event = sarradon_decisions.2001
+		hidden_effect = {
+			add_to_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:revive_the_chosen_magi_decision
+			}
+		}
+	}
+
+	ai_potential = {
+		always = no
+	}
+}
+
+establish_almusid_culture_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_conciliation.dds"
+	}
+	decision_group_type = major
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 0
+		duchy = 120
+		kingdom = 120
+		empire = 0
+		hegemony = 0
+	}
+
+	desc = establish_almusid_culture_decision_desc
+	selection_tooltip = establish_almusid_culture_decision_tooltip
+
+	is_shown = {
+		game_start_date >= 6050.1.1
+		culture = culture:utyalid
+		any_sub_realm_county = {
+			target_is_de_jure_liege_or_above = title:d_almudir
+			OR = {
+				culture = culture:dawasid
+				culture = culture:madikirib
+			}
+		}
+		NOT = {	
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:flag_formed_almusid_decision
+			}
+		}
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = { game_start_date >= 6298.1.1 }
+			custom_tooltip = {
+				text = gh_ten_years_past_for_settling_nomad_requirement_tt
+				current_date >= 6308.1.1		
+			}
+		}
+		trigger_else = {}
+		culture = culture:utyalid
+		completely_controls = title:d_almudir
+	}
+
+	is_valid_showing_failures_only = {
+		is_at_war = no
+		is_imprisoned = no
+	}
+
+	effect = {
+		hidden_effect = {
+			# Generate a list of counties we want to flip to the new culture.
+			title:d_almudir = {
+				every_in_de_jure_hierarchy = {
+					limit = { tier = tier_county}
+					add_to_list = almusid_counties
+				}
+			}
+			every_sub_realm_title = {
+				limit = {
+					tier = tier_county
+				}
+				if = {
+					limit = {
+						title_province = { geographical_region = custom_almudir_and_adjacent }
+						OR = {
+							culture = culture:dawasid
+							culture = culture:madikirib
+							culture = culture:utyalid
+						}
+					}
+					add_to_list = almusid_counties
+				}
+			}
+
+			# Perform the culture flip.
+			every_in_list = {
+				list = almusid_counties
+				merge_cultures_in_region_effect = {
+					OLD_CULTURE_1 = culture:utyalid
+					OLD_CULTURE_2 = culture:dawasid
+					NEW_CULTURE = culture:almusid
+					REGION = custom_almudir_and_adjacent
+				}
+			}
+			every_in_list = {
+				list = almusid_counties
+				merge_cultures_in_region_effect = {
+					OLD_CULTURE_1 = culture:utyalid
+					OLD_CULTURE_2 = culture:madikirib
+					NEW_CULTURE = culture:almusid
+					REGION = custom_almudir_and_adjacent
+				}
+			}
+
+			# Send all players in the game a notification event about the flip.
+			save_scope_as = almusid_founder
+			culture:utyalid = {save_scope_as = old_culture_1}
+			culture:dawasid = {save_scope_as = old_culture_2}
+			culture:madikirib = {save_scope_as = old_culture_3}
+			culture:almusid = {
+				reset_culture_creation_date = yes
+				get_all_innovations_from = scope:old_culture_1
+				get_all_innovations_from = scope:old_culture_2
+				get_all_innovations_from = scope:old_culture_3
+				save_scope_as = new_culture
+			}
+			every_player = {
+				if = {
+					limit = {
+						this != root
+						OR = {
+							culture = culture:utyalid
+							culture = culture:dawasid
+							culture = culture:madikirib
+						}
+						capital_province ?= { geographical_region = custom_almudir_and_adjacent }
+					}
+					trigger_event = sarradon_decisions.3001
+				}
+				else_if = {
+					limit = { this = root }
+					trigger_event = sarradon_decisions.3002
+				}
+				else_if = {
+					limit = {
+						capital_province ?= { geographical_region = world_sarradon }
+					}
+					trigger_event = sarradon_decisions.3003
+				}
+			}
+		}
+
+		# Player changes culture
+		set_culture = culture:almusid
+		add_character_flag = converted_culture_this_lifetime
+		hidden_effect = {
+			every_in_list = {
+				list = almusid_counties
+				limit = {
+					holder.capital_county = { is_in_list = almusid_counties }
+				}
+				holder = {
+					add_to_list = mass_melting_pot_list
+					every_courtier = { add_to_list = mass_melting_pot_list }
+					every_courtier_away = { add_to_list = mass_melting_pot_list }
+				}
+				every_in_list = {
+					list = mass_melting_pot_list
+					limit = {
+						OR = {
+							culture = culture:utyalid
+							culture = culture:dawasid
+							culture = culture:madikirib
+						}
+					}
+					set_culture = culture:almusid
+				}
+			}
+		}
+
+		# Summary of above hidden effects to inform players of the decision's impact.
+		show_as_tooltip = {
+			custom_tooltip = establish_almusid_culture_decision_effect.tt
+			culture:almusid = {
+				get_all_innovations_from = scope:old_culture_1
+				#get_all_innovations_from = scope:old_culture_2
+				get_all_innovations_from = scope:old_culture_3
+			}
+		}
+
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:flag_formed_almusid_decision
+		}
+
+		dynasty = { add_dynasty_prestige = 200 }
+	}
+
+	cost = {
+		prestige = {
+			value = minor_prestige_value
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 0
+
+		modifier = {
+			add = 100
+			any_sub_realm_county = {
+				percent >= 0.5
+				OR = {
+					culture = culture:dawasid
+					culture = culture:madikirib
+				}
+			}
+		}
+	}
+}

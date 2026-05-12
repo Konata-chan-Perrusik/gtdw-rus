@@ -1,0 +1,317 @@
+﻿
+gh_is_forced_passive_support_of_pretender_sgui = {
+	is_shown = { 
+		root.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+		has_character_flag = gh_acw_forced_to_acknowledge_another_pretender 
+	}
+	is_valid = { exists = this }
+}
+
+gh_is_passive_support_of_pretender_sgui = {
+	saved_scopes = { pretender }
+	is_shown = {
+		root.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+		NOT = { has_character_flag = gh_acw_forced_to_acknowledge_another_pretender }
+		scope:pretender = {	
+			var:gh_amsari_civil_war_info_story ?= {
+				is_target_in_variable_list = {
+					name = gh_acw_forced_acknowledgement_list
+					target = root
+				}				
+			}
+		}
+	}
+	is_valid = { exists = this }
+}
+
+gh_has_promised_strong_hook_on_pretender_sgui = {
+	saved_scopes = { pretender }
+	is_shown = {
+		root.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+		scope:pretender = {	
+			var:gh_amsari_civil_war_info_story ?= {
+				is_target_in_variable_list = {
+					name = gh_acw_will_get_strong_hook
+					target = root
+				}				
+			}
+		}
+	}
+	is_valid = { exists = this }
+}
+
+
+gh_view_acw_allies_window_setup_button = {
+	saved_scopes = { pretender }
+	is_valid = { exists = this }
+	effect = {
+		set_variable = {
+			name = gh_acw_is_viewing_character
+			value = scope:pretender
+		}
+	}
+}
+
+gh_view_acw_allies_window_setup_sgui = {
+	saved_scopes = { pretender }
+	is_shown = { NOT = { scope:pretender = { var:gh_amsari_civil_war_info_story ?= { has_variable_list = amsari_civil_war_supporter_list } } } }
+	is_valid = { exists = this }
+	effect = {
+		scope:pretender = {	
+			var:gh_amsari_civil_war_info_story ?= {
+				every_in_list = {
+					variable = amsari_civil_war_supporter_list
+					set_variable = {
+						name = nht_gui_nht_domain_income_characters_var
+						value = nht_domain_income_value
+					}
+				}				
+			}
+		}
+	}
+}
+
+gh_view_acw_allies_window_clear_sgui = {
+	saved_scopes = { pretender }
+	is_shown = { has_variable = gh_acw_is_viewing_character }
+	is_valid = { exists = this }
+	effect = {
+		scope:pretender.var:gh_amsari_civil_war_info_story ?= {
+			every_in_list = {
+				variable = amsari_civil_war_supporter_list
+				remove_variable = nht_gui_nht_domain_income_characters_var
+			}				
+		}	
+	}
+}
+
+
+
+
+gh_claim_amsari_hiklahn_yourself_sgui = {
+	scope = character
+	is_shown = { NOT = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } } }
+	is_valid = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = antagonistic } }
+}
+
+gh_ruling_hiklhan_dynasty_antagonistic_sgui = {
+	is_valid = {
+		exists = this
+		NOR = {
+			global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive }
+			global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = impassive }
+			global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = friendly }
+			global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = harmonious }
+		}
+	}
+}
+gh_ruling_hiklhan_dynasty_competitive_sgui = {
+	is_valid = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = competitive } }
+}
+gh_ruling_hiklhan_dynasty_impassive_sgui = {
+	is_valid = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = impassive }  }
+}
+gh_ruling_hiklhan_dynasty_friendly_sgui = {
+	is_valid = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = friendly } }
+}
+gh_ruling_hiklhan_dynasty_harmonious_sgui = {
+	is_valid = { global_var:gh_hiklahn_ruling_dynasty_var ?= { has_house_unity_stage = harmonious } }
+}
+
+gh_amsari_civil_war_window_sgui = {
+	scope = character
+	is_shown = {
+		exists = global_var:story_gh_amsari_civil_war
+		OR = {
+			capital_province = { geographical_region = world_ws_amsari }	
+			domicile ?= { domicile_location = { geographical_region = world_ws_amsari } }
+		}
+	}
+	is_valid = { exists = this }
+}
+
+gh_window_amsari_civil_war_faction_open_sgui = {
+	scope = character
+	is_valid = { exists = this }
+	effect = {
+		set_global_variable = {
+			name = gh_hiklahn_ruling_dynasty_house_unity_value_var
+			value = gh_hiklahn_ruling_dynasty_house_unity_value
+		}	
+		every_in_global_list = {
+			variable = gh_global_list_acw_pretenders
+			set_variable = {
+				name = gh_amsari_number_of_allies_value_var
+				value = gh_amsari_number_of_allies_value
+			}
+		}
+	}
+}
+
+gh_is_valid_gh_acw_stop_support_pretender_sgui = {
+	saved_scopes = { pretender }
+	is_valid = {
+		exists = this
+		exists = scope:pretender
+		trigger_if = {
+			limit = { exists = scope:pretender }
+			is_character_interaction_shown = {
+				recipient = scope:pretender
+				interaction = gh_acw_stop_support_pretender
+			}
+			is_character_interaction_valid = {
+				recipient = scope:pretender
+				interaction = gh_acw_stop_support_pretender
+			}
+		}
+	}
+}
+
+gh_is_valid_gh_acw_support_pretender_sgui = {
+	saved_scopes = { pretender }
+	is_valid = {
+		exists = this
+		exists = scope:pretender
+		trigger_if = {
+			limit = { exists = scope:pretender }
+			is_character_interaction_shown = {
+				recipient = scope:pretender
+				interaction = gh_acw_support_pretender
+			}
+			is_character_interaction_valid = {
+				recipient = scope:pretender
+				interaction = gh_acw_support_pretender
+			}
+		}
+	}
+}
+
+gh_is_valid_gh_acw_give_gold_interaction_sgui = {
+	saved_scopes = { pretender }
+	is_valid = {
+		exists = this
+		exists = scope:pretender
+		trigger_if = {
+			limit = { exists = scope:pretender }
+			is_character_interaction_shown = {
+				recipient = scope:pretender
+				interaction = gh_acw_give_gold_interaction
+			}
+			is_character_interaction_valid = {
+				recipient = scope:pretender
+				interaction = gh_acw_give_gold_interaction
+			}
+		}
+	}
+}
+
+gh_is_valid_gh_acw_request_gold_interaction_sgui = {
+	saved_scopes = { pretender }
+	is_valid = {
+		exists = this
+		exists = scope:pretender
+		trigger_if = {
+			limit = { exists = scope:pretender }
+			is_character_interaction_shown = {
+				recipient = scope:pretender
+				interaction = gh_acw_request_gold_interaction
+			}
+			is_character_interaction_valid = {
+				recipient = scope:pretender
+				interaction = gh_acw_request_gold_interaction
+			}
+		}
+	}
+}
+
+gh_is_valid_gh_call_for_loyal_banners_interaction_sgui = {
+	saved_scopes = { pretender }
+	is_valid = {
+		exists = scope:pretender
+		trigger_if = {
+			limit = { exists = scope:pretender }
+			is_character_interaction_shown = {
+				recipient = scope:pretender
+				interaction = gh_call_for_loyal_banners_interaction
+			}
+			is_character_interaction_valid = {
+				recipient = scope:pretender
+				interaction = gh_call_for_loyal_banners_interaction
+			}
+		}
+	}
+}
+
+gh_amsari_civil_war_map = {
+	is_shown = {
+		OR = {
+			NOT = { exists = global_var:custom_map_mode_changing }
+			global_var:custom_map_mode = flag:gh_amsari_civil_war_map
+		}
+	}
+	is_valid = {
+		exists = this
+		NOT = { exists = global_var:custom_map_mode_changing }
+	}
+	effect = {
+		set_global_variable = {
+			name = custom_map_mode_changing
+			value = 1
+		}
+		set_global_variable = {
+			name = custom_map_mode
+			value = flag:gh_amsari_civil_war_map
+		}
+		every_barony = { set_color_from_title = title:d_siro_map_base }
+		this.var:gh_amsari_civil_war_info_story ?= {
+			every_in_list = {
+				variable = amsari_civil_war_supporter_list			
+				every_realm_province = { barony = { set_color_from_title = title:d_gh_acw_map_color_supporter }	}
+			}
+			every_in_list = {
+				variable = gh_acw_forced_acknowledgement_list		
+				every_realm_province = { barony = { set_color_from_title = title:d_gh_acw_map_color_acknowledge } }
+			}
+		}
+		every_independent_ruler = {
+			limit = {
+				is_landed = yes
+				NOR = {
+					culture = { has_cultural_pillar = heritage_zarasadari }
+					culture = { has_cultural_pillar = heritage_thyssae }
+					religion = religion:amsari_religion
+				}
+				capital_county.title_province ?= { geographical_region = world_ws_amsari }
+			}
+			every_realm_province = { barony = { set_color_from_title = title:d_gh_acw_map_color_foreigners } }
+		}
+		every_independent_ruler = {
+			limit = {
+				is_landed = yes
+				OR = {
+					culture = { has_cultural_pillar = heritage_zarasadari }
+					culture = { has_cultural_pillar = heritage_thyssae }
+					religion = religion:amsari_religion
+				}
+				capital_county.title_province ?= { geographical_region = world_ws_amsari }
+				NOT = { this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting } }
+			}
+			every_realm_province = { barony = { set_color_from_title = title:d_gh_acw_map_color_neutral } }
+		}
+		every_independent_ruler = {
+			limit = {
+				is_landed = yes
+				OR = {
+					culture = { has_cultural_pillar = heritage_zarasadari }
+					culture = { has_cultural_pillar = heritage_thyssae }
+					religion = religion:amsari_religion
+				}
+				capital_county.title_province ?= { geographical_region = world_ws_amsari }
+				this.var:gh_amsari_civil_war_info_story ?= { has_variable = amsari_civil_war_supporting }
+				NOT = { this.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting ?= root.var:gh_amsari_civil_war_info_story.var:amsari_civil_war_supporting }
+			}
+			every_realm_province = { barony = { set_color_from_title = title:d_gh_acw_map_color_enemy } }
+		}
+		remove_global_variable = custom_map_mode_changing
+	}
+}

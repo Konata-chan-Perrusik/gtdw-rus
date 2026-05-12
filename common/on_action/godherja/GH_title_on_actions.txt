@@ -1,0 +1,21 @@
+﻿GH_on_title_gain = {
+	effect = {
+		# Legion inheritance - currently doesn't remove on_title_lost because the title is also honorary for former Legons (and because they might dispute having lost it)
+		if = { # Give the Arch-Legon trait to inheritors of Arch-Legions
+			limit = {
+				scope:title = { title_is_arch_legion_trigger = yes }
+				NOT = { has_trait = gh_arch_legon }
+				government_has_flag = government_is_military_unit
+			}
+			add_trait = gh_arch_legon # GH TODO: Arch-Legions are meant to be weird adhoc and difficult to recognize things, should be harder to maintain in future
+		}
+		else_if = { # Give the Legon trait to inheritors of Legions
+			limit = {
+				scope:title = { title_is_legion_trigger = yes }
+				NOT = { has_trait = gh_legon }
+				government_has_flag = government_is_military_unit
+			}
+			add_trait = gh_legon # GH TODO: Add some way to see if the title is legitimate
+		}
+	}
+}

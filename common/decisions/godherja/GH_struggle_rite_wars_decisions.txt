@@ -1,0 +1,1225 @@
+﻿##################################################
+
+#	Rite Wars Decisions List
+
+#	Convert to the Orispolj Rite - Convert to the Orispolj Rite without the prompting of the preacher or their acolytes
+
+##################################################
+
+#################################
+# Convert to the Orispolj Rite	#
+# by Hapchazzard				#
+#################################
+
+convert_to_orispolj_rite_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_personal_religious.dds"
+	}
+	decision_group_type = sjalvolki
+
+	ai_check_interval = 12
+
+	desc = convert_to_orispolj_rite_decision_desc
+	selection_tooltip = convert_to_orispolj_rite_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		#Must follow an unreformed Sjalvolki religion, or Sjalvolki Aagiokrata.
+		OR = {
+			AND = {
+				has_religion = religion:sjalvolki_religion
+				faith = { has_doctrine = unreformed_faith_doctrine }
+			}
+			has_faith = faith:sjalvolki_aagiokrata
+		}
+		# The reformation must be active
+		exists = global_var:sjalvolki_reformist_story
+		# The reformation must have either reached a certain level of fervor, or the character had previously interacted with the preacher or their acolytes
+		OR = {
+			global_var:sjalvolki_reformist_story.var:reform_fervor >= 20
+			has_variable = sjalvolki_reformation_policy
+		}
+		# Not repeatable for the character.
+		NOT = {
+			has_variable = converted_to_orispolj_rite
+		}
+	}
+
+	is_valid = {
+		
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		# Must not be imprisoned.
+		is_imprisoned = no
+	}
+
+	effect = {
+		set_character_faith_with_conversion = faith:orispolj_rite
+		# If you had previously told the reformers to take a hike, incur a prestige loss
+		if = {
+			limit = {
+				has_variable = sjalvolki_reformation_policy
+				var:sjalvolki_reformation_policy = flag:hostile
+			}
+			add_prestige = medium_prestige_loss
+			stress_impact = {
+				stubborn = major_stress_impact_gain
+				zealous = medium_stress_impact_gain
+				arrogant = medium_stress_impact_gain
+			}
+		}
+		else = {
+			stress_impact = {
+				stubborn = medium_stress_impact_gain
+				zealous = minor_stress_impact_gain
+			}
+		}
+		# Early converts get a piety bonus
+		if = {
+			limit = { global_var:sjalvolki_reformist_story.var:reform_fervor < 40 }
+			add_piety = {
+				value = major_piety_gain
+				divide = {
+					value = 1
+					add = {
+						value = global_var:sjalvolki_reformist_story.var:reform_fervor
+						divide = 10
+					}
+				}
+			}
+		}
+		set_variable = converted_to_orispolj_rite
+	}
+
+	ai_potential = {
+		# If you're stubborn and previously rejected the reformists, never do this
+		AND = {
+			has_variable = sjalvolki_reformation_policy
+			var:sjalvolki_reformation_policy = flag:hostile
+			NOT = {
+				has_trait = stubborn
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 20
+		modifier = {
+			add = global_var:sjalvolki_reformist_story.var:reform_fervor
+		}
+		modifier = {
+			add = 50
+			exists = capital_county
+			capital_county.faith = faith:orispolj_rite
+		}
+		modifier = {
+			factor = 0.2
+			has_trait = stubborn
+		}
+	}
+}
+
+
+# Opakasija Rite Wars Decisions
+#############################################
+# Hostility Ending							#
+# by TOG									#
+#############################################
+
+struggle_rite_wars_south_ending_hostility_decision = {
+	decision_group_type = struggle
+	title = struggle_rite_wars_south_ending_hostility_decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp2_decision_struggle_hostility.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decisions_buttons/fp2_decision_hostility.dds"
+	desc = struggle_rite_wars_south_ending_hostility_decision_desc
+	selection_tooltip = struggle_rite_wars_south_ending_hostility_decision_tooltip
+	is_invisible = yes
+	sort_order = 80
+
+	is_shown = {
+		is_playable_character = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		highest_held_title_tier >= tier_empire
+		prestige_level >= very_high_prestige_level # Exalted among Men or higher
+		piety_level >= very_high_piety_level
+		OR = {
+			custom_tooltip = {
+				text = struggle_rite_wars_south_ending_hostility_decision_correct_phase_tt
+				any_character_struggle = {
+					involvement = involved
+					is_struggle_type = rite_wars_south_struggle
+					is_struggle_phase = struggle_rite_wars_south_phase_hostility
+				}
+			}
+			## Completely control Northern Rite War Region for 5 years
+			AND = {
+				completely_controls_region = struggle_rite_wars_south
+				primary_title =  {
+					tier >= tier_kingdom
+					title_held_years >= 5
+				}
+			}
+		}
+
+		# All your capital kingdom's de jure counties are of your culture and faith
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_hostility_decision_county_tt
+			capital_county.de_jure_liege.de_jure_liege = {
+				any_de_jure_county = {
+					count = all
+					culture = root.culture
+					faith = root.faith
+				}
+			}
+		}
+
+		completely_controls_region = struggle_rite_wars_south
+	}
+
+	effect = {
+		##### Major Effects #####
+		show_as_tooltip = {
+			dynasty = { add_dynasty_prestige = 10000 }
+			gh_rws_struggle_hostility_ender_effect = yes
+		}
+		custom_description_no_bullet = { text = fp2_struggle_house_tt }
+		# Keep the Struggle Clash for your House
+		custom_tooltip = gh_rws_struggle_can_keep_using_struggle_clash_tt
+		# Boost to culture and faith conversion
+		custom_tooltip = gh_rws_struggle_hostility_conversion_tt
+		# Damage opinion with other culture/faiths
+		custom_tooltip = gh_rws_struggle_hostility_opinion_tt
+		custom_tooltip = gh_rws_struggle_hostility_opinion_negative_tt
+		# Choose Holy War boost, Culture War boost, or both
+		# custom_description_no_bullet = { text = gh_rws_struggle_hostility_list_tt } # GH URGENT: Was shooting out errors, fix this
+		#custom_tooltip = fp2_struggle_hostility_holy_cb_joint_tt
+		#custom_tooltip = fp2_struggle_hostility_culture_cb_tt
+
+
+
+		show_as_tooltip = {
+			stress_impact = {
+				humble = medium_stress_impact_gain
+				cynical = medium_stress_impact_gain
+			}
+		}
+
+		gh_achiev_cormagwouldbeproud_check = yes
+		# Trigger a player facing event as a coda
+		trigger_event = rite_wars_south_struggle.0900
+	}
+
+	cost = {
+		piety = 3000
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#############################################
+# Compromise Ending							#
+# by TOG 									#
+#############################################
+
+struggle_rite_wars_south_ending_compromise_decision = {
+	decision_group_type = struggle
+	title = struggle_rite_wars_south_ending_compromise_decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_diplomatic_greeting.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decisions_buttons/fp2_decision_compromise.dds"
+	desc = struggle_rite_wars_south_ending_compromise_decision_desc
+	selection_tooltip = struggle_rite_wars_south_ending_compromise_decision_tooltip
+	is_invisible = yes
+
+	sort_order = 80
+
+	is_shown = {
+		has_fp2_dlc_trigger = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_compromise_decision_correct_phase_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = rite_wars_south_struggle
+				is_struggle_phase = struggle_rite_wars_south_phase_compromise
+			}
+		}
+		OR = {
+			# Exalted among Men or higher
+			prestige_level >= very_high_prestige_level
+			piety_level >= very_high_piety_level
+			# Hold and completely control a holy site
+			calc_true_if = {
+				amount >= 1
+				completely_controls = title:c_last_light
+				completely_controls = title:c_evenstar
+				completely_controls = title:c_salikon
+			}
+		}
+
+		# Control less than 25% of Opakasija
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_compromise_decision_region_tt
+			fp2_struggle_ending_percent_rite_wars_south_trigger = yes
+		}
+
+		# No one else controls more than 50% of Opakasija
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_compromise_decision_other_region_tt
+			fp2_struggle_ending_other_percent_rite_wars_south_trigger = yes
+		}
+
+		# No Independent Involved rulers are at war with each other
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_compromise_truce_tt
+			NOT = {
+				struggle:rite_wars_south_struggle = {
+					any_involved_ruler = {
+						is_independent_ruler = yes
+						primary_title = { is_mercenary_company = no }
+						any_primary_war_enemy = {
+							is_independent_ruler = yes
+							any_character_struggle = {
+								involvement = involved
+								is_struggle_type = rite_wars_south_struggle
+							}
+							primary_title = { is_mercenary_company = no }
+						}
+					}
+				}
+			}
+		}
+
+		OR = {
+			# Every other involved independent ruler in Opakasija has at least 60 opinion of you or is strong hooked
+			custom_tooltip = {
+				text = struggle_rite_wars_south_ending_compromise_decision_opinion_tt
+				struggle:rite_wars_south_struggle = {
+					NOT = {
+						any_involved_ruler = {
+							NOT = { this = root }
+							is_independent_ruler = yes
+							primary_title = { is_holy_order = no }
+							primary_title = { is_mercenary_company = no }
+							save_temporary_scope_as = this_character
+							NOR = {
+								root = { has_strong_hook = scope:this_character }
+								opinion = {
+									target = root
+									value >= struggle_rite_wars_south_ending_compromise_decision_opinion_value
+								}
+							}
+						}
+					}
+				}
+			}
+			# No other independent ruler in Opakasija is a king or above
+			custom_tooltip = {
+				text = struggle_rite_wars_south_ending_compromise_decision_independent_tt
+				struggle:rite_wars_south_struggle = {
+					NOT = {
+						any_involved_ruler = {
+							NOT = { this = root }
+							is_independent_ruler = yes
+							primary_title = { is_mercenary_company = no }
+							primary_title.tier >= tier_kingdom
+						}
+					}
+				}
+			}
+			# More than 50% of Opakasija is controlled by Interloper or Uninvolved rulers
+			custom_tooltip = {
+				text = struggle_rite_wars_south_ending_compromise_decision_interloper_tt
+				any_county_in_region = {
+					region = struggle_rite_wars_south
+					percent > gh_rws_struggle_compromise_uninvolved_percent_decimal_value
+					holder.top_liege = { fp2_character_interloper_in_struggle_trigger = yes }
+				}
+			}
+		}
+	}
+
+	effect = {
+		##### Major Effects #####
+		# Personal effects for ruler
+		show_as_tooltip = { gh_rws_struggle_compromise_ender_effect = yes }
+		# Independent/Split De Jure Duchies will become De Jure Kingdoms
+		if = { 
+			limit = {
+				title:e_opakhasia = {
+					any_in_de_jure_hierarchy = {
+						fp2_struggle_ending_compromise_independent_duchy_trigger = yes
+					}
+				}
+			}
+		}
+		custom_tooltip = gh_rws_struggle_compromise_create_new_kingdoms_tt
+
+
+		## Other Tooltips!
+		gh_rws_struggle_compromise_tooltip_effect = yes
+
+		##### Minor Effects #####
+		# Self-sufficiency/defensive modifiers for each independent realm
+		show_as_tooltip = { gh_rws_struggle_compromise_tooltip_effect = yes }
+
+		show_as_tooltip = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+			}
+		}
+
+		gh_achiev_cormagwouldbeproud_check = yes
+		# Trigger a player facing event as a coda
+		trigger_event = rite_wars_south_struggle.0901
+	}
+
+	cost = { }
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#############################################
+# Conciliation Ending						#
+# by TOG 									#
+#############################################
+
+struggle_rite_wars_south_ending_conciliation_decision = {
+	decision_group_type = struggle
+	title = struggle_rite_wars_south_ending_conciliation_decision
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_camaraderie.dds"
+	}
+	extra_picture = "gfx/interface/illustrations/struggle_decisions_buttons/fp2_decision_conciliation.dds"
+	desc = struggle_rite_wars_south_ending_conciliation_decision_desc
+	selection_tooltip = struggle_rite_wars_south_ending_conciliation_decision_tooltip
+	is_invisible = yes
+
+	sort_order = 80
+
+	is_shown = {
+		has_fp2_dlc_trigger = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_conciliation_decision_correct_phase_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = rite_wars_south_struggle
+				is_struggle_phase = struggle_rite_wars_south_phase_conciliation
+			}
+		}
+
+		prestige_level >= very_high_prestige_level # Exalted among Men or higher
+		piety_level >= very_high_piety_level
+
+		# Hold and completely control a holy site
+		calc_true_if = {
+			amount >= 1
+			completely_controls = title:c_last_light
+			completely_controls = title:c_evenstar
+			completely_controls = title:c_salikon
+		}
+
+		# Every other independent involved ruler of duke or higher in Opakasija is allied to you
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_conciliation_decision_alliance_tt
+			struggle:rite_wars_south_struggle = {
+				NOT = {
+					any_involved_ruler = {
+						is_independent_ruler = yes
+						highest_held_title_tier	>= tier_duchy
+						primary_title = { is_mercenary_company = no }
+						primary_title = { is_holy_order = no }
+						NOR = {
+							this = root
+							is_allied_to = root
+						}
+					}
+				}
+			}
+		}
+
+		# Control less than 50% of Opakasija
+		custom_tooltip = {
+			text = struggle_rite_wars_south_ending_compromise_decision_region_tt
+			fp2_struggle_ending_percent_rite_wars_south_trigger = yes
+		}
+	}
+
+	effect = {
+		##### Major Effects #####
+		show_as_tooltip = {
+			gh_rws_struggle_conciliation_ender_effect = yes
+			gh_rws_struggle_conciliation_tooltip_effect = yes
+			gh_rws_struggle_conciliation_modifier_rewards_effect = yes
+		}
+
+		show_as_tooltip = {
+			stress_impact = {
+				arrogant = medium_stress_impact_gain
+				zealous = medium_stress_impact_gain
+			}
+		}
+
+
+		gh_achiev_cormagwouldbeproud_check = yes
+		# Trigger a player facing event as a coda
+		trigger_event = rite_wars_south_struggle.0902
+	}
+
+	cost = {}
+
+	ai_check_interval = 120
+
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+#############################################
+# Form High Kingdom of Opakasija 			#
+# by TOG 									#
+#############################################
+
+form_high_kingdom_of_opakasija_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_magnificent_castle_wol.dds"
+	}
+	title = form_high_kingdom_of_opakasija_decision
+	decision_group_type = struggle
+
+	ai_check_interval = 120
+
+	desc = form_high_kingdom_of_opakasija_decision_desc
+	selection_tooltip = form_high_kingdom_of_opakasija_decision_tooltip
+
+	is_shown = {
+		is_playable_character = yes
+		highest_held_title_tier >= tier_duchy
+		exists = dynasty
+		has_faith = faith:conclave_of_opakhasia
+		#NOT = { faith = faith.religious_head.faith }
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:flag_founded_opakasija
+			}
+		}
+	}
+
+	is_valid = {
+		# Must be independent
+		is_independent_ruler = yes
+		# Should be somewhat pious
+		piety_level >= 3
+		# Should me somewhat prestigious
+		prestige_level >= very_high_prestige_level
+		trigger_if = {
+			limit = { title:e_chevalie = { is_title_created = yes } }
+			custom_description = {
+				text = form_high_kingdom_of_opakasija_decision.chevalie_is_sinful
+				title:e_chevalie.holder = { num_sinful_traits >= 1 } 
+			}
+		}
+		trigger_else = {
+			custom_description = {
+				text = form_high_kingdom_of_opakasija_decision_chevalie_doesnt_exist
+				title:e_chevalie = { is_title_created = no }
+			}
+		}
+		custom_tooltip = {
+			text = form_highkingdom_involvement_tt
+			any_character_struggle = {
+				involvement = involved
+				is_struggle_type = rite_wars_south_struggle
+				is_struggle_phase = struggle_rite_wars_south_phase_hostility
+			}
+		}
+
+		custom_tooltip = {
+			text = form_highkingdom_decision_hostility_involvement_tt
+			capital_county.de_jure_liege.de_jure_liege = {
+				any_de_jure_county = {
+					count = all
+					culture = root.culture
+					faith = root.faith
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = form_highkingdom_decision_region_tt
+			NOT = {
+				struggle:rite_wars_south_struggle = {
+					any_involved_ruler = {
+						NOT = { this = root }
+						is_independent_ruler = yes
+						exists = primary_title
+						primary_title = { is_mercenary_company = no }
+						save_temporary_scope_as = opakasijan_realm
+						any_county_in_region = {
+							region = struggle_rite_wars_south
+							percent > form_highkingdom_region_percent_decimal_value
+							holder.top_liege = scope:opakasijan_realm
+						}
+					}
+				}
+			}
+		}
+
+		#completely_controls_region = world_ga_northeast_opakhasia
+		highest_held_title_tier < tier_empire
+
+		#Has ruled each kingdom for a very long time.
+		has_title = title:k_eve
+		title:k_eve = { title_held_years >= 25 }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		# Has to be around
+		NOT = { exists = involved_activity }
+		has_contagious_deadly_disease_trigger = no
+	}
+
+	effect = {
+		save_scope_as = high_kingdom_opakasija_founder
+		scope:high_kingdom_opakasija_founder.capital_county = { save_scope_as = new_opak_capital }
+		hidden_effect = {
+			add_to_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:flag_founded_opakasija
+			}
+		}
+		if = {
+			limit = { exists = title:e_chevalie }
+			title:e_chevalie.holder = {
+				save_scope_as = chevalie_holder
+			}
+		}
+		if = {
+			limit = { exists = title:d_marcher_rel }
+			title:d_marcher_rel.holder = {
+				save_scope_as = life_path_hof
+			}
+		}
+		show_as_tooltip = { 
+			dynasty = { add_dynasty_prestige = 3000 }
+			form_high_kingdom_of_opakasija_effect = yes 
+		}
+		faith = {
+			every_faith_ruler = {
+				limit = {
+					highest_held_title_tier >= tier_county
+					NOT = { this = root }
+				}
+				trigger_event = sjalvolki_reformation.0301
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_eve }
+			title:k_eve = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_suncourt }
+			title:k_suncourt = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_morn }
+			title:k_morn = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_day }
+			title:k_day = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_kasmiene }
+			title:k_kasmiene = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_kollos }
+			title:k_kollos = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_hyrea }
+			title:k_hyrea = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		if = {
+			limit = { completely_controls = title:k_kalliados }
+			title:k_kalliados = {
+				add_to_list = opakasija_empire_kingdoms
+			}
+		}
+		custom_tooltip = form_highkingdom_dejure_structure_tt
+		custom_tooltip = form_highkingdom_ends_struggle_tt
+
+		every_player = {
+			limit = {
+				NOT = { this = root }
+				OR = {
+					religion = religion:lifepath_religion
+					any_neighboring_and_across_water_top_liege_realm_owner = { this = root }
+					any_liege_or_above = { religion = religion:lifepath_religion }
+					religion = religion:sjalvolki_religion
+					any_neighboring_and_across_water_top_liege_realm_owner = { this = root }
+					any_liege_or_above = { religion = religion:sjalvolki_religion }
+					NOT = { faith = root.faith }
+				}
+			}
+			trigger_event = sjalvolki_reformation.0302
+		}
+		trigger_event = sjalvolki_reformation.0303
+	}
+
+	cost = {
+		gold = 500
+		piety = 500
+		prestige = 500
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 0
+		modifier = {
+			add = 500
+			faith = faith:conclave_of_opakhasia
+		}
+		modifier = {
+			add = 100
+			OR = {
+				has_trait = zealous
+				has_trait = cynical
+			}
+		}
+	}
+}
+
+#############################################
+# Form Mountain Sun Concordat 				#
+# by TOG 									#
+#############################################
+
+form_mountain_sun_concordat_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_hellenic_temple.dds"
+	}
+	decision_group_type = struggle
+
+	ai_check_interval = 120
+
+	desc = form_mountain_sun_concordat_decision_desc
+	selection_tooltip = form_mountain_sun_concordat_decision_tt
+
+	is_shown = {
+		is_playable_character = yes
+		exists = struggle:rite_wars_south_struggle
+		highest_held_title_tier >= tier_county
+		OR = {
+			religion = religion:aversarinas_aagiokrata_religion
+			culture = { has_cultural_pillar = heritage_aversarian }
+		}
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:flag_founded_mountain_concordat
+			}
+		}
+		any_sub_realm_county = {
+			title_province = {
+				OR = {
+					geographical_region = struggle_rite_wars_south
+					geographical_region = western_aironoi_biozone
+					geographical_region = struggle_rite_wars_north 
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		# Must be independent
+		is_independent_ruler = yes
+		# Should be somewhat pious
+		piety_level >= 3
+		# Should me somewhat prestigious
+		prestige_level >= 4
+		capital_province = { geographical_region = struggle_rite_wars_south }
+		custom_tooltip = {
+			text = form_mountain_concordat_interloper_tt
+			OR = {
+				any_character_struggle = {
+					is_struggle_type = rite_wars_south_struggle
+					involvement = interloper
+				}
+				any_character_struggle = {
+					is_struggle_type = rite_wars_south_struggle
+					involvement = involved
+				}
+			}
+		}
+		# If my religion is involved, I need to own the better portion of those counties
+		custom_tooltip = {
+			text = gh_rws_struggle_secure_rite_wars_south_foothold_outsider_tt
+			any_county_in_region = {
+				region = struggle_rite_wars_south
+				percent >= fp2_struggle_secure_rite_wars_south_foothold_outsider_target_percent_decimal_value
+				holder.top_liege = root
+			}
+		}
+		highest_held_title_tier < tier_empire
+
+		# Any de jure kingdom in Opakhasia is completely controlled
+		custom_tooltip = {
+			text = form_mountain_concordat_kingdom_opakhasia_tt
+			any_held_title = { form_mountain_concordat_kingdom_trigger = yes }
+		}
+
+		trigger_if = {
+			limit = { exists = scope:mountain_kingdom_temp }
+			custom_tooltip = {
+				text = gh_rws_struggle_secure_rite_wars_south_foothold_kingdom_faith_tt
+				fp2_struggle_secure_rite_wars_south_foothold_faith_trigger = yes
+			}
+			custom_tooltip = {
+				text = form_mountain_concordat_kingdom_border_tt
+				scope:mountain_kingdom_temp = { fp2_struggle_secure_rite_wars_south_foothold_outsider_kingdom_trigger = yes }
+			}
+			custom_tooltip = {
+				text = form_mountain_concordat_kingdom_held_tt
+				scope:mountain_kingdom_temp = { title_held_years >= fp2_struggle_secure_ritewars_foothold_years_value }
+			}	
+		}
+
+		trigger_else = {
+			custom_tooltip = {
+				text = gh_rws_struggle_secure_rite_wars_south_foothold_kingdom_faith_tt
+				always = no
+			}
+			custom_tooltip = {
+				text = form_mountain_concordat_kingdom_border_tt
+				always = no
+			}
+			custom_tooltip = {
+				text = form_mountain_concordat_kingdom_held_tt
+				always = no
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		trigger_if = {
+			limit = { exists = struggle:rite_wars_south_struggle }	
+			custom_tooltip = {
+				text = fp2_struggle_phase_hostility_or_opportunity_tt
+				struggle:rite_wars_south_struggle = {
+					has_struggle_phase_parameter = unlocks_secure_rite_wars_south_foothold_decision
+				}
+			}
+		}
+	}
+
+	effect = {
+		show_as_tooltip = { 
+			form_mountain_sun_concordat_effect = yes 
+			dynasty = { add_dynasty_prestige = 3000 }
+		}
+		custom_tooltip = form_mountain_concordat_effect_tt
+		trigger_event =  sjalvolki_reformation.0304
+
+		custom_tooltip = form_mountain_concordat_ends_the_struggle_tt
+		if = {
+			limit = { has_dlc_feature = legends }
+			legend_seed_struggle_ending_effect = {
+				ENDER = root
+				STRUGGLE = rite_wars_south_struggle
+				STRUGGLE_ENDING = concordat
+			}
+		}
+		hidden_effect = {
+			GH_achiev_aversariawho_check = yes
+		}
+	}
+
+	cost = {
+		gold = 500
+		piety = 500
+		prestige = 500
+	}
+	
+	ai_potential = {}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+########################
+# Secure Rite Foothold #
+# by TOG 			   # 
+########################
+
+secure_ritewars_foothold_decision = { # GH URGENT: Add everywhere secure_ritewars_foothold_decision is referenced in vanilla
+	title = secure_ritewars_foothold_decision_title
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	desc = secure_ritewars_foothold_decision_desc
+	selection_tooltip = secure_ritewars_foothold_decision_tooltip
+	sort_order = 80
+
+	decision_group_type = struggle
+
+	is_shown = {
+		# DLC check
+		has_fp2_dlc_trigger = yes
+		# Struggle is active
+		exists = struggle:ritewars_struggle
+		# Not Involved and capital lies outside Iberia
+		custom_tooltip = {
+			text = fp2_struggle_uninvolved_or_external_tt
+			NOR = {
+				any_character_struggle = {
+					is_struggle_type = ritewars_struggle
+					involvement = involved
+				}
+			}
+		}
+		# Hold land near Iberia
+		any_sub_realm_county = {
+			title_province = {
+				OR = {
+					geographical_region = struggle_rite_wars_north
+					geographical_region = tower_isles_biozone 
+					geographical_region = central_isles_biozone
+					geographical_region = guillate_rocks_biozone
+					geographical_region = black_mountains_biozone
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		##### General triggers #####
+
+		# Need lots of likes
+		prestige_level >= high_prestige_level
+		# Struggle phase must be right
+		custom_tooltip = {
+			text = fp2_struggle_secure_ritewars_foothold_empire_tt
+			any_held_title = {
+				tier = tier_empire
+				NOR = {
+					de_jure_liege = title:e_etepezea
+					de_jure_liege = title:e_cornucopia
+					de_jure_liege = title:e_the_reach
+				}
+			}
+		}
+		# If my religion is involved, I need to own the better portion of those counties
+		trigger_if = {
+			limit = {
+				religion = {
+					any_faith = {
+						struggle:ritewars_struggle = { is_faith_involved_in_struggle = prev }
+					}
+				}
+			}
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_religion_tt
+				fp2_struggle_secure_ritewars_foothold_religion_percent_value >= fp2_struggle_secure_ritewars_foothold_religion_target_percent_value
+			}
+		}
+		# Otherwise, I need to own a big chunk of the peninsula
+		trigger_else = {
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_outsider_tt
+				any_county_in_region = {
+					region = struggle_rite_wars_north
+					percent >= fp2_struggle_secure_ritewars_foothold_outsider_target_percent_decimal_value
+					holder.top_liege = root
+				}
+			}
+		}
+
+		##### kingdom triggers #####
+
+		custom_tooltip = {
+			text = fp2_struggle_secure_ritewars_foothold_kingdom_iberian_tt
+			any_held_title = { fp2_struggle_secure_ritewars_foothold_iberian_kingdom_trigger = yes }
+		}
+		# Real tooltips
+		trigger_if = {
+			limit = { exists = scope:iberian_kingdom_temp }
+			# That kingdom is mostly my faith
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_kingdom_faith_tt
+				fp2_struggle_secure_ritewars_foothold_faith_trigger = yes
+			}
+			# Borders held lands in a non-rite kingdom you hold
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_kingdom_border_tt
+				scope:iberian_kingdom_temp = { fp2_struggle_secure_ritewars_foothold_outsider_kingdom_trigger = yes }
+			}
+			# Held that kingdom for a while
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_kingdom_held_tt
+				scope:iberian_kingdom_temp = { title_held_years >= fp2_struggle_secure_ritewars_foothold_years_value }
+			}
+		}
+		# Fake tooltips
+		trigger_else = {
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_kingdom_faith_tt
+				always = no
+			}
+			# Borders held lands in a non-Iberian kingdom you hold
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_kingdom_border_tt
+				always = no
+			}
+			custom_tooltip = {
+				text = fp2_struggle_secure_ritewars_foothold_kingdom_held_tt
+				always = no
+			}
+		}
+
+		# If Im Krona/Piety, the rival HoF cannot exist
+
+		custom_description = {
+			text = gh_rws_piety_rel_cannot_exist
+			OR = {
+				title:e_rite_piety_rel = { is_title_created = no }
+				title:e_rite_piety_rel.holder = { is_playable_character = no }
+			}
+		}
+		custom_description = {
+			text = gh_rws_authority_rel_cannot_exist
+			OR = {
+				title:e_rite_authority_rel = { is_title_created = no }
+				title:e_rite_authority_rel.holder = { is_playable_character = no }
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		trigger_if = {
+			limit = { exists = struggle:ritewars_struggle }
+			custom_tooltip = {
+				text = fp2_struggle_phase_hostility_or_opportunity_tt
+				struggle:ritewars_struggle = {
+					has_struggle_phase_parameter = unlocks_secure_ritewars_foothold_decision
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				any_held_title = { tier = tier_empire }
+			}
+			custom_tooltip = fp2_struggle_secure_ritewars_foothold_empire_held_effect_tt
+		}
+		else = { custom_tooltip = fp2_struggle_secure_ritewars_foothold_empire_dejure_effect_tt }
+
+		trigger_event = {
+			id = gh_other_decisions.1000
+		}
+
+		gh_achiev_cormagwouldbeproud_check = yes
+		custom_tooltip = fp2_struggle_secure_ritewars_foothold_ends_the_struggle_tt
+	}
+
+	cost = {}
+
+	ai_check_interval = 120
+	
+	ai_potential = {}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#form_the_solar_rite_decision = {
+#	picture = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
+#	major = yes
+#
+#	ai_check_interval = 120
+#
+#	desc = form_the_solar_rite_decision_desc
+#	selection_tooltip = form_the_solar_rite_decision_tooltip
+#
+#	is_shown = {
+#		is_landed = yes
+#		culture = { has_cultural_pillar = heritage_karzarad }
+#		government_has_flag = government_is_feudal
+#		NOT = {
+#			is_target_in_global_variable_list = {
+#				name = unavailable_unique_decisions
+#				target = flag:formed_the_solar_rite
+#			}
+#		}
+#	}
+#
+#	is_valid = {
+#		exists = struggle:ritewars_struggle
+#		custom_description = {
+#			text = form_the_solar_rite_karz_sjal_requirement_desc
+#			OR = {
+#				AND = {
+#					faith.religion = sjalvolki_religion
+#					random_neighboring_top_liege_realm_owner = {
+#						faith.religion = religion:kakarataki_religion
+#						realm_size >= 3
+#						primary_title.tier >= tier_duchy
+#					}
+#				}
+#				AND = {
+#					faith.religion = kakarataki_religion
+#					random_neighboring_top_liege_realm_owner = {
+#						faith.religion = religion:sjalvolki_religion
+#						realm_size >= 3
+#						primary_title.tier >= tier_duchy
+#					}
+#				}
+#			}
+#		}
+#		OR = {
+#			piety_level >= high_piety_level
+#			has_trait = theologian
+#		}
+#		highest_held_title_tier >= tier_kingdom
+#	}
+#
+#	is_valid_showing_failures_only = {
+#		is_available_adult = yes
+#	}
+#
+#	effect = {
+#		save_scope_as = solar_rite_founder
+#		faith = { save_scope_as = old_faith }
+#		faith:solar_rite = { save_scope_as = solar_rite_faith }
+#		if = {
+#			limit = { exists = cp:councillor_court_chaplain }
+#			cp:councillor_court_chaplain = { save_scope_as = court_priest }
+#		}
+#		else = {
+#			limit = { any_vassal_or_below = { government_has_flag = government_is_theocracy }
+#			}
+#		}
+#
+#		if = {
+#			limit = {
+#				title:e_rite_piety_rel = { is_title_created = yes }
+#				title:e_rite_piety_rel.holder = { is_landed = yes }
+#			}
+#			title:e_rite_piety_rel.holder = { save_scope_as = piety_leader }
+#		}
+#
+#		if = {
+#			limit = {
+#				title:e_rite_authority_rel = { is_title_created = yes }
+#				title:e_rite_authority_rel.holder = { is_landed = yes }
+#			}
+#			tite:e_rite_authority_rel.holder = { save_scope_as = authority_leader }
+#		}
+#		form_the_solar_rite_decision_effects_scripted_effect = yes
+#
+#		if = {
+#			limit = {
+#				any_character_struggle = {
+#					is_struggle_type = ritewars_struggle
+#					NOT = { is_struggle_phase = struggle_ritewars_phase_opportunity }
+#				}
+#			}
+#			random_character_struggle = {
+#				limit = { is_struggle_type = ritewars_struggle }
+#				change_struggle_phase = struggle_ritewars_phase_opportunity
+#			}
+#		}
+#		trigger_event = sjalvolki_reformation.0305
+#		hidden_effect = {
+#			add_to_global_variable_list = {
+#				name = unavailable_unique_decisions
+#				target = flag:formed_the_solar_rite
+#			}
+#		}
+#	}
+#
+#	cost = {
+#		piety = 3000
+#	}
+#
+#	ai_potential = {
+#		highest_held_title_tier >= tier_kingdom
+#	}
+#
+#	ai_will_do = {
+#		modifier = {
+#			add = 25
+#			has_trait = cynical
+#		}
+#		modifier = {
+#			add = 25
+#			has_trait = arbitrary
+#		}
+#	}
+#}
+
+#form_the_shattered_rites_decision
+
+#form_the_wyld_pact_decision

@@ -1,0 +1,238 @@
+﻿story_wih_struggle_story_cycle = {
+	on_setup = {
+		set_variable = {
+			name = recently_ended_struggle
+			years = 100
+		}
+		#By default we want the chance of the struggle from restarting to be non-existent
+		set_variable = {
+			name = potential_struggle_reignite_var
+			value = flag:gh_struggle_restart_chance_minimal
+		}
+	}
+
+	on_end = {}
+	
+	# Maintenance group
+	effect_group = {
+		years = 3
+		
+		#Let's give the players a little bit of respite
+		#Maybe turn it into a gamerule?
+		trigger = { NOT = { has_variable = recently_ended_struggle } }
+
+		triggered_effect = {
+			trigger = { NOT = { has_variable = recently_ended_struggle } }
+			effect = {
+				#Saving Scope for wih_western_potential_struggle_reignite_value to know who won the struggle
+				if = {
+					limit = {
+						var:struggle_ending_reason ?= flag:gh_wih_ending_wardenite_victory
+					}
+					save_scope_as = wardenite_victory
+				}
+				else_if = {
+					limit = {
+						var:struggle_ending_reason ?= flag:gh_wih_ending_ritualist_victory
+					}
+					save_scope_as = ritualist_victory
+				}
+				
+				#What region should we save as a variable
+				if = {
+					limit = { this = global_var:gh_region_war_in_heaven_struggle }
+					#Create List to check
+					title:k_uraghad.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_karadun.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_four_rivers.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_mukhtab.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_emporia.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_tifrennesh.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:h_sarradon.holder ?= { add_to_temporary_list = possible_big_rulers }	
+					
+					#Saving the value on a var to save on performance
+					set_variable = {
+						name = saved_value_for_potential_struggle_reignite_var
+						value = wih_central_potential_struggle_reignite_value
+					}
+				}
+				else_if = {
+					limit = { this = global_var:gh_region_eastern_war_in_heaven_struggle }
+					#Create List to check
+					title:k_thaliteia.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_eastern_frontier.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_isle_of_visions.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:h_sarradon.holder ?= { add_to_temporary_list = possible_big_rulers }
+					
+					#Saving the value on a var to save on performance
+					set_variable = {
+						name = saved_value_for_potential_struggle_reignite_var
+						value = wih_eastern_potential_struggle_reignite_value
+					}
+				}
+				else_if = {
+					limit = { this = global_var:gh_region_far_eastern_war_in_heaven_struggle }
+					#Create List to check
+					title:k_kekhenemhat.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_edoutin.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_kazhomi.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_marwaven.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_hazrabay.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_aekershaan.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:e_kratemezin.holder ?= { add_to_temporary_list = possible_big_rulers }
+					
+					
+					#Saving the value on a var to save on performance
+					set_variable = {
+						name = saved_value_for_potential_struggle_reignite_var
+						value = wih_far_eastern_potential_struggle_reignite_value
+					}
+				}				
+				else_if = {
+					limit = { this = global_var:gh_region_western_war_in_heaven_struggle }
+					#Create List to check
+					title:k_tayalhun.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_lahkoryun.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:k_barunkazeb.holder ?= { add_to_temporary_list = possible_big_rulers }
+					title:e_ayyar.holder ?= { add_to_temporary_list = possible_big_rulers }
+					
+					#Saving the value on a var to save on performance					
+					set_variable = {
+						name = saved_value_for_potential_struggle_reignite_var
+						value = wih_western_potential_struggle_reignite_value
+					}
+				}
+				#else_if = {
+				#	limit = { this = global_var:gh_region_far_western_war_in_heaven_struggle }
+				#	#Saving the value on a var to save on performance
+				#	set_variable = {
+				#		name = saved_value_for_potential_struggle_reignite_var
+				#		value = wih_far_western_potential_struggle_reignite_value
+				#	}
+				#}
+				
+				
+				#Should the chance change?
+				if = {
+					limit = { var:saved_value_for_potential_struggle_reignite_var < -100 }
+					set_variable = {
+						name = potential_struggle_reignite_var
+						value = flag:gh_struggle_restart_chance_minimal
+					}
+				}
+				else_if = {
+					limit = {
+						var:saved_value_for_potential_struggle_reignite_var >= -100 
+						var:saved_value_for_potential_struggle_reignite_var < -50 
+					}
+					set_variable = {
+						name = potential_struggle_reignite_var
+						value = flag:gh_struggle_restart_chance_very_low
+					}
+				}				
+				else_if = {
+					limit = {
+						var:saved_value_for_potential_struggle_reignite_var >= -50
+						var:saved_value_for_potential_struggle_reignite_var < 0
+					}
+					set_variable = {
+						name = potential_struggle_reignite_var
+						value = flag:gh_struggle_restart_chance_low
+					}
+				}
+				else_if = {
+					limit = {
+						var:saved_value_for_potential_struggle_reignite_var >= 0
+						var:saved_value_for_potential_struggle_reignite_var < 30
+					}
+					set_variable = {
+						name = potential_struggle_reignite_var
+						value = flag:gh_struggle_restart_chance_medium
+					}
+				}
+				else_if = {
+					limit = {
+						var:saved_value_for_potential_struggle_reignite_var >= 30
+						var:saved_value_for_potential_struggle_reignite_var < 100
+					}
+					set_variable = {
+						name = potential_struggle_reignite_var
+						value = flag:gh_struggle_restart_chance_high
+					}
+				}	
+				else_if = {
+					limit = { var:saved_value_for_potential_struggle_reignite_var >= 100 }
+					set_variable = {
+						name = potential_struggle_reignite_var
+						value = flag:gh_struggle_restart_chance_very_high
+					}
+				}				
+			}
+		}
+	}
+
+	effect_group = {
+		years = 3
+		
+		trigger = { has_variable = potential_struggle_reignite_var }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				# Nothing happens we're good to chill
+				if = {
+					limit = { has_fp3_dlc_trigger = yes }
+					if = {
+						limit = { var:saved_value_for_potential_struggle_reignite_var = flag:gh_struggle_restart_chance_minimal }
+					}
+					#Maybe we should start taking a look at what's going on
+					else_if = {
+						limit = { var:saved_value_for_potential_struggle_reignite_var = flag:gh_struggle_restart_chance_very_low }
+						random_list = {
+							500 = {}
+							1 = {
+								start_regional_struggle_effect = yes
+							}
+						}
+					}
+					else_if = {
+						limit = { var:saved_value_for_potential_struggle_reignite_var = flag:gh_struggle_restart_chance_low }
+						random_list = {
+							300 = {}
+							1 = {
+								start_regional_struggle_effect = yes
+							}
+						}
+					}
+					else_if = {
+						limit = { var:saved_value_for_potential_struggle_reignite_var = flag:gh_struggle_restart_chance_medium }
+						random_list = {
+							100 = {}
+							1 = {
+								start_regional_struggle_effect = yes
+							}
+						}
+					}
+					else_if = {
+						limit = { var:saved_value_for_potential_struggle_reignite_var = flag:gh_struggle_restart_chance_high }
+						random_list = {
+							50 = {}
+							1 = {
+								start_regional_struggle_effect = yes
+							}
+						}
+					}
+					else_if = {
+						limit = { var:saved_value_for_potential_struggle_reignite_var = flag:gh_struggle_restart_chance_very_high }
+						random_list = {
+							20 = {}
+							1 = {
+								start_regional_struggle_effect = yes
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

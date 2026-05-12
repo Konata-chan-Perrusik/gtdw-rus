@@ -1,0 +1,140 @@
+﻿setup_succession_titles = {
+	every_held_title = {
+		limit = { tier >= tier_kingdom }
+		scope:primary_scope = {
+			add_to_variable_list = {
+				name = linked_titles
+				target = prev
+			}
+		}
+	}
+	if = {
+		limit = { has_title = scope:primary_scope.title_capital_county }
+		scope:primary_scope = {
+			add_to_variable_list = {
+				name = linked_titles
+				target = title_capital_county
+			}
+		}
+	}
+	else = {	# In case an unlanded person wins and the capital isn't available, pick a random county as a fallback
+		random_held_title = {
+			limit = { tier = tier_county }
+			scope:primary_scope = {
+				set_variable = {
+					name = fallback_succession_county
+					value = prev
+				}
+			}
+		}
+	}
+}
+
+setup_succession_all_titles = {
+	# If the title was inherited by someone that isn't a member of previous ruler's dynasty, ALL titles are up for grabs
+	every_held_title = {
+		add_to_variable_list = {
+			name = linked_titles
+			target = prev
+		}
+	}
+}
+
+transfer_titles_to_temporary_holder = {
+	scope:primary_scope = {
+		root.var:partner = {
+			remove_character_flag = temporary_holder
+			root = { add_character_flag = temporary_holder }
+			
+			create_title_and_vassal_change = {
+				type = conquest
+				save_scope_as = change
+			}
+			if = {
+				limit = { scope:primary_scope = { has_variable = fallback_succession_county } }
+				scope:primary_scope = {
+					var:fallback_succession_county = {
+						change_title_holder = {
+							holder = root
+							change = scope:change
+						}
+					}
+				}
+			}
+			scope:primary_scope = {
+				every_in_list = {
+					variable = linked_titles
+					
+					change_title_holder = {
+						holder = root
+						change = scope:change
+					}
+				}
+				change_title_holder_include_vassals = {
+					holder = root
+					change = scope:change
+				}
+			}
+			change_liege = {
+				liege = root
+				change = scope:change
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { is_ai = no }
+						dynasty = {
+							any_dynasty_member = {
+								this = root
+							}
+						}
+					}
+					trigger_else = { always = no }
+				}
+				set_player_character = root
+			}
+			resolve_title_and_vassal_change = scope:change
+		}
+	}
+}
+
+succession_cleanup = {
+	scope:primary_scope = {
+		if = {
+			limit = { has_variable = fallback_succession_county }
+			remove_variable = fallback_succession_county
+		}
+		if = {
+			limit = { has_variable_list = contesting_linked_titles }
+			every_in_list = { 
+				variable = contesting_linked_titles
+				save_scope_as = title_to_be_removed
+				scope:primary_scope = {
+					remove_list_variable = {
+						name = contesting_linked_titles
+						target = prev
+					}
+				}
+			}	
+		}
+		if = {
+			limit = { has_variable_list = linked_titles }
+			every_in_list = { 
+				variable = linked_titles
+				save_scope_as = title_to_be_removed
+				scope:primary_scope = {
+					remove_list_variable = {
+						name = linked_titles
+						target = prev
+					}
+				}
+			}	
+		}
+	}
+	if = {
+		limit = {
+			has_character_flag = temporary_holder
+		}
+		remove_character_flag = temporary_holder
+	}
+}

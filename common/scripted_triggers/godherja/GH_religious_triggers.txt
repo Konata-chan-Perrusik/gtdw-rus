@@ -1,0 +1,1183 @@
+﻿#########################
+### GH RELIGIOUS TRIGGERS
+## IsFaith Triggers
+## IsAnyFaith Triggers
+## Religious flavor triggers
+# God Activity Triggers
+# Religious Theology Triggers
+# Prohibition Triggers
+# Diet Triggers
+# Animal Triggers
+# Misc Religious Features Triggers
+## Graphical Religion Triggers
+## Syncretic Religion Triggers
+## Other Religious Triggers
+
+###################
+## IsFaith Triggers
+
+is_agionist_faith_trigger = { faith ?= { religion_tag = agionism_religion } }
+is_lifepath_faith_trigger = { faith ?= { religion_tag = lifepath_religion } }
+is_graveright_faith_trigger = { faith ?= { religion_tag = graveright_religion } }
+is_aagiokrata_faith_trigger = { faith ?= { religion_tag = aversarinas_aagiokrata_religion } }
+is_dravidic_faith_trigger = { faith ?= { religion_tag = dravidian_religion } }
+is_sarradonian_faith_trigger = {
+	OR = {
+		religion ?= religion:mogowai_religion
+		religion ?= religion:wardenism_religion
+		religion ?= religion:ritualist_religion
+		religion ?= religion:anaanides_religion
+		religion ?= religion:hubarism_religion
+		religion ?= religion:yuagaug_religion
+		religion ?= religion:quwazaw_religion
+		religion ?= religion:manats_religion
+		religion ?= religion:adabyssian_religion
+	}
+}
+
+######################
+## IsAnyFaith Triggers
+
+is_any_aversarian_faith_or_descended_trigger = {
+	OR = {
+		is_aagiokrata_faith_trigger = yes
+		is_agionist_faith_trigger = yes
+	}
+}
+is_any_marcher_faith_or_descended_trigger = {
+	OR = {
+		is_lifepath_faith_trigger = yes
+		is_graveright_faith_trigger = yes
+	}
+}
+is_any_rite_faith_trigger = {
+	OR = {
+		has_faith = faith:orispolj_rite
+		has_faith = faith:piety_rite
+		has_faith = faith:authority_rite
+		has_faith = faith:eastern_rite
+		#has_faith = faith:banstur_rite
+		#has_faith = faith:solar_rite
+		#has_faith = faith:shattered_rites
+	}
+}
+
+############################
+## Religious flavor triggers
+
+# God Activity Triggers
+
+GH_highgod_is_passive_trigger = {
+	OR = {
+		religion_tag = aversarinas_aagiokrata_religion
+		religion_tag = lifepath_religion
+		religion_tag = agionism_religion
+		religion_tag = ritualist_religion
+	}
+}
+GH_highgod_is_active_trigger = {
+	GH_highgod_is_passive_trigger = no
+}
+
+GH_creatorgod_is_passive_trigger = {
+	always = no
+}
+GH_creatorgod_is_active_trigger = {
+	GH_creatorgod_is_passive_trigger = no
+}
+
+GH_healthgod_is_passive_trigger = {
+	always = no
+}
+GH_healthgod_is_active_trigger = {
+	GH_healthgod_is_passive_trigger = no
+}
+
+GH_fertilitygod_is_passive_trigger = {
+	always = no
+}
+GH_fertilitygod_is_active_trigger = {
+	GH_fertilitygod_is_passive_trigger = no
+}
+
+GH_wealthgod_is_passive_trigger = {
+	always = no
+}
+GH_wealthgod_is_active_trigger = {
+	GH_wealthgod_is_passive_trigger = no
+}
+
+GH_housegod_is_passive_trigger = {
+	always = no
+}
+GH_housegod_is_active_trigger = {
+	GH_housegod_is_passive_trigger = yes
+}
+
+GH_fategod_is_passive_trigger = {
+	always = no
+}
+GH_fategod_is_active_trigger = {
+	GH_fategod_is_passive_trigger = yes
+}
+
+GH_knowledgegod_is_passive_trigger = {
+	always = no
+}
+GH_knowledgegod_is_active_trigger = {
+	GH_knowledgegod_is_passive_trigger = yes
+}
+
+GH_wargod_is_passive_trigger = {
+	always = no
+}
+GH_wargod_is_active_trigger = {
+	GH_wargod_is_passive_trigger = yes
+}
+
+GH_trickstergod_is_passive_trigger = {
+	always = no
+}
+GH_trickstergod_is_active_trigger = {
+	GH_trickstergod_is_passive_trigger = yes
+}
+
+GH_nightgod_is_passive_trigger = {
+	always = no
+}
+GH_nightgod_is_active_trigger = {
+	GH_nightgod_is_passive_trigger = yes
+}
+
+GH_watergod_is_passive_trigger = {
+	always = no
+}
+GH_watergod_is_active_trigger = {
+	GH_watergod_is_passive_trigger = yes
+}
+
+# Religious Theology Triggers
+
+nontheistic_faith_trigger = { # Added for trigger in event option for birth.3022 that just controls if your character asks god what they did to deserve it or not - change or remove this line if this is expanded in functionality
+	faith = { religion_tag = hulawite_religion }
+}
+monotheistic_faith_trigger = {
+	always = no
+}
+bitheistic_faith_trigger = {
+	always = no
+}
+tritheistic_faith_trigger = {
+	always = no
+}
+polytheistic_faith_trigger = {
+	AND = {
+		nontheistic_faith_trigger = no
+		monotheistic_faith_trigger = no
+		bitheistic_faith_trigger = no
+		tritheistic_faith_trigger = no
+	}
+}
+
+misotheistic_faith_trigger = { always = no } # Gods exist to be hated
+maltheistic_faith_trigger = { always = no } # God exists, but is evil
+dytheistic_faith_trigger = { always = no } # God isn't entirely good and might be evil
+eutheistic_faith_trigger = { # God is good
+	AND = {
+		misotheistic_faith_trigger = no
+		maltheistic_faith_trigger = no
+		dytheistic_faith_trigger = no
+	}
+}
+
+# Prohibition Triggers
+
+faith_exalts_hallucinogenics_trigger = { always = no } 
+faith_exalts_mixed_wool_and_linen_clothing_trigger = { always = no }
+faith_exalts_chort_trigger = { always = no }
+faith_exalts_alcohol_trigger = { always = no }
+
+faith_enjoys_hallucinogenics_trigger = { always = no } 
+faith_enjoys_mixed_wool_and_linen_clothing_trigger = { always = no }
+faith_enjoys_alcohol_trigger = { always = no }
+faith_enjoys_chort_trigger = {
+	faith = {
+		religion_tag = adabyssian_religion
+		religion_tag = wardenism_religion
+		religion_tag = ritualist_religion
+		religion_tag = mogowai_religion
+		religion_tag = xaxbaxakanax_religion
+		religion_tag = hubarism_religion
+	}
+}
+
+faith_prohibits_hallucinogenics_trigger = { always = no } 
+faith_prohibits_mixed_wool_and_linen_clothing_trigger = { always = no } # Added to replace vanilla triggers normally pointing at Judaism
+faith_prohibits_alcohol_trigger = { always = no } # To replace a lot of Islam triggers in vanilla
+GH_faith_prohibits_chort_trigger = { always = no } # To match the above
+
+# Diet Triggers
+
+faith_exalts_dairy_trigger = {
+	always = no
+}
+
+faith_exalts_beef_trigger = {
+	faith_exalts_red_meat_trigger = yes
+	faith_exalts_meat_trigger = yes
+}
+faith_exalts_pork_trigger = {
+	faith_exalts_red_meat_trigger = yes
+	faith_exalts_meat_trigger = yes
+}
+faith_exalts_mutton_trigger = {
+	faith_exalts_red_meat_trigger = yes
+	faith_exalts_meat_trigger = yes
+}
+faith_exalts_venison_trigger = {
+	faith_exalts_red_meat_trigger = yes
+	faith_exalts_meat_trigger = yes
+}
+faith_exalts_poultry_trigger = {
+	faith_exalts_white_meat_trigger = yes
+	faith_exalts_meat_trigger = yes
+}
+faith_exalts_hare_trigger = {
+	faith_exalts_white_meat_trigger = yes
+	faith_exalts_meat_trigger = yes
+}
+faith_exalts_red_meat_trigger = { faith_exalts_meat_trigger = yes }
+faith_exalts_white_meat_trigger = { faith_exalts_meat_trigger = yes }
+faith_exalts_monster_meat_trigger = { faith_exalts_meat_trigger = yes }
+faith_exalts_mundane_meat_trigger = { faith_exalts_meat_trigger = yes }
+faith_exalts_meat_trigger = { faith_is_vegan_trigger = yes }
+
+faith_enjoys_dairy_trigger = {
+	always = no
+}
+
+faith_enjoys_beef_trigger = {
+	faith_enjoys_red_meat_trigger = yes
+	faith_enjoys_meat_trigger = yes
+}
+faith_enjoys_pork_trigger = {
+	faith_enjoys_red_meat_trigger = yes
+	faith_enjoys_meat_trigger = yes
+}
+faith_enjoys_mutton_trigger = {
+	faith_enjoys_red_meat_trigger = yes
+	faith_enjoys_meat_trigger = yes
+}
+faith_enjoys_venison_trigger = {
+	faith_enjoys_red_meat_trigger = yes
+	faith_enjoys_meat_trigger = yes
+}
+faith_enjoys_poultry_trigger = {
+	faith_enjoys_white_meat_trigger = yes
+	faith_enjoys_meat_trigger = yes
+}
+faith_enjoys_hare_trigger = {
+	faith_enjoys_white_meat_trigger = yes
+	faith_enjoys_meat_trigger = yes
+}
+faith_enjoys_red_meat_trigger = { faith_enjoys_meat_trigger = yes }
+faith_enjoys_white_meat_trigger = { faith_enjoys_meat_trigger = yes }
+faith_enjoys_monster_meat_trigger = { faith_enjoys_meat_trigger = yes }
+faith_enjoys_mundane_meat_trigger = { faith_enjoys_meat_trigger = yes }
+faith_enjoys_meat_trigger = { faith_is_vegan_trigger = yes }
+
+faith_shuns_dairy_trigger = {
+	always = no
+}
+
+faith_shuns_beef_trigger = { # For various triggers primarily for Hinduism revolving around beef
+	#faith = { religion_tag = hinduism_religion }
+	#root.faith = { NOT = { religion_tag = hinduism_religion } }
+	faith_shuns_red_meat_trigger = yes
+	faith_shuns_meat_trigger = yes
+}
+faith_shuns_pork_trigger = { # For various triggers primarily for Islam and Judaism revolving around pork
+	#faith = {
+	#	OR = {
+	#		religion_tag = islam_religion
+	#		religion_tag = judaism_religion
+	#	}
+	#}
+	#root.faith = {
+	#	OR = {
+	#		religion_tag = islam_religion
+	#		religion_tag = judaism_religion
+	#	}
+	#}
+	faith_shuns_red_meat_trigger = yes
+	faith_shuns_meat_trigger = yes
+}
+faith_shuns_mutton_trigger = {
+	faith_shuns_red_meat_trigger = yes
+	faith_shuns_meat_trigger = yes
+}
+faith_shuns_venison_trigger = {
+	faith_shuns_red_meat_trigger = yes
+	faith_shuns_meat_trigger = yes
+}
+faith_shuns_poultry_trigger = {
+	faith_shuns_white_meat_trigger = yes
+	faith_shuns_meat_trigger = yes
+}
+faith_shuns_hare_trigger = {
+	faith_shuns_white_meat_trigger = yes
+	faith_shuns_meat_trigger = yes
+}
+faith_shuns_red_meat_trigger = { faith_shuns_meat_trigger = yes }
+faith_shuns_white_meat_trigger = { faith_shuns_meat_trigger = yes }
+faith_shuns_monster_meat_trigger = { faith_shuns_meat_trigger = yes }
+faith_shuns_mundane_meat_trigger = { faith_shuns_meat_trigger = yes }
+faith_shuns_meat_trigger = { always = no }
+
+faith_is_vegan_trigger = {
+	AND = {
+		faith_shuns_dairy_trigger = yes
+		faith_shuns_meat_trigger = yes
+	}
+}
+faith_prefers_kosher_trigger = { always = no }
+
+# Animal Triggers
+
+faith_exalts_dogs_trigger = { faith_exalts_all_animals_trigger = yes }
+faith_exalts_elephants_trigger = { faith_exalts_all_animals_trigger = yes }
+faith_exalts_cats_trigger = { faith_exalts_all_animals_trigger = yes }
+faith_exalts_cows_trigger = { faith_exalts_all_animals_trigger = yes }
+
+faith_exalts_all_animals_trigger = { always = no }
+
+faith_likes_dogs_trigger = { faith_likes_all_animals_trigger = yes }
+faith_likes_cats_trigger = { faith_likes_all_animals_trigger = yes }
+faith_likes_elephants_trigger = { faith_likes_all_animals_trigger = yes }
+faith_likes_cows_trigger = { faith_likes_all_animals_trigger = yes }
+
+faith_likes_all_animals_trigger = { always = no }
+
+faith_dislikes_dogs_trigger = { # To replace some Islam triggers in vanilla
+	# faith = { religion_tag = islam_religion }
+	faith_dislikes_all_animals_trigger = yes
+}
+faith_dislikes_cats_trigger = { faith_dislikes_all_animals_trigger = yes } # To match the above, just in case
+faith_dislikes_elephants_trigger = { faith_dislikes_all_animals_trigger = yes }
+faith_dislikes_cows_trigger = { faith_dislikes_all_animals_trigger = yes }
+
+faith_dislikes_all_animals_trigger = { always = no }
+
+# Misc Religious Features Triggers
+
+faith_has_saints_trigger = {
+	is_lifepath_faith_trigger = yes
+	is_agionist_faith_trigger = yes
+}
+
+faith_has_saintly_bones_trigger = { # For saintly_bones_faith_trigger in 00_artifact_triggers.txt
+	# Lonely Note: The vanilla triggers used multiple else_if statements, split this up if there was a reason or if it just looks better or w/e
+	OR = {
+		is_lifepath_faith_trigger = yes # Lifepath
+		is_agionist_faith_trigger = yes # Agionists
+	}
+}
+faith_has_saintly_bones_or_syncretic_trigger = { # For saintly_bones_faith_trigger in 00_artifact_triggers.txt
+	OR = {
+		faith_has_saintly_bones_trigger = yes
+		faith = { has_doctrine = tenet_lifepath_religion_syncretism }
+		faith = { has_doctrine = tenet_agionism_religion_syncretism }
+	}
+}
+
+faith_historically_practices_asceticism_trigger = { # For court_yearly.7040 - GH TODO: Add Agionists (Katharitos) and Aversarians (also Katharitos)
+	faith = {
+		OR = {
+			religion_tag = aversarinas_aagiokrata_religion
+			religion_tag = agionism_religion
+			has_doctrine = tenet_asceticism
+		}
+	}
+}
+GH_faith_is_aniconic_trigger = { # Added to replace vanilla triggers normally pointing at Islam (and its prohibitions on depicting animals and humans in art)
+	faith = { has_doctrine = tenet_aniconism }
+}
+GH_faith_is_iconoclastic_trigger = { # For faiths that are against *all* icons, not just anima
+	OR = {
+		faith = faith:arderism
+		faith = faith:forgotten
+	}
+}
+GH_faith_accepts_incest_trigger = { always = no }
+GH_faith_has_penance_trigger = { always = no } # For hold_court.7000
+
+faith_is_sexually_liberal_trigger = {
+	OR = {
+		is_deviant_trigger = yes
+		has_trait = lustful
+		has_trait = seducer
+		faith = { trait_is_virtue = lustful }
+		AND = {
+			exists = scope:activity
+			has_activity_intent = lechery_intent
+		}
+	}
+	NOR = {
+		has_trait = chaste
+		has_trait = celibate
+	}
+}
+GH_refusing_conversion_is_crime_faith_trigger = {
+	faith = {
+		OR = {
+			religion_tag = aversarinas_aagiokrata_religion
+		}
+		NOT = {
+			faith_hostility_level = {
+				target = $CHARACTER$.faith
+				value <= faith_astray_level
+			}
+		}
+	}
+}
+
+faith_likes_poets_trigger = { always = no }
+
+##############################
+## Graphical Religion Triggers
+
+graphical_christian_religion_trigger = { is_any_marcher_faith_or_descended_trigger = yes }
+graphical_islam_religion_trigger = { is_sarradonian_faith_trigger = yes }
+graphical_tengri_religion_trigger = {
+	OR = {
+		religion ?= religion:oltenic_religion
+		religion ?= religion:northern_oltenic_religion
+		religion ?= religion:salacad_religion
+	}
+}
+graphical_germanic_religion_trigger = {
+	OR = {
+		religion = religion:sjalvolki_religion
+		religion = religion:kardawai_religion
+	}
+}
+graphical_hellenic_religion_trigger = { is_any_aversarian_faith_or_descended_trigger = yes }
+graphical_indian_religion_trigger = { is_dravidic_faith_trigger = yes }
+
+##############################
+## Syncretic Religion Triggers
+
+has_syncretic_faith_with_scope_check_trigger = { # For 00_vassal_stances - this checks whether $FAITH$ is syncretic with the religion of $SCOPE$
+	trigger_if = {
+		limit = { NOT = { $FAITH$.religion ?= religion:wasteland_religion } }
+		AND = {
+			$FAITH$ ?= {
+				gh_has_religion_syncretism_tenet_trigger = { RELIGION = $SCOPE$.faith.religion }
+			}
+		}
+	}
+}
+
+faith_is_religion_or_syncretic_trigger = {
+    trigger_if = {
+        limit = { NOT = { religion:$RELIGION$ = religion:wasteland_religion } }
+        faith ?= {
+            OR = {
+                religion = religion:$RELIGION$
+                has_doctrine = tenet_$RELIGION$_syncretism
+            }
+        }
+    }
+}
+
+religion_has_syncretism_tenet_selected = { # For Doctrine Selection stuff, not elsewhere
+	OR = {
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_sjalvolki_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_wardenism_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_lifepath_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_agionism_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_eight_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_aversarinas_aagiokrata_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_partic_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_ritualist_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_graveright_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_iyrossi_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_amsari_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_kemsar_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_alau_koev_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_aruvasue_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_azakna_jakuungi_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_shyatan_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_mahrator_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_izaerto_bosar_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_oltenic_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_arnazni_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_manats_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_unreformed_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_astiliak_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_cuthanagi_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_ehatm_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_marndeoticeni_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_redland_cults_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_sunarwei_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_oulaupi_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_xaxbaxakanax_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_dravidian_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_viyagaric_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_saielaian_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_fourteen_heavenly_methods_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_blackhand_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_thixanonic_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_apti_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_ethowos_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_cnevobarthane_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_gallieni_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_gestanwoder_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_gethian_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_islands_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_kakarataki_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_kardawai_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_namejisht_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_orgarrd_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_raider_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_salacad_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_samojitian_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_starvayrd_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_stodherrn_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_tulharsin_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_uakaklo_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_zaragett_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_adabyssian_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_ahridar_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_anaanides_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_hubarism_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_masaagnite_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_mogowai_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_quwazaw_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_saratan_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_sheharddi_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_sokaloma_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_yuagaug_religion_syncretism }
+		#any_in_list = { list = selected_doctrines this = doctrine:tenet_aironoi_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_seven_one_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_nalmavast_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_zaldrigas_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_eastern_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_dahala_religion_syncretism }
+		any_in_list = { list = selected_doctrines this = doctrine:tenet_sepattan_religion_syncretism }
+	}
+}
+
+religion_has_any_syncretism_tenet = { # For checking if a faith has *any* syncretic tenet
+	OR = {
+		has_doctrine = tenet_sjalvolki_religion_syncretism
+		has_doctrine = tenet_wardenism_religion_syncretism
+		has_doctrine = tenet_lifepath_religion_syncretism
+		has_doctrine = tenet_agionism_religion_syncretism
+		has_doctrine = tenet_eight_religion_syncretism
+		has_doctrine = tenet_aversarinas_aagiokrata_religion_syncretism
+		has_doctrine = tenet_partic_religion_syncretism
+		has_doctrine = tenet_ritualist_religion_syncretism
+		has_doctrine = tenet_graveright_religion_syncretism
+		has_doctrine = tenet_iyrossi_religion_syncretism
+		has_doctrine = tenet_amsari_religion_syncretism
+		has_doctrine = tenet_kemsar_religion_syncretism
+		has_doctrine = tenet_alau_koev_religion_syncretism
+		has_doctrine = tenet_aruvasue_religion_syncretism
+		has_doctrine = tenet_azakna_jakuungi_religion_syncretism
+		has_doctrine = tenet_shyatan_religion_syncretism
+		has_doctrine = tenet_mahrator_religion_syncretism
+		has_doctrine = tenet_izaerto_bosar_religion_syncretism
+		has_doctrine = tenet_oltenic_religion_syncretism
+		has_doctrine = tenet_arnazni_religion_syncretism
+		has_doctrine = tenet_manats_religion_syncretism
+		has_doctrine = tenet_unreformed_religion_syncretism
+		has_doctrine = tenet_astiliak_religion_syncretism
+		has_doctrine = tenet_cuthanagi_religion_syncretism
+		has_doctrine = tenet_ehatm_religion_syncretism
+		has_doctrine = tenet_marndeoticeni_religion_syncretism
+		has_doctrine = tenet_redland_cults_religion_syncretism
+		has_doctrine = tenet_sunarwei_religion_syncretism
+		has_doctrine = tenet_oulaupi_religion_syncretism
+		has_doctrine = tenet_xaxbaxakanax_religion_syncretism
+		has_doctrine = tenet_dravidian_religion_syncretism
+		has_doctrine = tenet_viyagaric_religion_syncretism
+		has_doctrine = tenet_saielaian_religion_syncretism
+		has_doctrine = tenet_fourteen_heavenly_methods_religion_syncretism
+		has_doctrine = tenet_blackhand_religion_syncretism
+		has_doctrine = tenet_thixanonic_religion_syncretism
+		has_doctrine = tenet_apti_religion_syncretism
+		has_doctrine = tenet_ethowos_religion_syncretism
+		has_doctrine = tenet_cnevobarthane_religion_syncretism
+		has_doctrine = tenet_gallieni_religion_syncretism
+		has_doctrine = tenet_gestanwoder_religion_syncretism
+		has_doctrine = tenet_gethian_religion_syncretism
+		has_doctrine = tenet_islands_religion_syncretism
+		has_doctrine = tenet_kakarataki_religion_syncretism
+		has_doctrine = tenet_kardawai_religion_syncretism
+		has_doctrine = tenet_namejisht_religion_syncretism
+		has_doctrine = tenet_orgarrd_religion_syncretism
+		has_doctrine = tenet_raider_religion_syncretism
+		has_doctrine = tenet_salacad_religion_syncretism
+		has_doctrine = tenet_samojitian_religion_syncretism
+		has_doctrine = tenet_starvayrd_religion_syncretism
+		has_doctrine = tenet_stodherrn_religion_syncretism
+		has_doctrine = tenet_tulharsin_religion_syncretism
+		has_doctrine = tenet_uakaklo_religion_syncretism
+		has_doctrine = tenet_zaragett_religion_syncretism
+		has_doctrine = tenet_adabyssian_religion_syncretism
+		has_doctrine = tenet_ahridar_religion_syncretism
+		has_doctrine = tenet_anaanides_religion_syncretism
+		has_doctrine = tenet_hubarism_religion_syncretism
+		has_doctrine = tenet_masaagnite_religion_syncretism
+		has_doctrine = tenet_mogowai_religion_syncretism
+		has_doctrine = tenet_quwazaw_religion_syncretism
+		has_doctrine = tenet_saratan_religion_syncretism
+		has_doctrine = tenet_sheharddi_religion_syncretism
+		has_doctrine = tenet_sokaloma_religion_syncretism
+		has_doctrine = tenet_yuagaug_religion_syncretism
+		#has_doctrine = tenet_aironoi_religion_syncretism
+		has_doctrine = tenet_seven_one_religion_syncretism
+		has_doctrine = tenet_nalmavast_religion_syncretism
+		has_doctrine = tenet_zaldrigas_religion_syncretism
+		has_doctrine = tenet_eastern_syncretism
+	}
+}
+
+##########################
+# Other Religious Triggers
+
+GH_can_reincarnate_trigger = {
+	is_alive = no
+	OR = {
+		has_trait = temperate
+		has_trait = greedy
+		has_trait = generous
+		has_trait = diligent
+		has_trait = calm
+		has_trait = arrogant
+		has_trait = humble
+		has_trait = deceitful
+		has_trait = honest
+		has_trait = brave
+		has_trait = gregarious
+		has_trait = ambitious
+		has_trait = just
+		has_trait = zealous
+		has_trait = compassionate
+		has_trait = stubborn
+		has_trait = forgiving
+		has_trait = lunatic
+		has_trait = dull
+		has_trait = intellect_bad
+		has_trait = shrewd
+		has_trait = intellect_good
+		has_trait = strong
+		has_trait = physique_good
+	}
+}
+
+GH_is_reincarnation_trigger = {
+	can_become_reincarnation_trigger = yes
+	OR = {
+		AND = {
+			has_variable = reincarnation_of
+
+		}
+
+	}
+}
+
+# GH Change: Generic trigger replacement, replaced geo regions
+GH_does_religion_exist_in_world_region_trigger = { # The most efficient way I could think of to esentially do diplomatic range triggers on religions - duplicated vanilla trigger
+	trigger_if = {
+		limit = { location = { geographical_region = world_ga_lichdoms } }
+		any_county_in_region = {
+			region = world_ga_lichdoms
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_ga_marcher_kingdoms } }
+		any_county_in_region = {
+			region = world_ga_marcher_kingdoms
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_ga_clanlands } }
+		any_county_in_region = {
+			region = world_ga_clanlands
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_ga_aversarian_homelands } }
+		any_county_in_region = {
+			region = world_ga_aversarian_homelands
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_ga_foglands } }
+		any_county_in_region = {
+			region = world_ga_foglands
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_ga_kashirya } }
+		any_county_in_region = {
+			region = world_ga_kashirya
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_eastern_sarradon } }
+		any_county_in_region = {
+			region = world_eastern_sarradon
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_central_sarradon } }
+		any_county_in_region = {
+			region = world_central_sarradon
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_western_sarradon } }
+		any_county_in_region = {
+			region = world_western_sarradon
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else_if = {
+		limit = { location = { geographical_region = world_depths } }
+		any_county_in_region = {
+			region = world_depths
+			faith.religion = $RELIGION$
+		}
+	}
+	trigger_else = { always = no } # This should always go at the end of this scripted trigger
+}
+
+# Makes sure faiths get their unqiue holy site events
+pilgrimage_to_unique_site_trigger = {
+	location = { NOT = { geographical_region = sophocos_region } }
+	NOT = { religion = religion:ritualist_religion }
+}
+
+gh_imperrech_migration_religion = { # Imperrech faith that can migrate holy sites
+	OR = {
+		this = religion:kardawai_religion
+		this = religion:kakarataki_religion
+		this = religion:gethian_religion
+		this = religion:salacad_religion
+		this = religion:stodherrn_religion
+		this = religion:apti_religion
+	}
+}
+
+gh_anti_imperrech_migration_religion = { # Imperrech faith that can migrate holy sites
+	OR = {
+		this = religion:cnevobarthane_religion
+		this = religion:zaldrigas_religion
+		this = religion:nalmavast_religion
+	}
+}
+
+##############
+## Agionism ##
+##############
+
+# Panzer Note: Replace with something more dynamic to allow for random Order Militants in the future
+is_agionist_holy_order_trigger = {
+	OR = {
+		this = title:k_saint_sansias_rose
+		this = title:k_forlorn_guardian
+		this = title:k_golden_hand
+		this = title:k_saint_calystos_key
+		this = title:k_bleeding_martyr
+		this = title:k_pure_heart
+		this = title:k_blind_watcher
+		this = title:k_forgotten_saint
+	}
+}
+
+##############
+## Lifepath ##
+##############
+
+# Panzer Note: Move to a scripted effect
+is_wayfather_trigger = {
+	OR = {
+		has_trait = way_of_swords_follower
+		has_trait = way_of_family_follower
+		has_trait = way_of_coins_follower
+		has_trait = way_of_crowns_follower
+		has_trait = way_of_harvests_follower
+		has_trait = way_of_justice_follower
+		has_trait = way_of_knowledge_follower
+		has_trait = way_of_crows_follower
+		has_trait = way_of_nullification_follower
+		has_trait = way_of_dread_follower
+		has_trait = way_of_blood_follower
+		has_trait = way_of_fear_follower
+		has_trait = way_of_pain_follower
+		has_trait = way_of_sword_follower
+		has_trait = way_of_stars_follower
+		has_trait = way_of_shepherd_follower
+		has_trait = way_of_hunt_follower
+		has_trait = way_of_peace_follower
+		has_trait = way_of_war_follower
+		has_trait = way_of_death_follower
+	}
+	has_council_position = councillor_court_chaplain # GH_TODO: update to handle non-council wayfathers
+}
+
+##############
+## Wardenism ##
+##############
+wardenite_mainstream_schools = {
+	$FAITH_1$ = {
+		has_doctrine = wardenite_mainstream_doctrine
+	}
+	$FAITH_2$ = {
+		has_doctrine = wardenite_mainstream_doctrine
+	}
+}
+
+warden_idealist_schools = {
+	$FAITH_1$ = {
+		has_doctrine = wardenite_idealist_doctrine
+	}
+	$FAITH_2$ = {
+		has_doctrine = wardenite_idealist_doctrine
+	}
+}
+
+warden_traditionalist_schools = {
+	$FAITH_1$ = {
+		has_doctrine = wardenite_traditionalist_doctrine
+	}
+	$FAITH_2$ = {
+		has_doctrine = wardenite_traditionalist_doctrine
+	}
+}
+
+legal_tradition_has_flag_trigger = {
+	trigger_if = {
+		limit = { exists = scope:legal_tradition_scope }
+		scope:legal_tradition_scope = {
+			has_variable = $FLAG$
+		}
+	}
+	trigger_else_if = {
+		limit = { exists = var:character_legal_tradition }
+		var:character_legal_tradition = {
+			has_variable = $FLAG$
+		}
+	}
+	trigger_else = {
+		has_variable = $FLAG$
+	}
+}
+
+can_use_legal_tradition_trigger = {
+	faith = {
+		has_doctrine_parameter = uses_legal_traditions
+	}
+}
+
+should_adopt_legal_tradition_trigger = {
+	can_use_legal_tradition_trigger = yes
+	OR = {
+		is_playable_character = yes
+		has_trait = education_learning
+	}
+}
+
+can_use_legal_action_character_interaction_trigger = {
+	scope:actor.faith = { has_doctrine_parameter = uses_legal_traditions }
+	trigger_if = {
+		limit = { 
+			exists = scope:actor.faith.religious_head_title
+			exists = scope:recipient.faith.religious_head_title
+		}
+		scope:actor.faith.religious_head_title = scope:recipient.faith.religious_head_title
+	}
+	trigger_else = {
+		scope:recipient.faith = { 
+			has_doctrine_parameter = uses_legal_traditions
+			faith_hostility_level = {
+				target = scope:actor.faith
+				value <= 1
+			}
+		}
+	}
+	
+	# The head of faith probably has legal immunity unless there are exceptional circumstances
+	trigger_if = {
+		limit = { exists = scope:actor.faith.religious_head }
+		NOT = { scope:actor.faith.religious_head = scope:recipient }
+	}
+	# You can't sue your spouse
+	NOT = { scope:recipient = { is_spouse_of = scope:actor } }
+}
+
+can_be_censured_trigger = {
+	OR = {
+		trigger_if = {
+			limit = { has_variable = radicalism }
+			var:radicalism > 50
+		}
+		trigger_else = { always = no }
+		trigger_if = {
+			limit = { has_variable = corruption }
+			var:corruption > 50
+		}
+		trigger_else = { always = no }
+	}
+}
+
+high_court_seat_is_vacant_trigger = {
+	OR = {	# A seat is considered empty if it was either never assigned an occupant in the first place, or the "current" one is dead
+		NOT = { has_variable = seat_occupant }
+		var:seat_occupant = { is_alive = no }
+	}
+}
+
+legal_tradition_eligible_for_deletion_trigger = {
+	save_temporary_scope_as = tradition_being_checked
+	var:legal_tradition_level <= 0
+	# Don't delete traditions that were recently founded
+	NOT = { exists = var:legal_tradition_creation_cooldown }
+	# Prevent deleting traditions that a player is patronizing otherwise it might get annoying
+	trigger_if = {
+		limit = { has_variable_list = legal_tradition_patrons }
+		NOT = {
+			any_in_list = {
+				variable = legal_tradition_patrons
+				is_ai = no
+			}
+		}
+	}
+	# Don't delete traditions that have at least one High Judgeship, or if the Mamur themself supports it
+	trigger_if = {
+		limit = { root = { has_variable_list = high_court_seat_list } }
+		NOT = {
+			root = {
+				any_in_list = {
+					variable = high_court_seat_list
+					exists = var:seat_occupant
+					var:seat_occupant = {  
+						exists = var:character_legal_tradition
+						var:character_legal_tradition = scope:tradition_being_checked
+					}
+				}
+			}
+		}
+	}
+	trigger_if = {
+		limit = { 
+			exists = root.var:high_court_mamuramat
+			exists = root.var:high_court_mamuramat.holder
+			exists = root.var:high_court_mamuramat.holder.var:character_legal_tradition
+		}
+		NOT = {
+			root.var:high_court_mamuramat.holder.var:character_legal_tradition = scope:tradition_being_checked
+		}
+	}
+}
+
+has_any_positive_magic_doctrine = {
+	faith = {
+		OR = {
+			has_doctrine_parameter = magic_supreme
+			has_doctrine_parameter = magic_honored
+			has_doctrine_parameter = magic_accepted # remove once honored is hooked up
+		}
+	}
+}
+
+has_any_negative_magic_doctrine = {
+	faith = {
+		OR = {
+			has_doctrine_parameter = magic_shunned
+			has_doctrine_parameter = magic_illegal
+		}
+	}
+}
+
+## Syncreticism Triggers ##
+
+aagiokratan_or_syncretic_with_aagiokratan_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:aversarinas_aautokrata_religion
+				has_doctrine = tenet_aversarinas_aagiokrata_religion_syncretism
+			}
+		}
+	}
+}
+
+agionism_or_syncretic_with_agionism_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:agionism_religion
+				has_doctrine = tenet_agionism_religion_syncretism
+			}
+		}
+	}
+}
+
+amsari_or_syncretic_with_amsari_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:amsari_religion
+				has_doctrine = tenet_amsari_syncretism
+			}
+		}
+	}
+}
+
+lifepath_or_syncretic_with_lifepath_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:lifepath_religion
+				has_doctrine = tenet_lifepath_religion_syncretism
+			}
+		}
+	}
+}
+
+sjalvolki_or_syncretic_with_sjalvolki_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:sjalvolki_religion
+				has_doctrine = tenet_sjalvolki_syncretism
+			}
+		}
+	}
+}
+
+partic_or_syncretic_with_partic_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:partic_religion
+				has_doctrine = tenet_partic_syncretism
+			}
+		}
+	}
+}
+
+wardenite_or_syncretic_with_wardenite_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:sarradonian_religion
+				has_doctrine = tenet_wardenism_religion_syncretism
+			}
+		}
+	}
+}
+
+ritualist_or_syncretic_with_ritualist_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:ritualist_religion
+				has_doctrine = tenet_ritualist_syncretism
+			}
+		}
+	}
+}
+
+mogowai_or_syncretic_with_mogowai_trigger = {
+	$CHARACTER$ = {
+		faith = {
+			OR = {
+				religion = religion:mogowai_religion
+				has_doctrine = tenet_mogowai_syncretism
+			}
+		}
+	}
+}
+
+religion_has_syncretism_tenet = {
+	OR = {
+		doctrine:tenet_sjalvolki_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_wardenism_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_lifepath_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_agionism_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_eight_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_aversarinas_aagiokrata_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_partic_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_ritualist_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_graveright_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_iyrossi_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_amsari_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_kemsar_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_alau_koev_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_aruvasue_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_azakna_jakuungi_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_shyatan_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_mahrator_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_izaerto_bosar_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_oltenic_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_arnazni_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_manats_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_unreformed_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_astiliak_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_cuthanagi_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_ehatm_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_marndeoticeni_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_redland_cults_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_sunarwei_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_xaxbaxakanax_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_dravidian_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_viyagaric_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_saielaian_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_fourteen_heavenly_methods_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_blackhand_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_thixanonic_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_apti_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_ethowos_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_cnevobarthane_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_gallieni_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_gestanwoder_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_gethian_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_islands_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_kakarataki_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_kardawai_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_namejisht_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_orgarrd_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_raider_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_salacad_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_samojitian_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_starvayrd_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_stodherrn_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_tulharsin_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_uakaklo_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_zaragett_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_adabyssian_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_ahridar_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_anaanides_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_hubarism_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_masaagnite_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_mogowai_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_quwazaw_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_saratan_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_sheharddi_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_sokaloma_religion_syncretism = { is_in_list = selected_doctrines }
+		doctrine:tenet_yuagaug_religion_syncretism = { is_in_list = selected_doctrines }
+	}
+}

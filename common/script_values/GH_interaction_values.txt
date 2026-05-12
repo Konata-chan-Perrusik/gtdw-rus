@@ -1,0 +1,63 @@
+﻿number_of_magic_focused_vassals = {
+	value = 0
+	every_vassal = {
+		limit = {
+			has_vassal_stance = magic_focused
+		}
+		add = 1
+	}
+}
+
+number_of_participating_magic_focused_vassals = {
+	value = 0
+	every_vassal = {
+		limit = {
+			has_vassal_stance = magic_focused
+			is_participant_in_activity = root.involved_activity
+		}
+		add = 1
+	}
+}
+
+magic_focused_vassal_magi_grant_bonus = {
+	if = {
+		limit = {
+			any_in_list = {
+				list = titles_to_grant
+				tier >= tier_county
+			}
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier = tier_county
+			}
+			add = 5
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier = tier_duchy
+			}
+			add = 10
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier = tier_kingdom
+			}
+			add = 15
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier = tier_empire
+			}
+			add = 20
+		}
+	}
+}

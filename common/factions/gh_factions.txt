@@ -1,0 +1,478 @@
+﻿omiltos_conclave_faction = {
+	casus_belli = independence_faction_war
+	
+	short_effect_desc = omiltos_conclave_faction_desc
+
+	sort_order = 2
+
+	discontent_progress = {
+		base = 0	# By default, they will only gain and lose discontent through direct action
+	}
+
+	power_threshold = {
+		base = 100 	# By default, they will only gain and lose discontent through direct action
+	}
+	
+	is_character_valid = {
+		scope:faction.faction_target = liege
+		highest_held_title_tier > tier_barony
+		
+		liege = {
+			any_vassal_or_below = {
+				this = faith:omitilos_aagiokrata.religious_head
+			}
+		}
+		
+		#Not blocked through events
+		custom_description = {
+			text = character_blocked_from_joining
+			NOT = {
+				has_character_flag = joining_faction_block
+			}
+		}
+		
+		NOT = {
+			has_variable = blocked_from_conclave
+		}
+	}
+	
+	demand = {
+		save_scope_as = faction
+
+		faction_leader = {
+			save_scope_as = faction_leader
+		}
+		
+		faction_target = {
+			save_scope_as = faction_target
+		}
+		
+		if = {
+			limit = {
+				faction_power >= 300
+				any_faction_member = {
+					liege = {
+						NOT = { is_imprisoned = yes }
+					}
+				}
+			}
+			faction_target = {
+				trigger_event = cois.0100
+			}
+		}
+		else_if = {
+			limit = {
+				any_faction_member = {
+					save_temporary_scope_as = faction_member
+					liege = {
+						OR = {
+							any_diplomacy_councillor = { this = scope:faction_member }
+							any_intrigue_councillor = { this = scope:faction_member }
+							any_martial_councillor = { this = scope:faction_member }
+							any_stewardship_councillor = { this = scope:faction_member }
+						}
+					}
+				}
+			}
+			random_list = {
+				25 = {
+					trigger = { 
+						any_faction_member = {
+							save_temporary_scope_as = faction_member
+							liege = {
+								any_stewardship_councillor = { this = scope:faction_member }
+							}
+						}
+					}
+					faction_target = {
+						trigger_event = cois.0101
+					}
+				}
+				25 = {
+					trigger = { 
+						any_faction_member = {
+							save_temporary_scope_as = faction_member
+							liege = {
+								any_martial_councillor = { this = scope:faction_member }
+							}
+						}
+					}
+					faction_target = {
+						trigger_event = cois.0102
+					}
+				}
+				25 = {
+					trigger = { 
+						any_faction_member = {
+							save_temporary_scope_as = faction_member
+							liege = {
+								any_diplomacy_councillor = { this = scope:faction_member }
+							}
+						}
+					}
+					faction_target = {
+						trigger_event = cois.0103
+					}
+				}
+				25 = {
+					trigger = { 
+						any_faction_member = {
+							save_temporary_scope_as = faction_member
+							liege = {
+								any_intrigue_councillor = { this = scope:faction_member }
+							}
+						}
+					}
+					faction_target = {
+						trigger_event = cois.0104
+					}
+				}
+			}
+		}
+		else = {	# If weak and have no councillor, will try to worm their way into the council so they can continue ruining your day in other ways
+			random_list = {
+				80 = { # Failure
+					add_faction_discontent = -5
+				}
+				20 = { # Success
+					faction_target = {
+						random_list = {
+							25 = {
+								trigger = {
+									any_diplomacy_councillor = { exists = this }
+								}
+								random_diplomacy_councillor = {
+									faith:omitilos_aagiokrata.religious_head = {
+										add_hook = {
+											target = prev
+											type = favor_hook
+										}
+									}
+								}
+							}
+							25 = {
+								trigger = {
+									any_martial_councillor = { exists = this }
+								}
+								random_martial_councillor = {
+									faith:omitilos_aagiokrata.religious_head = {
+										add_hook = {
+											target = prev
+											type = favor_hook
+										}
+									}
+								}
+							}
+							25 = {
+								trigger = {
+									any_stewardship_councillor = { exists = this }
+								}
+								random_stewardship_councillor = {
+									faith:omitilos_aagiokrata.religious_head = {
+										add_hook = {
+											target = prev
+											type = favor_hook
+										}
+									}
+								}
+							}
+							25 = {
+								trigger = {
+									any_intrigue_councillor = { exists = this }
+								}
+								random_intrigue_councillor = {
+									faith:omitilos_aagiokrata.religious_head = {
+										add_hook = {
+											target = prev
+											type = favor_hook
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_create_score = {
+		base = -1000 # Only the Ypsolinis will ever create the faction
+		
+		# The head of the Conclave will ALWAYS join
+		modifier = {
+			add = 2000
+			AND = {
+				root = faith:omitilos_aagiokrata.religious_head
+				#top_liege = {
+				#	NOT = { has_strong_usable_hook = root }
+				#}
+			}
+		}
+	}
+
+	ai_join_score = {
+		base = -50 # Base reluctance value we must overcome to start an Independence Faction.
+		
+		# The head of the Conclave will ALWAYS join
+		modifier = {
+			add = 2000
+			this = faith:omitilos_aagiokrata.religious_head
+		}
+		
+		# If the Ypsolinis has a strong hook on them, they'll almost certainly join. This is especially pertinent when said head is Rhesus
+		modifier = {
+			add = 300
+			faith:omitilos_aagiokrata.religious_head = {
+				has_strong_usable_hook = root
+			}
+		}
+		
+		# For other hooks, it is still a decent boost
+		modifier = {
+			add = 100
+			faith:omitilos_aagiokrata.religious_head = {
+				has_usable_hook = root
+			}
+		}
+		
+		# If not Omiltos, drastically less likely to join unless blackmailed
+		modifier = {
+			add = -200
+			NOT = { has_faith = faith:omitilos_aagiokrata }
+		}
+		
+		############
+		# BLOCKERS #
+
+		# Do not join a new faction if I am already at war.
+		modifier = {
+			add = -1000
+			AND = {
+				is_at_war = yes
+				trigger_if = {
+					limit = {
+						exists = joined_faction
+					}
+					NOT = { joined_faction = scope:faction }
+				}
+			}
+		}
+
+		#######################
+		# Standard AI Weights #
+
+		# +50 join weight at -100 opinion
+		opinion_modifier = {
+			who = root
+			opinion_target = scope:faction.faction_target
+			multiplier = -0.4
+			min = 0
+		}
+		# -150 join weight at +100 opinion
+		opinion_modifier = {
+			who = root
+			opinion_target = scope:faction.faction_target
+			multiplier = -1.5
+			max = 0
+		}
+
+		# Dread
+		intimidated_from_faction_modifier = {
+			TARGET = scope:faction.faction_target
+			POWER =  scope:faction.faction_power
+			THRESHOLD = scope:faction.faction_power_threshold
+		}
+
+		# Larger realms are inherently more rebellious.
+		modifier = {
+			add = sub_realm_size
+		}
+
+		# Toe the Line Perk
+		modifier = {
+			add = -50
+			scope:faction.faction_target = {
+				has_perk = toe_the_line_perk
+			}
+		}
+
+		# +25 join chance per sin, -25 join chance per virtue
+		legalism_virtue_and_sin_modifier = {
+			TARGET = scope:faction.faction_target
+			SCORE_PER_TRAIT = 25
+		}
+
+		# -100 join chance from intimidation, -1000 join chance from terrified
+		intimidated_from_faction_modifier = {
+			TARGET = scope:faction.faction_target
+			POWER =  scope:faction.faction_power
+			THRESHOLD = scope:faction.faction_power_threshold
+		}
+
+		# Debt: +10 to +60 join chance depending on how far in debt the top liege is
+		liege_debt_modifier = {
+			TARGET = scope:faction.faction_target
+			SCORE_PER_DEBT_LEVEL = 10
+		}
+
+		# Difficulty Settings
+		modifier = { # Easy
+			add = -50
+			has_game_rule = easy_difficulty
+			scope:faction.faction_target = {
+				is_ai = no
+			}
+		}
+		modifier = { # Very Easy
+			add = -150
+			has_game_rule = very_easy_difficulty
+			scope:faction.faction_target = {
+				is_ai = no
+			}
+		}
+
+		##########################
+		# Faction 'Stacking' Factors, attempts to cluster AI rulers into several powerful factions instead of many weak ones.
+		modifier = {
+			scope:faction.faction_power < scope:faction.faction_power_minimal
+			liege = {
+				any_targeting_faction = {
+					OR = {
+						faction_is_type = liberty_faction
+						AND = {
+							faction_is_type = claimant_faction
+							special_character = {
+								reverse_opinion = {
+									target = root
+									value >= -20
+								}	
+							}	
+						}
+						AND = {
+							faction_is_type = populist_faction
+							var:faction_faith = root.faith
+						}
+					}
+					faction_power >= faction_power_minimal
+				}
+			}
+			factor = faction_weight_factor_power_minimal_penalty
+		}
+		modifier = {
+			scope:faction.faction_power >= scope:faction.faction_power_halfway_threshold
+			factor = faction_weight_factor_power_halfway_threshold
+		}
+		modifier = {
+			scope:faction.faction_power >= scope:faction.faction_power_pushing_threshold
+			factor = faction_weight_factor_power_pushing_threshold
+		}
+		modifier = {
+			scope:faction.faction_power >= scope:faction.faction_power_threshold
+			factor = faction_weight_factor_power_exceeds_threshold
+		}
+	}
+
+	ai_demand_chance = {
+		base = 0
+
+		#40% base chance at minimum power (80%), increasing linearly
+		compare_modifier = {
+			value = faction_power
+			multiplier = 0.5
+		}
+		
+		## Once the faction has a good chance to win (10% stronger than liege) demand chance increases much more rapidly.
+		#compare_modifier = {
+		#	trigger = {	faction_power > 110 }
+		#	value = faction_power
+		#	multiplier = 1
+		#}
+		#
+		#modifier = {
+		#	add = 100
+		#	faction_target = {
+		#		is_at_war = yes # Independence Factions are opportunistic bastards!
+		#	}
+		#}
+	}
+
+	can_character_join = {
+		trigger_if = {
+			limit = { NOT = { this = faith:omitilos_aagiokrata.religious_head } }
+			NOT = { is_allied_to = scope:faction.faction_target }
+			NOT = { has_truce = scope:faction.faction_target }
+			scope:faction.faction_target = {
+				NOT = { has_strong_hook = root }
+			}
+		}
+		trigger_else = {
+			always = yes
+		}
+		scope:faction.faction_target.highest_held_title_tier > tier_county
+
+		custom_description = {
+			text = character_has_faction_disabling_modifier
+			character_has_faction_disabling_modifier_trigger = yes
+		}
+	}
+
+	can_character_create = {
+		this = faith:omitilos_aagiokrata.religious_head
+		liege = {
+			is_independent_ruler = yes
+		}
+		faith:omitilos_aagiokrata.religious_head_title = { 
+			is_title_created = yes
+			NOT = { holder = { this = scope:target } }
+		}
+		
+		trigger_if = {
+			limit = { NOT = { this = faith:omitilos_aagiokrata.religious_head } }
+			NOT = { is_allied_to = scope:target }
+			NOT = { has_truce = scope:target }
+			scope:target = {
+				NOT = { has_strong_hook = root }
+			}
+		}
+		trigger_else = {
+			always = yes
+		}
+
+		OR = {
+			is_ai = no
+			this = faith:omitilos_aagiokrata.religious_head
+			NOR = {
+				has_relation_lover = scope:target
+				has_relation_friend = scope:target
+			}
+		}
+		scope:target.highest_held_title_tier > tier_county
+		highest_held_title_tier > tier_barony
+
+		####
+		# BLOCKERS
+		####
+		# General Faction immunity
+		custom_description = {
+			text = character_is_immune_to_factions
+			subject = scope:target
+			NOT = { scope:target = { immune_to_factions_trigger = yes } }
+		}
+
+		custom_description = {
+			text = character_has_faction_disabling_modifier
+			character_has_faction_disabling_modifier_trigger = yes
+		}
+	}
+	
+	can_character_become_leader = {
+		faith:omitilos_aagiokrata.religious_head_title = { 
+			holder = root
+		}
+	}
+
+	county_allow_join = no
+	county_allow_create = no
+	inherit_membership = no
+}

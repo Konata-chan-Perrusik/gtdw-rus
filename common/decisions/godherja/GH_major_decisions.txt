@@ -1,0 +1,472 @@
+﻿##################################################
+
+#	Godherja Generic Major Decisions List
+
+#	Abdicate - Voluntarily relinquish the throne to your successor.
+
+##################################################
+
+#############################################
+# Abdicate									#
+# by Hapchazzard							#
+#############################################
+
+gh_abdicate_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = major
+
+	ai_check_interval = 120
+
+	desc = gh_abdicate_decision_desc
+	selection_tooltip = gh_abdicate_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_playable_character = yes
+		exists = dynasty
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		#Must have the appropriate cultural parameter.
+		OR = {
+			culture = { has_cultural_parameter = encouraged_old_ruler_abdication }
+		}
+		#Must be at least a count.
+		highest_held_title_tier >= tier_county
+	}
+
+	is_valid = {
+		#Must be independent.
+		is_independent_ruler = yes
+		#Must be at least 50, or disabled.
+		OR = {
+			age >= 50
+			has_trait = maimed
+			has_trait = blind
+			has_trait = gh_dehanded
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+	}
+
+	effect = {
+		depose = yes
+		if = {
+			limit = { exists = dynasty }
+			dynasty = {
+				add_dynasty_prestige = {
+					value = root.diplomacy
+					add = root.intrigue
+					add = root.martial
+					add = root.stewardship
+					add = root.learning
+					add = root.prowess
+					if = {
+						limit = { root.highest_held_title_tier = tier_empire }
+						multiply = 4
+					}
+					else_if = {
+						limit = { root.highest_held_title_tier = tier_kingdom }
+						multiply = 3
+					}
+					else_if = {
+						limit = { root.highest_held_title_tier = tier_duchy }
+						multiply = 2
+					}
+				}
+			}
+		}
+		if = {
+			limit = { culture = { has_cultural_parameter = enables_alatans } }
+			add_trait = gh_alatan
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 0
+
+		ai_value_modifier = {
+			ai_energy = -0.25
+			ai_greed = -0.25
+		}
+		
+		modifier = {
+			add = -25
+			has_trait = arrogant
+		}
+		modifier = {
+			add = 30
+			age >= 60
+		}
+		modifier = {
+			add = 50
+			age >= 70
+		}
+	}
+}
+
+gh_military_to_feudalism_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = major
+	desc = convert_whole_realm_to_feudalism_decision_desc
+
+	ai_check_interval = 36
+
+	is_shown = {
+		government_has_flag = government_is_military_unit
+		OR = {
+			is_independent_ruler = yes
+			AND = {
+				is_independent_ruler = no
+				liege = {
+					NOR = {
+						government_has_flag = government_is_feudal
+						government_has_flag = government_is_clan
+						government_has_flag = government_is_continental_clan
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		has_realm_law = clique_authority_3
+		prestige_level >= 3
+		capital_province.county = {
+			development_level >= convert_to_feudalism_development_requirement
+		}
+	}
+
+	cost = {
+		prestige = 300
+	}
+
+	effect = {
+		trigger_event = gh_major_decisions.0002
+		save_scope_as = actor
+		convert_whole_realm_to_feudalism_effect = yes
+		hidden_effect = {
+			every_vassal = {
+				trigger_event = {
+					id = major_decisions.0002
+					days = 3
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+gh_divine_mission_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	decision_group_type = major
+	desc = gh_divine_mission_decision_desc
+
+	ai_check_interval = 36
+
+	is_shown = {
+		any_owned_story = {
+			story_type = story_divine_mission
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = gh_divine_mission_decision_tt
+			always = no
+		}
+	}
+
+	cost = {
+
+	}
+
+	effect = {
+		random_owned_story = {
+			limit = { story_type = story_divine_mission }
+			save_scope_as = new_divine_mission_scope
+		}
+		custom_tooltip = new_divine_mission_notification_tt
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_type }
+			custom_tooltip = mission_type_notification_tt
+		}
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_multiplicity }
+			custom_tooltip = mission_multiplicity_notification_count_tt
+		}
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_target_primary_title_tier }
+			if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_primary_title_tier = 5 }
+				custom_tooltip = mission_target_primary_title_tier_empire_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_primary_title_tier = 4 }
+				custom_tooltip = mission_target_primary_title_tier_kingdom_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_primary_title_tier = 3 }
+				custom_tooltip = mission_target_primary_title_tier_duchy_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_primary_title_tier = 2 }
+				custom_tooltip = mission_target_primary_title_tier_county_notification_tt
+			}
+			else = { custom_tooltip = mission_target_primary_title_tier_barony_notification_tt }
+		}
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_target_virtue_number }
+			custom_tooltip = mission_target_virtue_number_notification_tt
+		}
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_kill_method }
+			if = {
+				limit = { scope:new_divine_mission_scope.var:mission_kill_method = flag:murder }
+				custom_tooltip = mission_kill_method_murder_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_kill_method = flag:sacrifice }
+				custom_tooltip = mission_kill_method_sacrifice_notification_tt
+			}
+		}
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_target_development }
+			custom_tooltip = mission_target_development_notification_tt
+		}
+		if = {
+			limit = { exists = scope:new_divine_mission_scope.var:mission_target_magic_level }
+			if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_magic_level <= 1 }
+				custom_tooltip = mission_target_magic_level_1_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_magic_level = 2 }
+				custom_tooltip = mission_target_magic_level_2_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_magic_level = 3 }
+				custom_tooltip = mission_target_magic_level_3_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_magic_level = 4 }
+				custom_tooltip = mission_target_magic_level_4_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_magic_level = 5 }
+				custom_tooltip = mission_target_magic_level_5_notification_tt
+			}
+			else_if = {
+				limit = { scope:new_divine_mission_scope.var:mission_target_magic_level >= 6 }
+				custom_tooltip = mission_target_magic_level_high_notification_tt
+			}
+		}
+		custom_tooltip = mission_remaining_time_notification_tt
+		custom_tooltip = mission_remaining_time_penalty_notification_tt
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+###############################################################
+# Convert Republican Realm to an Administrative Republic type #
+###############################################################
+
+elevate_republic_administration_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/ep3_decision_city.dds"
+	}
+	decision_group_type = realm
+	desc = elevate_republic_administration_decision_desc
+
+	ai_check_interval = 36
+
+	is_shown = {
+		has_ep3_dlc_trigger = yes
+		government_has_flag = government_is_republic_nonadministrative
+		trigger_if = {
+			limit = { is_independent_ruler = no }
+			liege = { government_allows = administrative }
+		}
+		trigger_else = {
+			is_independent_ruler = yes
+		}
+	}
+
+	is_valid = {
+		has_ep3_dlc_trigger = yes
+		government_has_flag = government_is_republic_nonadministrative
+
+		trigger_if = {
+			limit = { is_independent_ruler = no }
+			liege = { government_allows = administrative }
+		}
+		custom_tooltip = {
+			text = king_tier_tt
+			primary_title.tier >= tier_kingdom
+		}
+
+		trigger_if = {
+			limit = {
+				is_independent_ruler = yes
+				is_ai = no
+			}
+			prestige_level >= 2
+		}
+		trigger_if = {
+			limit = {
+				is_independent_ruler = yes
+				is_ai = no
+			}
+			custom_tooltip = {
+				text = all_powerful_vassals_required_tt
+				any_powerful_vassal = {
+					count = all
+					opinion = {
+						target = root
+						value >= 0
+					}
+				}
+			}
+		}
+	}
+	
+	is_valid_showing_failures_only = {
+		is_at_war = no
+	}
+
+	cost = {
+		prestige = {
+			value = 500
+			if = {
+				limit = {
+					is_ai = no
+					primary_title.tier = tier_kingdom
+				}
+				multiply = 1.0
+			}
+			if = { # Much cheaper for vassals wanting to adopt their admin liege's government
+				limit = {
+					is_independent_ruler = no
+				}
+				multiply = 0.1
+			}
+		}
+		gold = {
+			value = 200
+			if = {
+				limit = { is_ai = no }
+				#Realm size
+				if = {
+					limit = { root.realm_size >= 300 }
+					multiply = 3.5
+				}
+				else_if = {
+					limit = { root.realm_size >= 250 }
+					multiply = 3
+				}
+				else_if = {
+					limit = { root.realm_size >= 200 }
+					multiply = 2.5
+				}
+				else_if = {
+					limit = { root.realm_size >= 150 }
+					multiply = 2
+				}
+				else_if = {
+					limit = { root.realm_size >= 100 }
+					multiply = 1.5
+				}
+			}
+			#Era
+			culture = {
+				if = {
+					limit = { has_cultural_era_or_later = culture_era_late_medieval }
+					multiply = 1.75
+				}
+				else_if = {
+					limit = { has_cultural_era_or_later = culture_era_high_medieval }
+					multiply = 1.25
+				}
+				else_if = {
+					limit = { has_cultural_era_or_later = culture_era_early_medieval }
+					multiply = 1
+				}
+				else = {
+					multiply = 0.75
+				}
+			}
+			#Income
+			if = {
+				limit = { root.monthly_character_income >= 100 }
+				multiply = 3
+			}
+			else_if = {
+				limit = { root.monthly_character_income >= 80 }
+				multiply = 2.5
+			}
+			else_if = {
+				limit = { root.monthly_character_income >= 60 }
+				multiply = 2
+			}
+			else_if = {
+				limit = { root.monthly_character_income >= 40 }
+				multiply = 1.5
+			}
+			else_if = {
+				limit = { root.monthly_character_income >= 20 }
+				multiply = 1.1
+			}
+
+			max = 3000
+			
+			if = { # Much cheaper for vassals wanting to adopt their admin liege's government
+				limit = {
+					is_independent_ruler = no
+				}
+				multiply = 0.1
+			}
+		}
+	}
+
+	effect = {
+		save_scope_as = actor
+		reform_the_republic_effect = yes
+		trigger_event = ep3_decisions_event.4060 #Also sends information event to human vassals
+		#Letter event for the vassals
+		trigger_event = gh_realm_maintenance.0036 # Sets up election laws
+	}
+
+	ai_potential = {
+		government_has_flag = government_is_republic_nonadministrative
+		is_independent_ruler = yes
+	}
+
+	ai_will_do = {
+		base = 50
+		
+	}
+}

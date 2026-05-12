@@ -1,0 +1,1003 @@
+﻿wih_western_potential_struggle_reignite_value = {
+	value = -40
+
+	if = { 
+		limit = { always = yes } #Not sure if I really need this, not sure exactly when temporary scopes end
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_wardenite_victory }
+			save_temporary_scope_as = wardenite_victory
+		}
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_ritualist_victory }
+			save_temporary_scope_as = ritualist_victory
+		}
+		if = {
+			limit = {
+				OR = {
+					exists = title:k_tayalhun
+					exists = title:k_lahkoryun
+					exists = title:k_barunkazeb
+					exists = title:e_ayyar
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = possible_big_rulers
+						any_county_in_region = {
+							region = GH_western_sarradon_struggle_region
+							percent >= 0.75
+							trigger_if = {
+								limit = { exists = scope:ritualist_victory }
+								faith.religion = religion:wardenism_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else_if = {
+								limit = { exists = scope:wardenite_victory }
+								faith.religion = religion:ritualist_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else = { always = no }
+						}
+					}
+				}
+				add = {
+					value = -1000
+					desc = gh_region_is_unified
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = possible_big_rulers
+					any_county_in_region = {
+						region = GH_western_sarradon_struggle_region
+						percent >= 0.2
+						trigger_if = {
+							limit = { exists = scope:ritualist_victory }
+							faith.religion = religion:wardenism_religion
+						}
+						trigger_else_if = {
+							limit = { exists = scope:wardenite_victory }
+							faith.religion = religion:ritualist_religion
+						}
+						trigger_else = { always = no }
+					}
+				}
+			}
+			add = {
+				value = 20
+				desc = gh_opposite_faith_is_in_region
+			}
+		}
+		if = {
+			limit = {
+				exists = struggle:gh_war_in_heaven_struggle
+			}
+			if = {
+				limit = { exists = scope:wardenite_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_posititive
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_negative
+					}
+				}
+			}
+			else_if = {
+				limit = { exists = scope:ritualist_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_negative
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_positive
+					}
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:ritualist_victory
+				gh_wih_count_rulers_western_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_wardenite_rulers_western_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_wardenite_rulers_western_sarradon_exists
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:wardenite_victory
+				gh_wih_count_rulers_western_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_ritualist_rulers_western_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_ritualist_rulers_western_sarradon_exists
+				}
+			}
+		}
+	}
+}
+
+gh_wih_count_wardenite_rulers_western_sarradon_percent_value = {
+	value = gh_wih_count_wardenite_rulers_western_sarradon_total_value
+	divide = gh_wih_count_rulers_western_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_ritualist_rulers_western_sarradon_percent_value = {
+	value = gh_wih_count_ritualist_rulers_western_sarradon_total_value
+	divide = gh_wih_count_rulers_western_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_rulers_western_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_western_sarradon_struggle_region
+			}		
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_wardenite_rulers_western_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_western_sarradon_struggle_region
+			}		
+			faith.religion = religion:wardenism_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_ritualist_rulers_western_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_western_sarradon_struggle_region
+			}		
+			faith.religion = religion:ritualist_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+
+wih_far_western_potential_struggle_reignite_value = {
+	value = -40
+
+	if = { 
+		limit = { always = yes } #Not sure if I really need this, not sure exactly when temporary scopes end
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_wardenite_victory }
+			save_temporary_scope_as = wardenite_victory
+		}
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_ritualist_victory }
+			save_temporary_scope_as = ritualist_victory
+		}
+		if = {
+			limit = {
+				OR = {
+					exists = title:e_amsari_hiklahn
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = possible_big_rulers
+						any_county_in_region = {
+							region = GH_far_western_sarradon_struggle_region
+							percent >= 0.75
+							trigger_if = {
+								limit = { exists = scope:ritualist_victory }
+								faith.religion = religion:wardenism_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else_if = {
+								limit = { exists = scope:wardenite_victory }
+								faith.religion = religion:ritualist_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else = { always = no }
+						}
+					}
+				}
+				add = {
+					value = -1000
+					desc = gh_region_is_unified
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = possible_big_rulers
+					any_county_in_region = {
+						region = GH_far_western_sarradon_struggle_region
+						percent >= 0.2
+						trigger_if = {
+							limit = { exists = scope:ritualist_victory }
+							faith.religion = religion:wardenism_religion
+						}
+						trigger_else_if = {
+							limit = { exists = scope:wardenite_victory }
+							faith.religion = religion:ritualist_religion
+						}
+						trigger_else = { always = no }
+					}
+				}
+			}
+			add = {
+				value = 20
+				desc = gh_opposite_faith_is_in_region
+			}
+		}
+		if = {
+			limit = {
+				exists = struggle:gh_war_in_heaven_struggle
+			}
+			if = {
+				limit = { exists = scope:wardenite_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_posititive
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_negative
+					}
+				}
+			}
+			else_if = {
+				limit = { exists = scope:ritualist_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_negative
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_positive
+					}
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:ritualist_victory
+				gh_wih_count_rulers_far_western_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_wardenite_rulers_far_western_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_wardenite_rulers_far_western_sarradon_exists
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:wardenite_victory
+				gh_wih_count_rulers_far_western_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_ritualist_rulers_far_western_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_ritualist_rulers_far_western_sarradon_exists
+				}
+			}
+		}
+	}
+}
+
+gh_wih_count_wardenite_rulers_far_western_sarradon_percent_value = {
+	value = gh_wih_count_wardenite_rulers_far_western_sarradon_total_value
+	divide = gh_wih_count_rulers_far_western_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_ritualist_rulers_far_western_sarradon_percent_value = {
+	value = gh_wih_count_ritualist_rulers_far_western_sarradon_total_value
+	divide = gh_wih_count_rulers_far_western_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_rulers_far_western_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_far_western_sarradon_struggle_region
+			}		
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_wardenite_rulers_far_western_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_far_western_sarradon_struggle_region
+			}		
+			faith.religion = religion:wardenism_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_ritualist_rulers_far_western_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_far_western_sarradon_struggle_region
+			}		
+			faith.religion = religion:ritualist_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+wih_central_potential_struggle_reignite_value = {
+	value = -40
+
+	if = { 
+		limit = { always = yes } #Not sure if I really need this, not sure exactly when temporary scopes end
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_wardenite_victory }
+			save_temporary_scope_as = wardenite_victory
+		}
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_ritualist_victory }
+			save_temporary_scope_as = ritualist_victory
+		}
+		if = {
+			limit = {
+				OR = {
+					exists = title:k_uraghad
+					exists = title:k_karadun
+					exists = title:k_four_rivers
+					exists = title:k_mukhtab
+					exists = title:k_emporia
+					exists = title:k_tifrennesh
+					exists = title:h_sarradon
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = possible_big_rulers
+						any_county_in_region = {
+							region = GH_central_sarradon_struggle_region
+							percent >= 0.75
+							trigger_if = {
+								limit = { exists = scope:ritualist_victory }
+								faith.religion = religion:wardenism_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else_if = {
+								limit = { exists = scope:wardenite_victory }
+								faith.religion = religion:ritualist_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else = { always = no }
+						}
+					}
+				}
+				add = {
+					value = -1000
+					desc = gh_region_is_unified
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = possible_big_rulers
+					any_county_in_region = {
+						region = GH_central_sarradon_struggle_region
+						percent >= 0.2
+						trigger_if = {
+							limit = { exists = scope:ritualist_victory }
+							faith.religion = religion:wardenism_religion
+						}
+						trigger_else_if = {
+							limit = { exists = scope:wardenite_victory }
+							faith.religion = religion:ritualist_religion
+						}
+						trigger_else = { always = no }
+					}
+				}
+			}
+			add = {
+				value = 20
+				desc = gh_opposite_faith_is_in_region
+			}
+		}
+		if = {
+			limit = {
+				exists = struggle:gh_war_in_heaven_struggle
+			}
+			if = {
+				limit = { exists = scope:wardenite_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_posititive
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_negative
+					}
+				}
+			}
+			else_if = {
+				limit = { exists = scope:ritualist_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_negative
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_positive
+					}
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:ritualist_victory
+				gh_wih_count_rulers_central_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_wardenite_rulers_central_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_wardenite_rulers_central_sarradon_exists
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:wardenite_victory
+				gh_wih_count_rulers_central_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_ritualist_rulers_central_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_ritualist_rulers_central_sarradon_exists
+				}
+			}
+		}
+	}
+}
+
+gh_wih_count_wardenite_rulers_central_sarradon_percent_value = {
+	value = gh_wih_count_wardenite_rulers_central_sarradon_total_value
+	divide = gh_wih_count_rulers_central_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_ritualist_rulers_central_sarradon_percent_value = {
+	value = gh_wih_count_ritualist_rulers_central_sarradon_total_value
+	divide = gh_wih_count_rulers_central_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_rulers_central_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_central_sarradon_struggle_region
+			}		
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_wardenite_rulers_central_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_central_sarradon_struggle_region
+			}		
+			faith.religion = religion:wardenism_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_ritualist_rulers_central_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_central_sarradon_struggle_region
+			}		
+			faith.religion = religion:ritualist_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+wih_eastern_potential_struggle_reignite_value = {
+	value = -40
+
+	if = { 
+		limit = { always = yes } #Not sure if I really need this, not sure exactly when temporary scopes end
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_wardenite_victory }
+			save_temporary_scope_as = wardenite_victory
+		}
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_ritualist_victory }
+			save_temporary_scope_as = ritualist_victory
+		}
+		if = {
+			limit = {
+				OR = {
+					exists = title:k_thaliteia
+					exists = title:k_eastern_frontier
+					exists = title:k_isle_of_visions
+					exists = title:h_sarradon
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = possible_big_rulers
+						any_county_in_region = {
+							region = GH_eastern_sarradon_struggle_region
+							percent >= 0.75
+							trigger_if = {
+								limit = { exists = scope:ritualist_victory }
+								faith.religion = religion:wardenism_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else_if = {
+								limit = { exists = scope:wardenite_victory }
+								faith.religion = religion:ritualist_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else = { always = no }
+						}
+					}
+				}
+				add = {
+					value = -1000
+					desc = gh_region_is_unified
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = possible_big_rulers
+					any_county_in_region = {
+						region = GH_eastern_sarradon_struggle_region
+						percent >= 0.2
+						trigger_if = {
+							limit = { exists = scope:ritualist_victory }
+							faith.religion = religion:wardenism_religion
+						}
+						trigger_else_if = {
+							limit = { exists = scope:wardenite_victory }
+							faith.religion = religion:ritualist_religion
+						}
+						trigger_else = { always = no }
+					}
+				}
+			}
+			add = {
+				value = 20
+				desc = gh_opposite_faith_is_in_region
+			}
+		}
+		if = {
+			limit = {
+				exists = struggle:gh_war_in_heaven_struggle
+			}
+			if = {
+				limit = { exists = scope:wardenite_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_posititive
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_negative
+					}
+				}
+			}
+			else_if = {
+				limit = { exists = scope:ritualist_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_negative
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_positive
+					}
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:ritualist_victory
+				gh_wih_count_rulers_eastern_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_wardenite_rulers_eastern_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_wardenite_rulers_eastern_sarradon_exists
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:wardenite_victory
+				gh_wih_count_rulers_eastern_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_ritualist_rulers_eastern_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_ritualist_rulers_eastern_sarradon_exists
+				}
+			}
+		}
+	}
+}
+
+gh_wih_count_wardenite_rulers_eastern_sarradon_percent_value = {
+	value = gh_wih_count_wardenite_rulers_eastern_sarradon_total_value
+	divide = gh_wih_count_rulers_eastern_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_ritualist_rulers_eastern_sarradon_percent_value = {
+	value = gh_wih_count_ritualist_rulers_eastern_sarradon_total_value
+	divide = gh_wih_count_rulers_eastern_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_rulers_eastern_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_eastern_sarradon_struggle_region
+			}		
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_wardenite_rulers_eastern_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_eastern_sarradon_struggle_region
+			}		
+			faith.religion = religion:wardenism_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_ritualist_rulers_eastern_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_eastern_sarradon_struggle_region
+			}		
+			faith.religion = religion:ritualist_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+wih_far_eastern_potential_struggle_reignite_value = {
+	value = -40
+
+	if = { 
+		limit = { always = yes } #Not sure if I really need this, not sure exactly when temporary scopes end
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_wardenite_victory }
+			save_temporary_scope_as = wardenite_victory
+		}
+		if = {
+			limit = { global_var:gh_region_war_in_heaven_struggle.var:struggle_ending_reason ?= flag:gh_wih_ending_ritualist_victory }
+			save_temporary_scope_as = ritualist_victory
+		}
+		if = {
+			limit = {
+				OR = {
+					exists = title:k_kekhenemhat
+					exists = title:k_edoutin
+					exists = title:k_kazhomi
+					exists = title:k_marwaven
+					exists = title:k_hazrabay
+					exists = title:k_aekershaan
+					exists = title:e_kratemezin
+				}
+			}
+			if = {
+				limit = {
+					any_in_list = {
+						list = possible_big_rulers
+						any_county_in_region = {
+							region = GH_far_eastern_sarradon_struggle_region
+							percent >= 0.75
+							trigger_if = {
+								limit = { exists = scope:ritualist_victory }
+								faith.religion = religion:wardenism_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else_if = {
+								limit = { exists = scope:wardenite_victory }
+								faith.religion = religion:ritualist_religion
+								holder.top_liege ?= prev
+							}
+							trigger_else = { always = no }
+						}
+					}
+				}
+				add = {
+					value = -1000
+					desc = gh_region_is_unified
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = possible_big_rulers
+					any_county_in_region = {
+						region = GH_far_eastern_sarradon_struggle_region
+						percent >= 0.2
+						trigger_if = {
+							limit = { exists = scope:ritualist_victory }
+							faith.religion = religion:wardenism_religion
+						}
+						trigger_else_if = {
+							limit = { exists = scope:wardenite_victory }
+							faith.religion = religion:ritualist_religion
+						}
+						trigger_else = { always = no }
+					}
+				}
+			}
+			add = {
+				value = 20
+				desc = gh_opposite_faith_is_in_region
+			}
+		}
+		if = {
+			limit = {
+				exists = struggle:gh_war_in_heaven_struggle
+			}
+			if = {
+				limit = { exists = scope:wardenite_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_posititive
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_negative
+					}
+				}
+			}
+			else_if = {
+				limit = { exists = scope:ritualist_victory }
+				if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance } }	
+					add = {
+						value = -20
+						desc = gh_central_sarradon_has_struggle_wih_phase_wardenite_dominance_negative
+					}
+				}
+				else_if = {
+					limit = { struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance } }
+					add = {
+						value = 20
+						desc = gh_central_sarradon_has_struggle_wih_phase_ritualist_dominance_positive
+					}
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:ritualist_victory
+				gh_wih_count_rulers_far_eastern_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_wardenite_rulers_far_eastern_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_wardenite_rulers_far_eastern_sarradon_exists
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = scope:wardenite_victory
+				gh_wih_count_rulers_far_eastern_sarradon_total_value >= 5
+			}
+			if = {
+				limit = {
+					gh_wih_count_ritualist_rulers_far_eastern_sarradon_percent_value > 0.2
+				}
+				add = {
+					value = -20
+					desc = gh_wih_multiple_ritualist_rulers_far_eastern_sarradon_exists
+				}
+			}
+		}
+	}
+}
+
+gh_wih_count_wardenite_rulers_far_eastern_sarradon_percent_value = {
+	value = gh_wih_count_wardenite_rulers_far_eastern_sarradon_total_value
+	divide = gh_wih_count_rulers_far_eastern_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_ritualist_rulers_far_eastern_sarradon_percent_value = {
+	value = gh_wih_count_ritualist_rulers_far_eastern_sarradon_total_value
+	divide = gh_wih_count_rulers_far_eastern_sarradon_total_value
+	multiply = 100
+	max = 100
+}
+
+gh_wih_count_rulers_far_eastern_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_far_eastern_sarradon_struggle_region
+			}		
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_wardenite_rulers_far_eastern_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_far_eastern_sarradon_struggle_region
+			}		
+			faith.religion = religion:wardenism_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}
+
+gh_wih_count_ritualist_rulers_far_eastern_sarradon_total_value = {
+	value = 0
+	every_independent_ruler = {
+		limit = {
+			capital_province = {
+				geographical_region = GH_far_eastern_sarradon_struggle_region
+			}		
+			faith.religion = religion:ritualist_religion
+			is_landed = yes
+		}
+		add = 1
+	}
+}

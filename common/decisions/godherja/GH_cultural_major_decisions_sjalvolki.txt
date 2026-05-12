@@ -1,0 +1,258 @@
+﻿##################
+##DECISIONS LIST##
+# Convert to Fuedalism via the Rite
+##################
+
+########
+# Convert to Fuedalise via Rite
+# By Netgear
+convert_realm_feudalism_rite = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = sjalvolki
+	desc = convert_realm_feudalism_rite_desc
+
+	ai_check_interval = 36
+
+	is_shown = {
+		OR = {
+			GH_is_any_tribal_government_trigger = yes
+			GH_gov_is_tribal_clan_trigger = yes
+		}
+		OR = {
+			faith.religion = religion:sjalvolki_religion
+			culture = { has_cultural_pillar = heritage_sjalvolki }
+		}
+	}
+
+	is_valid = {
+		is_any_rite_faith_trigger = yes
+		capital_province.county = {
+			development_level >= convert_to_feudalism_development_requirement
+		}
+	}
+
+	effect = {
+		trigger_event = major_decisions.0001
+		save_scope_as = actor
+		add_prestige = 200
+		add_piety = 200
+		convert_whole_realm_to_feudalism_effect = yes
+		GH_anewworld_check = yes
+		hidden_effect = {
+			every_vassal = {
+				trigger_event = {
+					id = major_decisions.0002
+					days = 3
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+#############################
+#Form the Waymakers of Velos#
+#By TOG 					#
+#############################
+
+form_waymakers_of_velos_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/fp1_decision_forge_jomsvikings.dds"
+	}
+	decision_group_type = sjalvolki
+
+	ai_check_interval = 120
+
+	desc = form_waymakers_of_velos_decision_desc
+	selection_tooltip = form_waymakers_of_velos_decision_tooltip
+
+	is_shown = {
+		is_playable_character = yes
+		government_has_flag = government_is_feudal
+		faith.religion = religion:sjalvolki_religion
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:form_waymakers_of_velos_decision
+			}
+		}
+		title:d_waymakers_of_velos = { is_title_created = no }
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		highest_held_title_tier = tier_duchy
+		prestige_level >= high_prestige_level
+		piety_level >= medium_piety_level
+		is_any_rite_faith_trigger = yes
+		custom_description = {
+			text = form_waymakers_of_velos_decision.tt.is_in_correct_region
+			capital_province = {
+				geographical_region = world_ga_aversarian_homelands
+			}
+		}
+		NOT = {
+			capital_province = {
+				has_special_building = yes
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+	}
+
+	effect = {
+		save_scope_as = founder
+		show_as_tooltip = { waymakers_of_velos_formed_decision_effect = yes }
+		custom_tooltip = waymakers_of_velos_formed_tooltip
+		trigger_event = { id = sjalvolki_decision.2001 }
+		hidden_effect = {
+			add_to_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:form_waymakers_of_velos_decision
+			}
+		}
+		set_global_variable = {
+			name = waymakers_title
+			value = scope:founder.primary_title
+		}
+	}
+
+	cost = {
+		piety = 1000
+		prestige = 1000
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+blow_the_black_horn_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_hooded_figure_hf.dds"
+	}
+	ai_check_interval = 120
+	desc = blow_the_black_horn_decision_desc
+	decision_group_type = major
+
+	is_shown = {
+		any_character_artifact = {
+			has_variable = blackhorn
+		}
+		NOT = {
+			has_character_flag = blew_the_horn
+		}
+	}
+
+	is_valid = {
+		custom_description = {
+			text = blow_the_blackhorn_decision_valid
+			any_character_artifact = {
+				has_variable = blackhorn
+			}
+		}
+		is_at_war = yes
+		
+	}
+
+	is_valid_showing_failures_only = {
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+		is_commanding_army = no
+	}
+
+	effect = {
+		save_scope_as = black_horn_user
+		add_character_flag = blew_the_horn
+
+		show_as_tooltip = {
+			blackhorn_troops_effect = yes
+		}
+
+		custom_tooltip = death_by_blackhorn_tooltip
+
+		trigger_event = artifacts_flavor.1008
+		every_player = {
+			limit = {
+				NOR = { 
+					this = scope:black_horn_user 
+					is_at_war_with = scope:black_horn_user
+				}
+				is_within_diplo_range = { CHARACTER = scope:black_horn_user }
+			}
+			trigger_event = artifacts_flavor.1011
+		}
+		every_player = {
+			limit = {
+				NOT = {
+					this = scope:black_horn_user
+				}
+				is_at_war_with = scope:black_horn_user
+			}
+			trigger_event = artifacts_flavor.1012
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 0
+		modifier = {
+			add = 30
+			has_trait = depressed
+		}
+		modifier = {
+			add = 25
+			has_trait = incapable
+		}
+		modifier = {
+			add = 10
+			has_trait = cancer
+		}
+		modifier = {
+			add = 10
+			has_trait = leper
+		}
+		modifier = {
+			add = 10
+			has_trait = great_pox
+		}
+		modifier = {
+			add = 10
+			has_trait = lunatic
+		}
+		modifier = {
+			add = 10
+			has_trait = brave
+		}
+		modifier = {
+			add = 5
+			has_trait = zealous
+		}
+		modifier = {
+			add = -50
+			has_trait = craven
+		}
+		modifier = {
+			add = -50
+			has_trait = cynical
+		}
+		modifier = {
+			add = 20
+			has_character_flag = make_suicide_available
+		}
+	}
+}

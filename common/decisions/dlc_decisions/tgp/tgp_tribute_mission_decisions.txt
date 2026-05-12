@@ -1,0 +1,513 @@
+﻿#Decisions for and to Tributaries
+
+tribute_mission_decision_mandala = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tgp_projects_mandala_capital.dds"
+	}
+	decision_group_type = realm
+
+	should_create_alert = { always = yes }
+
+	desc = tribute_mission_decision_desc_mandala
+
+	is_shown = {
+		is_tributary = yes
+		suzerain = { government_has_flag = government_is_mandala }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		NOT = { is_at_war_with = suzerain } #Pretty obvious
+		OR = {
+			tribute_mission_decision_generic_trigger = yes
+			tribute_mission_decision_concubine_trigger = { OVERLORD = suzerain }
+			tribute_mission_decision_eunuch_trigger = { OVERLORD = suzerain }
+			has_bunga_mas_tribute_trigger = yes
+		}
+	}
+
+	widget = {
+		gui = "decision_view_widget_pay_tribute"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_TRIBUTE_DECISION_NEXT_STEP_BUTTON"
+
+		item = { # Gold
+			value = tribute_mission_gold
+			is_valid = { has_gold_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_gold
+			icon = "gfx/interface/icons/message_feed/money.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { short_term_gold >= excessive_gold_tribute_value }
+					add = 20 
+				}
+				if = {
+					limit = { short_term_gold >= adequate_gold_tribute_value }
+					add = 20 
+				}
+			}
+		}
+		item = { # Herd
+			value = tribute_mission_herd
+			is_valid = { has_herd_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_herd
+			icon = "gfx/interface/icons/icon_herd.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { 
+						domicile ?= { herd >= excessive_herd_tribute_value }
+					}
+					add = 20 
+				}
+				if = {
+					limit = { 
+						domicile ?= { herd >= adequate_herd_tribute_value }
+					}
+					add = 20 
+				}
+			}
+		}
+
+		item = { # Artifact
+			value = tribute_mission_artifact
+			is_valid = { has_artifact_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_artifact
+			icon = "gfx/interface/icons/message_feed/artifact.dds"
+			ai_chance = { value = 20 }
+		}
+
+		item = { # Concubine 
+			value = tribute_mission_concubine
+			is_valid = { 
+				has_concubine_tribute_trigger = yes
+				can_have_concubines_trigger = { CHAR = suzerain }
+			}
+			localization = tribute_mission_decision_option_concubine
+			icon = "gfx/interface/icons/concubine_icon.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+
+		item = { # Eunuch
+			value = tribute_mission_eunuch
+			is_valid = { 
+				has_eunuch_tribute_trigger = yes
+				can_employ_court_eunuchs_trigger = { CHAR = suzerain }
+			}
+			localization = tribute_mission_decision_option_eunuch
+			icon = "gfx/interface/icons/character_interactions/eunuch.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+
+		item = { # Bunga Mas
+			value = tribute_mission_bunga_mas
+			is_valid = { has_bunga_mas_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_bunga_mas
+			icon = "gfx/interface/icons/artifact/tgp_artifact_golden_flower.dds"
+			ai_chance = { value = 100 } #The AI can do it? Do it!
+		}
+	}
+
+	effect = {
+		custom_tooltip = tribute_mission_decision_effects_mandala_tt
+		tribute_mission_decision_effect = { TARGET = suzerain }
+	}
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 36
+		duchy = 36
+		kingdom = 36
+		empire = 36
+		hegemony = 0
+	}
+
+	ai_potential = {
+		tribute_mission_decision_ai_potential_trigger = { TARGET = suzerain }
+	}
+
+	ai_will_do = {
+		base = 20
+		tribute_mission_decision_ai_will_do_modifiers = yes
+	}
+}
+
+#GH NOTE: Same as vanilla but is this even good practice? Could be just one decision
+tribute_mission_decision_kathun_kai = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tgp_kowtow.dds"
+	}
+	decision_group_type = realm
+
+	should_create_alert = { always = yes }
+
+	desc = tribute_mission_decision_desc_kathun_kai
+
+	is_shown = {
+		title:h_kathun_kai ?= { is_title_created = yes }
+		is_tributary_or_independent_neighbor_of_hegemon_trigger = { HEGEMON = h_kathun_kai }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		NOT = { is_at_war_with = title:h_kathun_kai.holder } #Pretty obvious
+		OR = {
+			tribute_mission_decision_generic_trigger = yes
+			tribute_mission_decision_concubine_trigger = { OVERLORD = title:h_kathun_kai.holder }
+			tribute_mission_decision_eunuch_trigger = { OVERLORD = title:h_kathun_kai.holder }
+		}
+	}
+
+	widget = {
+		gui = "decision_view_widget_pay_tribute"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_TRIBUTE_DECISION_NEXT_STEP_BUTTON"
+
+		item = { # Gold
+			value = tribute_mission_gold
+			is_valid = { has_gold_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_gold
+			icon = "gfx/interface/icons/message_feed/money.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { short_term_gold >= excessive_gold_tribute_value }
+					add = 20 
+				}
+				if = {
+					limit = { short_term_gold >= adequate_gold_tribute_value }
+					add = 20 
+				}
+			}
+		}
+		item = { # Herd
+			value = tribute_mission_herd
+			is_valid = { has_herd_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_herd
+			icon = "gfx/interface/icons/icon_herd.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { 
+						domicile ?= { herd >= excessive_herd_tribute_value }
+					}
+					add = 20 
+				}
+				if = {
+					limit = { 
+						domicile ?= { herd >= adequate_herd_tribute_value }
+					}
+					add = 20 
+				}
+			}
+		}
+
+		item = { # Artifact
+			value = tribute_mission_artifact
+			is_valid = { has_artifact_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_artifact
+			icon = "gfx/interface/icons/message_feed/artifact.dds"
+			ai_chance = { value = 20 }
+		}
+
+		item = { # Concubine 
+			value = tribute_mission_concubine
+			is_valid = { 
+				has_concubine_tribute_trigger = yes
+				title:h_kathun_kai.holder = { is_adult = yes }
+				can_have_concubines_trigger = { CHAR = title:h_kathun_kai.holder }
+			}
+			localization = tribute_mission_decision_option_concubine
+			icon = "gfx/interface/icons/concubine_icon.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+
+		item = { # Eunuch
+			value = tribute_mission_eunuch
+			is_valid = { 
+				has_eunuch_tribute_trigger = yes
+				can_employ_court_eunuchs_trigger = { CHAR = title:h_kathun_kai.holder }
+			}
+			localization = tribute_mission_decision_option_eunuch
+			icon = "gfx/interface/icons/character_interactions/eunuch.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+	}
+
+	effect = {
+		custom_tooltip = tribute_mission_decision_effects_kathun_kai_tt
+		tribute_mission_decision_effect = { TARGET = title:h_kathun_kai.holder }
+	}
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 72
+		duchy = 36
+		kingdom = 36
+		empire = 36
+		hegemony = 0
+	}
+
+	ai_potential = {
+		exists = title:h_kathun_kai.holder
+		tribute_mission_decision_ai_potential_trigger = { TARGET = title:h_kathun_kai.holder }
+	}
+
+	ai_will_do = {
+		base = 20
+		tribute_mission_decision_ai_will_do_modifiers = yes
+	}
+}
+
+tribute_mission_decision_aversarinas_aautokrata = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/ep3_decision_roman_restoration.dds"
+	}
+	decision_group_type = realm
+
+	should_create_alert = { always = yes }
+
+	desc = tribute_mission_decision_desc_aversarinas_aautokrata
+
+	is_shown = {
+		title:h_aversarinas_aautokrata ?= { is_title_created = yes }
+		is_tributary_or_independent_neighbor_of_hegemon_trigger = { HEGEMON = h_aversarinas_aautokrata }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		NOT = { is_at_war_with = title:h_aversarinas_aautokrata.holder } #Pretty obvious
+		OR = {
+			tribute_mission_decision_generic_trigger = yes
+			tribute_mission_decision_concubine_trigger = { OVERLORD = title:h_aversarinas_aautokrata.holder }
+			tribute_mission_decision_eunuch_trigger = { OVERLORD = title:h_aversarinas_aautokrata.holder }
+		}
+	}
+
+	widget = {
+		gui = "decision_view_widget_pay_tribute"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_TRIBUTE_DECISION_NEXT_STEP_BUTTON"
+
+		item = { # Gold
+			value = tribute_mission_gold
+			is_valid = { has_gold_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_gold
+			icon = "gfx/interface/icons/message_feed/money.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { short_term_gold >= excessive_gold_tribute_value }
+					add = 20 
+				}
+				if = {
+					limit = { short_term_gold >= adequate_gold_tribute_value }
+					add = 20 
+				}
+			}
+		}
+		item = { # Herd
+			value = tribute_mission_herd
+			is_valid = { has_herd_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_herd
+			icon = "gfx/interface/icons/icon_herd.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { 
+						domicile ?= { herd >= excessive_herd_tribute_value }
+					}
+					add = 20 
+				}
+				if = {
+					limit = { 
+						domicile ?= { herd >= adequate_herd_tribute_value }
+					}
+					add = 20 
+				}
+			}
+		}
+
+		item = { # Artifact
+			value = tribute_mission_artifact
+			is_valid = { has_artifact_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_artifact
+			icon = "gfx/interface/icons/message_feed/artifact.dds"
+			ai_chance = { value = 20 }
+		}
+
+		item = { # Concubine 
+			value = tribute_mission_concubine
+			is_valid = { 
+				has_concubine_tribute_trigger = yes
+				title:h_aversarinas_aautokrata.holder = { is_adult = yes }
+				can_have_concubines_trigger = { CHAR = title:h_aversarinas_aautokrata.holder }
+			}
+			localization = tribute_mission_decision_option_concubine
+			icon = "gfx/interface/icons/concubine_icon.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+
+		item = { # Eunuch
+			value = tribute_mission_eunuch
+			is_valid = { 
+				has_eunuch_tribute_trigger = yes
+				can_employ_court_eunuchs_trigger = { CHAR = title:h_aversarinas_aautokrata.holder }
+			}
+			localization = tribute_mission_decision_option_eunuch
+			icon = "gfx/interface/icons/character_interactions/eunuch.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+	}
+
+	effect = {
+		custom_tooltip = tribute_mission_decision_effects_aversaria_tt
+		tribute_mission_decision_effect = { TARGET = title:h_aversarinas_aautokrata.holder }
+	}
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 72
+		duchy = 36
+		kingdom = 36
+		empire = 36
+		hegemony = 0
+	}
+
+	ai_potential = {
+		exists = title:h_aversarinas_aautokrata.holder
+		tribute_mission_decision_ai_potential_trigger = { TARGET = title:h_aversarinas_aautokrata.holder }
+	}
+
+	ai_will_do = {
+		base = 20
+		tribute_mission_decision_ai_will_do_modifiers = yes
+	}
+}
+
+tribute_mission_decision_sarradon = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_golden_age.dds"
+	}
+	decision_group_type = realm
+
+	should_create_alert = { always = yes }
+
+	desc = tribute_mission_decision_desc_sarradon
+
+	is_shown = {
+		title:h_sarradon ?= { is_title_created = yes }
+		is_tributary_or_independent_neighbor_of_hegemon_trigger = { HEGEMON = h_sarradon }
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		NOT = { is_at_war_with = title:h_sarradon.holder } #Pretty obvious
+		OR = {
+			tribute_mission_decision_generic_trigger = yes
+			tribute_mission_decision_concubine_trigger = { OVERLORD = title:h_sarradon.holder }
+			tribute_mission_decision_eunuch_trigger = { OVERLORD = title:h_sarradon.holder }
+		}
+	}
+
+	widget = {
+		gui = "decision_view_widget_pay_tribute"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_TRIBUTE_DECISION_NEXT_STEP_BUTTON"
+
+		item = { # Gold
+			value = tribute_mission_gold
+			is_valid = { has_gold_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_gold
+			icon = "gfx/interface/icons/message_feed/money.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { short_term_gold >= excessive_gold_tribute_value }
+					add = 20 
+				}
+				if = {
+					limit = { short_term_gold >= adequate_gold_tribute_value }
+					add = 20 
+				}
+			}
+		}
+		item = { # Herd
+			value = tribute_mission_herd
+			is_valid = { has_herd_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_herd
+			icon = "gfx/interface/icons/icon_herd.dds"
+			ai_chance = {
+				value = 20 
+				if = {
+					limit = { 
+						domicile ?= { herd >= excessive_herd_tribute_value }
+					}
+					add = 20 
+				}
+				if = {
+					limit = { 
+						domicile ?= { herd >= adequate_herd_tribute_value }
+					}
+					add = 20 
+				}
+			}
+		}
+
+		item = { # Artifact
+			value = tribute_mission_artifact
+			is_valid = { has_artifact_tribute_trigger = yes }
+			localization = tribute_mission_decision_option_artifact
+			icon = "gfx/interface/icons/message_feed/artifact.dds"
+			ai_chance = { value = 20 }
+		}
+
+		item = { # Concubine 
+			value = tribute_mission_concubine
+			is_valid = { 
+				has_concubine_tribute_trigger = yes
+				title:h_sarradon.holder = { is_adult = yes }
+				can_have_concubines_trigger = { CHAR = title:h_sarradon.holder }
+			}
+			localization = tribute_mission_decision_option_concubine
+			icon = "gfx/interface/icons/concubine_icon.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+
+		item = { # Eunuch
+			value = tribute_mission_eunuch
+			is_valid = { 
+				has_eunuch_tribute_trigger = yes
+				can_employ_court_eunuchs_trigger = { CHAR = title:h_sarradon.holder }
+			}
+			localization = tribute_mission_decision_option_eunuch
+			icon = "gfx/interface/icons/character_interactions/eunuch.dds"
+			ai_chance = { value = 50 } #The AI can do it? Do it!
+		}
+	}
+
+	effect = {
+		custom_tooltip = tribute_mission_decision_effects_sarradon_tt
+		tribute_mission_decision_effect = { TARGET = title:h_sarradon.holder }
+	}
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 72
+		duchy = 36
+		kingdom = 36
+		empire = 36
+		hegemony = 0
+	}
+
+	ai_potential = {
+		exists = title:h_sarradon.holder
+		tribute_mission_decision_ai_potential_trigger = { TARGET = title:h_sarradon.holder }
+	}
+
+	ai_will_do = {
+		base = 20
+		tribute_mission_decision_ai_will_do_modifiers = yes
+	}
+}

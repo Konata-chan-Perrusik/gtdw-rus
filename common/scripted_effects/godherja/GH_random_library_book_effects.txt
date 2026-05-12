@@ -1,0 +1,4159 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_random_library_book_effects.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+add_random_historical_book_effect = {
+    save_scope_value_as = {
+        name = number_of_books_in_library
+        value = gh_location_topic_book_capacity_value
+    }
+
+    random_list = {
+        100 = {}
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_garden_of_copper
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_garden_of_copper
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:historical_dead_magic_grimoire_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        OR = {
+                            geographical_region = world_ga_mayikprolollan
+                            geographical_region = GH_graphical_shattered_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:historical_dead_magic_grimoire_1
+            }
+			create_book_attribute_story = { BOOK = historical_dead_magic_grimoire_1 }
+			var:historical_dead_magic_grimoire_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:earthquake }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:summon_precious_meteor }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:moon_magic_generation_spell }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:precious_metal_transmutation }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_collected_poems_of_useysh
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_collected_poems_of_useysh
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_five_sealed_springs
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_five_sealed_springs
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:a_thousand_dishes_of_sarradon
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:a_thousand_dishes_of_sarradon
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:on_the_paths_of_dream
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:on_the_paths_of_dream
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_rise_and_reign_of_naza
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_rise_and_reign_of_naza
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:in_search_of_the_lost_south
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:in_search_of_the_lost_south
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_campaigns_of_sharnira
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_campaigns_of_sharnira
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:proclamations_of_the_emerald_pretender
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        geographical_region = GH_geographic_amsar
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:proclamations_of_the_emerald_pretender
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:annals_of_the_house_of_harthah
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_kharadamat
+                            geographical_region = GH_geographic_sinhamiyah
+                            geographical_region = GH_geographic_khenemhat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:annals_of_the_house_of_harthah
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:wisemans_friend
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = world_ga_mayikprolollan
+                            geographical_region = GH_graphical_shattered_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:wisemans_friend
+            }
+			create_book_attribute_story = { BOOK = wisemans_friend }
+			var:wisemans_friend ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = detecting_malice_meditation }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = spirit_interaction_rules }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = aervalr_reading }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = star_cards }
+			}
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:owl_dissections
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_graphical_marches
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:owl_dissections
+            }
+			create_book_attribute_story = { BOOK = owl_dissections }
+			var:owl_dissections ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = wingspan_pinion }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = digits_talons }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = lenses_oracle }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:songwood
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_graphical_marches
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:songwood
+            }
+			create_book_attribute_story = { BOOK = songwood }
+			var:songwood ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = wisrutu }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = iltyds_lament }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = choir_of_laughing_shadows }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = spring_blessing }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = the_fell_one }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:azure_tablet
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = world_ga_mayikprolollan
+                            geographical_region = GH_graphical_shattered_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:azure_tablet
+            }
+			create_book_attribute_story = { BOOK = azure_tablet }
+			var:azure_tablet ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:rite_of_the_scarlet_kings_feast }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:invocation_of_the_red_frenzy }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:seal_of_the_red_madness }
+			}
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:aeltheniax_anatomy_vol_2
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_medicine_topic
+                    location = {
+                        OR = {
+                            geographical_region = world_ga_mayikprolollan
+                            geographical_region = GH_graphical_shattered_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:aeltheniax_anatomy_vol_2
+            }
+			create_book_attribute_story = { BOOK = aeltheniax_anatomy_vol_2 }
+			var:aeltheniax_anatomy_vol_2 ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = methods_of_vivisection }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = vitae_extraction_and_storage }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = applied_mutations_and_flesh_graftings }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:aeltheniax_anatomy_vol_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_medicine_topic
+                    location = {
+                        OR = {
+                            geographical_region = world_ga_mayikprolollan
+                            geographical_region = GH_graphical_shattered_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:aeltheniax_anatomy_vol_1
+            }
+			create_book_attribute_story = { BOOK = aeltheniax_anatomy_vol_1 }
+			var:aeltheniax_anatomy_vol_1 ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = basics_of_human_anatomy }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = three_humors }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = mechanics_of_the_heart }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = theorem_resonant_heartbeat }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = rune_four_valves }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:seventy_seven_cities
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_graphical_shattered_coast
+                            geographical_region = GH_geographic_chevalie
+                            geographical_region = GH_geographic_sinhamiyah
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:seventy_seven_cities
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:historical_wood_law_grimoire_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:historical_wood_law_grimoire_1
+            }
+			create_book_attribute_story = { BOOK = historical_wood_law_grimoire_1 }
+			var:historical_wood_law_grimoire_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:strengthen_soil }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:sacrifice_rare_herbs }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:verdant_growth }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:healing_water_rune_scroll_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:healing_water_rune_scroll_1
+            }
+			create_book_attribute_story = { BOOK = healing_water_rune_scroll_1 }
+			var:healing_water_rune_scroll_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:healing_water }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:magistrength_rune_scroll_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:magistrength_rune_scroll_1
+            }
+			create_book_attribute_story = { BOOK = magistrength_rune_scroll_1 }
+			var:magistrength_rune_scroll_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:magistrength }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:auspex_of_temptation_rune_scroll_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:auspex_of_temptation_rune_scroll_1
+            }
+			create_book_attribute_story = { BOOK = auspex_of_temptation_rune_scroll_1 }
+			var:auspex_of_temptation_rune_scroll_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:auspex_of_temptation }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:raise_bloodthralls_rune_scroll_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:raise_bloodthralls_rune_scroll_1
+            }
+			create_book_attribute_story = { BOOK = raise_bloodthralls_rune_scroll_1 }
+			var:raise_bloodthralls_rune_scroll_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:raise_bloodthralls }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:skeletalcraft_rune_scroll_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:skeletalcraft_rune_scroll_1
+            }
+			create_book_attribute_story = { BOOK = skeletalcraft_rune_scroll_1 }
+			var:skeletalcraft_rune_scroll_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:skeletalcraft }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:fire_magick_rune_scroll_1
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:fire_magick_rune_scroll_1
+            }
+			create_book_attribute_story = { BOOK = fire_magick_rune_scroll_1 }
+			var:fire_magick_rune_scroll_1 ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:fire_magick }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:skull_of_the_purest
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_etepezea
+                            geographical_region = GH_geographic_imperial_isle
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:skull_of_the_purest
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:masenmalik
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_kharadamat
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:masenmalik
+            }
+			create_book_attribute_story = { BOOK = masenmalik }
+			var:masenmalik ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = collection_of_tasurmad_poetry }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = beautiful_women_of_sar_naresh_cipher }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = chronological_list_of_ritualist_prophets_cipher }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = apricot_orchard_cipher }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:kam_gutaran
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_commerce_topic
+                    location = {
+                        geographical_region = GH_geographic_ayyar_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:kam_gutaran
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:bookofmaps
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:bookofmaps
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:afynehestoree
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_graphical_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:afynehestoree
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:book_of_kurush
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_graphical_amsar
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:book_of_kurush
+            }
+			create_book_attribute_story = { BOOK = book_of_kurush }
+			var:book_of_kurush ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = dream_maps_empyrean_tower }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = key_of_the_obsidian_gate_ke }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_lost_cities
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_graphical_mayikprolollan
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_lost_cities
+            }
+			create_book_attribute_story = { BOOK = the_lost_cities }
+			var:the_lost_cities ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = ship_quarreling_lover }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = empty_island_corvanor }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = nature_of_shade_infestation }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = fall_of_relar_outpost }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = tales_of_extinction }
+			}
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:book_of_forbidden_names
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_amsar
+                            geographical_region = GH_geographic_ayyar_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:book_of_forbidden_names
+            }
+			create_book_attribute_story = { BOOK = book_of_forbidden_names }
+			var:book_of_forbidden_names ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = dream_maps_empyrean_tower }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = key_of_the_obsidian_gate_ke }
+			}
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:amazingslaves
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_commerce_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_graphical_clanlands
+                            geographical_region = GH_graphical_isles
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:amazingslaves
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:fraternityofmagi
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_graphical_isles
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:fraternityofmagi
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_godherja
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_graphical_clanlands
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_godherja
+            }
+			create_book_attribute_story = { BOOK = the_godherja }
+			var:the_godherja ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = godherja }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:dragon_tale
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_graphical_isles
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:dragon_tale
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:womanknights
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:womanknights
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:pocket_guide_to_aversaria
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_graphical_isles
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:pocket_guide_to_aversaria
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:manswelbestiarium
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:manswelbestiarium
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:contents_of_silver
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_practical_arts_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_marches
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_graphical_isles
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:contents_of_silver
+            }
+			create_book_attribute_story = { BOOK = contents_of_silver }
+			var:contents_of_silver ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = warding_mirrors }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = mirror_spirit_interaction }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = mirror_lich_interaction }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = laser_beam_spell_ke }
+			}
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:greyfen_codex
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:greyfen_codex
+            }
+			create_book_attribute_story = { BOOK = greyfen_codex }
+			var:greyfen_codex ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:phylactery_of_the_trolls_blood }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:rite_of_the_scarlet_kings_feast }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:spawn_nature_elementals_army }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:interior_journey }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:invocation_of_the_wise_mother }
+			}
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:on_the_triune_blood_of_man
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_marches
+                            geographical_region = GH_geographic_sinhamiyah
+                            geographical_region = GH_geographic_kharadamat
+                            geographical_region = GH_geographic_isles
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:on_the_triune_blood_of_man
+            }
+			create_book_attribute_story = { BOOK = on_the_triune_blood_of_man }
+			var:on_the_triune_blood_of_man ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:humorsurge_pyrax }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:humorsurge_syngos }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:humorsurge_elemochis }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_voyagers
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_geographic_sinhamiyah
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_voyagers
+            }
+			create_book_attribute_story = { BOOK = the_voyagers }
+			var:the_voyagers ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = dream_maps_empyrean_tower }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = key_of_the_obsidian_gate_ke }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:clarifications_on_the_ivory_sea
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_graphical_western_aironoi
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:clarifications_on_the_ivory_sea
+            }
+			create_book_attribute_story = { BOOK = clarifications_on_the_ivory_sea }
+			var:clarifications_on_the_ivory_sea ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = wakeless_glass }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = wakeless_rubies }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = wakeless_incomprehensibilities }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:neverending_dream
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_graphical_etepezea
+                            geographical_region = GH_graphical_malcois
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:neverending_dream
+            }
+			create_book_attribute_story = { BOOK = neverending_dream }
+			var:neverending_dream ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = neverending_dream_appendices }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = neverending_dream_geese_questions }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = neverending_dream_roar_of_the_king }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = neverending_dream_spider_queen }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:transcripts_of_contention_of_rajmun
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_graphical_etepezea
+                            geographical_region = GH_graphical_malcois
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:transcripts_of_contention_of_rajmun
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:epic_of_talab
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_graphical_sarradon
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:epic_of_talab
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:high_chants_of_stargazers
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_aironoi
+                            geographical_region = GH_geographic_kashirya
+                        }
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:high_chants_of_stargazers
+            }
+			create_book_attribute_story = { BOOK = high_chants_of_stargazers }
+			var:high_chants_of_stargazers ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = star_gazers }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:splenderous_mirror_turned_inwards
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_aironoi
+                            geographical_region = GH_geographic_kashirya
+                            geographical_region = GH_geographic_dahangon
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:splenderous_mirror_turned_inwards
+            }
+			create_book_attribute_story = { BOOK = splenderous_mirror_turned_inwards }
+			var:splenderous_mirror_turned_inwards ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = splendorous_mirrors_part_one }
+			}
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_dancers
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_western_opakhasia
+                            geographical_region = GH_geographic_northern_opakhasia
+                        }
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_dancers
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_hippoxiad
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_hippoxiad
+            }
+			create_book_attribute_story = { BOOK = the_hippoxiad }
+			var:the_hippoxiad ?= {
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:humorsurge_syngos }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:rite_of_the_red_chain }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:humorsurge_pyrax }
+				assign_spell_knowledge_entry_effect = { SPELL = global_var:seal_of_the_red_madness }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:sound_of_veins
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_western_opakhasia
+                            geographical_region = GH_geographic_northern_opakhasia
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:sound_of_veins
+            }
+			create_book_attribute_story = { BOOK = sound_of_veins }
+			var:sound_of_veins ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = sound_of_veins_act_one }
+			}
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:testament_to_yunusfur
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_kharadamat
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:testament_to_yunusfur
+            }
+			create_book_attribute_story = { BOOK = testament_to_yunusfur }
+			var:testament_to_yunusfur ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = testament_to_yunusfur_el_qulatha }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = testament_to_yunusfur_hudi }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:arl_janvreeps_series
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_geographic_konij
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:arl_janvreeps_series
+            }
+			create_book_attribute_story = { BOOK = arl_janvreeps_series }
+			var:arl_janvreeps_series ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = arl_janvreep_world_tree_weddings_in_the_glade }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = arl_janvreep_world_tree_mid_summer }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = arl_janvreep_world_tree_autumn_prayer }
+			}
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:songs_of_the_sea
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = the_western_isles
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:songs_of_the_sea
+            }
+			create_book_attribute_story = { BOOK = songs_of_the_sea }
+			var:songs_of_the_sea ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = sea_queens_domain }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = duelist_adventurer }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = admiral_of_the_deep }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = minstrel_of_the_reef }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:alkan_tabbot
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_amsar
+                            geographical_region = GH_geographic_ayyar_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:alkan_tabbot
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:musings_on_flight_patterns
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_kashirya
+                            geographical_region = GH_geographic_pirate_coast
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:musings_on_flight_patterns
+            }
+			create_book_attribute_story = { BOOK = musings_on_flight_patterns }
+			var:musings_on_flight_patterns ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = musings_on_flight_patterns }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:sanasamadta
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_kashirya
+                            geographical_region = GH_geographic_pirate_coast
+                            geographical_region = GH_geographic_dahangon
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:sanasamadta
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:stony_affair_at_viridue
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_chevalie
+                            geographical_region = GH_geographic_imperial_isle
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:stony_affair_at_viridue
+            }
+			create_book_attribute_story = { BOOK = stony_affair_at_viridue }
+			var:stony_affair_at_viridue ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = preliminary_results }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = agata_rebirth_ke }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = anti_magi_cockatrice }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = killer_discovered }
+			}
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:lessons_on_oejeynican_burials
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:lessons_on_oejeynican_burials
+            }
+			create_book_attribute_story = { BOOK = lessons_on_oejeynican_burials }
+			var:lessons_on_oejeynican_burials ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = on_embalming }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = burial_rituals }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = funeral_dirges }
+			}
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:kassidius_diagrams
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:kassidius_diagrams
+            }
+			create_book_attribute_story = { BOOK = kassidius_diagrams }
+			var:kassidius_diagrams ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = kei_kassidius_diagrams }
+			}
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:lonely_spirit
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_western_opakhasia
+                            geographical_region = GH_geographic_northern_opakhasia
+                            geographical_region = GH_geographic_imperial_isle
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:lonely_spirit
+            }
+			create_book_attribute_story = { BOOK = lonely_spirit }
+			var:lonely_spirit ?= {
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = lonely_spirit_experiment_log }
+				assign_knowledge_entry_effect = { KNOWLEDGE_ENTRY_IDENTIFIER = lonely_spirit_personal_log }
+			}
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:aversariancookinginformational
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_practical_arts_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:aversariancookinginformational
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:marcherswhatdoweknow
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:marcherswhatdoweknow
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:mightmagibuxommaiden
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:mightmagibuxommaiden
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:fiftyshades
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:fiftyshades
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:taleofsirkoeveux
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:taleofsirkoeveux
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:imperialcivilwar
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:imperialcivilwar
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:nameofthewindknockoff
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:nameofthewindknockoff
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:tragedyinoejeynica
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_marches
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:tragedyinoejeynica
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:sarradoniansteps
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_kharadamat
+                            geographical_region = GH_geographic_sinhamiyah
+                            geographical_region = GH_geographic_ayyar_coast
+                            geographical_region = GH_geographic_khenemhat
+                            geographical_region = GH_geographic_sirwali
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:sarradoniansteps
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:chivalriccode
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:chivalriccode
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:griffonbestiary
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:griffonbestiary
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:lasthippogriff
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:lasthippogriff
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:howtomaimadragon
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:howtomaimadragon
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:loveanddeathinasiupoli
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_etepezea
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:loveanddeathinasiupoli
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:silastavroaliveordead
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:silastavroaliveordead
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:howtoreadabook
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_language_and_letters_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:howtoreadabook
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:purelifefifth
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:purelifefifth
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:purebodyfifth
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:purebodyfifth
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:puremindfifth
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:puremindfifth
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:purelifefirst
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:purelifefirst
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:purebodyfirst
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:purebodyfirst
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:puremindfirst
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:puremindfirst
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:travelsofsaintkatharitos
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:travelsofsaintkatharitos
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:hundredtrials
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:hundredtrials
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:bookofremedies
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_medicine_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:bookofremedies
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:saintslawbook
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:saintslawbook
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:rendingthechains
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:rendingthechains
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:eosianswordcharter
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_warfare_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:eosianswordcharter
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:masuherid_tribe_and_their_ways
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_graphical_amsar
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:masuherid_tribe_and_their_ways
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:compendum_five_fathers
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_graphical_marches
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:compendum_five_fathers
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:dangerofathousandstars
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_geographic_etepezea
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:dangerofathousandstars
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:bannediyrossipoetry
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_language_and_letters_topic
+                    location = {
+                        geographical_region = GH_geographic_malcois
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:bannediyrossipoetry
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:aeladaxostoaeliadias
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:aeladaxostoaeliadias
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:compiledworksofvenodau
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:compiledworksofvenodau
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:pillarsofaversaria
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:pillarsofaversaria
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:ontheoriginofmankind
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:ontheoriginofmankind
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:ataleoftwocities
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:ataleoftwocities
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:parthenaxiada
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_etepezea
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:parthenaxiada
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:edgeoftheworld
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_isles
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:edgeoftheworld
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:ninetysixtasks
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:ninetysixtasks
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:natureofmatter
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_philosophy_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:natureofmatter
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:ruleofmany
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:ruleofmany
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:thedragonandthescorpion
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:thedragonandthescorpion
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:arakkariacwar
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:arakkariacwar
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:lostpolis
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:lostpolis
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:mawtalmunininguide
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_geographic_kharadamat
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:mawtalmunininguide
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:expeditiontothenorth
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_imperial_isle
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:expeditiontothenorth
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:howtheendbegan
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_warfare_topic
+                    location = {
+                        geographical_region = GH_geographic_northern_opakhasia
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:howtheendbegan
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:refutation_of_the_phantasmal_mist
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = world_ga_mayikprolollan
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:refutation_of_the_phantasmal_mist
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:inquiryintothefog
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_natural_sciences_topic
+                    location = {
+                        geographical_region = world_ga_mayikprolollan
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:inquiryintothefog
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:clockworkcity
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:clockworkcity
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:whenaervalbleed
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:whenaervalbleed
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:treatiseofgoodpractice
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                            geographical_region = GH_geographic_sinhamiyah
+                            geographical_region = GH_geographic_kharadamat
+                        }
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:treatiseofgoodpractice
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:chevalienknightinoraispol
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:chevalienknightinoraispol
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:witchbreakerhero
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:witchbreakerhero
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:sjalvolkipoetry
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:sjalvolkipoetry
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:bookofthefallen
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_chevalie
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:bookofthefallen
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:jacotwaldisse
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        geographical_region = GH_geographic_marches
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:jacotwaldisse
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:delenelbook
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = world_ga_mayikprolollan
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:delenelbook
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:redlandsadventure
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_literature_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_aironoi_northwest
+                            geographical_region = GH_geographic_southeast_aironoi
+                            geographical_region = GH_geographic_western_aironoi
+                        }
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:redlandsadventure
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:fourlodges
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_damota
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:fourlodges
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:journalofseekers
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_damota
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:journalofseekers
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:godslaverdictations_fix
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_marches
+                            geographical_region = GH_geographic_etepezea
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:godslaverdictations_fix
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:thekardwenwhatweknow
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_shattered_coast
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:thekardwenwhatweknow
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:dethediaxnotes
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        geographical_region = GH_geographic_malcois
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:dethediaxnotes
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:dethediaxiancodex
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_shattered_coast
+                            geographical_region = GH_geographic_malcois
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:dethediaxiancodex
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:bluerobetreatise
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_law_and_governance_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_aironoi_northwest
+                            geographical_region = GH_geographic_southeast_aironoi
+                            geographical_region = GH_geographic_western_aironoi
+                        }
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:bluerobetreatise
+            }
+        }
+        50 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:boqqarofknives
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_history_topic
+                    location = {
+                        geographical_region = GH_geographic_damota
+                    }
+                }
+            }
+            modifier = { add = 30 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 20
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.3 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:boqqarofknives
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:the_aaimorgeneia
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_theology_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:the_aaimorgeneia
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:invocation_of_the_leashed_flame_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = {
+                add = 200
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:invocation_of_the_leashed_flame_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:rite_of_the_scarlet_kings_feast_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                }
+            }
+            modifier = {
+                add = -80
+                NOT = { scope:reader.location ?= { geographical_region = GH_geographic_aversaria } }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:rite_of_the_scarlet_kings_feast_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:invocation_of_the_wise_mother_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:invocation_of_the_wise_mother_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:humorsurge_syngos_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = {
+                add = 50
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:humorsurge_syngos_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:humorsurge_elemochis_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = {
+                add = 50
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:humorsurge_elemochis_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:humorsurge_pyrax_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = {
+                add = 50
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:humorsurge_pyrax_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:mark_of_the_gortillian_acolyte_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = {
+                add = 200
+                scope:reader.location ?= { geographical_region = GH_all_mayik }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:mark_of_the_gortillian_acolyte_scroll
+            }
+        }
+        10 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:rite_of_the_cradles_blessing_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        OR = {
+                            geographical_region = GH_geographic_etepezea
+                            geographical_region = GH_geographic_western_opakhasia
+                        }
+                    }
+                }
+            }
+            modifier = { add = 10 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 5
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            modifier = { factor = 0.1 scope:number_of_books_in_library < 5 }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:rite_of_the_cradles_blessing_scroll
+            }
+        }
+        100 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:rite_of_the_iron_vitae_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_all_mayik
+                    }
+                }
+            }
+            modifier = { add = 50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = 30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:rite_of_the_iron_vitae_scroll
+            }
+        }
+        300 = {
+            trigger = {
+                NOT = {
+                    is_target_in_variable_list = {
+                        name = gh_available_books_in_$TOPIC$_list
+                        target = flag:rite_of_the_red_chain_scroll
+                    }
+                }
+                scope:reader ?= {
+                    var:gh_chosen_topic ?= flag:gh_magic_topic
+                    location = {
+                        geographical_region = GH_geographic_aversaria
+                    }
+                }
+            }
+            modifier = { add = -50 scope:number_of_books_in_library > 15 }
+            modifier = {
+                add = -30
+                scope:number_of_books_in_library <= 15
+                scope:number_of_books_in_library >= 5
+            }
+            add_to_variable_list = {
+                name = gh_available_books_in_$TOPIC$_list
+                target = flag:rite_of_the_red_chain_scroll
+            }
+        }
+
+    }
+}

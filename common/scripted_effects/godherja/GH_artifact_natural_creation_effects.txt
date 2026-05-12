@@ -1,0 +1,320 @@
+﻿#####################################
+# Natural Artifact Creation Effects #
+#####################################
+
+#############
+# Gemstones #
+#############
+
+create_artifact_magical_gemstone_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	$HUNTER$ = { save_scope_as = hunter }
+	save_scope_value_as = { name = legendary value = $LEGENDARY$ }
+	scope:owner = {
+		set_variable = { name = animal_type value = $ANIMAL$ days = 5 }
+		if = {
+			limit = {
+				OR = {
+					NOT = { exists = var:animal_type }
+					var:animal_type ?= flag:none
+				}
+			}
+			random_list = {
+				8 = {
+					hunt_activity_standard_game_effect = { PROVINCE = scope:hunter.location HUNTER = scope:hunter }
+				}
+				2 = {
+					hunt_activity_dangerous_game_effect = { PROVINCE = scope:hunter.location }
+				}
+			}
+		}
+	}
+	if = {
+		limit = { exists = scope:adventurer }
+		scope:adventurer = { save_scope_as = creator }
+	}
+	else = {
+		scope:hunter = { save_scope_as = creator }
+	}
+	hidden_effect_new_object = {
+		# Get artifact quality, location, and animal
+		animal_artifact_wealth_quality_effect = yes
+		get_animal_hunt_location_effect = yes
+		scope:location = { add_to_list = artifact_material_sources }
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_gemstone_name_shard
+				creator = scope:owner
+				description = placeholder
+				type = gemstone
+				visuals = diamond
+				modifier = artifact_placeholder_modifier
+				save_scope_as = newly_created_artifact
+				wealth = scope:wealth
+				quality = scope:quality
+			}
+		}
+		scope:newly_created_artifact = {
+			set_max_durability = 120
+			set_artifact_feature_group = gemstone_magical_texture
+			set_artifact_feature_group = gemstone_magical_aura
+			set_artifact_description = artifact_gemstone_description
+
+			if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_hot }
+				add_artifact_aspect_modifier_effect = { NAME = fire VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_cold }
+				add_artifact_aspect_modifier_effect = { NAME = ice VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_wind }
+				add_artifact_aspect_modifier_effect = { NAME = air VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_dark }
+				add_artifact_aspect_modifier_effect = { NAME = dark VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_whispers }
+				add_artifact_aspect_modifier_effect = { NAME = ethereal VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_melancholy }
+				add_artifact_aspect_modifier_effect = { NAME = dream VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_euphoria }
+				add_artifact_aspect_modifier_effect = { NAME = dream VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_dark }
+				add_artifact_aspect_modifier_effect = { NAME = dark VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_washes_out_colors }
+				add_artifact_aspect_modifier_effect = { NAME = ethereal VALUE = 1 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_increases_vibrancy }
+				add_artifact_aspect_modifier_effect = { NAME = light VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_necromantic }
+				add_artifact_aspect_modifier_effect = { NAME = death VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_plant_growth }
+				add_artifact_aspect_modifier_effect = { NAME = nature VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_alluring }
+				add_artifact_aspect_modifier_effect = { NAME = metal VALUE = 1 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_magic_boosting }
+				add_artifact_aspect_modifier_effect = { NAME = blood VALUE = 2 }
+			}
+			else_if = {
+				limit = { has_artifact_feature = gemstone_magical_aura_anti_magic }
+				add_artifact_aspect_modifier_effect = { NAME = celestial VALUE = 2 }
+			}
+			add_artifact_aspect_modifier_effect = { NAME = stone VALUE = 1 }
+
+
+			random_list = {
+				pick = 2
+				unique = yes
+				25 = {
+					add_scaled_artifact_modifier_majesty_effect = yes
+				}
+				25 = {		
+					add_scaled_artifact_modifier_prestige_effect = yes
+				}
+				25 = {		
+					add_scaled_artifact_modifier_grandeur_small_effect = yes
+				}
+				25 = {		
+					add_scaled_artifact_modifier_dynasty_prestige_effect = yes
+				}
+			}
+			set_variable = {
+				name = animal_type
+				value = scope:owner.var:animal_type
+			}
+			set_variable = {
+				name = quality
+				value = scope:quality
+			}
+			set_variable = {
+				name = wealth
+				value = scope:wealth
+			}
+			hunt_animal_artifact_modifier_selection_effect = yes
+			if = {
+				limit = { scope:legendary = yes }
+				set_variable = { name = legendary }
+				add_scaled_artifact_modifier_majesty_effect = yes
+				add_scaled_artifact_modifier_combat_effect = yes
+			}
+		}
+		scope:owner = {
+			remove_variable = adventure_artifact_location
+			remove_variable = adventure_artifact_hunter
+		}
+	}
+}
+
+# For Spawning the Manzasiri Heart
+manzasiri_heart_artifact_effect = {
+	random_list = {
+		40 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:yellow_zircon
+			}
+		}
+		15 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:black_zircon
+			}
+		}
+		5 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:brown_zircon
+			}
+		}
+		5 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:green_zircon
+			}
+		}
+		3 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:clear_zircon
+			}
+		}
+		2 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:blue_zircon
+			}
+		}
+		10 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:sunstone
+			}
+		}
+		20 = {
+			set_variable = {
+				name = gemstone_type
+				value = flag:fire_opal
+			}
+		}
+	}
+	if = {
+		limit = { exists = var:gemstone_type }
+		random_list = {
+			50 = {
+				trigger = {
+					var:gemstone_type = flag:fire_opal
+				}
+				set_artifact_rarity_common = yes
+			}
+			30 = {
+				trigger = {
+					NOR = {
+						var:gemstone_type = flag:clear_zircon
+						var:gemstone_type = flag:blue_zircon
+					}
+				}
+				set_artifact_rarity_masterwork = yes
+			}
+			15 = {
+				trigger = {
+					NOT = {
+						var:gemstone_type = flag:blue_zircon
+					}
+				}
+				set_artifact_rarity_famed = yes
+			}
+			5 = {
+				set_artifact_rarity_illustrious = yes
+			}
+		}
+	}
+	create_artifact_magical_gemstone_effect = {
+		OWNER = root
+		HUNTER = root
+		ANIMAL = scope:activity.var:animal_type
+		LEGENDARY = no
+	}
+	scope:newly_created_artifact = {
+		set_artifact_name = artifact_gemstone_name_manzasiri_heart
+		set_artifact_description = artifact_gemstone_description_manzasiri_heart
+		save_scope_as = first_reward_artifact
+	}
+	remove_variable = gemstone_type
+}
+
+
+create_artifact_aervalr_shard_effect = {
+	$OWNER$ = { save_scope_as = owner }
+	$LOCATION$ = { save_scope_as = location }
+
+	hidden_effect_new_object = {
+		get_random_artifact_quality_and_wealth_effect = yes
+		scope:owner = {
+			create_artifact = {
+				name = placeholder
+				creator = scope:owner
+				description = placeholder
+				type = aervalr_shard
+				visuals = aervalr_shard
+				modifier = artifact_placeholder_modifier
+				save_scope_as = newly_created_artifact
+				wealth = scope:wealth
+				quality = scope:quality
+				decaying = no
+				history = {
+					location = scope:location
+					actor = scope:owner
+					recipient = scope:owner
+					type = created
+				}
+			}
+		}
+		scope:newly_created_artifact = {
+			set_artifact_feature_group = shard_quality
+			random_list = {
+				pick = 2
+				unique = yes
+				25 = {
+					add_scaled_artifact_modifier_majesty_effect = yes
+				}
+				25 = {		
+					add_scaled_artifact_modifier_prestige_effect = yes
+				}
+				25 = {		
+					add_scaled_artifact_modifier_grandeur_small_effect = yes
+				}
+				25 = {		
+					add_scaled_artifact_modifier_dynasty_prestige_effect = yes
+				}
+			}
+			add_artifact_modifier = artifact_health_penalty_1_modifier
+			remove_artifact_modifier = artifact_placeholder_modifier
+			set_artifact_as_magical = yes
+			set_artifact_name = artifact_aervalr_shard_name
+			set_artifact_description = artifact_aervalr_shard_description
+		}
+	}
+}

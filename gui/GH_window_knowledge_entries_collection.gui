@@ -1,0 +1,338 @@
+﻿window = {
+	name = "GH_window_knowledge_entries_collection"
+	visible = "[GetPlayer.MakeScope.Var('gh_book_with_knowledge_entry').IsSet]"
+	datacontext = "[GetPlayer.GetCurrentLocation.MakeScope.Var('gh_search_library_story').Story.MakeScope.Var(GetPlayer.MakeScope.Var('gh_book_with_knowledge_entry').GetFlagName).Story.MakeScope]"
+	
+	size = { 546 575 }
+	position = { 1200 265 }
+	layer = top
+
+	using = Window_Background_Subwindow
+	using = Animation_ShowHide_Standard
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Quick
+		using = Sound_WindowShow_Standard	
+		position_x = 1410
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Quick
+		using = Sound_WindowHide_Standard
+		position_x = 1200
+	}
+	icon = {
+		name = "tile_frame_top"
+		texture = "gfx/interface/skinned/component_decoration/decoration_frame_top_clean.dds"
+		spriteType = Corneredtiled
+		spriteborder = { 100 0 }
+		position = { -23 -8 }
+		texture_density = 2
+		size = { 109% 22 }
+	}
+	icon = {
+		name = "tile_frame_bottom"
+		texture = "gfx/interface/skinned/component_decoration/decoration_frame_bottom_clean.dds"
+		spriteType = Corneredtiled
+		spriteborder = { 100 0 }
+		position = { -23 8 }
+		texture_density = 2
+		size = { 109% 22 }
+		parentanchor = bottom
+	}
+	icon = {
+		name = "tile_frame_top_center_part"
+		texture = "gfx/interface/skinned/component_decoration/decoration_frame_top_center.dds"
+		position = { -3 -46 }
+		size = { 142 60 }
+		texture_density = 2
+		parentanchor = top|hcenter
+	}
+
+	vbox = {
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		margin_top = 10
+		header_pattern = {
+			
+			layoutpolicy_horizontal = expanding	
+			blockoverride "header_text"
+			{
+				raw_text = "Knowledge"
+			}
+
+			blockoverride "button_close"
+			{
+				onclick = "[GetScriptedGui('gh_remove_learn_from_book_with_knowledge_entries_sgui').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End)]"
+			}
+		}
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			text_single = {
+				text = "[Localize(Concatenate(GetPlayer.MakeScope.Var('gh_book_with_knowledge_entry').GetFlagName, '_title'))]"
+				default_format = "#high"
+				align = center
+			}
+			spacer = { size = {0 10 } }
+			divider = {
+				layoutpolicy_horizontal = expanding
+			}
+		}
+		scrollbox = {
+			size = { 546 465 }
+			blockoverride "scrollbox_background" {}
+			blockoverride "scrollbox_background_fade" {}
+			blockoverride "scrollbox_content" {
+				vbox = {
+					datamodel = "[Scope.GetList('knowledge_entry_list')]"
+
+					layoutpolicy_horizontal = expanding
+					spacing = 10
+
+					item = {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							
+							margin_bottom = 10
+							
+							background = {
+								using = Background_Area_Dark_Border
+								alpha = 0.3
+							}
+							
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								
+								background = {
+									block "header_background_color"
+									{
+										using = Background_Area_Solid
+									}
+									alpha = 0.8
+								}
+							
+								text_single = {
+									layoutpolicy_horizontal = expanding
+									text = "[Scope.Story.Custom('KnowledgeEntryName')]"
+									
+									margin_left = 5
+									margin_bottom = 10
+									
+									max_width = 430
+								}
+							
+								expand = {}
+								
+								text_single = {
+									margin_bottom = 10
+									margin_right = 40
+									
+									visible = "[And(Not(GetScriptedGui('knowledge_entry_is_learned_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)), GreaterThan_CFixedPoint(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('researcher', GetPlayer.MakeScope).AddScope('knowledge_entry', Scope.Story.MakeScope).ScriptValue('knowledge_entry_success_chance_value'), '(CFixedPoint)0'))]"
+									raw_text = "~6 months"
+								}
+							
+								widget = {
+									visible = "[And(GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End), Not(EqualTo_CFixedPoint(Scope.ScriptValue('knowledge_entry_skill_frame_value'), '(CFixedPoint)0')))]"
+									size = { 40 40 }
+									
+									text_single = {
+										position = { -29 8 }
+										visible = "[Not(GetScriptedGui('knowledge_entry_is_learned_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End))]"
+										raw_text = "[GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry', Scope.Story.MakeScope).AddScope('researcher', GetPlayer.MakeScope).ScriptValue('knowledge_entry_success_chance_value')|0]%"
+										min_width = 24
+										default_format = "#high"
+										align = nobaseline
+									
+										background = {
+											texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+											frame = "[FixedPointToInt(Scope.ScriptValue('knowledge_entry_skill_frame_value'))]"
+											framesize = { 70 26 }
+											margin = { 10 0 }
+										}
+									}
+									
+									icon = {
+										visible = "[GetScriptedGui('knowledge_entry_is_learned_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+										texture = "gfx/interface/icons/symbols/icon_check.dds"
+										position = { -10 11 }
+										size = { 18 18 }
+										
+										background = {
+											texture = "gfx/interface/window_character/character_view_skills_bg_generic.dds"
+											frame = 1
+											framesize = { 70 26 }
+											margin = { 10 0 }
+											
+											modify_texture = {
+												color = { 0.95 0.01 0.01 1 }
+												blend_mode = overlay
+											}
+										}
+									}
+								
+									icon = {
+										size = { 32 32 }
+										framesize = { 60 60 }
+										frame = "[FixedPointToInt(Scope.ScriptValue('knowledge_entry_skill_frame_value'))]"
+										texture = "gfx/interface/icons/icon_skills.dds"
+									}
+								}
+								
+								widget = {
+									visible = "[And(Not(GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)), Not(EqualTo_CFixedPoint(Scope.ScriptValue('knowledge_entry_cipher_skill_frame_value'), '(CFixedPoint)0')))]"
+									size = { 40 40 }
+									
+									text_single = {
+										position = { -22 8 }
+										raw_text = "46%"
+										default_format = "#high"
+										align = nobaseline
+									
+										background = {
+											texture = "gfx/interface/window_character/character_view_skills_bg.dds"
+											frame = "[FixedPointToInt(Scope.ScriptValue('knowledge_entry_cipher_skill_frame_value'))]"
+											framesize = { 70 26 }
+											margin = { 10 0 }
+										}
+									}
+								
+									icon = {
+										size = { 32 32 }
+										framesize = { 60 60 }
+										frame = "[FixedPointToInt(Scope.ScriptValue('knowledge_entry_cipher_skill_frame_value'))]"
+										texture = "gfx/interface/icons/icon_skills.dds"
+									}
+								}
+								
+								knowledge_entry_aspect_skill_display = {
+									visible = "[And(GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End), EqualTo_CFixedPoint(Scope.ScriptValue('knowledge_entry_skill_frame_value'), '(CFixedPoint)0'))]"
+								}
+								
+								knowledge_entry_cipher_aspect_skill_display = {
+									visible = "[And(Not(GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)), EqualTo_CFixedPoint(Scope.ScriptValue('knowledge_entry_skill_frame_value'), '(CFixedPoint)0'))]"
+								}
+							}
+
+							hbox = {
+								visible = "[GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_right = 5
+								margin_left = -10
+								margin_top = -10
+								scrollbox = {
+									layoutpolicy_horizontal = expanding
+									size = { 300 50 }
+									maximumsize = { 300 300 }
+									autoresizescrollarea = yes
+									margin_top = -10
+									
+									blockoverride "scrollbox_background" { }
+									blockoverride "scrollbox_background_fade" { }
+									
+									blockoverride "scrollbox_content" {
+										text_multi = {
+											visible = "[Scope.Var('knowledge_entry_name').IsSet]"
+											text = "[Localize(Concatenate(Scope.Var('knowledge_entry_name').GetFlagName, '_desc'))]"
+											maximumsize = { 270 3080 }
+											min_width = 270
+											autoresize = yes
+											fontsize_min = 12
+										}
+									}
+								}									
+							
+								expand = {}
+								
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									
+									#divider_light = {
+									#	layoutpolicy_vertical = expanding
+									#}
+									
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										
+										margin_left = 5
+										
+										text_multi = {
+											visible = "[GetScriptedGui('knowledge_entry_is_learned_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+											text = "[GetScriptedGui('knowledge_entry_is_learned_scripted_gui').BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+											autoresize = yes
+											multiline = yes
+											max_width = 180
+										}
+										
+										button_standard = {
+											raw_text = "Study"
+											
+											visible = "[GetScriptedGui('learn_knowledge_entry_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).AddScope('required_artifact_scope', Scope.Story.MakeScope).End)]"
+											enabled = "[GetScriptedGui('LIBRARY_learn_knowledge_entry_scripted_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).AddScope('required_artifact_scope', Scope.Story.MakeScope).End)]"
+											onclick = "[GetScriptedGui('LIBRARY_learn_knowledge_entry_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).AddScope('required_artifact_scope', Scope.Story.MakeScope).End)]"
+											tooltip = "[GetScriptedGui('LIBRARY_learn_knowledge_entry_scripted_gui').BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).AddScope('required_artifact_scope', Scope.Story.MakeScope).End)]"
+										}
+										
+										button_standard = {
+											raw_text = "Cancel"
+											
+											visible = "[GetScriptedGui('cancel_studying_knowledge_entry_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+											onclick = "[GetScriptedGui('cancel_studying_knowledge_entry_scripted_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+											tooltip = "[GetScriptedGui('cancel_studying_knowledge_entry_scripted_gui').BuildTooltip(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+										}
+									}
+								}
+							}
+							
+							vbox = {
+								visible = "[Not(GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End))]"
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin = { 10 0 }
+							
+								button_icon = {
+									size = { 60 60 }
+									texture = "gfx/interface/icons/focuses/martial_authority_focus.dds"
+									
+									onclick = "[GetScriptedGui('decipher_knowledge_entry_scripted_gui').Execute(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End)]"
+								}
+							
+								text_single = {
+									raw_text = "CIPHER"
+									autoresize = yes
+									fontsize_min = 12
+								}
+							}
+							
+							vbox = {
+								visible = "[And(GetScriptedGui('knowledge_entry_is_readable_scripted_gui').IsShown(GuiScope.SetRoot(Scope.Story.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End), GetScriptedGui('knowledge_entry_is_learned_scripted_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('knowledge_entry_scope', Scope.Story.MakeScope).End))]"
+								datamodel = "[Scope.GetList('knowledge_entry_spell_list')]"
+								spacing = 12
+								margin_left = 5
+								
+								divider_light = {
+									layoutpolicy_horizontal = expanding
+								}
+				
+								item = {
+									widget_spell_entry = {
+										size = { 472 110 }
+										datacontext = "[Scope.Story]"
+										blockoverride "button_effects" {
+											onclick = "[GetScriptedGui('learn_spell_from_character_scripted_gui').Execute(GuiScope.SetRoot(CharacterInteractionConfirmationWindow.GetActor.MakeScope).AddScope('spell_to_learn_scope', Scope.Story.MakeScope).End)]"
+											onclick = "[GetVariableSystem.Clear( 'character_interaction_change_spell' )]"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		expand = {}
+	}	
+}

@@ -1,0 +1,69 @@
+﻿great_struggle_window_sgui = {
+ 	saved_scopes = { struggle }	
+	is_shown = {
+		exists = scope:struggle
+		OR = { 
+			scope:struggle ?= struggle:gh_war_in_heaven_struggle 
+			scope:struggle ?= struggle:gh_eastern_war_in_heaven_struggle
+			scope:struggle ?= struggle:gh_far_eastern_war_in_heaven_struggle
+			scope:struggle ?= struggle:gh_western_war_in_heaven_struggle
+			#scope:struggle ?= struggle:gh_far_western_war_in_heaven_struggle
+		}
+	}
+	effect = { 
+		if = { 
+			limit = { 
+				exists = scope:struggle
+				OR = { 
+					scope:struggle ?= struggle:gh_war_in_heaven_struggle 
+					scope:struggle ?= struggle:gh_eastern_war_in_heaven_struggle
+					scope:struggle ?= struggle:gh_far_eastern_war_in_heaven_struggle
+					scope:struggle ?= struggle:gh_western_war_in_heaven_struggle
+					#scope:struggle ?= struggle:gh_far_western_war_in_heaven_struggle
+				}
+			}
+			set_variable = {
+				name = great_struggle_type
+				value = flag:wih_great_struggle
+			}
+		}
+	}
+}
+
+great_struggle_window_show_sgui = {
+	effect = { 
+		set_variable = can_end_struggle_player
+		set_variable = {
+			name = hide_ui_main_tabs
+			value = 1
+		}
+	}
+}
+
+great_struggle_window_hide_sgui = {
+	effect = { 
+		remove_variable = hide_ui_main_tabs
+		remove_variable = can_end_struggle_player
+	}
+}
+
+great_struggle_region_exists_sgui = {
+	is_shown = { 
+		#Need all of this instead of just exists = root because FlagName localize and I hate it with all my being 
+		trigger_if = {
+			limit = {
+				OR = {
+					scope:struggle ?= struggle:gh_war_in_heaven_struggle 
+					scope:struggle ?= struggle:gh_eastern_war_in_heaven_struggle
+					scope:struggle ?= struggle:gh_far_eastern_war_in_heaven_struggle
+					scope:struggle ?= struggle:gh_western_war_in_heaven_struggle
+					#scope:struggle ?= struggle:gh_far_western_war_in_heaven_struggle
+				}
+				exists = scope:struggle
+			}
+		}
+		trigger_else = {
+			always = no
+		}
+	}
+}

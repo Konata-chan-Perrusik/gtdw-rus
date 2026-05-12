@@ -1,0 +1,526 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_triggers/godherja/GH_magic_spell_triggers.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+spell_has_aspect_trigger = {
+	is_target_in_variable_list = { name = spell_effect_aspect_list target = flag:$ASPECT$ }
+}
+
+spell_has_primary_aspect_trigger = {
+	var:primary_aspect = flag:$ASPECT$
+}
+
+spell_has_secondary_aspect_trigger = {
+	is_target_in_variable_list = { name = spell_effect_aspect_list target = flag:$ASPECT$ }
+	NOT = { var:primary_aspect = flag:$ASPECT$ }
+}
+
+spell_has_effect_trigger = {
+	exists = scope:spell_effect
+	scope:spell_effect.var:spell_effect_name = flag:$EFFECT$
+}
+
+# Fired from spell organizer scope
+can_cast_spell_trigger = {
+	$CASTER$ = { can_access_magic = yes }
+	custom_tooltip = {
+		text = does_not_know_selected_spell_tt
+		magic_spell_is_known_by_trigger = { MAGI = $CASTER$ SPELL = $SPELL$ }
+	}
+	$SPELL$.var:minimum_level <= var:selected_spell.aspect_total_spell_level_value
+	$CASTER$ = { has_stored_magic_trigger = { VALUE = $SPELL$.total_spell_cost } }
+	gold >= $SPELL$.total_spell_gold_cost
+	$SPELL$ = { conditional_spell_tags_fulfilled_trigger = { TARGET_LIST_SOURCE = scope:spell_organizer GROUP = casting } }
+}
+
+################
+# TAG TRIGGERS #
+################
+
+spell_has_tag_trigger = {
+	any_in_list = {
+		variable = spell_tag_list
+		var:spell_tag_name = $NAME$
+	}
+}
+
+spell_has_tag_with_target_trigger = {
+	any_in_list = {
+		variable = spell_tag_list
+		var:spell_tag_name = $NAME$
+		exists = var:target_type
+		var:target_type = flag:$TARGET$
+	}
+}
+
+spell_has_primary_tag_and_target_trigger = {
+	exists = var:primary_spell_tag
+	var:primary_spell_tag.var:spell_tag_name = flag:$NAME$
+	exists = var:primary_spell_tag.var:target_type
+	var:primary_spell_tag.var:target_type = flag:$TARGET$
+}
+
+spell_has_activation_condition_with_target_trigger = {
+	has_variable_list = spell_activation_trigger_list
+	any_in_list = {
+		variable = spell_activation_trigger_list
+		var:spell_tag_name = flag:$NAME$
+		exists = var:target_type
+		var:target_type = flag:$TARGET$
+	}
+}
+
+conditional_spell_tags_fulfilled_trigger = {
+	save_temporary_scope_as = spell_being_casted
+	trigger_if = {
+		limit = { has_variable_list = affects_target_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			trigger_if = {
+			    limit = { has_variable_list = spell_targets }
+			    any_in_list = {
+			        variable = spell_targets
+			        count = all
+			        add_to_temporary_list = target_list
+			    }
+			}
+
+			trigger_if = {
+				limit = { list_size = { name = target_list value <= 0 } }
+				scope:spell_organizer = { add_to_temporary_list = target_list }
+			}
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_spell_organizer_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			scope:spell_organizer ?= { add_to_temporary_list = spell_organizer_list }
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_caster_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			scope:caster ?= { add_to_temporary_list = caster_list }
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_target_province_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			trigger_if = {
+			    limit = { has_variable_list = spell_target_province_list }
+			    any_in_list = {
+			        variable = spell_target_province_list
+			        count = all
+			        county = { add_to_temporary_list = target_province_list }
+			    }
+			}
+
+			trigger_if = {
+				limit = { list_size = { name = target_province_list value <= 0 } }
+				trigger_if = {
+				    limit = { exists = capital_province }
+				    capital_province = { 
+				        add_to_temporary_list = target_province_list
+				    }
+				}
+				trigger_else_if = {
+				    limit = { exists = location }
+				    location = { 
+				        add_to_temporary_list = target_province_list
+				    } 
+				}
+
+			}
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_target_title_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			trigger_if = {
+			    limit = { list_size = { name = target_province_list value > 0 } }
+			    any_in_list = {
+			        list = target_province_list
+			        count = all
+			        county = { add_to_temporary_list = target_title_list }
+			    }
+			}
+
+			trigger_if = {
+				limit = { list_size = { name = target_title_list value <= 0 } }
+				trigger_if = {
+				    limit = { exists = capital_county }
+				    capital_county = { 
+				        add_to_temporary_list = target_title_list
+				    }
+				}
+				trigger_else_if = {
+				    limit = { exists = location }
+				    location.county = { 
+				        add_to_temporary_list = target_title_list
+				    } 
+				}
+
+			}
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_target_artifact_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			trigger_if = {
+			    limit = { has_variable_list = spell_target_titles }
+			    any_in_list = {
+			        variable = spell_target_titles
+			        count = all
+			        add_to_temporary_list = target_title_list
+			    }
+			}
+
+			trigger_if = {
+				limit = { list_size = { name = target_artifact_list value <= 0 } }
+				trigger_if = {
+				    limit = { has_variable_list = spell_target_artifacts }
+				    any_in_list = {
+				        variable = spell_target_artifacts
+				        count = all
+				        add_to_temporary_list = target_artifact_list
+				    }
+				}
+
+			}
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_target_province_character_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			trigger_if = {
+			    limit = { list_size = { name = target_province_list value > 0 } }
+			    any_in_list = {
+			        list = target_province_list
+			        count = all
+			        any_character_in_location = {
+			            count = all
+			            add_to_temporary_list = target_province_character_list
+			        }
+			    }
+			}
+
+		}
+	}
+	trigger_if = {
+		limit = { has_variable_list = affects_target_newborn_child_trigger_list }
+		$TARGET_LIST_SOURCE$ = {
+			trigger_if = {
+			    limit = { exists = scope:child }
+			    scope:child = { add_to_temporary_list = target_newborn_child_list }
+			}
+
+		}
+	}
+	any_in_list = {
+		list = target_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:target }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = spell_organizer_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:spell_organizer }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = caster_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:caster }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = target_province_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:target_province }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = target_title_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:target_title }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = target_artifact_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:target_artifact }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = target_province_character_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:target_province_character }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	any_in_list = {
+		list = target_newborn_child_list
+		count = all
+		save_temporary_scope_as = spell_target
+		prev = {
+			any_in_list = {
+				variable = spell_$GROUP$_trigger_list
+				limit = { var:target_type = flag:target_newborn_child }
+				count = all
+				index_and_check_spell_trigger = yes
+			}
+		}
+	}
+	# Artifact
+	custom_tooltip = {
+		text = casting_condition_artifact_type_helmet_tooltip
+		trigger_if = {
+			limit = { spell_has_tag_with_target_trigger = { NAME = flag:casting_condition_artifact_type_helmet TARGET = target_artifacts } }
+			trigger_if = {
+				limit = { scope:spell_organizer = { has_variable_list = spell_targets_artifacts } }
+				scope:spell_organizer = {
+					NOT = {
+						any_in_list = {
+							variable = spell_targets_artifacts
+							NOR = {
+								artifact_type = helmet
+							}
+							NOR = {
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	custom_tooltip = {
+		text = casting_condition_artifact_type_bladed_tooltip
+		trigger_if = {
+			limit = { spell_has_tag_with_target_trigger = { NAME = flag:casting_condition_artifact_type_bladed TARGET = target_artifacts } }
+			trigger_if = {
+				limit = { scope:spell_organizer = { has_variable_list = spell_targets_artifacts } }
+				scope:spell_organizer = {
+					NOT = {
+						any_in_list = {
+							variable = spell_targets_artifacts
+							NOR = {
+								artifact_type = sword
+								artifact_type = dagger
+							}
+							NOR = {
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	custom_tooltip = {
+		text = casting_condition_artifact_feature_blade_metal_iron_tooltip
+		trigger_if = {
+			limit = { spell_has_tag_with_target_trigger = { NAME = flag:casting_condition_artifact_feature_blade_metal_iron TARGET = target_artifacts } }
+			trigger_if = {
+				limit = { scope:spell_organizer = { has_variable_list = spell_targets_artifacts } }
+				scope:spell_organizer = {
+					NOT = {
+						any_in_list = {
+							variable = spell_targets_artifacts
+							NOR = {
+								artifact_type = sword
+								artifact_type = dagger
+							}
+							NOR = {
+								has_artifact_feature = blade_metal_wrought_iron
+								has_artifact_feature = blade_metal_folded_iron
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	trigger_if = {
+		limit = { spell_has_component_with_input_type_trigger = { INPUT_TYPE = character_spell_component_input } }
+		custom_tooltip = {
+			text = required_spell_components_not_fulfilled_tooltip
+			NOT = {
+				any_in_list = {
+					variable = spell_component_list
+					save_temporary_scope_as = spell_component_being_checked
+					component_has_input_type_trigger = { INPUT_TYPE = character_spell_component_input }
+					exists = var:spell_component_required
+					NOT = {
+						scope:spell_organizer.var:spell_preparation_story_cycle = {
+							has_variable_list = spell_component_being_prepared_list
+							any_in_list = {
+								variable = spell_component_being_prepared_list
+								var:spell_component_template = scope:spell_component_being_checked
+								exists = var:spell_component_character_selection
+								var:spell_component_character_selection = {
+									is_alive = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	trigger_if = {
+		limit = { spell_has_component_with_input_type_trigger = { INPUT_TYPE = ingredient_spell_component_input } }
+		custom_tooltip = {
+			text = required_spell_components_not_fulfilled_tooltip
+			NOT = {
+				any_in_list = {
+					variable = spell_component_list
+					save_temporary_scope_as = spell_component_being_checked
+					component_has_input_type_trigger = { INPUT_TYPE = ingredient_spell_component_input }
+					exists = var:spell_component_required
+					NOT = {
+						scope:spell_organizer.var:spell_preparation_story_cycle = {
+							has_variable_list = spell_component_being_prepared_list
+							any_in_list = {
+								variable = spell_component_being_prepared_list
+								var:spell_component_template = scope:spell_component_being_checked
+								exists = var:spell_component_ingredient_selection
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+spell_tag_has_fulfilled_conditions_trigger = {
+	trigger_if = {
+		limit = {
+			has_variable_list = activation_condition_list
+		}
+		trigger_if = {
+			limit = {
+				is_target_in_variable_list = {
+					name = activation_condition_list
+					target = flag:trait
+				}
+				exists = var:activation_condition_trait
+			}
+			scope:spell_target ?= { has_trait = prev.var:activation_condition_trait }
+		}
+		trigger_if = {
+			limit = {
+				is_target_in_variable_list = {
+					name = activation_condition_list
+					target = flag:trait_negative
+				}
+				exists = var:activation_condition_trait_negative
+			}
+			scope:spell_target ?= { NOT = { has_trait = prev.var:activation_condition_trait_negative } }
+		}
+	}
+}
+
+################
+# HEX TRIGGERS #
+################
+
+has_hex_with_fulfilled_conditions_trigger = {
+	has_variable_list = hex_list
+	any_in_list = {
+		variable = hex_list
+		save_temporary_scope_as = hex_scope
+		var:spell_being_prepared = { conditional_spell_tags_fulfilled_trigger = { TARGET_LIST_SOURCE = scope:hex_scope GROUP = activation } }
+	}
+}
+
+######################
+# COMPONENT TRIGGERS #
+######################
+
+spell_has_component_trigger = {
+	has_variable_list = spell_component_list
+	any_in_list = {
+		variable = spell_component_list
+		var:spell_component_template.var:spell_component_name = flag:$COMPONENT_NAME$
+	}
+}
+
+component_has_input_type_trigger = {
+	exists = var:spell_component_template.var:spell_component_input_slot_type
+	var:spell_component_template.var:spell_component_input_slot_type = flag:$INPUT_TYPE$
+}
+
+spell_has_component_with_input_type_trigger = {
+	has_variable_list = spell_component_list
+	any_in_list = {
+		variable = spell_component_list
+		component_has_input_type_trigger = { INPUT_TYPE = $INPUT_TYPE$ }
+	}
+}
+
+has_prepared_component_with_input_flag_trigger = {
+	has_variable_list = spell_component_being_prepared_list
+	any_in_list = {
+		variable = spell_component_being_prepared_list
+		exists = var:spell_component_ingredient_selection
+		exists = var:spell_component_ingredient_selection.var:$NAME$
+		trigger_if = {
+			limit = { exists = var:spell_component_ingredient_selection.var:$NAME$_condition_aspect }
+			var:spell_component_ingredient_selection = {
+				spell_ingredient_is_activated_by_aspect_trigger = { NAME = $NAME$ }
+			}
+		}
+	}
+}

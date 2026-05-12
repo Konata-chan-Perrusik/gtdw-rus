@@ -1,0 +1,437 @@
+﻿##########################################
+# Court Artifact Creation and Decoration #
+##########################################
+
+create_artifact_aushedar_armor_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	
+	set_artifact_rarity_illustrious = yes
+	
+	create_artifact = {
+		name = artifact_armor_of_aushedar_name
+		description = artifact_armor_of_aushedar_description		
+		type = armor_plate
+		visuals = armor
+		wealth = scope:wealth
+		quality = scope:quality
+		modifier = artifact_prowess_4_modifier
+		save_scope_as = newly_created_artifact
+		history = { type = created_before_history }
+	}
+	
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		save_scope_as = epic
+		add_artifact_title_history = {
+			target = title:e_amsari_hiklahn #Amsar
+			date = 6011.3.5
+		}
+	}
+}
+
+create_artifact_siralqueen_crown_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	hidden_effect_new_object = {
+	set_artifact_rarity_famed = yes
+
+	# Create the artifact
+	create_artifact = {	
+		name = artifact_siralqueen_crown_name
+		description = artifact_siralqueen_crown_description
+		template = general_unique_template
+		type = helmet_simple
+		visuals = pedestal_justinian
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created
+			date = 6109.5.12
+			recipient = character:siralagi_mahndayana_1 # Senayya
+			location = province:3179  #Dehaneh-i-Tag
+		}
+		modifier = siralqueen_crown_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		save_scope_as = epic
+		add_artifact_title_history = {
+			target = title:k_durab
+			date = 6109.5.12
+		}
+	}
+	}
+}
+
+create_artifact_pedestal_crown_of_golshan_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+	set_artifact_rarity_famed = yes
+
+	# Create the artifact
+	create_artifact = {	
+		name = artifact_pedestal_crown_of_golshan_name
+		description = artifact_pedestal_crown_of_golshan_description
+		type = pedestal
+		template = general_unique_template
+		visuals = pedestal_justinian
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created
+			date = 6209.4.3
+			recipient = character:amsari_mahndayana_105
+			location = province:496 
+		}
+		modifier = crown_of_golshan_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		set_variable = crown_of_golshan
+		add_artifact_title_history = {
+			target = title:e_amsari_hiklahn
+			date = 6209.4.3
+		}
+		save_scope_as = epic
+	}	
+}
+
+create_artifact_figurine_of_mother_of_milk_effect = {
+	$OWNER$ = { save_scope_as = owner }
+
+	set_artifact_rarity_common = yes
+	create_artifact = {
+		name = artifact_figurine_of_mother_of_milk_name
+		description = artifact_figurine_of_mother_of_milk_description
+		template = general_unique_template
+		type = miscellaneous
+		visuals = fp2_santiago_aquamanile
+		wealth = scope:wealth
+		quality = scope:quality
+		history = { type = created_before_history }
+		modifier = figurine_of_mother_of_milk_modifier
+		save_scope_as = newly_created_artifact
+	}
+	
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_artifact_title_history = {
+			target = title:c_zikrhra
+			date = 6282.4.3
+		}
+	}
+}
+
+create_artifact_statue_three_divine_siblings_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	set_artifact_rarity_famed = yes
+
+	# Create the artifact
+	create_artifact = {	
+		name = artifact_statue_of_three_divine_siblings_name
+		description = artifact_statue_of_three_divine_siblings_description
+		type = wall_small
+		visuals = statue_four_tetarchs
+		wealth = scope:wealth
+		quality = scope:quality
+		template = general_unique_template
+		history = {
+			type = created
+			date = 6292.6.13
+			recipient = character:barzawa_tulharsin_1
+			location = province:1918 #Abu Qirshut
+		}		
+		modifier = statue_three_divine_siblings_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_artifact_title_history = {
+			target = title:d_rabiqraa
+			date = 6292.6.13
+		}
+	}
+}
+
+
+create_artifact_throne_of_the_lirenaras_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+	hidden_effect_new_object = {	
+		set_artifact_rarity_illustrious = yes
+
+		# Create the artifact
+		create_artifact = {	
+			name = artifact_throne_of_the_lirenaras_name
+			description = artifact_throne_of_the_lirenaras_description
+			type = throne_special
+			visuals = throne_solomon
+			wealth = scope:wealth
+			quality = scope:quality
+			template = general_unique_template
+			history = { type = created_before_history }
+			modifier = throne_of_the_lirenaras_modifier
+			save_scope_as = newly_created_artifact
+			decaying = no
+		}
+
+		scope:newly_created_artifact = {
+			set_variable = { name = historical_unique_artifact value = yes }
+			set_variable = throne_of_the_lirenaras
+			save_scope_as = epic
+			add_scaled_artifact_modifier_majesty_effect = yes
+			add_scaled_artifact_modifier_rulership_effect = yes
+			add_scaled_artifact_modifier_devotion_effect = yes
+			save_scope_value_as = {
+				name = throne
+				value = yes
+			}
+			add_artifact_title_history = {
+				target = title:e_ayyar
+				date = 5817.6.13
+			}
+		}
+	}
+}
+
+create_artifact_utyalid_poem_of_harthah_effect = {
+	$OWNER$ = { save_scope_as = owner }
+
+	hidden_effect_new_object = {
+		set_artifact_rarity_common = yes
+
+		scope:owner = {
+			create_artifact = {
+				name = artifact_utyalid_poem_of_harthah_name
+				description = artifact_utyalid_poem_of_harthah_description
+				visuals = scroll
+				type = miscellaneous
+				wealth = scope:wealth
+				quality = scope:quality				
+				history = { type = created_before_history }
+				modifier = artifact_placeholder_modifier
+				save_scope_as = newly_created_artifact
+			}
+		}
+		scope:newly_created_artifact = {
+			add_scaled_artifact_modifier_minor_prestige_effect = yes
+			add_artifact_title_history = {
+				target = title:e_ayyar
+				date = 6292.6.13
+			}
+		}
+	}
+}
+
+create_artifact_crown_of_issai_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+
+	set_artifact_rarity_famed = yes
+
+	# Create the artifact
+	create_artifact = {	
+		name = artifact_crown_of_issai_name
+		description = artifact_crown_of_issai_description
+		template = general_unique_template
+		type = helmet
+		visuals = al_taj_crown
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created
+			date = 6289.4.7 
+			recipient = character:lawgiri_wardenism_1
+			location = province:2397 # Qawiyah
+		}	
+		modifier = crown_of_issai_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_artifact_title_history = {
+			target = title:k_marwaven
+			date = 6289.4.7
+		}
+	}
+}
+
+create_artifact_letter_of_isaf_to_rushad_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+	set_artifact_rarity_common = yes
+
+	# Create the artifact
+	create_artifact = {
+		type = miscellaneous
+		name = artifact_letter_of_isaf_to_rushad_name
+		description = artifact_letter_of_isaf_to_rushad_description		
+		visuals = scroll
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created_before_history
+		}
+		modifier = artifact_placeholder_modifier
+		save_scope_as = newly_created_artifact
+		
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_artifact_title_history = {
+			target = title:c_cosmogene
+			date = 6297.4.7
+		}
+	}
+}
+
+
+create_artifact_sword_of_yusuf_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+
+	set_artifact_rarity_illustrious = yes
+
+	# Create the artifact
+	create_artifact = {
+		name =  artifact_sword_of_yusuf_name
+		description =  artifact_sword_of_yusuf_description
+		type = sword
+		visuals = sassanian_sword
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created
+			date = 5829.10.23
+			recipient = character:tasurmad_wardenism_11
+			location = province:1838 # El-Qulatha
+		}
+		modifier = artifact_placeholder_modifier
+		save_scope_as = newly_created_artifact
+	}
+
+	hidden_effect_new_object = {
+		scope:newly_created_artifact = {
+			set_variable = { name = historical_unique_artifact value = yes }
+			add_scaled_artifact_modifier_combat_effect = yes
+			add_scaled_artifact_modifier_majesty_effect = yes
+			add_scaled_artifact_modifier_attractiveness_effect = yes
+			add_artifact_title_history = {
+				target = title:k_four_rivers
+				date = 5829.10.23
+			}
+			add_artifact_title_history = {
+				target = title:d_abu_lebdour
+				date = 6293.6.25
+			}
+		}
+	}
+}
+
+create_artifact_yuaguag_scepter_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+	set_artifact_rarity_famed = yes
+
+	# Create the artifact
+	create_artifact = {	
+		name = artifact_yuaguag_scepter_name
+		description = artifact_yuaguag_scepter_description
+		type = regalia_simple
+		visuals = regalia
+		wealth = scope:wealth
+		quality = scope:quality
+		template = general_unique_template
+		history = {
+			type = created_before_history
+		}
+		modifier = yuaguag_scepter_modifier
+		save_scope_as = newly_created_artifact
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_2_scaled_artifact_modifier_rulership_effect = yes
+		add_scaled_artifact_modifier_scholarship_effect = yes
+		add_artifact_title_history = {
+			target = title:d_dyazmineh
+			date = 6295.6.25
+		}
+	}
+}
+
+create_artifact_uqtal_flute_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+	set_artifact_rarity_masterwork = yes
+
+	create_artifact = {	
+		name = artifact_uqtal_flute_name
+		description = artifact_uqtal_flute_description
+		type = miscellaneous
+		template = general_unique_template
+		visuals = pedestal_longinus
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created_before_history
+		}
+		modifier = artifact_placeholder_modifier
+		save_scope_as = newly_created_artifact
+	}
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_2_scaled_artifact_modifier_rulership_effect = yes
+		add_artifact_aspect_modifier_effect = { NAME = hymns VALUE = 2 }
+	}
+}
+
+create_artifact_letter_el_qulatha_destruction_hulawite_effect = {
+	# Get the character the artifact is being made for.
+	$OWNER$ = { save_scope_as = owner }
+	# Not really used, but if we don't set the scopes we get errors in the feature selection
+	set_artifact_rarity_common = yes
+
+	# Create the artifact
+	create_artifact = {
+		type = miscellaneous
+		name = artifact_letter_el_qulatha_destruction_hulawite_name
+		description = artifact_letter_el_qulatha_destruction_hulawite_description		
+		visuals = scroll
+		wealth = scope:wealth
+		quality = scope:quality
+		history = {
+			type = created_before_history
+		}
+		modifier = artifact_placeholder_modifier
+		save_scope_as = newly_created_artifact
+		
+	}
+
+	scope:newly_created_artifact = {
+		set_variable = { name = historical_unique_artifact value = yes }
+		add_artifact_title_history = {
+			target = title:c_cosmogene
+			date = 6297.4.7
+		}
+	}
+}

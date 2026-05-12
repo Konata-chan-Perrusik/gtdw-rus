@@ -1,0 +1,123 @@
+﻿GH_wasteland_empty_holding_trigger = {
+	has_holding_type = wasteland_empty_holding
+}
+
+GH_ruin_holding_trigger = {
+	has_holding_type = ruin_holding
+}
+
+GH_level_00_wall_building_trigger = {
+	# Using the no_wall holding graphics for cities with special walls so that they don't have double walls
+	has_building_or_higher = "01_thetowerwatch"
+}
+
+GH_level_01_wall_tribal_building_trigger = {
+	NOR = {
+		# disabling this level of walled graphics for holdings with special walls and other fortifications so that they always look appropriately fortified. Note: If any of these buildings are given unique 3D assets, this should be looked at again.
+		has_building_or_higher = "palisades_01"
+		has_building_or_higher = "curtain_walls_01"
+		has_building_or_higher = "hill_forts_01"
+		has_building_or_higher = "ramparts_01"
+		has_building_or_higher = "watchtowers_01"
+		has_building_or_higher = "gh_walls_01"
+		has_building_or_higher = "01_creusons"
+		has_building_or_higher = "01_thetowerwatch"	# Looks ugly with pallisades
+	}
+}
+
+GH_level_01_wall_building_trigger = {
+	OR = {
+		# These buildings will trigger the visual "upgrade" to this wall asset
+		has_building_or_higher = "palisades_01"
+		has_building_or_higher = "curtain_walls_01"
+		has_building_or_higher = "hill_forts_01"
+		has_building_or_higher = "ramparts_01"
+		has_building_or_higher = "watchtowers_01"
+		has_building_or_higher = "gh_walls_01"
+	}
+}
+
+GH_level_02_wall_building_trigger = {
+	OR = {
+		# Disabling this level of walled graphics for holdings with special walls and other fortifications so that they always look appropriately fortified. Note: If any of these buildings are given unique 3D assets, this should be looked at again.
+		has_building_or_higher = "palisades_02"
+		has_building_or_higher = "curtain_walls_02"
+		has_building_or_higher = "hill_forts_02"
+		has_building_or_higher = "ramparts_02"
+		has_building_or_higher = "watchtowers_02"
+		has_building_or_higher = "gh_walls_02"
+		has_building_or_higher = "01_creusons"
+	}
+}
+
+GH_has_level_03_wall_building_trigger = {
+	OR = {
+		# Disabling this level of walled graphics for holdings with special walls and other fortifications so that they always look appropriately fortified. Note: If any of these buildings are given unique 3D assets, this should be looked at again.
+		has_building_or_higher = "curtain_walls_03"
+		has_building_or_higher = "hill_forts_03"
+		has_building_or_higher = "ramparts_03"
+		has_building_or_higher = "watchtowers_03"
+		has_building_or_higher = "gh_walls_03"
+		has_building_or_higher = "01_creusons"
+	}
+}
+
+GH_has_level_04_wall_building_trigger = {
+	OR = {
+		# These buildings will trigger the visual "upgrade" to this wall asset
+		has_building_or_higher = "curtain_walls_06"
+		has_building_or_higher = "hill_forts_06"
+		has_building_or_higher = "ramparts_06"
+		has_building_or_higher = "watchtowers_06"
+		has_building_or_higher = "01_creusons"
+	}
+}
+
+GH_has_level_05_wall_building_trigger = {
+	OR = {
+		# These buildings will trigger the visual "upgrade" to this wall asset
+		has_building_or_higher = "curtain_walls_08"
+		has_building_or_higher = "hill_forts_08"
+		has_building_or_higher = "ramparts_08"
+		has_building_or_higher = "watchtowers_08"
+		has_building_or_higher = "01_creusons"
+	}
+}
+
+GH_any_wasteland_holding_trigger = {
+	OR = {
+		GH_wasteland_empty_holding_trigger = yes
+		GH_ruin_holding_trigger = yes
+		GH_fogswept_holding_trigger = yes
+	}
+}
+
+GH_fogswept_holding_trigger = {
+	OR = {
+		GH_wasteland_empty_holding_trigger = yes
+		GH_ruin_holding_trigger = yes
+	}
+	trigger_if = {
+		limit = { exists = county }
+		county = { has_county_modifier = fogswept_modifier }
+	}
+}
+
+GH_fogswept_barony_trigger = {
+	OR = {
+		GH_wasteland_empty_holding_trigger = yes
+		GH_ruin_holding_trigger = yes
+	}
+	trigger_if = {
+		limit = { exists = county }
+		county = { has_county_modifier = fogswept_modifier }
+	}
+}
+
+GH_no_chort_geo_region_trigger = {
+	OR = {
+		geographical_region = world_ga_marcher_kingdoms
+		geographical_region = world_ga_clanlands
+		geographical_region = world_ga_mountainheights
+	}
+}

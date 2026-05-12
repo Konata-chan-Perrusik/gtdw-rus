@@ -1,0 +1,488 @@
+﻿great_struggle_wih_story_cycle = {
+	on_setup = {
+		set_variable = {
+			name = great_struggle_normal_cycle_phase_type
+			value = flag:struggle_wih_phase_all_out_war
+		}
+		set_variable = {
+			name = great_struggle_influence_phase_type
+			value = flag:struggle_wih_phase_all_out_war
+		}
+		set_variable = {
+			name = great_struggle_influence_impact_level
+			value = flag:weak
+		}
+		
+		if = {
+			limit = { 
+				NOT = { has_variable = agionists_arrived_in_sarradon } 
+				game_start_date >= 6180.1.1
+			}
+			set_variable = {
+				name = agionists_arrived_in_sarradon
+				value = yes
+			}
+			if = {
+				limit = { game_start_date >= 6230.1.1 }
+				set_variable = {
+					name = agionist_involvement
+					value = flag:dominant
+				}
+			}
+			else_if = {
+				limit = { game_start_date >= 6210.1.1 }
+				set_variable = {
+					name = agionist_involvement
+					value = flag:significant
+				}
+			}
+			else_if = {
+				limit = { game_start_date >= 6180.1.1 }
+				set_variable = {
+					name = agionist_involvement
+					value = flag:limited
+				}
+			}
+		}
+		
+		add_to_variable_list = {
+			name = available_great_struggle_decisions
+			target = flag:gh_great_struggle_wardenite_ending
+		}
+		add_to_variable_list = {
+			name = available_great_struggle_decisions
+			target = flag:gh_great_struggle_ritualist_ending
+		}
+		add_to_variable_list = {
+			name = available_great_struggle_decisions
+			target = flag:gh_great_struggle_sarradon_divided_ending
+		}		
+	}
+
+	on_end = {}
+	
+	effect_group = {
+		years = 5
+		trigger = { has_variable = agionists_arrived_in_sarradon }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				save_temporary_scope_value_as = {
+					name = temp_agionist_involvement
+					value = { value = scope:gh_wih_eastern_and_central_sarradon_agionist_ruled_counties_percent_value }
+				}
+				if = {
+					limit = { has_variable = agionists_arrived_in_sarradon }
+					if = {
+						limit = { 
+							scope:temp_agionist_involvement >= 0.5
+						}
+						set_variable = {
+							name = agionist_involvement
+							value = flag:dominant
+						}
+					}
+					else_if = {
+						limit = { 
+							scope:temp_agionist_involvement >= 0.3	
+						}
+						set_variable = {
+							name = agionist_involvement
+							value = flag:significant
+						}
+					}
+					else_if = {
+						limit = {
+							scope:temp_agionist_involvement >= 0.1
+						}
+						set_variable = {
+							name = agionist_involvement
+							value = flag:limited
+						}
+					}
+				}
+			}
+		}
+	}	
+		
+		
+	effect_group = {
+		years = 1
+		trigger = { always = yes }		
+			
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				#Normal Cycle phases used for impact level
+				if = {
+					limit = { var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_all_out_war }
+                    random_list = {
+                        20 = { } # Same
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_wardenite_dominance
+							}
+						}
+                        20 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_detente
+							}
+						}
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_ritualist_dominance
+							}
+						}
+                    }
+				}
+				else_if = {
+					limit = { var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_wardenite_dominance }
+                    random_list = {
+                        20 = { } # Same
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_all_out_war
+							}
+						}
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_detente
+							}
+						}
+                        20 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_ritualist_dominance
+							}
+						}
+                    }
+				}
+				else_if = {
+					limit = { var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_detente }
+                    random_list = {
+                        20 = { } # Same
+                        20 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_all_out_war
+							}
+						}
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_wardenite_dominance
+							}
+						}
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_ritualist_dominance
+							}
+						}
+                    }
+				}
+				else_if = {
+					limit = { var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_ritualist_dominance }
+                    random_list = {
+                        20 = { } # Same
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_all_out_war
+							}
+						}
+                        20 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_wardenite_dominance
+							}
+						}
+                        30 = { 
+							set_variable = {
+								name = great_struggle_normal_cycle_phase_type
+								value = flag:struggle_wih_phase_detente
+							}
+						}
+                    }
+				}
+
+				random_list = {
+					10 = { 
+						modifier = {
+							add = -10
+							var:great_struggle_influence_phase_type ?= flag:struggle_wih_phase_ritualist_dominance
+						}
+						modifier = {
+							add = 20
+							var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_ritualist_dominance
+						}
+						modifier = {
+							add = 50
+							calc_true_if = {
+								amount >= 2
+								struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance }
+								struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance }
+								struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance }
+								struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance }
+								#struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_ritualist_dominance }
+							}
+						}
+						influence_phase_impact_level_injector = {
+							STRUGGLE_PHASE = struggle_wih_phase_ritualist_dominance
+						}
+						set_variable = {
+							name = great_struggle_influence_phase_type
+							value = flag:struggle_wih_phase_ritualist_dominance
+						}
+					}
+					10 = {
+						modifier = {
+							add = -10
+							var:great_struggle_influence_phase_type ?= flag:struggle_wih_phase_all_out_war
+						}
+						modifier = {
+							add = 20
+							var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_all_out_war
+						}
+						modifier = {
+							add = 50
+							calc_true_if = {
+								amount >= 2
+								struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_all_out_war }
+								struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_all_out_war }
+								struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_all_out_war }
+								struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_all_out_war }
+								#struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_all_out_war }
+							}
+						}
+						influence_phase_impact_level_injector = {
+							STRUGGLE_PHASE = struggle_wih_phase_all_out_war
+						}
+						set_variable = {
+							name = great_struggle_influence_phase_type
+							value = flag:struggle_wih_phase_all_out_war
+						}
+					}
+					10 = {
+						modifier = {
+							add = -10
+							var:great_struggle_influence_phase_type ?= flag:struggle_wih_phase_wardenite_dominance
+						}
+						modifier = {
+							add = 20
+							var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_wardenite_dominance
+						}
+						modifier = {
+							add = 50
+							calc_true_if = {
+								amount >= 2
+								struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance }
+								struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance }
+								struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance }
+								struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance }
+								#struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_wardenite_dominance }
+							}
+						}
+						influence_phase_impact_level_injector = {
+							STRUGGLE_PHASE = struggle_wih_phase_wardenite_dominance
+						}
+						set_variable = {
+							name = great_struggle_influence_phase_type
+							value = flag:struggle_wih_phase_wardenite_dominance
+						}
+					}
+					10 = {
+						modifier = {
+							add = -10
+							var:great_struggle_influence_phase_type ?= flag:struggle_wih_phase_detente
+						}
+						modifier = {
+							add = 20
+							var:great_struggle_normal_cycle_phase_type ?= flag:struggle_wih_phase_detente
+						}
+						modifier = {
+							add = 50
+							calc_true_if = {
+								amount >= 2
+								struggle:gh_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_central_sarradon_phase_detente }
+								struggle:gh_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_eastern_sarradon_phase_detente }
+								struggle:gh_far_eastern_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_detente }
+								struggle:gh_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_western_sarradon_phase_detente }
+								#struggle:gh_far_western_war_in_heaven_struggle ?= { is_struggle_phase = struggle_wih_far_western_sarradon_phase_detente }
+							}
+						}
+						influence_phase_impact_level_injector = {
+							STRUGGLE_PHASE = struggle_wih_phase_detente
+						}
+						set_variable = {
+							name = great_struggle_influence_phase_type
+							value = flag:struggle_wih_phase_detente
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect_group = {
+		years = { 1 3 }
+		trigger = { always = yes }
+
+		triggered_effect = {
+			trigger = { always = yes }
+			effect = {
+				if = {
+					limit = { exists = struggle:gh_war_in_heaven_struggle }	
+					struggle:gh_war_in_heaven_struggle = {
+						if = { 
+							limit = { is_struggle_phase = struggle_wih_central_sarradon_phase_wardenite_dominance }
+							struggle:gh_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = ritualist
+									REGION = central
+								}
+							}
+						}
+						else_if = { 
+							limit = { is_struggle_phase = struggle_wih_central_sarradon_phase_ritualist_dominance }
+							struggle:gh_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = wardenism
+									REGION = central
+								}
+							}
+						}
+						else_if = { 
+							limit = { is_struggle_phase = struggle_wih_central_sarradon_phase_agionist_dominance }
+							struggle:gh_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = wardenism
+									REGION = central
+								}
+							}
+							struggle:gh_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = ritualist
+									REGION = central
+								}
+							}
+						}
+					}
+				}
+				if = {
+					limit = { exists = struggle:gh_eastern_war_in_heaven_struggle }	
+					struggle:gh_eastern_war_in_heaven_struggle = {
+						if = { 
+							limit = { is_struggle_phase = struggle_wih_eastern_sarradon_phase_wardenite_dominance }
+							struggle:gh_eastern_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = ritualist
+									REGION = central
+								}
+							}
+						}
+						else_if = { 
+							limit = { is_struggle_phase = struggle_wih_eastern_sarradon_phase_ritualist_dominance }
+							struggle:gh_eastern_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = wardenism
+									REGION = central
+								}
+							}
+						}
+						else_if = { 
+							limit = { is_struggle_phase = struggle_wih_eastern_sarradon_phase_agionist_dominance }
+							struggle:gh_eastern_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = wardenism
+									REGION = central
+								}
+							}
+							struggle:gh_eastern_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = ritualist
+									REGION = central
+								}
+							}
+						}
+					}
+				}
+				if = {
+					limit = { exists = struggle:gh_far_eastern_war_in_heaven_struggle }	
+					struggle:gh_far_eastern_war_in_heaven_struggle = {
+						if = { 
+							limit = { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_wardenite_dominance }
+							struggle:gh_far_eastern_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = ritualist
+									REGION = central
+								}
+							}
+						}
+						else_if = { 
+							limit = { is_struggle_phase = struggle_wih_far_eastern_sarradon_phase_ritualist_dominance }
+							struggle:gh_far_eastern_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = wardenism
+									REGION = central
+								}
+							}
+						}
+					}
+				}
+				if = {
+					limit = { exists = struggle:gh_western_war_in_heaven_struggle }	
+					struggle:gh_far_eastern_war_in_heaven_struggle = {
+						if = { 
+							limit = { is_struggle_phase = struggle_wih_western_sarradon_phase_wardenite_dominance }
+							struggle:gh_western_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = ritualist
+									REGION = central
+								}
+							}
+						}
+						else_if = { 
+							limit = { is_struggle_phase = struggle_wih_western_sarradon_phase_ritualist_dominance }
+							struggle:gh_western_war_in_heaven_struggle = { 
+								struggle_opposing_faith_heresy_effect = { 
+									RELIGION = wardenism
+									REGION = central
+								}
+							}
+						}
+					}
+				}
+				#if = {
+				#	limit = { exists = struggle:gh_far_western_war_in_heaven_struggle }	
+				#	struggle:gh_far_western_war_in_heaven_struggle = {
+				#		if = { 
+				#			limit = { is_struggle_phase = struggle_wih_far_western_sarradon_phase_wardenite_dominance }
+				#			struggle:gh_far_western_war_in_heaven_struggle = { 
+				#				struggle_opposing_faith_heresy_effect = { 
+				#					RELIGION = ritualist
+				#					REGION = central
+				#				}
+				#			}
+				#		}
+				#		else_if = { 
+				#			limit = { is_struggle_phase = struggle_wih_far_western_sarradon_phase_ritualist_dominance }
+				#			struggle:gh_far_western_war_in_heaven_struggle = { 
+				#				struggle_opposing_faith_heresy_effect = { 
+				#					RELIGION = wardenism
+				#					REGION = central
+				#				}
+				#			}
+				#		}
+				#	}
+				#}
+			}
+		}
+	}
+}

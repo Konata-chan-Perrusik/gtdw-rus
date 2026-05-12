@@ -1,0 +1,89 @@
+﻿
+magic_resist_mult = {
+	value = 1
+	if = { limit = { has_trait_rank = { trait = gh_riftmark rank = 1 } } multiply = 0.9 }
+	if = { limit = { has_trait_rank = { trait = gh_riftmark rank = 2 } } multiply = 0.8 }
+	if = { limit = { has_trait_rank = { trait = gh_riftmark rank = 3 } } multiply = 0.7 }
+}
+
+magic_resist_fog_mult = {
+	value = 1
+	if = { limit = { has_trait_rank = { trait = gh_riftmark rank = 1 } } multiply = 0.9 }
+	if = { limit = { has_trait_rank = { trait = gh_riftmark rank = 2 } } multiply = 0.8 }
+	if = { limit = { has_trait_rank = { trait = gh_riftmark rank = 3 } } multiply = 0.7 }
+}
+
+# use total prowess, unless their magical prowess is somehow higher, e.g. due to prowess being hard-capped at 100
+# min is 2 to prevent literally every 0-prowess person from being autokilled
+magic_resist_prowess = {
+	value = prowess
+	if = {
+		limit = { has_variable = magic_prowess }
+		min = var:magic_prowess
+	}
+	min = 2
+	multiply = magic_resist_mult
+}
+
+# average health is slightly above 5 (~4.7 for men, ~5.2 for women before traits)
+magic_resist_health = {
+	value = 0
+	add = health
+	multiply = magic_resist_mult
+}
+magic_resist_health_poison = {
+	value = 0
+	add = health
+	if = {
+		limit = {
+			has_variable = magic_poison_resistance
+		}
+		add = var:magic_poison_resistance
+	}
+	multiply = magic_resist_mult
+}
+magic_resist_health_fog = {
+	value = 0
+	add = health
+	multiply = magic_resist_mult
+	multiply = magic_resist_fog_mult
+}
+magic_resist_health_prowess = {
+	value = 0
+	add = prowess
+	if = {
+		limit = { has_variable = magic_prowess }
+		min = var:magic_prowess
+	}
+	multiply = 0.1
+	add = health
+	multiply = magic_resist_mult
+}
+
+magic_resist_health_prowess_crush_armor = {
+	value = 0
+	add = prowess
+	if = {
+		limit = { has_variable = magic_prowess }
+		min = var:magic_prowess
+	}
+	multiply = 0.1
+	if = {
+		limit = {
+			has_variable = magic_crush_armor_resistance
+		}
+		add = var:magic_crush_armor_resistance
+	}
+	add = health
+	multiply = magic_resist_mult
+}
+
+# boldness and energy are both -100 to 100. We add 200 so the value is always positive
+# [0,400]
+magic_resist_mental = {
+	value = 0
+	add = ai_boldness
+	add = ai_energy
+	add = 200
+	multiply = magic_resist_mult
+}

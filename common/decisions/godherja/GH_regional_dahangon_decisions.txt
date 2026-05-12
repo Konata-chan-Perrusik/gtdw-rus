@@ -1,0 +1,530 @@
+﻿#################################################################################################
+##DECISIONS LIST##
+
+#	Restore Bronzeport Bureaucracy - Reform the Bronzeport into a Republic 						#
+#	Establish the Protectorate of the Southsea 													#
+#	Convene the Rite of Marks - Gives a titular kingdom and chagnes governnment to Magocratic	#
+#	Reclaim Naklan's Legacy 																	#
+#	Achieve Daya's Dream 																		#
+
+#################################################################################################
+
+##################################
+# Restore Bronzeport Bureaucracy #
+# by ScionEol			         #
+##################################
+
+gh_restore_bronzeport_bureaucracy_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = kathuni
+
+	ai_check_interval = 120
+
+	desc = gh_restore_bronzeport_bureaucracy_decision_desc
+	selection_tooltip = gh_restore_bronzeport_bureaucracy_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_landed = yes
+		exists = dynasty
+		NOT = {
+			government_has_flag = government_is_republic_playable
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:gh_restore_bronzeport_bureaucracy_decision
+			}
+		}
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+		}
+		has_primary_title = title:k_bronzeport
+	}
+
+	is_valid_showing_failures_only = {
+		stewardship >= 25
+		learning >= 15
+		prestige_level >= 4
+		is_at_war = no
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+	}
+
+	is_valid = {
+		#Must be independent.
+		is_independent_ruler = yes
+		#Must have the Bronzeport
+		has_primary_title = title:k_bronzeport
+		#Must have the highest level crown authority.
+		has_realm_law = crown_authority_3
+	}
+
+	effect = {
+		save_scope_as = bronzeport_bureau_restorer
+		gh_restore_bronzeport_bureaucracy_decision_effect = yes
+		initialize_default_cliques_effect = yes
+		trigger_event = dahangon_decision.0001
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:gh_restore_bronzeport_bureaucracy_decision
+		}
+		set_global_variable = {
+			name = gh_restore_bronzeport_bureaucracy_decision
+			value = scope:bronzeport_bureau_restorer
+		}
+	}
+
+	cost = {
+		gold = 600
+		prestige = 1000
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 20
+	}
+}
+
+##############################################
+# Establish the Protectorate of the Southsea #
+# by ScionEol			         			 #
+##############################################
+
+establish_southsea_protectorate_decision = {
+	title = establish_southsea_protectorate.t
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_china_invades.dds"
+	}
+	decision_group_type = kathuni
+	ai_check_interval = 48
+	desc = establish_southsea_protectorate_decision_desc
+
+	is_shown = {
+		game_start_date >= 900.1.1
+		culture = { has_cultural_pillar = heritage_easterner }
+		any_held_title = {
+			tier = tier_county
+			title_province = { geographical_region = dahangon_lowlands_biozone }
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:establish_southsea_protectorate_decision
+			}
+		}
+		highest_held_title_tier < tier_empire
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		
+		trigger_if = {
+			limit = { title:k_angryravine = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_angryravine
+			has_title = title:k_angryravine
+		}
+		trigger_if = {
+			limit = { title:k_bowerenclosure = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			has_title = title:k_bowerenclosure
+		}
+		trigger_if = {
+			limit = { title:k_peytrelle = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:k_peytrelle
+			has_title = title:k_peytrelle
+		}
+	}
+
+	effect = {
+		save_scope_as = southsea_protectorate_founder
+
+		show_as_tooltip = { establish_southsea_protectorate_decision_effects = yes }
+
+		trigger_event = dahangon_decision.0002
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:establish_southsea_protectorate_decision
+		}
+	}
+
+	cost = {
+		prestige = 1000
+		gold = 500
+	}
+}
+
+#############################
+# Convene the Rite of Marks #
+# by ScionEol			    #
+#############################
+
+gh_kedari_magocracy_decision = {
+	title = gh_kedari_magocracy.t
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_ritual_scroll_wol.dds"
+	}
+	decision_group_type = dahangon
+
+	ai_check_interval = 120
+
+	desc = gh_kedari_magocracy_decision_desc
+	selection_tooltip = gh_kedari_magocracy_decision_tooltip
+
+	is_shown = {
+		#Standard filter checks.
+		is_landed = yes
+		exists = dynasty
+		culture = { has_cultural_tradition = tradition_kedari_marked }
+		NOT = {
+			government_has_flag = government_is_magocratic
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:gh_kedari_magocracy_decision
+			}
+		}
+		OR = {
+			government_has_flag = government_is_feudal
+			government_has_flag = government_is_clan
+			government_has_flag = government_is_continental_clan
+			government_has_flag = government_is_tribal
+		}
+		#Culture must have the appropriate parameter.
+		OR = {
+			culture = { has_cultural_parameter = magocracy_government_enabled }
+		}
+	}
+
+	is_valid = {
+		#Must be independent.
+		is_independent_ruler = yes
+		#Must be a kingdom, at the very least
+		highest_held_title_tier >= tier_kingdom
+		#Should be exalted among men
+		prestige_level >= 4
+		#Must have the highest level crown authority.
+		OR = {
+			has_realm_law = crown_authority_3
+			has_realm_law = tribal_authority_3
+		}
+		#Must be a Magi
+		can_access_magic = yes
+		#Every direct vassal must be a Magi themselves
+		NOT = {
+			any_vassal = {
+				highest_held_title_tier >= tier_county # For sanity sake
+				can_access_magic = no
+			}
+		}
+		diplomacy >= 15
+		learning >= 20
+	}
+
+	is_valid_showing_failures_only = {
+		is_alive = yes
+		is_at_war = no
+		NOT = { exists = involved_activity }
+		is_imprisoned = no
+	}
+
+	effect = {
+		save_scope_as = kedari_magocracy_founder
+
+		show_as_tooltip = { gh_kedari_magocracy_decision_effects = yes }
+
+		change_government = magocratic_government
+		every_held_title = {
+			limit = { can_title_have_clique_law_trigger = yes }
+			add_title_law = magocratic_elective_title_succession_law
+		}
+		hidden_effect = {
+			every_vassal_or_below = {
+				limit = { 
+					highest_held_title_tier >= tier_county
+					OR = {
+						government_has_flag = government_is_feudal
+						government_has_flag = government_is_clan
+						government_has_flag = government_is_continental_clan
+					}
+				}
+				change_government = magocratic_government
+				if = {
+					limit = { has_realm_law = crown_authority_0 }
+					remove_realm_law = crown_authority_0
+					add_realm_law = clique_authority_0
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_1 }
+					remove_realm_law = crown_authority_1
+					add_realm_law = clique_authority_1
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_2 }
+					remove_realm_law = crown_authority_2
+					add_realm_law = clique_authority_2
+				}
+				if = {
+					limit = { has_realm_law = crown_authority_3 }
+					remove_realm_law = crown_authority_3
+					add_realm_law = clique_authority_3
+				}
+				if = {
+					limit = { has_realm_law = tribal_authority_0 }
+					remove_realm_law = tribal_authority_0
+					add_realm_law = clique_authority_0
+				}
+				if = {
+					limit = { has_realm_law = tribal_authority_1 }
+					remove_realm_law = tribal_authority_1
+					add_realm_law = clique_authority_1
+				}
+				if = {
+					limit = { has_realm_law = tribal_authority_2 }
+					remove_realm_law = tribal_authority_2
+					add_realm_law = clique_authority_2
+				}
+				if = {
+					limit = { has_realm_law = tribal_authority_3 }
+					remove_realm_law = tribal_authority_3
+					add_realm_law = clique_authority_3
+				}
+				every_held_title = {
+					limit = { can_title_have_clique_law_trigger = yes }
+					add_title_law = magocratic_elective_title_succession_law
+				}
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_0 }
+				remove_realm_law = crown_authority_0
+				add_realm_law = clique_authority_0
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_1 }
+				remove_realm_law = crown_authority_1
+				add_realm_law = clique_authority_1
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_2 }
+				remove_realm_law = crown_authority_2
+				add_realm_law = clique_authority_2
+			}
+			if = {
+				limit = { has_realm_law = crown_authority_3 }
+				remove_realm_law = crown_authority_3
+				add_realm_law = clique_authority_3
+			}
+			if = {
+				limit = { has_realm_law = tribal_authority_0 }
+				remove_realm_law = tribal_authority_0
+				add_realm_law = clique_authority_0
+			}
+			if = {
+				limit = { has_realm_law = tribal_authority_1 }
+				remove_realm_law = tribal_authority_1
+				add_realm_law = clique_authority_1
+			}
+			if = {
+				limit = { has_realm_law = tribal_authority_2 }
+				remove_realm_law = tribal_authority_2
+				add_realm_law = clique_authority_2
+			}
+			if = {
+				limit = { has_realm_law = tribal_authority_3 }
+				remove_realm_law = tribal_authority_3
+				add_realm_law = clique_authority_3
+			}
+		}
+
+		trigger_event = dahangon_decision.0003
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:gh_kedari_magocracy_decision
+		}
+
+		GH_achiev_shadowsgather_check = yes
+	}
+	cost = {
+		gold = 1000
+		prestige = 1500
+	}
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = {
+		base = 20
+	}
+}
+
+###########################
+# Reclaim Naklan's Legacy #
+# by ScionEol			  #
+###########################
+
+reclaim_naklans_legacy_decision = {
+	title = reclaim_naklans_legacy.t
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_bloodlines.dds"
+	}
+	decision_group_type = dahangon
+	ai_check_interval = 48
+	desc = reclaim_naklans_legacy_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_pillar = heritage_tanarka }
+		NOT = {
+			OR = {
+				culture = { has_cultural_tradition = tradition_dayarkan_warrior_queens }
+				is_target_in_global_variable_list = {
+					name = unavailable_unique_decisions
+					target = flag:reclaim_naklans_legacy_decision
+				}
+			}
+		}
+		#Must be independent.
+		is_independent_ruler = yes
+		#Must be a kingdom, at the very least
+		highest_held_title_tier >= tier_kingdom
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = { title:e_dahangon = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			custom_tooltip = {
+				text = must_control_majority_of_dahangon_decision_tt
+				controls_majority_of_dahangon_formable_trigger = yes
+			}
+			has_title = title:e_dahangon
+		}
+		#Must be independent.
+		is_independent_ruler = yes
+		#Should be exalted among men
+		prestige_level >= 4
+		#Should be paragon of virtue
+		piety_level >= 4
+		#Must have the highest level crown authority.
+		has_realm_law = crown_authority_3
+		#Must have either 2nd tier or 3rd tier beauty
+		OR = {
+			has_trait = beauty_good_2
+			has_trait = beauty_good_3
+		}
+		#Needs High Diplomacy
+		diplomacy >= 25
+		#Capital must be in Samut Sakkam
+		custom_description = {
+			text = reclaim_naklans_legacy_capital_tt
+			capital_county = title:c_shadowflats
+		}
+		#Needs to have rebuilt Dawang Tarmak
+		title:b_cliffcurrent = { title_province = { has_building = 02_dawang_tarmak } }
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+	}	
+
+	effect = {
+		save_scope_as = naklan_reborn
+
+		show_as_tooltip = { reclaim_naklans_legacy_decision_effects = yes }
+
+		trigger_event = dahangon_decision.0004
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:reclaim_naklans_legacy_decision
+		}
+		GH_achiev_voyagerofthestars_check = yes
+	}
+
+	cost = {
+		prestige = 2000
+		gold = 1000
+	}
+}
+
+########################
+# Achieve Daya's Dream #
+# by ScionEol		   #
+########################
+
+achieve_dayas_dream_decision = {
+	title = achieve_dayas_dream.t
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_woman_at_window_hf.dds"
+	}
+	decision_group_type = dahangon
+	ai_check_interval = 48
+	desc = achieve_dayas_dream_decision_desc
+
+	is_shown = {
+		culture = { has_cultural_tradition = tradition_dayarkan_warrior_queens }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:achieve_dayas_dream_decision
+			}
+		}
+		#Must be independent.
+		is_independent_ruler = yes
+		#Must be a kingdom, at the very least
+		highest_held_title_tier >= tier_kingdom
+	}
+
+	is_valid = {
+		trigger_if = {
+			limit = { title:e_dahangon = { any_in_de_jure_hierarchy = { tier = tier_county } } } #Has de jure land
+			completely_controls = title:e_dahangon
+			has_title = title:e_dahangon
+			has_title = title:k_vehangun
+		}	
+		#Must be independent.
+		is_independent_ruler = yes
+		#Should be exalted among men
+		prestige_level >= 4
+		#Should be paragon of virtue
+		piety_level >= 4
+		#Must have the highest level crown authority.
+		has_realm_law = crown_authority_3
+		#Must have either 2nd tier or 3rd tier beauty
+		OR = {
+			has_trait = beauty_good_2
+			has_trait = beauty_good_3
+		}
+		#Needs High Diplomacy
+		martial >= 25
+		#Capital must be in Samut Sakkam
+		custom_description = {
+			text = reclaim_naklans_legacy_capital_tt
+			capital_county = title:c_shadowflats
+		}
+		#Needs to have rebuilt Dawang Tarmak
+		title:b_cliffcurrent = { title_province = { has_building = 02_dawang_tarmak } }
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+	}	
+
+	effect = {
+		save_scope_as = daya_dreamer
+
+		show_as_tooltip = { achieve_dayas_dream_decision_effects = yes }
+
+		trigger_event = dahangon_decision.0005
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:achieve_dayas_dream_decision
+		}
+	}
+
+	cost = {
+		prestige = 2000
+		gold = 1000
+	}
+}

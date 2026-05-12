@@ -1,0 +1,966 @@
+﻿window = {
+	name = "window_great_struggle_wih"
+	datacontext = "[GetPlayer]"
+	datacontext = "[GetVariableSystem]"
+	visible = "[And(GetVariableSystem.Exists('window_great_struggle_wih_open'), Not(IsRightWindowOpen))]"
+	parentanchor = top|right
+	layer = windows_layer
+	movable = no
+	position = { -16 -17 }
+	allow_outside = yes	
+	size = { 685 1139 }
+	using = Window_Background
+
+	state = {
+		name = _show
+		using = Animation_FadeIn_Quick
+		using = Sound_WindowShow_Standard
+		using = Window_Position_MainTab
+		position = { 35 0 }
+		
+		on_start = "[CloseGameView('my_realm')]"
+		on_start = "[CloseGameView('military')]"
+		on_start = "[CloseGameView('council_window')]"
+		on_start = "[CloseGameView('court_window')]"
+		on_start = "[CloseGameView('intrigue_window')]"
+		on_start = "[CloseGameView('factions_window')]"
+		on_start = "[CloseGameView('decisions')]"
+		on_start = "[GetVariableSystem.Clear( 'showing_ending_decisions' )]"
+		on_finish = "[GetScriptedGui('great_struggle_window_show_sgui').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+	}
+
+	state = {
+		name = _hide
+		using = Animation_FadeOut_Quick
+		using = Sound_WindowHide_Standard
+		using = Window_Position_MainTab_Hide
+		
+		on_finish = "[GetScriptedGui('great_struggle_window_hide_sgui').Execute( GuiScope.SetRoot( GetPlayer.MakeScope ).End )]"
+	}	
+
+
+	margin_widget = {
+		size = { 100% 100% }
+		margin_top = 30
+		margin_bottom = 25
+		margin = { -5 46 }
+		widget = {
+			size = { 100% 100% }
+
+			vbox = {
+				margin_left = 38
+				margin_right = 35
+				widget_header_with_picture = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					
+					
+					blockoverride "header_text"
+					{
+						text = "GH_GREAT_STRUGGLE_LABEL"
+					}
+
+					blockoverride "button_close"
+					{
+						onclick = "[GetVariableSystem.Toggle('window_great_struggle_wih_open')]"
+					}
+
+					blockoverride "illustration_texture"
+					{
+						texture = "gfx/interface/illustrations/decisions/decision_levy_outcasts.dds"
+						alpha = 0.5
+
+						modify_texture = {
+							texture = "gfx/interface/component_masks/mask_clouds.dds"
+							blend_mode = alphamultiply
+							spriteType = corneredTiled
+							alpha = 0.5
+						}
+						modify_texture = {
+							texture = "gfx/interface/component_masks/mask_fade_horizontal_middle.dds"
+							blend_mode = alphamultiply
+							alpha = 0.7
+						}
+					}
+					blockoverride "size"
+					{
+						size = { 615 290 }
+					}
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding	
+								background = {
+									using = Background_Area_Dark
+									alpha = 0.6
+									margin = { -50 0 }
+									margin_top = -80
+									margin_bottom = -30
+								}
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									margin_top = 40
+									text_multi = {
+										visible = "[Not(EqualTo_string(GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).Var('great_struggle_influence_impact_level').GetFlagName, 'overwhelming'))]"
+										layoutpolicy_horizontal = expanding
+										text = "GH_GREAT_STRUGGLE_INFLUENCE_PHASE"
+										align = center|nobaseline
+										max_width = 430
+
+										fontsize = 19
+									}
+									text_multi = {
+										visible = "[EqualTo_string(GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).Var('great_struggle_influence_impact_level').GetFlagName, 'overwhelming')]"
+										layoutpolicy_horizontal = expanding
+										text = "GH_GREAT_STRUGGLE_INFLUENCE_PHASE_WARNING"
+										align = center|nobaseline
+										max_width = 430
+
+										fontsize = 19
+									}
+									text_single = {
+										visible = "[EqualTo_string(GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).Var('great_struggle_influence_impact_level').GetFlagName, 'weak')]"
+										align = center|nobaseline
+										text = "GH_GREAT_STRUGGLE_IMPACT_LEVEL_POSITIVE"
+									}
+									text_single = {
+										visible = "[EqualTo_string(GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).Var('great_struggle_influence_impact_level').GetFlagName, 'moderate')]"
+										align = center|nobaseline
+										text = "GH_GREAT_STRUGGLE_IMPACT_LEVEL_YELLOW"
+									}
+									text_single = {
+										visible = "[EqualTo_string(GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).Var('great_struggle_influence_impact_level').GetFlagName, 'strong')]"
+										align = center|nobaseline
+										text = "GH_GREAT_STRUGGLE_IMPACT_LEVEL_ORANGE"
+									}
+									text_single = {
+										visible = "[EqualTo_string(GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).Var('great_struggle_influence_impact_level').GetFlagName, 'overwhelming')]"
+										align = center|nobaseline
+										text = "GH_GREAT_STRUGGLE_IMPACT_LEVEL_NEGATIVE"
+									}
+								}
+							}
+
+							hbox = {	
+								layoutpolicy_horizontal = expanding
+								margin_bottom = 20
+								button_primary = {
+									size = { 300 60 }
+									tooltip = "ENDING_DECISION_MULTIPLE"
+									
+									onclick = "[VariableSystem.Toggle('showing_ending_decisions')]"
+									clicksound = "event:/DLC/FP2/SFX/UI/fp2_struggle_ending_decision_view"
+
+									text_single = {
+										visible = "[Not(VariableSystem.Exists('showing_ending_decisions'))]"
+										parentanchor = center
+										position = { 0 -15 }
+										text = "GH_GREAT_STRUGGLE_VIEW_ENDINGS"
+										max_width = 230
+										using = Font_Size_Medium
+										default_format = "#high"
+										alwaystransparent = yes
+									}
+									text_single = {
+										visible = "[VariableSystem.Exists('showing_ending_decisions')]"
+										parentanchor = center
+										position = { 0 -15 }
+										text = "GH_GREAT_STRUGGLE_HIDE_ENDINGS"
+										max_width = 230
+										using = Font_Size_Medium
+										default_format = "#high"
+										alwaystransparent = yes
+									}
+									
+									#text_single = {
+									#	visible = "[And( StruggleWindow.HasPossibleEndingDecision, Struggle.IsCharacterInvolvedOrInterloper( GetPlayer ) )]"
+									#	parentanchor = center
+									#	position = { 0 8 }
+									#	max_width = 180
+									#	text = "ENDING_DECISION_AVAILABLE"
+									#	default_format = "#clickable"
+									#	alwaystransparent = yes
+									#}
+
+									text_single = {
+									#	visible = "[Or( Not( StruggleWindow.HasPossibleEndingDecision ), Not( Struggle.IsCharacterInvolvedOrInterloper( GetPlayer ) ) )]"
+										parentanchor = center
+										position = { 0 8 }
+										max_width = 210
+										text = "GH_GREAT_STRUGGLE_CANNOT_END"
+										default_format = "#clickable"
+										alwaystransparent = yes
+									}
+								}
+							}
+						}
+					}					
+				}
+				vbox = {
+					visible = "[Not( GetVariableSystem.Exists('showing_ending_decisions') )]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					
+					scrollbox = {
+						name = "struggle_list"
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						size = { 100% 615 }
+
+						blockoverride "scrollbox_content"
+						{
+							vbox = {
+								layoutpolicy_horizontal = expanding
+
+								text_label_center = {
+									layoutpolicy_horizontal = expanding	
+									text = "GH_GREAT_STRUGGLE_REGIONS_HEADER"
+									using = Font_Size_Big
+									using = Font_Type_Flavor
+									align = center
+									default_format = "#high"
+								}
+								spacer = {
+									size = { 5 5 }
+								}
+								divider_light = {
+									layoutpolicy_horizontal = expanding
+								}
+								spacer = {
+									size = { 5 5 }
+								}
+								fixedgridbox = {
+									datamodel = "[GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).GetList('gh_regional_struggle_list')]"
+									
+									addcolumn = 590
+									addrow = 170
+									setitemsizefromcell = yes
+									datamodel_wrap = 20
+									
+									item = {
+										widget = {
+											vbox = {
+												visible = "[GetScriptedGui('great_struggle_region_exists_sgui').IsShown( GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('struggle', Scope.Struggle.MakeScope ).End )]"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												background = {
+													name = "decorative_background"
+													texture = "[Scope.Struggle.GetCurrentPhase.GetBackground]"
+													using = Mask_Rough_Edges
+													fittype = centercrop
+													alpha = 0.3
+
+													modify_texture = {
+														texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+														blend_mode = alphamultiply
+													}
+
+													modify_texture = {
+														texture = "gfx/interface/component_masks/mask_fade_vertical_up_dark.dds"
+														blend_mode = normal
+														mirror = vertical
+														alpha = 0.6
+													}
+												}
+												widget = {
+													size = { 420 10 }
+													allow_outside = yes
+			
+													### Banner for the current phase
+													widget = {
+														size = { 680 110 }
+														parentanchor = top|hcenter
+														position = { 4 35 }
+														
+														datacontext = "[Scope.Struggle.GetCurrentPhase]"
+
+														struggle_phase_based_widget = {
+															visible = "[Scope.Struggle.IsInterloperCharacter(GetPlayer)]"
+															widget = {
+																size = { 100% 100% }
+																icon = {
+																	size = { 100% 100% }
+																	texture = "gfx/interface/window_struggle/point_based_phase_panel_interloper.dds"
+																}
+															}
+														}
+
+														struggle_phase_based_widget = {
+															visible = "[Scope.Struggle.IsInvolvedCharacter(GetPlayer)]"
+															blockoverride "point_based_widget_content" {
+																icon = {
+																	size = { 100% 100% }
+																	texture = "gfx/interface/window_struggle/point_based_phase_panel_involved.dds"
+																}
+															}
+														}
+
+														widget = {
+															size = { 100% 100% }
+															visible = "[Not( Scope.Struggle.IsCharacterInvolvedOrInterloper( GetPlayer ) )]"
+															icon = {
+																size = { 100% 100% }
+																texture = "gfx/interface/window_struggle/point_based_phase_panel_interloper.dds"
+															}
+														}
+													}
+													text_multi = {
+														position = { 80 7 }
+														using = Font_Size_Big
+														align = center
+														min_width = 250
+														raw_text = "[Scope.Struggle.GetNameNoTooltip]"
+
+														background = {
+															margin_left = 40
+															margin_right = 40
+
+															texture = "gfx/interface/component_tiles/tile_title_bg_01.dds"
+															spriteType = Corneredtiled
+															spriteborder = { 40 8 }
+															texture_density = 2
+
+															modify_texture = {
+																name = "mask"
+																texture = "gfx/interface/component_masks/mask_fade_horizontal_middle_thick.dds"
+																spriteType = Corneredstretched
+																spriteborder = { 0 0 }
+																blend_mode = alphamultiply
+															}
+														}
+													}
+												
+													widget = {
+														position = { 350 15 }
+														text_single = {
+															align = center
+															raw_text = "[Scope.Struggle.GetStruggleStartDate.GetStringShort]"
+															default_format = "#weak"
+															fontsize = 14
+														}
+													}
+												}
+												
+												hbox = {
+													layoutpolicy_horizontal = expanding
+													margin_top = 13	
+													default_struggle_phase_banner  = {
+														blockoverride "title_visibiliy" {
+															visible = no
+														}
+
+														blockoverride "icon_visibiliy" {
+															visible = no
+														}
+
+														datacontext = [Scope.Struggle.GetCurrentPhase]
+														datacontext = [GetPlayer]
+
+														size = { 115 125 }
+														tooltipwidget = { gh_struggle_tooltip_light = {} }
+						
+														widget = {
+															name = "current_phase_header"
+															layoutpolicy_horizontal = expanding
+															layoutpolicy_vertical = expanding
+															maximumsize = { 250 114 }
+															position = { 20 32 }	
+															allow_outside = yes
+
+															container = {
+																name = "icon"
+
+																icon = {
+																	size = { 74 74 }
+																	visible = "[Scope.Struggle.IsInterloperCharacter(GetPlayer)]"
+																	texture = "gfx/interface/icons/struggle_banners/icon_background_01.dds"
+																}
+
+																icon = {
+																	size = { 74 74 }
+																	visible = "[Scope.Struggle.IsInvolvedCharacter(GetPlayer)]"
+																	texture = "gfx/interface/icons/struggle_banners/icon_background_02.dds"
+																}
+
+																icon = {
+																	size = { 72 72 }
+																	visible = "[Not( Scope.Struggle.IsCharacterInvolvedOrInterloper( GetPlayer ) )]"
+																	texture = "gfx/interface/icons/struggle_banners/icon_background_dark.dds"
+																}
+
+																icon = {
+																	parentanchor = center
+																	size = { 54 54 }
+																	position = { 0 -2 }
+																	texture = "[Scope.Struggle.GetCurrentPhase.GetIcon]"
+																}
+
+																widget = {
+																	position = { 64 14 }
+																	visible = "[Scope.Struggle.IsInTransitionPhase]"
+
+																	icon = {
+																		visible = "[Scope.Struggle.IsInvolvedCharacter(GetPlayer)]"
+																		parentanchor = center
+																		size = { 40 40 }
+																		texture = "gfx/interface/icons/struggle_banners/icon_background_dark.dds"
+																	}
+
+																	icon = {
+																		parentanchor = center
+																		size = { 35 35 }
+																		texture = "gfx/interface/icons/icon_time.dds"
+																	}
+																}
+															}
+														}				
+													}
+													vbox = {
+														name = "text"
+														minimumsize = { 170 1 }
+
+														text_single = {
+															layoutpolicy_horizontal = expanding
+															text = "CURRENT_PHASE"
+															max_width = 170
+															using = Font_Size_Medium
+															margin_bottom = -6
+															default_format = "#bold"
+														}
+														spacer = {
+															size = { 5 5 }
+														}
+														text_single = {
+															layoutpolicy_horizontal = expanding
+															text = "[Scope.Struggle.GetCurrentPhase.GetNameNoTooltip]"
+															max_width = 170
+															using = Font_Size_Big
+															default_format = "#high"
+														}
+											
+														text_single = {
+															layoutpolicy_horizontal = expanding
+															raw_text = "[Scope.Struggle.GetCurrentPhaseStartDate.GetStringLong]"
+															align = left
+															default_format = "#weak"
+														}
+													}
+													
+													expand = { layoutpolicy_horizontal = expanding }
+													
+													vbox = {
+														margin_top = 7
+														margin_left = 100
+														button_standard = {
+															size = { 200 32 }
+															minimumsize = { 200 0 }
+															onclick = "[ToggleGameViewData('struggle', Scope.Struggle)]"
+															onclick = "[GetVariableSystem.Toggle('window_great_struggle_wih_open')]"
+															text = "GH_GREAT_STRUGGLE_GOTO_BUTTON"
+														}
+														spacer = {
+															size = { 5 5 }
+														}
+														button_standard = {
+															size = { 200 32 }
+															minimumsize = { 200 0 }
+															onclick = "[ToggleGameViewData('struggle_involvement', Scope.Struggle.GetID)]"
+															text = "STRUGGLE_INVOLVEMENT_BUTTON"
+														}
+													}
+													expand = {
+														layoutpolicy_horizontal = expanding
+													}
+												}
+												hbox = {
+													layoutpolicy_horizontal = expanding
+													margin_left = 8
+													text_single = {
+														text = "GH_GREAT_STRUGGLE_LEADING_PHASE"
+														max_width = 530
+														default_format = "#high"
+														margin_top = -7
+													}
+													spacer = {
+														size = { 10 0 }
+													}
+													progressbar_standard = {
+														size = { 180 20 }
+														value = "[CurrentAndMaxToProgressbarValueInt32(Scope.Struggle.GetPhaseValue(Scope.Struggle.GetCurrentLeadingPhase.Self), Scope.Struggle.GetPhaseDurationValue)]"
+														progresstexture = "gfx/interface/progressbars/progress_orange.dds"
+													}
+													spacer = {
+														size = { 5 0 }
+													}
+													text_single = {
+														raw_text = "[Scope.Struggle.GetPhaseValue(Scope.Struggle.GetCurrentLeadingPhase.Self)]/[Scope.Struggle.GetPhaseDurationValue]"
+														default_format = "#high"
+														min_width = 120
+														margin_top = -7
+													}
+													expand = {}
+												}
+												expand = {}
+											}
+											vbox = {
+												visible = "[Not(GetScriptedGui('great_struggle_region_exists_sgui').IsShown( GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('struggle', Scope.Struggle.MakeScope ).End ))]"
+												layoutpolicy_horizontal = expanding
+												layoutpolicy_vertical = expanding
+												
+												background = {
+													texture = "gfx/interface/illustrations/struggle_backgrounds/struggle_iberia_phase_opportunity_bg.dds"
+													using = Mask_Rough_Edges
+													fittype = centercrop
+													alpha = 0.6
+
+													modify_texture = {
+														texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+														blend_mode = alphamultiply
+													}
+
+													modify_texture = {
+														texture = "gfx/interface/component_masks/mask_fade_vertical_up_dark.dds"
+														blend_mode = normal
+														mirror = vertical
+														alpha = 0.6
+													}
+												}
+												vbox = {
+													layoutpolicy_horizontal = expanding
+													layoutpolicy_vertical = expanding
+													margin_top = 8
+
+													vbox = {
+														layoutpolicy_horizontal = expanding
+														text_single = {
+															max_width = 300
+															fontsize_min = 15
+															fontsize = 17
+															raw_text = "[GetGlobalVariable(Scope.GetFlagName).Var('struggle_name').GetFlagName]"
+															
+															background = {
+																margin_left = 80
+																margin_right = 70
+																margin_top = 5
+																margin_bottom = 5
+
+																texture = "gfx/interface/component_tiles/tile_title_bg_01.dds"
+																spriteType = Corneredtiled
+																spriteborder = { 40 18 }
+																texture_density = 2
+
+																modify_texture = {
+																	name = "mask"
+																	texture = "gfx/interface/component_masks/mask_fade_horizontal_middle_thick.dds"
+																	spriteType = Corneredstretched
+																	spriteborder = { 0 0 }
+																	blend_mode = alphamultiply
+																}
+															}
+														}
+														spacer = {
+															size = { 0 7 }
+														}
+														vbox = {
+															visible = "[EqualTo_string(GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName, Localize('gh_struggle_restart_chance_minimal'))]"
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "#P [GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName]#!"
+																#tooltip = "[GetPlayer.MakeScope.GetScriptValueDesc('wih_western_potential_struggle_reignite_value')|0]"
+																align = center|nobaseline
+																fontsize = 14
+															}
+														}
+														vbox = {
+															visible = "[EqualTo_string(GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName, Localize('gh_struggle_restart_chance_very_low'))]"
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "#P [GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName]#!"
+																#tooltip = "[GetPlayer.MakeScope.GetScriptValueDesc('wih_western_potential_struggle_reignite_value')|0]"
+																align = center|nobaseline
+																fontsize = 14
+															}
+														}
+														vbox = {
+															visible = "[EqualTo_string(GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName, Localize('gh_struggle_restart_chance_low'))]"
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "#Y [GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName]#!"
+																#tooltip = "[GetPlayer.MakeScope.GetScriptValueDesc('wih_western_potential_struggle_reignite_value')|0]"
+																align = center|nobaseline
+																fontsize = 14
+															}
+														}
+														vbox = {
+															visible = "[EqualTo_string(GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName, Localize('gh_struggle_restart_chance_medium'))]"
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "#O [GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName]#!"
+																#tooltip = "[GetPlayer.MakeScope.GetScriptValueDesc('wih_western_potential_struggle_reignite_value')|0]"
+																align = center|nobaseline
+																fontsize = 14
+															}
+														}
+														vbox = {
+															visible = "[EqualTo_string(GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName, Localize('gh_struggle_restart_chance_high'))]"
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "#N [GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName]#!"
+																#tooltip = "[GetPlayer.MakeScope.GetScriptValueDesc('wih_western_potential_struggle_reignite_value')|0]"
+																align = center|nobaseline
+																fontsize = 14
+															}
+														}
+														vbox = {
+															visible = "[EqualTo_string(GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName, Localize('gh_struggle_restart_chance_very_high'))]"
+															layoutpolicy_horizontal = expanding
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "#N [GetGlobalVariable(Scope.GetFlagName).Var('potential_struggle_reignite_var').GetFlagName]#!"
+																tooltip = "[GetPlayer.MakeScope.GetScriptValueDesc('wih_western_potential_struggle_reignite_value')|0]"
+																align = center|nobaseline
+																fontsize = 14
+															}
+														}
+													}
+													vbox = {
+														layoutpolicy_horizontal = expanding
+														layoutpolicy_vertical = expanding
+														margin_left = 10
+														margin_top = 10
+														vbox = {
+															layoutpolicy_horizontal = expanding
+															layoutpolicy_vertical = expanding
+															
+															text_single = {
+																layoutpolicy_horizontal = expanding
+																text = "GH_GREAT_STRUGGLE_ENDING_SUMMARY"
+
+																align = center|nobaseline
+																default_format = "#high"
+																autoresize = no
+																fontsize_min = 15
+																fontsize = 16
+																min_width = 220
+															}
+													
+															spacer = {
+																size = { 0 10 }
+															}
+															divider_light = {
+																layoutpolicy_horizontal = expanding
+															}
+															spacer = {
+																size = { 0 10 }
+															}
+															text_multi = {
+																layoutpolicy_horizontal = expanding
+																raw_text = "[GetGlobalVariable(Scope.GetFlagName).Var('struggle_ending_reason_desc').GetFlagName]"
+																align = center|nobaseline
+																max_width = 520
+															}
+															expand = {}
+														}
+													}
+													expand = {}
+												}
+												expand = {}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				scrollbox = {
+					visible = "[VariableSystem.Exists('showing_ending_decisions')]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					size = { 100% 615 }
+					
+					blockoverride "scrollbox_content"
+					{
+
+						vbox = { # Ending Decisions
+							layoutpolicy_vertical = expanding
+							layoutpolicy_horizontal = expanding
+							margin = { -30 -10}
+				
+							using = Animation_Tab_Switch
+
+							state = {
+								name = _show
+								using = Animation_FadeIn_Quick
+							}
+
+							state = {
+								name = _hide
+								using = Animation_FadeOut_Quick
+							}
+
+							state = {
+								name = struggle_appear
+								delay = 0.1
+								using = Animation_Curve_Default
+								alpha = 1
+								duration = 0.8
+							}
+
+							state = {
+								name = struggle_hide
+								using = Animation_Curve_Default
+								alpha = 0
+							}
+
+							vbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								margin_top = 15
+								margin_bottom = 15
+								spacing = 20
+
+								background = {
+									using = Background_Area
+								}
+
+								background = {
+									using = Background_Area
+
+									modify_texture = {
+										texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+										blend_mode = alphamultiply
+									}
+								}
+
+								hbox = {
+									layoutpolicy_horizontal = expanding
+
+									text_label_center = {
+										layoutpolicy_horizontal = expanding
+										text = "GREAT_ENDING_DECISION_AREA_HEADER"
+										align = center
+										autoresize = yes
+										using = Font_Size_Medium
+										max_width = 510
+										margin_left = 33
+									}
+									button_close = {
+										onclick = "[VariableSystem.Toggle('showing_ending_decisions')]"
+									}
+								}
+								
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									text_label_center= {
+										text = "GH_GREAT_STRUGGLE_ENDING_DECISION_HEADER"
+										layoutpolicy_horizontal = expanding
+										align = center
+										autoresize = yes
+										max_width = 580
+									}
+
+									text_single = {
+										text = "ENDING_DECISION_AREA_DESCRIPTION"
+										multiline = yes
+										align = center
+										autoresize = yes
+										max_width = 580
+										margin_bottom = 15
+									}
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										
+										expand = { layoutpolicy_horizontal = expanding }
+										
+										scrollarea = {
+											size = { 580 320 }
+											scrollbarpolicy_vertical = always_off
+											scrollbarpolicy_horizontal = as_needed
+											scrollbar_horizontal = {
+												using = Scrollbar_Horizontal
+											}
+											
+											scrollwidget = {
+												dynamicgridbox = {
+													name = "ending_decisions"
+													datamodel = "[GetGlobalVariable(GetPlayer.MakeScope.Var('great_struggle_type').GetFlagName).GetList('available_great_struggle_decisions')]"
+													maxhorizontalslots = 20
+													flipdirection = yes
+
+													item = {
+														widget = {
+															datacontext = "[GetDecisionWithKey(Concatenate(Scope.GetFlagName, '_decision'))]"
+															visible = "[Decision.IsShownForPlayer]"
+															size = { 190 300 }
+															button_standard_clean = {
+																visible = "[Decision.IsShownForPlayer]"
+																size = { 180 300 }
+																onclick = "[OpenGameViewData( 'decision_detail', Decision.Self )]"
+
+																tooltipwidget = {
+																	decision_tooltip = {}
+																}
+
+																vbox = {
+																	layoutpolicy_horizontal = expanding
+																	layoutpolicy_vertical = expanding
+
+																	background = {
+																		name = "decision_background"
+																		texture = "[Decision.GetExtraPicture]"
+																		using = Mask_Rough_Edges
+																		fittype = centercrop
+																		alpha = "[Select_float(Decision.IsPossibleForPlayer, '(float)1', '(float)0.4')]"
+
+																		margin = { -1 -1 }
+
+																		modify_texture = {
+																			texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+																			blend_mode = alphamultiply
+																			translate_uv = { 0 -0.1 }
+																		}
+																	}
+
+																	hbox = {
+																		visible = "[Not(Decision.IsPossibleForPlayer)]"
+																		layoutpolicy_horizontal = expanding
+
+																		margin = { 0 5 }
+
+																		warning_icon = {
+																			size = { 30 30 }
+																			name = "not_possible"
+																		}
+
+																		background = {
+																			using = Background_Area_Dark
+																		}
+																	}
+
+																	expand = {}
+
+																	hbox = {
+																		layoutpolicy_horizontal = growing
+
+																		background =  {
+																			using = Background_Area_Dark
+
+																			modify_texture = {
+																				texture = "gfx/interface/component_masks/mask_fade_vertical.dds"
+																				blend_mode = alphamultiply
+																				mirror = vertical
+																			}
+																		}
+
+																		background = {
+																			texture ="gfx/interface/component_masks/patterns/mask_pattern_02.dds"
+																			spriteType = Corneredtiled
+																			color = { 0.6 0.7 0.65 0.2 }
+																			alpha = 0.7
+
+																			modify_texture = {
+																				texture = "gfx/interface/component_masks/mask_fade_vertical_up.dds"
+																				blend_mode = alphamultiply
+																			}
+																		}
+
+																		text_single = {
+																			visible = "[Decision.IsPossibleForPlayer]"
+																			max_width = 170
+																			margin = { 0 15 }
+
+																			text = "[Decision.GetTitleForPlayer]"
+																			default_format = "#clickable"
+																			align = center
+																		}
+
+																		text_single = {
+																			visible = "[Not(Decision.IsPossibleForPlayer)]"
+																			max_width = 170
+																			margin = { 0 15 }
+
+																			text = "[Decision.GetTitleForPlayer]"
+																			default_format = "#low"
+																			align = center
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+										spacer = { size = { 10 0 } }
+									}
+								}
+								expand = { layoutpolicy_vertical = expanding }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+types gh_great_struggle_types
+{
+	type gh_struggle_tooltip_light = object_tooltip_pop_out {
+		blockoverride "header_additions"
+		{
+			hbox = {
+				margin_right = 10
+				margin_top = 8
+				margin_left = -4
+
+				icon = {
+					size = { 52 52 }
+					texture = "[Scope.Struggle.GetCurrentPhase.GetIcon]"
+				}
+			}
+		}
+
+		blockoverride "title_text" {
+			margin = { 0 5 }
+			text = "[Scope.Struggle.GetCurrentPhase.GetNameNoTooltip]"
+			default_format = "#T"
+		}
+
+		blockoverride "main_description" {
+
+			vbox = {
+				name = "current_phase_information"
+				datacontext = "[Scope.Struggle.GetCurrentPhase]"
+				layoutpolicy_horizontal = expanding
+
+				textbox = {
+					name = "main_description"
+					layoutpolicy_horizontal = expanding
+					max_width = 400
+					margin = { 0 5 }
+					using = DefaultTooltipText
+					multiline = yes
+					text = "[Scope.Struggle.GetPhaseDescription(StrugglePhase.Self)]"
+					fonttintcolor = "[TooltipInfo.GetTintColor]"
+					alwaystransparent = no
+				}
+			}
+		}
+
+		blockoverride "concept_link" {}
+	}	
+}

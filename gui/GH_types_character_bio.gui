@@ -1,0 +1,187 @@
+types gh_character_bio
+{
+	type gh_character_bio_tooltip = object_tooltip_pop_out
+	{
+		blockoverride "title_text"
+		{
+			margin = { 0 8 }
+			text = "[SelectLocalization( EqualTo_string(Concatenate(Character.GetHistoryId, '_title'), Localize(Concatenate(Character.GetHistoryId, '_title'))), 'CHARACTER_NAME_NO_TITLE', 'CHARACTER_BIO_TITLE')]"
+			default_format = "#T"
+		}
+
+		blockoverride "subheading"
+		{
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				autoresize = yes
+				fontsize_min = 12
+				using = Font_Size_Small
+				text = "[SelectLocalization( EqualTo_string(Concatenate(Character.GetHistoryId, '_birth'), Localize(Concatenate(Character.GetHistoryId, '_birth'))), 'NOT_SET_BIRTH', 'CHARACTER_BIO_BIRTH')]"
+				fonttintcolor = "[TooltipInfo.GetTintColor]"
+				max_width = 500
+			}
+			text_single = {
+				visible = [Character.IsDeadAndValid]
+				layoutpolicy_horizontal = expanding
+				autoresize = yes
+				fontsize_min = 12
+				using = Font_Size_Small
+				text = "[SelectLocalization( EqualTo_string(Concatenate(Character.GetHistoryId, '_death'), Localize(Concatenate(Character.GetHistoryId, '_death'))), 'NOT_SET_DEATH', 'CHARACTER_BIO_DEATH')]"
+				fonttintcolor = "[TooltipInfo.GetTintColor]"
+				max_width = 500
+			}
+			spacer = {
+				size = { 10 10 }
+			}
+		}
+
+		blockoverride "concept_link"
+		{
+			text = [biography|E]
+		}
+
+		blockoverride "main_description"
+		{
+			cooltip_paragraph = {
+				layoutpolicy_horizontal	= expanding
+				text = "CHARACTER_BIO_DESC"
+				max_width = 500
+			}
+		}
+	}
+
+	type gh_bio_link_cooltip = vbox {
+		layoutpolicy_horizontal	= expanding
+		spacer = {
+			size = { 10 10 }
+		}
+
+		divider_light = {
+			layoutpolicy_horizontal = expanding
+		}
+
+		spacer = {
+			size = { 10 5 }
+		}
+
+		cooltip_paragraph = {
+			layoutpolicy_horizontal	= expanding
+			text = "CHARACTER_MINI_BIO"
+			default_format = "#inno_quote"
+			max_width = 600
+		}
+
+		cooltip_paragraph = {
+			layoutpolicy_horizontal	= expanding
+			text = "HOVER_TO_READ"
+			default_format = "#E;bold"
+			tooltipwidget = { gh_character_bio_tooltip = {} }
+			max_width = 600
+		}
+	}
+
+	type portrait_bio_status_icon = widget {
+		size = { 16 60 }
+		scissor = yes
+
+		flowcontainer = {
+			visible = "[Character.IsValid]"
+			ignoreinvisible = yes
+			direction = vertical
+			parentanchor = top
+			spacing = 1
+
+			background = {
+				using = Background_Area_Dark
+				margin = { 2 2 }
+			}
+
+			icon = {
+				name = "bio_status"
+				visible = "[Not(EqualTo_string(Concatenate(Character.GetHistoryId, '_desc'), Localize(Concatenate(Character.GetHistoryId, '_desc'))))]"
+				size = { 14 14 }
+				texture = "gfx/interface/icons/portraits/bio_status.dds"
+				tooltip = "CHARACTER_HAS_BIO_TOOLTIP"
+			}
+		}
+	}
+
+	type portrait_has_bio_icon = flowcontainer {
+		visible = "[Not(EqualTo_string(Concatenate(Character.GetHistoryId, '_desc'), Localize(Concatenate(Character.GetHistoryId, '_desc'))))]"
+		parentanchor = top|right
+		ignoreinvisible = yes
+		direction = vertical
+		margin = { 4 5 }
+
+		portrait_bio_status_icon = {
+			parentanchor = right
+		}
+	}
+
+	type character_window_bio = widget {
+		size = { 305 310 }
+		background = {
+			using = Background_Area_ExtraDark
+			margin_left = 5
+		}
+		parentanchor = top|right
+		visible = "[GetVariableSystem.Exists('character_bio')]"
+		scrollbox = {
+			size = { 325 300 }
+			position = { -15 5 }
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			blockoverride "scrollbox_background" {}
+			blockoverride "scrollbox_margins" {}
+			blockoverride "scrollbox_background_fade" {}
+
+			blockoverride "scrollbox_content" {
+				text_single = {
+					align = hcenter
+					margin_top = 10
+					autoresize = yes
+					min_width = 275
+					max_width = 275
+					text = "[SelectLocalization( EqualTo_string(Concatenate(Character.GetHistoryId, '_title'), Localize(Concatenate(Character.GetHistoryId, '_title'))), 'CHARACTER_NAME_NO_TITLE', 'CHARACTER_BIO_TITLE')]"
+				}
+				text_multi = {
+					margin_top = 10
+					autoresize = yes
+					min_width = 275
+					max_width = 275
+					text = "CHARACTER_BIO_DESC"
+				}
+
+				expand = {}
+			}
+		}
+	}
+
+	type modified_icon_round_button_base = highlight_icon {
+        texture = "gfx/interface/buttons/modified_button_lifestyles_base.dds"
+        size = { 100% 100% }
+    }
+
+    type character_window_bio_button = widget {
+		size = { 90 40 }
+		visible = "[Not(EqualTo_string(Concatenate(Character.GetHistoryId, '_desc'), Localize(Concatenate(Character.GetHistoryId, '_desc'))))]"
+		button_normal = {
+			name = "open_character_bio"
+			size = { 90 90 }
+
+			position = { -40 0 }
+
+			onclick = "[GetVariableSystem.Toggle('character_bio')]"
+			tooltip = "CAN_OPEN_CHARACTER_BIO"
+
+			modified_icon_round_button_base = {}
+
+			highlight_icon_lifestyle_focus = {
+				size = { 30 30 }
+				position = { 40 15 }
+				onclick = "[GetVariableSystem.Toggle('character_bio')]"
+				texture = "gfx/interface/icons/flat_icons/feudal_contract.dds"
+			}
+		}
+	}
+}

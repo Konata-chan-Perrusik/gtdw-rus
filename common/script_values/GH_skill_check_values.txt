@@ -1,0 +1,70 @@
+﻿prestige_reward_from_negotations_medium_value = {
+	value = minor_prestige_value
+	every_in_list = {
+		list = negotiation_characters
+		if = {
+			limit = {
+				save_temporary_scope_as = negotiation_character_to_check_against
+				any_in_list = {
+					list = negotiation_characters
+					trigger_if = {
+						limit = { exists = scope:negotiation_character_to_check_against }
+						NOT = { this = scope:negotiation_character_to_check_against }
+					}
+				}
+			}
+			every_in_list = {
+				list = negotiation_characters
+				limit = {
+					NOT = { this = prev } 
+				}
+				# More prestige given if the negotiating characters are highly incompatible with each other
+				if = {
+					limit = {
+						trait_compatibility = {
+							target = prev
+							value <= high_negative_trait_compatibility
+						}
+					}
+					add = 15
+				}
+				else_if = {
+					limit = {
+						trait_compatibility = {
+							target = prev
+							value <= medium_negative_trait_compatibility
+						}
+					}
+					add = 10
+				}
+				else_if = {
+					limit = {
+						trait_compatibility = {
+							target = prev
+							value <= low_negative_trait_compatibility
+						}
+					}
+					add = 5
+				}
+				# More prestige given if two negotiating characters hate each other
+				if = {
+					limit = { has_relation_rival = prev }
+					add = 15
+				}
+				# More prestige given if negotiating characters are generally difficult to get along with and/or irrational
+				add = {
+					value = ai_vengefulness
+					multiply = 0.2
+					min = 0
+					max = 50
+				}
+				add = {
+					value = ai_rationality
+					multiply = -0.1
+					min = 0
+					max = 50
+				}
+			}
+		}
+	}
+}

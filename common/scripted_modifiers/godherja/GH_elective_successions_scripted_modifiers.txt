@@ -1,0 +1,330 @@
+﻿elector_self_voting_pattern_clique_elective_modifier = {
+	##########################	Elector voting himself	##########################
+	
+	modifier = {
+		desc = tooltip_clique_skilltraits_myself
+		add = character_clique_internal_influence_total
+		this = scope:candidate
+	}
+	modifier = {
+		add = 15
+		desc = tooltip_feudal_elector_vote_myself
+		this = scope:candidate
+		NOR = {
+			has_trait = humble
+			has_trait = content
+			has_trait = craven
+			has_trait = lazy
+			has_trait = depressed
+			has_trait = ambitious
+		}
+	}
+	modifier = {
+		add = -25
+		desc = tooltip_feudal_elector_vote_not_myself
+		this = scope:candidate
+		NOT = { has_trait = ambitious }
+		OR = {
+			has_trait = humble
+			has_trait = content
+			has_trait = craven
+			has_trait = lazy
+			has_trait = depressed
+		}
+	}
+	modifier = {
+		add = {
+			add = 40
+			if = {
+				limit = {
+					ai_boldness > 0
+				}
+				add = this.ai_boldness
+			}
+			if = {
+				limit = {
+					ai_greed > 0
+				}
+				add = this.ai_greed
+			}
+		}
+		desc = tooltip_clique_elector_vote_myself_clique_leader
+		this = scope:candidate
+		exists = var:clique_leader
+		var:clique_leader = { this = scope:candidate }
+		
+		NOR = {
+			has_trait = humble
+			has_trait = content
+			has_trait = craven
+			has_trait = lazy
+			has_trait = depressed
+			has_trait = ambitious
+		}
+	}
+	modifier = {
+		desc = tooltip_feudal_elector_vote_myself_ambitious
+		this = scope:candidate
+		has_trait = ambitious
+		is_adult = yes
+		add = {
+			add = 40
+			if = {
+				limit = {
+					ai_boldness > 0
+				}
+				add = this.ai_boldness
+			}
+			if = {
+				limit = {
+					ai_greed > 0
+				}
+				add = this.ai_greed
+			}
+		}
+	}
+	modifier = {
+		add = 20
+		desc = tooltip_feudal_elector_vote_myself_ruler_choice
+		this = scope:candidate
+		this = scope:holder_candidate
+		is_adult = yes
+	}
+	modifier = {
+		desc = tooltip_feudal_elector_vote_myself_sick
+		this = scope:candidate
+		is_healthy = no
+		add = {
+			subtract = 20
+			if = {
+				limit = {
+					has_trait = pneumonic
+				}
+				subtract = 10
+			}
+			if = {
+				limit = {
+					has_trait = leper
+				}
+				subtract = 50
+			}
+			if = {
+				limit = {
+					has_trait = bubonic_plague
+				}
+				subtract = 50
+			}
+			if = {
+				limit = {
+					has_trait = wounded_3
+				}
+				subtract = 25
+			}
+			if = {
+				limit = {
+					has_trait = shade_stricken
+				}
+				subtract = 50
+			}
+			if = {
+				limit = {
+					has_trait = pellagra
+				}
+				subtract = 50
+			}
+		}
+		is_adult = yes
+	}
+}
+
+elector_voting_pattern_prestige_piety_holy_order_elective_modifier = {
+	##########################	Elector voting patterns (prestige/piety)	##########################
+	#Prestige
+	modifier = {
+		desc = tooltip_feudal_elector_vote_prestige_negative
+		add = -10
+		NOT = { this = scope:candidate }
+		scope:candidate = { prestige_level < 1 }
+	}
+	modifier = {
+		desc = tooltip_feudal_elector_vote_prestige_positive
+		add = {
+			value = scope:candidate.prestige_level
+			subtract = 1
+			multiply = 5
+		}
+		NOT = { this = scope:candidate }
+		scope:candidate = { prestige_level >= 2 }
+	}
+	#Piety
+	modifier = {
+		desc = tooltip_feudal_elector_vote_piety_negative
+		add = -10
+		NOT = { this = scope:candidate }
+		ai_zeal > -80
+		scope:candidate = { piety_level < 1 }
+	}
+	modifier = {
+		desc = tooltip_feudal_elector_vote_piety_positive
+		add = {
+			value = scope:candidate.piety_level
+			subtract = 1
+			multiply = 10
+		}
+		faith = scope:candidate.faith
+		ai_zeal > -80
+		scope:candidate = { piety_level >= 2 }
+	}
+}
+
+elector_voting_pattern_circumstances_clique_mechanics_modifier = {
+	modifier = {
+		desc = tooltip_same_clique_election
+		add = 10
+		NOT = { this = scope:candidate }
+		is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate }
+	}
+	#modifier = {
+	#	desc = tooltip_same_clique_leader
+	#	add = 10
+	#	NOT = { this = scope:candidate }
+	#	var:clique_leader = { this = scope:candidate }
+	#}
+	modifier = {
+		desc = tooltip_clique_skilltraits
+		add = scope:candidate.character_clique_internal_influence_total
+		NOT = { this = scope:candidate }
+		is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate }
+	}
+	modifier = {
+		desc = tooltip_nonclique_skillsvalues
+		add = {
+			value = 0
+			if = {
+				limit = { 
+					var:character_clique = { clique_has_skill_trigger = { SKILL = martial }} 
+				}
+				add = scope:candidate.martial
+			}
+			if = {
+				limit = { 
+					var:character_clique = { clique_has_skill_trigger = { SKILL = diplomacy }} 
+				}
+				add = scope:candidate.diplomacy
+			}
+			if = {
+				limit = { 
+					var:character_clique = { clique_has_skill_trigger = { SKILL = stewardship }} 
+				}
+				add = scope:candidate.stewardship
+			}
+			if = {
+				limit = { 
+					var:character_clique = { clique_has_skill_trigger = { SKILL = intrigue }} 
+				}
+				add = scope:candidate.intrigue
+			}
+			if = {
+				limit = { 
+					var:character_clique = { clique_has_skill_trigger = { SKILL = learning }} 
+				}
+				add = scope:candidate.learning
+			}
+		}
+		NOT = { this = scope:candidate }
+		has_variable = character_clique
+		NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } }
+	}
+	modifier = {
+		desc = tooltip_nonclique_prestige_value
+		add = {
+			value = prestige_based_clique_alignment_value
+			multiply = 0.5
+		}
+		NOT = { this = scope:candidate }
+		has_variable = character_clique
+		NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } }
+		var:character_clique = { clique_has_aspect_trigger = { ASPECT = prestige_based } }
+	}
+	modifier = {
+		desc = tooltip_nonclique_piety_evalue
+		add = {
+			value = piety_based_clique_alignment_value
+			multiply = 0.5
+		}
+		NOT = { this = scope:candidate }
+		has_variable = character_clique
+		NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } }
+		var:character_clique = { clique_has_aspect_trigger = { ASPECT = piety_based } }
+	}
+	modifier = {
+		desc = tooltip_nonclique_renown_value
+		add = {
+			value = renown_based_clique_alignment_value
+			multiply = 0.5
+		}
+		NOT = { this = scope:candidate }
+		has_variable = character_clique
+		NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } }
+		var:character_clique = { clique_has_aspect_trigger = { ASPECT = renown_based } }
+	}
+	modifier = {
+		desc = tooltip_nonclique_gold_value
+		add = {
+			value = gold_based_clique_alignment_value
+			multiply = 0.5
+		}
+		NOT = { this = scope:candidate }
+		has_variable = character_clique
+		NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } }
+		var:character_clique = { clique_has_aspect_trigger = { ASPECT = gold_based } }
+	}
+	modifier = {
+		desc = tooltip_nonclique_magic_value
+		add = {
+			value = magic_based_clique_alignment_value
+			multiply = 0.5
+		}
+		NOT = { this = scope:candidate }
+		has_variable = character_clique
+		NOT = { is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } }
+		var:character_clique = { clique_has_aspect_trigger = { ASPECT = magic_based } }
+	}
+}
+
+elector_voting_pattern_circumstances_military_unit_modifier = {
+	#Martial ability should always matter for military units
+	modifier = {
+		desc = tooltip_military_unit_martial
+		add = {
+			value = scope:candidate.martial
+			multiply = 0.5
+		}
+	}
+}
+
+elector_voting_pattern_circumstances_magocracy_modifier = {
+	#Magical ability should always matter for magocracies
+	modifier = {
+		desc = tooltip_magocracy_magic_voting_modifier
+		add = {
+			value = scope:candidate.var:magic_prowess
+		}
+		scope:candidate = { has_variable = magic_prowess }
+	}
+}
+
+elector_voting_pattern_circumstances_magocratic_republic_modifier = {
+	#Magical ability should always matter for magocratic republics
+	modifier = {
+		desc = tooltip_magocracy_magic_voting_modifier
+		add = {
+			value = scope:candidate.var:magic_prowess
+			multiply = 0.4
+		}
+		scope:candidate = { has_variable = magic_prowess }
+		NOT = { 
+			is_same_clique_as_trigger = { OTHER_CHARACTER = scope:candidate } 
+		}
+	}
+}

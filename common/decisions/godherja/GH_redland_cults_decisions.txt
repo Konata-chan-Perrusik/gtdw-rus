@@ -1,0 +1,536 @@
+﻿###################################
+##DECISIONS LIST##
+#find_prism_decision
+#request_heir_from_the_pit_decision
+#redland_cults_elevation_decision
+#redland_cults_proliferation_decision
+#void_blessing_one_decision
+#void_blessing_two_decision
+#void_blessing_three_decision
+#void_blessing_four_decision
+#void_blessing_five_decision
+#void_blessing_sundeath_decision
+###################################
+
+##########################
+# Locate Prism
+# by hihi
+# Shows who is currently holding the abyssal prism. 
+# It's already possible to find the prism by looking through all characters, but this should be less frustrating.
+
+find_prism_decision = {  
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	cooldown = { years = 5 }
+	desc = find_prism_decision_desc
+	decision_group_type = redland_cults
+	selection_tooltip = find_prism_decision_tooltip
+	
+	is_shown = {
+		any_artifact = { 
+			has_variable = abyssal_prism
+		}
+		NOT = {
+			any_character_artifact = {
+				has_variable = abyssal_prism
+			}
+		}
+		has_faith = faith:redland_cults
+	}	
+	is_valid = {
+		has_faith = faith:redland_cults
+	}
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+		is_available_adult = yes
+		piety >= 1000
+	}
+	effect = {
+		save_scope_as = prism_searcher_1
+
+		every_living_character = {
+			limit = {
+				any_character_artifact = {
+					has_variable = abyssal_prism
+				}
+			}
+			save_scope_as = current_prism_owner
+		}
+		trigger_event = redland_cults_events.0001
+		custom_tooltip = find_prism_decision_tooltip
+	}
+
+	cost = {
+		piety = 1000
+	}
+	ai_check_interval = 0
+	ai_potential = {
+		always = no
+	}
+	ai_will_do = {
+		base = 0
+	}
+}
+
+request_heir_from_the_pit_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_magi.dds"
+	}
+	
+	sort_order = 81
+	decision_group_type = redland_cults
+
+	desc = request_heir_from_the_pit_decision_desc
+	selection_tooltip = request_heir_from_the_pit_decision_tooltip
+
+	ai_check_interval = 60
+
+	is_shown = {
+		is_ruler = yes
+		is_redlander = yes
+	}
+
+	cooldown = { years = 10 }
+
+	is_valid_showing_failures_only = {
+		is_imprisoned = no
+	}
+
+	cost = {
+		piety = 1000
+	}
+	
+	effect = {
+		trigger_event = gh_redlander_events.0001
+		custom_tooltip = request_heir_from_the_pit_decision_tooltip
+		custom_tooltip = request_heir_from_the_pit_decision_quality_tooltip
+	}
+	
+	ai_potential = {
+		highest_held_title_tier > tier_barony
+		is_playable_character = yes
+		NOT = { exists = player_heir }
+		is_at_war = no
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+######
+# Pray for Elevation -hihi
+# Allows cultists to get a landless duchy title for use in vassalizing other cultists
+
+redland_cults_elevation_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+
+	cooldown = { years = 10 }
+
+	is_shown = {
+		is_independent_ruler = yes
+		highest_held_title_tier = tier_county
+		is_landed = yes
+		is_redlander = yes
+	}
+
+	is_valid = {
+		is_independent_ruler = yes
+		primary_title.tier = tier_county
+		is_landed = yes
+		is_redlander = yes
+		piety_level >= 1
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		is_at_war = no
+	}
+
+	cost = {
+		piety = 300
+		gold = 50
+	}
+
+	effect = {
+		create_redlander_duchy_effect = yes
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+## Pray for Proliferative Growth
+## Give away extra provinces to get under domain limit (redlanders can only have 1 county)
+redland_cults_proliferation_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		domain_size > domain_limit
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_redlander = yes
+		domain_size > domain_limit
+	}
+
+	cost = {
+		piety = 0
+	}
+
+	effect = {
+		every_held_title = {
+			limit = {
+				tier = tier_county
+				NOT = { this = root.capital_county }
+			}
+			save_scope_as = extra_county
+		}
+		redland_cults_proliferation_scripted_effect = {
+			CULTOWNER = root
+			EXTRATITLE = scope:extra_county
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##Pray for a Bountiful Harvest
+void_blessing_one_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		NOT = { exists = var:void_blessing }
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_redlander = yes
+		piety_level >= 1
+	}
+
+	cost = {
+		piety = 100
+	}
+
+	effect = {
+		spawn_army = {
+			name = redlander_decision_army_1
+			men_at_arms = { type = nascent_shadehosts men = 300 }
+			men_at_arms = { type = manifestations_of_fear men = 3 }
+			location = capital_province 
+		}
+		set_variable = {
+			name = void_blessing
+			value = 1
+		}
+	}
+}
+
+## Pray for Embodied Terror
+void_blessing_two_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 24
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 80
+	}
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		var:void_blessing ?= 1
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_redlander = yes
+		piety_level >= 2
+	}
+
+	cost = {
+		piety = 300
+	}
+
+	effect = {
+		spawn_army = {
+			name = redlander_decision_army_2
+			men_at_arms = { type = chasm_terrors men = 30 }
+			men_at_arms = { type = lesser_voidspawns men = 20 }
+			men_at_arms = { type = marrowdrones men = 60 }
+			location = capital_province 
+		}
+		change_variable = {
+			name = void_blessing
+			add = 1
+		}
+	}
+}
+
+## Pray for Hunger Manifest
+void_blessing_three_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 70
+	}
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		var:void_blessing ?= 2
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_redlander = yes
+		piety_level >= 3
+	}
+
+	cost = {
+		piety = 600
+	}
+
+	effect = {
+		spawn_army = {
+			name = redlander_decision_army_3
+			men_at_arms = { type = living_pits men = 4 }
+			men_at_arms = { type = hungering_mouths men = 30 }
+			men_at_arms = { type = archonarachs men = 10 }
+			location = capital_province 
+		}
+		change_variable = {
+			name = void_blessing
+			add = 1
+		}
+	}
+}
+
+## Pray for Anathema
+void_blessing_four_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 70
+	}
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		var:void_blessing ?= 3
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_redlander = yes
+		piety_level >= 4
+	}
+
+	cost = {
+		piety = 900
+	}
+
+	effect = {
+		spawn_army = { 
+			name = redlander_decision_army_4
+			men_at_arms = { type = spider_jockeys men = 2 }
+			men_at_arms = { type = blade_tendrils men = 400 } 
+			location = capital_province 
+		}
+		change_variable = {
+			name = void_blessing
+			add = 1
+		}
+	}
+}
+
+## Pray for Temporal Recognition
+void_blessing_five_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		var:void_blessing ?= 4
+	}
+
+	is_valid = {
+		is_landed = yes
+		is_redlander = yes
+		piety_level >= 5
+	}
+
+	cost = {
+		piety = 1200
+	}
+
+	effect = {
+		spawn_army = { 
+			name = redlander_decision_army_5
+			men_at_arms = { type = night_gaunts men = 3 } 
+			men_at_arms = { type = voidhosts men = 10 }
+			location = capital_province 
+		}
+		change_variable = {
+			name = void_blessing
+			add = 1
+		}
+		create_artifact_gh_chaos_throne_effect = { OWNER = this }
+	}
+}
+
+## Pray for True Freedom
+void_blessing_sundeath_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_devil_worshiper_sacrifice.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 12
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+	is_shown = {
+		is_landed = yes
+		is_redlander = yes
+		var:void_blessing ?= 5
+	}
+
+	is_valid = {
+		piety_level >= 5
+		has_trait = gh_blackspawn_5
+		NOT = { exists = global_var:redlands_crisis }
+	}
+
+	cost = {
+		piety = 1500
+	}
+
+	effect = {
+		spawn_army = { 
+			name = redlander_decision_army_sundeath
+			men_at_arms = { type = enfleshed_grotesquerie men = 3 } 
+			location = capital_province 
+		}
+		add_character_flag = void_blessing_sundeath
+		learn_global_spell_effect = { SPELL_IDENTIFIER = sundeath }
+	}
+}
+
+redland_cults_direct_rule_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_burning_castle_hf.dds"
+	}
+	decision_group_type = redland_cults
+	ai_check_interval = 60
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+
+	is_shown = {
+		is_redlander = yes
+		is_independent_ruler = yes
+		is_landed = yes
+		highest_held_title_tier >= tier_duchy
+		any_vassal_or_below = {
+			has_title = title:c_ofnammm
+		}
+	}
+
+	is_valid = {
+	}
+
+	cost = {
+		gold = 2
+	}
+
+	effect = {
+		every_vassal_or_below = {
+			limit = { has_title = title:c_ofnammm }
+			save_scope_as = ofnammm_vassal
+		}
+		title_swap_scripted_effect = {
+			SWAP_OWNER = root
+			SWAP_OWNER_TITLE = root.capital_county
+			SWAP_TARGET = scope:ofnammm_vassal
+			SWAP_TARGET_TITLE = title:c_ofnammm
+		}
+	}
+}

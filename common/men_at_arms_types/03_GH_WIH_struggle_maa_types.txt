@@ -1,0 +1,238 @@
+﻿# standard costs
+@maa_buy_cost = 150
+@maa_low_maintenance_cost = 1.0
+@maa_high_maintenance_cost = 5.0
+@cultural_maa_extra_ai_score = 80
+
+# Must be synced between files with the values located at "# Provisions Costs #".
+@provisions_cost_infantry_cheap = 3
+@provisions_cost_infantry_moderate = 7
+@provisions_cost_infantry_expensive = 12
+@provisions_cost_infantry_bankrupting = 15
+
+@provisions_cost_cavalry_cheap = 7
+@provisions_cost_cavalry_moderate = 15
+@provisions_cost_cavalry_expensive = 21
+@provisions_cost_cavalry_bankrupting = 30
+
+@provisions_cost_special_cheap = 6
+@provisions_cost_special_moderate = 12
+@provisions_cost_special_expensive = 18
+@provisions_cost_special_bankrupting = 24
+
+#################################################################################################
+# PLEASE USE common\script_values\GH_men_at_arms_values.txt FOR costs						 #
+# im not sure why paradox is using a seperate file for man at arm costs but im sticking with it #
+# signed, heisenbee/zslayernslay																#
+#################################################################################################
+
+jarifin_lancers = {
+	type = light_cavalry
+
+	damage = 30
+	toughness = 20
+	pursuit = 35
+	screen = 28
+
+	terrain_bonus = {
+		plains = { damage = 15 }
+		hills = { damage = -5 }
+		mountains = { damage = -10 pursuit = -20 }
+		wetlands = { damage = -15 toughness = -10 pursuit = -30 screen = -30 }
+		desert_mountains = { damage = -15 pursuit = -20 }
+		drylands = { damage = 15 }
+		## GH ADDITIONS ##
+		marcher_plains = { damage = 15 }
+		marcher_hills = { damage = -5 }
+		marcher_mountains = { damage = -10 pursuit = -20 }
+		marcher_wetlands = { damage = -15 toughness = -10 pursuit = -30 screen = -30 }
+
+		deadlands = { damage = 15 }
+
+		mayik_caverns = { damage = -20 toughness = -15 pursuit = -30 screen = -30 }
+		mayik_corridors = { damage = -18 toughness = -13 pursuit = -30 screen = -30 }
+		mayik_chamber = { damage = -16 toughness = -11 pursuit = -30 screen = -30 }
+		mayik_chamber = { damage = -14 toughness = -9 pursuit = -30 screen = -30 }
+	}
+	
+	counters = {
+		archers = 1
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		has_global_variable = gh_region_eastern_war_in_heaven_struggle
+		global_var:gh_region_eastern_war_in_heaven_struggle.var:struggle_ending_ender.house ?= root.house
+	}
+
+	winter_bonus = {
+		harsh_winter = { damage = -11 toughness = -4 }
+	}
+
+	buy_cost = { gold = light_cavalry_recruitment_cost }
+	low_maintenance_cost = { gold = light_cavalry_low_maint_cost }
+	high_maintenance_cost = { gold = light_cavalry_high_maint_cost }
+	provision_cost = @provisions_cost_cavalry_cheap
+
+	holy_order_fallback = no
+
+	stack = 100
+	ai_quality = {
+		value = @cultural_maa_extra_ai_score
+		add = counter_synergy_ai_weight_light_cavalry
+	}
+	icon = light_cavalry
+}
+
+kharazadim_footmen = {
+	type = heavy_infantry
+
+	damage = 44
+	toughness = 26
+	pursuit = 5
+	screen = 0
+
+	terrain_bonus = {
+		mayik_caverns = { pursuit = 10 screen = 12 }
+		mayik_corridors = { pursuit = 8 screen = 10 }
+		mayik_chamber = { pursuit = 6 screen = 8 }
+		underworld_expanse = { pursuit = 4 screen = 6 }
+	}
+
+	counters = {
+		pikemen = 1
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		has_global_variable = gh_region_central_war_in_heaven_struggle
+		global_var:gh_region_central_war_in_heaven_struggle.var:struggle_ending_ender.house ?= root.house
+	}
+	
+	winter_bonus = {
+		harsh_winter = { damage = -16 toughness = -9 }
+	}
+	
+	buy_cost = { gold = heavy_infantry_recruitment_cost }
+	low_maintenance_cost = { gold = heavy_infantry_low_maint_cost }
+	high_maintenance_cost = { gold = heavy_infantry_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_moderate
+
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = {
+		value = @cultural_maa_extra_ai_score
+		add = counter_synergy_ai_weight_heavy_infantry
+	}
+	icon = heavy_infantry
+}
+
+sarathem_magi = { # Sarradonian Crater Unit
+	type = magi
+
+	damage = 230
+	toughness = 120
+	pursuit = 15
+	screen = 40
+	siege_value = 0.05
+
+	terrain_bonus = {
+		hills = { damage = 50 toughness = 25 }
+		marcher_hills = { damage = -150 toughness = -50 }
+		marcher_farmlands = { damage = -200 toughness = -75 }
+		marcher_plains = { damage = -200 toughness = -75 }
+		marcher_mountains = { damage = -200 toughness = -75 }
+		marcher_forest = { damage = -200 toughness = -75 }
+		marcher_wetlands = { damage = -200 toughness = -75 }
+		marcher_floodplains = { damage = -200 toughness = -75 }
+		antimagic_terrain = { damage = -200 toughness = -75 }
+	}
+	
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		has_global_variable = gh_region_far_eastern_war_in_heaven_struggle
+		global_var:gh_region_far_eastern_war_in_heaven_struggle.var:struggle_ending_ender.house ?= root.house
+	}
+
+	counters = {
+		pikemen = 1
+		skirmishers = 1
+		magi = 0.3
+		magical = 1
+		magical_fire = 1
+		magical_ice = 1
+		magical_water = 1
+		magical_air = 1
+		magical_stone = 1
+		magical_dark = 1
+		magical_dream = 1
+		magical_light = 1
+		magical_nature = 1
+		magical_celestial = 1
+		magical_metal = 1
+		magical_sand = 1
+		magical_ethereal = 1
+		magical_death = 1
+		magical_blood = 1
+		#magical_hymns = 1
+		#magical_time = 1
+		#magical_dawn = 1
+	}
+
+	buy_cost = { gold = arcane_auxiliaries_recruitment_cost prestige = arcane_auxiliaries_recruitment_cost_prestige piety = arcane_auxiliaries_recruitment_cost_piety }
+	low_maintenance_cost = { gold = arcane_auxiliaries_low_maint_cost }
+	high_maintenance_cost = { gold = arcane_auxiliaries_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_expensive
+
+	stack = 20
+	ai_quality = { value = @cultural_maa_extra_ai_score }
+	icon = auxiliaries
+}
+
+safri_archers = {
+	type = archers
+
+	damage = 36
+	toughness = 18
+	pursuit = 0
+	screen = 0
+
+	terrain_bonus = {
+		hills = { damage = 10 toughness = 4 }
+		forest = { toughness = -4 screen = -4 }
+		floodplains = { damage = -4 toughness = -4 }
+		taiga = { toughness = 4 screen = 4 }
+		## GH ADDITIONS ##
+		marcher_forest = { toughness = -4 screen = -4 }
+		marcher_hills = { damage = 10 toughness = 4 }
+
+		mayik_caverns = { damage = -20 screen = 12 }
+		mayik_corridors = { damage = -18 screen = 10 }
+		mayik_chamber = { damage = -15 screen = 8 }
+		underworld_expanse = { damage = -12 screen = 6 }
+	}
+
+	counters = {
+		skirmishers = 1
+	}
+
+	can_recruit = {
+		culture = { culture_has_standard_maa = yes }
+		has_global_variable = gh_region_far_eastern_war_in_heaven_struggle
+		global_var:gh_region_western_war_in_heaven_struggle.var:struggle_ending_ender.house ?= root.house
+	}
+
+	buy_cost = { gold = crossbowmen_recruitment_cost }
+	low_maintenance_cost = { gold = bowmen_low_maint_cost }
+	high_maintenance_cost = { gold = bowmen_high_maint_cost }
+	provision_cost = @provisions_cost_infantry_moderate
+
+	holy_order_fallback = yes
+
+	stack = 100
+	ai_quality = {
+		value = @cultural_maa_extra_ai_score
+		add = counter_synergy_ai_weight_archers
+	}
+}

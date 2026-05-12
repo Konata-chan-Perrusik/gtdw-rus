@@ -1,0 +1,484 @@
+﻿blind_watcher_reform_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = agionist
+	ai_check_interval = 24
+	desc = blind_watcher_reform_decision_desc
+	
+	is_shown = {
+		has_faith = faith:dikaynos
+		government_has_flag = government_is_landed_order
+		has_variable = character_clique
+		OR = {
+			is_ai = no
+			var:character_clique = {
+				var:clique_name = flag:watcher_defenders
+			}
+		}
+		faith = { has_doctrine = tenet_blind_justice }
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = blind_watcher_reform_correct_clique_desc
+			var:character_clique = {
+				var:clique_name = flag:watcher_defenders
+			}
+		}
+		has_title = title:k_blind_watcher
+		prestige >= 1000
+		custom_description = {
+			text = blind_watcher_reform_valid_desc
+			character_clique_power_percentage >= 60
+		}
+		custom_description = {
+			text = landed_order_reform_no_powerful_vassal_must_oppose_desc
+			NOT = {
+				any_vassal = {
+					is_powerful_vassal = yes
+					opposes_succession_law_change_trigger = yes
+				}
+			}
+		}
+	}
+	
+	effect = {
+		add_piety = 1000
+		add_prestige = -1000
+		faith:dikaynos = {
+			remove_doctrine = tenet_blind_justice
+			add_doctrine = tenet_true_blind_justice
+			hidden_effect = {
+				remove_doctrine = doctrine_pluralism_fundamentalist
+			}
+			add_doctrine = doctrine_pluralism_righteous
+			
+			hidden_effect = {
+				uncorrupt_patron_saint_effect = { PATRON_SAINT = dikaynos }
+			}
+		}
+		uncorrupt_interpreters_effect = yes
+		uncorrupt_swords_effect = yes
+		
+	}
+}
+
+golden_hand_reform_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = agionist
+	ai_check_interval = 24
+	desc = golden_hand_reform_decision_desc
+	
+	is_shown = {
+		has_faith = faith:philanthrios
+		government_has_flag = government_is_landed_order
+		has_variable = character_clique
+		OR = {
+			is_ai = no
+			var:character_clique = {
+				var:clique_name = flag:dorogeros
+			}
+		}
+		faith = { has_doctrine = tenet_philanthrios_corrupt }
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = golden_hand_reform_correct_clique_desc
+			var:character_clique = {
+				var:clique_name = flag:dorogeros
+			}
+		}
+		has_title = title:k_golden_hand
+		prestige >= 1000
+		custom_description = {
+			text = landed_order_reform_no_powerful_vassal_must_oppose_desc
+			NOT = {
+				any_vassal = {
+					is_powerful_vassal = yes
+					opposes_succession_law_change_trigger = yes
+				}
+			}
+		}
+		custom_description = {
+			text = golden_hand_reform_valid_desc
+			character_clique_power_percentage >= 60
+		}
+	}
+	
+	effect = {
+		add_piety = 1000
+		add_prestige = -1000
+		uncorrupt_polykalton_effect = yes
+		uncorrupt_kleptiakos_effect = yes
+		var:clique_title = {
+			random_in_list = {
+				variable = title_cliques
+				limit = { var:clique_name = flag:dorogeros }
+				remove_variable = clique_name
+				set_variable = {
+					name = clique_name
+					value = flag:dorogeros
+				}
+			}
+		}
+		faith:philanthrios = {
+			remove_doctrine = tenet_philanthrios_corrupt
+			add_doctrine = tenet_philanthrios_pure
+			hidden_effect = {
+				remove_doctrine = doctrine_pluralism_fundamentalist
+			}
+			add_doctrine = doctrine_pluralism_righteous
+			
+			hidden_effect = {
+				uncorrupt_patron_saint_effect = { PATRON_SAINT = philanthros }
+			}
+		}
+	}
+}
+
+sansias_rose_reform_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = agionist
+	ai_check_interval = 24
+	desc = sansias_rose_reform_decision_desc
+	
+	is_shown = {
+		has_faith = faith:sansia
+		government_has_flag = government_is_landed_order
+		has_variable = character_clique
+		OR = {
+			is_ai = no
+			var:character_clique = {
+				var:clique_name = flag:kairouika
+			}
+		}
+		faith = { has_doctrine = tenet_sansia_corrupt }
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = sansias_rose_reform_correct_clique_desc
+			var:character_clique = {
+				var:clique_name = flag:kairouika
+			}
+		}
+		has_title = title:k_saint_sansias_rose
+		prestige >= 1000
+		custom_description = {
+			text = landed_order_reform_no_powerful_vassal_must_oppose_desc
+			NOT = {
+				any_vassal = {
+					is_powerful_vassal = yes
+					opposes_succession_law_change_trigger = yes
+				}
+			}
+		}
+		custom_description = {
+			text = sansias_rose_reform_valid_desc
+			character_clique_power_percentage >= 60
+		}
+	}
+	
+	effect = {
+		add_piety = 1000
+		add_prestige = -1000
+		uncorrupt_adoxos_effect = yes
+		uncorrupt_mazanai_effect = yes
+		var:clique_title = {
+			random_in_list = {
+				variable = title_cliques
+				limit = { var:clique_name = flag:kairouika }
+				remove_variable = clique_name
+				set_variable = {
+					name = clique_name
+					value = flag:kairouika_pure
+				}
+			}
+		}
+		faith:sansia = {
+			remove_doctrine = tenet_sansia_corrupt
+			add_doctrine = tenet_sansia_pure
+			hidden_effect = {
+				remove_doctrine = doctrine_pluralism_fundamentalist
+			}
+			add_doctrine = doctrine_pluralism_righteous
+			
+			hidden_effect = {
+				uncorrupt_patron_saint_effect = { PATRON_SAINT = sansia }
+			}
+		}
+	}
+}
+
+bleeding_martyr_reform_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = agionist
+	ai_check_interval = 24
+	desc = bleeding_martyr_reform_decision_desc
+	
+	is_shown = {
+		has_faith = faith:thysia
+		government_has_flag = government_is_landed_order
+		has_variable = character_clique
+		OR = {
+			is_ai = no
+			var:character_clique = {
+				var:clique_name = flag:xeneftoi
+			}
+		}
+		faith = { has_doctrine = tenet_quest_for_life }
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = bleeding_martyr_reform_correct_clique_desc
+			var:character_clique = {
+				var:clique_name = flag:xeneftoi
+			}
+		}
+		has_title = title:k_bleeding_martyr
+		prestige >= 1000
+		custom_description = {
+			text = landed_order_reform_no_powerful_vassal_must_oppose_desc
+			NOT = {
+				any_vassal = {
+					is_powerful_vassal = yes
+					opposes_succession_law_change_trigger = yes
+				}
+			}
+		}
+		custom_description = {
+			text = bleeding_martyr_reform_valid_desc
+			character_clique_power_percentage >= 60
+		}
+	}
+	
+	effect = {
+		add_piety = 1000
+		add_prestige = -1000
+		faith:thysia = {
+			remove_doctrine = tenet_quest_for_life
+			add_doctrine = tenet_thysian_pure
+			hidden_effect = {
+				remove_doctrine = doctrine_pluralism_fundamentalist
+			}
+			add_doctrine = doctrine_pluralism_righteous
+			
+			hidden_effect = {
+				uncorrupt_patron_saint_effect = { PATRON_SAINT = thysia }
+			}
+		}
+		uncorrupt_syngamar_effect = yes
+		uncorrupt_diomatias_effect = yes
+		var:clique_title = {
+			random_in_list = {
+				variable = title_cliques
+				limit = { var:clique_name = flag:xeneftoi }
+				remove_variable = clique_name
+				set_variable = {
+					name = clique_name
+					value = flag:xeneftoi_pure
+				}
+			}
+		}
+	}
+}
+
+pure_heart_reform_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = agionist
+	ai_check_interval = 24
+	desc = pure_heart_reform_decision_desc
+	
+	is_shown = {
+		has_faith = faith:katharitos
+		government_has_flag = government_is_landed_order
+		has_variable = character_clique
+		OR = {
+			is_ai = no
+			var:character_clique = {
+				var:clique_name = flag:apodromios
+			}
+		}
+		faith = { has_doctrine = tenet_blood_purity }
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = pure_heart_reform_correct_clique_desc
+			var:character_clique = {
+				var:clique_name = flag:apodromios
+			}
+		}
+		has_title = title:k_pure_heart
+		prestige >= 1000
+		custom_description = {
+			text = landed_order_reform_no_powerful_vassal_must_oppose_desc
+			NOT = {
+				any_vassal = {
+					is_powerful_vassal = yes
+					opposes_succession_law_change_trigger = yes
+				}
+			}
+		}
+		custom_description = {
+			text = pure_heart_reform_valid_desc
+			character_clique_power_percentage >= 60
+		}
+	}
+	
+	effect = {
+		add_piety = 1000
+		add_prestige = -1000
+		uncorrupt_metakas_effect = yes
+		uncorrupt_epichorima_effect = yes
+		var:clique_title = {
+			random_in_list = {
+				variable = title_cliques
+				limit = { var:clique_name = flag:apodromios }
+				remove_variable = clique_name
+				set_variable = {
+					name = clique_name
+					value = flag:apodromios_pure
+				}
+			}
+		}
+		faith:katharitos = {
+			remove_doctrine = tenet_blood_purity
+			add_doctrine = tenet_true_purity
+			hidden_effect = {
+				remove_doctrine = doctrine_pluralism_fundamentalist
+			}
+			add_doctrine = doctrine_pluralism_pluralistic
+			
+			hidden_effect = {
+				uncorrupt_patron_saint_effect = { PATRON_SAINT = katharitos }
+			}
+		}
+	}
+}
+
+saint_calystos_key_reform_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+	decision_group_type = agionist
+	ai_check_interval = 24
+	desc = saint_calystos_key_reform_decision_desc
+	
+	is_shown = {
+		has_faith = faith:calysto
+		government_has_flag = government_is_landed_order
+		has_variable = character_clique
+		OR = {
+			is_ai = no
+			var:character_clique = {
+				var:clique_name = flag:benedictioners
+			}
+		}
+		faith = { has_doctrine = tenet_slavery }
+	}
+	
+	is_valid = {
+		custom_description = {
+			text = saint_calystos_key_reform_correct_clique_desc
+			var:character_clique = {
+				var:clique_name = flag:benedictioners
+			}
+		}
+		has_title = title:k_saint_calystos_key
+		prestige >= 1000
+		custom_description = {
+			text = landed_order_reform_no_powerful_vassal_must_oppose_desc
+			NOT = {
+				any_vassal = {
+					is_powerful_vassal = yes
+					opposes_succession_law_change_trigger = yes
+				}
+			}
+		}
+		custom_description = {
+			text = saint_calystos_key_reform_valid_desc
+			character_clique_power_percentage >= 60
+		}
+	}
+	
+	effect = {
+		add_piety = 1000
+		add_prestige = -1000
+		uncorrupt_benedictioners_effect = yes
+		uncorrupt_securers_effect = yes
+		uncorrupt_masters_effect = yes
+		uncorrupt_patrons_effect = yes
+		faith:calysto = {
+			remove_doctrine = tenet_slavery
+			add_doctrine = tenet_calystos_pure
+			hidden_effect = {
+				remove_doctrine = doctrine_slavery_demanded
+			}
+			add_doctrine = doctrine_slavery_banned
+			
+			hidden_effect = {
+				uncorrupt_patron_saint_effect = { PATRON_SAINT = calysto }
+			}
+		}
+	}
+}
+
+donate_to_golden_hand_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	ai_check_interval = 120
+
+	cooldown = { days = 1825 }
+	
+	desc = donate_to_golden_hand_decision_desc
+	decision_group_type = agionist
+	
+	is_shown = {
+		has_religion = religion:agionism_religion
+		character_has_any_patron_saint = yes
+		any_character_patron_saint_has_aspect_trigger = { ASPECT = values_frivolous_expenses }
+		exists = title:k_golden_hand
+		title:k_golden_hand.holder.faith = { has_doctrine_parameter = religious_extort_subjects  }
+		NOT = { has_government = landed_order_government }
+	}
+	
+	is_valid_showing_failures_only = {
+		is_available = yes
+		short_term_gold >= minor_gold_value
+	}
+	
+	effect = {
+		pay_short_term_gold = {
+			gold = minor_gold_value
+			target = title:k_golden_hand.holder
+		}
+		add_piety = minor_piety_gain
+		patron_saint_frivolous_spending_affinity_check = { GOLD = minor_gold_value }
+	}
+	
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 50
+
+		ai_value_modifier = {
+			ai_zeal = 5
+			ai_greed = -5
+		}
+	}
+}

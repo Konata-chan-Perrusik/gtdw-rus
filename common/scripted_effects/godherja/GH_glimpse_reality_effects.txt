@@ -1,0 +1,603 @@
+﻿glimpse_reality_selection_effect = {
+	random_list = {
+		179 = {#Get a normal vision event, usually giving some small character bonus
+			glimpse_reality_normal_vision_effect = { CHOICE = $CHOICE$ }
+		}
+		20 = {#Character recruitment opportunity. These guys usually have good stats in one or more areas or other unique features
+			glimpse_reality_recruitment_vision_effect = { CHOICE = $CHOICE$ }
+		}
+		2 = {#Winner Winner Chicken Dinner! Get a rare vision! (only a 0.5% change of happening)
+			glimpse_reality_rare_vision_effect = { CHOICE = $CHOICE$ }
+		}
+	}
+}
+
+glimpse_reality_normal_vision_effect = {
+	random_list = {
+		10 = { #Diplomacy Vision
+			trigger = { glimpse_reality_choice_not_taken = { OPTION = diplomacy_vision }}
+			add_to_variable_list = {
+				name = glimpse_reality_choices
+				target = flag:diplomacy_vision
+			}
+			random_list = {
+				10 = {
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0010 } #Generic Diplomacy
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_0011} }
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0011 } #Reverse Hunt
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_0012} }
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0012 } #Tathtali & Sanad Marry
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_0013} }
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0013 } #Cenware Elysium pass
+				}
+				10 = {
+					trigger = {
+						NOT = { has_character_flag = glimpse_reality_had_0014 }
+						any_truce_target = {
+							is_playable_character = yes
+						}
+						NOT = { has_character_flag = glimpse_reality_had_0014 }
+					}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0014 } #Break Truce
+				}
+			}
+		}
+		10 = { #Martial visions
+			trigger = { glimpse_reality_choice_not_taken = { OPTION = martial_vision }}
+			add_to_variable_list = {
+				name = glimpse_reality_choices
+				target = flag:martial_vision
+			}
+			random_list = {
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_0501}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0501 } #Pillar Fall
+				}
+				10 = {
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0502 } #Generic martial
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_0503}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0503 } #Marcher Elysian Pass
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_0505}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 0505 } #Valden
+				}
+			}
+		}
+		10 = { #stewardship visions
+			trigger = { glimpse_reality_choice_not_taken = { OPTION = stewardship_vison }}
+			add_to_variable_list = {
+				name = glimpse_reality_choices
+				target = flag:stewardship_vison
+			}
+			random_list = {
+				10 = {
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 1001 } #Generic Stewardship
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_1002}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 1002 } #Esmwy
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_1003}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 1003 } #Gain Gold
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_1004 }}
+					glimpse_reality_choice_confirmation = { CHOICE = $CHOICE$ EVENT = 1004 } #Development Boons
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_1005 }}
+					glimpse_reality_choice_confirmation = { CHOICE = $CHOICE$ EVENT = 1005 } #Development Malus
+				}
+			}
+		}
+		10 = { #intrigue visions
+			trigger = { glimpse_reality_choice_not_taken = { OPTION = intrigue_vision }}
+			add_to_variable_list = {
+				name = glimpse_reality_choices
+				target = flag:intrigue_vision
+			}
+			random_list = {
+				#Intrigue buffs should account for 40% of intrigue visions
+				10 = {
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 1501 } #generic intrigue vision
+				}
+				#Secrets, schemes, and hooks should account for 40% of intrigue visons
+				10 = {
+					trigger = {
+						OR = {
+							any_neighboring_and_across_water_top_liege_realm_owner = {
+								any_secret = {
+									NOT = { is_known_by = root }
+								}
+							}
+							any_vassal = {
+								any_secret = {
+									NOT = { is_known_by = root }
+								}
+								NOT = { highest_held_title_tier = tier_barony }
+							}
+							any_liege_or_above = {
+								any_secret = {
+									NOT = { is_known_by = root }
+								}
+							}
+						}	
+						NOT = { has_character_flag = glimpse_reality_had_1502}	
+					}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 1502 } # Find secret
+				}
+			}
+		}
+		10 = { #learning visions
+			trigger = { glimpse_reality_choice_not_taken = { OPTION = learning_vision }}
+			add_to_variable_list = {
+				name = glimpse_reality_choices
+				target = flag:learning_vision
+			}
+			random_list = {
+				10 = {
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 2001 } #Generic Learning
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_2002}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 2002 } #Northbound
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_2005}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 2005 } #Eye Guy
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_2006}}
+					glimpse_reality_choice_confirmation = { CHOICE = $CHOICE$ EVENT = 2006 } # City of Golden Statues
+				}
+			}
+		}
+		10 = { #magic visions
+			trigger = { glimpse_reality_choice_not_taken = { OPTION = magic_vision }}
+			add_to_variable_list = {
+				name = glimpse_reality_choices
+				target = flag:magic_vision
+			}
+			random_list = {#Need to add a default vision later, for now just don't check if you already have one
+				10 = {
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3001 } #Generic Magic
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3002}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3002 } #First Fog
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3003}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3003 } #Tower Vindeon
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3004}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3004 } #Metaphorical Sorrow
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3005}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3005 } #Metaphorical woodpecker
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3006}}
+					glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3006 } #A Tale of Cold
+				}
+				10 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3007}}
+					glimpse_reality_choice_confirmation = { CHOICE = $CHOICE$ EVENT = 3007 } #The BAttle in the World's Bowels
+				}
+				5 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3008}}
+					glimpse_reality_choice_confirmation = { CHOICE = $CHOICE$ EVENT = 3008 } # A Dream of Wings
+				}
+				5 = {
+					trigger = { NOT = { has_character_flag = glimpse_reality_had_3009}}
+					glimpse_reality_choice_confirmation = { CHOICE = $CHOICE$ EVENT = 3009 } # The Titan and the Spear
+				}
+				#Character recruitment events
+			}
+		}
+	}
+}
+
+glimpse_reality_recruitment_vision_effect = {
+	random_list = {
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3501}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3501 } #Poet
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3502}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3502 } #Scallyway
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3511}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3511 } #recruit banished commander
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3512}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3512 } #recruit warrior
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3521}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3521 } #Skilled Merchant
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3531}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3531 } #recruit assassin
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3541}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3541 } #skilled character - doctor
+		}
+		#3542 used for followup event
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3543}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3543 } #skilled character - outcast priest
+		}
+		#magic users
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3561}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3561 } #Child Prodigy
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_3562}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 3562 } #Mixed Magi
+		}
+		0 = {#Fall back. If all the other options are unavailable, choose a normal vision instead
+			glimpse_reality_normal_vision_effect = { CHOICE = $CHOICE$ }
+		}
+	}
+}
+
+glimpse_reality_rare_vision_effect = {
+	random_list = {
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_4501}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 4501 } #IQ
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_4511}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 4511 } #Staff
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_4515}}
+			glimpse_reality_choice_confirmation = {CHOICE = $CHOICE$ EVENT = 4515 } #Agionists Meet the Eye
+		}
+		0 = {#Fall back. If all the other options are unavailable, choose a normal vision instead
+			glimpse_reality_normal_vision_effect = { CHOICE = $CHOICE$ }
+		}
+	}
+}
+
+glimpse_reality_choice_confirmation = {
+	set_variable = {
+		name = glimpse_reality_$CHOICE$
+		value = flag:$EVENT$
+	}
+}
+
+glimpse_reality_choice_effect = {
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0010 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0010 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0011 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0011 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0012 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0012 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0013 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0013 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0014 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0014 MODE = default YEARS = 10 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3501 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3501 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3502 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3502 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0501 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0501 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0502 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0502 MODE = default YEARS = 0 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0503 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0503 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:0505 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 0505 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3511 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3511 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3512 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3512 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1001 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1001 MODE = default YEARS = 0 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1002 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1002 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1003 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1003 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1004 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1004 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1005 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1005 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3521 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3521 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1501 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1501 MODE = default YEARS = 0 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:1502 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 1502 MODE = default YEARS = 1 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:2001 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 2001 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:2002 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 2002 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:2005 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 2005 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:2006 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 2006 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3541 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3541 MODE = default YEARS = 20 }
+	}
+	#3542 used for follow up event
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3543 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3543 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3001 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3001 MODE = default YEARS = 0 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3002 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3002 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3003 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3003 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3004 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3004 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3005 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3005 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3006 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3006 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3007 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3007 MODE = default YEARS = 5 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3008 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3008 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3009 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3009 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3561 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3561 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3562 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3562 MODE = default YEARS = 20 }
+	}
+#	if = {
+#		limit = { var:glimpse_reality_$CHOICE$ = flag:3502 }
+#		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3502 MODE = default YEARS = 5 }
+#	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:3531 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 3531 MODE = default YEARS = 20 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:4501 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 4501 MODE = rare YEARS = 999 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:4511 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 4511 MODE = rare YEARS = 999 }
+	}
+	if = {
+		limit = { var:glimpse_reality_$CHOICE$ = flag:4515 }
+		glimpse_reality_trigger_choice = { CHOICE = $CHOICE$ EVENT = 4515 MODE = rare YEARS = 999 }
+	}
+}
+
+glimpse_reality_trigger_choice = {
+	custom_tooltip = glimpse_reality.$EVENT$.tooltip
+	hidden_effect = {
+		random_list = {
+			20 = {
+				modifier = {
+					add = {
+						if = { 
+							limit = {
+								has_variable = glimpse_reality_choice_1
+								var:glimpse_reality_$CHOICE$ = var:glimpse_reality_choice_1 
+							}
+							add = 80
+						}
+					}
+				}
+				modifier = {
+					add = {
+						if = { 
+							limit = {
+								has_variable = glimpse_reality_choice_2
+								var:glimpse_reality_$CHOICE$ = var:glimpse_reality_choice_2
+							}
+							add = 40
+						}
+					}
+				}
+				modifier = {
+					add = {
+						if = { 
+							limit = {
+								has_variable = glimpse_reality_choice_3
+								var:glimpse_reality_$CHOICE$ = var:glimpse_reality_choice_3
+							}
+							add = 50
+						}
+					}
+				}
+				modifier = {
+					add = {
+						if = { 
+							limit = {
+								has_variable = glimpse_reality_choice_4
+								var:glimpse_reality_$CHOICE$ = var:glimpse_reality_choice_4
+							}
+							add = 60
+						}
+					}
+				}
+				modifier = {
+					add = {
+						if = { 
+							limit = {
+								has_variable = glimpse_reality_choice_5
+								var:glimpse_reality_$CHOICE$ = var:glimpse_reality_choice_5
+							}
+							add = 70
+						}
+					}
+				}
+				modifier = {
+					add = {
+						if = {
+							limit = {
+								dream_aspect_skill_trigger = { VALUE = 10 }
+							}
+							add = 40
+						}
+					}
+				}
+				trigger_event = glimpse_reality.$EVENT$
+				add_character_flag = {
+					flag = glimpse_reality_had_$EVENT$
+					years = $YEARS$
+				}
+			}
+			20 = {
+				$MODE$_glimpse_reality_failure = { EVENT = $EVENT$ }
+			}
+		}
+	}
+}
+
+default_glimpse_reality_failure = {
+	random_list = {
+		50 = {
+			trigger_event = glimpse_reality.9501 #Generic failed vision
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_9502}}
+			trigger_event = glimpse_reality.9502
+			add_character_flag = glimpse_reality_had_9502
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_9503}}
+			trigger_event = glimpse_reality.9503
+			add_character_flag = glimpse_reality_had_9503
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_9504}}
+			trigger_event = glimpse_reality.9504
+			add_character_flag = glimpse_reality_had_9504
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_9505}}
+			trigger_event = glimpse_reality.9505
+			add_character_flag = glimpse_reality_had_9505
+		}
+		10 = {
+			trigger = { NOT = { has_character_flag = glimpse_reality_had_9506}}
+			trigger_event = glimpse_reality.9506
+			add_character_flag = glimpse_reality_had_9506
+		}
+	}
+	add_character_flag = $EVENT$
+	remove_character_flag = $EVENT$
+}
+
+rare_glimpse_reality_failure = {#No one likes failing rare visions, so just make them succeed all the time
+	trigger_event = glimpse_reality.$EVENT$
+}
+
+create_historical_vision_of_character_effect = {
+	character:$CHARACTER$ = {
+		save_scope_as = copied_character
+		create_character = {
+			template = historical_vision_template
+			age = $AGE$
+			location = root.location
+			save_scope_as = $CHARACTER$_scope
+		}
+		scope:$CHARACTER$_scope = {
+			add_character_flag = $CHARACTER$_clone
+			add_character_flag = has_scripted_appearance
+			copy_inheritable_appearance_from = character:$CHARACTER$
+		}
+	}
+}

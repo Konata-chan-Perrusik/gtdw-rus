@@ -1,0 +1,248 @@
+﻿# Kingdom of the Clouds
+#by TBPineapple
+
+kingdom_of_the_clouds_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/ep3_decision_laamp_neutral_mountain.dds" }
+	desc = kingdom_of_the_clouds_decision_desc
+	decision_group_type = sarminian
+	ai_goal = yes
+	
+	is_shown = {
+		is_ruler = yes
+		is_playable_character = yes
+		culture = { has_cultural_pillar = heritage_sarminian }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:kingdom_of_the_clouds
+			}
+		}
+		primary_title.tier < tier_empire
+	}
+	
+	is_valid = {
+		prestige_level >= 3
+		has_trait_xp = {
+			trait = lifestyle_gh_steppe_queen
+			value >= 100
+		}
+		OR = {
+			highest_held_title_tier = tier_kingdom
+			custom_description = {
+				text = found_kingdom_samazonas_boczoj
+				any_held_title = {
+					count >= 2
+					tier = tier_duchy
+				}
+				has_character_modifier = boczoj_modifier
+			}
+			custom_description = {
+				text = found_kingdom_samazonas_skymothers_tear
+				any_held_title = {
+					count >= 3
+					tier = tier_duchy
+				}
+				any_artifact = {
+					artifact_owner = root
+					has_variable = skymothers_tear
+				}
+			}
+			custom_description = {
+				text = found_kingdom_samazonas_generic
+				any_held_title = {
+					count >= 4
+					tier = tier_duchy
+				}
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_landed = yes
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_independent_ruler = yes
+		is_at_war = no
+	}
+
+	effect = {
+		gain_heroic_legend_seed_tooltip_effect = yes
+		show_as_tooltip = { kingdom_of_the_clouds_decision_effect = yes }
+		trigger_event = gh_sarminian_events.0001
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:kingdom_of_the_clouds
+		}
+		set_global_variable = {
+			name = kingdom_of_the_clouds
+			value = root
+		}
+	}
+
+	cost = {
+		gold = 250
+		prestige = 1000
+	}
+	
+	ai_potential = { always = yes }
+
+	ai_will_do = { base = 100 }
+}
+
+decide_the_fate_of_the_sarminians_decision = {
+	picture = { reference = "gfx/interface/illustrations/decisions/decision_levy_outcasts.dds" }
+	desc = decide_the_fate_of_the_sarminians_decision_desc
+	selection_tooltip = decide_the_fate_of_the_sarminians_decision_tooltip
+	decision_group_type = sarminian
+	ai_goal = yes
+
+	is_shown = {
+		is_playable_character = yes
+		culture = {
+			OR = {
+				has_cultural_pillar = heritage_sarminian
+				has_cultural_tradition = tradition_steppe_queens
+			}
+			NOR = {
+				has_cultural_tradition = tradition_sisters_of_iron
+				has_cultural_tradition = tradition_mercenary_queens
+				has_cultural_tradition = tradition_braided_oaths
+				is_target_in_global_variable_list = {
+					name = culture_retained_steppe_queens_tradition
+					target = this
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		prestige_level >= 3
+		culture = { has_cultural_tradition = tradition_steppe_queens }
+		highest_held_title_tier >= tier_kingdom
+		OR = {
+			custom_tooltip = {
+				text = decide_the_fate_of_the_sarminians_decision_tribal_tooltip
+				OR = {
+					has_realm_law = tribal_authority_2
+					has_realm_law = tribal_authority_3
+				}
+			}
+			custom_tooltip = {
+				text = decide_the_fate_of_the_sarminians_decision_nomadic_tooltip
+				OR = {
+					has_realm_law = nomadic_authority_3
+					has_realm_law = nomadic_authority_4
+					has_realm_law = nomadic_authority_5
+				}
+			}
+			culture = { has_cultural_era_or_later = culture_era_early_medieval }
+		}
+		custom_tooltip = {
+			text = decide_the_fate_of_the_sarminians_decision_culture_head_tooltip
+			culture.culture_head ?= root
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_capable_adult = yes
+		is_imprisoned = no
+		is_at_war = no
+		custom_tooltip = {
+			text = decide_the_fate_of_the_sarminians_decision_coalition_tooltip
+			NOT = { top_liege = title:e_migrant_coalition.holder }
+		}
+	}
+
+	widget = {
+		gui = "decision_view_widget_option_list_generic"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "CHOOSE_CULTURE_IDEAL_TYPE"
+		show_from_start = yes
+
+		item = { # Tradition
+			value = sarminians_tradition
+			current_description = sarminians_tradition_desc
+			localization = sarminians_tradition
+			icon = "gfx/interface/icons/court_position_types/yeke_jarquchi_court_position.dds"
+			ai_chance = { value = 0 } # We want the AI to pick less boring options
+		}
+
+		item = { # Domination
+			value = sarminians_domination
+			current_description = sarminians_domination_desc
+			localization = sarminians_domination
+			icon = "gfx/interface/icons/court_position_types/master_of_arms_camp_officer.dds"
+			ai_chance = {
+				value = 25
+				if = {
+					limit = {
+						OR = {
+							has_trait = callous
+							has_trait = sadistic
+							has_trait = ambitious
+							has_trait = arrogant
+							has_education_martial_trigger = yes
+						}
+					}
+					add = 50
+				}
+			}
+		}
+
+		item = { # Glory
+			value = sarminians_glory
+			current_description = sarminians_glory_desc
+			localization = sarminians_glory
+			icon = "gfx/interface/icons/court_position_types/cherbi_court_position.dds"
+			ai_chance = {
+				value = 25
+				if = {
+					limit = {
+						OR = {
+							has_trait = brave
+							has_education_martial_trigger = yes
+						}
+					}
+					add = 50
+				}
+			}
+		}
+
+		item = { # Justice
+			value = sarminians_justice
+			current_description = sarminians_justice_desc
+			localization = sarminians_justice
+			icon = "gfx/interface/icons/court_position_types/champion_court_position.dds"
+			ai_chance = {
+				value = 25
+				if = {
+					limit = {
+						OR = {
+							has_trait = just
+							has_trait = temperate
+							has_education_diplomacy_trigger = yes
+							has_education_stewardship_trigger = yes
+							has_education_learning_trigger = yes
+						}
+					}
+					add = 50
+				}
+			}
+		}
+	}
+
+	effect = {
+		show_as_tooltip = { decide_the_fate_of_the_sarminians_decision_effect = yes }
+		trigger_event = gh_sarminian_events.1003
+	}
+
+	cost = {
+		prestige = 2000
+	}
+	
+	ai_potential = {
+		culture = { has_cultural_tradition = tradition_steppe_queens }
+	}
+
+	ai_will_do = { base = 100 }
+}

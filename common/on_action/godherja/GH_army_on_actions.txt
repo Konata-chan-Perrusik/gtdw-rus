@@ -1,0 +1,159 @@
+﻿GH_on_raid_action_completion = {
+	events = {
+		gh_izikalek_events.0001 # A Minor Herdstone has been Overturned
+		patron_saint_event.0003 # Saint affinity from raiding slavers
+	}
+	effect = {
+		scope:county = {
+			var:colonization_story ?= { # Colonization Progress deduction
+				change_variable = {
+					name = colonization_progress
+					add = -15
+				}
+				story_owner = {
+					send_interface_toast = {
+						title = gh_colony_raided_title
+						left_icon = scope:county
+						right_icon = scope:raider
+						custom_tooltip = gh_colony_raided_tt
+					}
+				}
+			}
+		}
+		army_commander ?= { gh_steppe_queen_xp_gain_effect = { VALUE = 1 } }
+		army_owner = {
+			every_knight = {
+				limit = {
+					knight_army = root
+					NOT = { this = root.army_commander }
+				}
+				gh_steppe_queen_xp_gain_effect = { VALUE = 1 }
+			}
+		}
+		if = {	# Raid divine mission
+			limit = {
+				scope:raider ?= {
+					has_variable_list = ongoing_missions
+					any_in_list = {
+						variable = ongoing_missions
+						var:mission_type ?= flag:mission_type_raid
+					}
+				}
+			}
+			scope:raider = {
+				every_in_list = {
+					variable = ongoing_missions
+					limit = {
+						var:mission_type ?= flag:mission_type_raid
+						trigger_if = {
+							limit = { exists = var:mission_target_development }
+							scope:county.development_level >= var:mission_target_development
+						}
+					}
+					if = {
+						limit = { NOT = { exists = var:mission_multiplicity } }
+						save_scope_as = mission_scope
+						scope:raider = { trigger_event = blackspawn.0011 }
+					}
+					else_if = { # Would the code logic be improved if we set this variable at the beginning?
+						limit = { NOT = { exists = var:completed_subtasks } }
+						set_variable = {
+							name = completed_subtasks
+							value = 1
+						}
+						scope:raider = {
+							send_interface_toast = {
+								title = blackspawn_mission_update_title
+								left_icon = this
+								decrease_divine_mission_penalties_effect = yes
+							}
+						}
+					}
+					else = {
+						change_variable = {
+							name = completed_subtasks
+							add = 1
+						}
+						if = {
+							limit = { var:completed_subtasks >= var:mission_multiplicity }
+							save_scope_as = mission_scope
+							scope:raider = { trigger_event = blackspawn.0011 }
+						}
+						else = {
+							scope:raider = {
+								send_interface_toast = {
+									title = blackspawn_mission_update_title
+									left_icon = this
+									decrease_divine_mission_penalties_effect = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if = { #give nickname 'Throne-Breaker' for raiding Oraispol as Sjalvolki
+			limit = { 
+				NOT = { is_target_in_global_variable_list = { #there can only be 1
+					name = nickname_already_given
+					target = flag:nick_sjal_throne_breaker
+				} }
+				scope:barony = { 
+					this = title:b_phasio #Capital barony of c_oraispol 
+				} 
+			}
+			scope:raider = {
+				if = {
+					limit = {
+						qualifies_for_sjal_nickname_trigger = yes
+						OR = {
+							has_any_nickname = no
+							has_bad_nickname = yes
+						}
+					}
+					trigger_event = sjal_nicknames.0409
+					trigger_event = {
+						id = sjal_nicknames.1000 #Inform player & allow to react
+						days = 3
+					}
+				}
+			}
+		}
+		if = { #give sjal raiding nickname
+			limit = { 
+				scope:raider = { 
+					qualifies_for_sjal_nickname_trigger = yes
+					OR = {
+						has_any_nickname = no
+						has_bad_nickname = yes
+					}
+				} 
+			}
+			scope:raider = {
+				random_list = {
+					15 = {
+						trigger = {
+							scope:barony.holder = { culture = { has_cultural_pillar = heritage_aversarian } }
+						}
+						trigger_event = {
+							on_action = sjal_raid_nickname_selection
+						}
+					}
+					5 = {
+						trigger_event = {
+							on_action = sjal_raid_nickname_selection
+						}
+					}
+					1 = {
+						trigger_event = {
+							on_action = sjal_general_nickname_selection
+						}
+					}
+					79 = {
+						#No effect
+					}
+				}
+			}
+		}
+	}
+}

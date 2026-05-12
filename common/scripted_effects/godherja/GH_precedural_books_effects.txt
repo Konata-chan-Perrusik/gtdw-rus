@@ -1,0 +1,2324 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_precedural_books_effects.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+add_historical_topic_added_variable_effect = { 
+	scope:reader ?= { 
+		if = {
+			limit = { NOT = { has_variable = historical_topic_added } }
+			set_variable = { name = historical_topic_added value = 1 }
+		}
+		else = { change_variable = { name = historical_topic_added add = 1 } }
+	}
+}
+
+GH_create_library_topic_effect = {
+	set_variable = { 
+		name = recently_checked_collection
+		value = yes
+		years = 5
+	}
+	if = {
+		limit = {
+			 NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_warfare_topic } }
+			scope:gh_location_ruler.location ?= { has_building_with_flag = has_martial_topic_in_library }
+		}
+		add_to_variable_list = {
+			name = list_of_available_topics
+			target = flag:gh_warfare_topic
+		}
+		add_historical_topic_added_variable_effect = yes
+	}
+	if = {
+		limit = { 
+			NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_magic_topic } }
+			scope:gh_location_ruler.location ?= { has_building_with_flag = has_arcana_topic_in_library } 
+		}
+		add_to_variable_list = {
+			name = list_of_available_topics
+			target = flag:gh_magic_topic
+		}
+		add_historical_topic_added_variable_effect = yes
+	}
+    while = {
+        count = $VALUE$
+        random_list = {
+            70 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_theology_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_theology_topic
+                }
+            }
+            30 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_law_and_governance_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_law_and_governance_topic
+                }
+            }
+            10 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_warfare_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_warfare_topic
+                }
+            }
+            10 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_philosophy_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_philosophy_topic
+                }
+            }
+            40 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_magic_topic } }
+		                    NOT = { scope:gh_location_ruler ?= { faith = { has_doctrine_parameter = magic_illegal } } }
+
+                }
+                modifier = {
+					                    add = -30
+                    scope:gh_location_ruler ?= { faith = { has_doctrine_parameter = magic_shunned } }
+
+                }
+                modifier = {
+					                    add = 20
+                    scope:gh_location_ruler ?= { faith = { has_doctrine_parameter = magic_supreme } }    
+
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_magic_topic
+                }
+            }
+            10 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_language_and_letters_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_language_and_letters_topic
+                }
+            }
+            100 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_history_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_history_topic
+                }
+            }
+            3 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_mathematics_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_mathematics_topic
+                }
+            }
+            2 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_cosmology_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_cosmology_topic
+                }
+            }
+            5 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_natural_sciences_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_natural_sciences_topic
+                }
+            }
+            50 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_medicine_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_medicine_topic
+                }
+            }
+            10 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_practical_arts_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_practical_arts_topic
+                }
+            }
+            30 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_commerce_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_commerce_topic
+                }
+            }
+            50 = {
+                trigger = {
+                    NOT = { is_target_in_variable_list = { name = list_of_available_topics target = flag:gh_literature_topic } }
+                }
+                add_to_variable_list = {
+                    name = list_of_available_topics
+                    target = flag:gh_literature_topic
+                }
+            }
+        }
+    }
+	scope:reader ?= { remove_variable = historical_topic_added }
+}
+
+gh_create_book_list_for_topic_effect = {
+	if = {
+		limit = { NOT = { has_variable_list = gh_available_books_in_$SELECTED_TOPIC$_list } }
+		gh_choose_region_for_book_list_for_topic_effect = { VALUE = gh_remaining_location_topic_book_capacity_value SELECTED_TOPIC = $SELECTED_TOPIC$ }
+		set_variable = { name = book_list_initialized value = yes }
+	}
+	else_if = {
+		limit = { 
+			NOT = { has_variable = recently_checked_collection  }
+			gh_post_creation_remaining_location_book_capacity_value > 1 # 1 instead of 0 because small variations are not taken into account; it could just be randomness
+		}
+		gh_choose_region_for_book_list_for_topic_effect = { VALUE = gh_post_creation_remaining_location_book_capacity_value SELECTED_TOPIC = $SELECTED_TOPIC$ }
+	}
+}
+
+gh_choose_region_for_book_list_for_topic_effect = {
+	if = {
+		limit = { NOT = { has_variable_list = gh_available_books_in_$SELECTED_TOPIC$_list } }
+		if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = amsar_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = amsar TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = kalath_redwoods_biozone } }
+					scope:reader ?= { location = { geographical_region = kalath_old_growth_biozone } }
+					scope:reader ?= { location = { geographical_region = southern_kalath_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = kalath TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = imperial_isle_biozone } }
+					scope:reader ?= { location = { geographical_region = the_isles_biozone } }
+					scope:reader ?= { location = { geographical_region = tower_isles_biozone } }
+					scope:reader ?= { location = { geographical_region = central_isles_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = isles TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = sinhamiyah_biozone } }
+					scope:reader ?= { location = { geographical_region = sarradonian_mountains_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = sinhamiyah TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = northern_opakhasia_biozone } }
+					scope:reader ?= { location = { geographical_region = western_opakhasia_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = opakhasia TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = guillate_rocks_biozone } }
+					scope:reader ?= { location = { geographical_region = chevalie_biozone } }
+					scope:reader ?= { location = { geographical_region = konijkmener_biozone } }
+					scope:reader ?= { location = { geographical_region = central_isles_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = chevalie TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = darmirat_plain_biozone } }
+					scope:reader ?= { location = { geographical_region = kashti_flats_biozone } }
+					scope:reader ?= { location = { geographical_region = magiyor_biozone } }
+					scope:reader ?= { location = { geographical_region = kafasali_biozone } }
+					scope:reader ?= { location = { geographical_region = vichacil_biozone } }
+					scope:reader ?= { location = { geographical_region = katuppilan_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = kashiryat TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = rovarska_biozone } }
+					scope:reader ?= { location = { geographical_region = nightcoast_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = nightcoast TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = kasiryat_biozone } }
+					scope:reader ?= { location = { geographical_region = hyratan_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = kasiryat TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = western_aironoi_biozone } }
+					scope:reader ?= { location = { geographical_region = great_steppe_biozone } }
+					scope:reader ?= { location = { geographical_region = aironoian_southeast_biozone } }
+					scope:reader ?= { location = { geographical_region = fools_coast_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = aironoi TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = malcois_biozone } }
+					scope:reader ?= { location = { geographical_region = hyrea_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = malcois TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = black_mountains_biozone } }
+					scope:reader ?= { location = { geographical_region = vyshtanka_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = black_mountains TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = amaghea_mountains_biozone } }
+					scope:reader ?= { location = { geographical_region = brass_sea_coasts_biozone } }
+					scope:reader ?= { location = { geographical_region = north_kharadan_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = amaghea TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = pathos_delta_biozone } }
+					scope:reader ?= { location = { geographical_region = sulzegg_basin_biozone } }
+					scope:reader ?= { location = { geographical_region = knokidbes_biozone } }
+					scope:reader ?= { location = { geographical_region = etepezea_biozone } }
+					scope:reader ?= { location = { geographical_region = eripomvuno_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = aversaria TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = sirwali_biozone } }
+					scope:reader ?= { location = { geographical_region = boneyard_biozone } }
+					scope:reader ?= { location = { geographical_region = alghazir_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = sirwali TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = crater_biozone } }
+					scope:reader ?= { location = { geographical_region = aekershaan_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = crater TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = migraddar_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = migraddar TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = mayikprolollan_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = mayikprolollan TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = krehejad_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = krehejad TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = continental_interior_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = continental_interior TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = kharadamat_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = kharadamat TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = khenemhat_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = khenemhat TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = ayyar_coast_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = ayyar_coast TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = damota_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = damota TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = rojihlat_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = rojihlat TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = kemsar_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = kemsar TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = whisperveil_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = whisperveil TOPIC = $SELECTED_TOPIC$ }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					scope:reader ?= { location = { geographical_region = lonely_light_biozone } }
+				}
+			}
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = lonely_light TOPIC = $SELECTED_TOPIC$ }
+		}
+
+		else = {
+			create_available_book_in_list_effect = { VALUE = $VALUE$ REGION = world TOPIC = $SELECTED_TOPIC$ }
+		}
+	}
+}
+
+gh_select_topic_for_book_list_creation_effect = {
+	$READER$ = { save_scope_as = reader }
+	if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_theology_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_theology_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_law_and_governance_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_law_and_governance_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_warfare_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_warfare_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_philosophy_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_philosophy_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_magic_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_magic_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_language_and_letters_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_language_and_letters_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_history_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_history_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_mathematics_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_mathematics_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_cosmology_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_cosmology_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_natural_sciences_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_natural_sciences_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_medicine_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_medicine_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_practical_arts_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_practical_arts_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_commerce_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_commerce_topic }
+	}
+	else_if = {
+		limit = { scope:reader ?= { var:gh_chosen_topic ?= flag:gh_literature_topic } }
+		gh_create_book_list_for_topic_effect = { SELECTED_TOPIC = gh_literature_topic }
+	}
+}
+
+gh_remove_book_from_collection_effect = {
+	if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_theology_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_theology_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_law_and_governance_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_law_and_governance_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_warfare_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_warfare_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_philosophy_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_philosophy_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_magic_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_magic_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_language_and_letters_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_language_and_letters_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_history_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_history_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_mathematics_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_mathematics_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_cosmology_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_cosmology_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_natural_sciences_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_natural_sciences_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_medicine_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_medicine_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_practical_arts_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_practical_arts_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_commerce_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_commerce_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+	else_if = {
+		limit = { scope:actor ?= { var:gh_chosen_topic ?= flag:gh_literature_topic } }
+		remove_list_variable = {
+			name = gh_available_books_in_gh_literature_topic_list
+			target = scope:actor.var:gh_attempt_to_buy_book_in_collection
+		}
+	}
+}
+
+
+create_available_book_in_list_effect = {
+	save_scope_value_as = {
+		name = gh_maximum_number_of_regional_books_in_topic
+		value = number_of_$REGION$_$TOPIC$_value
+	}
+	save_scope_value_as = {
+		name = gh_maximum_number_of_general_books_in_topic
+		value = number_of_general_$TOPIC$_value
+	}
+	save_scope_value_as = {
+		name = number_of_existing_book_in_topic_location_value_scope
+		value = number_of_existing_book_in_$TOPIC$_location_value
+	}
+
+	if = {
+		limit = { has_variable = book_list_initialized }
+		save_scope_value_as = {
+			name = number_of_books_with_increased_rarity_value_scope
+			value = number_of_books_with_increased_rarity_value
+		}
+	}
+
+	add_historical_book_artifact_to_libraries_effect = { TOPIC = $TOPIC$ }
+	while = {
+		count = $VALUE$
+		random_list = {
+
+			# REGIONAL BOOKS
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_1 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 1
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_1 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_2 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 2
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_2 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_3 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 3
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_3 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_4 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 4
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_4 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_5 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 5
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_5 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_6 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 6
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_6 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_7 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 7
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_7 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_8 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 8
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_8 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_9 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 9
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_9 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_10 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 10
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_10 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_11 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 11
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_11 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_12 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 12
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_12 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_13 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 13
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_13 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_14 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 14
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_14 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_15 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 15
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_15 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_16 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 16
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_16 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_17 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 17
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_17 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_18 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 18
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_18 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_19 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 19
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_19 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_20 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 20
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_20 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_21 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 21
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_21 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_22 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 22
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_22 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_23 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 23
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_23 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_24 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 24
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_24 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_25 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 25
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_25 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_26 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 26
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_26 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_27 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 27
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_27 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_28 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 28
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_28 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_29 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 29
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_29 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_30 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 30
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_30 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_31 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 31
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_31 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_32 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 32
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_32 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_33 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 33
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_33 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_34 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 34
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_34 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_35 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 35
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_35 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_36 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 36
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_36 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_37 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 37
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_37 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_38 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 38
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_38 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_39 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 39
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_39 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_40 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 40
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_40 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_41 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 41
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_41 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_42 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 42
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_42 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_43 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 43
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_43 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_44 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 44
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_44 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_45 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 45
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_45 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_46 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 46
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_46 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_47 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 47
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_47 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_48 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 48
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_48 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_49 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 49
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_49 }
+			}
+			300 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_$REGION$_$TOPIC$_book_50 } }
+					scope:gh_maximum_number_of_regional_books_in_topic >= 50
+				}
+				add_book_to_collection_effect = { REGION = $REGION$ TOPIC = $TOPIC$ BOOK = gh_$REGION$_$TOPIC$_book_50 }
+			}
+
+
+			# GENERAL BOOKS
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_1 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 1
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_1 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_2 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 2
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_2 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_3 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 3
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_3 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_4 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 4
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_4 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_5 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 5
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_5 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_6 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 6
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_6 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_7 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 7
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_7 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_8 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 8
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_8 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_9 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 9
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_9 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_10 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 10
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_10 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_11 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 11
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_11 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_12 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 12
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_12 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_13 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 13
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_13 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_14 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 14
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_14 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_15 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 15
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_15 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_16 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 16
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_16 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_17 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 17
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_17 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_18 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 18
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_18 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_19 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 19
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_19 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_20 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 20
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_20 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_21 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 21
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_21 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_22 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 22
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_22 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_23 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 23
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_23 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_24 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 24
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_24 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_25 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 25
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_25 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_26 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 26
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_26 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_27 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 27
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_27 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_28 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 28
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_28 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_29 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 29
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_29 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_30 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 30
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_30 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_31 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 31
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_31 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_32 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 32
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_32 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_33 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 33
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_33 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_34 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 34
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_34 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_35 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 35
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_35 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_36 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 36
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_36 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_37 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 37
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_37 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_38 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 38
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_38 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_39 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 39
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_39 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_40 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 40
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_40 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_41 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 41
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_41 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_42 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 42
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_42 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_43 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 43
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_43 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_44 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 44
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_44 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_45 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 45
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_45 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_46 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 46
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_46 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_47 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 47
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_47 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_48 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 48
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_48 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_49 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 49
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_49 }
+			}
+			100 = {
+				trigger = { 
+					NOT = { is_target_in_variable_list = { name = gh_available_books_in_$TOPIC$_list target = flag:gh_general_$TOPIC$_book_50 } } 
+					scope:gh_maximum_number_of_general_books_in_topic >= 50
+				}
+				add_book_to_collection_effect = { REGION = general TOPIC = $TOPIC$ BOOK = gh_general_$TOPIC$_book_50 }
+			}
+
+
+			#### HISTORICAL BOOKS ####
+			300 = {
+				modifier = { 
+					add = 100 
+					scope:reader ?= { 
+						any_directly_owned_province = { 
+							has_building_with_flag = gh_contain_medium_collection_books 
+						} 
+					} 
+				}
+				modifier = { 
+					add = 300 
+					scope:reader ?= { 
+						any_directly_owned_province = { 
+							has_building_with_flag = gh_contain_vast_collection_books 
+						} 
+					} 
+				}
+				add_random_historical_book_effect = { TOPIC = $TOPIC$ }
+			}
+		}
+	}
+	remove_variable = book_list_initialized
+	remove_variable = book_rarity_set_var
+}
+
+gh_transfer_procedural_book_to_library = {
+	$COLLECTOR$ = { save_scope_as = gh_collector_procedural }
+
+	# We want to make sure the topic exists before trying to add to its list
+	gh_add_topic_to_collection_effect = { TOPIC = $TOPIC$ }
+
+	scope:gh_collector_procedural.location.var:gh_search_library_story ?= { #ASKIL NOTE: If collections should be county-based, change value here
+		gh_select_topic_for_book_list_creation_effect = { READER = scope:gh_collector_procedural }
+	}
+
+	# We find a flag that hasn't been used to store book information
+	if = {
+		limit = { NOT = { has_variable = procedural_book_flag_1 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_1 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_2 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_2 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_3 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_3 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_4 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_4 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_5 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_5 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_6 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_6 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_7 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_7 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_8 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_8 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_9 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_9 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_10 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_10 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_11 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_11 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_12 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_12 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_13 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_13 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_14 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_14 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_15 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_15 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_16 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_16 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_17 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_17 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_18 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_18 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_19 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_19 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_20 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_20 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_21 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_21 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_22 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_22 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_23 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_23 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_24 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_24 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_25 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_25 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_26 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_26 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_27 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_27 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_28 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_28 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_29 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_29 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_30 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_30 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_31 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_31 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_32 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_32 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_33 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_33 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_34 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_34 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_35 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_35 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_36 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_36 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_37 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_37 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_38 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_38 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_39 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_39 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_40 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_40 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_41 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_41 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_42 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_42 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_43 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_43 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_44 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_44 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_45 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_45 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_46 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_46 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_47 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_47 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_48 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_48 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_49 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_49 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_50 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_50 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_51 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_51 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_52 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_52 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_53 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_53 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_54 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_54 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_55 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_55 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_56 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_56 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_57 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_57 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_58 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_58 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_59 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_59 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_60 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_60 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_61 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_61 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_62 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_62 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_63 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_63 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_64 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_64 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_65 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_65 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_66 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_66 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_67 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_67 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_68 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_68 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_69 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_69 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_70 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_70 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_71 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_71 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_72 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_72 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_73 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_73 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_74 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_74 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_75 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_75 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_76 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_76 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_77 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_77 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_78 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_78 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_79 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_79 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_80 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_80 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_81 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_81 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_82 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_82 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_83 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_83 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_84 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_84 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_85 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_85 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_86 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_86 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_87 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_87 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_88 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_88 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_89 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_89 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_90 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_90 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_91 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_91 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_92 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_92 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_93 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_93 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_94 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_94 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_95 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_95 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_96 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_96 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_97 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_97 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_98 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_98 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_99 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_99 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_100 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_100 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_101 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_101 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_102 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_102 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_103 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_103 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_104 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_104 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_105 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_105 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_106 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_106 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_107 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_107 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_108 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_108 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_109 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_109 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_110 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_110 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_111 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_111 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_112 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_112 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_113 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_113 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_114 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_114 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_115 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_115 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_116 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_116 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_117 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_117 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_118 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_118 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_119 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_119 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_120 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_120 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_121 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_121 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_122 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_122 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_123 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_123 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_124 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_124 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_125 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_125 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_126 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_126 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_127 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_127 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_128 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_128 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_129 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_129 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_130 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_130 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_131 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_131 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_132 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_132 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_133 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_133 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_134 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_134 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_135 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_135 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_136 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_136 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_137 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_137 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_138 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_138 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_139 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_139 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_140 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_140 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_141 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_141 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_142 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_142 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_143 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_143 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_144 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_144 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_145 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_145 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_146 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_146 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_147 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_147 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_148 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_148 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_149 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_149 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_150 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_150 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_151 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_151 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_152 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_152 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_153 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_153 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_154 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_154 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_155 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_155 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_156 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_156 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_157 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_157 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_158 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_158 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_159 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_159 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_160 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_160 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_161 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_161 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_162 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_162 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_163 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_163 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_164 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_164 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_165 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_165 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_166 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_166 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_167 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_167 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_168 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_168 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_169 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_169 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_170 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_170 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_171 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_171 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_172 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_172 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_173 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_173 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_174 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_174 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_175 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_175 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_176 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_176 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_177 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_177 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_178 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_178 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_179 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_179 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_180 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_180 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_181 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_181 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_182 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_182 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_183 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_183 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_184 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_184 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_185 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_185 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_186 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_186 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_187 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_187 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_188 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_188 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_189 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_189 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_190 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_190 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_191 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_191 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_192 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_192 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_193 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_193 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_194 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_194 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_195 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_195 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_196 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_196 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_197 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_197 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_198 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_198 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_199 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_199 }
+	}
+	else_if = {
+		limit = { NOT = { has_variable = procedural_book_flag_200 } }
+		create_procedural_book_attribute_story = { TOPIC = $TOPIC$ BOOK_FLAG = procedural_book_flag_200 }
+	}
+}
+
+gh_add_topic_book_bonus_effect = {
+	if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_theology_topic }
+		add_gh_theology_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_law_and_governance_topic }
+		add_gh_law_and_governance_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_warfare_topic }
+		add_gh_warfare_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_philosophy_topic }
+		add_gh_philosophy_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_magic_topic }
+		add_gh_magic_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_language_and_letters_topic }
+		add_gh_language_and_letters_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_history_topic }
+		add_gh_history_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_mathematics_topic }
+		add_gh_mathematics_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_cosmology_topic }
+		add_gh_cosmology_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_natural_sciences_topic }
+		add_gh_natural_sciences_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_medicine_topic }
+		add_gh_medicine_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_practical_arts_topic }
+		add_gh_practical_arts_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_commerce_topic }
+		add_gh_commerce_topic_bonus_effect = yes
+	}
+	else_if = {
+		limit = { var:gh_chosen_topic ?= flag:gh_literature_topic }
+		add_gh_literature_topic_bonus_effect = yes
+	}
+}
+
+
+GH_select_topic_for_random_ke_effect = {
+	if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_theology_topic }
+		add_gh_theology_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_law_and_governance_topic }
+		add_gh_law_and_governance_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_warfare_topic }
+		add_gh_warfare_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_philosophy_topic }
+		add_gh_philosophy_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_magic_topic }
+		add_gh_magic_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_language_and_letters_topic }
+		add_gh_language_and_letters_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_history_topic }
+		add_gh_history_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_mathematics_topic }
+		add_gh_mathematics_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_cosmology_topic }
+		add_gh_cosmology_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_natural_sciences_topic }
+		add_gh_natural_sciences_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_medicine_topic }
+		add_gh_medicine_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_practical_arts_topic }
+		add_gh_practical_arts_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_commerce_topic }
+		add_gh_commerce_topic_ke_effect = yes
+	}
+	else_if = {
+		limit = { scope:reader.var:gh_chosen_topic ?= flag:gh_literature_topic }
+		add_gh_literature_topic_ke_effect = yes
+	}
+}

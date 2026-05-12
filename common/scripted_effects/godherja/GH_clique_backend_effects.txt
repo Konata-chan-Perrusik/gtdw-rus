@@ -1,0 +1,1528 @@
+﻿########################
+# TITLE CLIQUE EFFECTS #
+########################
+
+set_title_clique_effect = {
+	save_temporary_scope_as = title_to_assign_clique_to
+	increase_clique_counter_effect = yes
+	random_province = {
+		limit = { NOT = { has_variable = already_assigned_clique_storage } }
+		save_temporary_scope_as = clique_storage_province
+		set_variable = already_assigned_clique_storage
+		add_to_global_variable_list = {
+			name = all_cliques
+			target = scope:clique_storage_province
+		}
+		set_variable = {
+			name = clique_name
+			value = flag:$NAME$
+		}
+		$NAME$_guiding_principle_trait_effect = { MODE = set }
+		$NAME$_guiding_principle_skill_effect = { MODE = set }
+		$NAME$_guiding_principle_aspect_effect = { MODE = set }
+		$NAME$_ai_values_effect = { MODE = set }
+		$NAME$_interaction_effect = { MODE = set }
+		set_variable = {
+			name = latched_to_title
+			value = scope:title_to_assign_clique_to
+		}
+		save_scope_as = last_created_clique
+	}
+	add_to_variable_list = {
+		name = title_cliques
+		target = scope:clique_storage_province
+	}
+	add_to_global_variable_list = {
+		name = titles_with_cliques
+		target = this
+	}
+}
+
+set_title_external_clique_effect = {
+	save_temporary_scope_as = title_to_assign_clique_to
+	$EXTERNAL_CLIQUE_TITLE$ = {
+		random_in_list = {
+			variable = title_cliques
+			limit = { var:clique_name = flag:$NAME$ }
+			save_temporary_scope_as = external_clique_province
+		}
+	}
+	add_to_variable_list = {
+		name = title_external_cliques
+		target = scope:external_clique_province
+	}
+}
+
+remove_title_clique_effect = {
+	save_temporary_scope_as = title_to_remove_clique_from
+	decrease_clique_counter_effect = yes
+	random_in_list = {
+		variable = title_cliques
+		limit = {
+			has_variable = clique_name
+			var:clique_name = flag:$NAME$
+		}
+		save_temporary_scope_as = clique_storage_province
+		remove_variable = already_assigned_clique_province
+		
+		remove_variable = clique_name
+		remove_variable = latched_to_title
+		remove_variable = clique_members
+		
+		$NAME$_guiding_principle_trait_effect = { MODE = remove }
+		$NAME$_guiding_principle_skill_effect = { MODE = remove }
+		$NAME$_guiding_principle_aspect_effect = { MODE = remove }
+		$NAME$_ai_values_effect = { MODE = remove_with_modifier }
+		$NAME$_interaction_effect = { MODE = remove }
+	}
+	
+	remove_list_global_variable = {
+		name = all_cliques
+		target = scope:clique_storage_province
+	}
+	
+	remove_list_variable = {
+		name = title_cliques
+		target = scope:clique_storage_province
+	}
+}
+
+############################
+# CHARACTER CLIQUE EFFECTS #
+############################
+
+# Finds the landed title from which to draw a character's valid cliques and sets it as a local variable for convenience
+find_clique_title_effect = {
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { exists = primary_title }
+				primary_title = { has_variable = clique_number }
+			}
+			trigger_else = { always = no }
+		}
+		set_variable = {
+			name = clique_title
+			value = primary_title
+		}
+	}
+	else_if = {
+		limit = {
+			any_held_title = {
+				has_variable = clique_number
+				tier = holder.primary_title.tier
+			}
+		}
+		random_held_title = {
+			limit = {
+				has_variable = clique_number
+				tier = holder.primary_title.tier
+			}
+			save_temporary_scope_as = clique_target_title
+		}
+		set_variable = {
+			name = clique_title
+			value = scope:clique_target_title
+		}
+	}
+	else_if = {
+		limit = { 
+			is_independent_ruler = no
+			exists = liege
+			liege = { any_held_title = { has_variable = clique_number } }
+		}
+		liege = {
+			save_temporary_scope_as = character_liege
+			random_held_title = {
+				limit = {
+					trigger_if = {
+						limit = { scope:character_liege.primary_title = { has_variable = clique_number } }
+						this = scope:character_liege.primary_title
+					}
+					trigger_else = {
+						has_variable = clique_number
+						tier = holder.primary_title.tier
+					}
+				}
+				save_temporary_scope_as = clique_target_title
+			}
+		}
+		set_variable = {
+			name = clique_title
+			value = scope:clique_target_title
+		}
+	}
+	else_if = {
+		limit = { 
+		is_independent_ruler = no
+			exists = liege.liege
+			liege.liege = { any_held_title = { has_variable = clique_number } }
+		}
+		liege.liege = {
+			save_temporary_scope_as = character_liege
+			random_held_title = {
+				limit = {
+					trigger_if = {
+						limit = { scope:character_liege.primary_title = { has_variable = clique_number } }
+						this = scope:character_liege.primary_title
+					}
+					trigger_else = {
+						has_variable = clique_number
+						tier = holder.primary_title.tier
+					}
+				}
+				save_temporary_scope_as = clique_target_title
+			}
+		}
+		set_variable = {
+			name = clique_title
+			value = scope:clique_target_title
+		}
+	}
+	else_if = {
+		limit = { 
+		is_independent_ruler = no
+			exists = liege.liege.liege
+			liege.liege.liege = { any_held_title = { has_variable = clique_number } }
+		}
+		liege.liege.liege = {
+			save_temporary_scope_as = character_liege
+			random_held_title = {
+				limit = {
+					trigger_if = {
+						limit = { scope:character_liege.primary_title = { has_variable = clique_number } }
+						this = scope:character_liege.primary_title
+					}
+					trigger_else = {
+						has_variable = clique_number
+						tier = holder.primary_title.tier
+					}
+				}
+				save_temporary_scope_as = clique_target_title
+			}
+		}
+		set_variable = {
+			name = clique_title
+			value = scope:clique_target_title
+		}
+	}
+}
+
+assign_ai_clique_wrapper_effect = {
+	find_clique_title_effect = yes
+	save_temporary_scope_as = character_being_checked
+	if = {
+		limit = { 
+			has_variable = clique_title
+			NOT = {
+				has_variable = character_clique
+				has_variable = forced_into_clique
+			}
+		}
+		set_variable = {
+			name = maximum_clique_weight
+			value = 0
+		}
+		clique_effect = { MODE = assign_ai }
+	}
+}
+
+assign_ai_clique_effect = {
+	if = {
+		limit = {
+			exists = var:clique_title
+			var:clique_title = {
+				any_in_list = {
+					variable = title_cliques
+					var:clique_name = flag:$NAME$
+					# Secret societies are not joined through conventional means
+					trigger_if = {
+						limit = { has_variable_list = clique_guiding_principle_aspects }
+						NOT = {
+							any_in_list = {
+								variable = clique_guiding_principle_aspects
+								this = flag:secret_society
+							}
+						}
+					}
+				}
+			}
+			$NAME$_entry_trigger = yes
+		}
+		var:clique_title = {
+			random_in_list = {
+				variable = title_cliques
+				limit = { var:clique_name = flag:$NAME$ }
+				save_scope_as = clique_being_checked
+			}
+		}
+		set_variable = {
+			name = current_clique_weight
+			value = 0
+		}
+		$NAME$_guiding_principle_trait_effect = { MODE = calculate_ai_weight }
+		change_variable = {
+			name = current_clique_weight
+			add = clique_ai_weight_value
+		}
+		change_variable = {
+			name = current_clique_weight
+			add = clique_ai_aspect_value
+		}
+		change_variable = {
+			name = current_clique_weight
+			add = clique_ai_leader_opinion_value
+		}
+		if = {
+			limit = {
+				trigger_if = {
+					limit = {
+						has_variable = current_clique_weight
+						has_variable = maximum_clique_weight
+					}
+					save_temporary_scope_as = clique_character_trigger_scope
+					var:current_clique_weight > scope:clique_character_trigger_scope.var:maximum_clique_weight
+				}
+				trigger_else = { always = no }
+			}
+			var:clique_title = {
+				random_in_list = {
+					variable = title_cliques
+					limit = { var:clique_name = flag:$NAME$ }
+					save_temporary_scope_as = clique_to_assign_to
+				}
+			}
+			set_variable = {
+				name = maximum_clique_weight
+				value = var:current_clique_weight
+			}
+			set_variable = {
+				name = clique_trait_alignment
+				value = 0
+			}
+			assign_character_to_clique_effect = { CLIQUE = scope:clique_to_assign_to }
+			$NAME$_guiding_principle_trait_effect = { MODE = calculate_alignment }
+			$NAME$_guiding_principle_aspect_effect = { MODE = calculate_alignment }
+		}
+	}
+}
+
+assign_character_to_clique_effect = {
+	save_temporary_scope_as = character_to_be_assigned_to_clique
+	remove_from_any_clique_effect = yes
+	set_variable = {
+		name = character_clique
+		value = $CLIQUE$
+	}
+	$CLIQUE$ = {
+		add_to_variable_list = {
+			name = clique_members
+			target = scope:character_to_be_assigned_to_clique
+		}
+	}
+	if = {
+		limit = {
+			$CLIQUE$ = { has_variable = secret_society_clique }
+		}
+		$CLIQUE$ = { var:secret_society_clique = { save_temporary_scope_as = secret_society_to_assign_character_to } }
+		assign_character_to_secret_clique_effect = { CLIQUE = scope:secret_society_to_assign_character_to }
+	}
+}
+
+assign_character_to_secret_clique_effect = {
+	save_temporary_scope_as = character_to_be_assigned_to_secret_clique
+	remove_from_any_secret_clique_effect = yes
+	set_variable = {
+		name = character_secret_clique
+		value = $CLIQUE$
+	}
+	$CLIQUE$ = {
+		add_to_variable_list = {
+			name = clique_members
+			target = scope:character_to_be_assigned_to_secret_clique
+		}
+	}
+}
+
+remove_from_any_clique_effect = {
+	if = {
+		limit = { has_variable = character_clique }
+		save_temporary_scope_as = character_to_be_removed_from_clique
+		var:character_clique = {
+			remove_list_variable = {
+				name = clique_members
+				target = scope:character_to_be_removed_from_clique
+			}
+			if = {
+				limit = {  
+					trigger_if = {
+						limit = { has_variable = clique_leader }
+						var:clique_leader = scope:character_to_be_removed_from_clique
+					}
+					trigger_else = { always = no }
+				}
+				remove_variable = clique_leader
+				update_leadership_effect = yes
+			}
+		}
+		remove_variable = character_clique
+	}
+}
+
+remove_from_any_secret_clique_effect = {
+	if = {
+		limit = { has_variable = character_secret_clique }
+		save_temporary_scope_as = character_to_be_removed_from_secret_clique
+		var:character_secret_clique = {
+			remove_list_variable = {
+				name = clique_members
+				target = scope:character_to_be_removed_from_secret_clique
+			}
+			if = {
+				limit = {  
+					trigger_if = {
+						limit = { has_variable = clique_leader }
+						var:clique_leader = scope:character_to_be_removed_from_secret_clique
+					}
+					trigger_else = { always = no }
+				}
+				remove_variable = clique_leader
+			}
+		}
+		remove_variable = character_secret_clique
+	}
+}
+
+transfer_titles_with_clique_successors_effect = {
+	save_temporary_scope_as = previous_holder
+	if = {
+		limit = { 
+			any_held_title = {
+				tier = scope:previous_holder.primary_title.tier
+				has_variable = clique_number
+			}
+			has_clique_election_government_trigger = yes
+		}
+		random_held_title = {
+			limit = { 
+				tier = scope:previous_holder.primary_title.tier
+				has_variable = clique_number
+			}
+			if = {
+				limit = { exists = current_heir }
+				current_heir = { save_temporary_scope_as = presumed_heir }
+			}
+			save_temporary_scope_as = title_with_cliques
+		}
+	}
+	if = {
+		limit = {
+			exists = scope:title_with_cliques
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { exists = scope:presumed_heir }
+					AND = {
+						scope:presumed_heir = {
+							is_ruler = yes
+							NOT = { has_same_government = scope:previous_holder } 
+						}
+					}
+				}
+			}
+			if = {
+				limit = { scope:previous_holder = { has_variable = character_clique } }
+				scope:previous_holder.var:character_clique = { save_temporary_scope_as = inheritance_previous_holder_clique }
+			}
+			else = {
+				scope:title_with_cliques = {
+					random_in_list = {
+						variable = title_cliques
+						save_temporary_scope_as = inheritance_previous_holder_clique
+					}
+				}
+			}
+			generate_clique_character_effect = { CLIQUE = scope:inheritance_previous_holder_clique }
+			scope:generated_clique_character = { save_temporary_scope_as = presumed_heir }
+		}
+		if = {
+			limit = { 
+				exists = scope:presumed_heir
+			}
+			if = {
+				limit = { # This is to make sure baron republics arent included
+					government_has_flag = government_is_republic_playable
+				}
+				save_scope_value_as = { name = previous_government_republic value = yes }
+			}
+			else_if = {
+				limit = {
+					government_has_flag = government_is_landed_order 
+				}
+				save_scope_value_as = { name = previous_government_landed_order value = yes }
+			}
+			else_if = {
+				limit = {
+					government_has_flag = government_is_military_unit 
+				}
+				save_scope_value_as = { name = previous_government_military_unit value = yes }
+			}
+			else_if = {
+				limit = {
+					government_has_flag = government_is_theocracy
+				}
+				save_scope_value_as = { name = previous_government_theocracy value = yes }
+			}
+			else_if = {
+				limit = {
+					government_has_flag = government_is_magocratic_republic
+				}
+				save_scope_value_as = { name = previous_government_magocratic_republic value = yes }
+			}
+			if = {
+				limit = {
+					has_realm_law = clique_authority_0
+				}
+				save_scope_value_as = { name = previous_clique_authority_0 value = yes }
+			}
+			else_if = {
+				limit = {
+					has_realm_law = clique_authority_1
+				}
+				save_scope_value_as = { name = previous_clique_authority_1 value = yes }
+			}
+			else_if = {
+				limit = {
+					has_realm_law = clique_authority_2
+				}
+				save_scope_value_as = { name = previous_clique_authority_2 value = yes }
+			}
+			else_if = {
+				limit = {
+					has_realm_law = clique_authority_3
+				}
+				save_scope_value_as = { name = previous_clique_authority_3 value = yes }
+			}
+			every_held_title = {
+				limit = { tier = scope:previous_holder.primary_title.tier }
+				add_to_list = target_titles
+			}
+			if = { # transfers player to another character for the duration of the succession
+				limit = { is_ai = no }
+				scope:presumed_heir = { save_temporary_scope_as = clique_heir }
+				random_ruler = {
+					limit = { is_ai = yes }
+					save_temporary_scope_as = temporary_character
+				}
+				root = { set_player_character = scope:temporary_character }
+					
+			}
+			if = {
+				limit = { GH_is_any_theocracy_government_trigger = yes }
+				every_held_title = {
+					add_to_list = target_titles
+				}
+			}
+			if = {
+				limit = { 
+					primary_title = { exists = title_capital_county }
+					primary_title.title_capital_county.holder = scope:previous_holder
+				}
+				primary_title = {
+					title_capital_county = { add_to_list = target_titles }
+				}
+			}
+			else_if = {
+				limit = { 
+					scope:presumed_heir = {
+						highest_held_title_tier < tier_county
+					}
+				}
+				random_held_title = {
+					limit = { tier = tier_county }
+					add_to_list = target_titles
+				}
+			}
+			create_title_and_vassal_change = {
+				type = conquest_claim
+				save_scope_as = change
+				add_claim_on_loss = no
+			}
+			setup_claim_cb = {
+				titles = target_titles
+				attacker = scope:presumed_heir
+				defender = scope:previous_holder
+				claimant = scope:presumed_heir
+				change = scope:change
+			}
+			resolve_title_and_vassal_change = scope:change
+			scope:presumed_heir = {
+				if = { 
+					limit = {
+						exists = scope:previous_government_republic
+					}
+					change_government = republic_playable_government
+					if = {
+						limit = { scope:title_with_cliques = { NOT = { has_title_law = clique_republic_elective_title_succession_law } } }
+						scope:title_with_cliques = { add_title_law = clique_republic_elective_title_succession_law }
+					}
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_government_landed_order
+					}
+					change_government = landed_order_government
+					if = {
+						limit = { scope:title_with_cliques = { NOT = { has_title_law = landed_order_elective_title_succession_law } } }
+						scope:title_with_cliques = { add_title_law = landed_order_elective_title_succession_law }
+					}
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_government_military_unit
+					}
+					change_government = military_unit_government
+					if = {
+						limit = { scope:title_with_cliques = { NOT = { has_title_law = clique_military_unit_elective_title_succession_law } } }
+						scope:title_with_cliques = { add_title_law = clique_military_unit_elective_title_succession_law }
+					}
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_government_theocracy
+					}
+					change_government = theocracy_government
+					if = {
+						limit = { scope:title_with_cliques = { NOT = { has_title_law = clique_theocracy_elective_title_succession_law } } }
+						scope:title_with_cliques = { add_title_law = clique_theocracy_elective_title_succession_law }
+					}
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_government_magocratic_republic
+					}
+					change_government = magocratic_republic
+					if = {
+						limit = { scope:title_with_cliques = { NOT = { has_title_law = clique_magocratic_republic_elective_title_succession_law } } }
+						scope:title_with_cliques = { add_title_law = clique_magocratic_republic_elective_title_succession_law }
+					}
+				}
+				if = { 
+					limit = {
+						exists = scope:previous_clique_authority_0
+					}
+					add_realm_law_skip_effects = clique_authority_0
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_clique_authority_1
+					}
+					add_realm_law_skip_effects = clique_authority_1
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_clique_authority_2
+					}
+					add_realm_law_skip_effects = clique_authority_2
+				}
+				else_if = { 
+					limit = {
+						exists = scope:previous_clique_authority_3
+					}
+					add_realm_law_skip_effects = clique_authority_3
+				}
+				# Stopgap solution to make Agionists allied to each other - moved here from on_title_gain
+				if = {
+					limit = {
+						government_has_flag = government_is_landed_order
+						any_held_title = {
+							OR = {
+								is_agionist_holy_order_trigger = yes
+								trigger_if = {
+									limit = { has_variable_list = title_synonyms }
+									any_in_list = {
+										variable = title_synonyms
+										is_agionist_holy_order_trigger = yes
+									}
+								}
+								trigger_else = { always = no }
+							}
+						}
+					}
+					create_alliance_with_title_or_synonym = { TITLE = title:k_saint_sansias_rose   }
+					create_alliance_with_title_or_synonym = { TITLE = title:k_forlorn_guardian	 }
+					create_alliance_with_title_or_synonym = { TITLE = title:k_golden_hand		  }
+					create_alliance_with_title_or_synonym = { TITLE = title:k_saint_calystos_key   }
+					create_alliance_with_title_or_synonym = { TITLE = title:k_bleeding_martyr	  }
+					create_alliance_with_title_or_synonym = { TITLE = title:k_pure_heart		   }
+					create_alliance_with_title_or_synonym = { TITLE = title:k_blind_watcher		}
+					create_alliance_with_title_or_synonym = { TITLE = title:k_forgotten_saint	  }
+				}
+				assign_ai_clique_wrapper_effect = yes
+				remove_variable = clique_appointed_heir
+				
+			}
+			if = { # returns player control to the new heir
+				limit = { exists = scope:temporary_character }
+				scope:temporary_character = {
+					set_player_character = scope:clique_heir
+				}
+			}
+		}
+	}
+}
+
+assign_clique_to_character_vassals_and_courtiers = {
+	assign_ai_clique_wrapper_effect = yes
+	save_temporary_scope_as = clique_title_holder
+	every_vassal_or_below = {
+		limit = {
+			trigger_if = {
+				limit = { scope:clique_title_holder = { highest_held_title_tier >= tier_kingdom } }
+				highest_held_title_tier >= tier_county	# Barons are insignificant in kingdom and empire level clique-bearing titles
+			}
+			trigger_else = { always = yes }
+			OR = {
+				highest_held_title_tier = tier_barony
+				has_clique_government_trigger = no
+				AND = {
+					has_same_government = liege
+					OR = { 
+						faith = liege.faith
+						NOT = { government_has_flag = government_is_landed_order }
+					}
+				}
+			}
+			age >= 16
+		}
+		assign_ai_clique_wrapper_effect = yes
+		if = {
+			limit = { scope:clique_title_holder = { highest_held_title_tier <= tier_duchy } }
+			every_child = {
+				limit = { age >= 16 }
+				assign_ai_clique_wrapper_effect = yes
+			}
+		}
+	}
+	every_councillor = {
+		limit = {
+			NOT = { highest_held_title_tier >= tier_county }	# This is purely for unlanded courtiers and barons. It might get repeated twice for barons of duchy-level 
+																# cliques, but it really shouldn't be a big deal performance-wise
+		}
+		assign_ai_clique_wrapper_effect = yes
+		if = {
+			limit = { 
+				NOT = { has_claim_on = var:clique_title }
+				is_ruler = no
+				liege_or_court_owner = {
+					has_clique_government_trigger = yes
+				}
+			}
+			set_variable = { name = councillor_clique_claim value = var:clique_title }
+			make_claim_weak = var:clique_title
+		}
+	}
+	every_child = {
+		limit = { age >= 16 }
+		assign_ai_clique_wrapper_effect = yes
+	}
+}
+
+assign_cliques_to_primary_title_if_necessary = {
+	if = {
+		limit = {
+		should_have_own_cliques_trigger = yes
+		NOT = {
+			any_held_title = {
+				has_variable = clique_number
+				}
+			}
+		}
+		assign_cliques_to_primary_title = yes
+	}
+}
+
+assign_cliques_to_primary_title = {
+	primary_title = { set_default_cliques_effect = yes }
+	assign_clique_to_character_vassals_and_courtiers = yes
+}
+
+assign_correct_clique_government_law = {
+	if = {
+		limit = {
+			holder = { government_has_flag = government_is_landed_order }
+			NOT = { has_title_law = landed_order_elective_title_succession_law }
+		}
+		add_title_law = landed_order_elective_title_succession_law
+	}
+	else_if = {
+		limit = {
+			holder = { government_has_flag = government_is_republic_playable }
+			NOT = { has_title_law = clique_republic_elective_title_succession_law } 
+		}
+		add_title_law = clique_republic_elective_title_succession_law
+	}
+	else_if = {
+		limit = {
+			holder = { government_has_flag = government_is_military_unit }
+			NOT = { has_title_law = clique_military_unit_elective_title_succession_law } 
+		}
+		add_title_law = clique_military_unit_elective_title_succession_law
+	}
+	else_if = {
+		limit = {
+			holder = { government_has_flag = government_is_theocracy }
+			NOT = { has_title_law = clique_theocracy_elective_title_succession_law } 
+		}
+		add_title_law = clique_theocracy_elective_title_succession_law
+	}
+	else = {
+		debug_log = "Failed to assign clique law"
+	}
+}
+
+#########################
+# GLOBAL CLIQUE EFFECTS #
+#########################
+
+update_global_clique_information = {
+	every_in_global_list = {
+		variable = titles_with_cliques
+		limit = { is_title_created = yes }
+		holder = {
+			assign_clique_to_character_vassals_and_courtiers = yes
+		}
+		every_in_list = {
+			variable = title_cliques
+			update_leadership_effect = yes
+		}
+	}
+}
+
+increase_clique_counter_effect = {
+	if = {
+		limit = { has_variable = clique_number }
+		change_variable = {
+			name = clique_number
+			add = 1
+		}
+	}
+	else = { 
+		set_variable = {
+			name = clique_number
+			value = 1
+		}
+	}
+}
+
+decrease_clique_counter_effect = {
+	if = {
+		limit = { has_variable = clique_number }
+		change_variable = {
+			name = clique_number
+			subtract = 1
+		}
+		if = {
+			limit = { var:clique_number <= 0 }
+			remove_variable = clique_number
+		}
+	}
+}
+
+update_leadership_effect = {
+	if = {
+		limit = { has_variable_list = clique_members }
+		save_temporary_scope_as = clique_to_set_leader_for
+		ordered_in_list = {
+			variable = clique_members
+			order_by = character_influence_total
+			save_temporary_scope_as = new_clique_leader
+			set_variable = {
+				name = leader_of_clique
+				value = scope:clique_to_set_leader_for
+			}
+			scope:clique_to_set_leader_for = {
+				set_variable = {
+					name = clique_leader
+					value = scope:new_clique_leader
+				}
+			}
+		}
+	}
+}
+
+copy_clique_information_effect = {
+	$SOURCE$ = {
+		every_in_list = {
+			variable = title_cliques
+			save_temporary_scope_as = clique_to_copy_over
+			$TARGET$ = {
+				add_to_variable_list = {
+					name = title_cliques
+					target = scope:clique_to_copy_over
+				}
+				increase_clique_counter_effect = yes
+				assign_correct_clique_government_law = yes
+			}
+			set_variable = {
+				name = latched_to_title
+				value = $TARGET$
+			}
+		}
+		clear_variable_list = title_cliques
+		remove_list_global_variable = {
+			name = titles_with_cliques
+			target = this
+		}
+		remove_variable = clique_number
+	}
+}
+
+remove_and_destroy_cliques_in_title_effect = {
+	every_in_list = {
+		variable = title_cliques
+		destroy_clique = yes
+	}
+	remove_list_global_variable = {
+		name = titles_with_cliques
+		target = this
+	}
+	clear_variable_list = title_cliques
+	remove_variable = clique_number
+}
+
+destroy_clique = {
+	every_in_list = {
+		variable = clique_members
+		remove_from_any_clique_effect = yes
+	}
+	clear_variable_list = clique_guiding_principle_traits
+	clear_variable_list = clique_guiding_principle_opposed_traits
+	clear_variable_list = clique_guiding_principle_skills
+	clear_variable_list = clique_guiding_principle_aspects
+	remove_variable = clique_name
+	remove_variable = latched_to_target
+	remove_list_global_variable = {
+		name = all_cliques
+		target = this
+	}
+}
+
+#############################
+# GUIDING PRINCIPLE EFFECTS #
+#############################
+
+# Sets a clique virtue in its information storage province
+set_guiding_principle_trait_effect = {
+	add_to_variable_list = {
+		name = clique_guiding_principle_traits
+		target = flag:$TRAIT$
+	}
+}
+
+set_guiding_principle_opposed_trait_effect = {
+	add_to_variable_list = {
+		name = clique_guiding_principle_opposed_traits
+		target = flag:$TRAIT$
+	}
+}
+
+set_guiding_principle_skill_effect = {
+	add_to_variable_list = {
+		name = clique_guiding_principle_skills
+		target = flag:$SKILL$
+	}
+}
+
+set_guiding_principle_aspect_effect = {
+	add_to_variable_list = {
+		name = clique_guiding_principle_aspects
+		target = flag:$ASPECT$
+	}
+}
+
+remove_guiding_principle_trait_effect = {
+	remove_list_variable = {
+		name = clique_guiding_principle_traits
+		target = flag:$TRAIT$
+	}
+}
+
+remove_guiding_principle_opposed_trait_effect = {
+	remove_list_variable = {
+		name = clique_guiding_principle_opposed_traits
+		target = flag:$TRAIT$
+	}
+}
+
+remove_guiding_principle_skill_effect = {
+	remove_list_variable = {
+		name = clique_guiding_principle_skills
+		target = flag:$SKILL$
+	}
+}
+
+remove_guiding_principle_aspect_effect = {
+	remove_list_variable = {
+		name = clique_guiding_principle_aspects
+		target = flag:$ASPECT$
+	}
+}
+
+calculate_ai_weight_guiding_principle_trait_effect = {
+	if = {
+		limit = { has_trait = $TRAIT$ }
+		change_variable = {
+			name = current_clique_weight
+			add = clique_aligned_trait_weight
+		}
+	}
+}
+
+calculate_ai_weight_guiding_principle_opposed_trait_effect = {
+	if = {
+		limit = { has_trait = $TRAIT$ }
+		change_variable = {
+			name = current_clique_weight
+			subtract = clique_opposed_trait_weight
+		}
+	}
+}
+
+calculate_alignment_guiding_principle_trait_effect = {
+	if = {
+		limit = { has_trait = $TRAIT$ }
+		change_variable = {
+			name = clique_trait_alignment
+			add = standard_clique_trait_alignment_value
+		}
+	}
+}
+
+calculate_alignment_guiding_principle_opposed_trait_effect = {
+	if = {
+		limit = { has_trait = $TRAIT$ }
+		change_variable = {
+			name = clique_trait_alignment
+			subtract = standard_clique_opposed_trait_alignment_value
+		}
+	}
+}
+
+calculate_alignment_for_trait = {
+	if = {
+		limit = { 
+			has_clique_trait_trigger = { TRAIT = $TRAIT$ }
+		}
+		change_variable = {
+			name = clique_trait_alignment
+			add = standard_clique_trait_alignment_value
+		}
+	}
+	else_if = {
+		limit = { 
+			has_opposed_clique_trait_trigger = { TRAIT = $TRAIT$ }
+		}
+		change_variable = {
+			name = clique_trait_alignment
+			subtract = standard_clique_opposed_trait_alignment_value
+		}
+	}
+}
+
+calculate_alignment_guiding_principle_aspect_effect = {
+	if = {
+		limit = { has_variable = clique_trait_alignment }
+		change_variable = {
+			name = clique_trait_alignment
+			add = $ASPECT$_clique_alignment_value
+		}
+	}
+}
+
+calculate_alignment_for_current_clique = {
+	set_variable = {
+		name = clique_trait_alignment
+		value = 0
+	}
+	if = {
+		limit = {
+			has_variable = character_clique 
+		}
+	
+		calculate_alignment_for_aspect = { ASPECT = magic_based CLIQUE = var:character_clique }
+		calculate_alignment_for_aspect = { ASPECT = prestige_based CLIQUE = var:character_clique }
+		calculate_alignment_for_aspect = { ASPECT = renown_based CLIQUE = var:character_clique }
+		calculate_alignment_for_aspect = { ASPECT = piety_based CLIQUE = var:character_clique }
+		calculate_alignment_for_aspect = { ASPECT = gold_based CLIQUE = var:character_clique }
+		
+		calculate_alignment_for_trait = { TRAIT = brave }
+		calculate_alignment_for_trait = { TRAIT = craven }
+		calculate_alignment_for_trait = { TRAIT = calm }
+		calculate_alignment_for_trait = { TRAIT = wrathful }
+		calculate_alignment_for_trait = { TRAIT = chaste }
+		calculate_alignment_for_trait = { TRAIT = lustful }
+		calculate_alignment_for_trait = { TRAIT = content }
+		calculate_alignment_for_trait = { TRAIT = ambitious }
+		calculate_alignment_for_trait = { TRAIT = diligent }
+		calculate_alignment_for_trait = { TRAIT = lazy }
+		calculate_alignment_for_trait = { TRAIT = fickle }
+		calculate_alignment_for_trait = { TRAIT = stubborn }
+		calculate_alignment_for_trait = { TRAIT = forgiving }
+		calculate_alignment_for_trait = { TRAIT = vengeful }
+		calculate_alignment_for_trait = { TRAIT = generous }
+		calculate_alignment_for_trait = { TRAIT = greedy }
+		calculate_alignment_for_trait = { TRAIT = honest }
+		calculate_alignment_for_trait = { TRAIT = deceitful }
+		calculate_alignment_for_trait = { TRAIT = humble }
+		calculate_alignment_for_trait = { TRAIT = arrogant }
+		calculate_alignment_for_trait = { TRAIT = just }
+		calculate_alignment_for_trait = { TRAIT = arbitrary }
+		calculate_alignment_for_trait = { TRAIT = patient }
+		calculate_alignment_for_trait = { TRAIT = impatient }
+		calculate_alignment_for_trait = { TRAIT = temperate }
+		calculate_alignment_for_trait = { TRAIT = gluttonous }
+		calculate_alignment_for_trait = { TRAIT = trusting }
+		calculate_alignment_for_trait = { TRAIT = paranoid }
+		calculate_alignment_for_trait = { TRAIT = zealous }
+		calculate_alignment_for_trait = { TRAIT = cynical }
+		calculate_alignment_for_trait = { TRAIT = compassionate }
+		calculate_alignment_for_trait = { TRAIT = callous }
+		calculate_alignment_for_trait = { TRAIT = sadistic }
+		
+		calculate_alignment_for_trait = { TRAIT = education_diplomacy_1 }
+		calculate_alignment_for_trait = { TRAIT = education_diplomacy_2 }
+		calculate_alignment_for_trait = { TRAIT = education_diplomacy_3 }
+		calculate_alignment_for_trait = { TRAIT = education_diplomacy_4 }
+		
+		calculate_alignment_for_trait = { TRAIT = education_martial_1 }
+		calculate_alignment_for_trait = { TRAIT = education_martial_2 }
+		calculate_alignment_for_trait = { TRAIT = education_martial_3 }
+		calculate_alignment_for_trait = { TRAIT = education_martial_4 }
+		
+		calculate_alignment_for_trait = { TRAIT = education_stewardship_1 }
+		calculate_alignment_for_trait = { TRAIT = education_stewardship_2 }
+		calculate_alignment_for_trait = { TRAIT = education_stewardship_3 }
+		calculate_alignment_for_trait = { TRAIT = education_stewardship_4 }
+		
+		calculate_alignment_for_trait = { TRAIT = education_learning_1 }
+		calculate_alignment_for_trait = { TRAIT = education_learning_2 }
+		calculate_alignment_for_trait = { TRAIT = education_learning_3 }
+		calculate_alignment_for_trait = { TRAIT = education_learning_4 }
+		
+		calculate_alignment_for_trait = { TRAIT = education_intrigue_1 }
+		calculate_alignment_for_trait = { TRAIT = education_intrigue_2 }
+		calculate_alignment_for_trait = { TRAIT = education_intrigue_3 }
+		calculate_alignment_for_trait = { TRAIT = education_intrigue_4 }
+		
+		calculate_alignment_for_trait = { TRAIT = education_arcana_1 }
+		calculate_alignment_for_trait = { TRAIT = education_arcana_2 }
+		calculate_alignment_for_trait = { TRAIT = education_arcana_3 }
+		calculate_alignment_for_trait = { TRAIT = education_arcana_4 }
+		calculate_alignment_for_trait = { TRAIT = education_arcana_5 }
+	}
+}
+
+calculate_alignment_for_aspect = {
+	if = {
+		limit = { 
+		clique_has_aspect = { ASPECT = $ASPECT$ CLIQUE = $CLIQUE$ }
+		}
+		change_variable = {
+			name = clique_trait_alignment
+			add = $ASPECT$_clique_alignment_value
+		}
+	}
+}
+
+set_geographical_constraint_effect = {
+	set_variable = {
+		name = clique_geographic_constraint
+		value = $GEOGRAPHIC_CONSTRAINT$
+	}
+}
+
+set_secret_society_front_clique_effect = {
+	save_temporary_scope_as = secret_society_scope
+	$FRONT_CLIQUE$ = {
+		set_variable = {
+			name = secret_society_clique
+			value = scope:secret_society_scope
+		}
+	}
+}
+
+############################
+# AI VALUE RELATED EFFECTS #
+############################
+
+set_clique_ai_values_effect = {
+	set_variable = {
+		name = $AI_VALUE$_weighted
+		value = $MODIFIER$
+	}
+}
+
+remove_clique_ai_values_effect = {
+	remove_variable = $AI_VALUE$_weighted
+}
+
+remove_with_modifier_clique_ai_values_effect = {
+	set_clique_ai_values_effect = { AI_VALUE = $AI_VALUE$ 	MODIFIER = $MODIFIER$ }
+	remove_variable = $AI_VALUE$_weighted
+}
+
+###############################
+# INTERACTION RELATED BACKEND #
+###############################
+
+set_clique_interaction_effect = {
+	save_temporary_scope_as = interaction_clique
+	random_province = {
+		limit = { NOT = { has_variable = clique_interaction_name } }
+		save_temporary_scope_as = clique_interaction_storage_province
+		set_variable = {
+			name = clique_interaction_name
+			value = flag:$INTERACTION$
+		}
+		set_variable = {
+			name = interaction_clique
+			value = scope:interaction_clique
+		}
+	}
+	add_to_variable_list = {
+		name = valid_clique_interactions
+		target = scope:clique_interaction_storage_province
+	}
+}
+
+remove_clique_interaction_effect = {
+	random_in_list = {
+		variable = valid_clique_interactions
+		limit = { var:clique_interaction_name = flag:$INTERACTION$ }
+		save_temporary_scope_as = clique_interaction_to_be_removed
+		remove_variable = clique_interaction_name
+		remove_variable = interaction_clique
+	}
+	remove_list_variable = {
+		name = valid_clique_interactions
+		target = scope:clique_interaction_to_be_removed
+	}
+}
+
+execute_clique_interaction_effect = {
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { has_variable = clique_interaction_name }
+				var:clique_interaction_name = flag:$INTERACTION$
+			}
+			trigger_else = { always = no }
+		}
+		if = {
+			limit = { exists = scope:player_viewing_cliques }
+			scope:player_viewing_cliques = {
+				$INTERACTION$_clique_interaction = yes
+			}
+		}
+	}
+}
+
+apply_interaction_clique_effect = {
+	if = {
+		limit = {  
+			trigger_if = {
+				limit = { has_variable = interaction_clique }
+				var:interaction_clique = {  
+					trigger_if = {
+						limit = { has_variable = clique_name }
+						var:clique_name = flag:$NAME$
+					}
+					trigger_else = { always = no }
+				}
+			}
+			trigger_else = { always = no }
+		}
+		var:interaction_clique = { save_scope_as = interaction_clique_scope }
+		$NAME$_interaction_effect = { MODE = execute }
+	}
+}
+
+pick_or_generate_random_clique_member_effect = {
+	if = { 
+		limit = { exists = $CLIQUE$ }
+		scope:interaction_clique_scope = {
+			if = {
+				limit = { has_variable_list = clique_members }
+				random_in_list = {
+					variable = clique_members
+					save_scope_as = clique_member_scope
+				}
+			}
+			else = {
+				generate_clique_character_effect = { CLIQUE = scope:interaction_clique_scope }
+				scope:generated_clique_character = { save_scope_as = clique_member_scope }
+			}
+		}
+	}
+}
+
+###############################
+# CLIQUE CHARACTER GENERATION #
+###############################
+
+generate_clique_character_effect = {
+	create_character = {
+		employer = root
+		culture = root.culture
+		faith = root.faith
+		gender_female_chance = {
+			value = clique_character_gender_value
+		}
+		age = {20 55}
+		save_scope_as = generated_clique_character
+		random_traits_list = {
+			count = 1
+			education_martial_2	= { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = martial } } } } }
+			education_martial_3	= { weight = { base = 50 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = martial } } } } }
+			education_martial_4	= { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = martial } } } } }
+			education_diplomacy_2 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = diplomacy } } } } }
+			education_diplomacy_3 = { weight = { base = 50 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = diplomacy } } } } }
+			education_diplomacy_4 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = diplomacy } } } } }
+			education_learning_2 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = learning } } } } }
+			education_learning_3 = { weight = { base = 50 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = learning } } } } }
+			education_learning_4 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = learning } } } } }
+			education_stewardship_2	= { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = stewardship } } } } }
+			education_stewardship_3	= { weight = { base = 50 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = stewardship } } } } }
+			education_stewardship_4	= { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = stewardship } } } } }
+			education_intrigue_2 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = intrigue } } } } }
+			education_intrigue_3 = { weight = { base = 50 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = intrigue } } } } }
+			education_intrigue_4 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = intrigue } } } } }
+			education_arcana_2 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = arcana } } } } }
+			education_arcana_3 = { weight = { base = 50 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = arcana } } } } }
+			education_arcana_4 = { weight = { base = 25 modifier = { factor = 7 $CLIQUE$ = { clique_has_skill_trigger = { SKILL = arcana } } } } }
+		}
+		random_traits_list = {
+			count = 1
+			brave = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = brave } } } } }
+			craven = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = craven } } } } }
+			wrathful = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = wrathful } } } } }
+			calm = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = calm } } } } }
+			chaste = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = chaste } } } } }
+			lustful = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = lustful } } } } }
+			diligent = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = diligent } } } } }
+			lazy = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = lazy } } } } }
+			fickle = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = fickle } } } } }
+			stubborn = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = stubborn } } } } }
+			forgiving = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = forgiving } } } } }
+			vengeful = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = vengeful } } } } }
+			generous = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = generous } } } } }
+			greedy = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = greedy } } } } }
+			gregarious = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = gregarious } } } } }
+			shy = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = shy } } } } }
+			honest = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = honest } } } } }
+			deceitful = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = deceitful } } } } }
+			arbitrary = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = arbitrary } } } } }
+			just = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = just } } } } }
+			patient = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = patient } } } } }
+			impatient = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = impatient } } } } }
+			temperate = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = temperate } } } } }
+			gluttonous = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = gluttonous } } } } }
+			trusting = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = trusting } } } } }
+			paranoid = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = paranoid } } } } }
+			zealous = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = zealous } } } } }
+			cynical = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = cynical } } } } }
+			compassionate = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = compassionate } } } } }
+			callous = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = callous } } } } }
+			sadistic = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = sadistic } } } } }
+			ambitious = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = ambitious } } } } }
+			content = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = content } } } } }
+			arrogant = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = arrogant } } } } }
+			humble = { weight = { base = 0 modifier = { add = 1 $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = humble } } } } }
+		}
+		random_traits_list = {
+			count = 2
+			brave = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = brave } } } } }
+			craven = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = craven } } } } }
+			wrathful = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = wrathful } } } } }
+			calm = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = calm } } } } }
+			chaste = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = chaste } } } } }
+			lustful = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = lustful } } } } }
+			diligent = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = diligent } } } } }
+			lazy = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = lazy } } } } }
+			fickle = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = fickle } } } } }
+			stubborn = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = stubborn } } } } }
+			forgiving = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = forgiving } } } } }
+			vengeful = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = vengeful } } } } }
+			generous = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = generous } } } } }
+			greedy = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = greedy } } } } }
+			gregarious = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = gregarious } } } } }
+			shy = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = shy } } } } }
+			honest = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = honest } } } } }
+			deceitful = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = deceitful } } } } }
+			arbitrary = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = arbitrary } } } } }
+			just = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = just } } } } }
+			patient = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = patient } } } } }
+			impatient = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = impatient } } } } }
+			temperate = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = temperate } } } } }
+			gluttonous = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = gluttonous } } } } }
+			trusting = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = trusting } } } } }
+			paranoid = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = paranoid } } } } }
+			zealous = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = zealous } } } } }
+			cynical = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = cynical } } } } }
+			compassionate = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = compassionate } } } } }
+			callous = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = callous } } } } }
+			sadistic = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = sadistic } } } } }
+			ambitious = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = ambitious } } } } }
+			content = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = content } } } } }
+			arrogant = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = arrogant } } } } }
+			humble = { weight = { base = 10 modifier = { factor = 0.25 $CLIQUE$ = { clique_has_opposed_trait_trigger = { TRAIT = humble } } } } }
+		}
+		martial = {
+			min_template_average_skill
+			max_template_average_skill
+		}
+		stewardship = {
+			min_template_average_skill
+			max_template_average_skill
+		}
+		diplomacy = {
+			min_template_average_skill
+			max_template_average_skill
+		}
+		intrigue = {
+			min_template_average_skill
+			max_template_average_skill
+		}
+		learning = {
+			min_template_average_skill
+			max_template_average_skill
+		}
+		
+	}
+	scope:generated_clique_character = {
+		if = {
+			limit = { $CLIQUE$ = { clique_has_skill_trigger = { SKILL = martial } } }
+			add_martial_skill = 3
+		}
+		if = {
+			limit = { $CLIQUE$ = { clique_has_skill_trigger = { SKILL = diplomacy } } }
+			add_diplomacy_skill = 3
+		}
+		if = {
+			limit = { $CLIQUE$ = { clique_has_skill_trigger = { SKILL = stewardship } } }
+			add_stewardship_skill = 3
+		}
+		if = {
+			limit = { $CLIQUE$ = { clique_has_skill_trigger = { SKILL = intrigue } } }
+			add_intrigue_skill = 3
+		}
+		if = {
+			limit = { $CLIQUE$ = { clique_has_skill_trigger = { SKILL = learning } } }
+			add_learning_skill = 3
+		}
+		if = {
+			limit = { $CLIQUE$ = { clique_has_skill_trigger = { SKILL = prowess } } }
+			add_prowess_skill = 3
+		}
+		if = {
+			limit = { 
+				clique_has_aspect = { ASPECT = attracts_knights CLIQUE = $CLIQUE$ }
+				NOT = { has_trait = lifestyle_blademaster }
+			}
+			random_list = {
+				20 = {
+				}
+				55 = {
+					add_trait = lifestyle_blademaster
+				}
+				20 = {
+					add_trait = lifestyle_blademaster
+					add_trait_xp = {
+						trait = lifestyle_blademaster
+						value = 50
+					}
+				}
+				5 = {
+					add_trait = lifestyle_blademaster
+					add_trait_xp = {
+						trait = lifestyle_blademaster
+						value = 100
+					}
+				}
+			}
+		}
+		if = {
+			limit = { clique_has_aspect = { ASPECT = magic_based CLIQUE = $CLIQUE$ } }
+			add_to_magi_list = yes
+			random_list = { # Inherent magical ability
+				5 = {
+					add_trait = magic_good_1
+				}
+				55 = {
+					add_trait = magic_good_2
+				}
+				30 = {
+					add_trait = magic_good_3
+				}
+				10 = {
+					add_trait = magic_good_4
+				}
+			}
+			#random_list = {
+			#	1 = { 
+			#		trigger = { $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = education_mixed_magic_1 } } }
+			#		random_list = {
+			#			10 = {
+			#				add_trait = education_mixed_magic_1
+			#			}
+			#			40 = {
+			#				add_trait = education_mixed_magic_2
+			#			}
+			#			40 = {
+			#				add_trait = education_mixed_magic_3
+			#			}
+			#			10 = {
+			#				add_trait = education_mixed_magic_4
+			#			}
+			#		}
+			#	}
+			#	5 = {
+			#		trigger = { $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = education_dead_magic_1 } } }
+			#		random_list = {
+			#			10 = {
+			#				add_trait = education_dead_magic_1
+			#			}
+			#			40 = {
+			#				add_trait = education_dead_magic_2
+			#			}
+			#			40 = {
+			#				add_trait = education_dead_magic_3
+			#			}
+			#			10 = {
+			#				add_trait = education_dead_magic_4
+			#			}
+			#		}
+			#	}
+			#	5 = {
+			#		trigger = { $CLIQUE$ = { clique_has_trait_trigger = { TRAIT = education_living_magic_1 } } }
+			#		random_list = {
+			#			10 = {
+			#				add_trait = education_living_magic_1
+			#			}
+			#			40 = {
+			#				add_trait = education_living_magic_2
+			#			}
+			#			40 = {
+			#				add_trait = education_living_magic_3
+			#			}
+			#			10 = {
+			#				add_trait = education_living_magic_4
+			#			}
+			#		}
+			#	}
+			#}
+		}
+	}
+}

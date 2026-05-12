@@ -1,0 +1,150 @@
+﻿#################################################################################################
+##DECISIONS LIST##
+
+#	#
+#	#
+#	#
+#	#
+#	#
+
+#################################################################################################
+
+##################################
+# Secure the Republic's Borders  #
+# by Mayor			             #
+##################################
+
+secure_disuwai_republic_borders = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = secure_disuwai_republic_borders_desc
+	selection_tooltip = secure_disuwai_republic_borders_tt
+	is_shown = {
+		GH_is_any_republic_government_trigger = yes
+		is_ruler = yes
+		is_independent_ruler = yes
+		has_title = title:k_disuwai_republic
+		primary_title = title:k_disuwai_republic
+		faith = { has_doctrine = wardenite_idealist_doctrine }
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:secure_disuwai_republic_borders_decision_taken
+			}
+		}
+	}
+	is_valid = {
+		completely_controls = title:k_uraghad
+	}
+	effect = {
+		title:d_khefyyih = { set_de_jure_liege_title = title:k_disuwai_republic }
+		title:d_merrha = { set_de_jure_liege_title = title:k_disuwai_republic }
+		title:d_central_sarradon1 = { set_de_jure_liege_title = title:k_disuwai_republic }
+		title:d_tel_habja = { set_de_jure_liege_title = title:k_disuwai_republic }
+		title:k_disuwai_republic = { set_de_jure_liege_title = title:e_sarradon }
+		destroy_title = title:k_uraghad 
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:secure_disuwai_republic_borders_decision_taken
+		}
+	}
+
+}
+
+kathsiti_ascendancy_east_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_realm.dds"
+	}
+	decision_group_type = wardenite
+	ai_check_interval = 0
+	desc = kathsiti_ascendancy_east_decision_desc
+	selection_tooltip = kathsiti_ascendancy_east_decision_tt
+	is_shown = {
+		always = no
+		# Temp disabled til finished
+		is_ruler = yes
+		is_independent_ruler = yes
+		OR = {
+			has_title = title:k_uraghad
+			primary_title = title:k_disuwai_republic
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:kathsiti_ascendancy_east_decision
+			}
+		}
+		OR = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:secure_disuwai_republic_borders_decision_taken
+			}
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:kathsiti_kingdom_progress
+			}
+		}
+		faith = { has_doctrine = wardenite_idealist_doctrine }
+	}
+	is_valid = {
+		completely_controls = title:k_uraghad
+		custom_tooltip = {
+				text = must_control_majority_of_ayyar_decision_tt
+				controls_majority_of_east_wardenites_trigger = yes
+			}
+	}
+	effect = {
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = title_change
+			add_claim_on_loss = yes
+		}
+		title:e_eastern_administration = {
+			change_title_holder = {
+				holder = root
+				change = scope:title_change
+			}
+		}
+		if = {
+			limit = {
+				has_title = title:k_disuwai_republic
+			}
+			change_government = judicial_republic_government
+			assign_cliques_to_primary_title_if_necessary = yes
+		}
+		if = {
+			limit = { 
+				has_title = title:k_barunkazeb
+			}
+			title:k_barunkazeb = { set_de_jure_liege_title = title:e_eastern_administration }
+		}
+		if = {
+			limit = { 
+				has_title = title:k_lahkoryun
+			}
+			title:k_lahkoryun = { set_de_jure_liege_title = title:e_eastern_administration }
+		}
+		if = {
+			limit = { 
+				has_title = title:k_tayalhun
+			}
+			title:k_tayalhun = { set_de_jure_liege_title = title:e_eastern_administration }
+		}
+		if = {
+			limit = { 
+				has_title = title:k_karadoon
+			}
+			title:k_karadoon = { set_de_jure_liege_title = title:e_eastern_administration }
+		}
+		if = {
+			limit = {
+				has_title = title:e_ayyar
+			}
+			destroy_title = title:e_ayyar
+		}
+	}
+
+}

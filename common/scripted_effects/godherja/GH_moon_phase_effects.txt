@@ -1,0 +1,248 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/scripted_effects/godherja/GH_moon_phase_effects.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+##################
+# INITIALIZATION #
+##################
+
+initialize_moon_phase_information_effect = {
+	initialize_moon_phase = { MOON_PHASE = new_moon 				COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 0 }
+	initialize_moon_phase = { MOON_PHASE = waxing_crescent_moon 	COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 2 }
+	initialize_moon_phase = { MOON_PHASE = first_quarter_moon 		COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 2 }
+	initialize_moon_phase = { MOON_PHASE = waxing_gibbous_moon 		COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 5 }
+	initialize_moon_phase = { MOON_PHASE = full_moon 				COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 10 }
+	initialize_moon_phase = { MOON_PHASE = waning_gibbous_moon 		COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 5 }
+	initialize_moon_phase = { MOON_PHASE = last_quarter_moon 		COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 2 }
+	initialize_moon_phase = { MOON_PHASE = waning_crescent_moon 	COLOR = default		SPECIAL_MOON_PHASE_CHANCE = 2 }
+	if = {
+		limit = { exists = scope:previous_moon_phase }
+		scope:previous_moon_phase = {
+			set_variable = {
+				name = next_moon_phase
+				value = scope:first_moon_phase
+			}
+		}
+	}
+	
+	initialize_special_moon_phase = { MOON_PHASE = waxing_crescent_moon_blood_moon 		COLOR = red			REPLACES_PHASE = waxing_crescent_moon WEIGHT = 1 }
+	initialize_special_moon_phase = { MOON_PHASE = first_quarter_moon_blood_moon 		COLOR = red			REPLACES_PHASE = first_quarter_moon WEIGHT = 1 }
+	initialize_special_moon_phase = { MOON_PHASE = waxing_gibbous_moon_blood_moon 		COLOR = red			REPLACES_PHASE = waxing_gibbous_moon WEIGHT = 1 }
+	initialize_special_moon_phase = { MOON_PHASE = full_moon_blood_moon 				COLOR = red			REPLACES_PHASE = full_moon WEIGHT = 1 }
+	initialize_special_moon_phase = { MOON_PHASE = waning_gibbous_moon_blood_moon 		COLOR = red			REPLACES_PHASE = waning_gibbous_moon WEIGHT = 1 }
+	initialize_special_moon_phase = { MOON_PHASE = last_quarter_moon_blood_moon 		COLOR = red			REPLACES_PHASE = last_quarter_moon WEIGHT = 1 }
+	initialize_special_moon_phase = { MOON_PHASE = waning_crescent_moon_blood_moon 		COLOR = red			REPLACES_PHASE = waning_crescent_moon WEIGHT = 2 }
+	initialize_special_moon_phase = { MOON_PHASE = sundeath_moon 						COLOR = default		REPLACES_PHASE = new_moon WEIGHT = 0 }	# Happens only as a result of events
+	initialize_special_moon_phase = { MOON_PHASE = aelhyoer_moon 						COLOR = teal		REPLACES_PHASE = full_moon WEIGHT = 0 }	# Happens only as a result of events
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waxing_crescent_moon_blood_moon MODIFIER = blood VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = first_quarter_moon_blood_moon MODIFIER = blood VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waxing_gibbous_moon_blood_moon MODIFIER = blood VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = full_moon_blood_moon MODIFIER = blood VALUE = 2 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waning_gibbous_moon_blood_moon MODIFIER = blood VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = last_quarter_moon_blood_moon MODIFIER = blood VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waning_crescent_moon_blood_moon MODIFIER = blood VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = new_moon MODIFIER = death VALUE = -2 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waxing_crescent_moon MODIFIER = death VALUE = -1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waxing_gibbous_moon MODIFIER = death VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = full_moon MODIFIER = death VALUE = 2 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waning_gibbous_moon MODIFIER = death VALUE = 1 }
+	assign_moon_phase_modifier_effect = { MOON_PHASE = waning_crescent_moon MODIFIER = death VALUE = -1 }
+}
+
+###########
+# BACKEND #
+###########
+
+initialize_moon_phase = {
+	random_province = {
+		limit = { NOT = { has_variable = moon_phase_name } }
+		save_temporary_scope_as = moon_phase_storage_province
+		set_variable = {
+			name = moon_phase_name
+			value = flag:$MOON_PHASE$
+		}
+		set_variable = {
+			name = base_moon_phase_name
+			value = flag:$MOON_PHASE$
+		}
+		set_variable = {
+			name = special_moon_phase_chance
+			value = $SPECIAL_MOON_PHASE_CHANCE$
+		}
+		set_variable = {
+			name = moon_color
+			value = flag:$COLOR$
+		}
+		if = {
+			limit = { exists = scope:previous_moon_phase }
+			scope:previous_moon_phase = {
+				set_variable = {
+					name = next_moon_phase
+					value = scope:moon_phase_storage_province
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:first_moon_phase } }
+			save_scope_as = first_moon_phase
+			set_global_variable = {
+				name = current_moon_phase
+				value = scope:moon_phase_storage_province
+			}
+		}
+		save_scope_as = previous_moon_phase
+		save_scope_as = $MOON_PHASE$
+	}
+}
+
+initialize_special_moon_phase = {
+	random_province = {
+		limit = { NOT = { has_variable = moon_phase_name } }
+		save_temporary_scope_as = moon_phase_storage_province
+		set_variable = {
+			name = moon_phase_name
+			value = flag:$MOON_PHASE$
+		}
+		set_variable = {
+			name = base_moon_phase_name
+			value = flag:$REPLACES_PHASE$
+		}
+		set_variable = {
+			name = special_moon_phase_weight
+			value = $WEIGHT$
+		}
+		set_variable = {
+			name = moon_color
+			value = flag:$COLOR$
+		}
+		random_province = {
+			limit = {  
+				has_variable = moon_phase_name
+				var:moon_phase_name = flag:$REPLACES_PHASE$
+			}
+			save_temporary_scope_as = normal_moon_phase_being_replaced_scope
+		}
+		if = {
+			limit = { exists = scope:normal_moon_phase_being_replaced_scope }
+			set_variable = {
+				name = replacing_normal_phase
+				value = scope:normal_moon_phase_being_replaced_scope
+			}
+			scope:normal_moon_phase_being_replaced_scope = {
+				add_to_variable_list = {
+					name = special_moon_phase_list
+					target = scope:moon_phase_storage_province
+				}
+			}
+			set_variable = {
+				name = next_moon_phase
+				value = scope:normal_moon_phase_being_replaced_scope.var:next_moon_phase
+			}
+		}
+		save_scope_as = $MOON_PHASE$
+	}
+}
+
+advance_moon_phase = {
+	if = {
+		limit = { 
+			exists = global_var:current_moon_phase
+			NOT = { exists = global_var:moon_phases_disabled }
+		}
+		global_var:current_moon_phase = {
+			var:next_moon_phase = { save_temporary_scope_as = next_moon_phase_scope }
+			random = {
+				chance = 0
+				modifier = {
+					add = scope:next_moon_phase_scope.var:special_moon_phase_chance
+					has_variable_list = special_moon_phase_list
+				}
+				scope:next_moon_phase_scope = {
+					random_in_list = {
+						variable = special_moon_phase_list
+						weight = {
+							base = 0
+							modifier = {
+								add = var:special_moon_phase_weight
+								has_variable = special_moon_phase_weight
+							}
+						}
+						save_temporary_scope_as = substituting_special_moon_phase_scope
+					}
+				}
+			}
+		}
+		if = {
+			limit = { exists = scope:substituting_special_moon_phase_scope }
+			set_global_variable = {
+				name = current_moon_phase
+				value = scope:substituting_special_moon_phase_scope
+			}
+		}
+		else = {
+			set_global_variable = {
+				name = current_moon_phase
+				value = scope:next_moon_phase_scope
+			}
+		}
+		if = {
+			limit = { global_var:current_moon_phase = { var:moon_color = flag:red } }
+			set_global_variable = global_red_tint_activated
+		}
+		else_if = {
+			limit = { exists = global_var:global_red_tint_activated }
+			remove_global_variable = global_red_tint_activated
+		}
+		if = {
+			limit = { 
+				global_var:current_moon_phase = { 
+					var:moon_color = flag:default 
+					var:moon_phase_name = flag:full_moon
+				}
+			}
+			random = {
+				chance = 20
+				set_global_variable = global_green_tint_activated
+			}
+		}
+		else_if = {
+			limit = { exists = global_var:global_green_tint_activated }
+			remove_global_variable = global_green_tint_activated
+		}
+	}
+}
+
+assign_moon_phase_modifier_effect = {
+	if = {
+		limit = { exists = scope:$MOON_PHASE$ }
+		scope:$MOON_PHASE$ = {
+			set_variable = {
+				name = $MODIFIER$
+				value = $VALUE$
+			}
+			add_to_variable_list = {
+				name = moon_phase_modifier_list
+				target = flag:$MODIFIER$
+			}
+		}
+	}
+}
+
+set_permanent_moon_phase_effect = {
+	random_province = {
+		limit = {  
+			exists = var:moon_phase_name
+			var:moon_phase_name = flag:$MOON_PHASE$
+		}
+		save_temporary_scope_as = permanent_moon_phase_scope
+	}
+	set_global_variable = {
+		name = current_moon_phase
+		value = scope:permanent_moon_phase_scope
+	}
+	set_global_variable = moon_phases_disabled ## GH TODO: Figure out how to interact with multiple special triggered moon phases
+}

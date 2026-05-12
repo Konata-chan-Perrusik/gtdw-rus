@@ -1,0 +1,1620 @@
+﻿# THIS IS A GENERATED FILE.
+#
+# Source template:
+# added_folders/templates/common/script_values/GH_magic_ai_values.txt.jinja
+#
+# Please avoid manually editing this file: your changes WILL be overwritten when it gets regenerated.
+# Instead, edit the source template and/or variables, then run render_templates.bat .
+
+##########################
+# AI SPELLCASTING VALUES #
+##########################
+
+ai_spell_weight_spell_effect_value = {
+	value = 0
+	if = {
+		limit = {
+			save_temporary_scope_as = spell_being_casted
+			# Compile target lists
+			trigger_if = {
+				limit = { has_variable_list = affects_target_effect_list }
+				scope:spell_organizer = {
+					trigger_if = {
+					    limit = { has_variable_list = spell_targets }
+					    any_in_list = {
+					        variable = spell_targets
+					        count = all
+					        add_to_temporary_list = target_list
+					    }
+					}
+
+					trigger_if = {
+						limit = { list_size = { name = target_list value <= 0 } }
+						scope:spell_organizer = { add_to_temporary_list = target_list }
+					}
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_spell_organizer_effect_list }
+				scope:spell_organizer = {
+					scope:spell_organizer ?= { add_to_temporary_list = spell_organizer_list }
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_caster_effect_list }
+				scope:spell_organizer = {
+					scope:caster ?= { add_to_temporary_list = caster_list }
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_target_province_effect_list }
+				scope:spell_organizer = {
+					trigger_if = {
+					    limit = { has_variable_list = spell_target_province_list }
+					    any_in_list = {
+					        variable = spell_target_province_list
+					        count = all
+					        county = { add_to_temporary_list = target_province_list }
+					    }
+					}
+
+					trigger_if = {
+						limit = { list_size = { name = target_province_list value <= 0 } }
+						trigger_if = {
+						    limit = { exists = capital_province }
+						    capital_province = { 
+						        add_to_temporary_list = target_province_list
+						    }
+						}
+						trigger_else_if = {
+						    limit = { exists = location }
+						    location = { 
+						        add_to_temporary_list = target_province_list
+						    } 
+						}
+
+					}
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_target_title_effect_list }
+				scope:spell_organizer = {
+					trigger_if = {
+					    limit = { list_size = { name = target_province_list value > 0 } }
+					    any_in_list = {
+					        list = target_province_list
+					        count = all
+					        county = { add_to_temporary_list = target_title_list }
+					    }
+					}
+
+					trigger_if = {
+						limit = { list_size = { name = target_title_list value <= 0 } }
+						trigger_if = {
+						    limit = { exists = capital_county }
+						    capital_county = { 
+						        add_to_temporary_list = target_title_list
+						    }
+						}
+						trigger_else_if = {
+						    limit = { exists = location }
+						    location.county = { 
+						        add_to_temporary_list = target_title_list
+						    } 
+						}
+
+					}
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_target_artifact_effect_list }
+				scope:spell_organizer = {
+					trigger_if = {
+					    limit = { has_variable_list = spell_target_titles }
+					    any_in_list = {
+					        variable = spell_target_titles
+					        count = all
+					        add_to_temporary_list = target_title_list
+					    }
+					}
+
+					trigger_if = {
+						limit = { list_size = { name = target_artifact_list value <= 0 } }
+						trigger_if = {
+						    limit = { has_variable_list = spell_target_artifacts }
+						    any_in_list = {
+						        variable = spell_target_artifacts
+						        count = all
+						        add_to_temporary_list = target_artifact_list
+						    }
+						}
+
+					}
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_target_province_character_effect_list }
+				scope:spell_organizer = {
+					trigger_if = {
+					    limit = { list_size = { name = target_province_list value > 0 } }
+					    any_in_list = {
+					        list = target_province_list
+					        count = all
+					        any_character_in_location = {
+					            count = all
+					            add_to_temporary_list = target_province_character_list
+					        }
+					    }
+					}
+
+				}
+			}
+			trigger_if = {
+				limit = { has_variable_list = affects_target_newborn_child_effect_list }
+				scope:spell_organizer = {
+					trigger_if = {
+					    limit = { exists = scope:child }
+					    scope:child = { add_to_temporary_list = target_newborn_child_list }
+					}
+
+				}
+			}
+		}
+	}
+	every_in_list = {
+		variable = spell_effect_list
+		limit = {
+			trigger_if = {
+				limit = { var:target_type = flag:target }
+				scope:spell_being_checked_ai_target = { is_in_list = target_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:spell_organizer }
+				scope:spell_being_checked_ai_target = { is_in_list = spell_organizer_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:caster }
+				scope:spell_being_checked_ai_target = { is_in_list = caster_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:target_province }
+				scope:spell_being_checked_ai_target = { is_in_list = target_province_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:target_title }
+				scope:spell_being_checked_ai_target = { is_in_list = target_title_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:target_artifact }
+				scope:spell_being_checked_ai_target = { is_in_list = target_artifact_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:target_province_character }
+				scope:spell_being_checked_ai_target = { is_in_list = target_province_character_list }
+			}
+			trigger_else_if = {
+				limit = { var:target_type = flag:target_newborn_child }
+				scope:spell_being_checked_ai_target = { is_in_list = target_newborn_child_list }
+			}
+		}
+		add = indexed_spell_effect_ai_weight_value
+	}
+	########################
+	### Positive effects ###
+	########################
+	#if = {	# Aspect increase for relevant (i.e. knows a school with it) aspect
+	#	limit = {
+	#		exists = var:add_aspect_positive_
+	#		var:add_aspect_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_being_checked_ai_target = { knows_magic_school_with_aspect_trigger = { ASPECT = var:add_aspect_positive_.var:affected_aspect } }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 5
+	#			multiply = var:add_aspect_positive_.spell_tag_scalar_threshold_diff_value
+	#		}
+	#		desc = add_aspect_positive_knows_school_ai_value_desc
+	#	}
+	#}
+	#if = {	# Aspect increase for irrelevant (i.e. does not know a school with it) aspect
+	#	limit = {
+	#		exists = var:add_aspect_positive_
+	#		var:add_aspect_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#		NOT = { scope:spell_being_checked_ai_target = { knows_magic_school_with_aspect_trigger = { ASPECT = var:add_aspect_positive_.var:affected_aspect } } }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 1
+	#			multiply = var:add_aspect_positive_.spell_tag_scalar_threshold_diff_value
+	#		}
+	#		desc = add_aspect_positive_not_knows_school_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		var:shard_of_imbued_knowledge_child_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = { is_adult = no }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = var:shard_of_imbued_knowledge_child_target.spell_tag_scalar_threshold_diff_value
+	#			multiply = 30
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = lazy } }
+	#				multiply = 3
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = paranoid } }
+	#				multiply = 0.5
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = ambitious } }
+	#				multiply = 2
+	#			}
+	#		}
+	#		desc = shard_of_imbued_knowledge_child_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		var:shard_of_imbued_knowledge_adult_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = { is_adult = yes }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = var:shard_of_imbued_knowledge_adult_target.spell_tag_scalar_threshold_diff_value
+	#			multiply = 25
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = lazy } }
+	#				multiply = 2
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = paranoid } }
+	#				multiply = 0.5
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = ambitious } }
+	#				multiply = 1.5
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = content } }
+	#				multiply = 0.75
+	#			}
+	#			if = { # Already did their learning in life (accumulated perks)
+	#				limit = { scope:spell_being_checked_ai_target = { age > 40 } }
+	#				multiply = 0.9
+	#				if = {
+	#					limit = { scope:spell_being_checked_ai_target = { age > 50 } }
+	#					multiply = 0.8
+	#					if = {
+	#						limit = { scope:spell_being_checked_ai_target = { age > 60 } }
+	#						multiply = 0.7
+	#						if = {
+	#							limit = { scope:spell_being_checked_ai_target = { age > 70 } }
+	#							multiply = 0.6
+	#						}
+	#					}
+	#				}
+	#			}
+	#		}
+	#		desc = shard_of_imbued_knowledge_adult_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		var:improve_inspiration_quality_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target.inspiration ?= { exists = inspiration_sponsor }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = var:improve_inspiration_quality_target.spell_tag_scalar_threshold_diff_value
+	#			multiply = 12
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = ambitious } }
+	#				multiply = 1.35
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = content } }
+	#				multiply = 0.75
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = eccentric } }
+	#				multiply = 2.25
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = diligent } }
+	#				multiply = 1.25
+	#			}
+	#		}
+	#		desc = improve_inspiration_quality_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_gold_positive_
+	#		var:add_gold_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 10
+	#			multiply = var:add_gold_positive_.spell_tag_scalar_threshold_diff_value
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target.gold < 0 }
+	#				add = 200
+	#			}
+	#			add = scope:spell_being_checked_ai_target.ai_greed
+	#		}
+	#		desc = add_gold_positive_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_piety_positive_
+	#		var:add_piety_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			add = 5
+	#			add = scope:spell_organizer.ai_zeal
+	#			multiply = var:add_piety_positive_.spell_tag_scalar_threshold_diff_value
+	#		}
+	#		desc = add_piety_positive_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_piety_level_positive_
+	#		var:add_piety_level_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 1
+	#			multiply = var:add_piety_level_positive_.spell_tag_scalar_threshold_diff_value
+	#		}
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_diplomacy_magic_modifier_seduction_positive_
+	#		var:add_character_modifier_diplomacy_magic_modifier_seduction_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			add = {
+	#				value = scope:spell_organizer.ai_sociability
+	#				divide = 2
+	#				ceiling = yes
+	#				min = 0
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = lustful } }
+	#				add = 20
+	#			}
+	#		}
+	#		desc = add_character_modifier_diplomacy_magic_modifier_seduction_positive_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:initiate_spell_event_interior_journey_
+	#		var:initiate_spell_event_interior_journey_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 3
+	#			multiply = var:initiate_spell_event_interior_journey_.spell_tag_scalar_threshold_diff_value
+	#		}
+	#		desc = initiate_spell_event_interior_journey_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_fertility_positive_
+	#		var:add_character_modifier_fertility_positive_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_being_checked_ai_target = {
+	#			age < 50
+	#			NOT = { any_child = { is_alive = yes count >= 2 } }
+	#		}
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 1
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { fertility < medium_fertility } }
+	#				add = {
+	#					value = medium_fertility
+	#					subtract = scope:spell_being_checked_ai_target.fertility
+	#					multiply = 10
+	#				}
+	#			}
+	#		}
+	#		desc = add_character_modifier_fertility_positive_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_arcana_positive_
+	#		var:add_character_modifier_arcana_positive_.spell_tag_scalar_threshold_diff_value > 0 
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 1
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = education_arcana } }
+	#				add = 25
+	#			}
+	#		}
+	#		desc = add_character_modifier_arcana_positive_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:decrease_magic_wounds_
+	#		var:decrease_magic_wounds_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_being_checked_ai_target = { has_trait = wounded }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 1
+	#			if = {
+	#				limit = {
+	#					scope:spell_being_checked_ai_target.health < medium_health
+	#				}
+	#				add = {
+	#					value = medium_health
+	#					subtract = scope:spell_being_checked_ai_target.health
+	#					multiply = 50
+	#					min = 0
+	#				}
+	#			}
+	#		}
+	#		desc = decrease_magic_wounds_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_magic_resistance_magic_modifier_
+	#		var:add_character_modifier_magic_resistance_magic_modifier_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_being_checked_ai_target = {
+	#			NOR = { 
+	#				has_character_modifier = magic_resistance_magic_modifier_1
+	#				has_character_modifier = magic_resistance_magic_modifier_2
+	#				has_character_modifier = magic_resistance_magic_modifier_3
+	#				has_character_modifier = magic_resistance_magic_modifier_4
+	#				has_character_modifier = magic_resistance_magic_modifier_5
+	#			}
+	#		}
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 1
+	#			if = {
+	#				limit = { scope:spell_organizer = { highest_held_title_tier = tier_empire } }
+	#				add = 75
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_organizer = { highest_held_title_tier = tier_kingdom} }
+	#				add = 50
+	#			}
+	#			else = {
+	#				add = 25
+	#			}
+	#			if = {
+	#				limit = { scope:spell_organizer = { is_at_war = yes } }
+	#				add = 25
+	#			}
+	#			if = {
+	#				limit = { scope:spell_organizer = { has_trait = paranoid } }
+	#				add = 50
+	#			} 
+	#		}
+	#		desc = add_character_modifier_magic_resistance_magic_modifier_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_magic_penetration_magic_modifier_
+	#		var:add_character_modifier_magic_penetration_magic_modifier_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_being_checked_ai_target = {
+	#			NOR = { 
+	#				has_character_modifier = magic_penetration_magic_modifier_1
+	#				has_character_modifier = magic_penetration_magic_modifier_2
+	#				has_character_modifier = magic_penetration_magic_modifier_3
+	#				has_character_modifier = magic_penetration_magic_modifier_4
+	#				has_character_modifier = magic_penetration_magic_modifier_5
+	#			}
+	#		}
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 10
+	#			if = {
+	#				limit = { scope:spell_organizer = { highest_held_title_tier = tier_empire } }
+	#				subtract = 9
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_organizer = { highest_held_title_tier = tier_kingdom} }
+	#				subtract = 5
+	#			}
+	#		}
+	#		desc = add_character_modifier_magic_resistance_magic_modifier_ai_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_battle_magic_
+	#		var:add_character_modifier_battle_magic_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			NOT = { has_character_modifier = magic_battle_magic_modifier }
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 75
+	#		desc = add_character_modifier_battle_magic_ai_value_desc
+	#	}
+	#}
+	##if = {
+	##	limit = {
+	##		exists = var:add_character_modifier_battle_magic_losses_modifier_
+	##		var:add_character_modifier_battle_magic_losses_modifier_.spell_tag_scalar_threshold_diff_value > 0
+	##		scope:spell_organizer = {
+	##			NOT = { has_character_modifier = battle_magic_losses_modifier }
+	##			is_at_war = yes
+	##		}
+	##	}
+	##	add = {
+	##		value = 30
+	##		desc = add_character_modifier_battle_magic_losses_modifier_ai_value_desc
+	##	}
+	##}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_knight_effectiveness_
+	#		var:add_character_modifier_knight_effectiveness_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			NOT = { has_character_modifier = knight_effectiveness_magic_modifier }
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = add_character_modifier_knight_effectiveness_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_army_damage_mult_
+	#		var:add_character_modifier_army_damage_mult_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			NOT = { has_character_modifier = army_damage_magic_mult_modifier }
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = add_character_modifier_army_damage_mult_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_army_toughness_mult_
+	#		var:add_character_modifier_army_toughness_mult_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			NOT = { has_character_modifier = army_toughness_magic_modifier }
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = add_character_modifier_army_toughness_mult_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_undead_skirmishers_
+	#		var:spawn_undead_skirmishers_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_undead_skirmishers_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_elite_undead_
+	#		var:spawn_elite_undead_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_elite_undead_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_stone_golem_army_
+	#		var:spawn_stone_golem_army_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_stone_golem_army_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_metal_golem_army_
+	#		var:spawn_metal_golem_army_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_metal_golem_army_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_magma_golem_army_
+	#		var:spawn_magma_golem_army_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_magma_golem_army_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_ice_golem_army_
+	#		var:spawn_ice_golem_army_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_ice_golem_army_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_siege_golems_
+	#		var:spawn_siege_golems_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_siege_golems_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:spawn_fogbeast_army_
+	#		var:spawn_fogbeast_army_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = spawn_fogbeast_army_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:generate_magic_from_target_baseline_
+	#		var:generate_magic_from_target_baseline_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			if = {
+	#				limit = { scope:spell_organizer = { exposure_level_value = 0 } }
+	#				add = 70
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_organizer = { exposure_total_value < magic_power_limit_1 } }
+	#				add = 35
+	#			}
+	#		}
+	#		desc = generate_magic_from_target_baseline_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:generate_magic_from_components_
+	#		var:generate_magic_from_components_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = {
+	#			if = {
+	#				limit = { scope:spell_organizer = { exposure_level_value = 0 } }
+	#				add = 70
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_organizer = { exposure_total_value < magic_power_limit_1 } }
+	#				add = 35
+	#			}
+	#		}
+	#		desc = generate_magic_from_components_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_levy_reinforcement_rate_gain_
+	#		var:add_character_modifier_levy_reinforcement_rate_gain_.spell_tag_scalar_threshold_diff_value > 0
+	#		scope:spell_organizer = {
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = add_character_modifier_levy_reinforcement_rate_gain_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_random_divination_modifier_
+	#		var:add_character_modifier_random_divination_modifier_.spell_tag_scalar_threshold_diff_value > 0
+	#	}
+	#	add = {
+	#		value = 50
+	#		desc = add_character_modifier_random_divination_modifier_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		var:gain_lifestyle_xp_per_language_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = { is_adult = yes }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 25
+	#			multiply = { value = scope:spell_being_checked_ai_target.num_of_known_languages } # Must be done this way for it to not be read as a trigger instead of a value
+	#			if = { # Already did their learning in life (accumulated perks)
+	#				limit = { scope:spell_being_checked_ai_target = { age > 40 } }
+	#				multiply = 0.9
+	#				if = {
+	#					limit = { scope:spell_being_checked_ai_target = { age > 50 } }
+	#					multiply = 0.8
+	#					if = {
+	#						limit = { scope:spell_being_checked_ai_target = { age > 60 } }
+	#						multiply = 0.7
+	#						if = {
+	#							limit = { scope:spell_being_checked_ai_target = { age > 70 } }
+	#							multiply = 0.6
+	#						}
+	#					}
+	#				}
+	#			}
+	#		}
+	#		desc = gain_lifestyle_xp_per_language_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		var:knight_summons_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = {
+	#			is_landed_or_landless_administrative = yes
+	#			max_number_of_knights >= 1
+	#		}
+	#	}
+	#	add = {
+	#		value = 5
+	#		if = {
+	#			limit = { scope:spell_being_checked_ai_target = { number_of_knights < max_number_of_knights } }
+	#			multiply = {
+	#				value = max_number_of_knights
+	#				subtract = number_of_knights
+	#				multiply = 2
+	#			}
+	#		}
+	#		if = {
+	#			limit = { scope:spell_being_checked_ai_target.gold < minor_gold_value }
+	#			multiply = 0.5
+	#		}
+	#		desc = knight_summons_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		var:magic_vassalization_acceptance_modifier_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = {
+	#			is_landed = yes
+	#			highest_held_title_tier > tier_county
+	#		}
+	#	}
+	#	add = {
+	#		value = 10
+	#		if = {
+	#			limit = { scope:spell_being_checked_ai_target = { highest_held_title_tier > tier_duchy } }
+	#			multiply = 2
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { highest_held_title_tier > tier_kingdom } }
+	#				multiply = 2
+	#			}
+	#		}
+	#		if = {
+	#			limit = { scope:spell_being_checked_ai_target = { has_trait = ambitious } }
+	#			multiply = 1.5
+	#		}
+	#		desc = magic_vassalization_acceptance_modifier_value_desc
+	#	}
+	#}
+	#if = { ## GH TODO: Make this generic for trait gain
+	#	limit = {
+	#		var:add_trait_lifestyle_physician_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = { NOT = { has_trait = lifestyle_physician } }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 10
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target.faith = { trait_is_virtue = lifestyle_physician } }
+	#				multiply = 4
+	#			}
+	#		}
+	#		desc = add_trait_lifestyle_physician_value_desc
+	#	}
+	#}
+	#if = { ## GH TODO: Make this generic for trait xp gain
+	#	limit = {
+	#		var:add_trait_xp_lifestyle_physician_target ?= { spell_tag_scalar_threshold_diff_value > 0 }
+	#		scope:spell_being_checked_ai_target = { NOT = { has_trait = lifestyle_physician } }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 2
+	#			multiply = {
+	#				value = lifestyle_physician_xp_change_value
+	#				multiply = var:add_trait_xp_lifestyle_physician_target.spell_tag_scalar_threshold_diff_value
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target.faith = { trait_is_virtue = lifestyle_physician } }
+	#				multiply = 2
+	#			}
+	#		}
+	#		desc = add_trait_xp_lifestyle_physician_value_desc
+	#	}
+	#}
+	##########################
+	#### Ambiguous effects ###
+	##########################
+	#if = {
+	#	limit = { 
+	#		exists = var:dominate_character__target
+	#		var:dominate_character__target.spell_tag_scalar_threshold_diff_value > 0
+	#		OR = {
+	#			list_size = { name = spell_targets value > 0 }
+	#			scope:spell_organizer ?= { has_variable_list = spell_targets }
+	#		}
+	#	}
+	#	if = {
+	#		limit = { list_size = { name = spell_targets value > 0 } }
+	#		every_in_list = {
+	#			list = spell_targets
+	#			limit = { NOT = { this = scope:spell_being_checked_ai_target } }
+	#			add = {
+	#				value = {
+	#					value = 10
+	#					multiply = {
+	#						value = 1
+	#						add = highest_held_title_tier
+	#					}
+	#					if = {
+	#						limit = {
+	#							OR = {
+	#								is_vassal_of = scope:spell_being_checked_ai_target
+	#								AND = {
+	#									exists = liege
+	#									liege = scope:spell_being_checked_ai_target
+	#								}
+	#							}
+	#						}
+	#						add = 20
+	#					}
+	#				}
+	#				desc = dominate_character_would_receive_hook_value_desc
+	#			}
+	#		}
+	#	}
+	#	else = {
+	#		scope:spell_organizer = {
+	#			every_in_list = {
+	#				variable = spell_targets
+	#				limit = { NOT = { this = scope:spell_being_checked_ai_target } }
+	#				add = {
+	#					value = {
+	#						value = 10
+	#						multiply = {
+	#							value = 1
+	#							add = highest_held_title_tier
+	#						}
+	#						if = {
+	#							limit = {
+	#								OR = {
+	#									is_vassal_of = scope:spell_being_checked_ai_target
+	#									AND = {
+	#										exists = liege
+	#										liege = scope:spell_being_checked_ai_target
+	#									}
+	#								}
+	#							}
+	#							add = 20
+	#						}
+	#					}
+	#					desc = dominate_character_would_receive_hook_value_desc
+	#				}
+	#			}
+	#		}
+	#	}
+	#}
+	#if = {
+	#	limit = { 
+	#		exists = var:dominate_character__spell_organizer
+	#		var:dominate_character__spell_organizer.spell_tag_scalar_threshold_diff_value > 0
+	#		NOT = { this = scope:spell_organizer }
+	#	}
+	#	add = {
+	#		value = {
+	#			value = 10
+	#			multiply = {
+	#				value = 1
+	#				add = scope:spell_organizer.highest_held_title_tier
+	#			}
+	#			if = {
+	#				limit = {
+	#					OR = {
+	#						is_vassal_of = scope:spell_organizer
+	#						AND = {
+	#							exists = liege
+	#							liege = scope:spell_organizer
+	#						}
+	#					}
+	#				}
+	#				add = 20
+	#			}
+	#		}
+	#		desc = dominate_character_would_receive_hook_value_desc
+	#	}
+	#}
+	##if = {
+	##	limit = { 
+	##		exists = scope:spell_being_checked_ai_target.var:dominate_character_target_
+	##		var:dominate_character__target.spell_tag_scalar_threshold_diff_value > 0
+	##		list_size = { name = spell_targets value > 0 }
+	##	}
+	##	every_in_list = {
+	##		list = spell_targets
+	##		limit = { NOT = { this = prev } }
+	##		add = {
+	##			value = {
+	##				value = -20
+	##				# The tier of the person having a hook on you matters somewhat less than the tier of the person you have a hook on, so it is ignored here
+	##				if = {
+	##					limit = {
+	##						OR = {
+	##							is_vassal_of = prev
+	##							AND = {
+	##								exists = liege
+	##								liege = prev
+	##							}
+	##						}
+	##					}
+	##					add = -20
+	##				}
+	##			}
+	##			desc = dominate_character_would_give_hook_value_desc
+	##		}
+	##	}
+	##}
+	##if = {
+	##	limit = { 
+	##		exists = scope:spell_being_checked_ai_target.var:dominate_character_spell_organizer_
+	##		var:dominate_character__spell_organizer.spell_tag_scalar_threshold_diff_value > 0
+	##		NOT = { this = scope:spell_organizer }
+	##	}
+	##	add = {
+	##		value = {
+	##			value = -20
+	##			# The tier of the person having a hook on you matters somewhat less than the tier of the person you have a hook on, so it is ignored here
+	##			if = {
+	##				limit = {
+	##					OR = {
+	##						is_vassal_of = scope:spell_organizer
+	##						AND = {
+	##							exists = liege
+	##							liege = scope:spell_organizer
+	##						}
+	##					}
+	##				}
+	##				add = -20
+	##			}
+	##		}
+	##		desc = dominate_character_would_give_hook_value_desc
+	##	}
+	##}
+	#########################
+	#### Negative effects ###
+	#########################
+	#if = {
+	#	limit = {
+	#		exists = var:death_effect_target
+	#	}
+	#	subtract = {
+	#		value = {
+	#			value = scope:spell_being_checked_ai_target.health
+	#			multiply = 240	# 1 health = 8 years of life = 240 AWP (see health section below)
+	#			min = 100
+	#			max = 1000
+	#			multiply = var:death_effect_target.ai_spell_effect_chance_negative_factor
+	#		}
+	#		desc = death_chance_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		OR = {
+	#			exists = var:death_chance
+	#			exists = var:death_on_childbirth_chance
+	#		}
+	#	}
+	#	subtract = {
+	#		value = {
+	#			value = medium_health
+	#			subtract = scope:spell_being_checked_ai_target.health
+	#			multiply = 100
+	#			min = 10
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = brave } }
+	#				multiply = 0.75
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = craven } }
+	#				multiply = 2
+	#			}
+	#		}
+	#		desc = death_chance_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = { exists = var:add_character_modifier_shattercurse_modifier_target }
+	#	subtract = {
+	#		value = {
+	#			value = medium_health
+	#			subtract = scope:spell_being_checked_ai_target.health
+	#			multiply = 65
+	#			min = 20
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = education_martial } }
+	#				multiply = 1.6
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = brave } }
+	#				multiply = 1.2
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = craven } }
+	#				multiply = 0.8
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { is_knight = yes } }
+	#				multiply = 1.8
+	#			}
+	#		}
+	#		desc = shattercurse_modifier_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = { var:stress_gain_target ?= { spell_tag_scalar_threshold_diff_value > 0 } }
+	#	subtract = {
+	#		value = {
+	#			value = minor_stress_gain
+	#			multiply = 0.5
+	#			multiply = var:stress_gain_target.spell_tag_scalar_threshold_diff_value
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = diligent } }
+	#				multiply = 1.2
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = lazy } }
+	#				multiply = 0.8
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = paranoid } }
+	#				multiply = 1.2
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = ambitious } }
+	#				multiply = 1.2
+	#			}
+	#			else_if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = content } }
+	#				multiply = 0.8
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = arbitrary } }
+	#				multiply = 0.8
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { has_trait = eccentric } }
+	#				multiply = 0.6
+	#			}
+	#			if = {
+	#				limit = { scope:spell_being_checked_ai_target = { stress_level > 0 } }
+	#				multiply = 1.2
+	#				if = {
+	#					limit = { scope:spell_being_checked_ai_target = { stress_level > 1 } }
+	#					multiply = 1.4
+	#					if = {
+	#						limit = { scope:spell_being_checked_ai_target = { stress_level > 2 } }
+	#						multiply = 1.8
+	#						if = {
+	#							limit = { scope:spell_being_checked_ai_target = { stress_level > 3 } }
+	#							multiply = 2.6
+	#						}
+	#					}
+	#				}
+	#			}
+	#		}
+	#		desc = stress_gain_value_desc
+	#	}
+	#}
+	#if = {
+	#	limit = {
+	#		exists = var:add_character_modifier_army_damage_negative_target
+	#		scope:spell_being_checked_ai_target = {
+	#			NOT = { has_character_modifier = army_damage_negative_magic_modifier }
+	#			is_at_war = yes
+	#		}
+	#	}
+	#	subtract = {
+	#		value = 50
+	#		desc = add_character_modifier_army_damage_negative_value_desc
+	#	}
+	#}
+	#
+	### GH URGENT: Still need to reimplement these negative effects
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_prowess_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					is_knight = yes 
+	##				}
+	##				subtract = 50
+	##			}
+	##			if = {
+	##				limit = {
+	##					has_trait = lifestyle_hunter
+	##				}
+	##				subtract = 50
+	##			}
+	##			if = {
+	##				limit = {
+	##					has_trait = education_martial
+	##				}
+	##				subtract = 50
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_martial_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = education_martial
+	##				}
+	##				subtract = 100
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_stewardship_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = education_stewardship
+	##				}
+	##				subtract = 100
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_intrigue_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = education_intrigue
+	##				}
+	##				subtract = 100
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_learning_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = education_learning
+	##				}
+	##				subtract = 100
+	##			}
+	##		}
+	##		if = {
+	##			limit = {
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_arcana_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = education_arcana
+	##				}
+	##				subtract = 100
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:increase_magic_wounds
+	##			}
+	##			subtract = {
+	##				value = medium_health
+	##				subtract = health
+	##				multiply = 50
+	##				min = 10
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_haunting_power
+	##			}
+	##			subtract = 20
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:increase_riftmark
+	##			}
+	##			subtract = 20
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:remove_gold_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = greedy
+	##				}
+	##				subtract = 10
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:death_chance_no_injury
+	##			}
+	##			subtract = {
+	##				value = medium_health
+	##				subtract = health
+	##				multiply = 40
+	##				min = 10
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_mental_illness
+	##			}
+	##			subtract = 20
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:sporecloud
+	##			}
+	##			subtract = 20
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_character_modifier_diplomacy_magic_modifi#er_seduction_negative
+	##			}
+	##			subtract = 20
+	##			if = {
+	##				limit = {
+	##					has_trait = lustful
+	##				}
+	##				subtract = 15
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:increase_blind_magic
+	##			}
+	##			subtract = 25
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:increase_stress_pain
+	##			}
+	##			subtract = 20
+	##		}
+	##	}
+	##}
+	##if = {
+	##	limit = { 
+	##		exists = scope:spell_being_checked_ai_target_title
+	##		trigger_if = {
+	##			limit = { NOT = { exists = scope:spell_being_checked_ai_target } }
+	##			save_temporary_scope_as = spell_being_checked_ai_target
+	##		}
+	##	}
+	##	scope:spell_being_checked_ai_target_title = {
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_defensive_county_magic
+	##				NOT = { has_county_modifier = defensive_county_magic_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 1.5
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 25
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_fort_creation
+	##				NOT = { has_county_modifier = fort_creation_county_magic_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 1.5
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 25
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_resource_exotic_metals
+	##				NOT = { has_county_modifier = resource_exotic_metals_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 2
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 50
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_building_construction
+	##				NOT = { has_county_modifier = building_construction_county_magic_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 1.75
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 40
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_improve_agriculture
+	##				NOT = { has_county_modifier = improve_agriculture_magic_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 2
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 50
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_resource_excellent_soil
+	##				NOT = { has_county_modifier = resource_excellent_soil_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 2
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 50
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = #scope:spell_being_checked_ai_target.var:add_county_modifier_resource_verdant_plant_growth
+	##				NOT = { has_county_modifier = resource_verdant_plant_growth_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 2
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 50
+	##			}
+	##		}
+	##		if = {
+	##			limit = { 
+	##				exists = scope:spell_being_checked_ai_target.var:add_county_modifier_defender_advantage
+	##				NOT = { has_county_modifier = county_defender_advantage_modifier }
+	##			}
+	##			add = {
+	##				value = development_level
+	##				multiply = 1.5
+	##			}
+	##			if = {
+	##				limit = { holder = { has_focus = stewardship_domain_focus } }
+	##				add = 25
+	##			}
+	##		}
+	##		
+	##		 NEGATIVE COUNTY EFFECTS 
+	##		
+	##		if = {
+	##			limit = {
+	##				OR = {
+	##					AND = {
+	##						exists = #scope:spell_being_checked_ai_target.var:add_province_modifier_magic_shattered_defenses
+	##						NOT = { title_province = { has_province_modifier = magic_shattered_defenses_modifier #} }
+	##					}
+	##					AND = {
+	##						exists = #scope:spell_being_checked_ai_target.var:add_county_modifier_magic_destroyed_buildings
+	##						NOT = { has_county_modifier = magic_destroyed_buildings_modifier }
+	##					}
+	##					AND = {
+	##						exists = #scope:spell_being_checked_ai_target.var:add_county_modifier_magic_destroyed_buildings
+	##						NOT = { has_county_modifier = magic_destroyed_buildings_modifier }
+	##					}
+	##					AND = {
+	##						exists = scope:spell_being_checked_ai_target.var:magic_ruined_agriculture_modifier
+	##						NOT = { has_county_modifier = magic_destroyed_buildings_modifier }
+	##					}
+	##				}
+	##			}
+	##			subtract = {
+	##				value = development_level
+	##				multiply = 2
+	##			}
+	##		}
+	##		if = {
+	##			limit = {
+	##				exists = scope:spell_being_checked_ai_target.var:summon_fog_id
+	##				NOT = { has_county_modifier = magic_fogswept_modifier }
+	##			}
+	##			subtract = {
+	##				value = development_level
+	##				multiply = 2
+	##			}
+	##		}
+	##		if = {
+	##			limit = {
+	##				exists = scope:spell_being_checked_ai_target.var:reduce_development
+	##			}
+	##			subtract = {
+	##				value = development_level
+	##				multiply = 1
+	##			}
+	##		}
+	##	}
+	##}
+}
+
+ai_spell_weight_value = {
+	value = ai_spell_weight_spell_effect_value
+	multiply = {
+		value = spell_success_chance
+		multiply = 0.01
+	}
+	if = {
+		limit = { 
+			exists = scope:spell_organizer
+			scope:spell_organizer.gold > 0
+		}
+		multiply = {
+			value = 1
+			subtract = {
+				value = total_spell_gold_cost
+				divide = scope:spell_organizer.gold
+				min = 0
+				max = 1
+			}
+		}
+	}
+}
+
+ai_spell_weight_inverse_value = {
+	value = ai_spell_weight_value
+	multiply = -1
+}
+
+# Value used for adjusting acceptance amount for beneficial effects that have a chance associated
+# Bolder characters put more weight on potentially beneficial effects with a chance
+ai_spell_effect_chance_positive_factor = {
+	value = spell_effect_chance_value
+	multiply = 0.01
+	if = {
+		limit = { spell_effect_chance_value < 100 }
+		multiply = {
+			value = spell_tag_scalar_threshold_diff_value
+			multiply = {
+				value = 1
+				if = {
+					limit = { scope:spell_being_checked_ai_target.ai_boldness < 0 }
+					add = {
+						value = scope:spell_being_checked_ai_target.ai_boldness
+						multiply = 0.005
+					}
+				}
+				else = {
+					add = {
+						value = scope:spell_being_checked_ai_target.ai_boldness
+						multiply = 0.01
+					}
+				}
+			}
+		}
+	}
+	max = 1
+	min = 0
+}
+
+# Value used for adjusting acceptance amount for harmful effects that have a chance associated
+# Bolder characters put less weight on risky effects with a chance
+ai_spell_effect_chance_negative_factor = {
+	value = spell_effect_chance_value
+	multiply = 0.01
+	if = {
+		limit = { spell_effect_chance_value < 100 }
+		multiply = {
+			value = spell_tag_scalar_threshold_diff_value
+			multiply = {
+				value = 1
+				if = {
+					limit = { scope:spell_being_checked_ai_target.ai_boldness < 0 }
+					add = {
+						value = scope:spell_being_checked_ai_target.ai_boldness
+						multiply = -0.01
+					}
+				}
+				else = {
+					add = {
+						value = scope:spell_being_checked_ai_target.ai_boldness
+						multiply = -0.005
+					}
+				}
+			}
+		}
+	}
+	max = 1
+	min = 0
+}

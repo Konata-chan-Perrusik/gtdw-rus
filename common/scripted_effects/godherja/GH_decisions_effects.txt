@@ -1,0 +1,2035 @@
+﻿form_chevalie_scripted_effect = {
+	add_prestige = monumental_prestige_gain
+	add_piety = massive_piety_gain
+	add_trait = gh_chevalie_uniter
+
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:e_chevalie = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+}
+
+initialize_traditional_borders = {
+	every_duchy = {
+		set_variable = {
+			name = traditional_de_jure_kingdom
+			value = this.kingdom
+		}
+	}
+	every_kingdom = {
+		limit = { exists = empire }
+		set_variable = {
+			name = traditional_de_jure_empire
+			value = this.empire
+		}
+	}
+}
+
+restore_traditional_borders = {
+	every_duchy = {
+		limit = { 
+			has_variable = traditional_de_jure_kingdom
+			var:traditional_de_jure_kingdom = title:$KINGDOM_NAME$
+		}
+		kingdom = {
+			if = {
+				limit = { 
+					is_title_created = yes 
+					NOR = { 
+						this = title:$KINGDOM_NAME$ 
+						empire = title:e_cornucopia
+						empire = title:e_the_reach
+						empire = title:e_etepezea
+						empire = title:e_malcois
+						empire = title:e_opakhasia
+						empire = title:e_aironoi
+					}
+				}
+				holder = {
+					destroy_title = prev
+				}
+			}
+		}
+		set_de_jure_liege_title = title:$KINGDOM_NAME$
+	}
+	if = {
+		limit = { 
+			exists = title:$KINGDOM_NAME$.var:traditional_de_jure_empire
+			NOT = {
+				title:$KINGDOM_NAME$.empire = title:$KINGDOM_NAME$.var:traditional_de_jure_empire
+			}
+		}
+		title:$KINGDOM_NAME$ = {
+			set_de_jure_liege_title = title:$KINGDOM_NAME$.var:traditional_de_jure_empire
+		}
+	}
+}
+
+restore_demoted_borders = {
+	every_duchy = {
+		limit = { 
+			trigger_if = {
+				limit = { has_variable = traditional_de_jure_kingdom }
+				var:traditional_de_jure_kingdom = title:$KINGDOM_NAME$
+			}
+		}
+		set_de_jure_liege_title = title:$DEMOTED_EMPIRE$.var:kingdom_demotion_title
+	}
+}
+
+restore_traditional_aversarian_borders_megos_kalathipsomi = {
+	restore_traditional_borders = { KINGDOM_NAME = k_cornucopia }
+	restore_traditional_borders = { KINGDOM_NAME = k_redwald }
+	restore_traditional_borders = { KINGDOM_NAME = k_pearlcoast }
+	
+}
+
+restore_traditional_aversarian_borders_mikros_kalathipsomi = {
+##	restore_traditional_borders = { KINGDOM_NAME = k_sulzegg }
+##	restore_traditional_borders = { KINGDOM_NAME = k_okrouhlice }
+	restore_traditional_borders = { KINGDOM_NAME = k_everrain }
+	restore_traditional_borders = { KINGDOM_NAME = k_heartwood }
+	restore_traditional_borders = { KINGDOM_NAME = k_skycrown }
+	restore_traditional_borders = { KINGDOM_NAME = k_easternkatraddia8 }
+}
+
+restore_traditional_aversarian_borders_etepezea = {
+	# restore_traditional_borders = { KINGDOM_NAME = k_dragonmarch }
+	restore_traditional_borders = { KINGDOM_NAME = k_assocaea }
+	restore_traditional_borders = { KINGDOM_NAME = k_pergicos }
+	restore_traditional_borders = { KINGDOM_NAME = k_palitake }
+	## restore_traditional_borders = { KINGDOM_NAME = k_cycladecia }
+	# restore_traditional_borders = { KINGDOM_NAME = k_tethix }
+	restore_traditional_borders = { KINGDOM_NAME = k_kollos }
+	# restore_traditional_borders = { KINGDOM_NAME = k_neokhrion }
+#	restore_traditional_borders = { KINGDOM_NAME = k_farsoutheastern_isles }
+}
+
+restore_traditional_aversarian_borders_malcois = {
+	restore_traditional_borders = { KINGDOM_NAME = k_kallios }
+	restore_traditional_borders = { KINGDOM_NAME = k_helenai }
+	# restore_traditional_borders = { KINGDOM_NAME = k_delphilikos }
+	restore_traditional_borders = { KINGDOM_NAME = k_cyrocaea }
+	restore_traditional_borders = { KINGDOM_NAME = k_mytidon }
+	restore_traditional_borders = { KINGDOM_NAME = k_adgos }
+	restore_traditional_borders = { KINGDOM_NAME = k_kasmiene }
+}
+
+restore_traditional_aversarian_borders_opakhasia = {
+	restore_traditional_borders = { KINGDOM_NAME = k_eve }
+	restore_traditional_borders = { KINGDOM_NAME = k_suncourt }
+	# restore_traditional_borders = { KINGDOM_NAME = k_karthos }
+	restore_traditional_borders = { KINGDOM_NAME = k_day }
+	## restore_traditional_borders = { KINGDOM_NAME = k_agadendon }
+#	restore_traditional_borders = { KINGDOM_NAME = k_karros }
+	restore_traditional_borders = { KINGDOM_NAME = k_morn }
+	# restore_traditional_borders = { KINGDOM_NAME = k_opakoutercrescent }
+}
+
+restore_demoted_aversarian_borders_opakhasia = {
+	restore_demoted_borders = { DEMOTED_EMPIRE = e_opakhasia KINGDOM_NAME = k_eve }
+	restore_demoted_borders = { DEMOTED_EMPIRE = e_opakhasia KINGDOM_NAME = k_suncourt }
+	# restore_demoted_borders = { DEMOTED_EMPIRE = e_opakhasia KINGDOM_NAME = k_karthos }
+	restore_demoted_borders = { DEMOTED_EMPIRE = e_opakhasia KINGDOM_NAME = k_day }
+	## restore_demoted_borders = { KINGDOM_NAME = k_agadendon }
+	restore_demoted_borders = { DEMOTED_EMPIRE = e_opakhasia KINGDOM_NAME = k_morn }
+	# restore_demoted_borders = { DEMOTED_EMPIRE = e_opakhasia KINGDOM_NAME = k_opakoutercrescent }
+}
+
+restore_traditional_aversarian_borders_aironoi = {
+	restore_traditional_borders = { KINGDOM_NAME = k_hyrea }
+	# restore_traditional_borders = { KINGDOM_NAME = k_bourillai }
+	restore_traditional_borders = { KINGDOM_NAME = k_kalliados }
+	restore_traditional_borders = { KINGDOM_NAME = k_kteumaxa }
+	restore_traditional_borders = { KINGDOM_NAME = k_arderwan }
+	restore_traditional_borders = { KINGDOM_NAME = k_muthathk }
+	restore_traditional_borders =  { KINGDOM_NAME = k_imrezstav }
+	restore_traditional_borders =  { KINGDOM_NAME = k_svatavego }
+	restore_traditional_borders =  { KINGDOM_NAME = k_coluehis }
+	restore_traditional_borders =  { KINGDOM_NAME = k_svanti }
+	restore_traditional_borders =  { KINGDOM_NAME = k_krehejad }
+	restore_traditional_borders =  { KINGDOM_NAME = k_dethskel }
+	restore_traditional_borders =  { KINGDOM_NAME = k_ijardigarrn }
+	restore_traditional_borders =  { KINGDOM_NAME = k_chvor }
+	restore_traditional_borders =  { KINGDOM_NAME = k_anthygal }
+	restore_traditional_borders =  { KINGDOM_NAME = k_dartar }
+	restore_traditional_borders =  { KINGDOM_NAME = k_arbaz }
+	# restore_traditional_borders =  { KINGDOM_NAME = k_kargavi }
+	restore_traditional_borders =  { KINGDOM_NAME = k_taykovi }
+
+}
+
+restore_traditional_aversarian_borders_gurdurbok = {
+	restore_traditional_borders = { KINGDOM_NAME = k_vyshtanka }
+	restore_traditional_borders = { KINGDOM_NAME = k_niidinia }
+}
+
+reunite_the_empire_decision_effects = {
+	add_prestige = 8000
+	add_piety = 4000
+	if = {
+		limit = {
+			faith = { has_doctrine = tenet_the_long_war }
+		}
+		add_trait = gh_axiaothea_reborn
+		gh_achiev_aneventrueraautokratia_check = yes
+	}
+	if = {
+		limit = { has_dlc_feature = legends }
+		create_legend_seed = {
+			type = legitimizing
+			quality = illustrious
+			chronicle = new_title
+			properties = {
+				title = title:e_aversarinas_aautokrata
+				founder = root
+			}
+		}
+	}
+
+	custom_tooltip = create_new_empire
+	# TODO: improve custom loc here
+
+	hidden_effect = {
+		get_title = title:e_aversarinas_aautokrata
+		set_primary_title_to = title:e_aversarinas_aautokrata
+		
+		if = {
+			limit = { 
+				title:e_asiupoli_aautokrata = {  
+					any_in_de_jure_hierarchy = {
+						exists = this
+					}
+				}
+			}
+			title:e_asiupoli_aautokrata = {  
+				every_in_de_jure_hierarchy = {
+					limit = { tier = tier_kingdom }
+					set_de_jure_liege_title = title:e_aversarinas_aautokrata
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = title:e_asiupoli_aautokrata.holder
+				title:e_asiupoli_aautokrata.holder = this
+			}
+			destroy_title = title:e_asiupoli_aautokrata
+		}
+		if = {
+			limit = { 
+				title:e_oraispol_aautokrata = {  
+					any_in_de_jure_hierarchy = {
+						exists = this
+					}
+				} 
+			}
+			title:e_oraispol_aautokrata = {  
+				every_in_de_jure_hierarchy = {
+					limit = { tier = tier_kingdom }
+					set_de_jure_liege_title = title:e_aversarinas_aautokrata
+				}
+			}
+		}
+		if = {
+			limit = { 
+				exists = title:e_oraispol_aautokrata.holder
+				title:e_oraispol_aautokrata.holder = this
+			}
+			destroy_title = title:e_oraispol_aautokrata
+		}
+		title:e_aversarinas_aautokrata = {
+			set_capital_county = title:c_oraispol
+		}
+		every_held_title = {
+			limit = {
+				tier = tier_empire
+				NOT = { this = title:e_aversarinas_aautokrata }
+			}
+			demote_empire_to_kingdom_effect = { NEW_EMPIRE_LIEGE_TITLE = title:e_aversarinas_aautokrata }
+		}
+	}
+}
+
+reunite_the_empire_decision_effects_all_titles = { # this is called above and also in the decision that catches the missing bits
+	save_scope_as = founder
+
+	reunite_the_empire_decision_effects_per_title = {
+		TITLENAME = etepezea
+		CAPITAL = c_oraispol
+		EMPIRENAME = $EMPIRENAME$
+	}
+	reunite_the_empire_decision_effects_per_title = {
+		TITLENAME = malcois
+		CAPITAL = c_lapithymna
+		EMPIRENAME = $EMPIRENAME$
+	}
+	reunite_the_empire_decision_effects_per_title = {
+		TITLENAME = aironoi
+		CAPITAL = c_asiupoli
+		EMPIRENAME = $EMPIRENAME$
+	}
+	reunite_the_empire_decision_effects_per_title = {
+		TITLENAME = opakhasia
+		CAPITAL = c_last_light
+		EMPIRENAME = $EMPIRENAME$
+	}
+	reunite_the_empire_decision_effects_per_title = {
+		TITLENAME = megos_kalathipsomi
+		CAPITAL = c_kankaanviisa
+		EMPIRENAME = $EMPIRENAME$
+	}
+	reunite_the_empire_decision_effects_per_title = {
+		TITLENAME = mikros_kalathipsomi
+		CAPITAL = c_giants_ford
+		EMPIRENAME = $EMPIRENAME$
+	}
+}
+
+reunite_the_empire_decision_effects_per_title = {
+	# uses TITLENAME and CAPITAL
+	title:e_$TITLENAME$ = {	
+		save_temporary_scope_as = my_empire_title
+	}
+	title:k_$TITLENAME$ = {
+		save_temporary_scope_as = my_kingdom_title
+	}
+	if = {
+		limit = {
+			trigger_if = {
+				limit = { scope:my_empire_title = { any_in_de_jure_hierarchy = { tier = tier_county }}}
+				has_title = scope:my_empire_title
+				#completely_controls = scope:my_empire_title
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+
+		get_title = scope:my_kingdom_title
+		title:k_$TITLENAME$ = {
+			set_capital_county = title:$CAPITAL$
+			copy_title_history = scope:my_empire_title
+			set_de_jure_liege_title = title:e_$EMPIRENAME$
+			save_temporary_scope_as = new_kingdom
+		}
+
+		title:e_$TITLENAME$ = {
+			every_claimant = { # transferring claims
+				if = {
+					limit = {
+						has_claim_on = scope:my_empire_title
+					}
+					add_pressed_claim = scope:my_kingdom_title
+				}
+				remove_claim = scope:my_empire_title
+			}
+
+			every_in_de_jure_hierarchy = { # give those who lose their titles a claim on the kingdom
+				continue = {
+					tier > tier_kingdom
+				}
+				limit = {
+					tier = tier_kingdom
+				}
+
+				save_scope_as = kingdom_being_removed
+
+				if = {
+					limit = {
+						is_title_created = yes # someone owns it
+						any_in_de_jure_hierarchy = { tier = tier_county } # it's not titular
+						NOT = { holder = scope:founder }
+					}
+					holder = {
+						add_pressed_claim = scope:my_kingdom_title # this will do nothing if they already have a claim
+
+						trigger_event = {
+							id = aversaria.0003
+							days = 2
+						}
+
+						if = { # storing what the claims are added to
+							limit = {
+								NOT = {
+									is_target_in_variable_list = {
+										name = titles_claim_gained_on
+										target = scope:new_kingdom
+									}
+								}
+							}
+
+							add_to_variable_list = {
+								name = titles_claim_gained_on
+								target = scope:new_kingdom
+							}
+						}
+
+						add_character_flag = { # so the event isn't received more than once
+							flag = has_lost_land_in_aversarian_reorganisation
+							days = 7
+						}
+					}
+				}
+
+				# give those with pressed claims on the old titles unpressed claims on the new ones
+				every_claimant = {
+					limit = { has_claim_on = scope:kingdom_being_removed }
+					add_unpressed_claim = scope:my_kingdom_title
+				}
+
+				scope:founder = {
+					destroy_title = scope:kingdom_being_removed
+				}
+			}
+
+
+			every_in_de_jure_hierarchy = { # set the duchies to go under their new kingdom
+				continue = {
+					tier > tier_duchy
+				}
+				limit = {
+					tier = tier_duchy
+				}
+
+				set_de_jure_liege_title = scope:my_kingdom_title
+			}
+		}
+		scope:founder = {
+			destroy_title = scope:my_empire_title
+		}
+	}
+}
+
+#SUCCESSION
+set_succession_law_gh = {
+	# uses TRIGGER, TT and LAW
+
+	if = {
+		limit = { highest_held_title_tier = tier_empire }
+		every_held_title = {
+			limit = {
+				tier = tier_empire
+				NOR = {
+					has_title_law_flag = advanced_succession_law
+					has_title_law_flag = elective_succession_law
+				}
+			}
+			add_title_law = $LAW$
+		}
+		every_vassal = {
+			limit = { $TRIGGER$ = yes }
+			add_opinion = {
+				modifier = implemented_traditional_succession_law_opinion
+				years = 20
+				target = root
+			}
+			custom = major_decisions.3100.$TT$
+		}
+	}
+	else = {
+		every_held_title = {
+			limit = {
+				tier = tier_kingdom
+				NOR = {
+					has_title_law_flag = advanced_succession_law
+					has_title_law_flag = elective_succession_law
+				}
+			}
+			add_title_law = $LAW$
+		}
+		every_vassal = {
+			limit = { $TRIGGER$ = yes }
+			add_opinion = {
+				modifier = implemented_traditional_succession_law_opinion
+				years = 20
+				target = root
+			}
+			custom = major_decisions.3100.$TT$
+		}
+	}
+}
+
+
+#} # I do not know why this is here; it doesn't work without it
+
+#} # iyrossi empire creation effect
+
+create_iyrossi_empire_scripted_effect = {
+	add_trait = gh_iyrossi_uniter
+	give_nickname = nick_motherfather_of_iyrossi
+	#Create Iyrossi Empire, shift dejure/history/laws,
+	hidden_effect = {
+		every_held_title = { #Should shift all dejure of all Empires owned at the time.
+			limit = {
+				tier = tier_empire
+			}
+			every_in_de_jure_hierarchy = {
+				limit = {
+					tier = tier_kingdom
+				}
+				set_de_jure_liege_title = title:e_iyrossi
+				
+			}
+		}
+	}
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_iyrossi = {
+		change_title_holder = {
+			holder = root
+			change = scope:change
+		}	
+	}
+	resolve_title_and_vassal_change = scope:change
+	hidden_effect = { set_primary_title_to = title:e_iyrossi }
+	every_held_title = { #Should destroy all other Empires owned at the time.
+		limit = {
+			tier = tier_empire
+			NOT = { this = title:e_iyrossi }
+		}
+		root = { destroy_title = prev }
+	}
+	if = { #Automatically move capital to Myrespiae.
+		limit = {
+			NOT = { capital_county = { this = title:c_myrespiae } }
+			exists = title:e_iyrossi.holder
+		}
+		hidden_effect = {
+			if = { #Usurp if not held personally.
+				limit = {
+					NOT = { title:c_myrespiae.holder = { this = root } }
+				}
+				create_title_and_vassal_change = {
+					type = returned
+					save_scope_as = change
+					add_claim_on_loss = no
+				}
+				title:c_myrespiae = {
+					change_title_holder = {
+						holder = root
+						change = scope:change
+					}
+				}
+				resolve_title_and_vassal_change = scope:change
+			}
+		}
+	}
+	every_held_title = {
+			limit = {
+				tier = tier_kingdom
+			}
+			if = {
+				limit = {
+					#Check if you need to notify a player
+					exists = empire
+					empire = {
+						exists = holder
+						holder = {
+							NOT = { this = root }
+							is_ai = no
+						}
+					}
+				}
+				add_to_temporary_list = kingdoms_for_notification
+				root = {
+					save_temporary_scope_value_as = {
+						name = send_notifications
+						value = yes
+					}
+				}
+			}
+			set_de_jure_liege_title = title:e_iyrossi
+		}
+	every_sub_realm_county = {
+			limit = {
+				exists = kingdom
+				NOT = { exists = kingdom.holder }
+				holder.top_liege = root
+				kingdom = {
+					save_temporary_scope_as = test_kingdom
+				}
+				holder.top_liege = {
+					completely_controls = title:e_iyrossi
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						kingdom = {
+							is_in_list = additional_de_jure_kingdoms
+						}
+					}
+				}
+				kingdom = {
+					set_de_jure_liege_title = title:e_iyrossi
+					add_to_list = additional_de_jure_kingdoms
+				}
+			}
+		}
+	
+}
+
+
+reunite_boqqarut_decision_effects = {
+	if = { #Automatically move capital to Zahali.
+		limit = {
+			NOT = { capital_county = { this = title:c_zahali } }
+			exists = title:e_damota.holder
+		}
+		hidden_effect = {
+			if = { #Usurp if not held personally.
+				limit = {
+					NOT = { title:c_zahali.holder = { this = root } }
+				}
+				create_title_and_vassal_change = {
+					type = returned
+					save_scope_as = change
+					add_claim_on_loss = no
+				}
+				title:c_zahali = {
+					change_title_holder = {
+						holder = root
+						change = scope:change
+					}
+				}
+				resolve_title_and_vassal_change = scope:change
+			}
+		}
+	}
+}
+
+avenge_ayule_expedition_decision_effects = {
+	title:d_taliwahin = { set_de_jure_liege_title = title:k_ayularawe }
+	title:d_dedezkale = { set_de_jure_liege_title = title:k_ayularawe }
+	title:d_valley_of_the_djinn_kings = { set_de_jure_liege_title = title:k_ayularawe }
+}
+
+hubarite_empire_decision_effects = {
+	title:k_tifrennesh = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+	
+	title:k_emporia = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+	
+	title:k_mukhtab = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+	
+	title:k_thaliteia = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+
+	title:k_sorros_mar = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+	
+	title:k_palitake = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+
+	title:k_southeastern_isles = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+
+	title:k_southwestern_isles = {
+		if = {
+			limit = { is_in_list = hubarite_empire_kingdoms }
+			set_de_jure_liege_title = title:e_shanisa_hubarin
+		}
+	}
+		
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_shanisa_hubarin = {
+		change_title_holder = {
+			holder = root
+			change = scope:change
+		}	
+	}
+	resolve_title_and_vassal_change = scope:change
+	hidden_effect = { set_primary_title_to = title:e_shanisa_hubarin }
+	every_held_title = { #Should destroy all other Empires owned at the time.
+		limit = {
+			tier = tier_empire
+			NOT = { this = title:e_shanisa_hubarin }
+		}
+		root = { destroy_title = prev }
+	}
+}
+
+revive_ertomax_kingdom_decision_effects = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:k_aryvann_vos = {
+		change_title_holder = {
+			holder = scope:ertomax_restorer
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+
+	title:d_murdetaal = { set_de_jure_liege_title = title:k_aryvann_vos }
+	title:d_karcord = { set_de_jure_liege_title = title:k_aryvann_vos }
+	title:d_hutstearv = { set_de_jure_liege_title = title:k_aryvann_vos }
+	title:d_serbar = { set_de_jure_liege_title = title:k_aryvann_vos }
+}
+
+kingdom_of_the_clouds_decision_effect = {
+	save_scope_as = founder
+	primary_title = {
+		if = {
+			limit = { tier = tier_kingdom }
+			save_scope_as = old_kingdom
+		}
+	}
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:k_samazonas = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+	custom_tooltip = {
+		text = kingdom_of_the_clouds_decision_effect_duchy_tooltip
+		set_primary_title_to = title:k_samazonas
+		root.capital_county.empire ?= { title:k_samazonas = { set_de_jure_liege_title = prev } }
+		scope:old_kingdom ?= { # Add all duchy titles of the old kingdom to the dejure
+			every_in_de_jure_hierarchy = {
+				limit = { tier = tier_duchy }
+				set_de_jure_liege_title = title:k_samazonas
+			}
+			prev = { destroy_title = prev }
+		}
+		every_held_title = { # Add all duchy titles we hold to the dejure
+			limit = {
+				tier = tier_duchy
+				NOT = { kingdom = title:k_samazonas }
+				is_titular = no
+			}
+			set_de_jure_liege_title = title:k_samazonas
+		}
+		every_realm_de_jure_duchy = { # Add all duchy titles we completely control to the dejure
+			limit = {
+				NOR = {
+					kingdom = title:k_samazonas
+					any_in_de_jure_hierarchy = {
+						tier = tier_county
+						NOT = { holder.top_liege = root }
+					}
+				}
+			}
+			set_de_jure_liege_title = title:k_samazonas
+		}
+		title:k_samazonas = { set_capital_county = root.capital_county }
+	}
+	capital_county = {
+		change_development_level = 10
+		set_county_culture = root.culture
+		set_county_faith = root.faith
+	}
+	dynasty = { add_dynasty_prestige = monumental_dynasty_prestige_gain }
+	if = {
+		limit = { has_character_modifier = boczoj_modifier }
+		remove_character_modifier = boczoj_modifier
+	}
+	if = {
+		limit = { has_character_modifier = last_stand_of_the_clans_modifier }
+		remove_character_modifier = last_stand_of_the_clans_modifier
+	}
+	house = {
+		add_house_modifier = {
+			modifier = daughters_of_the_sky_modifier
+			years = 100
+		}
+	}
+}
+
+decide_the_fate_of_the_sarminians_decision_effect = {
+	save_scope_as = reformer
+	culture = {
+		switch = {
+			trigger = yes
+			scope:sarminians_tradition = {
+				custom_tooltip = decide_the_fate_of_the_sarminians_tradition_tradition_tooltip
+				scope:reformer = {
+					dynasty = { add_dynasty_prestige = massive_dynasty_prestige_gain }
+					custom_tooltip = {
+						text = decide_the_fate_of_the_sarminians_tradition_vassal_tooltip
+						every_vassal = {
+							limit = { has_vassal_stance = belligerent }
+							add_opinion = {
+								target = scope:reformer
+								modifier = pleased_opinion
+								opinion = 30
+							}
+						}
+					}
+				}
+				add_to_global_variable_list = {
+					name = culture_retained_steppe_queens_tradition
+					target = this
+				}
+			}
+			scope:sarminians_domination = {
+				remove_culture_tradition = tradition_steppe_queens
+				add_culture_tradition = tradition_sisters_of_iron
+				if = {
+					limit = { NOT = { has_innovation = innovation_sunstriders } }
+					add_innovation = innovation_sunstriders
+				}
+				scope:reformer = {
+					custom_tooltip = {
+						text = decide_the_fate_of_the_sarminians_domination_county_tooltip
+						every_sub_realm_county = {
+							if = {
+								limit = { culture = scope:reformer.culture }
+								add_county_modifier = {
+									modifier = domineering_culture_modifier
+									years = 25
+								}
+							}
+							else = {
+								add_county_modifier = {
+									modifier = harsh_subjugation_modifier
+									years = 25
+								}
+							}
+						}
+					}
+					custom_tooltip = decide_the_fate_of_the_sarminians_domination_county_tooltip_2
+				}
+				add_to_global_variable_list = {
+					name = culture_adopted_sisters_of_iron_tradition
+					target = this
+				}
+			}
+			scope:sarminians_glory = {
+				remove_culture_tradition = tradition_steppe_queens
+				add_culture_tradition = tradition_mercenary_queens
+				scope:reformer = {
+					custom_tooltip = {
+						text = decide_the_fate_of_the_sarminians_mercenary_county_tooltip
+						every_sub_realm_county = {
+							limit = { culture = scope:reformer.culture }
+							add_county_modifier = {
+								modifier = adventurous_culture_modifier
+								years = 25
+							}
+						}
+					}
+					custom_tooltip = {
+						text = decide_the_fate_of_the_sarminians_mercenary_vassal_tooltip
+						every_vassal = {
+							limit = { has_vassal_stance = glory_hound }
+							add_opinion = {
+								target = scope:reformer
+								modifier = pleased_opinion
+								opinion = 30
+							}
+						}
+					}
+				}
+				add_to_global_variable_list = {
+					name = culture_adopted_mercenary_queens_tradition
+					target = this
+				}
+			}
+			scope:sarminians_justice = {
+				remove_culture_tradition = tradition_steppe_queens
+				add_culture_tradition = tradition_braided_oaths
+				scope:reformer = {
+					custom_tooltip = {
+						text = decide_the_fate_of_the_sarminians_justice_county_tooltip
+						every_sub_realm_county = {
+							if = {
+								limit = {
+									culture = {
+										NOR = {
+											this = scope:reformer.culture
+											is_in_list = sarminians_justice_cultures
+										}
+									}
+								}
+								culture = { add_to_list = sarminians_justice_cultures }
+							}
+							else = {
+								add_county_modifier = {	
+									modifier = lasting_unity_modifier
+									years = 25
+								}
+							}
+						}
+					}
+				}
+				custom_tooltip = {
+					text = decide_the_fate_of_the_sarminians_justice_culture_tooltip
+					every_in_list = {
+						list = sarminians_justice_cultures
+						change_cultural_acceptance = {
+							target = scope:reformer.culture
+							value = 20
+							desc = decide_the_fate_of_the_sarminians_justice_acceptance_tooltip
+						}
+					}
+				}
+				add_to_global_variable_list = {
+					name = culture_adopted_braided_oaths_tradition
+					target = this
+				}
+			}
+		}
+	}
+}
+
+form_taryaad_saramsaasan_effect = {
+	hidden_effect = {
+		every_held_title = { #Should shift all dejure of all Empires owned at the time.
+			limit = {
+				tier = tier_empire
+			}
+			every_in_de_jure_hierarchy = {
+				limit = {
+					tier = tier_kingdom
+				}
+				set_de_jure_liege_title = title:e_taryaad_saramsaasan
+				
+			}
+		}
+	}
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:e_taryaad_saramsaasan = {
+		change_title_holder = {
+			holder = root
+			change = scope:change
+		}	
+	}
+	resolve_title_and_vassal_change = scope:change
+	hidden_effect = { set_primary_title_to = title:e_taryaad_saramsaasan }
+	every_held_title = { #Should destroy all other Empires owned at the time.
+		limit = {
+			tier = tier_empire
+			NOT = { this = title:e_taryaad_saramsaasan }
+		}
+		root = { destroy_title = prev }
+	}
+	if = { #Automatically move capital to Patas.
+		limit = {
+			NOT = { capital_county = { this = title:c_southkashirya_isles_1 } }
+			exists = title:e_taryaad_saramsaasan.holder
+		}
+		hidden_effect = {
+			if = { #Usurp if not held personally.
+				limit = {
+					NOT = { title:c_southkashirya_isles_1.holder = { this = root } }
+				}
+				create_title_and_vassal_change = {
+					type = returned
+					save_scope_as = change
+					add_claim_on_loss = no
+				}
+				title:c_southkashirya_isles_1 = {
+					change_title_holder = {
+						holder = root
+						change = scope:change
+					}
+				}
+				resolve_title_and_vassal_change = scope:change
+			}
+		}
+	}
+}
+
+form_stellios_aautokrata_scripted_effect = { 
+	title:d_detharax = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+	title:d_chacos = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+	title:d_theslaxxos = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+	title:d_voraxos = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+	title:d_asthaeradae = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+	#title:d_detherax = {
+	#	set_de_jure_liege_title = title:k_kyvernis_leidokos
+	#}
+	title:d_avirios = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+	title:d_vonatolos = {
+		set_de_jure_liege_title = title:k_kyvernis_vonatos
+	}
+	title:d_vatos = {
+		set_de_jure_liege_title = title:k_kyvernis_vonatos
+	}
+	title:d_chacos = {
+		set_de_jure_liege_title = title:k_kyvernis_leidokos
+	}
+}
+
+death_by_blackhorn_effect = {
+	death = {
+		death_reason = death_blackhorn
+	}
+}
+
+blackhorn_troops_effect = {
+	spawn_army = {
+		name = "BLACKHORN_HOST"
+		location = capital_province
+		men_at_arms = {
+			type = spirits_of_the_horn
+			stacks = 100
+		}
+		inheritable = no
+		uses_supply = no
+	}
+}
+
+#GH TODO mix into falconry
+#train_falcon_duel_success_effect = {
+#	add_prestige = minor_prestige_gain
+#	if = {
+#		limit = {
+#			var:falcons_trained >= 2
+#		}
+#		if = {
+#			limit = {
+#				NOT = {
+#					has_trait = gh_falconer
+#				}
+#			}
+#			add_trait = gh_falconer
+#		}
+#	}
+#	else = {
+#		custom_tooltip = falconer_trait_progress_tt
+#	}
+#	if = {
+#		limit = { NOT = { exists = var:falcons_trained } }
+#		set_variable = {
+#			name = falcons_trained
+#			value = 1
+#		}
+#	}
+#	else = {
+#		change_variable = {
+#			name = falcons_trained
+#			add = 1
+#		}
+#	}
+#	if = {
+#		limit = { NOT = { has_character_modifier = peregrine_falcon } }
+#		add_character_modifier = {
+#			modifier = peregrine_falcon
+#			years = 5
+#		}
+#	}
+#}
+#
+#train_falcon_duel_failure_effect = {
+#	add_prestige = minor_prestige_loss
+#	change_variable = {
+#		name = falcons_attempted
+#		add = 1
+#	}
+#}
+#
+#train_falcon_duel_effect = {
+#	duel = {
+#		skill = diplomacy
+#		value = decent_skill_rating
+#		50 = {
+#			desc = falconer.0001.a.tt_success
+#			compare_modifier = {
+#				value = scope:duel_value
+#				multiplier = 3.5
+#				min = -49
+#			}
+#			modifier = {
+#				add = {
+#					value = var:falcons_trained
+#					multiply = 10
+#				}
+#			}
+#			modifier = {
+#				add = {
+#					value = var:falcons_attempted
+#					multiply = 5
+#				}
+#			}				
+#			modifier = {
+#				has_trait = hunter_1
+#				add = 2
+#			}
+#			
+#			modifier = {
+#				culture = {
+#					has_cultural_parameter = easier_to_train_falcons
+#				}
+#				add = 15
+#			}
+#			modifier = {
+#				has_trait = gh_falconer
+#				add = 30
+#			}
+#			show_as_tooltip = {
+#				train_falcon_duel_success_effect = yes
+#			}
+#			trigger_event = {
+#				id = falconer.0002
+#				days = 93
+#			}
+#		}
+#		50 = {
+#			desc = falconer.0001.a.tt_failure
+#			modifier = {
+#				has_trait = lazy
+#				add = 5
+#			}
+#			modifier = {
+#				has_trait = craven
+#				add = 5
+#			}
+#			show_as_tooltip = {
+#				train_falcon_duel_failure_effect = yes
+#			}
+#			trigger_event = {
+#				id = falconer.0003
+#				days = 26
+#			}
+#		}
+#	}
+#	custom_tooltip = falconer_future_attempts_easier_tt
+#}
+
+unite_the_eastern_coast_decision_effects = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:e_night_coast = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+	add_prestige = major_prestige_gain
+	set_primary_title_to = title:e_night_coast
+	if = {
+		limit = {
+			NOT = { title:k_peytrelle.holder = ROOT }
+			exists = title:k_peytrelle.holder
+		}
+		title:k_peytrelle.holder = {
+			add_opinion = {
+				modifier= usurped_title
+				target = ROOT
+			}
+		}
+		destroy_title = title:k_peytrelle
+	}
+	if = {
+		limit = {
+			NOT = { title:k_velliqalinka.holder = ROOT }
+			exists = title:k_velliqalinka.holder
+		}
+		title:k_velliqalinka.holder = {
+			add_opinion = {
+				modifier = usurped_title
+				target = ROOT
+			}
+		}
+		destroy_title = title:k_velliqalinka
+	}
+	title:k_peytrelle = { set_de_jure_liege_title = title:e_night_coast }
+	title:k_velliqalinka = { set_de_jure_liege_title = title:e_night_coast }
+
+	if = {
+		limit = { completely_controls = title:k_sheytara }
+		title:k_sheytara = { set_de_jure_liege_title = title:e_night_coast }
+	}
+	if = {
+		limit = { completely_controls = title:k_wellatola }
+		title:k_wellatola = { set_de_jure_liege_title = title:e_night_coast }
+	}
+	if = {
+		limit = { completely_controls = title:k_ufaliracci }
+		title:k_ufaliracci = { set_de_jure_liege_title = title:e_night_coast }
+	}
+}
+
+take_control_of_spice_trade_effect = {
+	house = {
+		add_house_modifier = {
+			modifier = controls_the_spice_trade_house_modifier
+			years = 100
+		}
+	}
+	dynasty = { add_dynasty_prestige = major_prestige_gain }
+
+	if = {
+		limit = {
+			highest_held_title_tier < tier_kingdom
+			GH_is_any_republic_government_trigger = yes
+		}
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = title_change
+			add_claim_on_loss = no
+		}
+		title:k_spice_cities = {
+			change_title_holder = {
+				holder = root
+				change = scope:title_change
+			}
+		}
+		resolve_title_and_vassal_change = scope:title_change
+		hidden_effect = { set_primary_title_to = title:k_spice_cities }
+	}
+
+	every_realm_province = {
+		if = {
+			limit = {
+				has_building_or_higher = 01_mdala_hasira
+			}
+			add_province_modifier = {
+				modifier = flourishing_pirate_coast_trade_modifier
+				years = 100
+			}
+		}
+	}
+}
+
+reform_ufaliracci_decision_effect = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:k_ufaliracci = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+	title:d_trinapaawa = { add_to_list = kingdom_ufaliracci_absorb_list }
+	if = {
+		limit = { NOT = { exists = scope:has_kingdom_ufaliracci_absorb_list_been_created } }
+		ordered_held_title = {
+			limit = {
+				tier = tier_duchy
+				is_titular = no
+				NOT = { this = title:d_trinapaawa }
+				root = { completely_controls = prev }
+				any_title_to_title_neighboring_and_across_water_duchy = { this = title:d_trinapaawa }
+				de_jure_liege = {
+					any_in_de_jure_hierarchy = {
+						count > 2
+						tier = tier_duchy
+					}
+				}
+			}
+			order_by = {
+				value = 0
+				every_de_jure_county = {
+					limit = { any_neighboring_county = { de_jure_liege = title:d_trinapaawa } }
+					add = 1
+				}
+			}
+			add_to_list = kingdom_ufaliracci_absorb_list
+		}
+	}
+	every_in_list = {
+		list = kingdom_ufaliracci_absorb_list
+		if = {
+			limit = {
+				exists = de_jure_liege.holder
+				NOT = { de_jure_liege.holder = root }
+			}
+			de_jure_liege.holder = { add_to_list = kingdom_ufaliracci_opinion_list }
+		}
+		set_de_jure_liege_title = title:k_ufaliracci
+	}
+	hidden_effect = { title:k_ufaliracci = { set_de_jure_liege_title = title:e_rovarksa } }
+	every_in_list = {
+		list = kingdom_ufaliracci_opinion_list
+		limit = { is_ai = yes }
+		add_opinion = {
+			target = root
+			modifier = absorbed_de_jure_opinion
+		}
+	}
+	add_prestige = massive_prestige_gain
+	add_character_modifier = {
+		modifier = reformed_ufaliracci_modifier
+		years = 25
+	}
+}
+
+# Otached Restored Decision effect
+otachedian_restoration_decision_effects = {
+	give_nickname = nick_lord_of_the_kasir
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:e_otached_empire = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+		save_scope_as = title_e_otached_empire
+	}
+	resolve_title_and_vassal_change = scope:title_change
+
+	set_primary_title_to = title:e_otached_empire
+	title:e_otached_empire = { save_scope_as = otached_empire }
+
+	every_held_title = {
+		limit = {
+			tier = tier_empire
+			NOT = { this = title:e_otached_empire }
+		}
+		root = { destroy_title = prev }
+	}
+	# add all dejure kingdoms that MUST be changed
+	title:k_taleshtadendar = { add_to_list = otached_kingdoms }
+	title:k_kasharya = { add_to_list = otached_kingdoms }
+	title:k_magiyor = { add_to_list = otached_kingdoms }
+	title:k_kafasali = { add_to_list = otached_kingdoms }
+	title:k_adlurbad = { add_to_list = otached_kingdoms }
+	title:k_sheytara = { add_to_list = otached_kingdoms }
+	title:k_kinilam = { add_to_list = otached_kingdoms }
+	title:k_kebnachi = { add_to_list = otached_kingdoms }
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+			de_jure_liege = title:e_aironoi
+		}
+		add_to_list = otached_kingdoms
+	}
+	if = {
+		limit = { completely_controls = title:k_wellatola }
+		title:k_wellatola = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_peytrelle }
+		title:k_peytrelle = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_akkescha }
+		title:k_akkescha = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_velliqalinka }
+		title:k_velliqalinka = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_anthygal }
+		title:k_anthygal = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_dartar }
+		title:k_dartar = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_arbaz }
+		title:k_arbaz = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_taykovi }
+		title:k_taykovi = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_chvor }
+		title:k_chvor = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_imrezstav }
+		title:k_imrezstav = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_kteumaxa }
+		title:k_kteumaxa = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_arderwan }
+		title:k_arderwan = { add_to_list = otached_kingdoms }
+	}
+	if = {
+		limit = { completely_controls = title:k_kalliados }
+		title:k_kalliados = { add_to_list = otached_kingdoms }
+	}
+	#PC Titles
+	title:e_otached_empire = { custom_tooltip = otached_restoration_decision_titles_tt }
+
+	if = {
+		limit = { has_dlc_feature = legends }
+		create_legend_seed = {
+			type = legitimizing
+			quality = illustrious
+			chronicle = new_title
+			properties = {
+				title = title:e_otached_empire
+				founder = root
+			}
+		}
+	}
+
+	hidden_effect = {
+		every_in_list = {
+			list = otached_kingdoms
+
+			set_de_jure_liege_title = scope:otached_reborn.primary_title
+		}
+	}
+	custom_tooltip = otachedian_restoration_troops_effect_tt
+	hidden_effect = {
+		spawn_army = {
+			name = otacheds_riders
+			men_at_arms = {
+				type = oltenic_horse_archers
+				stacks = 10
+			}
+			men_at_arms = {
+				type = oltenic_spearmen
+				stacks = 10
+			}
+			location = this.capital_province
+			uses_supply = yes
+			inheritable = yes
+		}
+	}
+
+	add_prestige = 5000
+	dynasty = {
+		add_dynasty_modifier = { modifier = otached_reborn_modifier }
+		custom_tooltip = otachedian_restoration_modifier_vassalization_effect_tt
+		add_dynasty_prestige = 5000
+	}
+}
+
+declare_rivarisian_kingdom_decision_effects = {
+	#Create the title and set proper de jure
+	title:c_derentiede = {
+		save_scope_as = c_derentiede
+		set_de_jure_liege_title = title:d_grascoi
+	}
+	title:d_vallguedoc = {
+		save_scope_as = d_vallguedoc
+		set_de_jure_liege_title = title:k_riverlands
+	}
+	title:d_grascoi = {
+		save_scope_as = d_grascoi
+		set_de_jure_liege_title = title:k_riverlands
+	}
+	title:d_cavrine = {
+		save_scope_as = d_cavrine
+		set_de_jure_liege_title = title:k_riverlands
+	}
+	title:k_riverlands = {
+		save_scope_as = title_k_riverlands
+	}
+
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:k_riverlands = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+		save_scope_as = title_k_riverlands
+	}
+	resolve_title_and_vassal_change = scope:title_change
+
+	if = {
+		limit = {
+			NOR = {
+				primary_title = { this = title:k_riverlands }
+				highest_held_title_tier = tier_empire
+			}
+		}
+		set_primary_title_to = title:k_riverlands
+	}
+
+	#Prestige
+	add_prestige = massive_prestige_gain	
+}
+
+gh_restore_bronzeport_bureaucracy_decision_effect = {
+	
+	if = {
+		limit = {
+			NOT = { has_dlc_feature = roads_to_power }
+		}
+		change_government = republic_playable_government 
+		every_held_title = {
+			limit = { can_title_have_clique_law_trigger = yes }
+			add_title_law = clique_republic_elective_title_succession_law
+		}
+	}
+	else = {
+		change_government = administrative_republic_playable_government
+	}
+
+	#Prestige
+	add_prestige = massive_prestige_gain
+	
+	add_character_modifier = {
+		modifier = bronzeport_restorer_modifier
+		years = 10
+	}
+
+	every_realm_province = {
+		if = {
+			limit = {
+				has_building_or_higher = common_tradeport_01
+			}
+			add_province_modifier = {
+				modifier = restored_bronzeport_modifier
+				years = 10
+			}
+		}
+	}
+}
+
+establish_southsea_protectorate_decision_effects = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:e_protectorate_of_the_southsea = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+	add_prestige = major_prestige_gain
+	set_primary_title_to = title:e_protectorate_of_the_southsea
+	if = {
+		limit = {
+			NOT = { title:k_peytrelle.holder = ROOT }
+			exists = title:k_peytrelle.holder
+		}
+		title:k_peytrelle.holder = {
+			add_opinion = {
+				modifier= usurped_title
+				target = ROOT
+			}
+		}
+		destroy_title = title:k_peytrelle
+	}
+	if = {
+		limit = {
+			NOT = { title:k_bowerenclosure.holder = ROOT }
+			exists = title:k_bowerenclosure.holder
+		}
+		title:k_bowerenclosure.holder = {
+			add_opinion = {
+				modifier = usurped_title
+				target = ROOT
+			}
+		}
+		destroy_title = title:k_bowerenclosure
+	}
+	if = {
+		limit = {
+			NOT = { title:k_angryravine.holder = ROOT }
+			exists = title:k_angryravine.holder
+		}
+		title:k_angryravine.holder = {
+			add_opinion = {
+				modifier = usurped_title
+				target = ROOT
+			}
+		}
+		destroy_title = title:k_angryravine
+	}
+	title:k_peytrelle = { set_de_jure_liege_title = title:e_protectorate_of_the_southsea }
+	title:k_bowerenclosure = { set_de_jure_liege_title = title:e_protectorate_of_the_southsea }
+	title:k_angryravine = { set_de_jure_liege_title = title:e_protectorate_of_the_southsea }	
+
+	if = {
+		limit = { completely_controls = title:k_sheytara }
+		title:k_sheytara = { set_de_jure_liege_title = title:e_protectorate_of_the_southsea }
+	}
+	if = {
+		limit = { completely_controls = title:k_autumngate }
+		title:k_autumngate = { set_de_jure_liege_title = title:e_protectorate_of_the_southsea }
+	}
+	if = {
+		limit = { completely_controls = title:k_wellatola }
+		title:k_wellatola = { set_de_jure_liege_title = title:e_protectorate_of_the_southsea }
+	}
+}
+
+gh_kedari_magocracy_decision_effects = {
+	capital_county = {
+		change_development_level = 15
+		set_county_culture = root.culture
+		set_county_faith = root.faith
+		save_scope_as = character_capital
+	}
+
+	hidden_effect = {
+		save_scope_as = founder
+		primary_title = {
+			save_scope_as = old_title
+		}
+
+		get_title = title:k_shadowmark_concord
+		set_primary_title_to = title:k_shadowmark_concord
+		primary_title = {
+			save_scope_as = new_title
+		}
+
+		if = { # Get rid of a previous kingdom title
+			limit = { scope:old_title = { tier = tier_kingdom } }
+			destroy_title = scope:old_title
+		}
+
+		create_title_and_vassal_change = {
+			type = created
+			save_scope_as = change
+			add_claim_on_loss = no
+		}
+		scope:new_title = {
+			change_title_holder = {
+				holder = root
+				change = scope:change
+			}
+			set_capital_county = scope:character_capital
+		}
+		resolve_title_and_vassal_change = scope:change
+
+
+		#Check if all territory is from a single Empire, and if so, make Kingdom de jure of that Empire
+		every_sub_realm_county = {
+			if = {
+				limit = {
+					exists = empire
+				}
+				empire = {
+					if = {
+						limit = {
+							NOT = {
+								is_in_list = potential_empires
+							}
+						}
+						add_to_list = potential_empires
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					list = potential_empires
+					count > 0
+				}
+			}
+			ordered_in_list = {
+				list = potential_empires
+				order_by = {
+					every_in_de_jure_hierarchy = {
+						continue = {
+							tier > tier_county
+						}
+						limit = {
+							tier = tier_county
+							holder.top_liege = root
+						}
+						add = 1
+					}
+				}
+				position = 0
+				save_scope_as = old_empire
+			}
+		}
+		if = {
+			limit = {
+				exists = scope:old_empire
+			}
+			scope:new_title = {
+				set_de_jure_liege_title = scope:old_empire
+			}
+		}
+		every_held_title = {
+			limit = {
+				tier = tier_duchy
+			}
+			if = {
+				limit = {
+					#Check if you need to notify a player
+					OR = {
+						AND = {
+							exists = kingdom
+							kingdom = {
+								exists = holder
+								holder = {
+									NOT = { this = root }
+									is_ai = no
+								}
+							}
+						}
+						AND = {
+							exists = empire
+							empire = {
+								exists = holder
+								holder = {
+									NOT = { this = root }
+									is_ai = no
+								}
+							}
+						}
+					}
+				}
+				add_to_temporary_list = duchy_for_notification
+				root = {
+					save_temporary_scope_value_as = {
+						name = send_notifications
+						value = yes
+					}
+				}
+			}
+			set_de_jure_liege_title = scope:new_title
+		}
+		every_sub_realm_county = {
+			limit = {
+				exists = duchy
+				NOT = { exists = duchy.holder }
+				holder.top_liege = root
+				duchy = {
+					save_temporary_scope_as = test_duchy
+				}
+				holder.top_liege = {
+					completely_controls = scope:test_duchy
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						duchy = {
+							is_in_list = additional_de_jure_duchies
+						}
+					}
+				}
+				duchy = {
+					set_de_jure_liege_title = scope:new_title
+					add_to_list = additional_de_jure_duchies
+				}
+			}
+		}
+
+		if = { # Resolve capital change if old primary title is titular
+			limit = { scope:old_title = { is_titular = no } }
+			scope:new_title = { set_capital_county = scope:old_title.title_capital_county }
+		}
+		else = { scope:new_title = { set_capital_county = scope:character_capital } }
+		
+		every_player = {
+			if = {
+				limit = {
+					top_liege = scope:founder
+					NOT = { this = root }
+				}
+			}
+			else_if = {
+				limit = {
+					exists = scope:send_notifications
+					NOT = { this = root }
+					NOT = { top_liege = scope:founder }
+					any_held_title = {
+						any_in_de_jure_hierarchy = {
+							continue = {
+								tier > tier_duchy
+							}
+							tier = tier_duchy
+							is_in_list = duchy_for_notification
+						}
+					}
+				}
+				every_held_title = {
+					every_in_de_jure_hierarchy = {
+						continue = {
+							tier > tier_duchy
+						}
+						limit = {
+							tier = tier_duchy
+							is_in_list = duchy_for_notification
+						}
+						add_to_list = notification_titles	
+					}
+				}			
+				if = {
+					limit = {
+						any_in_list = {
+							list = notification_titles
+							count > 0
+						}
+					}
+				}
+			}
+		}
+	}
+	dynasty = { 
+		add_dynasty_prestige = 750
+	}
+	give_nickname = nick_inklord
+	hidden_effect = {
+		set_primary_title_to = title:k_shadowmark_concord
+	}
+}
+
+reclaim_naklans_legacy_decision_effects = {
+	if = {
+		limit = { has_dlc_feature = legends }
+		create_legend_seed = {
+			type = legitimizing
+			quality = illustrious
+			chronicle = ancestral_glory
+			properties = {
+				ancestor = character:banwagul_dahala_17
+				title = title:e_dahangon
+			}
+		}
+	}
+
+	dynasty = {
+		add_dynasty_prestige = 2500
+	}	
+
+	add_trait = gh_naklan_returned
+	give_nickname = nick_naklan_returned
+
+	#Prestige
+	add_prestige = monumental_prestige_gain
+}
+
+achieve_dayas_dream_decision_effects = {
+	if = {
+		limit = { has_dlc_feature = legends }
+		create_legend_seed = {
+			type = legitimizing
+			quality = illustrious
+			chronicle = ancestral_glory
+			properties = {
+				ancestor = character:dayarka_dahala_1
+				title = title:e_dahangon
+			}
+		}
+	}
+
+	dynasty = {
+		add_dynasty_prestige = 2000
+	}	
+
+	give_nickname = nick_thorn_queen
+
+	#Prestige
+	add_prestige = monumental_prestige_gain
+}
+
+form_anastereias_scripted_effect = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:e_aversaria_anastereias = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+	if = {
+		limit = { prestige_level < 5 }
+		add_prestige_level = 1
+	}
+	title:e_aironoi.holder ?= {
+		add_opinion = {
+			modifier = usurped_title
+			target = root
+		}
+	}
+	title:k_arbaz = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	title:k_anthygal = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	culture = { add_culture_tradition = tradition_otachedian_law }
+
+	if = {
+		limit = { completely_controls = title:k_hyratan }
+		title:k_hyratan = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	}
+	if = {
+		limit = { completely_controls = title:k_taleshtadendar }
+		title:k_taleshtadendar = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	}
+	if = {
+		limit = { completely_controls = title:k_kasharya }
+		title:k_kasharya = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	}
+	if = {
+		limit = { completely_controls = title:k_dartar }
+		title:k_dartar = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	}
+	if = {
+		limit = { completely_controls = title:d_taliron }
+		title:d_taliron = { set_de_jure_liege_title = title:k_arbaz }
+	}
+	if = {
+		limit = { completely_controls = title:d_batset }
+		title:d_batset = { set_de_jure_liege_title = title:k_arbaz }
+	}
+	if = {
+		limit = {
+			completely_controls = title:d_detbora
+			completely_controls = title:k_hyratan
+		}
+		title:d_detbora = { set_de_jure_liege_title = title:k_hyratan }
+		
+	}
+	else_if = {
+		limit = { completely_controls = title:d_detbora }
+		title:d_detbora = { set_de_jure_liege_title = title:k_anthygal }
+	}
+}
+
+form_anastereias_traditionalist_scripted_effect = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = title_change
+		add_claim_on_loss = no
+	}
+	title:e_aversaria_anastereias = {
+		change_title_holder = {
+			holder = root
+			change = scope:title_change
+		}
+	}
+	resolve_title_and_vassal_change = scope:title_change
+	if = {
+		limit = { prestige_level < 5 }
+		add_prestige_level = 1
+	}
+	title:e_aironoi.holder ?= {
+		add_opinion = {
+			modifier = usurped_title
+			target = root
+		}
+	}
+
+	title:k_arbaz = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	title:k_anthygal = { set_de_jure_liege_title = title:e_aversaria_anastereias }
+	if = {
+		limit = { completely_controls = title:d_taliron }
+		title:d_taliron = { set_de_jure_liege_title = title:k_arbaz }
+	}
+	if = {
+		limit = { completely_controls = title:d_bazauuk }
+		title:d_bazauuk = { set_de_jure_liege_title = title:k_anthygal }	
+	}
+	culture = { add_culture_tradition = tradition_ruling_caste }
+}
+
+anastereias_county_scripted_effect = {
+	every_county_in_region = {
+		region = kasiryat_biozone
+		add_county_modifier = {
+			modifier = union_of_two_shores_modifier
+			years = 25
+		}
+	}
+	title:c_sainhad = { #Popular opinion bonus with capital and bit extra dev
+		add_county_modifier = {
+			modifier = city_of_kasiryat_county_modifier
+			years = 100
+		}
+	}	
+}
+
+anastereias_traditionalist_county_scripted_effect = {
+	every_sub_realm_county = {
+		limit = {
+			NOT = {
+				culture = { has_cultural_pillar = heritage_aversarian }
+			}
+			title_province = { geographical_region = world_ga_greater_kashiryat_river }
+		}
+		add_county_modifier = {
+			modifier = disguntled_populace_modifier
+			years = 75
+		}
+	}
+	title:c_sainhad = { #Popular opinion bonus with capital and bit extra dev
+		add_county_modifier = {
+			modifier = city_of_kasiryat_county_modifier
+			years = 100
+		}
+	}
+}

@@ -1,0 +1,29 @@
+﻿slayer_contract_trigger = {
+	OR = {
+		has_task_contract_type = gh_laamp_base_1001
+		has_task_contract_type = gh_laamp_base_1021
+		has_task_contract_type = gh_laamp_base_1041
+	}
+}
+
+migration_contract_trigger = {
+	OR = {
+		has_task_contract_type = gh_laamp_base_9001
+		has_task_contract_type = gh_laamp_base_9011
+		has_task_contract_type = gh_laamp_base_9021
+		#has_task_contract_type = gh_laamp_base_9031
+		#has_task_contract_type = gh_laamp_base_9041
+	}
+}
+
+
+gh_can_have_migration_band_band_purpose_trigger = {
+	top_liege = { has_title = title:e_migrant_coalition } # You must be a vassal to the coalition for this to be valid
+}
+
+gh_is_laamp_migration_band_trigger = {
+	trigger_if = {
+		limit = { exists = scope:owner }
+		scope:owner = { has_realm_law = camp_purpose_migration_band }
+	}
+}

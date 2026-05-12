@@ -1,0 +1,148 @@
+﻿tyranny_from_confiscations_value = {
+	value = 0
+	every_in_list = {
+		list = target_kingdoms
+		add = 20
+	}
+	every_in_list = {
+		list = target_duchies
+		add = 10
+	}
+	every_in_list = {
+		list = target_counties
+		add = 5
+	}
+}
+
+dread_from_confiscations_value = {
+	value = 0
+	every_in_list = {
+		list = target_kingdoms
+		add = 20
+	}
+	every_in_list = {
+		list = target_duchies
+		add = 10
+	}
+	every_in_list = {
+		list = target_counties
+		add = 5
+	}
+}
+
+faith_hostility_level_conversion_malus = {
+	value = 1
+	if = {
+		limit = {
+			faith = {
+				faith_hostility_level = {
+					target = scope:councillor.faith
+					value >= faith_hostile_level
+				}
+			}
+		}
+		add = 2
+	}
+	if = {
+		limit = {
+			faith = {
+				faith_hostility_level = {
+					target = scope:councillor.faith
+					value >= faith_evil_level
+				}
+			}
+		}
+		add = 3
+	}
+}
+
+direct_de_jure_vassal_tier_value = {
+	value = tier
+	subtract = 1
+}
+
+direct_de_jure_vassals_value = {
+	value = 0
+	every_in_de_jure_hierarchy = {
+		limit = { tier = prev.direct_de_jure_vassal_tier_value }
+		add = 1
+	}
+}
+
+duchy_same_to_target_kingdom_neighboring_difference_value = {
+	value = 0
+	every_title_to_title_neighboring_duchy = {
+		limit = { kingdom = prev.kingdom }
+		add = 1
+	}
+	if = {
+		limit = { 
+			exists = scope:target_kingdom
+		}
+		every_title_to_title_neighboring_duchy = {
+			limit = { kingdom = scope:target_kingdom }
+			subtract = 1
+		}
+	}
+}
+
+duchy_same_to_target_kingdom_neighboring_difference_inverted_value = {
+	value = duchy_same_to_target_kingdom_neighboring_difference_value
+	multiply = -1
+}
+
+kingdoms_in_empire_value = {
+	value = 0
+	every_in_de_jure_hierarchy = {
+		limit = { tier = tier_kingdom }
+		add = 1
+	}
+}
+
+
+# Vassal Opinion values
+
+number_of_magic_focused_vassals = {
+	value = 0
+	every_vassal = {
+		limit = {
+			has_vassal_stance = magic_focused
+		}
+		add = 1
+	}
+}
+
+magic_focused_vassal_magi_grant_bonus = {
+	if = {
+		limit = {
+			any_in_list = {
+				list = titles_to_grant
+				tier >= tier_county
+			}
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier = tier_county
+			}
+			add = 5
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier = tier_duchy
+			}
+			add = 20
+		}
+
+		every_in_list = {
+			list = titles_to_grant
+			limit = {
+				tier > tier_duchy
+			}
+			add = 50
+		}
+	}
+}

@@ -1,0 +1,570 @@
+﻿personal_inspiration_remaining_time_estimate_value = { # Remaining time in months for a Personal Inspiration to complete
+	value = 10
+	subtract = var:personal_inspiration_story.var:personal_inspiration_progress
+	divide = personal_inspiration_monthly_progress_chance_value
+	ceiling = yes
+}
+
+personal_inspiration_monthly_progress_chance_value = 0.75 # Chance of monthly progress in a Personal Inspiration
+
+personal_inspiration_quality_value = { # Artifact Quality of a Personal Inspiration
+	value = 0
+	add = { # Stewardship
+		value = story_owner.stewardship
+		desc = stewardship
+		format = "QUALITY_VALUE_FORMAT"
+	}
+	add = { # Learning
+		value = story_owner.learning
+		desc = learning
+		format = "QUALITY_VALUE_FORMAT"
+	}
+	if = { # Arcana
+		limit = { story_owner = { has_variable = arcana_character_counter } }
+		add = {
+			value = story_owner.var:arcana_character_counter
+			desc = arcana
+			format = "QUALITY_VALUE_FORMAT"
+		}
+	}
+	add = { # Glassmith Trait xp
+		value = "story_owner.has_trait_xp(gh_lifestyle_glassmith)"
+		divide = 2
+		desc = personal_inspiration_quality_value_glassmith_trait_xp_desc
+		format = "QUALITY_VALUE_FORMAT"
+	}
+	if = { # Personal Forge
+		limit = { story_owner = { has_variable = personal_forge_location } }
+		if = { # Landless
+			limit = {
+				story_owner = {
+					has_domicile = yes
+					var:personal_forge_location = domicile.domicile_location.barony
+				}
+			}
+			add = {
+				value = 20
+				desc = personal_inspiration_quality_value_personal_forge_desc
+				format = "QUALITY_VALUE_FORMAT"
+			}
+		}
+		else_if = { # Landed
+			limit = { story_owner = { var:personal_forge_location = capital_barony } }
+			add = {
+				value = 20
+				desc = personal_inspiration_quality_value_personal_forge_desc
+				format = "QUALITY_VALUE_FORMAT"
+			}
+		}
+	}
+	if = { # Adept Glassworkers Cultural Tradition
+		limit = {
+			story_owner = {
+				has_variable = artifact_glassware_type
+				culture = { has_cultural_tradition = tradition_adept_glassworkers }
+			}
+		}
+		add = {
+			value = 10
+			desc = personal_inspiration_quality_value_improved_glassware_inspiration_parameter_desc
+			format = "QUALITY_VALUE_FORMAT"
+		}
+	}
+	if = { # Better Artifacts Doctrine Parameter
+		limit = { story_owner.faith = { has_doctrine_parameter = better_artifacts } }
+		add = {
+			value = 10
+			desc = personal_inspiration_quality_value_better_artifacts_doctrine_desc
+			format = "QUALITY_VALUE_FORMAT"
+		}
+	}
+	if = { # Location bonuses for a Landless Character
+		limit = { story_owner = { is_landless_adventurer = yes } }
+		add = {
+			value = {
+				if = { # Smithies
+					limit = { story_owner.capital_province = { has_building_or_higher = smiths_05 } }
+					add = {
+						story_owner = {
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = smiths_05 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = smiths_06 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = smiths_07 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = smiths_08 }
+									add = 2
+								}
+							}
+						}
+					}
+				}
+				if = { # Caravanserai
+					limit = { story_owner.capital_province = { has_building_or_higher = caravanserai_04 } }
+					add = {
+						story_owner = {
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = caravanserai_04 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = caravanserai_05 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = caravanserai_06 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = caravanserai_07 }
+									add = 2
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = caravanserai_08 }
+									add = 2
+								}
+							}
+						}
+					}
+				}
+				if = { # Blacksmiths
+					limit = { story_owner.capital_province = { has_building_or_higher = blacksmiths_01 } }
+					add = {
+						story_owner = {
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = blacksmiths_01 }
+									add = 4
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = blacksmiths_02 }
+									add = 8
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = blacksmiths_03 }
+									add = 12
+								}
+							}
+						}
+					}
+				}
+				if = { # Glassworks
+					limit = {
+						story_owner = {
+							has_variable = artifact_glassware_type
+							capital_province = { has_building_or_higher = gh_glassworks_01 }
+						}
+					}
+					add = {
+						story_owner = {
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = gh_glassworks_01 }
+									add = 4
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = gh_glassworks_02 }
+									add = 8
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = gh_glassworks_03 }
+									add = 12
+								}
+							}
+						}
+					}
+				}
+				if = { # Yeiqushen High Wall
+					limit = { story_owner.capital_province = { has_building_or_higher = 03_yeiqushen_high_wall } }
+					add = {
+						story_owner = {
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = 03_yeiqushen_high_wall }
+									add = 4
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = 04_yeiqushen_high_wall }
+									add = 8
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = 05_yeiqushen_high_wall }
+									add = 12
+								}
+							}
+						}
+					}
+				}
+				if = { # Glassworks of Ysanda
+					limit = { story_owner.capital_province = { has_building_or_higher = 01_glassworks_of_ysanda } }
+					add = {
+						story_owner = {
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = 01_glassworks_of_ysanda }
+									add = 10
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = 02_glassworks_of_ysanda }
+									add = 10
+								}
+							}
+							capital_province = {
+								if = {
+									limit = { has_building_or_higher = 03_glassworks_of_ysanda }
+									add = 10
+								}
+							}
+						}
+					}
+				}
+			}
+			desc = personal_inspiration_quality_value_camp_location_desc
+			format = "QUALITY_VALUE_FORMAT"
+		}
+	}
+	else = { # Location bonuses for a Landed Character
+		add = {
+			value = {
+				if = { # Smithies
+					limit = { story_owner = { any_directly_owned_province = { has_building_or_higher = smiths_05 } } }
+					add = {
+						story_owner = {
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = smiths_05 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = smiths_06 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = smiths_07 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = smiths_08 }
+								add = 2
+							}
+						}
+					}
+				}
+				if = { # Caravanserai
+					limit = { story_owner = { any_directly_owned_province = { has_building_or_higher = caravanserai_04 } } }
+					add = {
+						story_owner = {
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = caravanserai_04 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = caravanserai_05 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = caravanserai_06 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = caravanserai_07 }
+								add = 2
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = caravanserai_08 }
+								add = 2
+							}
+						}
+					}
+				}
+				if = { # Blacksmiths
+					limit = { story_owner = { any_directly_owned_province = { has_building_or_higher = blacksmiths_01 } } }
+					add = {
+						story_owner = {
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = blacksmiths_01 }
+								add = 4
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = blacksmiths_02 }
+								add = 8
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = blacksmiths_03 }
+								add = 12
+							}
+						}
+					}
+				}
+				if = { # Glassworks
+					limit = {
+						story_owner = {
+							has_variable = artifact_glassware_type
+							any_directly_owned_province = { has_building_or_higher = gh_glassworks_01 }
+						}
+					}
+					add = {
+						story_owner = {
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = gh_glassworks_01 }
+								add = 4
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = gh_glassworks_01 }
+								add = 8
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = gh_glassworks_01 }
+								add = 12
+							}
+						}
+					}
+				}
+				if = { # Yeiqushen High Wall
+					limit = { story_owner = { any_directly_owned_province = { has_building_or_higher = 03_yeiqushen_high_wall } } }
+					add = {
+						story_owner = {
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = 03_yeiqushen_high_wall }
+								add = 4
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = 04_yeiqushen_high_wall }
+								add = 8
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = 05_yeiqushen_high_wall }
+								add = 12
+							}
+						}
+					}
+				}
+				if = { # Glassworks of Ysanda
+					limit = { story_owner = { any_directly_owned_province = { has_building_or_higher = 01_glassworks_of_ysanda } } }
+					add = {
+						story_owner = {
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = 01_glassworks_of_ysanda }
+								add = 10
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = 02_glassworks_of_ysanda }
+								add = 10
+							}
+							every_directly_owned_province = {
+								limit = { has_building_or_higher = 03_glassworks_of_ysanda }
+								add = 10
+							}
+						}
+					}
+				}
+			}
+			desc = personal_inspiration_quality_value_domain_desc
+			format = "QUALITY_VALUE_FORMAT"
+		}
+	}
+	add = { # Estate bonuses
+		value = {
+			if = {
+				limit = { story_owner.court_owner ?= { domicile ?= { has_domicile_parameter = estate_improved_inspirations_2 } } }
+				add = 10
+			}
+			else_if = {
+				limit = { story_owner.court_owner ?= { domicile ?= { has_domicile_parameter = estate_improved_inspirations_1 } } }
+				add = 5
+			}
+		}
+		desc = personal_inspiration_quality_value_estate_improved_inspirations_desc
+		format = "QUALITY_VALUE_FORMAT"
+	}
+	if = { # Arcana Lifestyle Perk
+		limit = { story_owner = { has_perk = arcana_cognition_perk4_tree2 } }
+		multiply = 1.33
+		desc = personal_inspiration_quality_value_estate_cognition_desc
+		format = "QUALITY_PERCENTAGE_VALUE_FORMAT"
+	}
+	add = { # From events
+		value = var:personal_inspiration_quality
+		desc = personal_inspiration_quality_value_story_desc
+		format = "QUALITY_VALUE_FORMAT"
+	}
+	multiply = { # Relative Artifact type/Glassmith skill penalty
+		value = 1
+		if = { # Artifact type far above Character's skill
+			limit = { story_owner = { glassware_inspiration_difficulty_far_above_check = yes } }
+			add = {
+				value = -0.8
+				desc = personal_inspiration_quality_value_far_above_desc
+				format = "QUALITY_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+		else_if = { # Artifact type above Character's skill
+			limit = { story_owner = { glassware_inspiration_difficulty_above_check = yes } }
+			add = {
+				value = -0.4
+				desc = personal_inspiration_quality_value_above_desc
+				format = "QUALITY_PERCENTAGE_VALUE_FORMAT"
+			}
+		}
+	}
+	max = 100
+	min = 1
+}
+
+personal_inspiration_wealth_value = { # Artifact Wealth of a Personal Inspiration
+	value = 0
+	add = { # Character Rank
+		if = { # Adventurers
+			limit = { story_owner = { has_government = landless_adventurer_government } }
+			add = 10
+		}
+		else_if = { # Noble Family House Head (Landless)
+			limit = {
+				story_owner = {
+					is_landless_ruler = yes
+					any_held_title = { is_noble_family_title = yes }
+				}
+			}
+			add = 20
+		}
+		else = { # Landed Rulers
+			story_owner = {
+				switch = {
+					trigger = primary_title.tier
+					tier_county = { value = 10 }
+					tier_duchy = { value = 20 }
+					tier_kingdom = { value = 30 }
+					tier_empire = { value = 40 }
+					tier_hegemony = { value = 50 }
+				}
+			}
+		}
+		desc = personal_inspiration_wealth_value_rank
+		format = "WEALTH_VALUE_FORMAT"
+	}
+	if = { # Family Estate Location Development
+		limit = { story_owner = { any_held_title = { is_noble_family_title = yes } } }
+		add = {
+			value = story_owner.domicile.domicile_location.county.development_level
+			divide = 2
+			desc = personal_inspiration_wealth_value_development_level_desc
+			format = "WEALTH_VALUE_FORMAT"
+		}
+	}
+	else = { # Capital County Development
+		add = {
+			value = story_owner.capital_county.development_level
+			divide = 2
+			desc = personal_inspiration_wealth_value_development_level_desc
+			format = "WEALTH_VALUE_FORMAT"
+		}
+	}
+	add = { # Purchased materials
+		value = possible_personal_inspiration_actions_materials_wealth_value
+		multiply = var:possible_personal_inspiration_actions_materials_count
+		desc = personal_inspiration_wealth_value_materials_desc
+		format = "WEALTH_VALUE_FORMAT"
+	}
+	add = { # From events
+		value = var:personal_inspiration_wealth
+		desc = personal_inspiration_wealth_value_story_desc
+		format = "WEALTH_VALUE_FORMAT"
+	}
+}
+
+personal_inspiration_combined_rarity_value = { # Combined Quality and Wealth score of a Personal Inspiration
+	value = personal_inspiration_quality_value
+	add = personal_inspiration_wealth_value
+}
+
+possible_personal_inspiration_actions_forge_cost_value = 200 # Construct a Personal Forge Inspiration Action cost
+
+possible_personal_inspiration_actions_materials_base_cost_value = 50 # Purchase Crafting Materials Inspiration Action base cost
+
+possible_personal_inspiration_actions_materials_max_count = 4 # Purchase Crafting Materials Inspiration Action max count
+
+possible_personal_inspiration_actions_materials_cost_value = { # Purchase Crafting Materials Inspiration Action dynamic cost
+	value = possible_personal_inspiration_actions_materials_base_cost_value
+	if = {
+		limit = { var:personal_inspiration_story.var:possible_personal_inspiration_actions_materials_count = 0 }
+		multiply = 1
+	}
+	else_if = {
+		limit = { var:personal_inspiration_story.var:possible_personal_inspiration_actions_materials_count = 1 }
+		multiply = 2
+	}
+	else_if = {
+		limit = { var:personal_inspiration_story.var:possible_personal_inspiration_actions_materials_count = 2 }
+		multiply = 4
+	}
+	else = { multiply = 8 }
+}
+
+possible_personal_inspiration_actions_materials_wealth_value = 15 # Purchase Crafting Materials Inspiration Action Wealth bonus
+
+possible_personal_inspiration_actions_tutor_minimum_cost = { # Find a Tutor Inspiration Action minimum cost
+	value = 50
+	if = {
+		limit = { has_trait = gh_lifestyle_glassmith }
+		add = {
+			value = 50
+			multiply = {
+				value = "has_trait_xp(gh_lifestyle_glassmith)"
+				multiply = 0.02
+				add = 1
+			}
+		}
+	}
+}
+
+possible_personal_inspiration_actions_tutor_medium_cost = { # Find a Tutor Inspiration Action medium cost
+	value = possible_personal_inspiration_actions_tutor_minimum_cost
+	multiply = 2
+}
+
+possible_personal_inspiration_actions_tutor_maximum_cost = { # Find a Tutor Inspiration Action maximum cost
+	value = possible_personal_inspiration_actions_tutor_minimum_cost
+	multiply = 4
+}
+
+possible_personal_inspiration_actions_composition_local_cost = 0 # Pick Glass Composition Inspiration Action local cost
+
+possible_personal_inspiration_actions_composition_import_cost = 100 # Pick Glass Composition Inspiration Action import cost
+
+personal_inspiration_refund_percentage = 0.5 # Personal Inspiration refund percentage

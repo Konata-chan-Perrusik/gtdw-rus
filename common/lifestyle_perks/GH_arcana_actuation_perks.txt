@@ -1,0 +1,195 @@
+﻿arcana_actuation_perk1_tree1 = { # Magic Prowess bonus
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 1 0 }
+	icon = node_martial
+
+	auto_selection_weight = {
+		value = 11
+		if = {
+			limit = {
+				has_trait = education_arcana
+			}
+			add = 1989
+		}
+		if = {
+			limit = {
+				has_focus = arcana_actuation_focus
+			}
+			multiply = 5
+		}
+		if = {
+			limit = {
+				can_start_new_lifestyle_tree_trigger = no
+			}
+			multiply = 0
+		}
+		if = {
+			limit = {
+				faith = { has_doctrine_parameter = magic_illegal }
+			}
+			multiply = 0
+		}
+	}
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_theory_perk_effect
+		}
+		custom_tooltip = arcana_prowess_potential_tt
+	}
+
+	character_modifier = {
+		max_combat_roll = 3
+	}
+}
+
+
+arcana_actuation_perk2_tree1 = { # Magic Resistance Bonus
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 2 1 }
+	icon = node_martial
+
+	parent = arcana_actuation_perk1_tree1
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_tooltip = arcane_defense_tt
+		custom_tooltip = arcana_backfire_resistance_tt
+	}
+
+	character_modifier = {
+		character_travel_safety_mult = 0.1
+	}
+}
+
+arcana_actuation_perk3_tree1 = { # Spellcasting Chance, EMB Bonus
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 0 1 }
+	icon = node_martial
+
+	parent = arcana_actuation_perk1_tree1
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_tooltip = arcana_spellcasting_success_bonus_tt
+		custom_tooltip = arcana_extended_baseline_bonus_tt
+	}
+}
+
+arcana_actuation_perk4_tree1 = { # Cheaper Magic Spell Cost
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 0 2 }
+	icon = node_martial
+
+	parent = arcana_actuation_perk3_tree1
+
+	can_be_picked = {
+		always = yes
+	}
+
+
+	effect = {
+		custom_description_no_bullet = { 
+			text = arcana_cognition_cheaper_magic_perk_effect
+		}
+	}
+}
+
+
+arcana_actuation_perk7_tree1 = { # Stronger Exposure Resistance
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 2 2 }
+	icon = node_martial
+
+	parent = arcana_actuation_perk2_tree1
+
+	can_be_picked = {
+		always = yes
+	}
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_exposure_resistance_perk_effect
+		}
+	}
+}
+
+arcana_actuation_perk8_tree1 = { # Increased resistance to Mutations
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 2 3 }
+	icon = node_martial 
+	can_be_picked = {
+		always = yes
+	}
+
+	parent = arcana_actuation_perk7_tree1
+
+	effect = {
+		custom_description_no_bullet = {
+			text = arcana_increased_mutation_resistance
+		}
+	}
+}
+
+arcana_actuation_perk5_tree1 = { # Bonus to Spellcasting Discovery
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 0 3 }
+	icon = node_martial
+
+	parent = arcana_actuation_perk4_tree1
+
+	effect = {
+		custom_tooltip = arcana_secret_knowledge_perk_effect
+	}
+}
+
+arcana_actuation_perk6_tree1 = { # Bonus to Spellcasting Ability
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 1 4 }
+	icon = node_martial
+
+	parent = arcana_actuation_perk8_tree1
+	parent = arcana_actuation_perk5_tree1
+
+	effect = {
+		custom_tooltip = arcane_relief_tt
+		custom_description_no_bullet = {
+			text = arcana_cognition_spellcasting_ability_bonus_perk_effect
+		}
+	}
+}
+
+arcana_actuation_perk9_tree1 = { # 
+	lifestyle = arcana_lifestyle
+	tree = arcana_tree1
+	position = { 1 5 }
+	icon = trait_scholar
+	can_be_picked = {
+		always = yes
+	}
+
+	trait = gh_transmuturgist
+	effect = {
+		add_trait_force_tooltip = gh_transmuturgist
+	}
+
+	parent = arcana_actuation_perk6_tree1
+}

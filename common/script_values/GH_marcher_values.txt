@@ -1,0 +1,44 @@
+﻿character_merit_value = {
+	value = 0
+	add = character_merit_value_from_martial
+	add = character_merit_value_from_intrigue
+	add = character_merit_value_from_prowess
+	add = character_merit_value_from_boldness
+	add = character_merit_value_from_energy
+}
+
+character_merit_value_from_martial = {
+	value = martial
+}
+
+character_merit_value_from_intrigue = {
+	value = intrigue
+}
+
+character_merit_value_from_prowess = {
+	value = prowess
+	multiply = 0.75
+}
+
+character_merit_value_from_boldness = {
+	value = ai_boldness
+	multiply = 0.1
+}
+
+character_merit_value_from_energy = {
+	value = ai_energy
+	multiply = 0.1
+}
+
+character_total_sibling_merit_value = {
+	value = 0
+	add = character_merit_value
+	every_sibling = {
+		add = this.character_merit_value
+	}
+}
+
+merit_threshold_value = {
+	value = character_total_sibling_merit_value
+	multiply = 0.3
+}

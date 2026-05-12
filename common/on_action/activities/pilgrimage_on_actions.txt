@@ -1,0 +1,493 @@
+﻿# On actions for the Pilgrimage activity
+
+# On-action managing possible Pilgrimage journey events
+pilgrimage_journey_events = {
+	trigger = {
+		exists = involved_activity
+		involved_activity = {
+			has_activity_type = activity_pilgrimage
+		}
+		#We should only get pilgrimage events on our way TO the pilgrimage destination
+		is_on_a_pilgrimage_trigger = yes
+		NOR = { 
+			has_character_flag = in_pilgrimage_event_chain
+			has_character_flag = pilgrimage_dealing_with_invalidation
+		} 
+		#Barons don't need pilgrimage events - to avoid them bloating their court when getting add_courtier events
+		highest_held_title_tier >= tier_county
+	}
+
+	random_on_action = {
+		10 = pilgrimage_generic_travel_events
+		5 = pilgrimage_temptation_travel_events
+		5 = pilgrimage_religious_travel_events
+		8 = pilgrimage_intent_travel_events
+	}
+}
+
+pilgrimage_generic_travel_events = {
+	random_events = {
+		chance_of_no_event = {
+			value = 50
+		}
+		100 = 0
+		# Generic Pilgrimage Events
+		50 = pilgrimage.1110 # Heathen Raiders
+		150 = pilgrimage.1120 # Tour Church
+		100 = pilgrimage.1130 # Roadside Shrine
+		50 = pilgrimage.1140 # Strength in Numbers
+		100 = pilgrimage.2002 # Heathen-hating adherent challenges you
+		100 = pilgrimage.2003 # Companions are running low
+		100 = pilgrimage.2004 # Run into a potential friend
+		100 = pilgrimage.2005 # A peasant inadvertedly insults you
+		100 = pilgrimage.2006 # You have gotten lost
+		25 = pilgrimage.2008 # Fall ill
+		100 = pilgrimage.2009 # Develop pneumonia
+		25 = pilgrimage.2010 # Meet a Mystic (chain)
+		50 = pilgrimage.2020 # Pilgrimage thieves
+		# Sea Generic Pilgrimage Events Events
+		50 = pilgrimage.2030 # Massive rainbow
+		50 = pilgrimage.2040 # Go fish
+		50 = pilgrimage.2050 # Shipwrecked pilgrims
+		# BP1 Events 
+		50 = pilgrimage.6001 #Sneaking off to a tavern with your pal
+	}
+}
+
+pilgrimage_temptation_travel_events = {
+	random_events = {
+		chance_of_no_event = {
+			value = 50
+		}
+		100 = 0
+		# 'Temptation' Events
+		50 = pilgrimage.2101 # Rakish or Lustful character considers making a pit stop, or perhaps, a detour to the local brothels
+		50 = pilgrimage.2501 # Persistent Beggar
+		50 = pilgrimage.2511 # Cocky Lordling
+	}
+}
+
+pilgrimage_religious_travel_events = {
+	random_events = {
+		chance_of_no_event = {
+			value = 50
+		}
+		100 = 0
+		# Christian-specific Pilgrimage Events
+		#50 = pilgrimage.3001 # Zealous priest giving sermon in freezing rains
+		#5 = pilgrimage.3002  # Naked preacher claims to have recovered Adam & Eve's innocence
+		# 50 = pilgrimage.3004 # Doomsayer promises the end is nigh!
+
+		# Muslim-specific Pilgrimage Events
+		#50 = pilgrimage.3102 # Ziyarat - Why am I taking this pilgrimage?
+
+		# Hindu-specific Pilgrimage Events
+		#50 = pilgrimage.3201 # Ritual purification in a river
+		#50 = pilgrimage.3202 # Contemplating the universe
+
+		# Buddhist-specific Pilgrimage Events
+		#50 = pilgrimage.3301 # Critical Wanderer
+	}
+}
+
+pilgrimage_intent_travel_events = {
+	random_events = {
+		chance_of_no_event = {
+			value = 50
+		}
+		100 = 0
+		#Intent Events
+		50 = pilgrimage_intent.1110 #Sea: Sea legs
+		#Altruism
+		50 = tour_travel.1004 # You decide to wash the feet of locals
+		50 = tour_travel.1005 # Locals beg for your royal touch
+		50 = tour_travel.1006 # Distribute alms in front of a temple
+		#Zealot
+		50 = pilgrimage_intent.1000 # Console a local
+		50 = pilgrimage_intent.1001 # Convert a child
+		50 = pilgrimage_intent.1010 # Local courtier is passing by, convert them and bring them on your pilgrimage!
+		50 = pilgrimage_intent.1020 # Fellow pilgrims of a different faith are on your path
+		100 = pilgrimage_intent.9000 # A local heathen is smitten with one of your entourage members and asks to marry them
+		#Reflection
+		50 = pilgrimage_intent.1030 # You see a particularly calm clearing along your way and stop to meditate
+		50 = pilgrimage_intent.1040 # You spot an animal, follow it for an omen?
+		50 = pilgrimage_intent.1050 # You contemplate the brevity of life
+		50 = pilgrimage_intent.1060 # You contemplate old empires
+		100 = pilgrimage_intent.1100 # Personal reflections
+	}
+}
+
+# On-action managing possible destination arrival events
+pilgrimage_arrival_events = {
+	first_valid_on_action = {
+		aversarian_destination_events
+		damota_destination_events
+		games_for_the_gods_tenet_destination_events
+		anaanides_destination_events
+		amsari_destination_events
+		graveright_religion
+		quwazaw_religion
+		marcher_destination_events
+		kardawai_destination_events
+		uakaklo_destination_events
+		ritualist_destination_events
+		wardenite_destination_events
+		pilgrimage_generic_arrival_events
+	}
+	effect = {
+		if = {
+			limit = { has_character_flag = pilgrim_group_joined }
+			send_interface_toast = {
+				type = event_toast_effect_good
+				title = grateful_pilgrims_title
+				left_icon = scope:group_leader
+				current_travel_plan = {
+					remove_travel_plan_modifier = pilgrim_group_joined_modifier
+					if = {
+						limit = {
+							any_entourage_character = { has_character_flag = peasant_pilgrim_leader }
+						}
+						every_entourage_character = {
+							limit = { has_character_flag = peasant_pilgrim_leader }
+							remove_character_flag = peasant_pilgrim_leader
+							add_trait = pilgrim
+							save_scope_as = group_leader
+						}
+						remove_character = scope:group_leader
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable_list = holy_site_dreams
+				is_target_in_variable_list = {
+					name = holy_site_dreams
+					target = root.location
+				}
+			}
+			send_interface_message = {
+				type = send_interface_message_good
+				title = travel_events_bp3.95.t
+				left_icon = root
+
+				if = {
+					limit = {
+						has_lifestyle = wanderer_lifestyle
+					}
+					add_wanderer_lifestyle_xp = 500
+				}
+				stress_impact = { 
+					base = major_stress_impact_loss 
+					zealous = medium_stress_impact_loss
+				}
+				add_piety = major_piety_gain
+			}
+		}
+	}
+}
+
+burial_arrival_events = {
+	trigger = { has_variable = pilgrimage_death_bury_there }
+	random_events = {
+		100 = pilgrimage.4020
+	}
+}
+
+aversarian_destination_events = {
+	trigger = {
+		religion = religion:aversarinas_aagiokrata_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_oraispol # Oraispol
+				county = title:c_rhamnythrae # Vounill
+				county = title:c_atce # Mayikprolollan
+				county = title:c_palinia # Drakavil
+				county = title:c_thebastro # Tower Watch
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0001 # Oraispol
+		100 = gh_pilgrimage.0002 # Vounill
+		100 = gh_pilgrimage.0003 # Mayikprolollan
+		100 = gh_pilgrimage.0004 # Drakavil
+		100 = gh_pilgrimage.0005 # Tower Watch
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+damota_destination_events = {
+	trigger = {
+		religion = religion:mogowai_religion
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_siralab # The Ḥāseti Mekab
+				county = title:c_zahali # The Tabik Bētemisīt
+				county = title:c_kilahijan # The Irōchi Damotada
+				county = title:c_adabyssfort # The Nāgóm Kakezihī	
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0009 # The Ḥāseti Mekab
+		100 = gh_pilgrimage.0010 # The Tabik Bētemisīt
+		100 = gh_pilgrimage.0011 # The Irōchi Damotada
+		100 = gh_pilgrimage.0012 # The Nāgóm Kakezihī
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+quwazaw_religion = {
+	trigger = {
+		religion = religion:quwazaw_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_mirrorgaol # Fendkiyah
+				county = title:c_tanar # Ifralimane
+				county = title:c_kudahhar # Gharstir
+				county = title:c_blooming_sands # Saidal
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0083 # Fendkiyah
+		100 = gh_pilgrimage.0084 # Ifralimane
+		100 = gh_pilgrimage.0085 # Gharstir
+		100 = gh_pilgrimage.0086 # Saidal
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+graveright_religion = {
+	trigger = {
+		religion = religion:graveright_religion
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_deceiex # Sacreinux
+				county = title:c_shrascens # Tillyes
+				county = title:c_prefallias # Prefallias
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0315 # Sacreinux
+		100 = gh_pilgrimage.0316 # Tillyes
+		100 = gh_pilgrimage.0317 # Prefallias
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+games_for_the_gods_tenet_destination_events = {
+	trigger = {
+		root.faith = { has_doctrine = tenet_games_for_gods }		
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_ullabahd # The Neck of Kasiryat
+				county = title:c_sestaclea # The Farthest Bank
+				county = title:c_dzuga # The Branching
+				county = title:c_choirgai # The Holy Precincts
+				county = title:c_sainhad # The Emptying
+				county = title:c_tseteretii # The Cup of Kasiryat
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0401 # The Neck of Kasiryat
+		100 = gh_pilgrimage.0402 # The Farthest Bank
+		100 = gh_pilgrimage.0403 # The Branching
+		100 = gh_pilgrimage.0404 # The Holy Precincts
+		100 = gh_pilgrimage.0405 # The Emptying
+		100 = gh_pilgrimage.0406 # The Cup of Kasiryat
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+anaanides_destination_events = {
+	trigger = {
+		religion = religion:anaanides_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_ihedum_and_nettlewreath # The Cave of Towersight
+				county = title:c_fakkugat # The Isle of Liberation
+				county = title:c_oldthrone # The Field of Ascention
+				county = title:c_chalcamahos # The Gilded Palace
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0407 # The Cave of Towersight
+		100 = gh_pilgrimage.0408 # The Isle of Liberation
+		100 = gh_pilgrimage.0409 # The Field of Ascention
+		100 = gh_pilgrimage.0410 # The Gilded Palace
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+amsari_destination_events = {
+	trigger = {
+		religion = religion:amsari_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_bandar_ozbak # Site of the First Vision
+				county = title:c_tchouran # The Holy Capital
+				county = title:c_kani_tarn # Wehydka'ha
+				county = title:c_kalatehye_kabireh # Birthplace of the Prophet
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0021 # Site of the First Vision
+		100 = gh_pilgrimage.0022 # The Holy Capital
+		100 = gh_pilgrimage.0027 # Wehydka'ha
+		100 = gh_pilgrimage.0028 # Birthplace of the Prophet
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+marcher_destination_events = {
+	trigger = {
+		religion = religion:lifepath_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_rozalie # Crucible
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0025 # Crucible
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+kardawai_destination_events = {
+	trigger = {
+		religion = religion:kardawai_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_sugarholt # Many-Trees
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0026 # Many-Trees
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+uakaklo_destination_events = {
+	trigger = {
+		religion = religion:uakaklo_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_tamarenia # Temple of the Wrath Wielder
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0041 # Temple of the Wrath Wielder
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+ritualist_destination_events = {
+	trigger = {
+		religion = religion:ritualist_religion 
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_sophocene
+			}
+		}
+	}
+
+	random_events = {
+		100 = sophocos_quest.5001 # Sophocos
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+wardenite_destination_events = {
+	trigger = {
+		religion = religion:wardenism_religion
+		involved_activity.activity_location = {
+			OR = {
+				county = title:c_el_qulatha # Mamur of the Center
+				county = title:c_zahali # Southern Mamur
+			}
+		}
+	}
+
+	random_events = {
+		100 = gh_pilgrimage.0412 # Mamur of the Center
+		100 = gh_pilgrimage.0040 # Southern Mamur
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+pagan_arrival_events = {
+	trigger = {
+		faith = {
+			has_doctrine = tenet_sanctity_of_nature
+		}
+	}
+
+	random_events = {
+		100 = pilgrimage.5921 # Sacred Grove
+		100 = pilgrimage.4002 # Meet the Mystic again
+	}
+}
+
+pilgrimage_generic_arrival_events = {
+	random_events = {
+		100 = pilgrimage.4001
+		100 = pilgrimage.4002
+	}
+}
+
+#Events that happen while remaining on-site
+pilgrimage_destination_events = {
+	trigger = {
+		location = scope:activity.activity_location
+	}
+	random_events = {
+		100 = 0
+		120 = pilgrimage.6500 #Appreciation
+		100 = pilgrimage.6510 #Lost in Translation
+		100 = pilgrimage.6520 #Time To Go Home Soon?
+		50 = pilgrimage.6530 #Fishy local guide?
+		100 = pilgrimage.6540 #Find some exotic wares
+		150 = pilgrimage.6750 #Repentance - remove secret/coping trait
+		#120 = pilgrimage.6760 #The Disputation of GetCurrentLocation
+		100 = pilgrimage.6770 #Buy a relic
+		100 = pilgrimage.6780 #Recruit local expert
+		120 = pilgrimage.6790 #Spiritual mentor changes your ways
+		100 = pilgrimage.6800 #An entourage member feels a religious calling
+		#100 = pilgrimage.6810 #Do you wanna buy an indulgence?
+		120 = pilgrimage.6820 #Buy a pilgrims' guide
+		150 = pilgrimage.6830 #Reflect on an empty temple
+		100 = pilgrimage.6840 #Ask local priest to bless your artifact
+	}
+}
+
+#Events that happen once you've returned home
+pilgrimage_return_events = {
+	effect = {
+		if = {
+			limit = { exists = var:visited_cultures_list }
+			remove_variable = visited_cultures_list
+		}
+	}
+	random_events = {
+		100 = pilgrimage.9001
+	}
+}

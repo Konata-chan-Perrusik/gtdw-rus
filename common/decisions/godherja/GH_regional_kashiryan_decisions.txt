@@ -1,0 +1,220 @@
+﻿###Kashiryan Decision###
+
+##############
+## Reform Taryaad Saramsaasan
+## by Darth Plague
+gh_taryaad_saramsaasan_unification_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_destiny_goal.dds"
+	}
+	decision_group_type = kashiryan
+
+	ai_check_interval = 120
+
+	is_shown = {
+		capital_province = {
+			geographical_region = world_ga_kashirya  
+		
+		}
+		has_character_modifier = taryaad_pretender_modifier	
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:taryaad_saramsaasan_unification
+			}
+		}
+	}
+	is_valid = {
+		prestige_level >= 4
+		piety_level >= 4
+		
+		has_title = title:e_darmirat
+		has_title = title:e_naavjagarad
+	}
+	
+	cost = {
+		gold = 1000
+		prestige = 1500
+		piety = 1000
+	}
+	effect = {
+		save_scope_as = taryaad_reformer
+
+		show_as_tooltip = { form_taryaad_saramsaasan_effect = yes }
+		#For the Reformer
+		trigger_event = kashirya_decision.0001
+		every_player = {
+			limit = {
+				NOT = { 
+					this = scope:taryaad_reformer 
+					capital_province = {
+						geographical_region = world_ga_kashirya  
+					
+					}
+				}
+				is_within_diplo_range = { CHARACTER = scope:taryaad_reformer }
+				
+			}
+			trigger_event = kashirya_decision.0002 #For everyone in diplo range of Kaashirya
+		}
+		every_player = {
+			limit = {
+				NOT = {
+					this = scope:taryaad_reformer
+				}
+				capital_province = {
+					geographical_region = world_ga_kashirya
+				}	 
+			}
+			trigger_event = kashirya_decision.0003
+		}
+		
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:taryaad_saramsaasan_unification
+		}
+		add_prestige = 350
+	}
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+###########################
+#Proclaim Taryaad Pretender
+#By Darth Plague
+###########################
+gh_taryaad_pretender_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+	decision_group_type = kashiryan
+
+	ai_check_interval = 120
+
+	is_shown = {
+		religion = religion:dravidian_religion
+		capital_province = {
+			geographical_region = world_ga_kashirya  
+		}
+		NOT = {
+			has_character_modifier = taryaad_pretender_modifier	
+		}
+
+	}
+	
+	is_valid = {
+		prestige_level >= 4
+		piety_level >= 4
+		
+		OR = {
+			faith = faith:vidvaookeyatra
+			faith = faith:askevaryaa
+			faith = faith:nabbarek
+			faith = faith:dravadari
+		}
+
+		OR = {
+			has_primary_title = title:e_naavjagarad
+			has_primary_title = title:e_darmirat
+		}
+	}
+
+	effect = {
+		add_character_modifier = taryaad_pretender_modifier	
+	}
+	ai_potential = {
+		always = yes
+	}
+	ai_will_do = {
+		base = 100
+	}
+}
+
+##########################
+# Otachedian Restoration #
+# By TOG 				 #
+##########################
+
+otachedian_restoration_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_ck2_hl_steppe_mercenaries.dds"
+	}
+	decision_group_type = oltenic
+	confirm_click_sound = "event:/DLC/FP2/SFX/UI/fp2_struggle_ending_decision_confirm"
+	selection_tooltip = otachedian_restoration_decision_tooltip
+	ai_check_interval = 60
+	desc = otachedian_restoration_decision_desc
+
+	is_shown = {
+		culture = {
+			OR = {
+				has_cultural_pillar = heritage_khokhuud
+				has_cultural_pillar = heritage_vhanavid
+				has_cultural_pillar = heritage_xajirkel
+			}
+		}
+		exists = capital_province
+		capital_province = {
+			OR = {
+				geographical_region = GH_geographic_aironoi
+				geographical_region = GH_geographic_kashirya
+			}
+		}
+		NOT = {
+			is_target_in_global_variable_list = {
+				name = unavailable_unique_decisions
+				target = flag:otachedian_restoration_decision
+			}
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		is_available_adult = yes
+		# Independent
+		is_independent_ruler = yes
+	}
+
+	is_valid = {
+		# At least a king
+		highest_held_title_tier >= tier_kingdom
+		# Famed
+		prestige_level >= very_high_prestige_level
+		# Must completely control Kashirya & the Kasiryat basin
+		custom_tooltip = {
+			text = must_control_majority_of_kashirya_decision_tt
+			controls_majority_of_kashirya_formable_trigger = yes
+		}
+	}
+
+	effect = {
+		save_scope_as = otached_reborn
+
+		show_as_tooltip = { otachedian_restoration_decision_effects = yes }
+
+		trigger_event = kashirya_decision.1001
+		every_player = {
+			limit = {
+				NOT = { this = scope:otached_reborn }
+				is_within_diplo_range = { CHARACTER = scope:otached_reborn }
+			}
+		}
+
+		add_to_global_variable_list = {
+			name = unavailable_unique_decisions
+			target = flag:otachedian_restoration_decision
+		}
+		set_global_variable = {
+			name = otachedian_restoration_decision
+			value = scope:otached_reborn
+		}
+		GH_achiev_nicegoingotached_check = yes
+	}
+
+	ai_potential = { always = yes }
+	ai_will_do = { base = 100 }
+}

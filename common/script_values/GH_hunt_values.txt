@@ -1,0 +1,825 @@
+﻿################
+## HUNT VALUES #
+################
+#
+## Distances to target hunting site
+#long_hunt_max_length = 10000000 # 10M
+#medium_hunt_max_length = 5000000 # 1M, slightly larger than 1 'holy roman #empire' away
+#short_hunt_max_length = 1000000 # 100K, slightly larger than 1 'ireland' #away.
+#
+#hunt_cooldown_value = {
+#	value = 24
+#	if = {
+#		limit = { 
+#			OR = { 
+#				has_trait = lifestyle_hunter
+#				has_trait = lifestyle_beasthunter
+#			}
+#		}
+#		multiply = 0.25
+#	}
+#	if = {
+#		limit = {
+#			root.culture = {
+#				has_cultural_parameter = more_frequent_hunts
+#			}
+#		}
+#		multiply = 0.5
+#	}
+#}
+#
+## Tracking Power
+#tracking_power = {
+#	value = 1	# Everyone has a base of at least 1
+#	if = {	# Each hunter trait gives an exponentially better output
+#		limit = { has_trait = hunter_1 }
+#		add = 0.5
+#	}
+#	if = {
+#		limit = { has_trait = hunter_2 }
+#		add = 1
+#	}
+#	if = {
+#		limit = { has_trait = hunter_3 }
+#		add = 2
+#	}
+#	if = {
+#		limit = { has_trait = hunter_4 }
+#		add = 4
+#	}
+#	if = {
+#		limit = { has_trait = hunter_5 }
+#		add = 8
+#	}
+#	if = { # Beasthunter traits are worse than hunter traits at tracking
+#		limit = { has_trait = beasthunter_1 }
+#		add = 0.75
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_2 }
+#		add = 1.5
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_3 }
+#		add = 2.5
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_4 }
+#		add = 4
+#	}
+#	if = {	# Scaled by the Adept Tracker perk
+#		limit = { has_perk = adept_tracker_perk }
+#		add = 2
+#	}
+#	add = {	# Scaled by learning
+#		value = learning
+#		multiply = 0.1
+#	}
+#	if = {	# Brave won't hesitate to follow the most direct, risky trail
+#		limit = { has_trait = brave }
+#		multiply = 1.25
+#	}
+#	if = {	# Craven will be much slower, with the benefit of being less #likely to get into trouble
+#		limit = { has_trait = craven }
+#		multiply = 0.75
+#	}
+#	if = {	# Diligent will be more thorough
+#		limit = { has_trait = diligent }
+#		multiply = 1.25
+#	}
+#	if = {	# Lazy will half ass it
+#		limit = { has_trait = lazy }
+#		multiply = 0.75
+#	}
+#	if = {	# Stubborn will be decisive
+#		limit = { has_trait = stubborn }
+#		multiply = 1.25
+#	}
+#	if = {	# Fickle will be indecisive
+#		limit = { has_trait = fickle }
+#		multiply = 0.75
+#	}
+#	if = {	# Impatient will be decisive
+#		limit = { has_trait = impatient }
+#		multiply = 1.25
+#	}
+#	if = {	# Patient won't rush things
+#		limit = { has_trait = patient }
+#		multiply = 0.75
+#	}
+#	if = {	# Scaled by intelligence
+#		limit = { has_trait = intellect_bad_3 }
+#		multiply = 0.1
+#	}
+#	if = {
+#		limit = { has_trait = intellect_bad_2 }
+#		multiply = 0.5
+#	}
+#	if = {
+#		limit = { has_trait = intellect_bad_1 }
+#		multiply = 0.75
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_1 }
+#		multiply = 1.25
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_2 }
+#		multiply = 1.5
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_3 }
+#		multiply = 2
+#	}
+#	if = {	# Scaled by shrewdness and dullness
+#		limit = { has_trait = dull }
+#		multiply = 0.75
+#	}
+#	if = {
+#		limit = { has_trait = shrewd }
+#		multiply = 1.25
+#	}
+#	if = {	# Scaled by home turf advantage
+#		limit = { 
+#			exists = scope:hunting_in_home_biozone
+#			has_perk = home_turf_perk
+#		}
+#		multiply = 2
+#	}
+#}
+#
+#hunting_death_chance = {
+#	value = 0
+#	if = {	# If only slightly below fine, only apply linear, relatively #small penalties
+#		limit = {
+#			health < 3
+#			health >= 2
+#		}
+#		add = {	# 20% chance of dying once hitting only 2 health
+#			value = 3
+#			subtract = health
+#			multiply = 20
+#		}
+#	}
+#	else_if = {	# If only significantly below fine, start applying #increasing penalties
+#		limit = {
+#			health < 2
+#			health >= 1
+#		}
+#		add = 20
+#		add = {	# 50% chance of dying once hitting only 1 health
+#			value = 2
+#			subtract = health
+#			multiply = 30
+#		}
+#	}
+#	else_if = {	# If dying, massively increase penalties
+#		limit = {
+#			health < 1
+#		}
+#		add = 50
+#		add = {	# 100% chance of dying once hitting 0 health
+#			value = 1
+#			subtract = health
+#			multiply = 50
+#		}
+#	}
+#}
+#
+#hunting_chance_of_getting_lost = {
+#	value = 1
+#	if = {	# Needs to be a labyrinthine zone to be inherently risky
+#		limit = { exists = scope:labyrinthine }
+#		add = 20
+#	}
+#	if = {
+#		limit = { exists = scope:wasteland }
+#		add = 15
+#	}
+#	if = {	# If you have no experience with the great outdoors, there's #a reasonable chance of getting lost
+#		limit = { 
+#			NOR = { 
+#				has_trait = lifestyle_hunter
+#				has_trait = lifestyle_beasthunter
+#			} 
+#		}
+#		add = 20
+#	}
+#	if = {	# If you're already lost, the more lost you are, the easier #it is to get unlost. Goes up to 30
+#		limit = { root = { has_variable = lost_level } }
+#		add = {
+#			value = root.var:lost_level
+#			multiply = -5
+#		}
+#	}
+#	if = {	# If you're injured or in bad health in general, it becomes #harder to focus and easier to panic
+#		limit = { health < 3 }
+#		add = {
+#			value = 3
+#			subtract = health
+#			multiply = 10
+#		}
+#	}
+#	if = {	# Weighted by negative intelligence
+#		limit = { has_trait = intellect_bad_3 }
+#		add = 30
+#	}
+#	if = {
+#		limit = { has_trait = intellect_bad_2 }
+#		add = 20
+#	}
+#	if = {
+#		limit = { has_trait = intellect_bad_1 }
+#		add = 10
+#	}
+#	if = {	# Increased by being dull
+#		limit = { has_trait = dull }
+#		add = 10
+#	}
+#	if = {	# Increased by being fickle
+#		limit = { has_trait = fickle }
+#		add = 10
+#	}
+#	if = {	# Increased by being stubborn if already lost
+#		limit = { 
+#			has_trait = stubborn
+#			trigger_if = {
+#				limit = { root = { has_variable = lost_level } }
+#				root.var:lost_level > 0
+#			}
+#			trigger_else = { always = no }
+#		}
+#		add = 20
+#	}
+#	if = {	# Increased by being arrogant and not being a hunter or #already being lost
+#		limit = { 
+#			has_trait = arrogant
+#			OR = {
+#				NOR = { 
+#					has_trait = lifestyle_hunter
+#					has_trait = lifestyle_beasthunter
+#				} 
+#				trigger_if = {
+#					limit = { root = { has_variable = lost_level } }
+#					root.var:lost_level > 0
+#				}
+#				trigger_else = { always = no }
+#			}
+#		}
+#		add = 10
+#	}
+#	if = {	# Increased by being impatient
+#		limit = { has_trait = impatient }
+#		add = 10
+#	}
+#	if = {	# Increased by being insane
+#		limit = { has_trait = lunatic_1 }
+#		add = 10
+#	}
+#	if = {	# Increased by being a drunk
+#		limit = { has_trait = drunkard }
+#		add = 10
+#	}
+#	if = {	# Halved in home biozone
+#		limit = { exists = scope:hunting_in_home_biozone }
+#		multiply = 0.5
+#	}
+#	if = {
+#		limit = { 
+#			exists = scope:mountainous
+#		root.culture = { has_cultural_parameter = #mountain_dwellers_biome }
+#		}
+#		multiply = 0.75
+#	}
+#	if = {
+#		limit = {
+#			exists = scope:jungle
+#		root.culture = { has_cultural_parameter = #jungle_dwellers_biome }
+#		}
+#		multiply = 0.75
+#	}
+#	if = {
+#		limit = {
+#			exists = scope:woodland
+#			root.culture = { has_cultural_parameter = forest_folk_biome }
+#		}
+#		multiply = 0.75
+#	}
+#}
+#
+#hunting_chance_of_regaining_bearings = {
+#	value = 0
+#	if = {	# Scaled by hunting skill. Level 1 intentionally doesn't get a bonus since it instead cancels the 20 increased chance to actually #getting lost.
+#		limit = { has_trait = hunter_2 }
+#		add = 5
+#	}
+#	if = {
+#		limit = { has_trait = hunter_3 }
+#		add = 10
+#	}
+#	if = {
+#		limit = { has_trait = hunter_4 }
+#		add = 20
+#	}
+#	if = {	# Completely annuls chance of getting lost even in #labyrinthine zones
+#		limit = { has_trait = hunter_5 }
+#		add = 30
+#	}
+#	if = {	# Scaled by hunting skill. Made Beasthunter worse than #hunting for this, though I'll ask Hap about this later
+#		limit = { has_trait = beasthunter_1 }
+#		add = 2
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_2 }
+#		add = 5
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_3 }
+#		add = 10
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_4 }
+#		add = 20
+#	}
+#	if = {	# Weighted by positive intelligence
+#		limit = { has_trait = intellect_good_1 }
+#		add = 10
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_2 }
+#		add = 15
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_3 }
+#		add = 20
+#	}
+#	if = {	# Increased by being shrewd
+#		limit = { has_trait = shrewd }
+#		add = 10
+#	}
+#	if = {	# Increased by being patient
+#		limit = { has_trait = patient }
+#		add = 10
+#	}
+#}
+#
+#hunting_forage_success_chance = {
+#	value = 5	# Small inherent chance by default
+#	if = {	# Verdant and idyllic zones have abundant forage
+#		limit = { 
+#			OR = {
+#				exists = scope:verdant
+#				exists = scope:idyllic
+#			}
+#		}
+#		add = 20
+#	}
+#	if = {	# Scaled by hunting skill
+#		limit = { has_trait = hunter_2 }
+#		add = 5
+#	}
+#	if = {
+#		limit = { has_trait = hunter_3 }
+#		add = 10
+#	}
+#	if = {
+#		limit = { has_trait = hunter_4 }
+#		add = 20
+#	}
+#	if = {
+#		limit = { has_trait = hunter_5 }
+#		add = 30
+#	}
+#	if = {	# Scaled by hunting skill - beasthunter worse than hunter
+#		limit = { has_trait = beasthunter_1 }
+#		add = 2
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_2 }
+#		add = 5
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_3 }
+#		add = 10
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_4 }
+#		add = 20
+#	}
+#	add = {	# Knowing what you can actually forage for helps
+#		value = learning
+#		multiply = 0.5
+#	}
+#	if = {	# Slightly increased by being patient
+#		limit = { has_trait = patient }
+#		add = 5
+#	}
+#}
+#
+#hunting_injury_chance = {
+#	value = 1	# Always a small chance
+#	if = {	# Challenging Terrain makes it higher
+#		limit = { exists = scope:challenging_terrain }
+#		add = 10
+#	}
+#	if = {
+#		limit = { 
+#			exists = scope:challenging_terrain 
+#		root.culture = { has_cultural_parameter = #challenging_terrain_dwellers }
+#		}
+#		add = 5
+#	}
+#	if = {	# Poisonous wildlife makes it slightly higher
+#		limit = { exists = scope:poisonous_wildlife }
+#		add = 5
+#	}
+#	if = {	# If you're lost, stacking higher chances
+#		limit = { root = { has_variable = lost_level } }
+#		add = {
+#			value = root.var:lost_level
+#			multiply = 10
+#		}
+#	}
+#	if = {	# Weighted by negative intelligence
+#		limit = { has_trait = intellect_bad_3 }
+#		add = 30
+#	}
+#	if = {
+#		limit = { has_trait = intellect_bad_2 }
+#		add = 20
+#	}
+#	if = {
+#		limit = { has_trait = intellect_bad_1 }
+#		add = 10
+#	}
+#	if = {	# Increased by being dull
+#		limit = { has_trait = dull }
+#		add = 10
+#	}
+#	if = {	# Increased by being brave
+#		limit = { has_trait = brave }
+#		add = 3
+#	}
+#	if = {	# Increased by being impatient
+#		limit = { has_trait = impatient }
+#		add = 5
+#	}
+#	if = {	# Increased by being insane
+#		limit = { has_trait = lunatic_1 }
+#		add = 10
+#	}
+#	if = {	# Increased by being a drunk
+#		limit = { has_trait = drunkard }
+#		add = 10
+#	}
+#	
+#	if = {	# Slashed by positive intelligence
+#		limit = { has_trait = intellect_good_3 }
+#		multiply = 0.5
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_2 }
+#		multiply = 0.7
+#	}
+#	if = {
+#		limit = { has_trait = intellect_good_1 }
+#		multiply = 0.9
+#	}
+#	
+#	if = {	# Slashed by being a good hunter
+#		limit = { has_trait = hunter_1 }
+#		multiply = 0.9
+#	}
+#	if = {
+#		limit = { has_trait = hunter_2 }
+#		multiply = 0.75
+#	}
+#	if = {
+#		limit = { has_trait = hunter_3 }
+#		multiply = 0.6
+#	}
+#	if = {
+#		limit = { has_trait = hunter_4 }
+#		multiply = 0.45
+#	}
+#	if = {
+#		limit = { has_trait = hunter_5 }
+#		multiply = 0.3
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_1 }
+#		multiply = 0.8
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_2 }
+#		multiply = 0.7
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_3 }
+#		multiply = 0.6
+#	}
+#	if = {
+#		limit = { has_trait = beasthunter_4 }
+#		multiply = 0.5
+#	}
+#}
+#
+#moon_phase_factor = {
+#	value = 0.5
+#	if = {
+#		limit = {
+#			exists = global_var:current_moon_phase
+#			global_var:current_moon_phase = {
+#				has_variable = aervalr_strength
+#			}
+#		}
+#		add = {
+#			value = global_var:current_moon_phase.var:aervalr_strength
+#			multiply = 0.01
+#		}
+#	}
+#}
+#
+#hunting_quest_reward_gold_value = {
+#	value = 0
+#	if = {
+#		limit = { exists = var:quest_tier }
+#		if = {
+#			limit = { var:quest_tier = flag:mundane }
+#			add = tiny_gold_min_value
+#		}
+#		else_if = {
+#			limit = { var:quest_tier = flag:low }
+#			add = minor_gold_min_value
+#		}
+#		else_if = {
+#			limit = { var:quest_tier = flag:medium }
+#			add = medium_gold_min_value
+#		}
+#		else_if = {
+#			limit = { var:quest_tier = flag:high }
+#			add = massive_gold_min_value
+#		}
+#	}
+#	if = {
+#		limit = { has_focus = adventure_fortune_focus }
+#		multiply = 1.3
+#	}
+#	if = {
+#		limit = { exists = local_var:travel_costs }
+#		add = local_var:travel_costs
+#	}
+#}
+#
+##################################
+## SPECIFIC GAME PRESTIGE VALUES #
+##################################
+#
+#vampire_prestige_value = {
+#	value = scope:vampire.prowess
+#	multiply = 20
+#}
+#
+#werewolf_prestige_value = {
+#	value = major_prestige_value
+#	if = {
+#		limit = {
+#			exists = global_var:current_moon_phase
+#			global_var:current_moon_phase = {
+#				has_variable = aervalr_strength
+#			}
+#		}
+#		multiply = {
+#			value = 0.5
+#			add = {
+#				value = global_var:current_moon_phase.var:aervalr_strength
+#				multiply = 0.01
+#			}
+#		}
+#	}
+#}
+#
+
+## Commission Values
+
+hunt_commission_gold_value = {
+	value = 0
+	if = { # Tier 4
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:bear
+				involved_activity.var:animal_type = flag:kursha
+				involved_activity.var:animal_type = flag:lymrill
+				involved_activity.var:animal_type = flag:snow_leopard
+				involved_activity.var:animal_type = flag:panther
+				involved_activity.var:animal_type = flag:leopard
+			}
+		}
+		add = 50
+	}
+	else_if = { # Tier 5
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:lion
+				involved_activity.var:animal_type = flag:tiger
+				involved_activity.var:animal_type = flag:hippopotamus
+				involved_activity.var:animal_type = flag:rhinoceros
+				involved_activity.var:animal_type = flag:pegasus
+				involved_activity.var:animal_type = flag:tinessian_lion
+				involved_activity.var:animal_type = flag:owlbear
+				involved_activity.var:animal_type = flag:damotan_elephant
+				involved_activity.var:animal_type = flag:sarradon_elephant
+				involved_activity.var:animal_type = flag:kashiryan_elephant
+				involved_activity.var:animal_type = flag:gorilla
+				involved_activity.var:animal_type = flag:emperor_cobra
+				involved_activity.var:animal_type = flag:dire_mosquito
+				involved_activity.var:animal_type = flag:sea_scorpion
+				involved_activity.var:animal_type = flag:pooka
+				involved_activity.var:animal_type = flag:shade
+				involved_activity.var:animal_type = flag:hammerhead
+				involved_activity.var:animal_type = flag:brittlestar
+			}
+		}
+		add = 75
+	}
+	else_if = { # Tier 6
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:karkadann
+				involved_activity.var:animal_type = flag:crocotta
+				involved_activity.var:animal_type = flag:manticore
+				involved_activity.var:animal_type = flag:dire_lion
+				involved_activity.var:animal_type = flag:mammoth
+				involved_activity.var:animal_type = flag:gajara
+				involved_activity.var:animal_type = flag:griffon
+				involved_activity.var:animal_type = flag:crocodile
+				involved_activity.var:animal_type = flag:great_rahksasa
+				involved_activity.var:animal_type = flag:ukhinbooum
+				involved_activity.var:animal_type = flag:ugkilrrrmag
+				involved_activity.var:animal_type = flag:dreadleech
+				involved_activity.var:animal_type = flag:cockatrice
+				involved_activity.var:animal_type = flag:reef_automata
+				involved_activity.var:animal_type = flag:terrestrial_mutant
+				involved_activity.var:animal_type = flag:sea_mutant
+				involved_activity.var:animal_type = flag:crystal_wisp
+				involved_activity.var:animal_type = flag:merbeast
+			}
+		}
+		add = 100
+	}
+	else_if = { # Tier 7
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:urmahlullu
+				involved_activity.var:animal_type = flag:peluda
+				involved_activity.var:animal_type = flag:roc
+				involved_activity.var:animal_type = flag:gargoyle
+				involved_activity.var:animal_type = flag:naga
+				involved_activity.var:animal_type = flag:adze
+				involved_activity.var:animal_type = flag:bhramar
+				involved_activity.var:animal_type = flag:devouring_worm
+				involved_activity.var:animal_type = flag:karankoncolos
+				involved_activity.var:animal_type = flag:nagual
+				involved_activity.var:animal_type = flag:ochokochi
+				involved_activity.var:animal_type = flag:ubir
+				involved_activity.var:animal_type = flag:gaunt
+				involved_activity.var:animal_type = flag:false_kraken
+			}
+		}
+		add = 125
+	}
+	else_if = { # Tier 8 
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:werewolf
+				involved_activity.var:animal_type = flag:chimera
+				involved_activity.var:animal_type = flag:daggertusk
+				involved_activity.var:animal_type = flag:dire_griffon
+				involved_activity.var:animal_type = flag:coatl
+				involved_activity.var:animal_type = flag:myrmeke
+				involved_activity.var:animal_type = flag:wyrm
+				involved_activity.var:animal_type = flag:forest_troll
+				involved_activity.var:animal_type = flag:vampire
+				involved_activity.var:animal_type = flag:giant
+				involved_activity.var:animal_type = flag:almas
+				involved_activity.var:animal_type = flag:wildhunt
+				involved_activity.var:animal_type = flag:valien_diamond
+			}
+		}
+		add = 150
+	}
+	else_if = { # Tier 9
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:zilant
+				involved_activity.var:animal_type = flag:hieracosphinx
+				involved_activity.var:animal_type = flag:hydra
+				involved_activity.var:animal_type = flag:running_raptor
+				involved_activity.var:animal_type = flag:twin_serpent
+				involved_activity.var:animal_type = flag:roaring_lizard
+				involved_activity.var:animal_type = flag:pyralis
+				involved_activity.var:animal_type = flag:false_hydra
+				involved_activity.var:animal_type = flag:djinn
+				involved_activity.var:animal_type = flag:cor
+			}
+		}
+		add = 175
+	}
+	else_if = { # Tier 10, primarily Legendaries & Elementals
+		limit = {
+			OR = {
+				involved_activity.var:animal_type = flag:apep_ibizan
+				involved_activity.var:animal_type = flag:simurgh
+				involved_activity.var:animal_type = flag:akapura
+				involved_activity.var:animal_type = flag:tarasque
+				involved_activity.var:animal_type = flag:devi
+				involved_activity.var:animal_type = flag:shahmaran
+				involved_activity.var:animal_type = flag:banshee
+				involved_activity.var:animal_type = flag:fortune_eater
+				involved_activity.var:animal_type = flag:leshen
+				involved_activity.var:animal_type = flag:rock_giant
+				involved_activity.var:animal_type = flag:manzasiri
+				involved_activity.var:animal_type = flag:living_blizzard
+				involved_activity.var:animal_type = flag:whisperwind
+				involved_activity.var:animal_type = flag:aboleth
+				involved_activity.var:animal_type = flag:fogbeast
+				involved_activity.var:animal_type = flag:vendarja
+				involved_activity.var:animal_type = flag:seamonster
+			}
+		}
+		add = 200
+	}
+}
+
+hunt_gh_steppe_queen_xp_value = {
+	value = 1
+	scope:activity = {
+		if = {
+			limit = { GH_creature_prestige_tier_01_trigger = { VAR = var:animal_type } }
+			multiply = 2
+		}
+		else_if = { # Tier 2
+			limit = { GH_creature_prestige_tier_02_trigger = { VAR = var:animal_type } }
+			multiply = 3
+		}
+		else_if = { # Tier 3
+			limit = { GH_creature_prestige_tier_03_trigger = { VAR = var:animal_type } }
+			multiply = 4
+		}
+		else_if = { # Tier 4
+			limit = { GH_creature_prestige_tier_04_trigger = { VAR = var:animal_type } }
+			multiply = 5
+		}
+		else_if = { # Tier 5
+			limit = { GH_creature_prestige_tier_05_trigger = { VAR = var:animal_type } }
+			multiply = 6
+		}
+		else_if = { # Tier 6
+			limit = { GH_creature_prestige_tier_06_trigger = { VAR = var:animal_type } }
+			multiply = 8
+		}
+		else_if = { # Tier 7
+			limit = { GH_creature_prestige_tier_07_trigger = { VAR = var:animal_type } }
+			multiply = 9
+		}
+		else_if = { # Tier 8 
+			limit = { GH_creature_prestige_tier_08_trigger = { VAR = var:animal_type } }
+			multiply = 10
+		}
+		else_if = { # Tier 9
+			limit = { GH_creature_prestige_tier_09_trigger = { VAR = var:animal_type } }
+			multiply = 12
+		}
+		else_if = { # Tier 10, primarily Legendaries & Elementals
+			limit = { GH_creature_prestige_tier_10_trigger = { VAR = var:animal_type } }
+			multiply = 14
+		}
+		else = { multiply = 2 }
+		if = {
+			limit = { has_activity_option = { category = hunt_option_party_size option = hunt_party_size_normal } }
+			multiply = 1.25
+		}
+		else_if = {
+			limit = { has_activity_option = { category = hunt_option_party_size option = hunt_party_size_many } }
+			multiply = 1.5
+		}
+	}
+	if = {
+		limit = { scope:activity.var:hunt_success ?= flag:no }
+		divide = 2
+	}
+	if = {
+		limit = {
+			scope:activity = {
+				has_activity_option = { category = special_type option = hunt_type_legendary }
+				var:hunt_success ?= flag:yes
+			}
+		}
+		multiply = 2
+	}
+	else_if = {
+		limit = { scope:activity = { has_activity_option = { category = special_type option = hunt_type_monster_hunt } } }
+		multiply = 1.25
+	}
+	round = yes
+}

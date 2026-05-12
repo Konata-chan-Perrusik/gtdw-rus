@@ -1,0 +1,110 @@
+﻿court_gaffer_total_salary_value = {
+	value = medium_court_position_salary
+	if = {
+		limit = { court_position_inner_circle_salary_trigger = { POS = court_gaffer } }
+		multiply = {
+			value = 0
+			desc = inner_circle_salary_mod
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	else_if = {
+		limit = {
+			court_position_obligation_hook_salary_trigger = {
+				POS = court_gaffer
+				LIEGE = scope:liege
+			}
+		}
+		multiply = {
+			value = 0.5
+			desc = obligation_hook_salary
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	if = {
+		limit = {
+			court_position_halved_salary_trigger = { POS = court_gaffer }
+		}
+		multiply = {
+			value = 0.5
+			desc = court_position_halved_salary
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	# Increased salary
+	if = {
+		limit = {
+			court_position_increased_salary_trigger = { POS = court_gaffer }
+		}
+		multiply = {
+			value = 1.5
+			desc = court_position_increased_salary
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	if = {
+		limit = { 
+			scope:liege ?= { government_has_flag = government_is_landless_adventurer }
+		}
+		multiply = {
+			value = 0
+			desc = court_position_laamps_free
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+}
+
+court_gaffer_prestige_salary_value = {
+	value = medium_court_position_prestige_salary
+	if = {
+		limit = { court_position_inner_circle_salary_trigger = { POS = court_gaffer } }
+		multiply = {
+			value = 0
+			desc = inner_circle_salary_mod
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	else_if = {
+		limit = {
+			court_position_obligation_hook_salary_trigger = {
+				POS = court_gaffer
+				LIEGE = scope:liege
+			}
+		}
+		multiply = {
+			value = 0.5
+			desc = obligation_hook_salary
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	if = {
+		limit = {
+			court_position_halved_salary_trigger = { POS = court_gaffer }
+		}
+		multiply = {
+			value = 0.5
+			desc = court_position_halved_salary
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	if = {
+		limit = {
+			court_position_increased_salary_trigger = { POS = court_gaffer }
+		}
+		multiply = {
+			value = 1.5
+			desc = court_position_increased_salary
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+	if = {
+		limit = { 
+			scope:liege ?= { government_has_flag = government_is_landless_adventurer }
+		}
+		multiply = {
+			value = 0
+			desc = court_position_laamps_free
+			format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+		}
+	}
+}

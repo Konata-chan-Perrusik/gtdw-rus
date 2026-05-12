@@ -1,0 +1,750 @@
+﻿clique_republic_elective = {
+	elector_vote_strength = {
+		base = 0
+		modifier = { # Political power
+			desc = tooltip_clique_political_power_elector_strength
+			add = character_influence_total
+		}
+		
+	}
+	
+	electors = {
+		add = holder
+		add = holder_direct_vassals
+		add = title_claimants
+	}
+
+	candidate_score = {
+		base = 0
+		######################	Elector self-voting pattern	##########################
+		elector_self_voting_pattern_clique_elective_modifier = yes
+		# some stuff about children of the ruler voting for themselves needed to be changed from the feudal one
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_prestige_piety_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one for republics
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either
+		
+		##########################	Elector voting patterns (cliques)	##########################
+		elector_voting_pattern_circumstances_clique_mechanics_modifier = yes
+	}
+	
+	#scope:candidate = Candidate, scope:title = Title, scope:holder_candidate = Candidate currently selected by ruler.
+	candidates = {
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				GH_is_any_republic_government_trigger = yes
+				age > 15
+			}
+		}
+		add = {
+			type = title_claimants
+			limit = {
+				OR = {
+					GH_is_any_republic_government_trigger = yes
+					is_playable_character = no
+				}
+				age > 15
+			}
+		}
+		add = {
+			type = holder_close_family
+			limit = {
+				OR = {
+					GH_is_any_republic_government_trigger = yes
+					is_playable_character = no
+				}
+				age > 15
+				culture = { has_same_culture_heritage = scope:holder.culture }
+			}
+		}
+	}
+}
+
+## Non-Clique Republican Electives
+oligarchic_elective = { # The Landed Nobility still exerts some power in affairs
+	elector_vote_strength = {
+		base = 1
+		modifier = { # Emperor
+			desc = tooltip_feudal_vote_strength_emperor_tier
+			add = 1
+			highest_held_title_tier = 5
+		}
+		modifier = { # King
+			desc = tooltip_feudal_vote_strength_king_tier
+			add = 1
+			highest_held_title_tier = 4
+		}
+		modifier = { # Duke
+			desc = tooltip_feudal_vote_strength_duke_tier
+			add = 1
+			highest_held_title_tier = 3
+		}
+		modifier = { # Count
+			desc = tooltip_feudal_vote_strength_count_tier
+			add = 1
+			highest_held_title_tier = 2
+		}
+		modifier = { # Prestige
+			desc = tooltip_vote_strength_prestige_level
+			add = {
+				add = prestige_level
+				multiply = 2
+			}
+		}
+		modifier = { # Prestige value
+			desc = tooltip_vote_strength_prestige_reserve
+			add = {
+				add = prestige
+				multiply = 0.05
+			}
+		}
+		modifier = { # Political power
+			desc = tooltip_clique_political_power_elector_strength
+			add = {
+				add = influence_level
+				multiply = 3
+			}
+			government_allows = administrative
+		}
+		modifier = {
+			desc = tooltip_clique_political_power_elector_strength
+			add = {
+				add = influence
+				multiply = 0.075
+			}
+			government_allows = administrative
+		}
+		modifier = {
+			desc = tooltip_vote_strength_slandered
+			factor = 0.5
+			has_character_modifier = scheme_slandered_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_strength_promoted
+			factor = 1.25
+			has_character_modifier = scheme_promoted_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_privateer
+			factor = 0.5
+
+			vassal_contract_has_flag = republican_privateers
+		}
+		modifier = {
+			desc = tooltip_vote_burgher
+			factor = 1.25
+
+			vassal_contract_has_flag = republican_burghers
+		}
+		modifier = {
+			desc = magi_election_bad_desc
+			factor = 0.25
+			faith = { has_doctrine = doctrine_magic_crime }
+		}
+		min = 0
+	}
+
+	electors = {
+		add = holder
+		add = {
+			type = title_dejure_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+				any_held_title = {
+					tier = root.highest_held_title_tier
+					exists = de_jure_liege
+					target_is_de_jure_liege_or_above = scope:title
+				}
+			}
+		}
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+			}
+		}
+	}
+
+	candidate_score = {
+		base = 0
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Holder voting pattern	##########################
+		holder_voting_pattern_feudal_elective_modifier = yes
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_prestige_piety_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one for republics
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either
+		
+	}
+
+	candidates = {
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				feudal_elective_potential_landed_candidate_trigger = yes
+			}
+		}
+		
+		add = {
+			type = title_claimants
+			limit = { feudal_elective_potential_landless_claimant_candidate_trigger = yes }
+		}
+		add = {
+			type = holder_close_family
+			limit = {
+				is_close_family_of = scope:holder
+				feudal_elective_potential_landless_dynastic_candidate_trigger = yes
+			}
+		}
+	}
+}
+
+stratocratic_elective = {
+	elector_vote_strength = {
+		base = 1
+		modifier = { # Emperor
+			desc = tooltip_feudal_vote_strength_emperor_tier
+			add = 1
+			highest_held_title_tier = 5
+		}
+		modifier = { # King
+			desc = tooltip_feudal_vote_strength_king_tier
+			add = 1
+			highest_held_title_tier = 4
+		}
+		modifier = { # Duke
+			desc = tooltip_feudal_vote_strength_duke_tier
+			add = 1
+			highest_held_title_tier = 3
+		}
+		modifier = { # Count
+			desc = tooltip_feudal_vote_strength_count_tier
+			add = 1
+			highest_held_title_tier = 2
+		}
+		modifier = {
+			desc = tooltip_vote_military_strength
+			add = {
+				add = current_military_strength
+				multiply = 0.01
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_number_of_knights
+			add = {
+				add = max_number_of_knights
+				multiply = 0.5
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_martial
+			add = 1
+			has_trait = education_martial
+		}
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_martial
+			add = 1
+			martial_lifestyle_perks > 0
+		}
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_martial_trait
+			add = 3
+			has_martial_lifestyle_trait_trigger = yes	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_martial_3
+			add = 2
+			has_trait = education_martial_3	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_martial_4
+			add = 4
+			OR = {
+				has_trait = education_martial_4
+				has_trait = education_martial_5
+			}	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_commander_traits_number
+			add = {
+				add = number_of_commander_traits
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_martial_points
+			add = {
+				add = martial
+				multiply = 0.15
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_influence_level
+			add = {
+				add = influence_level
+				multiply = 3
+			}
+			government_allows = administrative
+		}
+		
+		modifier = {
+			desc = tooltip_vote_strength_influence_reserve
+			add = {
+				add = influence
+				multiply = 0.075
+			}
+			government_allows = administrative
+		}
+		modifier = {
+			desc = tooltip_vote_strength_slandered
+			factor = 0.5
+			has_character_modifier = scheme_slandered_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_strength_promoted
+			factor = 1.25
+			has_character_modifier = scheme_promoted_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_privateer
+			factor = 1.25
+
+			vassal_contract_has_flag = republican_privateers
+		}
+		modifier = {
+			desc = tooltip_vote_burgher
+			factor = 0.5
+
+			vassal_contract_has_flag = republican_burghers
+		}
+		modifier = {
+			desc = magi_election_bad_desc
+			factor = 0.25
+			faith = { has_doctrine = doctrine_magic_crime }
+		}
+		min = 0
+	}
+	electors = {
+		add = holder
+		add = {
+			type = title_dejure_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+				any_held_title = {
+					tier = root.highest_held_title_tier
+					exists = de_jure_liege
+					target_is_de_jure_liege_or_above = scope:title
+				}
+			}
+		}
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+			}
+		}
+	}
+
+	candidate_score = {
+		base = 0
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Holder voting pattern	##########################
+		holder_voting_pattern_feudal_elective_modifier = yes
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_prestige_piety_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one for republics
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either	
+	}
+
+	candidates = {
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				feudal_elective_potential_landed_candidate_trigger = yes
+			}
+		}
+		 
+		add = {
+			type = title_claimants
+			limit = {
+				is_adult = yes
+				feudal_elective_potential_landless_claimant_candidate_trigger = yes
+			}
+		}
+		add = {
+			type = holder_close_family
+			limit = {
+				is_close_family_of = scope:holder
+				is_adult = yes
+				feudal_elective_potential_landless_dynastic_candidate_trigger = yes
+			}
+		}
+	}
+}
+
+mercantile_elective = {
+	elector_vote_strength = {
+		base = 1
+		modifier = { # Emperor
+			desc = tooltip_feudal_vote_strength_emperor_tier
+			add = 4
+			highest_held_title_tier = 5
+		}
+		modifier = { # King
+			desc = tooltip_feudal_vote_strength_king_tier
+			add = 3
+			highest_held_title_tier = 4
+		}
+		modifier = { # Duke
+			desc = tooltip_feudal_vote_strength_duke_tier
+			add = 2
+			highest_held_title_tier = 3
+		}
+		modifier = { # Count
+			desc = tooltip_feudal_vote_strength_count_tier
+			add = 1
+			highest_held_title_tier = 2
+		}
+		modifier = {
+			desc = tooltip_vote_strength_gold
+			add = {
+				add = gold
+				multiply = 0.05
+			}
+		}	
+		modifier = {
+			desc = tooltip_vote_strength_monthly_income
+			add = {
+				add = monthly_character_income
+				multiply = 0.5
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_stewardship
+			add = 1
+			has_trait = education_stewardship
+		}
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_stewardship
+			add = 1
+			stewardship_lifestyle_perks > 0	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_lifestyle_stewardship_trait
+			add = 3
+			has_stewardship_lifestyle_trait_trigger = yes	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_stewardship_3
+			add = 2
+			has_trait = education_stewardship_3	
+		}
+		modifier = {
+			desc = tooltip_vote_strength_education_stewardship_4
+			add = 4
+			OR = {
+				has_trait = education_stewardship_4
+				has_trait = education_stewardship_5
+			}	
+		}
+		modifier = {
+			
+			desc = tooltip_vote_strength_stewardship_points
+			add = {
+				add = stewardship
+				multiply = 0.15
+			}
+		}
+		modifier = {
+			desc = tooltip_vote_strength_steward
+			add = 4
+			has_council_position = councillor_steward
+		}
+		modifier = {
+			desc = tooltip_vote_strength_influence_level
+			add = {
+				add = influence_level
+				multiply = 3
+			}
+			government_allows = administrative
+		}
+		modifier = {
+			desc = tooltip_vote_strength_influence_reserve
+			add = {
+				add = influence
+				multiply = 0.075
+			}
+			government_allows = administrative
+		}	
+		modifier = {
+			desc = tooltip_vote_strength_slandered
+			factor = 0.5
+			
+			has_character_modifier = scheme_slandered_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_strength_promoted
+			factor = 1.25
+			
+			has_character_modifier = scheme_promoted_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_privateer
+			factor = 0.5
+
+			vassal_contract_has_flag = republican_privateers
+		}
+		modifier = {
+			desc = tooltip_vote_burgher
+			factor = 1.25
+
+			vassal_contract_has_flag = republican_burghers
+		}
+		modifier = {
+			desc = magi_election_bad_desc
+			factor = 0.25
+			faith = { has_doctrine = doctrine_magic_crime }
+		}
+		min = 0
+	}
+	electors = {
+		add = holder
+		add = {
+			type = title_dejure_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+				any_held_title = {
+					tier = root.highest_held_title_tier
+					exists = de_jure_liege
+					target_is_de_jure_liege_or_above = scope:title
+				}
+			}
+		}
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+			}
+		}
+	}
+
+	candidate_score = {
+		base = 0
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Holder voting pattern	##########################
+		holder_voting_pattern_feudal_elective_modifier = yes
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_prestige_piety_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one for republics
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either	
+	}
+
+	candidates = {
+		add = {
+			type = holder_direct_vassals
+			limit = {
+				is_adult = yes
+				is_vassal_of = scope:holder
+				feudal_elective_potential_landed_candidate_trigger = yes
+			}
+		}
+		 
+		add = {
+			type = title_claimants
+			limit = {
+				is_adult = yes
+				feudal_elective_potential_landless_claimant_candidate_trigger = yes
+			}
+		}
+		add = {
+			type = holder_close_family
+			limit = {
+				is_close_family_of = scope:holder
+				is_adult = yes
+				feudal_elective_potential_landless_dynastic_candidate_trigger = yes
+			}
+		}
+	}
+}
+
+blood_elective = {
+	elector_vote_strength = {
+		base = 0
+		modifier = { # Emperor
+			desc = tooltip_feudal_vote_strength_emperor_tier
+			add = 4
+			highest_held_title_tier = 5
+		}
+		modifier = { # King
+			desc = tooltip_feudal_vote_strength_king_tier
+			add = 3
+			highest_held_title_tier = 4
+		}
+		modifier = { # Duke
+			desc = tooltip_feudal_vote_strength_duke_tier
+			add = 2
+			highest_held_title_tier = 3
+		}
+		modifier = { # Count
+			desc = tooltip_feudal_vote_strength_count_tier
+			add = 1
+			highest_held_title_tier = 2
+		}
+		modifier = {
+			desc = tooltip_vote_strength_influence_level
+			add = {
+				add = influence_level
+				multiply = 3
+			}
+			government_allows = administrative
+		}
+		modifier = {
+			desc = tooltip_vote_strength_influence_reserve
+			add = {
+				add = influence
+				multiply = 0.075
+			}
+			government_allows = administrative
+		}	
+		modifier = {
+			desc = tooltip_vote_strength_slandered
+			factor = 0.5
+			
+			has_character_modifier = scheme_slandered_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_strength_promoted
+			factor = 1.25
+			
+			has_character_modifier = scheme_promoted_modifier
+		}
+		modifier = {
+			desc = tooltip_vote_privateer
+			factor = 0.5
+
+			vassal_contract_has_flag = republican_privateers
+		}
+		modifier = {
+			desc = tooltip_vote_burgher
+			factor = 0.5
+
+			vassal_contract_has_flag = republican_burghers
+		}
+		modifier = {
+			desc = magi_election_bad_desc
+			factor = 0.25
+			faith = { has_doctrine = doctrine_magic_crime }
+		}
+		min = 0
+	}
+
+	electors = {
+		add = holder
+		add = {
+			type = title_dejure_vassals
+			limit = {
+				is_vassal_of = scope:holder
+				is_adult = yes
+				NOT = { has_trait = incapable }
+				any_held_title = {
+					tier = root.highest_held_title_tier
+					exists = de_jure_liege
+					target_is_de_jure_liege_or_above = scope:title
+				}
+			}
+		}
+	}
+
+	candidate_score = {
+		base = 0
+
+		##########################	Elector voting patterns (circumstances)	##########################
+		elector_voting_pattern_circumstances_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one
+
+		##########################	Holder voting pattern	##########################
+		holder_voting_pattern_feudal_elective_modifier = yes
+
+		##########################	Elector voting patterns (prestige/piety)	##########################
+		elector_voting_pattern_prestige_piety_feudal_elective_modifier = yes
+		# doesn't need to be changed from the feudal one for republics
+
+		##########################	Elector voting patterns (traits)	##########################
+		elector_voting_pattern_traits_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one
+
+		##########################	Elector voting patterns (opinion)	##########################
+		elector_voting_pattern_opinion_feudal_elective_modifier = yes
+		# doesn't seem necessary to change this from the feudal one either	
+	}
+
+	candidates = {
+		add = {
+			type = holder_close_or_extended_family
+			limit = { is_adult = yes }
+		}
+	}
+}

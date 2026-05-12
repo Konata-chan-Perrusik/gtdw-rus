@@ -1,0 +1,539 @@
+﻿#Runs code that needs to happen every month
+on_monthly = {
+	effect = {
+		#########
+		# MAGIC #
+		#########
+		# Initializes and/or updates all passive magic generation related variables for all Magi
+		global_magic_calculations = yes
+		every_in_global_list = {
+			variable = non_magi_with_exposure
+			#reduce_overwhelmation = yes # GH TODO: this doesnt currently exist
+		}
+
+		# update pirates smuggling lists and remove counties that have reached 100 control
+		every_independent_ruler = {
+			if = {
+				limit = {
+					government_has_flag = government_is_pirate
+				}
+				update_shadow_ports_list_and_value = yes
+			}
+		}
+		# update the trade confluences
+		trade_strait_table_effect = { MODE = update }
+		####################
+		# LEGAL TRADITIONS #
+		####################
+		update_global_legal_tradition_information_effect = yes
+	}
+
+	on_actions = {
+		delay = { months = 1 }
+		on_monthly
+	}
+}
+
+on_biannual_fog = {
+	effect = {
+		trigger_event = { id = gh_fog_spread_events.1 }
+		every_ruler = {
+			limit = {
+				OR = {
+					is_fogeater = yes
+					any_sub_realm_county = {
+						OR = {
+							has_county_modifier = fogswept_modifier
+							culture = culture:fog_eaters
+							faith = faith:fogeater
+						}
+					}
+				}
+			}
+			if = {
+				limit = { is_fogeater = yes }
+				trigger_event = gh_fog_spread_events.5
+			}
+			else = { trigger_event = gh_fog_spread_events.6 }
+		}
+	}
+}
+
+biannual_moon_cycle = {
+	effect = {
+		advance_moon_phase = yes
+	}
+}
+
+yearly_gedeora_pulse = {
+	effect = {
+		random_list = {
+			0 = {
+				trigger = { NOT = { has_game_rule = gedeora_frequency_disabled } }
+				modifier = {
+					add = 5
+					has_game_rule = gedeora_frequency_rare # Has a 5% chance of striking each year
+				}
+				modifier = {
+					add = 20
+					has_game_rule = gedeora_frequency_default # Has a 20% chance of striking each year
+				}
+				modifier = {
+					add = 50
+					has_game_rule = gedeora_frequency_common # Has a 50% chance of striking each year
+				}
+				modifier = {
+					add = 100
+					OR = {
+						has_game_rule = gedeora_frequency_extreme # Has a 100% chance of striking each year
+						has_game_rule = gedeora_frequency_armageddon # Strikes multiple times a year
+					}
+				}
+				if = {
+					limit = { NOT = { has_game_rule = gedeora_frequency_armageddon } }
+					trigger_event = {
+						id = gedeora.0001
+						days = { 1 360 }
+					}
+				}
+				else = {
+					trigger_event = {
+						id = gedeora.0001
+						days = { 1 180 }
+					}
+				}
+			}
+			0 = {
+				modifier = {
+					add = 95
+					has_game_rule = gedeora_frequency_rare
+				}
+				modifier = {
+					add = 80
+					has_game_rule = gedeora_frequency_default
+				}
+				modifier = {
+					add = 50
+					has_game_rule = gedeora_frequency_common
+				}
+				modifier = {
+					add = 100
+					has_game_rule = gedeora_frequency_disabled
+				}
+			}
+		}
+	}
+}
+
+on_yearly_legacy_of_elysia_check = {	# Yearly check to give Aversarian counties in Etepezea the Legacy of Elysia modifier. Should self-terminate after 1304 AD
+	effect = {
+		if = {
+			limit = { current_date <= 1304.1.1 }
+			every_county_in_region = {
+				region = world_ga_western_aversaria
+				limit = {
+					has_county_modifier = legacy_of_elysia
+					NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+					holder.top_liege.primary_title = title:e_migrant_coalition
+				}
+				remove_county_modifier = legacy_of_elysia
+			}
+			trigger_event = {
+				on_action = on_yearly_legacy_of_elysia_check
+				days = 360
+			}
+		}
+	}
+}
+
+on_yearly_mainland_refugees_check = {	# Yearly check to give non-Redlander heritage counties in Redlands the Mainland Refugees modifier. Should self-terminate after 1274 IS
+	effect = {
+		if = {	# If the date is post 1274, remove the modifier everywhere and self-terminate the on_action
+			limit = { current_date <= 1274.1.1 }
+			every_county_in_region = {
+				region = redlands_biozone
+				if = {
+					limit = {
+						has_county_modifier = mainland_refugees_modifier
+						holder.culture = { has_cultural_pillar = heritage_redlander }
+					}
+					remove_county_modifier = mainland_refugees_modifier
+				}
+				if = {
+					limit = {
+						has_county_modifier = collapsed_administration_modifier
+						holder.culture = { has_cultural_pillar = heritage_redlander }
+					}
+					remove_county_modifier = collapsed_administration_modifier
+				}
+			}
+			trigger_event = {
+				on_action = on_yearly_mainland_refugees_check
+				days = 360
+			}
+		}
+	}
+}
+
+on_yearly_aftermath_of_the_ash_war_check = {	# Yearly check to give Aversarian counties in the Black Mountains the Ash War modifier. Should self-terminate after 1264
+	effect = {
+		if = {	# If the date is post 1264, remove the modifier everywhere and self-terminate the on_action
+			limit = { current_date <= 1264.1.1 }
+			every_county_in_region = {
+				region = world_ga_mountainheights
+				if = {
+					limit = {
+						has_county_modifier = aftermath_of_the_ash_war
+						NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+						holder.top_liege.primary_title = title:k_warisnik
+					}
+					remove_county_modifier = aftermath_of_the_ash_war
+
+				}
+			}
+			trigger_event = {
+				on_action = on_yearly_aftermath_of_the_ash_war_check
+				days = 360
+			}
+		}
+	}
+}
+
+on_yearly_legacy_of_icw_check = {	# Yearly check to give Aversarian counties in Opakhasia the Legacy of the Civil War modifier. Should self-terminate after 1286 AD
+	effect = {
+		if = {	# If the date is post 1286, remove the modifier everywhere and self-terminate the on_action
+			limit = { current_date <= 1286.1.1 }
+			every_county_in_region = {
+				region = world_ga_central_aversaria
+				if = {
+					limit = {
+						has_county_modifier = legacy_of_icw
+						NOT = { culture = { has_cultural_pillar = heritage_aversarian } }
+						holder.top_liege.primary_title = title:e_migrant_coalition
+					}
+					remove_county_modifier = legacy_of_icw
+				}
+			}
+			trigger_event = {
+				on_action = on_yearly_legacy_of_icw_check
+				days = 360
+			}
+		}
+	}
+}
+
+
+on_yearly_malcoisiac_anarchy_check = {	# Yearly check to give Aversarian counties in Malcois the Anarchy modifier.
+	effect = {
+		every_county_in_region = {
+			region = world_ga_northern_aversaria
+			if = {
+				limit = {
+					has_county_modifier = malcoisiac_anarchy
+					OR = {
+						NOT = { holder.culture = { has_cultural_pillar = heritage_aversarian } }
+						holder.top_liege.primary_title = { tier = tier_kingdom }
+						holder.top_liege.primary_title = { tier = tier_empire }
+					}
+				}
+				remove_county_modifier = malcoisiac_anarchy
+			}
+			else_if = {
+				limit = {
+					holder.culture = { has_cultural_pillar = heritage_aversarian }
+					NOT = { has_county_modifier = malcoisiac_anarchy }
+					NOT = { holder.top_liege.primary_title = { tier = tier_kingdom } }
+					NOT = { holder.top_liege.primary_title = { tier = tier_empire } }
+				}
+				add_county_modifier = malcoisiac_anarchy
+			}
+		}
+		trigger_event = {
+			on_action = on_yearly_malcoisiac_anarchy_check
+			days = 360
+		}
+	}
+}
+
+on_yearly_ruined_by_ulfirx_check = {	# Yearly check to give Aversarian island counties in Opakhasia the Raided by ulfirx modifier. Should self-terminate after 1284 AD
+	effect = {
+		if = {	# If the date is post 1284, remove the modifier everywhere and self-terminate the on_action
+			limit = { current_date <= 1284.1.1 }
+			every_county_in_region = {
+				region = world_ga_aversarian_isles
+				if = {
+					limit = {
+						has_county_modifier = ruined_by_ulfirx
+						holder.top_liege.primary_title = title:e_migrant_coalition
+					}
+					remove_county_modifier = ruined_by_ulfirx
+				}
+			}
+			trigger_event = {
+				on_action = on_yearly_ruined_by_ulfirx_check
+				days = 360
+			}
+		}
+	}
+}
+
+on_yearly_sarradon_horn_tidal_check = { # Checks the Tide in the Horn of Sarradon to apply the county modifier 
+	effect = {
+		every_county_in_region = {
+			region = world_ga_sarradon_horn
+			if = {
+				limit = {
+					has_county_modifier = high_tide_modifier
+				}
+				remove_county_modifier = high_tide_modifier
+			}
+			if = {
+				limit = {
+					has_county_modifier = low_tide_modifier
+				}
+				remove_county_modifier = low_tide_modifier
+			}
+			if = {
+				limit = {
+					NOT = { has_county_modifier = high_tide_modifier }
+					title_province = { has_building = 01_crab_ranch }
+				}
+				title_province = { remove_building = 01_crab_ranch }
+			}
+			random_list = {
+				50 = {
+					add_county_modifier = high_tide_modifier
+				}
+				50 = {
+					add_county_modifier = low_tide_modifier
+				}
+			}
+		}
+		trigger_event = {
+			on_action  = on_yearly_sarradon_horn_tidal_check
+			days = 780
+		}
+	}
+}
+
+yearly_aervalr_shard_pulse = {
+	effect = {
+		random_list = { # GH TODO: Is this the best way to do this?
+			60 = { } # Nothing, Aervalr shards should fall once every 3 years or so.
+			120 = {
+				trigger = { has_game_rule = aervalr_shard_quadrupled }
+				trigger_event = {
+					id = aervalr.0100
+					days = { 1 360 }
+				}
+			}
+			40 = {
+				trigger = { has_game_rule = aervalr_shard_doubled }
+				trigger_event = {
+					id = aervalr.0100
+					days = { 1 360 }
+				}
+			}
+			40 = {
+				trigger_event = {
+					id = aervalr.0100
+					days = { 1 360 }
+				}
+			}
+		}
+	}
+}
+
+daily_aervalr_shard_on_action = {
+	effect = {
+		random_list = {
+			50 = {
+				random_living_character = {
+					trigger_event = {
+						id = aervalr.0100
+						days = { 1 30 }
+					}
+					trigger_event = {
+						on_action = daily_aervalr_shard_on_action
+						days = { 1 3 }
+					}
+				}
+			}
+			50 = {
+				random_living_character = {
+					limit = { is_ai = yes } # The events get really spammy, so they're focused away from the player
+					trigger_event = {
+						id = aervalr.0100
+						days = { 1 30 }
+					}
+					trigger_event = {
+						on_action = daily_aervalr_shard_on_action
+						days = { 1 3 }
+					}
+				}
+			}
+		}
+	}
+}
+
+on_yearly_amsari_blood_check = {	# Yearly check to see if the Amsari empire has the Prophets blood trait
+	effect = {
+		set_global_variable = {
+			name = amsari_blood_length
+			value = 1
+		}
+		if = {
+			limit = { 
+				title:e_amsari = {
+					holder = {
+						NOT = {
+							has_trait = gh_blood_of_prophet
+						}
+					}
+				}
+			}
+			change_global_variable = {
+				name = amsari_blood_length
+				add = 1
+			}
+		}
+		if = {
+			limit = {
+				global_var:amsari_blood_length >= 50
+				NOT = {
+					has_global_variable = reformed_amsari
+				}
+			}
+			title:e_amsari = {
+				holder = {
+					trigger_event = gh_amsari.0013
+					every_vassal = {
+						limit = {
+							is_playable_character = yes
+						}
+						trigger_event = gh_amsari.0013
+					}
+					destroy_title = title:e_amsari
+				}
+			}
+		}
+	}
+
+	on_actions = {
+		delay = { months = 12}
+		on_yearly_amsari_blood_check
+	}
+}
+
+sjalvolki_conquest_events = {
+	random_events = {
+		100 = 0
+		25 = sjalvolki_conquest.0101
+		25 = sjalvolki_conquest.0111
+		25 = sjalvolki_conquest.0121
+		25 = sjalvolki_conquest.0131
+		25 = sjalvolki_conquest.0141
+		#3 = sjalvolki_conquest.0120
+		#3 = sjalvolki_conquest.0122
+		#3 = sjalvolki_conquest.0123
+		#3 = sjalvolki_conquest.0124
+		#3 = sjalvolki_conquest.0126
+		#4 = sjalvolki_conquest.0127
+		#3 = sjalvolki_conquest.0128
+		#3 = sjalvolki_conquest.0129
+		#3 = sjalvolki_conquest.0130
+		#3 = sjalvolki_conquest.0131
+		#3 = sjalvolki_conquest.0132
+		#3 = sjalvolki_conquest.0138
+		#3 = sjalvolki_conquest.0141
+		#3 = sjalvolki_conquest.0144
+		#3 = sjalvolki_conquest.0145
+		#3 = sjalvolki_conquest.0146
+		#3 = sjalvolki_conquest.0148
+	}
+}
+
+vampire_start_check_pulse = {
+	effect = {
+		every_county = {
+			limit = {
+				trigger_if = {
+					limit = { exists = empire }
+					OR = {
+						empire = title:e_cornucopia
+						empire = title:e_the_reach
+					}
+				}
+				trigger_else = { always = no }
+			}
+			set_variable = {
+				name = dominant_vampire_faith
+				value = faith:aversarinas_aagiokrata
+				years = 50
+			}
+			set_variable = {
+				name = dominant_vampire_culture
+				value = culture:northernimperial
+				years = 50
+			}
+			set_variable = {
+				name = temporary_vampire_check_block
+				days = 5
+			}
+		}
+	}
+	on_actions = {
+		vampire_information_check_pulse # every_county
+	}
+}
+
+vampire_information_check_pulse = {	# Checks county vampire population information, once every 10 years
+	effect = {
+		every_county = {
+			limit = { NOT = { has_variable = temporary_vampire_check_block } }
+			save_temporary_scope_as = county_being_checked
+			set_variable = {
+				name = dominant_vampire_faith
+				value = scope:county_being_checked.faith
+			}
+			set_variable = {
+				name = dominant_vampire_culture
+				value = scope:county_being_checked.culture
+			}
+		}
+	}
+}
+
+dissolve_aversarian_titles_action = {
+	effect = {
+		dissolve_aversarian_titles = yes
+	}
+}
+
+### Redlander Crisis: Redrunner Flavor Events
+### by doodleSM
+
+ongoing_redrunner_flavor_events = {
+	trigger = {
+		is_imprisoned = no
+		exists = global_var:redlands_crisis
+	}
+
+	random_events = {
+		50 = gh_redrunner_events.0001
+		50 = gh_redrunner_events.0002
+	}
+}
+
+wasteland_maintenance_pulse = { # This is for clearing out wastelands of excess courtiers/guests
+	effect = {
+		every_courtier_or_guest = {
+			limit = {
+				is_ruin = yes
+			}
+			death = {
+				death_reason = death_vanished
+			}
+		}
+	}
+}

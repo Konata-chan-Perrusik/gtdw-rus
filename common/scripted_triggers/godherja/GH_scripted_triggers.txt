@@ -1,0 +1,352 @@
+﻿is_sjalvolki = { is_sjalvolki_culture_trigger = yes }
+
+is_sjalvolki_tribal = {
+	is_sjalvolki = yes
+	GH_is_any_tribal_government_trigger = yes
+}
+
+is_coastal_sjalvolki_tribal = {
+	# Standard checks.
+	is_sjalvolki_tribal = yes
+	# Do you have a relevant coastal county somewhere?
+	any_sub_realm_county = { is_coastal_county = yes }
+}
+
+has_opening_event = {
+	trigger_if = {
+		limit = { current_year = 1254 }
+		OR = {
+			this = character:westernimperial_omitilos_aagiokrata_2
+			this = character:adrakamp_sjalvolki_6
+			this = character:alewui_kemsari_vinderon_1
+			this = character:amaghean_amaghean_aagiokrata_1
+			this = character:amaghean_amaghean_aagiokrata_103
+			this = character:amaghean_amaghean_aagiokrata_11
+			this = character:amaghean_amaghean_aagiokrata_2
+			this = character:amaghean_amaghean_aagiokrata_3
+			this = character:amaghean_amaghean_aagiokrata_6
+			this = character:apokiakas_aversarinas_aagiokratia_23
+			this = character:apokiakas_militant_cliques_1
+			this = character:caemansi_sjalvolki_14
+			this = character:carsavisians_lifepath_15
+			this = character:carsavisians_lifepath_5
+			this = character:centralimperial_aversarinas_aagiokrata_93
+			this = character:centralislander_aversarinas_aagiokrata_1
+			this = character:centralislander_aversarinas_aagiokrata_2
+			this = character:charchac_alau_koev_2
+			this = character:daukeni_sjalvolki_1
+			this = character:dielecender_lifepath_1
+			this = character:draneti_izaerto_bosar_2
+			this = character:easternimperial_aeschraes_aagiokrata_1
+			this = character:easternimperial_aironoian_aagiokrata_1
+			this = character:easternimperial_aironoian_aagiokrata_4
+			this = character:easternimperial_aironoian_aagiokrata_7
+			this = character:easternimperial_aversarinas_aagiokrata_7
+			this = character:enisaloi_aversarinas_aagiokrata_1
+			this = character:erimatos_aversarinas_aagiokrata_2
+			this = character:erimatos_aversarinas_aagiokrata_3
+			this = character:etrandanexi_aversarinas_aagiokrata_1
+			this = character:fenvir_sjalvolki_1
+			this = character:fenvir_sjalvolki_21
+			this = character:goans_gethian_1
+			this = character:guillater_aversarian_black_fraternity_1
+			this = character:guillater_aversarian_cleansed_ones_1
+			this = character:guillater_seaborne_exalted_1
+			this = character:huegodocs_apti_2
+			this = character:jarakmar_ertomax_1
+			this = character:kardwens_kardawai_1
+			this = character:mastikigni_sjalvolki_2
+			this = character:northernimperial_aversarinas_aagiokrata_1
+			this = character:salisians_lifepath_1
+			this = character:sarminians_salacad_1
+			this = character:scusstari_iyrossi_aagiokrata_13
+			this = character:southernimperial_aversarian_axiaotheaism_1
+			this = character:southernimperial_aversarian_gorassos_1
+			this = character:southernimperial_aversarinas_aagiokrata_30
+			this = character:southernimperial_aversarinas_aagiokrata_66
+			this = character:southernimperial_manikos_aagiokrata_1
+			this = character:surugin_ehatm_1
+			this = character:tasurmad_ritualist_1
+			this = character:trustians_lifepath_1
+			this = character:voluntic_partic_1
+			this = character:vonatolis_aversarinas_aagiokrata_1
+			this = character:voyagen_lifepath_7
+			this = character:voyagen_lifepath_8
+			this = character:voyagen_lifepath_9
+			this = character:vrodkin_sjalvolki_1
+			this = character:westernimperial_aeschraes_aagiokrata_1
+			this = character:westernimperial_aversarian_axiaotheaism_5
+			this = character:westernimperial_aversarinas_aagiokrata_154
+			this = character:westernimperial_aversarinas_aagiokrata_158
+			this = character:ypsikenai_aversarinas_aagiokrata_1
+			this = character:yylaxxaz_xaxbaxakanax_5
+			this = character:centralimperial_aversarinas_aagiokrata_5
+			this = character:westernimperial_aversarinas_aagiokrata_203
+			this = character:westernimperial_aversarinas_aagiokrata_155
+			this = character:easternimperial_aironoian_aagiokrata_30
+			this = character:easternimperial_aironoian_aagiokrata_89
+			this = character:apokiakas_aversarinas_aagiokratia_30
+			this = character:redrunner_aversarinas_aagiokrata_9
+		}
+	}
+}
+has_story_content = {
+	trigger_if = {
+		limit = { current_year = 1254 }
+		OR = {
+			this = character:easternimperial_aironoian_aagiokrata_1
+			this = character:easternimperial_aironoian_aagiokrata_7
+			this = character:apokiakas_aversarinas_aagiokratia_23
+			this = character:westernimperial_omitilos_aagiokrata_2
+		}
+	}
+}
+
+has_aelvalr_shard = {
+	OR = {
+		title_province = {
+			OR = {
+				has_building = 01_special_aervalr_shard
+				has_building = 02_special_aervalr_shard
+				has_building = 03_special_aervalr_shard
+				has_building = 04_special_aervalr_shard
+			}
+		}
+		has_county_modifier = aervalr_debris_field
+	}
+}
+
+is_not_in_traditional_kingdom = {
+	has_variable = traditional_de_jure_kingdom
+	var:traditional_de_jure_kingdom = title:$KINGDOM_NAME$
+	OR = {
+		NOT = { kingdom = var:traditional_de_jure_kingdom }
+		AND = {
+			exists = var:traditional_de_jure_kingdom.var:traditional_de_jure_empire
+			OR = {
+				NOT = { exists = empire }
+				NOT = { empire = kingdom.var:traditional_de_jure_empire }
+			}
+		}
+	}
+}
+
+is_not_in_demoted_kingdom = {
+	has_variable = traditional_de_jure_kingdom
+	var:traditional_de_jure_kingdom = title:$KINGDOM_NAME$
+	NOT = { kingdom = title:$DEMOTED_EMPIRE$.var:kingdom_demotion_title }
+}
+
+
+protected_from_title_rebuilding = {
+	OR = {	# Add stuff here in the future, that's why it's an OR
+		has_variable = sjalvolki_vanguard	# Sjalvolki vanguard rulers shouldn't have their vassals stolen from them
+	}
+}
+
+ai_can_convert = { #Checked for if an AI can convert
+	character_cenware_trigger = no
+	# Lonely Note: Add Fogeaters and Wasteland
+	is_human = yes
+}
+
+controls_majority_of_etepezea_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_etepezea_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_megos_kalathipsomi_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_megos_kalathipsomi_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_mikros_kalathipsomi_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_mikros_kalathipsomi_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_malcois_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_malcois_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_opakhasia_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_opakhasia_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_aironoi_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_aironoi_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_gurdurbok_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_gurdurbok_formable
+		percent >= aversarian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_kashirya_formable_trigger = {
+	any_county_in_region = {
+		region = GH_geographic_kashirya
+		percent >= otachedian_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_dahangon_formable_trigger = {
+	any_county_in_region = {
+		region = world_ga_dahangon_formable
+		percent >= dahangon_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+controls_majority_of_east_wardenites_trigger = {
+	any_county_in_region = {
+		region = world_ws_ayyar
+		percent >= ascendancy_of_east_formable_percent_decimal_value
+		holder.top_liege = root
+	}
+}
+
+is_imperrech_vanguard_trigger = {
+	OR = {
+		culture = { has_cultural_pillar = heritage_karzarad }
+		culture = { has_cultural_pillar = heritage_kardwen }
+		culture = { has_cultural_pillar = heritage_sarminian }
+		culture = { has_cultural_pillar = heritage_partic }
+		culture = { has_cultural_pillar = heritage_mondecny }
+		culture = { has_cultural_pillar = heritage_goan }
+		culture = { has_cultural_pillar = heritage_huegodoc }
+		culture = { has_cultural_pillar = heritage_sjalvolki }
+	}
+}
+
+oltenic_mask_user_cultural_trigger = { # Has a cultural reason to wear an oltenic mask artifact
+	custom_description = {
+		text = oltenic_mask_user_trigger_cultural_reasons
+		culture = {
+			OR = {
+				has_oltenic_heritage_pillar_trigger = yes
+				any_parent_culture_or_above = { has_oltenic_heritage_pillar_trigger = yes }
+			}
+		}
+	}
+}
+
+oltenic_mask_user_religious_trigger = { # Has a religious reason to wear an oltenic mask artifact
+	custom_description = {
+		text = oltenic_mask_user_trigger_religious_reasons
+		faith = { has_doctrine_parameter = masked_adherents_active }
+	}
+}
+
+oltenic_mask_user_personal_trigger = { # Has a personal reason to wear an oltenic mask artifact
+	custom_description = {
+		text = oltenic_mask_user_trigger_personal_reasons
+		OR = {
+			has_trait = leper
+			has_trait = disfigured
+			has_character_modifier = magic_defiled_nadir_modifier
+		}
+	}
+}
+
+oltenic_mask_user_strict_trigger = { # Is expected to wear an oltenic mask artifact
+	OR = {
+		oltenic_mask_user_cultural_trigger = yes
+		oltenic_mask_user_religious_trigger = yes
+	}
+}
+
+oltenic_mask_user_lax_trigger = { # Has any reason to wear an oltenic mask artifact
+	OR = {
+		oltenic_mask_user_strict_trigger = yes
+		oltenic_mask_user_personal_trigger = yes
+	}
+}
+
+partic_secret_haver_trigger = { # Anyone with knowledge of Partic Secrets (will expand this for artifacts/weird shit only Partics will have knowledge of in future)
+	custom_description = {
+		text = partic_secret_haver
+		OR = {
+			culture = {
+				has_cultural_pillar = heritage_partic
+			}
+			faith = {
+				 religion_tag = partic_religion
+			}
+		}
+	}
+}
+
+arcana_is_highest_skill_trigger = {
+	switch = {
+		trigger = highest_skill
+		diplomacy = {
+			diplomacy < character_arcana_baseline_value # more accurate
+		}
+		martial = {
+			martial < character_arcana_baseline_value
+		}
+		stewardship = {
+			stewardship < character_arcana_baseline_value
+		}
+		intrigue = {
+			intrigue < character_arcana_baseline_value
+		}
+		learning = {
+			learning < character_arcana_baseline_value
+		}
+	}
+}
+
+accustomed_to_drinking_kumis = { # Can be expected to know what kumis is
+	culture = {
+		OR = { ## GH NOTE: Keep this updated with new horse traditions
+			has_oltenic_heritage_pillar_trigger = yes
+			has_cultural_pillar = heritage_sarminian
+			has_cultural_tradition = tradition_kaegan_wind
+			has_cultural_tradition = tradition_lords_of_aironoi
+			has_cultural_tradition = tradition_steppe_queens
+			has_cultural_tradition = tradition_horse_lords
+			has_cultural_tradition = tradition_horse_breeder
+		}
+	}
+	drinks_alcohol_trigger = yes
+}
+
+character_can_raid = {
+	OR = {
+		culture = {
+			OR = {
+				has_cultural_parameter = culture_can_raid_over_land_even_if_feudal
+				has_cultural_parameter = culture_can_raid_at_sea_even_if_feudal
+				has_cultural_parameter = culture_can_raid_at_sea_even_if_feudal_no_restrictions
+				has_cultural_parameter = culture_can_raid_over_land_even_if_feudal_no_restrictions
+			}
+		}
+		faith = { has_doctrine_parameter = faith_can_raid }
+	}
+}

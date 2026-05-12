@@ -1,0 +1,86 @@
+﻿### REALM RELATED ALERTS
+
+action_chevalie_will_shatter = {
+	type = alert
+	check_create_action = {
+		if = {
+			limit = { chevalie_will_shatter = yes }
+			capital_county = { save_scope_as = capital }
+			try_create_important_action = {
+				important_action_type = action_chevalie_will_shatter
+				actor = root
+			}
+		}
+	}
+	effect = {
+		pan_camera_to_title = scope:capital
+	}
+}
+
+action_pirate_cohesion_too_low = {
+	type = alert
+	icon = action_chevalie_will_shatter
+	priority = 1100
+	check_create_action = {
+		if = {
+			limit = {
+				government_has_flag = government_is_pirate
+				OR = {
+					primary_heir ?= {
+						martial <= 15
+						prestige_level <= 2
+					}
+					AND = {
+						has_character_flag = pirate_succession
+						martial <= 15
+						prestige_level <= 2
+					}
+				}
+			}
+			try_create_important_action = {
+				important_action_type = action_pirate_cohesion_too_low
+				actor = root
+			}
+		}
+	}
+	effect = {
+		scope:actor = {
+			open_view_data = {
+				view = character
+			}
+		}
+	}
+}
+
+action_failing_colony = {
+	combine_into_one = yes
+	is_dangerous = yes
+
+	check_create_action = {
+		if = {
+			limit = {
+				any_owned_story = {
+					story_type = story_cycle_colonization
+					var:colonization_progress < 0
+				}
+			}
+			every_owned_story = {
+				limit = {
+					story_type = story_cycle_colonization
+					var:colonization_progress < 0
+				}
+				var:county_being_colonized = {
+					try_create_important_action = {
+						important_action_type = action_failing_colony
+						actor = root
+						landed_title = this
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		scope:landed_title.title_province = { open_view_data = { view = holding_view } }
+	}
+}

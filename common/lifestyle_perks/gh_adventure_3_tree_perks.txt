@@ -1,0 +1,140 @@
+﻿beasthunter_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 2 0 }
+	icon = node_wanderer
+
+	can_be_auto_selected = {
+		OR = {
+			has_trait = lifestyle_hunter
+			faith = { has_doctrine = tenet_sjalvolki_hunt }
+		}
+	}
+
+	auto_selection_weight = {
+		value = 3
+		if = {
+			limit = { has_trait = lifestyle_hunter }
+			add = 10
+		}
+		if = {
+			limit = { faith = { has_doctrine = tenet_sjalvolki_hunt } }
+			add = 10
+		}
+	}
+
+	effect = {
+		custom_description_no_bullet = { text = beasthunter_perk_effect }
+	}
+}
+
+home_turf_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 0 1.25 }
+	icon = node_wanderer
+	
+	parent = beasthunter_perk
+	
+	effect = {
+		custom_description_no_bullet = { text = home_turf_perk_effect }
+	}
+}
+
+adept_tracker_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 0 2.5 }
+	icon = node_wanderer
+	
+	parent = home_turf_perk
+	
+	effect = {
+		custom_description_no_bullet = { text = adept_tracker_perk_effect }
+	}
+}
+
+grizzled_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 2 1.25 }
+	icon = node_wanderer
+	
+	parent = beasthunter_perk
+	
+	effect = {
+		custom_description_no_bullet = { text = grizzled_perk_effect }
+	}
+}
+
+skilled_forager_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 2 2.5 }
+	icon = node_wanderer
+	
+	parent = grizzled_perk
+	
+	character_modifier = {
+		character_travel_safety = 15
+		character_travel_speed_mult = 0.1
+		supply_capacity_mult = 0.1
+		provisions_loss_mult = -0.1
+	}
+}
+
+proficiency_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 4 1.25 }
+	icon = node_wanderer
+	
+	parent = beasthunter_perk
+	
+	effect = {
+		custom_description_no_bullet = { text = proficiency_perk_effect }
+	}
+}
+
+trophy_collector_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 4 2.5 }
+	icon = node_wanderer
+	
+	parent = proficiency_perk
+	
+	effect = {
+		custom_description_no_bullet = { text = trophy_collector_perk_effect }
+	}
+}
+
+unconventional_game_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 2 3.75 }
+	icon = node_wanderer
+	
+	parent = adept_tracker_perk
+	parent = skilled_forager_perk
+	parent = trophy_collector_perk
+	
+	effect = {
+		custom_description_no_bullet = { text = unconventional_game_perk_effect }
+	}
+}
+
+professional_monster_slayer_perk = {
+	lifestyle = adventure_lifestyle
+	tree = adventure_lifestyle_tree3
+	position = { 2 5 }
+	icon = trait_administrator
+	
+	parent = unconventional_game_perk
+	
+	trait = lifestyle_one_with_nature
+	effect = {
+		add_trait_force_tooltip = lifestyle_one_with_nature
+		GH_achiev_honorarychevalien_check = yes
+	}
+}

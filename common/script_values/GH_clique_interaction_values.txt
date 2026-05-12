@@ -1,0 +1,129 @@
+﻿kleptiakos_enforcer_recruitment_cost_prestige = {
+	value = major_prestige_value
+	# Halved for members of the clique
+	if = {
+		limit = {  
+			trigger_if = {
+				limit = { has_variable = character_clique }
+				var:character_clique = { var:clique_name = flag:kleptiakos }
+			}
+			trigger_else = { always = no }
+		}
+		multiply = 0.5
+	}
+}
+
+kleptiakos_enforcer_recruitment_cost_gold = {
+	value = major_gold_value
+	# Increased if the leader of the clique is greedy (hint: they nearly always are)
+	if = {
+		limit = {  
+			exists = scope:interaction_clique_scope
+			scope:interaction_clique_scope = {
+				exists = var:clique_leader
+				var:clique_leader = { has_trait = greedy }
+			}			
+		}
+		multiply = 1.2
+	}
+	if = {
+		limit = {
+			exists = scope:interaction_clique_scope
+			scope:interaction_clique_scope = {
+				exists = var:clique_leader
+			}
+		}
+		var:clique_leader = {
+			# Discounts if the leader of the clique likes you
+			if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= very_high_positive_opinion
+					}		
+				}
+				multiply = 0.5
+			}
+			else_if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= high_positive_opinion
+					}		
+				}
+				multiply = 0.7
+			}
+			else_if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= medium_positive_opinion
+					}		
+				}
+				multiply = 0.9
+			}
+			else_if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= low_negative_opinion
+					}		
+				}
+				multiply = 1
+			}
+			else_if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= medium_negative_opinion
+					}		
+				}
+				multiply = 1.5
+			}
+			else_if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= high_negative_opinion
+					}		
+				}
+				multiply = 2
+			}
+			else_if = {
+				limit = {  
+					opinion = {
+						target = root
+						value >= very_high_negative_opinion
+					}		
+				}
+				multiply = 3
+			}
+			else = {
+				multiply = 5
+			}
+		}
+	}
+}
+
+urgent_fundraising_cost = {
+	value = minor_prestige_value
+	# If Philantrianist, discount per level of piety
+	if = {
+		limit = { faith = faith:philanthrios }
+		multiply = {
+			value = 10
+			subtract = piety_level
+			multiply = 0.1
+		}
+	}
+}
+
+urgent_fundraising_service_fee_percentage = {
+	value = 50
+	# Halved fee for fellow Philantrianists
+	if = {
+		limit = { scope:interaction_requester.faith = faith:philanthrios }
+		multiply = 0.5
+	}
+	min = 0
+}

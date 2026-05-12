@@ -1,0 +1,385 @@
+﻿spawn_oasis_in_area_effect = {
+	random_county_in_region = {
+		region = $REGION$
+		limit = {
+			NOT = { any_county_situation = { situation_type = sarradonian_oasis } }
+		}
+		spawn_oasis_in_county_effect = { COUNTY = this }
+	}
+}
+
+spawn_oasis_in_county_effect = {
+	$COUNTY$ = { save_scope_as = oasis_county }
+	start_situation = {
+		type = sarradonian_oasis
+		save_scope_as = situation
+	}
+	scope:situation ?= {
+		set_situation_center_province = scope:oasis_county.title_province
+		add_to_global_variable_list = {
+			name = active_dynamic_oases
+			target = this
+		}
+		# Potentially overridden below based on region
+		save_scope_value_as = {
+			name = min_severity
+			value = 1
+		}
+		save_scope_value_as = {
+			name = max_severity
+			value = 3
+		}
+
+		set_variable = {
+			name = severity
+			value = {
+				add = {
+					fixed_range = {
+						min = 1
+						max = 3
+					}
+					min = scope:min_severity
+					max =  scope:max_severity
+				}
+			}
+		}
+
+		set_variable = {
+			name = oasis_county
+			value = scope:oasis_county
+		}
+
+		situation_sub_region:oasis_area = { add_dejure_title_to_sub_region = scope:oasis_county }
+		scope:oasis_county = {
+			every_neighboring_county = {
+				add_to_temporary_list = neighbouring_counties
+				save_temporary_scope_as = neighbouring_county
+				scope:situation.situation_sub_region:oasis_area = { add_dejure_title_to_sub_region = scope:neighbouring_county }
+				# Cleanup for simpler debugging
+				clear_saved_scope = neighbouring_county
+			}
+		}
+		log_natural_disaster = "started oasis"
+	}
+}
+
+oasis_growth_effect = {
+	scope:situation = {
+		every_situation_county = {
+			custom = every_oasis_county_custom
+			if = {
+				limit = { scope:situation.var:severity >= 2.5 }
+				add_county_modifier = {
+					modifier = gh_oasis_4_county_modifier
+					years = 25
+				}
+			}
+			else_if = {
+				limit = { scope:situation.var:severity >= 2.0 }
+				add_county_modifier = {
+					modifier = gh_oasis_3_county_modifier
+					years = 25
+				}
+			}
+			else_if = {
+				limit = { scope:situation.var:severity >= 1.5 }
+				add_county_modifier = {
+					modifier = gh_oasis_2_county_modifier
+					years = 25
+				}
+			}
+			else = {
+				add_county_modifier = {
+					modifier = gh_oasis_county_modifier
+					years = 25
+				}
+			}
+		}
+	}
+}
+
+#spawn_incomplete_oasis_in_area_effect = {
+	#if = {
+		#limit = { NOT = { exists = scope:oasis_area } }
+		#$REGION$ = { save_scope_as = oasis_area }
+	#}
+	#start_situation = {
+		#type = sarradonian_oasis
+		#start_phase = situation_oasis_incomplete
+		#save_scope_as = situation
+	#}
+	#scope:situation ?= {
+		#set_variable = {
+			#name = oasis_area
+			#value = scope:oasis_area
+		#}
+		#random_situation_sub_region = { add_geographical_region = scope:oasis_area }
+	#}
+	#add_to_global_variable_list = {
+		#name = active_dynamic_oases
+		#target = scope:situation
+	#}
+	#if = {
+		#limit = { debug_only = yes }
+		#debug_log = "Incomplete Oasis Spawned"
+		#debug_log_scopes = yes
+	#}
+#}
+
+oasis_save_scopes_effect = {
+	save_scope_as = situation
+	var:oasis_county ?= { save_scope_as = oasis_county }
+	var:oasis_area ?= { save_scope_as = oasis_area }
+	scope:situation_sub_region ?= { save_scope_as = situation_sub_region }
+}
+
+oasis_ruler_start_effect = {
+	save_scope_as = ruler
+	scope:situation.situation_center_province ?= {
+		if = {
+			limit = { scope:ruler = county.holder.top_liege }
+				save_scope_as = oasis_province
+		}
+	}
+	if = {
+		limit = { NOT = { exists = scope:oasis_province } }
+		scope:situation_sub_region = {
+			random_situation_sub_region_county = {
+				limit = { scope:ruler = holder.top_liege }
+				title_province = {
+					save_scope_as = oasis_province
+				}
+			}
+		}
+	}
+	scope:situation = {
+		situation:sarradonian_oasis = {
+			scope:ruler = { natural_disaster_start_great_project_effect = { TYPE = oasis } }
+		}
+	}
+	scope:great_project ?= {
+		set_variable = {
+			name = situation
+			value = scope:situation
+		}
+		scope:situation = { # Nested to prevent errors from non-existence
+			add_to_variable_list = {
+				name = great_projects
+				target = scope:great_project
+			}
+		}
+	}
+}
+
+reform_great_tarrafent_decision_effect = {
+	create_title_and_vassal_change = {
+		type = created
+		save_scope_as = change
+		add_claim_on_loss = no
+	}
+	title:h_great_tarrafent = {
+		change_title_holder = {
+			holder = root
+			change = scope:change
+		}
+	}
+	resolve_title_and_vassal_change = scope:change
+	hidden_effect = { set_primary_title_to = title:h_great_tarrafent }
+	every_held_title = {
+		limit = {
+			tier = tier_kingdom
+		}
+		if = {
+			limit = {
+				#Check if you need to notify a player
+				exists = empire
+				empire = {
+					exists = holder
+					holder = {
+						NOT = { this = root }
+						is_ai = no
+					}
+				}
+			}
+			add_to_temporary_list = kingdoms_for_notification
+			root = {
+				save_temporary_scope_value_as = {
+					name = send_notifications
+					value = yes
+				}
+			}
+		}
+		set_de_jure_liege_title = title:h_great_tarrafent
+	}
+	every_sub_realm_county = {
+		limit = {
+			exists = kingdom
+			NOT = { exists = kingdom.holder }
+			holder.top_liege = root
+			kingdom = {
+				save_temporary_scope_as = test_kingdom
+			}
+			holder.top_liege = {
+				completely_controls = title:h_great_tarrafent
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					kingdom = {
+						is_in_list = additional_de_jure_kingdoms
+					}
+				}
+			}
+			kingdom = {
+				set_de_jure_liege_title = title:h_great_tarrafent
+				add_to_list = additional_de_jure_kingdoms
+			}
+		}
+	}
+	add_prestige = massive_prestige_gain
+	give_nickname = nick_tuder_amhaddi
+	dynasty = {
+		add_dynasty_prestige = medium_dynasty_prestige_gain
+	}
+	if = {
+		limit = {
+			faith = {
+				OR = {
+					religion_tag = marmaladid_religion
+					religion_tag = ritualist_religion
+					religion_tag = wardenism_religion
+				}
+			}
+		}
+		add_piety = massive_piety_gain
+
+		faith = {
+			change_fervor = {
+				value = medium_fervor_gain
+				desc = fervor_great_tarrafent_reformed
+			}
+		}
+
+		if = {
+			limit = {
+				any_vassal_or_below = {
+					NOT = { faith = scope:great_tarrafent_uniter.faith }
+					is_ai = yes
+					exists = capital_province
+					capital_province = { geographical_region = historic_great_tarrafent }
+				}
+			}
+			every_vassal_or_below = {
+				custom = every_non_root_faith_vassal_great_tarrafent
+				limit = {
+					NOT = { faith  = scope:great_tarrafent_uniter.faith }
+					is_ai = yes
+					exists = capital_province
+					capital_province = { geographical_region = historic_great_tarrafent } 
+				}
+				random = {
+					chance = 33
+					set_character_faith = scope:great_tarrafent_uniter.faith
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				any_realm_province = {
+					NOT = { faith = scope:great_tarrafent_uniter.faith }
+					geographical_region = historic_great_tarrafent
+				}
+			}
+			every_realm_province = {
+				limit = {
+					NOT = { faith = scope:great_tarrafent_uniter.faith }
+					geographical_region = historic_great_tarrafent
+				}
+				county = { add_to_list = every_realm_county }
+			}
+
+			every_in_list = {
+				list = every_realm_county
+				custom = every_non_root_faith_county_tarrafent
+				random = {
+					chance = 33
+					custom_tooltip = every_non_tarrafent_uniter_faith_convert
+					hidden_effect = { set_county_faith = scope:great_tarrafent_uniter.faith }
+				}
+			}
+		}
+	}
+
+	every_sub_realm_county = {
+		limit = {
+			culture = { has_cultural_tradition = tradition_desert_nomads }
+			title_province = { geographical_region = historic_great_tarrafent }
+		}
+		custom = sarradon_decisions.1001.custom
+		add_county_modifier = {
+			modifier = reform_great_tarrafent_culture_modifier
+			years = 10
+		}
+	}
+}
+
+revive_the_chosen_magi_decision_scripted_effect = {
+	set_character_faith_with_conversion = faith:talita_namit
+	custom_tooltip = revive_the_chosen_magi.county_conversions.tt
+	hidden_effect = {
+		primary_title = {
+			every_in_de_facto_hierarchy = {
+				limit = {
+					tier = tier_county
+					culture = { has_cultural_pillar = heritage_marmaladid }
+					exists = scope:old_faith
+					religion = scope:old_faith.religion
+				}
+				if = {
+					limit = { culture = { has_cultural_pillar = heritage_marmaladid } } 
+					random = {
+						chance = 70
+						set_county_faith = faith:talita_namit
+					}
+				}
+				else_if = {
+					limit = { holder = root }
+					random = {
+						chance = 50
+						set_county_faith = faith:talita_namit
+					}
+				}
+				else = {
+					random = {
+						chance = 30
+						set_county_faith = faith:talita_namit
+					}
+				}
+			}
+		}
+	}
+	primary_title = {
+		every_in_de_facto_hierarchy = {
+			limit = {
+				tier = tier_county
+				faith = faith:talita_namit
+			}
+			custom = restore_chosen_magi.every_converted_province
+			add_county_modifier = {
+				modifier = marmaladid_appreciation_modifier
+				years = 25
+			}
+		}
+	}
+	hidden_effect = {
+		faith:talita_namit = {
+			save_temporary_scope_as = talita_faith
+			change_fervor = {
+				value = 100
+				desc = fervor_gain_talita_namit_revived
+			}
+		}
+	}
+}
